@@ -1,14 +1,12 @@
 package com.Da_Technomancer.crossroads.blocks.rotary;
 
+import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.Da_Technomancer.crossroads.tileentities.rotary.MasterAxisCreativeTileEntity;
-import com.Da_Technomancer.essentials.ESConfig;
-import com.Da_Technomancer.essentials.blocks.ESProperties;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.ConfigUtil;
+import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -38,18 +36,17 @@ public class MasterAxisCreative extends BaseEntityBlock{
 	public MasterAxisCreative(){
 		super(CRBlocks.getMetalProperty());
 		String name = "master_axis_creative";
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this, new Item.Properties().tab(CRItems.TAB_CROSSROADS).rarity(CRItems.CREATIVE_RARITY));
+		CRBlocks.toRegister.put(name, this);
+		CRBlocks.blockAddQue(name, this, new Item.Properties().tab(CRItems.TAB_CROSSROADS).rarity(CRItems.CREATIVE_RARITY));
 	}
 	
 	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		if(!worldIn.isClientSide){
-			if(ESConfig.isWrench(playerIn.getItemInHand(hand))){
-				worldIn.setBlockAndUpdate(pos, state.cycle(ESProperties.FACING));
+			if(ConfigUtil.isWrench(playerIn.getItemInHand(hand))){
+				worldIn.setBlockAndUpdate(pos, state.cycle(CRProperties.FACING));
 			}else if(worldIn.getBlockEntity(pos) instanceof MasterAxisCreativeTileEntity menuTE){
-				NetworkHooks.openGui((ServerPlayer) playerIn, menuTE, buf -> {buf.writeFloat(menuTE.setting); buf.writeUtf(menuTE.expression); buf.writeBlockPos(pos);});
+				NetworkHooks.openScreen((ServerPlayer) playerIn, menuTE, buf -> {buf.writeFloat(menuTE.setting); buf.writeUtf(menuTE.expression); buf.writeBlockPos(pos);});
 			}
 		}
 		return InteractionResult.SUCCESS;
@@ -57,13 +54,13 @@ public class MasterAxisCreative extends BaseEntityBlock{
 
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder){
-		builder.add(ESProperties.FACING);
+		builder.add(CRProperties.FACING);
 	}
 
 	@Nullable
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context){
-		return defaultBlockState().setValue(ESProperties.FACING, context.getNearestLookingDirection().getOpposite());
+		return defaultBlockState().setValue(CRProperties.FACING, context.getNearestLookingDirection().getOpposite());
 	}
 
 	@Override
@@ -84,7 +81,7 @@ public class MasterAxisCreative extends BaseEntityBlock{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter reader, List<Component> tooltip, TooltipFlag flag){
-		tooltip.add(new TranslatableComponent("tt.crossroads.boilerplate.creative"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.master_axis_creative.desc"));
+		tooltip.add(Component.translatable("tt.crossroads.boilerplate.creative"));
+		tooltip.add(Component.translatable("tt.crossroads.master_axis_creative.desc"));
 	}
 }

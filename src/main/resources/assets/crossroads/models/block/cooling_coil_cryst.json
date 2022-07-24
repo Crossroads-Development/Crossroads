@@ -1,4 +1,5 @@
 {
+	"render_type": "cutout",
 	"parent": "crossroads:block/cooling_coil",
 	"textures": {
 		"glass": "crossroads:block/alch_tube/cryst_tube_cap",

@@ -1,6 +1,5 @@
 package com.Da_Technomancer.crossroads.entity;
 
-import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
@@ -20,15 +19,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkHooks;
-import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.List;
 
-@ObjectHolder(Crossroads.MODID)
 public class EntityFlyingMachine extends Entity{
 
-	@ObjectHolder("flying_machine")
-	public static EntityType<EntityFlyingMachine> type = null;
+	public static EntityType<EntityFlyingMachine> type;
 
 	//In radians, 0 is down, pi/2 is forward
 	private static final EntityDataAccessor<Float> GRAV_PLATE_ANGLE = SynchedEntityData.defineId(EntityFlyingMachine.class, EntityDataSerializers.FLOAT);

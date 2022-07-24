@@ -1,13 +1,10 @@
 package com.Da_Technomancer.crossroads.blocks.beams;
 
-import com.Da_Technomancer.crossroads.API.CRProperties;
-import com.Da_Technomancer.crossroads.API.templates.BeamBlock;
-import com.Da_Technomancer.crossroads.tileentities.beams.BeamRedirectorTileEntity;
-import com.Da_Technomancer.essentials.blocks.ESProperties;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import com.Da_Technomancer.crossroads.api.CRProperties;
+import com.Da_Technomancer.crossroads.api.templates.BeamBlock;
+import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -49,22 +46,22 @@ public class BeamRedirector extends BeamBlock{
 
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context){
-		return super.getStateForPlacement(context).setValue(ESProperties.REDSTONE_BOOL, context.getLevel().hasNeighborSignal(context.getClickedPos()));
+		return super.getStateForPlacement(context).setValue(CRProperties.REDSTONE_BOOL, context.getLevel().hasNeighborSignal(context.getClickedPos()));
 	}
 
 	@Override
 	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving){
 		if(worldIn.hasNeighborSignal(pos)){
-			if(!state.getValue(ESProperties.REDSTONE_BOOL)){
-				worldIn.setBlockAndUpdate(pos, state.setValue(ESProperties.REDSTONE_BOOL, true));
+			if(!state.getValue(CRProperties.REDSTONE_BOOL)){
+				worldIn.setBlockAndUpdate(pos, state.setValue(CRProperties.REDSTONE_BOOL, true));
 			}
-		}else if(state.getValue(ESProperties.REDSTONE_BOOL)){
-			worldIn.setBlockAndUpdate(pos, state.setValue(ESProperties.REDSTONE_BOOL, false));
+		}else if(state.getValue(CRProperties.REDSTONE_BOOL)){
+			worldIn.setBlockAndUpdate(pos, state.setValue(CRProperties.REDSTONE_BOOL, false));
 		}
 	}
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn){
-		tooltip.add(new TranslatableComponent("tt.crossroads.beam_redirector.desc"));
+		tooltip.add(Component.translatable("tt.crossroads.beam_redirector.desc"));
 	}
 }

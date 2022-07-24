@@ -1,16 +1,15 @@
 package com.Da_Technomancer.crossroads.gui.screen;
 
-import com.Da_Technomancer.crossroads.API.templates.TileEntityGUI;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.blocks.alchemy.ReagentFilterTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.ReagentFilterContainer;
-import com.Da_Technomancer.crossroads.tileentities.alchemy.ReagentFilterTileEntity;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class ReagentFilterScreen extends TileEntityGUI<ReagentFilterContainer, ReagentFilterTileEntity>{
+public class ReagentFilterScreen extends com.Da_Technomancer.essentials.api.BlockMenuScreen<ReagentFilterContainer, ReagentFilterTileEntity>{
 
 	private static final ResourceLocation GUI_TEXTURES = new ResourceLocation(Crossroads.MODID, "textures/gui/container/reagent_filter_gui.png");
 

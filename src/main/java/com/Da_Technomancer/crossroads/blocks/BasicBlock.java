@@ -7,8 +7,7 @@ public class BasicBlock extends Block{
 
 	public BasicBlock(String name, BlockBehaviour.Properties prop){
 		super(prop);
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this);
+		CRBlocks.toRegister.put(name, this);
+		CRBlocks.blockAddQue(name, this);
 	}
 }

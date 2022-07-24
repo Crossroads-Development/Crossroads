@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.items.witchcraft;
 
-import com.Da_Technomancer.crossroads.API.witchcraft.EntityTemplate;
+import com.Da_Technomancer.crossroads.api.witchcraft.EntityTemplate;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
@@ -39,8 +39,7 @@ public class GeneticSpawnEgg extends Item{
 	public GeneticSpawnEgg(){
 		super(new Item.Properties());//Not added to any creative tab
 		String name = "spawn_egg";
-		setRegistryName(name);
-		CRItems.toRegister.add(this);
+		CRItems.toRegister.put(name, this);
 
 		DefaultDispenseItemBehavior dispenseBehavior = new DefaultDispenseItemBehavior(){
 			public ItemStack execute(BlockSource source, ItemStack stack){

@@ -1,13 +1,13 @@
 package com.Da_Technomancer.crossroads.gui.screen;
 
-import com.Da_Technomancer.crossroads.API.CircuitUtil;
-import com.Da_Technomancer.crossroads.API.packets.CRPackets;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.api.CircuitUtil;
+import com.Da_Technomancer.crossroads.api.packets.CRPackets;
+import com.Da_Technomancer.crossroads.blocks.technomancy.SequenceBoxTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.SequenceBoxContainer;
-import com.Da_Technomancer.crossroads.tileentities.technomancy.SequenceBoxTileEntity;
 import com.Da_Technomancer.essentials.Essentials;
-import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
-import com.Da_Technomancer.essentials.packets.SendNBTToServer;
+import com.Da_Technomancer.essentials.api.packets.SendNBTToServer;
+import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -15,7 +15,6 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import org.lwjgl.glfw.GLFW;
@@ -47,7 +46,7 @@ public class SequenceBoxScreen extends AbstractContainerScreen<SequenceBoxContai
 
 		shiftingUI = true;
 		for(int i = 0; i < inputBars.length; i++){
-			inputBars[i] = CircuitUtil.createFormulaInputUIComponent(this, font, 24, 24 + 18 * i, new TextComponent(""), this::entryChanged, menu.inputs.size() > i ? menu.inputs.get(i) : "");
+			inputBars[i] = CircuitUtil.createFormulaInputUIComponent(this, font, 24, 24 + 18 * i, Component.literal(""), this::entryChanged, menu.inputs.size() > i ? menu.inputs.get(i) : "");
 			inputBars[i].setCanLoseFocus(true);
 			addWidget(inputBars[i]);
 		}

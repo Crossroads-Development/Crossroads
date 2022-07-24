@@ -1,6 +1,5 @@
 package com.Da_Technomancer.crossroads.entity;
 
-import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.Packet;
@@ -17,13 +16,11 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
-import net.minecraftforge.registries.ObjectHolder;
 
-@ObjectHolder(Crossroads.MODID)
 public class EntityNitro extends ThrowableProjectile implements ItemSupplier{
 
-	@ObjectHolder("nitro")
-	public static EntityType<EntityNitro> type = null;
+	public static EntityType<EntityNitro> type;
+
 	private static final ItemStack RENDER_STACK = new ItemStack(CRItems.nitroglycerin);
 
 	public EntityNitro(EntityType<EntityNitro> type, Level worldIn){

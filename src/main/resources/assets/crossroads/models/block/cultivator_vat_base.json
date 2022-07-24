@@ -1,4 +1,5 @@
 {
+	"render_type": "translucent",
 	"ambientocclusion": false,
 	"textures": {
 		"top": "crossroads:block/bronze_fluid",

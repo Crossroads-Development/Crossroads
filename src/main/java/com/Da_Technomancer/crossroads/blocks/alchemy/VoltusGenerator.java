@@ -2,13 +2,11 @@ package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.tileentities.alchemy.VoltusGeneratorTileEntity;
-import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
-import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.redstone.IReadable;
+import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
@@ -28,9 +26,8 @@ public class VoltusGenerator extends BaseEntityBlock implements IReadable{
 	public VoltusGenerator(){
 		super(CRBlocks.getMetalProperty());
 		String name = "voltus_generator";
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this);
+		CRBlocks.toRegister.put(name, this);
+		CRBlocks.blockAddQue(name, this);
 	}
 
 	@Nullable
@@ -52,9 +49,9 @@ public class VoltusGenerator extends BaseEntityBlock implements IReadable{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
-		tooltip.add(new TranslatableComponent("tt.crossroads.voltus_generator.desc"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.voltus_generator.eff", CRConfig.voltusValue.get()));
-		tooltip.add(new TranslatableComponent("tt.crossroads.voltus_generator.rate"));
+		tooltip.add(Component.translatable("tt.crossroads.voltus_generator.desc"));
+		tooltip.add(Component.translatable("tt.crossroads.voltus_generator.eff", CRConfig.voltusValue.get()));
+		tooltip.add(Component.translatable("tt.crossroads.voltus_generator.rate"));
 	}
 
 	@Override

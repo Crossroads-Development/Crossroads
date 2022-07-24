@@ -1,6 +1,8 @@
 package com.Da_Technomancer.crossroads.render;
 
 import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
+import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
+import com.Da_Technomancer.crossroads.api.render.IVisualEffect;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;

@@ -15,8 +15,7 @@ public class CowLeggings extends ArmorItem{
 	protected CowLeggings(){
 		super(ChickenBoots.BOBO_MATERIAL, EquipmentSlot.LEGS, new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
 		String name = "cow_leggings";
-		setRegistryName(name);
-		CRItems.toRegister.add(this);
+		CRItems.toRegister.put(name, this);
 	}
 
 	@Override

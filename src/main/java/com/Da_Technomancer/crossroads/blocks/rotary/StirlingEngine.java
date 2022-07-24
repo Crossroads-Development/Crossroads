@@ -1,13 +1,11 @@
 package com.Da_Technomancer.crossroads.blocks.rotary;
 
-import com.Da_Technomancer.crossroads.API.CRProperties;
 import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.tileentities.rotary.StirlingEngineTileEntity;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
@@ -29,9 +27,8 @@ public class StirlingEngine extends BaseEntityBlock{
 	public StirlingEngine(){
 		super(CRBlocks.getMetalProperty());
 		String name = "stirling_engine";
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this);
+		CRBlocks.toRegister.put(name, this);
+		CRBlocks.blockAddQue(name, this);
 		registerDefaultState(defaultBlockState().setValue(CRProperties.RATE_SIGNED, 2));
 	}
 
@@ -58,10 +55,10 @@ public class StirlingEngine extends BaseEntityBlock{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
-		tooltip.add(new TranslatableComponent("tt.crossroads.stirling_engine.desc", CRConfig.jouleWorth.get() * StirlingEngineTileEntity.MAX_TEMPERATURE_DIFFERANCE / CRConfig.stirlingConversion.get() / StirlingEngineTileEntity.EFFICIENCY_MULTIPLIER));
-		tooltip.add(new TranslatableComponent("tt.crossroads.stirling_engine.rate", StirlingEngineTileEntity.HEAT_INTERVAL));
-		tooltip.add(new TranslatableComponent("tt.crossroads.stirling_engine.power", CRConfig.formatVal(CRConfig.stirlingConversion.get())));
-		tooltip.add(new TranslatableComponent("tt.crossroads.stirling_engine.limit", CRConfig.stirlingSpeedLimit.get()));
-		tooltip.add(new TranslatableComponent("tt.crossroads.boilerplate.inertia", StirlingEngineTileEntity.INERTIA));
+		tooltip.add(Component.translatable("tt.crossroads.stirling_engine.desc", CRConfig.jouleWorth.get() * StirlingEngineTileEntity.MAX_TEMPERATURE_DIFFERANCE / CRConfig.stirlingConversion.get() / StirlingEngineTileEntity.EFFICIENCY_MULTIPLIER));
+		tooltip.add(Component.translatable("tt.crossroads.stirling_engine.rate", StirlingEngineTileEntity.HEAT_INTERVAL));
+		tooltip.add(Component.translatable("tt.crossroads.stirling_engine.power", CRConfig.formatVal(CRConfig.stirlingConversion.get())));
+		tooltip.add(Component.translatable("tt.crossroads.stirling_engine.limit", CRConfig.stirlingSpeedLimit.get()));
+		tooltip.add(Component.translatable("tt.crossroads.boilerplate.inertia", StirlingEngineTileEntity.INERTIA));
 	}
 }

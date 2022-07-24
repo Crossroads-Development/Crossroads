@@ -1,34 +1,33 @@
 package com.Da_Technomancer.crossroads;
 
-import com.Da_Technomancer.crossroads.API.alchemy.ReagentManager;
-import com.Da_Technomancer.crossroads.API.packets.*;
-import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
-import com.Da_Technomancer.crossroads.API.witchcraft.EntityTemplate;
 import com.Da_Technomancer.crossroads.ambient.particles.CRParticles;
 import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.api.alchemy.ReagentManager;
+import com.Da_Technomancer.crossroads.api.packets.*;
+import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
+import com.Da_Technomancer.crossroads.api.render.IVisualEffect;
+import com.Da_Technomancer.crossroads.api.technomancy.EnumGoggleLenses;
+import com.Da_Technomancer.crossroads.api.witchcraft.EntityTemplate;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.entity.CREntities;
-import com.Da_Technomancer.crossroads.gui.container.*;
-import com.Da_Technomancer.crossroads.gui.screen.*;
+import com.Da_Technomancer.crossroads.gui.container.CRContainers;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
-import com.Da_Technomancer.crossroads.items.itemSets.OreProfileItem;
-import com.Da_Technomancer.crossroads.items.itemSets.OreSetup;
+import com.Da_Technomancer.crossroads.items.item_sets.OreProfileItem;
+import com.Da_Technomancer.crossroads.items.item_sets.OreSetup;
 import com.Da_Technomancer.crossroads.items.technomancy.ArmorPropellerPack;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamUsingItem;
 import com.Da_Technomancer.crossroads.items.witchcraft.GeneticSpawnEgg;
+import com.Da_Technomancer.crossroads.render.BeamToolOverlay;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
-import com.Da_Technomancer.crossroads.render.CRRenderUtil;
-import com.Da_Technomancer.crossroads.render.IVisualEffect;
-import com.Da_Technomancer.crossroads.render.TESR.CRRendererRegistry;
+import com.Da_Technomancer.crossroads.render.tesr.CRRendererRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.item.ItemColor;
-import net.minecraft.client.color.item.ItemColors;
-import net.minecraft.client.gui.screens.MenuScreens;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -37,20 +36,19 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.*;
+import net.minecraftforge.client.event.ModelEvent.RegisterGeometryLoaders;
 import net.minecraftforge.common.ForgeSpawnEggItem;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.network.IContainerFactory;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegisterEvent;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -63,7 +61,17 @@ public class EventHandlerClient{
 
 		@SuppressWarnings("unused")
 		@SubscribeEvent
-		public static void registerModels(ModelRegistryEvent e){
+		public static void register(RegisterEvent e){
+			e.register(ForgeRegistries.Keys.MENU_TYPES, helper -> {
+				//The other half of this is in EventHandlerServer
+				CRContainers.initClient();
+				EventHandlerCommon.CRModEventsCommon.registerAll(helper, CRContainers.toRegisterMenu);
+			});
+		}
+
+		@SuppressWarnings("unused")
+		@SubscribeEvent
+		public static void registerModels(RegisterGeometryLoaders e){
 			CRBlocks.clientInit();
 			CRItems.clientInit();
 		}
@@ -97,78 +105,29 @@ public class EventHandlerClient{
 
 		@SuppressWarnings("unused")
 		@SubscribeEvent
-		public static void registerParticleFactories(ParticleFactoryRegisterEvent e){
+		public static void registerParticleFactories(RegisterParticleProvidersEvent e){
 			CRParticles.clientInit();
 		}
 
 		@SuppressWarnings("unused")
 		@SubscribeEvent
-		public static void registerContainers(RegistryEvent.Register<MenuType<?>> e){
-			registerCon(FireboxContainer::new, FireboxScreen::new, "firebox", e);
-			registerCon(IceboxContainer::new, IceboxScreen::new, "icebox", e);
-			registerCon(FluidCoolerContainer::new, FluidCoolerScreen::new, "fluid_cooler", e);
-			registerCon(CrucibleContainer::new, CrucibleScreen::new, "crucible", e);
-			registerCon(SaltReactorContainer::new, SaltReactorScreen::new, "salt_reactor", e);
-			registerCon(SmelterContainer::new, SmelterScreen::new, "smelter", e);
-			registerCon(BlastFurnaceContainer::new, BlastFurnaceScreen::new, "ind_blast_furnace", e);
-			registerCon(MillstoneContainer::new, MillstoneScreen::new, "millstone", e);
-			registerCon(StampMillContainer::new, StampMillScreen::new, "stamp_mill", e);
-			registerCon(FatCollectorContainer::new, FatCollectorScreen::new, "fat_collector", e);
-			registerCon(FatCongealerContainer::new, FatCongealerScreen::new, "fat_congealer", e);
-			registerCon(FatFeederContainer::new, FatFeederScreen::new, "fat_feeder", e);
-			registerCon(FluidTankContainer::new, FluidTankScreen::new, "fluid_tank", e);
-			registerCon(OreCleanserContainer::new, OreCleanserScreen::new, "ore_cleanser", e);
-			registerCon(RadiatorContainer::new, RadiatorScreen::new, "radiator", e);
-			registerCon(SteamBoilerContainer::new, SteamBoilerScreen::new, "steam_boiler", e);
-			registerCon(WaterCentrifugeContainer::new, WaterCentrifugeScreen::new, "water_centrifuge", e);
-			registerCon(ColorChartContainer::new, ColorChartScreen::new, "color_chart", e);
-			registerCon(BeamExtractorContainer::new, BeamExtractorScreen::new, "beam_extractor", e);
-			registerCon(HeatLimiterContainer::new, HeatLimiterScreen::new, "heat_limiter", e);
-			registerCon(RotaryPumpContainer::new, RotaryPumpScreen::new, "rotary_pump", e);
-			registerCon(DetailedCrafterContainer::new, DetailedCrafterScreen::new, "detailed_crafter", e);
-			registerCon(ReagentFilterContainer::new, ReagentFilterScreen::new, "reagent_filter", e);
-			registerCon(CopshowiumMakerContainer::new, CopshowiumMakerScreen::new, "copshowium_maker", e);
-			registerCon(SteamerContainer::new, SteamerScreen::new, "steamer", e);
-			registerCon(WindingTableContainer::new, WindingTableScreen::new, "winding_table", e);
-			registerCon(DetailedAutoCrafterContainer::new, DetailedAutoCrafterScreen::new, "detailed_auto_crafter", e);
-			registerCon(SequenceBoxContainer::new, SequenceBoxScreen::new, "sequence_box", e);
-			registerCon(SteamTurbineContainer::new, SteamTurbineScreen::new, "steam_turbine", e);
-			registerCon(BeaconHarnessContainer::new, BeaconHarnessScreen::new, "beacon_harness", e);
-			registerCon(FormulationVatContainer::new, FormulationVatScreen::new, "formulation_vat", e);
-			registerCon(BrewingVatContainer::new, BrewingVatScreen::new, "brewing_vat", e);
-			registerCon(AutoInjectorContainer::new, AutoInjectorScreen::new, "auto_injector", e);
-			registerCon(ColdStorageContainer::new, ColdStorageScreen::new, "cold_storage", e);
-			registerCon(HydroponicsTroughContainer::new, HydroponicsTroughScreen::new, "hydroponics_trough", e);
-			registerCon(StasisStorageContainer::new, StasisStorageScreen::new, "stasis_storage", e);
-			registerCon(CultivatorVatContainer::new, CultivatorVatScreen::new, "cultivator_vat", e);
-			registerCon(IncubatorContainer::new, IncubatorScreen::new, "incubator", e);
-			registerCon(BloodCentrifugeContainer::new, BloodCentrifugeScreen::new, "blood_centrifuge", e);
-			registerCon(EmbryoLabContainer::new, EmbryoLabScreen::new, "embryo_lab", e);
-			registerCon(HeatReservoirCreativeContainer::new, HeatReservoirCreativeScreen::new, "heat_reservoir_creative", e);
-			registerCon(MasterAxisCreativeContainer::new, MasterAxisCreativeScreen::new, "master_axis_creative", e);
-			registerCon(BeamExtractorCreativeContainer::new, BeamExtractorCreativeScreen::new, "beam_extractor_creative", e);
-		}
-
-		/**
-		 * Creates and registers both a container type and a screen factory. Not usable on the physical server due to screen factory.
-		 * @param cons Container factory
-		 * @param screenFactory The screen factory to be linked to the type
-		 * @param id The ID to use
-		 * @param reg Registery event
-		 * @param <T> Container subclass
-		 */
-		private static <T extends AbstractContainerMenu> void registerCon(IContainerFactory<T> cons, MenuScreens.ScreenConstructor<T, AbstractContainerScreen<T>> screenFactory, String id, RegistryEvent.Register<MenuType<?>> reg){
-			MenuType<T> contType = EventHandlerCommon.CRModEventsCommon.registerConType(cons, id, reg);
-			MenuScreens.register(contType, screenFactory);
+		public static void registerKeyMappings(RegisterKeyMappingsEvent e){
+			Keys.init();
+			Keys.toRegister.forEach(e::register);
+			Keys.toRegister.clear();
 		}
 
 		@SuppressWarnings("unused")
 		@SubscribeEvent
-		public static void registerItemColoration(ColorHandlerEvent.Item e){
-			//Coloring
-			ItemColors itemColor = e.getItemColors();
+		public static void registerKeyMappings(RegisterGuiOverlaysEvent e){
+			e.registerAboveAll("crossroad_beam_tool_overlay", new BeamToolOverlay());
+		}
+
+		@SuppressWarnings("unused")
+		@SubscribeEvent
+		public static void registerItemColoration(RegisterColorHandlersEvent.Item e){
 			//Alchemy containers
-			itemColor.register((ItemStack stack, int layer) -> layer == 0 ? AbstractGlassware.getColorRGB(stack) : -1, CRItems.phialGlass, CRItems.florenceFlaskGlass, CRItems.shellGlass, CRItems.phialCrystal, CRItems.florenceFlaskCrystal, CRItems.shellCrystal);
+			e.register((ItemStack stack, int layer) -> layer == 0 ? AbstractGlassware.getColorRGB(stack) : -1, CRItems.phialGlass, CRItems.florenceFlaskGlass, CRItems.shellGlass, CRItems.phialCrystal, CRItems.florenceFlaskCrystal, CRItems.shellCrystal);
 
 			//Gears and ore processing dusts
 			ItemColor oreItemColoring = (ItemStack stack, int tintIndex) -> {
@@ -178,7 +137,7 @@ public class EventHandlerClient{
 				OreSetup.OreProfile mat = OreProfileItem.getProfile(stack);
 				return mat == null ? -1 : mat.getColor().getRGB();
 			};
-			itemColor.register(oreItemColoring, CRItems.oreGravel, CRItems.oreClump, CRItems.axle, CRItems.smallGear, CRItems.largeGear, CRItems.clutch, CRItems.invClutch, CRItems.toggleGear, CRItems.invToggleGear, CRItems.axleMount);
+			e.register(oreItemColoring, CRItems.oreGravel, CRItems.oreClump, CRItems.axle, CRItems.smallGear, CRItems.largeGear, CRItems.clutch, CRItems.invClutch, CRItems.toggleGear, CRItems.invToggleGear, CRItems.axleMount);
 
 			//Genetic spawn egg
 			ItemColor eggItemColoring = (ItemStack stack, int tintIndex) -> {
@@ -198,7 +157,7 @@ public class EventHandlerClient{
 				//Which are hideous, but that's what you get for not registering spawn eggs
 				return tintIndex == 0 ? Color.CYAN.getRGB() : Color.GREEN.getRGB();
 			};
-			itemColor.register(eggItemColoring, CRItems.geneticSpawnEgg);
+			e.register(eggItemColoring, CRItems.geneticSpawnEgg);
 		}
 	}
 
@@ -206,7 +165,11 @@ public class EventHandlerClient{
 
 	@SubscribeEvent
 	@SuppressWarnings("unused")
-	public void drawFieldsAndBeams(RenderLevelLastEvent e){
+	public void drawFieldsAndBeams(RenderLevelStageEvent e){
+		if(e.getStage() != RenderLevelStageEvent.Stage.AFTER_PARTICLES){
+			return;
+		}
+
 		Minecraft game = Minecraft.getInstance();
 
 //		//Goggle entity glowing (Moved to tick event handler)
@@ -256,7 +219,7 @@ public class EventHandlerClient{
 			for(Entity ent : game.level.entitiesForRendering()){
 				CompoundTag entNBT = ent.getPersistentData();
 				if(entNBT == null){
-					Crossroads.logger.info("Found entity with null persistent data! Report to the mod author of the mod that added the entity: %s", ent.getType().getRegistryName().toString());
+					Crossroads.logger.info("Found entity with null persistent data! Report to the mod author of the mod that added the entity: %s", MiscUtil.getRegistryName(ent.getType(), ForgeRegistries.Keys.ENTITY_TYPES).toString());
 					continue;//Should never be null, but some mods override the entNBT method to return null for some reason
 				}
 
@@ -458,7 +421,7 @@ public class EventHandlerClient{
 
 	@SubscribeEvent
 	@SuppressWarnings("unused")
-	public void keyListener(InputEvent.KeyInputEvent e){
+	public void keyListener(InputEvent.Key e){
 		if(Minecraft.getInstance().screen != null || !Keys.keysInitialized){
 			return;//Only accept key hits if the player isn't in a UI
 		}
@@ -478,7 +441,7 @@ public class EventHandlerClient{
 				KeyMapping key = Keys.asKeyMapping(lens.getKey());
 				if(key != null && key.consumeClick() && key.isDown() && nbt.contains(lens.toString())){
 					boolean wasEnabled = nbt.getBoolean(lens.toString());
-					CRSounds.playSoundClientLocal(play.level, play.eyeBlockPosition(), SoundEvents.SPYGLASS_USE, SoundSource.PLAYERS, 1.0F, 1.0F);
+					CRSounds.playSoundClientLocal(play.level, new BlockPos(play.getEyePosition()), SoundEvents.SPYGLASS_USE, SoundSource.PLAYERS, 1.0F, 1.0F);
 					CRPackets.channel.sendToServer(new SendGoggleConfigureToServer(lens, !wasEnabled));
 					return;
 				}
@@ -504,14 +467,14 @@ public class EventHandlerClient{
 
 	@SubscribeEvent
 	@SuppressWarnings("unused")
-	public void viewZoom(FOVModifierEvent e){
+	public void viewZoom(ComputeFovModifierEvent e){
 		//Zooms in the view to spyglass levels when the player is wearing goggles with the amethyst lens enabled
 		if(Minecraft.getInstance().options.getCameraType().isFirstPerson()){
 			ItemStack helmet = Minecraft.getInstance().player.getItemBySlot(EquipmentSlot.HEAD);
 			boolean doGoggleZoom = helmet.getItem() == CRItems.armorGoggles && helmet.hasTag() && helmet.getTag().getBoolean(EnumGoggleLenses.AMETHYST.toString());
 			if(doGoggleZoom){
 				final float scopingFOV = 0.1F;
-				e.setNewfov(Mth.lerp(Minecraft.getInstance().options.fovEffectScale, 1.0F, scopingFOV));
+				e.setNewFovModifier((float) Mth.lerp(Minecraft.getInstance().options.fovEffectScale().get(), 1.0F, scopingFOV));
 			}
 		}
 	}

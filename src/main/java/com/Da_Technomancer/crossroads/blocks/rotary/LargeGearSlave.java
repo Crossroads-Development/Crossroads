@@ -1,11 +1,9 @@
 package com.Da_Technomancer.crossroads.blocks.rotary;
 
-import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
+import com.Da_Technomancer.crossroads.api.CRProperties;
+import com.Da_Technomancer.crossroads.api.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearMasterTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearSlaveTileEntity;
-import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -54,23 +52,22 @@ public class LargeGearSlave extends BaseEntityBlock{
 	public LargeGearSlave(){
 		super(CRBlocks.getMetalProperty());
 		String name = "large_gear_slave";
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
+		CRBlocks.toRegister.put(name, this);
 	}
 
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder){
-		builder.add(ESProperties.FACING);
+		builder.add(CRProperties.FACING);
 	}
 
 	@Override
 	public VoxelShape getCollisionShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context){
-		return COL_SHAPES[state.getValue(ESProperties.FACING).get3DDataValue()];
+		return COL_SHAPES[state.getValue(CRProperties.FACING).get3DDataValue()];
 	}
 
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context){
-		return SHAPES[state.getValue(ESProperties.FACING).get3DDataValue()];
+		return SHAPES[state.getValue(CRProperties.FACING).get3DDataValue()];
 	}
 
 	@Override
@@ -116,7 +113,7 @@ public class LargeGearSlave extends BaseEntityBlock{
 	@Override
 	public boolean onDestroyedByPlayer(BlockState state, Level worldIn, BlockPos pos, Player player, boolean willHarvest, FluidState fluid){
 		if(willHarvest && worldIn.getBlockEntity(pos) instanceof LargeGearSlaveTileEntity){
-			((LargeGearSlaveTileEntity) worldIn.getBlockEntity(pos)).passBreak(state.getValue(ESProperties.FACING), true);
+			((LargeGearSlaveTileEntity) worldIn.getBlockEntity(pos)).passBreak(state.getValue(CRProperties.FACING), true);
 		}
 		return super.onDestroyedByPlayer(state, worldIn, pos, player, willHarvest, fluid);
 	}
@@ -124,7 +121,7 @@ public class LargeGearSlave extends BaseEntityBlock{
 	@Override
 	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving){
 		if(worldIn.getBlockEntity(pos) instanceof LargeGearSlaveTileEntity){
-			((LargeGearSlaveTileEntity) worldIn.getBlockEntity(pos)).passBreak(state.getValue(ESProperties.FACING), false);
+			((LargeGearSlaveTileEntity) worldIn.getBlockEntity(pos)).passBreak(state.getValue(CRProperties.FACING), false);
 		}
 		super.onRemove(state, worldIn, pos, newState, isMoving);
 	}

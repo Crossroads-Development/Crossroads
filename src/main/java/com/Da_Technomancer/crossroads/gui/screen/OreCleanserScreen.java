@@ -1,16 +1,16 @@
 package com.Da_Technomancer.crossroads.gui.screen;
 
-import com.Da_Technomancer.crossroads.API.templates.MachineGUI;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.api.templates.MachineScreen;
+import com.Da_Technomancer.crossroads.blocks.fluid.OreCleanserTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.OreCleanserContainer;
-import com.Da_Technomancer.crossroads.tileentities.fluid.OreCleanserTileEntity;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class OreCleanserScreen extends MachineGUI<OreCleanserContainer, OreCleanserTileEntity>{
+public class OreCleanserScreen extends MachineScreen<OreCleanserContainer, OreCleanserTileEntity>{
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/gui/container/ore_cleanser_gui.png");
 

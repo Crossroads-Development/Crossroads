@@ -1,10 +1,8 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
-import com.Da_Technomancer.crossroads.API.CRProperties;
+import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.tileentities.alchemy.GlasswareHolderTileEntity;
-import com.Da_Technomancer.essentials.blocks.ESProperties;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -41,9 +39,8 @@ public class GlasswareHolder extends BaseEntityBlock{
 
 	protected GlasswareHolder(String name){
 		super(CRBlocks.getMetalProperty());
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this);
+		CRBlocks.toRegister.put(name, this);
+		CRBlocks.blockAddQue(name, this);
 	}
 
 	@Override
@@ -102,19 +99,19 @@ public class GlasswareHolder extends BaseEntityBlock{
 	@Override
 	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving){
 		if(worldIn.hasNeighborSignal(pos)){
-			if(!state.getValue(ESProperties.REDSTONE_BOOL)){
-				worldIn.setBlockAndUpdate(pos, state.setValue(ESProperties.REDSTONE_BOOL, true));
+			if(!state.getValue(CRProperties.REDSTONE_BOOL)){
+				worldIn.setBlockAndUpdate(pos, state.setValue(CRProperties.REDSTONE_BOOL, true));
 				worldIn.updateNeighbourForOutputSignal(pos, this);
 			}
-		}else if(state.getValue(ESProperties.REDSTONE_BOOL)){
-			worldIn.setBlockAndUpdate(pos, state.setValue(ESProperties.REDSTONE_BOOL, false));
+		}else if(state.getValue(CRProperties.REDSTONE_BOOL)){
+			worldIn.setBlockAndUpdate(pos, state.setValue(CRProperties.REDSTONE_BOOL, false));
 			worldIn.updateNeighbourForOutputSignal(pos, this);
 		}
 	}
 
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder){
-		builder.add(CRProperties.CRYSTAL, CRProperties.CONTAINER_TYPE, ESProperties.REDSTONE_BOOL);
+		builder.add(CRProperties.CRYSTAL, CRProperties.CONTAINER_TYPE, CRProperties.REDSTONE_BOOL);
 	}
 
 	@Override

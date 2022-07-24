@@ -1,18 +1,18 @@
 package com.Da_Technomancer.crossroads.gui.screen;
 
-import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.templates.MachineGUI;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.api.templates.MachineScreen;
+import com.Da_Technomancer.crossroads.blocks.fluid.RadiatorTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.RadiatorContainer;
-import com.Da_Technomancer.crossroads.tileentities.fluid.RadiatorTileEntity;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class RadiatorScreen extends MachineGUI<RadiatorContainer, RadiatorTileEntity>{
+public class RadiatorScreen extends MachineScreen<RadiatorContainer, RadiatorTileEntity>{
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/gui/container/radiator_gui.png");
 

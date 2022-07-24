@@ -1,24 +1,23 @@
 package com.Da_Technomancer.crossroads.gui.container;
 
-import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.ObjectHolder;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
+import java.util.function.Supplier;
 
-@ObjectHolder(Crossroads.MODID)
 public class ColorChartContainer extends AbstractContainerMenu{
 
-	@ObjectHolder("color_chart")
-	private static MenuType<ColorChartContainer> type = null;
+	private static final Supplier<MenuType<?>> TYPE_SPL = MiscUtil.getCRRegistryObject("color_chart", ForgeRegistries.Keys.MENU_TYPES);
 
 	public ColorChartContainer(int id, Inventory playerInv, @Nullable FriendlyByteBuf buf){
-		super(type, id);
+		super(TYPE_SPL.get(), id);
 	}
 
 	@Override

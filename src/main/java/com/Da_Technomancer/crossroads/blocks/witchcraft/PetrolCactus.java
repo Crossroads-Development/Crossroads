@@ -1,11 +1,10 @@
 package com.Da_Technomancer.crossroads.blocks.witchcraft;
 
-import com.Da_Technomancer.crossroads.API.MiscUtil;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
@@ -36,9 +35,8 @@ public class PetrolCactus extends CactusBlock{
 	public PetrolCactus(){
 		super(Properties.of(FLAMMABLE_CACTUS).randomTicks().strength(0.4F).sound(SoundType.WOOL));
 		String name = "petrol_cactus";
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this, new BlockItem(this, CRBlocks.itemBlockProp){
+		CRBlocks.toRegister.put(name, this);
+		CRBlocks.blockAddQue(name, this, new BlockItem(this, CRBlocks.itemBlockProp){
 			@Override
 			public int getBurnTime(ItemStack itemStack, @Nullable RecipeType<?> recipeType){
 				return 3200;//Makes this a furnace fuel
@@ -96,7 +94,7 @@ public class PetrolCactus extends CactusBlock{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
-		tooltip.add(new TranslatableComponent("tt.crossroads.petrol_cactus.desc"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.petrol_cactus.quip").setStyle(MiscUtil.TT_QUIP));
+		tooltip.add(Component.translatable("tt.crossroads.petrol_cactus.desc"));
+		tooltip.add(Component.translatable("tt.crossroads.petrol_cactus.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 }

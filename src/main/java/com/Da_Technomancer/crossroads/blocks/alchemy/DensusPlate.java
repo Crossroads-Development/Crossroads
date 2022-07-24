@@ -1,11 +1,9 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
-import com.Da_Technomancer.crossroads.API.CRProperties;
+import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.tileentities.alchemy.DensusPlateTileEntity;
-import com.Da_Technomancer.essentials.ESConfig;
-import com.Da_Technomancer.essentials.blocks.ESProperties;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.ConfigUtil;
+import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -47,18 +45,17 @@ public class DensusPlate extends BaseEntityBlock{
 	public DensusPlate(boolean anti){
 		super(CRBlocks.getRockProperty());
 		String name = anti ? "anti_densus_plate" : "densus_plate";
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this);
+		CRBlocks.toRegister.put(name, this);
+		CRBlocks.blockAddQue(name, this);
 		registerDefaultState(defaultBlockState().setValue(CRProperties.LAYERS, 1));
 	}
 
 	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		ItemStack stack = playerIn.getItemInHand(hand);
-		if(ESConfig.isWrench(stack)){
+		if(ConfigUtil.isWrench(stack)){
 			if(!worldIn.isClientSide){
-				worldIn.setBlockAndUpdate(pos, state.cycle(ESProperties.FACING));
+				worldIn.setBlockAndUpdate(pos, state.cycle(CRProperties.FACING));
 			}
 			return InteractionResult.SUCCESS;
 		}
@@ -78,17 +75,17 @@ public class DensusPlate extends BaseEntityBlock{
 	@Nullable
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context){
-		return defaultBlockState().setValue(ESProperties.FACING, context.getNearestLookingDirection().getOpposite());
+		return defaultBlockState().setValue(CRProperties.FACING, context.getNearestLookingDirection().getOpposite());
 	}
 
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context){
-		return SHAPES[state.getValue(CRProperties.LAYERS) - 1][state.getValue(ESProperties.FACING).get3DDataValue()];
+		return SHAPES[state.getValue(CRProperties.LAYERS) - 1][state.getValue(CRProperties.FACING).get3DDataValue()];
 	}
 
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder){
-		builder.add(ESProperties.FACING, CRProperties.LAYERS);
+		builder.add(CRProperties.FACING, CRProperties.LAYERS);
 	}
 
 	@Override

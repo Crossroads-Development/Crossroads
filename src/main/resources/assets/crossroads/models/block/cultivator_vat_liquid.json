@@ -1,4 +1,5 @@
 {
+	"render_type": "translucent",
 	"ambientocclusion": false,
 	"textures": {
 		"fluid": "crossroads:block/nutrient_solution_still",

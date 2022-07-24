@@ -1,13 +1,11 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
-import com.Da_Technomancer.crossroads.API.CircuitUtil;
+import com.Da_Technomancer.crossroads.api.CircuitUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.tileentities.technomancy.SequenceBoxTileEntity;
-import com.Da_Technomancer.essentials.blocks.redstone.IWireConnect;
+import com.Da_Technomancer.essentials.api.redstone.IWireConnect;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -36,9 +34,9 @@ public class SequenceBox extends BaseEntityBlock implements IWireConnect{
 
 	public SequenceBox(){
 		super(CRBlocks.getMetalProperty());
-		setRegistryName("sequence_box");
-		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this);
+		String name = "sequence_box";
+		CRBlocks.toRegister.put(name, this);
+		CRBlocks.blockAddQue(name, this);
 	}
 
 	@Override
@@ -83,8 +81,8 @@ public class SequenceBox extends BaseEntityBlock implements IWireConnect{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn){
-		tooltip.add(new TranslatableComponent("tt.crossroads.sequence_box.desc"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.sequence_box.trigger"));
+		tooltip.add(Component.translatable("tt.crossroads.sequence_box.desc"));
+		tooltip.add(Component.translatable("tt.crossroads.sequence_box.trigger"));
 	}
 
 	@Override
@@ -92,7 +90,7 @@ public class SequenceBox extends BaseEntityBlock implements IWireConnect{
 		BlockEntity te;
 		if(!worldIn.isClientSide && (te = worldIn.getBlockEntity(pos)) instanceof SequenceBoxTileEntity){
 			SequenceBoxTileEntity cte = (SequenceBoxTileEntity) te;
-			NetworkHooks.openGui((ServerPlayer) player, cte, cte::encodeBuf);
+			NetworkHooks.openScreen((ServerPlayer) player, cte, cte::encodeBuf);
 		}
 
 		return InteractionResult.SUCCESS;

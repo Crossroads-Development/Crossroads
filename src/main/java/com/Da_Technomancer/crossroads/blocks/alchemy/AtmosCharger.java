@@ -1,18 +1,16 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
-import com.Da_Technomancer.crossroads.API.CRProperties;
-import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.alchemy.AtmosChargeSavedData;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.api.CRProperties;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.api.alchemy.AtmosChargeSavedData;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.tileentities.alchemy.AtmosChargerTileEntity;
-import com.Da_Technomancer.essentials.ESConfig;
-import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
-import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.ConfigUtil;
+import com.Da_Technomancer.essentials.api.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.redstone.IReadable;
+import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -39,9 +37,8 @@ public class AtmosCharger extends BaseEntityBlock implements IReadable{
 	public AtmosCharger(){
 		super(CRBlocks.getMetalProperty());
 		String name = "atmos_charger";
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this);
+		CRBlocks.toRegister.put(name, this);
+		CRBlocks.blockAddQue(name, this);
 	}
 
 	@Nullable
@@ -63,10 +60,10 @@ public class AtmosCharger extends BaseEntityBlock implements IReadable{
 
 	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
-		if(ESConfig.isWrench(playerIn.getItemInHand(hand))){
+		if(ConfigUtil.isWrench(playerIn.getItemInHand(hand))){
 			if(!worldIn.isClientSide){
 				worldIn.setBlockAndUpdate(pos, state.cycle(CRProperties.ACTIVE));
-				MiscUtil.chatMessage(playerIn, new TranslatableComponent(state.getValue(CRProperties.ACTIVE) ? "tt.crossroads.atmos_charger.charging" : "tt.crossroads.atmos_charger.draining"));
+				MiscUtil.displayMessage(playerIn, Component.translatable(state.getValue(CRProperties.ACTIVE) ? "tt.crossroads.atmos_charger.charging" : "tt.crossroads.atmos_charger.draining"));
 			}
 			return InteractionResult.SUCCESS;
 		}
@@ -91,10 +88,10 @@ public class AtmosCharger extends BaseEntityBlock implements IReadable{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
-		tooltip.add(new TranslatableComponent("tt.crossroads.atmos_charger.desc"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.atmos_charger.safety"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.atmos_charger.structure"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.atmos_charger.circuit"));
+		tooltip.add(Component.translatable("tt.crossroads.atmos_charger.desc"));
+		tooltip.add(Component.translatable("tt.crossroads.atmos_charger.safety"));
+		tooltip.add(Component.translatable("tt.crossroads.atmos_charger.structure"));
+		tooltip.add(Component.translatable("tt.crossroads.atmos_charger.circuit"));
 	}
 
 	@Override

@@ -1,8 +1,7 @@
 package com.Da_Technomancer.crossroads.entity;
 
-import com.Da_Technomancer.crossroads.API.alchemy.AlchemyUtil;
-import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
-import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.api.alchemy.AlchemyUtil;
+import com.Da_Technomancer.crossroads.api.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -28,13 +27,11 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
-import net.minecraftforge.registries.ObjectHolder;
 
-@ObjectHolder(Crossroads.MODID)
 public class EntityShell extends ThrowableProjectile implements ItemSupplier{
 
-	@ObjectHolder("shell")
-	public static EntityType<EntityShell> type = null;
+	public static EntityType<EntityShell> type;
+
 	private static final EntityDataAccessor<ItemStack> item = SynchedEntityData.defineId(EntityShell.class, EntityDataSerializers.ITEM_STACK);
 
 	private ReagentMap contents;//Technically redundant with the itemstack in data manager, but meh

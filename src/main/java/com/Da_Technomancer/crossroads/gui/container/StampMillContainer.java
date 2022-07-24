@@ -1,25 +1,25 @@
 package com.Da_Technomancer.crossroads.gui.container;
 
-import com.Da_Technomancer.crossroads.API.templates.MachineContainer;
-import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.tileentities.rotary.StampMillTileEntity;
-import com.Da_Technomancer.essentials.gui.container.IntDeferredRef;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.api.templates.MachineContainer;
+import com.Da_Technomancer.crossroads.blocks.rotary.StampMillTileEntity;
+import com.Da_Technomancer.essentials.api.IntDeferredRef;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraftforge.registries.ObjectHolder;
+import net.minecraftforge.registries.ForgeRegistries;
 
-@ObjectHolder(Crossroads.MODID)
+import java.util.function.Supplier;
+
 public class StampMillContainer extends MachineContainer<StampMillTileEntity>{
 
-	@ObjectHolder("stamp_mill")
-	private static MenuType<StampMillContainer> type = null;
+	private static final Supplier<MenuType<?>> TYPE_SPL = MiscUtil.getCRRegistryObject("stamp_mill", ForgeRegistries.Keys.MENU_TYPES);
 
 	public final IntDeferredRef progRef;
 	public final IntDeferredRef timeRef;
 
 	public StampMillContainer(int windowId, Inventory playerInv, FriendlyByteBuf data){
-		super(type, windowId, playerInv, data);
+		super(TYPE_SPL.get(), windowId, playerInv, data);
 		progRef = new IntDeferredRef(te::getProgress, te.getLevel().isClientSide);
 		timeRef = new IntDeferredRef(te::getTimer, te.getLevel().isClientSide);
 		addDataSlot(progRef);

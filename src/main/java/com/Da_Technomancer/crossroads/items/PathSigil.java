@@ -1,11 +1,10 @@
 package com.Da_Technomancer.crossroads.items;
 
-import com.Da_Technomancer.crossroads.API.AdvancementTracker;
-import com.Da_Technomancer.crossroads.API.EnumPath;
-import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.api.AdvancementTracker;
+import com.Da_Technomancer.crossroads.api.EnumPath;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -25,8 +24,7 @@ public class PathSigil extends Item{
 		super(new Properties().tab(CRItems.TAB_CROSSROADS));
 		this.path = path;
 		String name = "sigil_" + path.toString();
-		setRegistryName(name);
-		CRItems.toRegister.add(this);
+		CRItems.toRegister.put(name, this);
 	}
 
 	public EnumPath getPath(){
@@ -35,9 +33,9 @@ public class PathSigil extends Item{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
-		tooltip.add(new TranslatableComponent("tt.crossroads.path_sigil.desc"));
+		tooltip.add(Component.translatable("tt.crossroads.path_sigil.desc"));
 		if(CRConfig.forgetPaths.get()){
-			tooltip.add(new TranslatableComponent("tt.crossroads.path_sigil.desc.forget"));
+			tooltip.add(Component.translatable("tt.crossroads.path_sigil.desc.forget"));
 		}
 	}
 
@@ -56,27 +54,27 @@ public class PathSigil extends Item{
 			if(CRConfig.forgetPaths.get()){
 				if(path.isUnlocked(playerIn)){
 					if(!worldIn.isClientSide()){
-						MiscUtil.chatMessage(playerIn, new TranslatableComponent("tt.crossroads.path_sigil.forget", path.getLocalName()));
+						MiscUtil.displayMessage(playerIn, Component.translatable("tt.crossroads.path_sigil.forget", path.getLocalName()));
 					}
 					path.setUnlocked(playerIn, false);
 					held.shrink(1);
 					return InteractionResultHolder.success(held);
 				}else{
 					if(!worldIn.isClientSide()){
-						MiscUtil.chatMessage(playerIn, new TranslatableComponent("tt.crossroads.path_sigil.forget.fail"));
+						MiscUtil.displayMessage(playerIn, Component.translatable("tt.crossroads.path_sigil.forget.fail"));
 					}
 					return InteractionResultHolder.fail(held);
 				}
 			}else{
 				if(!worldIn.isClientSide()){
-					MiscUtil.chatMessage(playerIn, new TranslatableComponent("tt.crossroads.path_sigil.forget.fail.config"));
+					MiscUtil.displayMessage(playerIn, Component.translatable("tt.crossroads.path_sigil.forget.fail.config"));
 				}
 				return InteractionResultHolder.fail(held);
 			}
 		}else if(EnumPath.canUnlockNewPath(playerIn)){
 			if(path.isUnlocked(playerIn)){
 				if(!worldIn.isClientSide()){
-					MiscUtil.chatMessage(playerIn, new TranslatableComponent("tt.crossroads.path_sigil.taken"));
+					MiscUtil.displayMessage(playerIn, Component.translatable("tt.crossroads.path_sigil.taken"));
 				}
 				return InteractionResultHolder.fail(held);
 			}else{
@@ -86,7 +84,7 @@ public class PathSigil extends Item{
 			}
 		}else{
 			if(!worldIn.isClientSide()){
-				MiscUtil.chatMessage(playerIn, new TranslatableComponent("tt.crossroads.path_sigil.fail"));
+				MiscUtil.displayMessage(playerIn, Component.translatable("tt.crossroads.path_sigil.fail"));
 			}
 			return InteractionResultHolder.fail(held);
 		}

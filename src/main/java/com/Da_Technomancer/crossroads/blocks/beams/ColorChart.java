@@ -1,11 +1,10 @@
 package com.Da_Technomancer.crossroads.blocks.beams;
 
+import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.gui.container.ColorChartContainer;
-import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -43,18 +42,17 @@ public class ColorChart extends Block{
 	public ColorChart(){
 		super(Properties.of(Material.WOOD).strength(3));
 		String name = "color_chart";
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this);
+		CRBlocks.toRegister.put(name, this);
+		CRBlocks.blockAddQue(name, this);
 	}
 
 	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		if(!worldIn.isClientSide){
-			NetworkHooks.openGui((ServerPlayer) playerIn, new MenuProvider(){
+			NetworkHooks.openScreen((ServerPlayer) playerIn, new MenuProvider(){
 				@Override
 				public Component getDisplayName(){
-					return new TranslatableComponent("container.color_chart");
+					return Component.translatable("container.color_chart");
 				}
 
 				@Override
@@ -69,16 +67,16 @@ public class ColorChart extends Block{
 	@Nullable
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context){
-		return defaultBlockState().setValue(ESProperties.FACING, context.getNearestLookingDirection().getOpposite());
+		return defaultBlockState().setValue(CRProperties.FACING, context.getNearestLookingDirection().getOpposite());
 	}
 
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context){
-		return SHAPES[state.getValue(ESProperties.FACING).get3DDataValue()];
+		return SHAPES[state.getValue(CRProperties.FACING).get3DDataValue()];
 	}
 
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder){
-		builder.add(ESProperties.FACING);
+		builder.add(CRProperties.FACING);
 	}
 }

@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.items.alchemy;
 
-import com.Da_Technomancer.crossroads.API.MiscUtil;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.entity.EntityNitro;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.core.BlockSource;
@@ -8,7 +8,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -48,8 +47,7 @@ public class Nitroglycerin extends Item{
 	public Nitroglycerin(){
 		super(new Properties().tab(CRItems.TAB_CROSSROADS));
 		String name = "nitroglycerin";
-		setRegistryName(name);
-		CRItems.toRegister.add(this);
+		CRItems.toRegister.put(name, this);
 		DispenserBlock.registerBehavior(this, NITRO_DISPENSER_BEHAVIOR);
 	}
 
@@ -72,7 +70,7 @@ public class Nitroglycerin extends Item{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
-		tooltip.add(new TranslatableComponent("tt.crossroads.nitroglycerin.quip").setStyle(MiscUtil.TT_QUIP));
+		tooltip.add(Component.translatable("tt.crossroads.nitroglycerin.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 
 	@Override

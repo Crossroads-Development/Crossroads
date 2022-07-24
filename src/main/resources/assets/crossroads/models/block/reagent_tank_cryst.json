@@ -1,4 +1,5 @@
 {
+	"render_type": "cutout",
 	"textures":
 	{
 		"side": "crossroads:block/reagent_tank_cryst",

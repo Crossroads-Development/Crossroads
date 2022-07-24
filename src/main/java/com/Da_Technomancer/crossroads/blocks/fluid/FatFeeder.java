@@ -1,11 +1,9 @@
 package com.Da_Technomancer.crossroads.blocks.fluid;
 
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.tileentities.fluid.FatFeederTileEntity;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -32,9 +30,8 @@ public class FatFeeder extends BaseEntityBlock{
 	public FatFeeder(){
 		super(CRBlocks.getMetalProperty());
 		String name = "fat_feeder";
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this);
+		CRBlocks.toRegister.put(name, this);
+		CRBlocks.blockAddQue(name, this);
 	}
 
 	@Override
@@ -52,16 +49,16 @@ public class FatFeeder extends BaseEntityBlock{
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		BlockEntity te;
 		if(!worldIn.isClientSide && (te = worldIn.getBlockEntity(pos)) instanceof MenuProvider){
-			NetworkHooks.openGui((ServerPlayer) playerIn, (MenuProvider) te, pos);
+			NetworkHooks.openScreen((ServerPlayer) playerIn, (MenuProvider) te, pos);
 		}
 		return InteractionResult.SUCCESS;
 	}
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn){
-		tooltip.add(new TranslatableComponent("tt.crossroads.fat_feeder.desc"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.fat_feeder.goal"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.fat_feeder.range", FatFeederTileEntity.MIN_RANGE, FatFeederTileEntity.MAX_RANGE));
+		tooltip.add(Component.translatable("tt.crossroads.fat_feeder.desc"));
+		tooltip.add(Component.translatable("tt.crossroads.fat_feeder.goal"));
+		tooltip.add(Component.translatable("tt.crossroads.fat_feeder.range", FatFeederTileEntity.MIN_RANGE, FatFeederTileEntity.MAX_RANGE));
 	}
 
 	@Override

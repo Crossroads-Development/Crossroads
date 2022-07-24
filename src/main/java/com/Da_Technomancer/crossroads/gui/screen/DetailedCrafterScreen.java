@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.gui.screen;
 
-import com.Da_Technomancer.crossroads.API.AdvancementTracker;
-import com.Da_Technomancer.crossroads.API.EnumPath;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.api.AdvancementTracker;
+import com.Da_Technomancer.crossroads.api.EnumPath;
 import com.Da_Technomancer.crossroads.gui.container.DetailedCrafterContainer;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;

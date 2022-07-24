@@ -1,14 +1,12 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
-import com.Da_Technomancer.crossroads.API.CRProperties;
-import com.Da_Technomancer.crossroads.API.MiscUtil;
+import com.Da_Technomancer.crossroads.api.CRProperties;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.tileentities.alchemy.ReagentFilterTileEntity;
-import com.Da_Technomancer.essentials.ESConfig;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.ConfigUtil;
+import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
@@ -45,9 +43,8 @@ public class ReagentFilter extends BaseEntityBlock{
 		super(CRBlocks.getGlassProperty());
 		this.crystal = crystal;
 		String name = (crystal ? "crystal_" : "") + "reagent_filter";
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this);
+		CRBlocks.toRegister.put(name, this);
+		CRBlocks.blockAddQue(name, this);
 	}
 
 	@Override
@@ -79,9 +76,9 @@ public class ReagentFilter extends BaseEntityBlock{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn){
-		tooltip.add(new TranslatableComponent("tt.crossroads.reagent_filter.desc"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.reagent_filter.filter"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.reagent_filter.quip").setStyle(MiscUtil.TT_QUIP));
+		tooltip.add(Component.translatable("tt.crossroads.reagent_filter.desc"));
+		tooltip.add(Component.translatable("tt.crossroads.reagent_filter.filter"));
+		tooltip.add(Component.translatable("tt.crossroads.reagent_filter.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 
 //	@Override
@@ -93,11 +90,11 @@ public class ReagentFilter extends BaseEntityBlock{
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		if(!worldIn.isClientSide){
 			BlockEntity te = worldIn.getBlockEntity(pos);
-			if(ESConfig.isWrench(playerIn.getItemInHand(hand))){
+			if(ConfigUtil.isWrench(playerIn.getItemInHand(hand))){
 				worldIn.setBlockAndUpdate(pos, state.cycle(CRProperties.HORIZ_FACING));
 			}else{
 				if(te instanceof MenuProvider){
-					NetworkHooks.openGui((ServerPlayer) playerIn, (MenuProvider) te, pos);
+					NetworkHooks.openScreen((ServerPlayer) playerIn, (MenuProvider) te, pos);
 				}
 			}
 		}

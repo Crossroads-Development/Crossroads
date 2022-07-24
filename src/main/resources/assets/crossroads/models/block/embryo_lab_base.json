@@ -1,4 +1,5 @@
 {
+	"render_type": "translucent",
 	"ambientocclusion": false,
 	"textures": {
 		"copper": "crossroads:block/block_copper",

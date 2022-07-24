@@ -1,6 +1,5 @@
 package com.Da_Technomancer.crossroads.entity;
 
-import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.essentials.blocks.ESBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.Packet;
@@ -37,18 +36,15 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.network.NetworkHooks;
-import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.List;
 
-@ObjectHolder(Crossroads.MODID)
 public class EntityHopperHawk extends ShoulderRidingEntity implements FlyingAnimal{
 
 	private static final Ingredient FOOD_INGREDIENT = Ingredient.of(Items.HOPPER, ESBlocks.sortingHopper, ESBlocks.speedHopper);
 
-	@ObjectHolder("hopper_hawk")
 	public static EntityType<EntityHopperHawk> type;
 
 	protected float flap;

@@ -1,10 +1,9 @@
 package com.Da_Technomancer.crossroads.blocks.beams;
 
+import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.essentials.blocks.ESProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -33,12 +32,11 @@ public class LightCluster extends Block{
 	private static final VoxelShape SHAPE = box(6.4, 6.4, 6.4, 9.6, 9.6, 9.6);
 
 	public LightCluster(){
-		super(Properties.of(Material.DECORATION).strength(0).sound(SoundType.GLASS).noCollission().noDrops().lightLevel(state -> 15));
+		super(Properties.of(Material.DECORATION).strength(0).sound(SoundType.GLASS).noCollission().noLootTable().lightLevel(state -> 15));
 		String name = "light_cluster";
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this);
-		registerDefaultState(defaultBlockState().setValue(ESProperties.COLOR, DyeColor.WHITE));
+		CRBlocks.toRegister.put(name, this);
+		CRBlocks.blockAddQue(name, this);
+		registerDefaultState(defaultBlockState().setValue(CRProperties.COLOR, DyeColor.WHITE));
 	}
 
 	@Override
@@ -58,8 +56,8 @@ public class LightCluster extends Block{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn){
-		tooltip.add(new TranslatableComponent("tt.crossroads.boilerplate.beam_permeable"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.light_cluster.decor"));
+		tooltip.add(Component.translatable("tt.crossroads.boilerplate.beam_permeable"));
+		tooltip.add(Component.translatable("tt.crossroads.light_cluster.decor"));
 	}
 
 	@Override
@@ -69,7 +67,7 @@ public class LightCluster extends Block{
 
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder){
-		builder.add(ESProperties.COLOR);
+		builder.add(CRProperties.COLOR);
 	}
 
 	@Override
@@ -77,7 +75,7 @@ public class LightCluster extends Block{
 		ItemStack heldItem = playerIn.getItemInHand(hand);
 		DyeColor col = DyeColor.getColor(heldItem);
 		if(col != null){
-			worldIn.setBlock(pos, state.setValue(ESProperties.COLOR, col),  2);
+			worldIn.setBlock(pos, state.setValue(CRProperties.COLOR, col),  2);
 			return InteractionResult.SUCCESS;
 		}
 		return InteractionResult.PASS;

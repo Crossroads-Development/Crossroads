@@ -1,18 +1,18 @@
 package com.Da_Technomancer.crossroads.blocks.witchcraft;
 
-import com.Da_Technomancer.crossroads.API.CRProperties;
-import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.ambient.particles.CRParticles;
 import com.Da_Technomancer.crossroads.ambient.particles.ColorParticleData;
 import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
+import com.Da_Technomancer.crossroads.api.CRProperties;
+import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -35,7 +35,6 @@ import net.minecraftforge.common.util.LazyOptional;
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.List;
-import java.util.Random;
 
 public class Wheezewort extends DoublePlantBlock implements BonemealableBlock{
 
@@ -48,9 +47,8 @@ public class Wheezewort extends DoublePlantBlock implements BonemealableBlock{
 	public Wheezewort(){
 		super(BlockBehaviour.Properties.of(Material.PLANT).randomTicks().instabreak().sound(SoundType.GRASS));
 		String name = "wheezewort";
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
-//		CRBlocks.blockAddQue(this); No item form. Seeds are a separate item
+		CRBlocks.toRegister.put(name, this);
+//		CRBlocks.blockAddQue(name, this); No item form. Seeds are a separate item
 
 		registerDefaultState(defaultBlockState().setValue(CRProperties.AGE_3, 1));
 	}
@@ -67,12 +65,12 @@ public class Wheezewort extends DoublePlantBlock implements BonemealableBlock{
 	}
 
 	@Override
-	public boolean isBonemealSuccess(Level world, Random p_180670_2_, BlockPos pos, BlockState state){
+	public boolean isBonemealSuccess(Level world, RandomSource random, BlockPos pos, BlockState state){
 		return true;
 	}
 
 	@Override
-	public void performBonemeal(ServerLevel world, Random random, BlockPos pos, BlockState state){
+	public void performBonemeal(ServerLevel world, RandomSource random, BlockPos pos, BlockState state){
 		grow(world, pos, state);
 	}
 
@@ -118,11 +116,6 @@ public class Wheezewort extends DoublePlantBlock implements BonemealableBlock{
 	}
 
 	@Override
-	public OffsetType getOffsetType(){
-		return OffsetType.NONE;//Removes the offset added by the super class
-	}
-
-	@Override
 	public boolean isRandomlyTicking(BlockState state){
 		return state.getValue(CRProperties.AGE_3) != 3;
 	}
@@ -140,7 +133,7 @@ public class Wheezewort extends DoublePlantBlock implements BonemealableBlock{
 	}
 
 	@Override
-	public void randomTick(BlockState state, ServerLevel world, BlockPos pos, Random rand){
+	public void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource rand){
 		boolean bottom = state.getValue(HALF) == DoubleBlockHalf.LOWER;
 		int age = state.getValue(CRProperties.AGE_3);
 
@@ -158,9 +151,9 @@ public class Wheezewort extends DoublePlantBlock implements BonemealableBlock{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltips, TooltipFlag context){
-		tooltips.add(new TranslatableComponent("tt.crossroads.wheezewort.purpose", COOLING));
-		tooltips.add(new TranslatableComponent("tt.crossroads.wheezewort.age"));
-		tooltips.add(new TranslatableComponent("tt.crossroads.wheezewort.dispense"));
-		tooltips.add(new TranslatableComponent("tt.crossroads.wheezewort.quip").setStyle(MiscUtil.TT_QUIP));
+		tooltips.add(Component.translatable("tt.crossroads.wheezewort.purpose", COOLING));
+		tooltips.add(Component.translatable("tt.crossroads.wheezewort.age"));
+		tooltips.add(Component.translatable("tt.crossroads.wheezewort.dispense"));
+		tooltips.add(Component.translatable("tt.crossroads.wheezewort.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 }

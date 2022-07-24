@@ -1,29 +1,34 @@
 package com.Da_Technomancer.crossroads.ambient.particles;
 
-import com.Da_Technomancer.crossroads.API.packets.CRPackets;
-import com.Da_Technomancer.crossroads.API.packets.CreateParticlesOnClient;
-import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.api.packets.CRPackets;
+import com.Da_Technomancer.crossroads.api.packets.CreateParticlesOnClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleType;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.registries.ObjectHolder;
 
-@ObjectHolder(Crossroads.MODID)
+import java.util.HashMap;
+
 public class CRParticles{
 
-	@ObjectHolder("color_flame")
-	public static ColorParticleType COLOR_FLAME = null;
-	@ObjectHolder("color_gas")
-	public static ColorParticleType COLOR_GAS = null;
-	@ObjectHolder("color_liquid")
-	public static ColorParticleType COLOR_LIQUID = null;
-	@ObjectHolder("color_solid")
-	public static ColorParticleType COLOR_SOLID = null;
-	@ObjectHolder("color_splash")
-	public static ColorParticleType COLOR_SPLASH = null;
+	public static final ColorParticleType COLOR_FLAME = new ColorParticleType(false);
+	public static final ColorParticleType COLOR_GAS = new ColorParticleType(false);
+	public static final ColorParticleType COLOR_LIQUID = new ColorParticleType(false);
+	public static final ColorParticleType COLOR_SOLID = new ColorParticleType(false);
+	public static final ColorParticleType COLOR_SPLASH = new ColorParticleType(false);
+
+	public static void init(){
+		toRegister.put("color_flame", COLOR_FLAME);
+		toRegister.put("color_gas", COLOR_GAS);
+		toRegister.put("color_liquid", COLOR_LIQUID);
+		toRegister.put("color_solid", COLOR_SOLID);
+		toRegister.put("color_splash", COLOR_SPLASH);
+	}
+
+	public static final HashMap<String, ParticleType<?>> toRegister = new HashMap<>(5);
 
 	public static void clientInit(){
 		ParticleEngine manager = Minecraft.getInstance().particleEngine;

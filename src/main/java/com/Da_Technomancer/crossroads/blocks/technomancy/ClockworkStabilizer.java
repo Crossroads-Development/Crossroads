@@ -1,13 +1,11 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
-import com.Da_Technomancer.crossroads.API.templates.BeamBlock;
-import com.Da_Technomancer.crossroads.tileentities.technomancy.ClockworkStabilizerTileEntity;
-import com.Da_Technomancer.essentials.blocks.ESProperties;
-import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import com.Da_Technomancer.crossroads.api.CRProperties;
+import com.Da_Technomancer.crossroads.api.templates.BeamBlock;
+import com.Da_Technomancer.essentials.api.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.redstone.IReadable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
@@ -42,7 +40,7 @@ public class ClockworkStabilizer extends BeamBlock implements IReadable{
 
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context){
-		return SHAPE[state.getValue(ESProperties.FACING).get3DDataValue()];
+		return SHAPE[state.getValue(CRProperties.FACING).get3DDataValue()];
 	}
 
 	@Override
@@ -64,7 +62,7 @@ public class ClockworkStabilizer extends BeamBlock implements IReadable{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag flag){
-		tooltip.add(new TranslatableComponent("tt.crossroads.clock_stab.desc", ClockworkStabilizerTileEntity.RATE * 100));
-		tooltip.add(new TranslatableComponent("tt.crossroads.clock_stab.circuit"));
+		tooltip.add(Component.translatable("tt.crossroads.clock_stab.desc", ClockworkStabilizerTileEntity.RATE * 100));
+		tooltip.add(Component.translatable("tt.crossroads.clock_stab.circuit"));
 	}
 }

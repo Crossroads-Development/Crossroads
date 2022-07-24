@@ -1,16 +1,16 @@
 package com.Da_Technomancer.crossroads.gui.screen;
 
-import com.Da_Technomancer.crossroads.API.templates.MachineGUI;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.api.templates.MachineScreen;
+import com.Da_Technomancer.crossroads.blocks.heat.IceboxTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.IceboxContainer;
-import com.Da_Technomancer.crossroads.tileentities.heat.IceboxTileEntity;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class IceboxScreen extends MachineGUI<IceboxContainer, IceboxTileEntity>{
+public class IceboxScreen extends MachineScreen<IceboxContainer, IceboxTileEntity>{
 
 	private static final ResourceLocation GUI_TEXTURES = new ResourceLocation(Crossroads.MODID + ":textures/gui/container/icebox_gui.png");
 

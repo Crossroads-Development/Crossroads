@@ -1,13 +1,11 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
-import com.Da_Technomancer.crossroads.API.MiscUtil;
+import com.Da_Technomancer.crossroads.api.CRProperties;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.tileentities.technomancy.BeamCannonTileEntity;
-import com.Da_Technomancer.essentials.blocks.ESProperties;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
@@ -41,7 +39,7 @@ public class BeamCannon extends AbstractCannon{
 
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context){
-		return SHAPES[state.getValue(ESProperties.FACING).get3DDataValue()];
+		return SHAPES[state.getValue(CRProperties.FACING).get3DDataValue()];
 	}
 
 	@Override
@@ -57,10 +55,10 @@ public class BeamCannon extends AbstractCannon{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn){
-		tooltip.add(new TranslatableComponent("tt.crossroads.beam_cannon.desc"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.beam_cannon.angle"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.beam_cannon.lockable"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.boilerplate.inertia", BeamCannonTileEntity.INERTIA));
-		tooltip.add(new TranslatableComponent("tt.crossroads.beam_cannon.quip").setStyle(MiscUtil.TT_QUIP));
+		tooltip.add(Component.translatable("tt.crossroads.beam_cannon.desc"));
+		tooltip.add(Component.translatable("tt.crossroads.beam_cannon.angle"));
+		tooltip.add(Component.translatable("tt.crossroads.beam_cannon.lockable"));
+		tooltip.add(Component.translatable("tt.crossroads.boilerplate.inertia", BeamCannonTileEntity.INERTIA));
+		tooltip.add(Component.translatable("tt.crossroads.beam_cannon.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 }

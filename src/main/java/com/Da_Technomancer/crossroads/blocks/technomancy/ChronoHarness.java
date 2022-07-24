@@ -1,14 +1,12 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
-import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.api.CRProperties;
+import com.Da_Technomancer.crossroads.api.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.tileentities.technomancy.ChronoHarnessTileEntity;
-import com.Da_Technomancer.essentials.blocks.ESProperties;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -40,10 +38,9 @@ public class ChronoHarness extends BaseEntityBlock{
 	public ChronoHarness(){
 		super(CRBlocks.getMetalProperty());
 		String name = "chrono_harness";
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this);
-		registerDefaultState(defaultBlockState().setValue(ESProperties.REDSTONE_BOOL, false));
+		CRBlocks.toRegister.put(name, this);
+		CRBlocks.blockAddQue(name, this);
+		registerDefaultState(defaultBlockState().setValue(CRProperties.REDSTONE_BOOL, false));
 	}
 
 	@Override
@@ -59,7 +56,7 @@ public class ChronoHarness extends BaseEntityBlock{
 
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder){
-		builder.add(ESProperties.REDSTONE_BOOL);
+		builder.add(CRProperties.REDSTONE_BOOL);
 	}
 
 	@Override
@@ -75,11 +72,11 @@ public class ChronoHarness extends BaseEntityBlock{
 	@Override
 	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving){
 		if(worldIn.hasNeighborSignal(pos)){
-			if(!state.getValue(ESProperties.REDSTONE_BOOL)){
-				worldIn.setBlock(pos, state.setValue(ESProperties.REDSTONE_BOOL, true), 2);
+			if(!state.getValue(CRProperties.REDSTONE_BOOL)){
+				worldIn.setBlock(pos, state.setValue(CRProperties.REDSTONE_BOOL, true), 2);
 			}
-		}else if(state.getValue(ESProperties.REDSTONE_BOOL)){
-			worldIn.setBlock(pos, state.setValue(ESProperties.REDSTONE_BOOL, false), 2);
+		}else if(state.getValue(CRProperties.REDSTONE_BOOL)){
+			worldIn.setBlock(pos, state.setValue(CRProperties.REDSTONE_BOOL, false), 2);
 		}
 	}
 
@@ -95,8 +92,8 @@ public class ChronoHarness extends BaseEntityBlock{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
-		tooltip.add(new TranslatableComponent("tt.crossroads.chrono_harness.desc"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.chrono_harness.power", 64 / FluxUtil.FLUX_TIME * CRConfig.fePerEntropy.get(), CRConfig.fePerEntropy.get()));
-		tooltip.add(new TranslatableComponent("tt.crossroads.chrono_harness.reds"));
+		tooltip.add(Component.translatable("tt.crossroads.chrono_harness.desc"));
+		tooltip.add(Component.translatable("tt.crossroads.chrono_harness.power", 64 / FluxUtil.FLUX_TIME * CRConfig.fePerEntropy.get(), CRConfig.fePerEntropy.get()));
+		tooltip.add(Component.translatable("tt.crossroads.chrono_harness.reds"));
 	}
 }

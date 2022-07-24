@@ -1,4 +1,5 @@
 {
+	"render_type": "cutout",
 	"parent": "crossroads:block/glassware_stand_bottle_florence",
 	"textures": {
 		"glass": "crossroads:block/crystal_thin",

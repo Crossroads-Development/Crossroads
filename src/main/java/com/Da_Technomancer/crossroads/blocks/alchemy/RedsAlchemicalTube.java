@@ -1,10 +1,9 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
-import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
-import com.Da_Technomancer.crossroads.tileentities.alchemy.RedsAlchemicalTubeTileEntity;
-import com.Da_Technomancer.essentials.ESConfig;
-import com.Da_Technomancer.essentials.blocks.ESProperties;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import com.Da_Technomancer.crossroads.api.CRProperties;
+import com.Da_Technomancer.crossroads.api.alchemy.EnumTransferMode;
+import com.Da_Technomancer.essentials.api.ConfigUtil;
+import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -25,7 +24,7 @@ public class RedsAlchemicalTube extends AlchemicalTube{
 
 	public RedsAlchemicalTube(boolean crystal){
 		super(crystal, (crystal ? "crystal_" : "") + "reds_alch_tube");
-		registerDefaultState(defaultBlockState().setValue(ESProperties.REDSTONE_BOOL, false));
+		registerDefaultState(defaultBlockState().setValue(CRProperties.REDSTONE_BOOL, false));
 	}
 
 	@Override
@@ -41,7 +40,7 @@ public class RedsAlchemicalTube extends AlchemicalTube{
 
 	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
-		if(state.getValue(ESProperties.REDSTONE_BOOL) && ESConfig.isWrench(playerIn.getItemInHand(hand))){
+		if(state.getValue(CRProperties.REDSTONE_BOOL) && ConfigUtil.isWrench(playerIn.getItemInHand(hand))){
 			return super.use(state, worldIn, pos, playerIn, hand, hit);
 		}
 		return InteractionResult.PASS;
@@ -50,24 +49,24 @@ public class RedsAlchemicalTube extends AlchemicalTube{
 	@Override
 	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving){
 		boolean isPowered = worldIn.hasNeighborSignal(pos);
-		if(isPowered != state.getValue(ESProperties.REDSTONE_BOOL)){
-			worldIn.setBlockAndUpdate(pos, state.setValue(ESProperties.REDSTONE_BOOL, isPowered));
+		if(isPowered != state.getValue(CRProperties.REDSTONE_BOOL)){
+			worldIn.setBlockAndUpdate(pos, state.setValue(CRProperties.REDSTONE_BOOL, isPowered));
 		}
 	}
 
 	@Override
 	protected boolean evaluate(EnumTransferMode value, BlockState state, @Nullable IConduitTE<EnumTransferMode> te){
-		return super.evaluate(value, state, te) && state.getValue(ESProperties.REDSTONE_BOOL);
+		return super.evaluate(value, state, te) && state.getValue(CRProperties.REDSTONE_BOOL);
 	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context){
-		return super.getStateForPlacement(context).setValue(ESProperties.REDSTONE_BOOL, context.getLevel().hasNeighborSignal(context.getClickedPos()));
+		return super.getStateForPlacement(context).setValue(CRProperties.REDSTONE_BOOL, context.getLevel().hasNeighborSignal(context.getClickedPos()));
 	}
 
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder){
 		super.createBlockStateDefinition(builder);
-		builder.add(ESProperties.REDSTONE_BOOL);
+		builder.add(CRProperties.REDSTONE_BOOL);
 	}
 }

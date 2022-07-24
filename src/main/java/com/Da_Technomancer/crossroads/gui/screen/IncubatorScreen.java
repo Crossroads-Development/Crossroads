@@ -1,10 +1,10 @@
 package com.Da_Technomancer.crossroads.gui.screen;
 
-import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.templates.MachineGUI;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.api.templates.MachineScreen;
+import com.Da_Technomancer.crossroads.blocks.witchcraft.IncubatorTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.IncubatorContainer;
-import com.Da_Technomancer.crossroads.tileentities.witchcraft.IncubatorTileEntity;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.network.chat.Component;
@@ -13,7 +13,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 import java.awt.*;
 
-public class IncubatorScreen extends MachineGUI<IncubatorContainer, IncubatorTileEntity>{
+public class IncubatorScreen extends MachineScreen<IncubatorContainer, IncubatorTileEntity>{
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/gui/container/incubator_gui.png");
 

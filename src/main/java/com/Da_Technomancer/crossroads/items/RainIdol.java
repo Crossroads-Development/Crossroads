@@ -1,8 +1,7 @@
 package com.Da_Technomancer.crossroads.items;
 
-import com.Da_Technomancer.crossroads.API.MiscUtil;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -26,8 +25,7 @@ public class RainIdol extends Item{
 	protected RainIdol(){
 		super(new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
 		String name = "rain_idol";
-		setRegistryName(name);
-		CRItems.toRegister.add(this);
+		CRItems.toRegister.put(name, this);
 	}
 
 	@Override
@@ -37,7 +35,7 @@ public class RainIdol extends Item{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
-		tooltip.add(new TranslatableComponent("tt.crossroads.rain_idol.quip").setStyle(MiscUtil.TT_QUIP));
+		tooltip.add(Component.translatable("tt.crossroads.rain_idol.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 
 	@Override

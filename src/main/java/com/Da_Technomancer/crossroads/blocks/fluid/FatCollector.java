@@ -1,11 +1,9 @@
 package com.Da_Technomancer.crossroads.blocks.fluid;
 
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.tileentities.fluid.FatCollectorTileEntity;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.*;
 import net.minecraft.world.entity.player.Player;
@@ -30,9 +28,8 @@ public class FatCollector extends BaseEntityBlock{
 	public FatCollector(){
 		super(CRBlocks.getMetalProperty());
 		String name = "fat_collector";
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this);
+		CRBlocks.toRegister.put(name, this);
+		CRBlocks.blockAddQue(name, this);
 	}
 
 	@Override
@@ -55,7 +52,7 @@ public class FatCollector extends BaseEntityBlock{
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		BlockEntity te;
 		if(!worldIn.isClientSide && (te = worldIn.getBlockEntity(pos)) instanceof MenuProvider){
-			NetworkHooks.openGui((ServerPlayer) playerIn, (MenuProvider) te, pos);
+			NetworkHooks.openScreen((ServerPlayer) playerIn, (MenuProvider) te, pos);
 		}
 		return InteractionResult.SUCCESS;
 	}
@@ -69,7 +66,7 @@ public class FatCollector extends BaseEntityBlock{
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
 		for(int i = 0; i < FatCollectorTileEntity.TIERS.length; i++){
-			tooltip.add(new TranslatableComponent("tt.crossroads.fat_collector.tier", (int) (100 * FatCollectorTileEntity.EFFICIENCY[i]), FatCollectorTileEntity.TIERS[i]));
+			tooltip.add(Component.translatable("tt.crossroads.fat_collector.tier", (int) (100 * FatCollectorTileEntity.EFFICIENCY[i]), FatCollectorTileEntity.TIERS[i]));
 		}
 	}
 }

@@ -4,9 +4,8 @@ import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.entity.mob_effects.CRPotions;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.alchemy.PoisonVodka;
-import com.Da_Technomancer.essentials.blocks.BlockUtil;
+import com.Da_Technomancer.essentials.api.BlockUtil;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -104,8 +103,7 @@ public class Syringe extends Item{
 	public Syringe(){
 		super(new Item.Properties().stacksTo(1).tab(CRItems.TAB_CROSSROADS));
 		String name = "syringe";
-		setRegistryName(name);
-		CRItems.toRegister.add(this);
+		CRItems.toRegister.put(name, this);
 		populateSyringeMap();
 	}
 
@@ -186,10 +184,10 @@ public class Syringe extends Item{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag){
-		tooltip.add(new TranslatableComponent("tt.crossroads.syringe.desc", CRConfig.injectionEfficiency.get()));
-		tooltip.add(new TranslatableComponent("tt.crossroads.syringe.use"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.syringe.offhand"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.syringe.perm"));
+		tooltip.add(Component.translatable("tt.crossroads.syringe.desc", CRConfig.injectionEfficiency.get()));
+		tooltip.add(Component.translatable("tt.crossroads.syringe.use"));
+		tooltip.add(Component.translatable("tt.crossroads.syringe.offhand"));
+		tooltip.add(Component.translatable("tt.crossroads.syringe.perm"));
 	}
 
 	public static interface SyringeExtension{

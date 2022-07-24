@@ -1,16 +1,16 @@
 package com.Da_Technomancer.crossroads.gui.screen;
 
-import com.Da_Technomancer.crossroads.API.templates.MachineGUI;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.api.templates.MachineScreen;
+import com.Da_Technomancer.crossroads.blocks.witchcraft.HydroponicsTroughTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.HydroponicsTroughContainer;
-import com.Da_Technomancer.crossroads.tileentities.witchcraft.HydroponicsTroughTileEntity;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class HydroponicsTroughScreen extends MachineGUI<HydroponicsTroughContainer, HydroponicsTroughTileEntity>{
+public class HydroponicsTroughScreen extends MachineScreen<HydroponicsTroughContainer, HydroponicsTroughTileEntity>{
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/gui/container/hydroponics_trough_gui.png");
 

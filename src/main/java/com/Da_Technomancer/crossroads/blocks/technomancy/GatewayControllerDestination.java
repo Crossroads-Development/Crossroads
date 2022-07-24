@@ -1,14 +1,12 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
-import com.Da_Technomancer.crossroads.API.CRProperties;
-import com.Da_Technomancer.crossroads.API.technomancy.IGateway;
+import com.Da_Technomancer.crossroads.api.CRProperties;
+import com.Da_Technomancer.crossroads.api.technomancy.IGateway;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.tileentities.technomancy.GatewayControllerDestinationTileEntity;
-import com.Da_Technomancer.essentials.ESConfig;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.ConfigUtil;
+import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -35,9 +33,8 @@ public class GatewayControllerDestination extends BaseEntityBlock{
 	public GatewayControllerDestination(){
 		super(CRBlocks.getMetalProperty());
 		String name = "gateway_controller_destination";
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this);
+		CRBlocks.toRegister.put(name, this);
+		CRBlocks.blockAddQue(name, this);
 		registerDefaultState(defaultBlockState().setValue(CRProperties.ACTIVE, false));
 	}
 
@@ -75,7 +72,7 @@ public class GatewayControllerDestination extends BaseEntityBlock{
 	@Override
 	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult ray){
 		ItemStack held = player.getItemInHand(hand);
-		if(!state.getValue(CRProperties.ACTIVE) && ESConfig.isWrench(held)){
+		if(!state.getValue(CRProperties.ACTIVE) && ConfigUtil.isWrench(held)){
 			//Attempt to form the multiblock
 			BlockEntity te = world.getBlockEntity(pos);
 			if(te instanceof GatewayControllerDestinationTileEntity){
@@ -97,9 +94,9 @@ public class GatewayControllerDestination extends BaseEntityBlock{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag flag){
-		tooltip.add(new TranslatableComponent("tt.crossroads.gateway.desc"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.gateway.destination"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.gateway.destination.redial"));
+		tooltip.add(Component.translatable("tt.crossroads.gateway.desc"));
+		tooltip.add(Component.translatable("tt.crossroads.gateway.destination"));
+		tooltip.add(Component.translatable("tt.crossroads.gateway.destination.redial"));
 	}
 
 	@Override

@@ -1,15 +1,13 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
-import com.Da_Technomancer.crossroads.API.CRProperties;
+import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamCage;
-import com.Da_Technomancer.crossroads.tileentities.technomancy.CageChargerTileEntity;
-import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
-import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
+import com.Da_Technomancer.essentials.api.redstone.IReadable;
+import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -39,9 +37,8 @@ public class CageCharger extends BaseEntityBlock implements IReadable{
 	public CageCharger(){
 		super(CRBlocks.getMetalProperty());
 		String name = "cage_charger";
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this);
+		CRBlocks.toRegister.put(name, this);
+		CRBlocks.blockAddQue(name, this);
 		registerDefaultState(defaultBlockState().setValue(CRProperties.ACTIVE, false));
 	}
 
@@ -74,8 +71,8 @@ public class CageCharger extends BaseEntityBlock implements IReadable{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn){
-		tooltip.add(new TranslatableComponent("tt.crossroads.cage_charger.desc"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.cage_charger.redstone"));
+		tooltip.add(Component.translatable("tt.crossroads.cage_charger.desc"));
+		tooltip.add(Component.translatable("tt.crossroads.cage_charger.redstone"));
 	}
 
 	@Override

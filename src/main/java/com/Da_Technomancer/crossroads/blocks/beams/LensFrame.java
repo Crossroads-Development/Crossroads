@@ -1,13 +1,12 @@
 package com.Da_Technomancer.crossroads.blocks.beams;
 
+import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.Da_Technomancer.crossroads.tileentities.beams.LensFrameTileEntity;
-import com.Da_Technomancer.essentials.ESConfig;
-import com.Da_Technomancer.essentials.blocks.ESProperties;
-import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
-import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
+import com.Da_Technomancer.essentials.api.ConfigUtil;
+import com.Da_Technomancer.essentials.api.redstone.IReadable;
+import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
@@ -44,14 +43,13 @@ public class LensFrame extends BaseEntityBlock implements IReadable{
 	public LensFrame(){
 		super(CRBlocks.getRockProperty());
 		String name = "lens_frame";
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this);
+		CRBlocks.toRegister.put(name, this);
+		CRBlocks.blockAddQue(name, this);
 	}
 
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context){
-		return SHAPE[state.getValue(ESProperties.AXIS).ordinal()];
+		return SHAPE[state.getValue(CRProperties.AXIS).ordinal()];
 	}
 
 	@Override
@@ -80,21 +78,21 @@ public class LensFrame extends BaseEntityBlock implements IReadable{
 	@Nullable
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context){
-		return defaultBlockState().setValue(ESProperties.AXIS, context.getNearestLookingDirection().getAxis());
+		return defaultBlockState().setValue(CRProperties.AXIS, context.getNearestLookingDirection().getAxis());
 	}
 
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder){
-		builder.add(ESProperties.AXIS);
+		builder.add(CRProperties.AXIS);
 	}
 
 	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		ItemStack stack = playerIn.getItemInHand(hand);
 
-		if(ESConfig.isWrench(stack)){
+		if(ConfigUtil.isWrench(stack)){
 			// Wrenches rotate the block instead
-			if(!worldIn.isClientSide) worldIn.setBlockAndUpdate(pos, state.cycle(ESProperties.AXIS));
+			if(!worldIn.isClientSide) worldIn.setBlockAndUpdate(pos, state.cycle(CRProperties.AXIS));
 			return InteractionResult.SUCCESS;
 		}else if(stack.sameItem(CRItems.omnimeter.getDefaultInstance())){
 			// Omnimeter performs its function instead

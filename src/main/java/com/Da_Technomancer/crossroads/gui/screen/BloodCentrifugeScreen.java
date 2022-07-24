@@ -1,17 +1,17 @@
 package com.Da_Technomancer.crossroads.gui.screen;
 
-import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.templates.MachineGUI;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.api.templates.MachineScreen;
+import com.Da_Technomancer.crossroads.blocks.witchcraft.BloodCentrifugeTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.BloodCentrifugeContainer;
-import com.Da_Technomancer.crossroads.tileentities.witchcraft.BloodCentrifugeTileEntity;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class BloodCentrifugeScreen extends MachineGUI<BloodCentrifugeContainer, BloodCentrifugeTileEntity>{
+public class BloodCentrifugeScreen extends MachineScreen<BloodCentrifugeContainer, BloodCentrifugeTileEntity>{
 
 	private static final ResourceLocation BACKGROUND = new ResourceLocation(Crossroads.MODID, "textures/gui/container/blood_centrifuge_gui.png");
 

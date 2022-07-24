@@ -1,6 +1,6 @@
 # Crossroads
 
-A steampunk techology mod for Minecraft with the intention of expanding automation and making it more interesting by adding machines with unusual requirements, and giving the player all the tools they need to automate anything in the mod. There are no 'magic blocks'. 
+A steampunk technology mod for Minecraft with the intention of expanding automation and making it more interesting by adding machines with unusual requirements, and giving the player all the tools they need to automate anything in the mod. There are no 'magic blocks'. 
 
 ---------------------------------
 

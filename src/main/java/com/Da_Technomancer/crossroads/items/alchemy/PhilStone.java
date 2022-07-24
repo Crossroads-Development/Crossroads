@@ -16,8 +16,7 @@ public class PhilStone extends Item{
 	public PhilStone(boolean pracStone){
 		super(new Properties().tab(CRItems.TAB_CROSSROADS));
 		String name = pracStone ? "prac_stone" : "phil_stone";
-		setRegistryName(name);
-		CRItems.toRegister.add(this);
+		CRItems.toRegister.put(name, this);
 	}
 
 	@Override

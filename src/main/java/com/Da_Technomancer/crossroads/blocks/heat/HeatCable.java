@@ -1,19 +1,16 @@
 package com.Da_Technomancer.crossroads.blocks.heat;
 
-import com.Da_Technomancer.crossroads.API.CRProperties;
-import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
-import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
-import com.Da_Technomancer.crossroads.API.templates.ConduitBlock;
+import com.Da_Technomancer.crossroads.api.CRProperties;
+import com.Da_Technomancer.crossroads.api.alchemy.EnumTransferMode;
+import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
+import com.Da_Technomancer.crossroads.api.templates.ConduitBlock;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.Da_Technomancer.crossroads.tileentities.heat.HeatCableTileEntity;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
@@ -53,8 +50,8 @@ public class HeatCable extends ConduitBlock<EnumTransferMode>{
 	protected HeatCable(HeatInsulators insulator, String name){
 		super(CRBlocks.getMetalProperty());
 		this.insulator = insulator;
-		setRegistryName(name);
-		CRBlocks.blockAddQue(this, itemProp);
+		CRBlocks.toRegister.put(name, this);
+		CRBlocks.blockAddQue(name, this, itemProp);
 		registerDefaultState(defaultBlockState().setValue(CRProperties.CONDUCTOR, Conductors.COPPER));
 	}
 
@@ -105,7 +102,7 @@ public class HeatCable extends ConduitBlock<EnumTransferMode>{
 			Conductors match = null;
 			Item item = playerIn.getItemInHand(hand).getItem();
 			for(Conductors c : Conductors.values()){
-				if(CRItemTags.tagContains(c.tag, item)){
+				if(CraftingUtil.tagContains(c.tag, item)){
 					match = c;
 					break;
 				}
@@ -147,8 +144,8 @@ public class HeatCable extends ConduitBlock<EnumTransferMode>{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
-		tooltip.add(new TranslatableComponent("tt.crossroads.heat_cable.loss", insulator.getRate()));
-		tooltip.add(new TranslatableComponent("tt.crossroads.heat_cable.melt", insulator.getLimit()));
+		tooltip.add(Component.translatable("tt.crossroads.heat_cable.loss", insulator.getRate()));
+		tooltip.add(Component.translatable("tt.crossroads.heat_cable.melt", insulator.getLimit()));
 	}
 
 	public enum Conductors implements StringRepresentable{

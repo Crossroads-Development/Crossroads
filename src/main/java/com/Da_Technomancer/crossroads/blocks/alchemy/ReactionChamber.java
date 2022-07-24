@@ -1,18 +1,16 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
-import com.Da_Technomancer.crossroads.API.alchemy.IReagent;
-import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
-import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
+import com.Da_Technomancer.crossroads.api.alchemy.IReagent;
+import com.Da_Technomancer.crossroads.api.alchemy.ReagentMap;
+import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.tileentities.alchemy.ReactionChamberTileEntity;
-import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
-import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.redstone.IReadable;
+import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import com.google.common.collect.Lists;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -44,9 +42,8 @@ public class ReactionChamber extends BaseEntityBlock implements IReadable{
 		super(CRBlocks.getGlassProperty().noOcclusion());
 		this.crystal = crystal;
 		String name = (crystal ? "crystal_" : "") + "reaction_chamber";
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this);
+		CRBlocks.toRegister.put(name, this);
+		CRBlocks.blockAddQue(name, this);
 	}
 
 	@Override
@@ -134,7 +131,7 @@ public class ReactionChamber extends BaseEntityBlock implements IReadable{
 		double temp = stored.getTempC();
 
 		if(stored.getTotalQty() == 0){
-			tooltip.add(new TranslatableComponent("tt.crossroads.boilerplate.alchemy_empty"));
+			tooltip.add(Component.translatable("tt.crossroads.boilerplate.alchemy_empty"));
 		}else{
 			HeatUtil.addHeatInfo(tooltip, temp, Short.MIN_VALUE);
 			int total = 0;
@@ -143,19 +140,19 @@ public class ReactionChamber extends BaseEntityBlock implements IReadable{
 				if(qty > 0){
 					total++;
 					if(total <= 4 || flagIn != TooltipFlag.Default.NORMAL){
-						tooltip.add(new TranslatableComponent("tt.crossroads.boilerplate.alchemy_content", type.getName(), qty));
+						tooltip.add(Component.translatable("tt.crossroads.boilerplate.alchemy_content", type.getName(), qty));
 					}else{
 						break;
 					}
 				}
 			}
 			if(total > 4 && flagIn == TooltipFlag.Default.NORMAL){
-				tooltip.add(new TranslatableComponent("tt.crossroads.boilerplate.alchemy_excess", total - 4));
+				tooltip.add(Component.translatable("tt.crossroads.boilerplate.alchemy_excess", total - 4));
 			}
 		}
 
-		tooltip.add(new TranslatableComponent("tt.crossroads.reaction_chamber.power", ReactionChamberTileEntity.DRAIN));
-		tooltip.add(new TranslatableComponent("tt.crossroads.reaction_chamber.redstone", ReactionChamberTileEntity.CAPACITY));
+		tooltip.add(Component.translatable("tt.crossroads.reaction_chamber.power", ReactionChamberTileEntity.DRAIN));
+		tooltip.add(Component.translatable("tt.crossroads.reaction_chamber.redstone", ReactionChamberTileEntity.CAPACITY));
 	}
 
 	@Override

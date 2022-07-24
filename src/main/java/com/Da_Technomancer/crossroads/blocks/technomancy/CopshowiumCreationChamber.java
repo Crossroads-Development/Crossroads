@@ -1,15 +1,13 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
-import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.api.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.tileentities.technomancy.CopshowiumCreationChamberTileEntity;
-import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
-import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.redstone.IReadable;
+import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -36,9 +34,8 @@ public class CopshowiumCreationChamber extends BaseEntityBlock implements IReada
 	public CopshowiumCreationChamber(){
 		super(CRBlocks.getMetalProperty());
 		String name = "copshowium_creation_chamber";
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this);
+		CRBlocks.toRegister.put(name, this);
+		CRBlocks.blockAddQue(name, this);
 	}
 
 	@Override
@@ -63,19 +60,19 @@ public class CopshowiumCreationChamber extends BaseEntityBlock implements IReada
 		if(FluxUtil.handleFluxLinking(worldIn, pos, playerIn.getItemInHand(hand), playerIn).shouldSwing()){
 			return InteractionResult.SUCCESS;
 		}else if(!worldIn.isClientSide && (te = worldIn.getBlockEntity(pos)) instanceof MenuProvider){
-			NetworkHooks.openGui((ServerPlayer) playerIn, (MenuProvider) te, pos);
+			NetworkHooks.openScreen((ServerPlayer) playerIn, (MenuProvider) te, pos);
 		}
 		return InteractionResult.SUCCESS;
 	}
 	
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
-		tooltip.add(new TranslatableComponent("tt.crossroads.ccc.desc"));
+		tooltip.add(Component.translatable("tt.crossroads.ccc.desc"));
 //		tooltip.add(new TranslationTextComponent("tt.crossroads.ccc.mult", CRConfig.copsPerLiq.get()));
-		tooltip.add(new TranslatableComponent("tt.crossroads.ccc.flux", CopshowiumCreationChamberTileEntity.FLUX_PER_INGOT));
-		tooltip.add(new TranslatableComponent("tt.crossroads.ccc.io"));
+		tooltip.add(Component.translatable("tt.crossroads.ccc.flux", CopshowiumCreationChamberTileEntity.FLUX_PER_INGOT));
+		tooltip.add(Component.translatable("tt.crossroads.ccc.io"));
 		if(CRConfig.allowOverflow.get()){
-			tooltip.add(new TranslatableComponent("tt.crossroads.ccc.limit"));//Describe bursting
+			tooltip.add(Component.translatable("tt.crossroads.ccc.limit"));//Describe bursting
 		}
 	}
 

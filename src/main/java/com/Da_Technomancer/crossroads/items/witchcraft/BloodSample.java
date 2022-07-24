@@ -1,11 +1,10 @@
 package com.Da_Technomancer.crossroads.items.witchcraft;
 
-import com.Da_Technomancer.crossroads.API.witchcraft.EntityTemplate;
-import com.Da_Technomancer.crossroads.API.witchcraft.IPerishable;
+import com.Da_Technomancer.crossroads.api.witchcraft.EntityTemplate;
+import com.Da_Technomancer.crossroads.api.witchcraft.IPerishable;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -26,8 +25,7 @@ public class BloodSample extends Item implements IPerishable{
 
 	public BloodSample(String name){
 		super(new Item.Properties().stacksTo(1));//Not added to any creative tab
-		setRegistryName(name);
-		CRItems.toRegister.add(this);
+		CRItems.toRegister.put(name, this);
 	}
 
 	public ItemStack withEntityData(ItemStack stack, LivingEntity source){
@@ -60,7 +58,7 @@ public class BloodSample extends Item implements IPerishable{
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag){
 		if(this != CRItems.separatedBloodSample){
-			tooltip.add(new TranslatableComponent("tt.crossroads.blood_sample.craft"));
+			tooltip.add(Component.translatable("tt.crossroads.blood_sample.craft"));
 		}
 		EntityTemplate template = getEntityTypeData(stack);
 		template.addTooltip(tooltip, 2);

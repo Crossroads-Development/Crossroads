@@ -1,0 +1,6 @@
+{
+	"type": "forge:add_features",
+	"biomes": "#minecraft:is_end",
+	"features": "crossroads:ore_void",
+	"step": "underground_ores"
+}

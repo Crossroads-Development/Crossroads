@@ -1,15 +1,13 @@
 package com.Da_Technomancer.crossroads.blocks.witchcraft;
 
-import com.Da_Technomancer.crossroads.API.CRProperties;
-import com.Da_Technomancer.crossroads.API.MiscUtil;
+import com.Da_Technomancer.crossroads.api.CRProperties;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.tileentities.witchcraft.BloodCentrifugeTileEntity;
-import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
-import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.redstone.IReadable;
+import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.*;
 import net.minecraft.world.entity.player.Player;
@@ -41,9 +39,8 @@ public class BloodCentrifuge extends BaseEntityBlock implements IReadable{
 	public BloodCentrifuge(){
 		super(CRBlocks.getMetalProperty());
 		String name = "blood_centrifuge";
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this);
+		CRBlocks.toRegister.put(name, this);
+		CRBlocks.blockAddQue(name, this);
 		registerDefaultState(defaultBlockState().setValue(CRProperties.CONTENTS, 0));
 	}
 
@@ -73,7 +70,7 @@ public class BloodCentrifuge extends BaseEntityBlock implements IReadable{
 		BlockEntity te;
 		if(!worldIn.isClientSide && (te = worldIn.getBlockEntity(pos)) instanceof MenuProvider){
 			//Open the UI
-			NetworkHooks.openGui((ServerPlayer) playerIn, (MenuProvider) te, pos);
+			NetworkHooks.openScreen((ServerPlayer) playerIn, (MenuProvider) te, pos);
 		}
 		return InteractionResult.SUCCESS;
 	}
@@ -94,11 +91,11 @@ public class BloodCentrifuge extends BaseEntityBlock implements IReadable{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
-		tooltip.add(new TranslatableComponent("tt.crossroads.blood_centrifuge.desc", BloodCentrifugeTileEntity.HIGH_SPEED));
-		tooltip.add(new TranslatableComponent("tt.crossroads.blood_centrifuge.degradation"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.blood_centrifuge.redstone"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.boilerplate.inertia", BloodCentrifugeTileEntity.INERTIA));
-		tooltip.add(new TranslatableComponent("tt.crossroads.blood_centrifuge.quip").setStyle(MiscUtil.TT_QUIP));
+		tooltip.add(Component.translatable("tt.crossroads.blood_centrifuge.desc", BloodCentrifugeTileEntity.HIGH_SPEED));
+		tooltip.add(Component.translatable("tt.crossroads.blood_centrifuge.degradation"));
+		tooltip.add(Component.translatable("tt.crossroads.blood_centrifuge.redstone"));
+		tooltip.add(Component.translatable("tt.crossroads.boilerplate.inertia", BloodCentrifugeTileEntity.INERTIA));
+		tooltip.add(Component.translatable("tt.crossroads.blood_centrifuge.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 
 	@Override

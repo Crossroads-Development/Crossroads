@@ -1,8 +1,7 @@
 package com.Da_Technomancer.crossroads.items;
 
-import com.Da_Technomancer.crossroads.API.MiscUtil;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -25,8 +24,7 @@ public class ChaosRod extends Item{
 	protected ChaosRod(){
 		super(new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
 		String name = "chaos_rod";
-		setRegistryName(name);
-		CRItems.toRegister.add(this);
+		CRItems.toRegister.put(name, this);
 	}
 
 	@Override
@@ -47,7 +45,7 @@ public class ChaosRod extends Item{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
-		tooltip.add(new TranslatableComponent("tt.crossroads.chaos_rod.quip").setStyle(MiscUtil.TT_QUIP));
+		tooltip.add(Component.translatable("tt.crossroads.chaos_rod.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 
 	@Override

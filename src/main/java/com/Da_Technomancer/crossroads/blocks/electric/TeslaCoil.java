@@ -1,19 +1,16 @@
 package com.Da_Technomancer.crossroads.blocks.electric;
 
-import com.Da_Technomancer.crossroads.API.CRProperties;
-import com.Da_Technomancer.crossroads.API.MiscUtil;
+import com.Da_Technomancer.crossroads.api.CRProperties;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.LeydenJar;
-import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTileEntity;
-import com.Da_Technomancer.essentials.ESConfig;
-import com.Da_Technomancer.essentials.blocks.ESProperties;
-import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
-import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.ConfigUtil;
+import com.Da_Technomancer.essentials.api.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.redstone.IReadable;
+import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -48,9 +45,8 @@ public class TeslaCoil extends BaseEntityBlock implements IReadable{
 	public TeslaCoil(){
 		super(CRBlocks.getMetalProperty());
 		String name = "tesla_coil";
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this);
+		CRBlocks.toRegister.put(name, this);
+		CRBlocks.blockAddQue(name, this);
 		registerDefaultState(defaultBlockState().setValue(CRProperties.ACTIVE, false));
 	}
 
@@ -78,7 +74,7 @@ public class TeslaCoil extends BaseEntityBlock implements IReadable{
 	@Nullable
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context){
-		return defaultBlockState().setValue(ESProperties.HORIZ_FACING, context.getHorizontalDirection().getOpposite());
+		return defaultBlockState().setValue(CRProperties.HORIZ_FACING, context.getHorizontalDirection().getOpposite());
 	}
 
 	@Override
@@ -112,9 +108,9 @@ public class TeslaCoil extends BaseEntityBlock implements IReadable{
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		ItemStack heldItem = playerIn.getItemInHand(hand);
 
-		if(ESConfig.isWrench(heldItem)){
+		if(ConfigUtil.isWrench(heldItem)){
 			if(!worldIn.isClientSide){
-				worldIn.setBlockAndUpdate(pos, state.cycle(ESProperties.HORIZ_FACING));
+				worldIn.setBlockAndUpdate(pos, state.cycle(CRProperties.HORIZ_FACING));
 				BlockEntity te = worldIn.getBlockEntity(pos);
 				if(te instanceof TeslaCoilTileEntity){
 					((TeslaCoilTileEntity) te).rotate();
@@ -163,15 +159,15 @@ public class TeslaCoil extends BaseEntityBlock implements IReadable{
 
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder){
-		builder.add(CRProperties.ACTIVE, ESProperties.HORIZ_FACING);
+		builder.add(CRProperties.ACTIVE, CRProperties.HORIZ_FACING);
 	}
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn){
-		tooltip.add(new TranslatableComponent("tt.crossroads.tesla_coil.desc"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.tesla_coil.top"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.tesla_coil.leyden", LeydenJar.MAX_CHARGE));
-		tooltip.add(new TranslatableComponent("tt.crossroads.tesla_coil.quip").setStyle(MiscUtil.TT_QUIP));
+		tooltip.add(Component.translatable("tt.crossroads.tesla_coil.desc"));
+		tooltip.add(Component.translatable("tt.crossroads.tesla_coil.top"));
+		tooltip.add(Component.translatable("tt.crossroads.tesla_coil.leyden", LeydenJar.MAX_CHARGE));
+		tooltip.add(Component.translatable("tt.crossroads.tesla_coil.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 
 	@Override

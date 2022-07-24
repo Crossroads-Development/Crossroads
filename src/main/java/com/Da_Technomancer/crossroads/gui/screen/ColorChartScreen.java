@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.gui.screen;
 
-import com.Da_Technomancer.crossroads.API.AdvancementTracker;
-import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.api.AdvancementTracker;
+import com.Da_Technomancer.crossroads.api.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.gui.container.ColorChartContainer;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -10,8 +10,6 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -43,7 +41,7 @@ public class ColorChartScreen extends AbstractContainerScreen<ColorChartContaine
 
 		AdvancementTracker.listen();//Used for beam alignments
 
-		searchBar = new EditBox(font, leftPos, topPos + imageHeight, imageWidth, 18, new TranslatableComponent("container.search_bar"));
+		searchBar = new EditBox(font, leftPos, topPos + imageHeight, imageWidth, 18, Component.translatable("container.search_bar"));
 		searchBar.setCanLoseFocus(false);
 		searchBar.setTextColor(-1);
 		searchBar.setTextColorUneditable(-1);
@@ -76,11 +74,11 @@ public class ColorChartScreen extends AbstractContainerScreen<ColorChartContaine
 			EnumBeamAlignments elem = EnumBeamAlignments.getAlignment(col);
 			ArrayList<Component> tooltip = new ArrayList<>(2);
 			if(elem.isDiscovered(minecraft.player)){
-				tooltip.add(new TextComponent(elem.getLocalName(false)));
+				tooltip.add(Component.literal(elem.getLocalName(false)));
 			}else{
-				tooltip.add(new TextComponent("???"));
+				tooltip.add(Component.literal("???"));
 			}
-			tooltip.add(new TextComponent("R: " + col.getRed() + ", G: " + col.getGreen() + ", B: " + col.getBlue()));
+			tooltip.add(Component.literal("R: " + col.getRed() + ", G: " + col.getGreen() + ", B: " + col.getBlue()));
 			renderComponentTooltip(matrix, tooltip, mouseX, mouseY);//MCP note: renderTooltip
 		}
 

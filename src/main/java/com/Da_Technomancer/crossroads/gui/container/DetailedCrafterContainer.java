@@ -1,12 +1,13 @@
 package com.Da_Technomancer.crossroads.gui.container;
 
-import com.Da_Technomancer.crossroads.API.EnumPath;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.api.EnumPath;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
-import com.Da_Technomancer.crossroads.crafting.recipes.DetailedCrafterRec;
-import com.Da_Technomancer.essentials.blocks.BlockUtil;
+import com.Da_Technomancer.crossroads.crafting.DetailedCrafterRec;
+import com.Da_Technomancer.essentials.api.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
@@ -28,28 +29,26 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import static net.minecraftforge.common.ForgeHooks.setCraftingPlayer;
 
-@ObjectHolder(Crossroads.MODID)
 public class DetailedCrafterContainer extends RecipeBookMenu<CraftingContainer>{
 
-	@ObjectHolder("detailed_crafter")
-	private static MenuType<DetailedCrafterContainer> type = null;
+	private static final Supplier<MenuType<?>> TYPE_SPL = MiscUtil.getCRRegistryObject("detailed_crafter", ForgeRegistries.Keys.MENU_TYPES);
 
 	@SuppressWarnings("unchecked")
 	private static final TagKey<Item>[] unlockKeys = new TagKey[3];
-	private static final TagKey<Item> fillerMats = CRItemTags.getTagKey(ForgeRegistries.Keys.ITEMS, new ResourceLocation(Crossroads.MODID, "path_unlock_filler"));
+	private static final TagKey<Item> fillerMats = CraftingUtil.getTagKey(ForgeRegistries.Keys.ITEMS, new ResourceLocation(Crossroads.MODID, "path_unlock_filler"));
 
 	static{
-		unlockKeys[0] = CRItemTags.getTagKey(ForgeRegistries.Keys.ITEMS, new ResourceLocation(Crossroads.MODID, "technomancy_unlock_key"));
-		unlockKeys[1] = CRItemTags.getTagKey(ForgeRegistries.Keys.ITEMS, new ResourceLocation(Crossroads.MODID, "alchemy_unlock_key"));
-		unlockKeys[2] = CRItemTags.getTagKey(ForgeRegistries.Keys.ITEMS, new ResourceLocation(Crossroads.MODID, "witchcraft_unlock_key"));
+		unlockKeys[0] = CraftingUtil.getTagKey(ForgeRegistries.Keys.ITEMS, new ResourceLocation(Crossroads.MODID, "technomancy_unlock_key"));
+		unlockKeys[1] = CraftingUtil.getTagKey(ForgeRegistries.Keys.ITEMS, new ResourceLocation(Crossroads.MODID, "alchemy_unlock_key"));
+		unlockKeys[2] = CraftingUtil.getTagKey(ForgeRegistries.Keys.ITEMS, new ResourceLocation(Crossroads.MODID, "witchcraft_unlock_key"));
 	}
 
 	private final CraftingContainer inInv = new CraftingContainer(this, 3, 3);
@@ -62,7 +61,7 @@ public class DetailedCrafterContainer extends RecipeBookMenu<CraftingContainer>{
 	private final BlockPos pos;//Null if fake, nonnull otherwise- used for canInteractWith
 
 	public DetailedCrafterContainer(int id, Inventory playerInv, FriendlyByteBuf buf){
-		super(type, id);
+		super(TYPE_SPL.get(), id);
 		player = playerInv.player;
 		world = player.level;
 
@@ -273,11 +272,11 @@ public class DetailedCrafterContainer extends RecipeBookMenu<CraftingContainer>{
 	 */
 	private boolean unlockRecipe(EnumPath path){
 		for(int i = 0; i < 9; i++){
-			if(i != 4 && !CRItemTags.tagContains(fillerMats, inInv.getItem(i).getItem())){
+			if(i != 4 && !CraftingUtil.tagContains(fillerMats, inInv.getItem(i).getItem())){
 				return false;
 			}
 		}
-		return CRItemTags.tagContains(unlockKeys[path.getIndex()], inInv.getItem(4).getItem());
+		return CraftingUtil.tagContains(unlockKeys[path.getIndex()], inInv.getItem(4).getItem());
 	}
 
 	private void playUnlockSound(){

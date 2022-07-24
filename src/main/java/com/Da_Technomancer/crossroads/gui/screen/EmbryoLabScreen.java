@@ -1,10 +1,10 @@
 package com.Da_Technomancer.crossroads.gui.screen;
 
-import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.templates.MachineGUI;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.api.templates.MachineScreen;
+import com.Da_Technomancer.crossroads.blocks.witchcraft.EmbryoLabTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.EmbryoLabContainer;
-import com.Da_Technomancer.crossroads.tileentities.witchcraft.EmbryoLabTileEntity;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.network.chat.Component;
@@ -13,7 +13,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 import java.util.ArrayList;
 
-public class EmbryoLabScreen extends MachineGUI<EmbryoLabContainer, EmbryoLabTileEntity>{
+public class EmbryoLabScreen extends MachineScreen<EmbryoLabContainer, EmbryoLabTileEntity>{
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/gui/container/embryo_lab_gui.png");
 

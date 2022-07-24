@@ -1,13 +1,11 @@
 package com.Da_Technomancer.crossroads.blocks.beams;
 
-import com.Da_Technomancer.crossroads.API.templates.BeamBlock;
+import com.Da_Technomancer.crossroads.api.templates.BeamBlock;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.Da_Technomancer.crossroads.tileentities.beams.BeamExtractorCreativeTileEntity;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -31,7 +29,7 @@ public class BeamExtractorCreative extends BeamBlock{
 
 	public BeamExtractorCreative(){
 		super("beam_extractor_creative", CRBlocks.getRockProperty());
-		CRBlocks.blockAddQue(this, new Item.Properties().tab(CRItems.TAB_CROSSROADS).rarity(CRItems.CREATIVE_RARITY));
+		CRBlocks.blockAddQue("beam_extractor_creative", this, new Item.Properties().tab(CRItems.TAB_CROSSROADS).rarity(CRItems.CREATIVE_RARITY));
 	}
 
 	@Override
@@ -49,7 +47,7 @@ public class BeamExtractorCreative extends BeamBlock{
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		if(!super.use(state, worldIn, pos, playerIn, hand, hit).shouldSwing() && !worldIn.isClientSide){
 			if(worldIn.getBlockEntity(pos) instanceof BeamExtractorCreativeTileEntity menuTE){
-				NetworkHooks.openGui((ServerPlayer) playerIn, menuTE, buf -> {
+				NetworkHooks.openScreen((ServerPlayer) playerIn, menuTE, buf -> {
 					buf.writeVarIntArray(menuTE.output.getValues());
 					buf.writeUtf(menuTE.expression[0]); buf.writeUtf(menuTE.expression[1]);
 					buf.writeUtf(menuTE.expression[2]); buf.writeUtf(menuTE.expression[3]);
@@ -62,8 +60,8 @@ public class BeamExtractorCreative extends BeamBlock{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
-		tooltip.add(new TranslatableComponent("tt.crossroads.boilerplate.creative"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.beam_extractor_creative.desc"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.beam_extractor_creative.redstone"));
+		tooltip.add(Component.translatable("tt.crossroads.boilerplate.creative"));
+		tooltip.add(Component.translatable("tt.crossroads.beam_extractor_creative.desc"));
+		tooltip.add(Component.translatable("tt.crossroads.beam_extractor_creative.redstone"));
 	}
 }

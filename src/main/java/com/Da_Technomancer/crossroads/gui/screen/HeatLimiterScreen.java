@@ -1,11 +1,11 @@
 package com.Da_Technomancer.crossroads.gui.screen;
 
-import com.Da_Technomancer.crossroads.API.CircuitUtil;
+import com.Da_Technomancer.crossroads.api.CircuitUtil;
 import com.Da_Technomancer.crossroads.gui.container.HeatLimiterContainer;
 import com.Da_Technomancer.essentials.Essentials;
-import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
-import com.Da_Technomancer.essentials.packets.EssentialsPackets;
-import com.Da_Technomancer.essentials.packets.SendNBTToServer;
+import com.Da_Technomancer.essentials.api.packets.EssentialsPackets;
+import com.Da_Technomancer.essentials.api.packets.SendNBTToServer;
+import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -13,7 +13,6 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -31,7 +30,7 @@ public class HeatLimiterScreen extends AbstractContainerScreen<HeatLimiterContai
 	@Override
 	protected void init(){
 		super.init();
-		searchBar = CircuitUtil.createFormulaInputUIComponent(this, font, 4, 8, new TranslatableComponent("container.search_bar"), this::entryChanged, menu.conf);
+		searchBar = CircuitUtil.createFormulaInputUIComponent(this, font, 4, 8, Component.translatable("container.search_bar"), this::entryChanged, menu.conf);
 		addWidget(searchBar);
 		setInitialFocus(searchBar);
 	}

@@ -1,16 +1,14 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
-import com.Da_Technomancer.crossroads.API.CRProperties;
-import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.api.CRProperties;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.Da_Technomancer.crossroads.tileentities.technomancy.HamsterWheelTileEntity;
-import com.Da_Technomancer.essentials.ESConfig;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.ConfigUtil;
+import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -50,9 +48,8 @@ public class HamsterWheel extends BaseEntityBlock{
 	public HamsterWheel(){
 		super(CRBlocks.getMetalProperty().sound(SoundType.NETHER_WART));//Tried to find a fleshy sound
 		String name = "hamster_wheel";
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this, new Item.Properties().tab(CRItems.TAB_CROSSROADS).rarity(CRItems.BOBO_RARITY));
+		CRBlocks.toRegister.put(name, this);
+		CRBlocks.blockAddQue(name, this, new Item.Properties().tab(CRItems.TAB_CROSSROADS).rarity(CRItems.BOBO_RARITY));
 	}
 
 	@Override
@@ -79,7 +76,7 @@ public class HamsterWheel extends BaseEntityBlock{
 
 	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
-		if(ESConfig.isWrench(playerIn.getItemInHand(hand))){
+		if(ConfigUtil.isWrench(playerIn.getItemInHand(hand))){
 			if(!worldIn.isClientSide){
 				worldIn.setBlockAndUpdate(pos, state.setValue(CRProperties.HORIZ_FACING, state.getValue(CRProperties.HORIZ_FACING).getClockWise()));
 			}
@@ -100,7 +97,7 @@ public class HamsterWheel extends BaseEntityBlock{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
-		tooltip.add(new TranslatableComponent("tt.crossroads.hamster_wheel.desc", CRConfig.hamsterPower.get()));
-		tooltip.add(new TranslatableComponent("tt.crossroads.hamster_wheel.quip").setStyle(MiscUtil.TT_QUIP));
+		tooltip.add(Component.translatable("tt.crossroads.hamster_wheel.desc", CRConfig.hamsterPower.get()));
+		tooltip.add(Component.translatable("tt.crossroads.hamster_wheel.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 }

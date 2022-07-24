@@ -1,16 +1,16 @@
 package com.Da_Technomancer.crossroads.gui.screen;
 
-import com.Da_Technomancer.crossroads.API.templates.MachineGUI;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.api.templates.MachineScreen;
+import com.Da_Technomancer.crossroads.blocks.fluid.SteamBoilerTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.SteamBoilerContainer;
-import com.Da_Technomancer.crossroads.tileentities.fluid.SteamBoilerTileEntity;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class SteamBoilerScreen extends MachineGUI<SteamBoilerContainer, SteamBoilerTileEntity>{
+public class SteamBoilerScreen extends MachineScreen<SteamBoilerContainer, SteamBoilerTileEntity>{
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/gui/container/steam_boiler_gui.png");
 

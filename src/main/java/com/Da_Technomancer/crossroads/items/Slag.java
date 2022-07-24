@@ -37,8 +37,7 @@ public class Slag extends Item{
 	protected Slag(){
 		super(new Properties().tab(CRItems.TAB_CROSSROADS));
 		String name = "slag";
-		setRegistryName(name);
-		CRItems.toRegister.add(this);
+		CRItems.toRegister.put(name, this);
 		DispenserBlock.registerBehavior(this, SLAG_DISPENSER_BEHAVIOR);
 	}
 

@@ -1,15 +1,12 @@
 package com.Da_Technomancer.crossroads.blocks.heat;
 
-import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
-import com.Da_Technomancer.crossroads.API.heat.HeatInsulators;
-import com.Da_Technomancer.crossroads.tileentities.heat.RedstoneHeatCableTileEntity;
-import com.Da_Technomancer.essentials.blocks.ESProperties;
-import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
-import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import com.Da_Technomancer.crossroads.api.CRProperties;
+import com.Da_Technomancer.crossroads.api.alchemy.EnumTransferMode;
+import com.Da_Technomancer.essentials.api.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.redstone.IReadable;
+import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -32,12 +29,12 @@ public class RedstoneHeatCable extends HeatCable implements IReadable{
 
 	public RedstoneHeatCable(HeatInsulators insulator){
 		super(insulator, "redstone_heat_cable_" + insulator.toString().toLowerCase());
-		registerDefaultState(defaultBlockState().setValue(ESProperties.REDSTONE_BOOL, false));
+		registerDefaultState(defaultBlockState().setValue(CRProperties.REDSTONE_BOOL, false));
 	}
 
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context){
-		if(state.getValue(ESProperties.REDSTONE_BOOL)){
+		if(state.getValue(CRProperties.REDSTONE_BOOL)){
 			return super.getShape(state, worldIn, pos, context);
 		}else{
 			return SHAPES[0];//Core only
@@ -46,7 +43,7 @@ public class RedstoneHeatCable extends HeatCable implements IReadable{
 
 	@Override
 	protected boolean evaluate(EnumTransferMode value, BlockState state, @Nullable IConduitTE<EnumTransferMode> te){
-		return super.evaluate(value, state, te) && state.getValue(ESProperties.REDSTONE_BOOL);
+		return super.evaluate(value, state, te) && state.getValue(CRProperties.REDSTONE_BOOL);
 	}
 
 	@Override
@@ -57,18 +54,18 @@ public class RedstoneHeatCable extends HeatCable implements IReadable{
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder){
 		super.createBlockStateDefinition(builder);
-		builder.add(ESProperties.REDSTONE_BOOL);
+		builder.add(CRProperties.REDSTONE_BOOL);
 	}
 
 	@Override
 	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving){
 		if(worldIn.hasNeighborSignal(pos)){
-			if(!state.getValue(ESProperties.REDSTONE_BOOL)){
-				worldIn.setBlockAndUpdate(pos, state.setValue(ESProperties.REDSTONE_BOOL, true));
+			if(!state.getValue(CRProperties.REDSTONE_BOOL)){
+				worldIn.setBlockAndUpdate(pos, state.setValue(CRProperties.REDSTONE_BOOL, true));
 				worldIn.updateNeighbourForOutputSignal(pos, this);
 			}
-		}else if(state.getValue(ESProperties.REDSTONE_BOOL)){
-			worldIn.setBlockAndUpdate(pos, state.setValue(ESProperties.REDSTONE_BOOL, false));
+		}else if(state.getValue(CRProperties.REDSTONE_BOOL)){
+			worldIn.setBlockAndUpdate(pos, state.setValue(CRProperties.REDSTONE_BOOL, false));
 			worldIn.updateNeighbourForOutputSignal(pos, this);
 		}
 	}
@@ -86,14 +83,14 @@ public class RedstoneHeatCable extends HeatCable implements IReadable{
 
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context){
-		return super.getStateForPlacement(context).setValue(ESProperties.REDSTONE_BOOL, context.getLevel().hasNeighborSignal(context.getClickedPos()));
+		return super.getStateForPlacement(context).setValue(CRProperties.REDSTONE_BOOL, context.getLevel().hasNeighborSignal(context.getClickedPos()));
 	}
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
 		super.appendHoverText(stack, world, tooltip, advanced);
 
-		tooltip.add(new TranslatableComponent("tt.crossroads.redstone_heat_cable.reader"));
+		tooltip.add(Component.translatable("tt.crossroads.redstone_heat_cable.reader"));
 
 		/*
 		tooltip.add("");

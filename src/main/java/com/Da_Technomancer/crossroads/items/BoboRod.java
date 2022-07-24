@@ -1,17 +1,16 @@
 package com.Da_Technomancer.crossroads.items;
 
-import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.crafting.CRItemTags;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
+import com.Da_Technomancer.crossroads.crafting.BoboRec;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
-import com.Da_Technomancer.crossroads.crafting.recipes.BoboRec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -50,13 +49,12 @@ public class BoboRod extends Item{
 	};
 
 	//Items that are considered valid offerings
-	private static final TagKey<Item> offering = CRItemTags.getTagKey(ForgeRegistries.Keys.ITEMS, new ResourceLocation(Crossroads.MODID, "bobo_unlock_key"));
+	private static final TagKey<Item> offering = CraftingUtil.getTagKey(ForgeRegistries.Keys.ITEMS, new ResourceLocation(Crossroads.MODID, "bobo_unlock_key"));
 
 	protected BoboRod(){
 		super(new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
 		String name = "bobo_rod";
-		setRegistryName(name);
-		CRItems.toRegister.add(this);
+		CRItems.toRegister.put(name, this);
 		DispenserBlock.registerBehavior(this, BOBO_DISPENSER_BEHAVIOR);
 	}
 
@@ -75,7 +73,7 @@ public class BoboRod extends Item{
 					world.playSound(player, pos, SoundEvents.REDSTONE_TORCH_BURNOUT, SoundSource.PLAYERS, 1F, (float) Math.random());
 					return false;
 				}
-				if(!hasOffering && CRItemTags.tagContains(offering, ent.getItem().getItem())){
+				if(!hasOffering && CraftingUtil.tagContains(offering, ent.getItem().getItem())){
 					hasOffering = true;
 				}else{
 					inv.addItem(ent.getItem());
@@ -104,8 +102,8 @@ public class BoboRod extends Item{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
-		tooltip.add(new TranslatableComponent("tt.crossroads.bobo_rod.desc"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.bobo_rod.use"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.bobo_rod.quip").setStyle(MiscUtil.TT_QUIP));
+		tooltip.add(Component.translatable("tt.crossroads.bobo_rod.desc"));
+		tooltip.add(Component.translatable("tt.crossroads.bobo_rod.use"));
+		tooltip.add(Component.translatable("tt.crossroads.bobo_rod.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 }

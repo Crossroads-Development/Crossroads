@@ -1,16 +1,16 @@
 package com.Da_Technomancer.crossroads.gui.screen;
 
-import com.Da_Technomancer.crossroads.API.templates.MachineGUI;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.api.templates.MachineScreen;
+import com.Da_Technomancer.crossroads.blocks.heat.SaltReactorTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.SaltReactorContainer;
-import com.Da_Technomancer.crossroads.tileentities.heat.SaltReactorTileEntity;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class SaltReactorScreen extends MachineGUI<SaltReactorContainer, SaltReactorTileEntity>{
+public class SaltReactorScreen extends MachineScreen<SaltReactorContainer, SaltReactorTileEntity>{
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/gui/container/salt_reactor_gui.png");
 

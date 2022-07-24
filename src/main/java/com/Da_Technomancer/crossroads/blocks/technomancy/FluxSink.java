@@ -1,13 +1,11 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
-import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.api.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.tileentities.technomancy.FluxSinkTileEntity;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -36,9 +34,9 @@ public class FluxSink extends BaseEntityBlock{
 
 	public FluxSink(){
 		super(CRBlocks.getMetalProperty());
-		setRegistryName("flux_sink");
-		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this);
+		String name = "flux_sink";
+		CRBlocks.toRegister.put(name, this);
+		CRBlocks.blockAddQue(name, this);
 	}
 
 	@Override
@@ -54,9 +52,9 @@ public class FluxSink extends BaseEntityBlock{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
-		tooltip.add(new TranslatableComponent("tt.crossroads.flux_sink.desc"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.flux_sink.beacon"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.flux_sink.quip").setStyle(MiscUtil.TT_QUIP));
+		tooltip.add(Component.translatable("tt.crossroads.flux_sink.desc"));
+		tooltip.add(Component.translatable("tt.crossroads.flux_sink.beacon"));
+		tooltip.add(Component.translatable("tt.crossroads.flux_sink.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 
 	@Override

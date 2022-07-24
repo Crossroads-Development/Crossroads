@@ -1,9 +1,8 @@
 package com.Da_Technomancer.crossroads.blocks.fluid;
 
-import com.Da_Technomancer.crossroads.API.alchemy.EnumTransferMode;
-import com.Da_Technomancer.crossroads.tileentities.fluid.RedstoneFluidTubeTileEntity;
-import com.Da_Technomancer.essentials.blocks.ESProperties;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import com.Da_Technomancer.crossroads.api.CRProperties;
+import com.Da_Technomancer.crossroads.api.alchemy.EnumTransferMode;
+import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -46,12 +45,12 @@ public class RedstoneFluidTube extends FluidTube{
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder){
 		super.createBlockStateDefinition(builder);
-		builder.add(ESProperties.REDSTONE_BOOL);
+		builder.add(CRProperties.REDSTONE_BOOL);
 	}
 
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context){
-		if(state.getValue(ESProperties.REDSTONE_BOOL)){
+		if(state.getValue(CRProperties.REDSTONE_BOOL)){
 			return super.getShape(state, worldIn, pos, context);
 		}else{
 			return SHAPES[0];//Core only
@@ -60,19 +59,19 @@ public class RedstoneFluidTube extends FluidTube{
 
 	@Override
 	protected boolean evaluate(EnumTransferMode value, BlockState state, @Nullable IConduitTE<EnumTransferMode> te){
-		return super.evaluate(value, state, te) && state.getValue(ESProperties.REDSTONE_BOOL);
+		return super.evaluate(value, state, te) && state.getValue(CRProperties.REDSTONE_BOOL);
 	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context){
-		return super.getStateForPlacement(context).setValue(ESProperties.REDSTONE_BOOL, context.getLevel().hasNeighborSignal(context.getClickedPos()));
+		return super.getStateForPlacement(context).setValue(CRProperties.REDSTONE_BOOL, context.getLevel().hasNeighborSignal(context.getClickedPos()));
 	}
 
 	@Override
 	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving){
 		boolean isPowered = worldIn.hasNeighborSignal(pos);
-		if(isPowered != state.getValue(ESProperties.REDSTONE_BOOL)){
-			worldIn.setBlockAndUpdate(pos, state.setValue(ESProperties.REDSTONE_BOOL, isPowered));
+		if(isPowered != state.getValue(CRProperties.REDSTONE_BOOL)){
+			worldIn.setBlockAndUpdate(pos, state.setValue(CRProperties.REDSTONE_BOOL, isPowered));
 		}
 	}
 }

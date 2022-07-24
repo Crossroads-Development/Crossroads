@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.blocks.rotary;
 
-import com.Da_Technomancer.crossroads.API.CRProperties;
+import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.essentials.ESConfig;
+import com.Da_Technomancer.essentials.api.ConfigUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
@@ -40,8 +40,7 @@ public class StampMillTop extends Block{
 	public StampMillTop(){
 		super(Properties.of(Material.WOOD).strength(1).sound(SoundType.METAL));
 		String name = "stamp_mill_top";
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
+		CRBlocks.toRegister.put(name, this);
 		//Not added to queue to prevent registering item form
 	}
 
@@ -52,7 +51,7 @@ public class StampMillTop extends Block{
 
 	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
-		if(ESConfig.isWrench(playerIn.getItemInHand(hand))){
+		if(ConfigUtil.isWrench(playerIn.getItemInHand(hand))){
 			if(!worldIn.isClientSide){
 				worldIn.setBlockAndUpdate(pos, state.cycle(CRProperties.HORIZ_AXIS));
 				BlockState lowerState = worldIn.getBlockState(pos.below());
@@ -65,7 +64,7 @@ public class StampMillTop extends Block{
 
 		BlockEntity te;
 		if(!worldIn.isClientSide && (te = worldIn.getBlockEntity(pos.below())) instanceof MenuProvider){
-			NetworkHooks.openGui((ServerPlayer) playerIn, (MenuProvider) te, pos.below());
+			NetworkHooks.openScreen((ServerPlayer) playerIn, (MenuProvider) te, pos.below());
 		}
 		return InteractionResult.SUCCESS;
 	}

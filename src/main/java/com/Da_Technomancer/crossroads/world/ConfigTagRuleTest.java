@@ -6,6 +6,7 @@ import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.RuleTestType;
@@ -14,7 +15,6 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.HashMap;
-import java.util.Random;
 import java.util.function.Function;
 
 /**
@@ -66,7 +66,7 @@ public class ConfigTagRuleTest extends TagMatchTest{
 	}
 
 	@Override
-	public boolean test(BlockState state, Random rand){
+	public boolean test(BlockState state, RandomSource rand){
 		return (config == null || config.get()) && super.test(state, rand);
 	}
 

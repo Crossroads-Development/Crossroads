@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads;
 
-import com.Da_Technomancer.crossroads.crafting.CRItemTags;
-import com.Da_Technomancer.essentials.ESConfig;
+import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
+import com.Da_Technomancer.essentials.api.ConfigUtil;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
 import com.google.common.collect.Lists;
@@ -120,7 +120,7 @@ public class CRConfig{
 	public static ForgeConfigSpec.DoubleValue solarRate;
 	public static ForgeConfigSpec.DoubleValue medicinalMushroomSpread;
 
-	private static final TagKey<Block> destroyBlacklist = CRItemTags.getTagKey(ForgeRegistries.Keys.BLOCKS, new ResourceLocation(Crossroads.MODID, "destroy_blacklist"));
+	private static final TagKey<Block> destroyBlacklist = CraftingUtil.getTagKey(ForgeRegistries.Keys.BLOCKS, new ResourceLocation(Crossroads.MODID, "destroy_blacklist"));
 
 	private static ForgeConfigSpec clientSpec;
 	private static ForgeConfigSpec serverSpec;
@@ -282,7 +282,7 @@ public class CRConfig{
 	 * @return Whether the block is protected via the config from destruction
 	 */
 	public static boolean isProtected(Level world, BlockPos pos, BlockState state){
-		return CRItemTags.tagContains(destroyBlacklist, state.getBlock()) || state.getBlock().defaultDestroyTime() < 0;
+		return CraftingUtil.tagContains(destroyBlacklist, state.getBlock()) || state.getBlock().defaultDestroyTime() < 0;
 	}
 
 	protected static void load(){
@@ -300,6 +300,6 @@ public class CRConfig{
 	}
 
 	public static String formatVal(float f){
-		return ESConfig.formatFloat(f, null);
+		return ConfigUtil.formatFloat(f, null);
 	}
 }

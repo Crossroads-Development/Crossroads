@@ -1,11 +1,10 @@
 package com.Da_Technomancer.crossroads.items.technomancy;
 
-import com.Da_Technomancer.crossroads.API.packets.CRPackets;
-import com.Da_Technomancer.crossroads.API.packets.SendBeamItemToServer;
+import com.Da_Technomancer.crossroads.api.packets.CRPackets;
+import com.Da_Technomancer.crossroads.api.packets.SendBeamItemToServer;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.Item;
@@ -80,9 +79,9 @@ public abstract class BeamUsingItem extends Item{
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag advanced){
 		byte[] settings = getSetting(stack);
-		tooltip.add(new TranslatableComponent("tt.crossroads.beam_item.energy", settings[0], maxSetting()));
-		tooltip.add(new TranslatableComponent("tt.crossroads.beam_item.potential", settings[1], maxSetting()));
-		tooltip.add(new TranslatableComponent("tt.crossroads.beam_item.stability", settings[2], maxSetting()));
-		tooltip.add(new TranslatableComponent("tt.crossroads.beam_item.void", settings[3], maxSetting()));
+		tooltip.add(Component.translatable("tt.crossroads.beam_item.energy", settings[0], maxSetting()));
+		tooltip.add(Component.translatable("tt.crossroads.beam_item.potential", settings[1], maxSetting()));
+		tooltip.add(Component.translatable("tt.crossroads.beam_item.stability", settings[2], maxSetting()));
+		tooltip.add(Component.translatable("tt.crossroads.beam_item.void", settings[3], maxSetting()));
 	}
 }

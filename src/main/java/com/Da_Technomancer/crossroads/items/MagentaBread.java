@@ -1,8 +1,7 @@
 package com.Da_Technomancer.crossroads.items;
 
-import com.Da_Technomancer.crossroads.API.MiscUtil;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.food.FoodProperties;
@@ -25,8 +24,7 @@ public class MagentaBread extends Item{
 	protected MagentaBread(){
 		super(new Properties().tab(CRItems.TAB_CROSSROADS).food(new FoodProperties.Builder().alwaysEat().nutrition(20).saturationMod(0.5F).effect(speedSupplier, 1).effect(jumpBoostSupplier, 1).effect(nauseaSupplier, 1).build()));
 		String name = "magenta_bread";
-		setRegistryName(name);
-		CRItems.toRegister.add(this);
+		CRItems.toRegister.put(name, this);
 	}
 
 	@Override
@@ -41,6 +39,6 @@ public class MagentaBread extends Item{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
-		tooltip.add(new TranslatableComponent("tt.crossroads.mag_bread.quip").setStyle(MiscUtil.TT_QUIP));
+		tooltip.add(Component.translatable("tt.crossroads.mag_bread.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 }

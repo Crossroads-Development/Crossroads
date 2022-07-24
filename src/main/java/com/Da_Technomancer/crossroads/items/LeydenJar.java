@@ -1,10 +1,9 @@
 package com.Da_Technomancer.crossroads.items;
 
-import com.Da_Technomancer.crossroads.API.MiscUtil;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -22,8 +21,7 @@ public class LeydenJar extends Item{
 		super(new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
 		String name = "leyden_jar";
 //		hasSubtypes = true;
-		setRegistryName(name);
-		CRItems.toRegister.add(this);
+		CRItems.toRegister.put(name, this);
 	}
 	
 	public static int getCharge(ItemStack stack){
@@ -48,14 +46,14 @@ public class LeydenJar extends Item{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
-		tooltip.add(new TranslatableComponent("tt.crossroads.leyden_jar.desc"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.leyden_jar.stats", getCharge(stack), MAX_CHARGE));
-		tooltip.add(new TranslatableComponent("tt.crossroads.leyden_jar.quip").setStyle(MiscUtil.TT_QUIP));
+		tooltip.add(Component.translatable("tt.crossroads.leyden_jar.desc"));
+		tooltip.add(Component.translatable("tt.crossroads.leyden_jar.stats", getCharge(stack), MAX_CHARGE));
+		tooltip.add(Component.translatable("tt.crossroads.leyden_jar.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 
 	@Override
 	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items){
-		if(allowdedIn(group)){
+		if(allowedIn(group)){
 			items.add(new ItemStack(this, 1));
 			ItemStack stack = new ItemStack(this, 1);
 			setCharge(stack, MAX_CHARGE);

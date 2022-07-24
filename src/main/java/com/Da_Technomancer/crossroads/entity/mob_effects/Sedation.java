@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.entity.mob_effects;
 
 import com.Da_Technomancer.crossroads.CRConfig;
-import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -11,6 +11,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 
@@ -20,7 +21,6 @@ public class Sedation extends MobEffect{
 
 	public Sedation(){
 		super(MobEffectCategory.HARMFUL, 0x848484);
-		setRegistryName(Crossroads.MODID, "sedation");
 
 		//On non-players (and other blacklisted entities):
 		//Disables the AI
@@ -44,7 +44,7 @@ public class Sedation extends MobEffect{
 
 			//Check against the blacklist
 			List<? extends String> blacklist = CRConfig.sedationBlacklist.get();
-			if(blacklist.stream().anyMatch(entry -> new ResourceLocation(entry).equals(entity.getType().getRegistryName()))){
+			if(blacklist.stream().anyMatch(entry -> new ResourceLocation(entry).equals(MiscUtil.getRegistryName(entity.getType(), ForgeRegistries.ENTITY_TYPES)))){
 				return false;
 			}
 

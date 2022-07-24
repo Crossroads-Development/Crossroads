@@ -1,16 +1,16 @@
 package com.Da_Technomancer.crossroads.gui.screen;
 
-import com.Da_Technomancer.crossroads.API.templates.MachineGUI;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.api.templates.MachineScreen;
+import com.Da_Technomancer.crossroads.blocks.rotary.BlastFurnaceTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.BlastFurnaceContainer;
-import com.Da_Technomancer.crossroads.tileentities.rotary.BlastFurnaceTileEntity;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class BlastFurnaceScreen extends MachineGUI<BlastFurnaceContainer, BlastFurnaceTileEntity>{
+public class BlastFurnaceScreen extends MachineScreen<BlastFurnaceContainer, BlastFurnaceTileEntity>{
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/gui/container/blast_furnace_gui.png");
 

@@ -1,12 +1,11 @@
 package com.Da_Technomancer.crossroads.items.alchemy;
 
-import com.Da_Technomancer.crossroads.API.alchemy.IReagent;
-import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
-import com.Da_Technomancer.crossroads.API.heat.HeatUtil;
+import com.Da_Technomancer.crossroads.api.alchemy.IReagent;
+import com.Da_Technomancer.crossroads.api.alchemy.ReagentMap;
+import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -100,7 +99,7 @@ public abstract class AbstractGlassware extends Item{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
-		tooltip.add(new TranslatableComponent("tt.crossroads.boilerplate.alchemy_capacity", getCapacity()));
+		tooltip.add(Component.translatable("tt.crossroads.boilerplate.alchemy_capacity", getCapacity()));
 		if(!stack.hasTag()){
 			return;
 		}
@@ -109,7 +108,7 @@ public abstract class AbstractGlassware extends Item{
 		double temp = stored.getTempC();
 
 		if(stored.getTotalQty() == 0){
-			tooltip.add(new TranslatableComponent("tt.crossroads.boilerplate.alchemy_empty"));
+			tooltip.add(Component.translatable("tt.crossroads.boilerplate.alchemy_empty"));
 		}else{
 			HeatUtil.addHeatInfo(tooltip, temp, Short.MIN_VALUE);
 			int total = 0;
@@ -118,14 +117,14 @@ public abstract class AbstractGlassware extends Item{
 				if(qty > 0){
 					total++;
 					if(total <= 4 || flagIn != TooltipFlag.Default.NORMAL){
-						tooltip.add(new TranslatableComponent("tt.crossroads.boilerplate.alchemy_content", type.getName(), qty));
+						tooltip.add(Component.translatable("tt.crossroads.boilerplate.alchemy_content", type.getName(), qty));
 					}else{
 						break;
 					}
 				}
 			}
 			if(total > 4 && flagIn == TooltipFlag.Default.NORMAL){
-				tooltip.add(new TranslatableComponent("tt.crossroads.boilerplate.alchemy_excess", total - 4));
+				tooltip.add(Component.translatable("tt.crossroads.boilerplate.alchemy_excess", total - 4));
 			}
 		}
 	}

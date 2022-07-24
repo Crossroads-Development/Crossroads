@@ -1,10 +1,9 @@
 package com.Da_Technomancer.crossroads.items;
 
-import com.Da_Technomancer.crossroads.API.MiscUtil;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -29,8 +28,7 @@ public class EdibleBlob extends Item{
 	public EdibleBlob(){
 		super(new Item.Properties());//Not in a creative tab due to creative giving a version that has no NBT
 		String name = "edible_blob";
-		setRegistryName(name);
-		CRItems.toRegister.add(this);
+		CRItems.toRegister.put(name, this);
 	}
 
 	public static CompoundTag createNBT(@Nullable CompoundTag base, int hunger, int sat){
@@ -57,11 +55,11 @@ public class EdibleBlob extends Item{
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
 		if(stack.hasTag()){
-			tooltip.add(new TranslatableComponent("tt.crossroads.edible_blob.food", getHealAmount(stack)));
-			tooltip.add(new TranslatableComponent("tt.crossroads.edible_blob.sat", getTrueSat(stack)));
-			tooltip.add(new TranslatableComponent("tt.crossroads.edible_blob.quip").setStyle(MiscUtil.TT_QUIP));
+			tooltip.add(Component.translatable("tt.crossroads.edible_blob.food", getHealAmount(stack)));
+			tooltip.add(Component.translatable("tt.crossroads.edible_blob.sat", getTrueSat(stack)));
+			tooltip.add(Component.translatable("tt.crossroads.edible_blob.quip").setStyle(MiscUtil.TT_QUIP));
 		}else{
-			tooltip.add(new TranslatableComponent("tt.crossroads.edible_blob.error"));
+			tooltip.add(Component.translatable("tt.crossroads.edible_blob.error"));
 		}
 	}
 

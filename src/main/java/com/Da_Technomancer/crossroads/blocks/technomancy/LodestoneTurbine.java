@@ -1,13 +1,11 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
-import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.tileentities.technomancy.LodestoneTurbineTileEntity;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
@@ -27,9 +25,8 @@ public class LodestoneTurbine extends BaseEntityBlock{
 	public LodestoneTurbine(){
 		super(CRBlocks.getMetalProperty());
 		String name = "lodestone_turbine";
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this);
+		CRBlocks.toRegister.put(name, this);
+		CRBlocks.blockAddQue(name, this);
 	}
 
 	@Nullable
@@ -51,9 +48,9 @@ public class LodestoneTurbine extends BaseEntityBlock{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn){
-		tooltip.add(new TranslatableComponent("tt.crossroads.lodestone_turbine.desc", CRConfig.lodestoneTurbinePower.get()));
-		tooltip.add(new TranslatableComponent("tt.crossroads.lodestone_turbine.limit", LodestoneTurbineTileEntity.MAX_SPEED));
-		tooltip.add(new TranslatableComponent("tt.crossroads.boilerplate.inertia", LodestoneTurbineTileEntity.INERTIA));
-		tooltip.add(new TranslatableComponent("tt.crossroads.lodestone_turbine.quip").setStyle(MiscUtil.TT_QUIP));
+		tooltip.add(Component.translatable("tt.crossroads.lodestone_turbine.desc", CRConfig.lodestoneTurbinePower.get()));
+		tooltip.add(Component.translatable("tt.crossroads.lodestone_turbine.limit", LodestoneTurbineTileEntity.MAX_SPEED));
+		tooltip.add(Component.translatable("tt.crossroads.boilerplate.inertia", LodestoneTurbineTileEntity.INERTIA));
+		tooltip.add(Component.translatable("tt.crossroads.lodestone_turbine.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 }

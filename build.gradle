@@ -15,7 +15,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.parchmentmc.librarian.forgegradle' //Parchment
 apply plugin: 'eclipse'
 //apply plugin: 'maven-publish'
-//apply from: 'https://raw.githubusercontent.com/SizableShrimp/Forge-Class-Remapper/main/classremapper.gradle' //Magic mappings updater
+//apply from: 'https://raw.githubusercontent.com/SizableShrimp/ForgeUpdatesRemapper/main/remapper.gradle' //Magic mappings updater
 
 version = "$mc_version-$mod_version"
 group = "com.technomancer.crossroads"
@@ -92,10 +92,13 @@ dependencies {
 	minecraft("net.minecraftforge:forge:$mc_version-$fg_version")
 
 	//Compile against APIs
-	compileOnly(fg.deobf("mezz.jei:jei-$jei_mc_version:$jei_version:api"))//JEI
+	//JEI
+	compileOnly fg.deobf("mezz.jei:jei-$jei_mc_version-common-api:$jei_version")
+	compileOnly fg.deobf("mezz.jei:jei-$jei_mc_version-forge-api:$jei_version")
+	//Curios
 	compileOnly(fg.deobf("top.theillusivec4.curios:curios-forge:$curios_version:api"))//Curios
 	//Run with the full versions
-	runtimeOnly(fg.deobf("mezz.jei:jei-$jei_mc_version:$jei_version"))//JEI
+	runtimeOnly fg.deobf("mezz.jei:jei-$jei_mc_version-forge:$jei_version")//JEI
 	runtimeOnly(fg.deobf("top.theillusivec4.curios:curios-forge:$curios_version"))//Curios
 
 	compileOnly(fg.deobf("vazkii.patchouli:Patchouli:$patchouli_version"))

@@ -1,11 +1,10 @@
 package com.Da_Technomancer.crossroads.items;
 
-import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.rotary.IAxleHandler;
-import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
+import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
+import com.Da_Technomancer.crossroads.api.rotary.RotaryUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -27,8 +26,7 @@ public class HandCrank extends Item{
 
 	protected HandCrank(String name, Rarity rarity){
 		super(new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1).rarity(rarity));
-		setRegistryName(name);
-		CRItems.toRegister.add(this);
+		CRItems.toRegister.put(name, this);
 	}
 
 	protected int getRate(){
@@ -54,7 +52,7 @@ public class HandCrank extends Item{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
-		tooltip.add(new TranslatableComponent("tt.crossroads.crank.desc", getRate()));
-		tooltip.add(new TranslatableComponent("tt.crossroads.crank.back", getRate()));
+		tooltip.add(Component.translatable("tt.crossroads.crank.desc", getRate()));
+		tooltip.add(Component.translatable("tt.crossroads.crank.back", getRate()));
 	}
 }

@@ -1,18 +1,16 @@
 package com.Da_Technomancer.crossroads.blocks.witchcraft;
 
-import com.Da_Technomancer.crossroads.API.CRProperties;
-import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.templates.TEBlock;
+import com.Da_Technomancer.crossroads.api.CRProperties;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.Da_Technomancer.crossroads.tileentities.witchcraft.EmbryoLabTileEntity;
-import com.Da_Technomancer.essentials.blocks.BlockUtil;
-import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
+import com.Da_Technomancer.essentials.api.BlockUtil;
+import com.Da_Technomancer.essentials.api.TEBlock;
+import com.Da_Technomancer.essentials.api.redstone.IReadable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -61,9 +59,8 @@ public class EmbryoLab extends TEBlock implements IReadable{
 	public EmbryoLab(){
 		super(CRBlocks.getMetalProperty());
 		String name = "embryo_lab";
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this);
+		CRBlocks.toRegister.put(name, this);
+		CRBlocks.blockAddQue(name, this);
 		registerDefaultState(defaultBlockState().setValue(CRProperties.ACTIVE, false));
 	}
 
@@ -109,17 +106,17 @@ public class EmbryoLab extends TEBlock implements IReadable{
 			}
 
 			//Didn't add an item. Open the UI
-			NetworkHooks.openGui((ServerPlayer) playerIn, (MenuProvider) te, pos);
+			NetworkHooks.openScreen((ServerPlayer) playerIn, (MenuProvider) te, pos);
 		}
 		return InteractionResult.SUCCESS;
 	}
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
-		tooltip.add(new TranslatableComponent("tt.crossroads.embryo_lab.desc"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.embryo_lab.ingr"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.embryo_lab.circuit"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.embryo_lab.quip").setStyle(MiscUtil.TT_QUIP));
+		tooltip.add(Component.translatable("tt.crossroads.embryo_lab.desc"));
+		tooltip.add(Component.translatable("tt.crossroads.embryo_lab.ingr"));
+		tooltip.add(Component.translatable("tt.crossroads.embryo_lab.circuit"));
+		tooltip.add(Component.translatable("tt.crossroads.embryo_lab.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 
 	@Override

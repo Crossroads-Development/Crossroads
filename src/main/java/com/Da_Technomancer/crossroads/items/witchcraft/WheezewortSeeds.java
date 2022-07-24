@@ -39,8 +39,8 @@ public class WheezewortSeeds extends ItemNameBlockItem{
 
 	public WheezewortSeeds(){
 		super(CRBlocks.wheezewort, new Item.Properties().tab(CRItems.TAB_CROSSROADS));
-		setRegistryName("wheezewort_seeds");
-		CRItems.toRegister.add(this);
+		String name = "wheezewort_seeds";
+		CRItems.toRegister.put(name, this);
 		DispenserBlock.registerBehavior(this, PLANTING_DISPENSER_BEHAVIOR);
 	}
 }

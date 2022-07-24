@@ -2,10 +2,10 @@ package com.Da_Technomancer.crossroads;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
-import net.minecraftforge.client.ClientRegistry;
 import net.minecraftforge.client.extensions.IForgeKeyMapping;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 
 public class Keys{
 
@@ -19,6 +19,8 @@ public class Keys{
 
 	public static boolean keysInitialized = false;
 
+	protected static final ArrayList<KeyMapping> toRegister = new ArrayList<>(6);
+
 	protected static void init(){
 		try{
 			controlEnergy = new KeyMapping("key.control_energy", InputConstants.UNKNOWN.getValue(), Crossroads.MODID);
@@ -31,12 +33,13 @@ public class Keys{
 		}catch(RuntimeException e){
 			Crossroads.logger.error("Keys loaded on server side; Report to mod author", e);
 		}
-		ClientRegistry.registerKeyBinding((KeyMapping) controlEnergy);
-		ClientRegistry.registerKeyBinding((KeyMapping) controlPotential);
-		ClientRegistry.registerKeyBinding((KeyMapping) controlStability);
-		ClientRegistry.registerKeyBinding((KeyMapping) controlVoid);
-		ClientRegistry.registerKeyBinding((KeyMapping) controlZoom);
-		ClientRegistry.registerKeyBinding((KeyMapping) boost);
+
+		toRegister.add((KeyMapping) controlEnergy);
+		toRegister.add((KeyMapping) controlPotential);
+		toRegister.add((KeyMapping) controlStability);
+		toRegister.add((KeyMapping) controlVoid);
+		toRegister.add((KeyMapping) controlZoom);
+		toRegister.add((KeyMapping) boost);
 	}
 
 	public static boolean isKeyActiveAndMatch(IForgeKeyMapping key, int activeKeyCode, int scanCode){

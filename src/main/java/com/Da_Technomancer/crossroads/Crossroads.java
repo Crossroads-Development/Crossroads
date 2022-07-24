@@ -1,11 +1,7 @@
 package com.Da_Technomancer.crossroads;
 
-import com.Da_Technomancer.crossroads.API.beams.BeamToolOverlay;
-import com.Da_Technomancer.crossroads.API.packets.CRPackets;
+import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.crossroads.integration.CRIntegration;
-import com.Da_Technomancer.crossroads.integration.curios.CurioHelper;
-import com.Da_Technomancer.crossroads.items.CRItems;
-import net.minecraftforge.client.gui.OverlayRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
@@ -41,17 +37,14 @@ public final class Crossroads{
 
 	private void commonInit(@SuppressWarnings("unused") FMLCommonSetupEvent e){
 		//Pre
-		CRPackets.preInit();
+		CRPackets.init();
 		//Main
 		MinecraftForge.EVENT_BUS.register(new EventHandlerCommon());
 
 		CRIntegration.init();
-		CurioHelper.initIntegration();
 	}
 
 	private void clientInit(@SuppressWarnings("unused") FMLClientSetupEvent e){
-		Keys.init();
-		OverlayRegistry.registerOverlayTop("crossroad_beam_tool_overlay", new BeamToolOverlay());
 		MinecraftForge.EVENT_BUS.register(new EventHandlerClient());
 	}
 

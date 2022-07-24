@@ -1,8 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.tileentities.alchemy.ReactiveSpotTileEntity;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -20,10 +19,9 @@ import javax.annotation.Nullable;
 public class ReactiveSpot extends BaseEntityBlock{
 
 	public ReactiveSpot(){
-		super(Properties.of(Material.SPONGE).strength(0).noCollission().noDrops());
+		super(Properties.of(Material.SPONGE).strength(0).noCollission().noLootTable());
 		String name = "reactive_spot";
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
+		CRBlocks.toRegister.put(name, this);
 		//No item form
 	}
 

@@ -1,4 +1,5 @@
 {
+	"render_type": "cutout",
 	"parent": "crossroads:block/reagent_filter",
 	"textures": {
 		"glass": "crossroads:block/alch_tube/glass_tube_cap"

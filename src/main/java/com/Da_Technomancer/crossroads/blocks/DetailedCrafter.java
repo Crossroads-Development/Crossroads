@@ -5,7 +5,6 @@ import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -35,14 +34,13 @@ public class DetailedCrafter extends Block{
 	public DetailedCrafter(){
 		super(CRBlocks.getMetalProperty());
 		String name = "detailed_crafter";
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this);
+		CRBlocks.toRegister.put(name, this);
+		CRBlocks.blockAddQue(name, this);
 	}
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn){
-		tooltip.add(new TranslatableComponent("tt.crossroads.detailed_crafter.desc"));
+		tooltip.add(Component.translatable("tt.crossroads.detailed_crafter.desc"));
 	}
 
 	@Override
@@ -54,7 +52,7 @@ public class DetailedCrafter extends Block{
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		if(!worldIn.isClientSide){
 //			StoreNBTToClient.syncNBTToClient((ServerPlayerEntity) playerIn);//Sync player path data to client
-			NetworkHooks.openGui((ServerPlayer) playerIn, new DetailedCrafterProvider(pos), buf -> {buf.writeBoolean(false); buf.writeBlockPos(pos);});
+			NetworkHooks.openScreen((ServerPlayer) playerIn, new DetailedCrafterProvider(pos), buf -> {buf.writeBoolean(false); buf.writeBlockPos(pos);});
 		}
 		return InteractionResult.SUCCESS;
 	}
@@ -69,7 +67,7 @@ public class DetailedCrafter extends Block{
 
 		@Override
 		public Component getDisplayName(){
-			return new TranslatableComponent("container.detailed_crafter");
+			return Component.translatable("container.detailed_crafter");
 		}
 
 		@Nullable

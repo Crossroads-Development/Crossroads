@@ -1,10 +1,10 @@
 package com.Da_Technomancer.crossroads.gui.screen;
 
-import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.templates.MachineGUI;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.api.templates.MachineScreen;
+import com.Da_Technomancer.crossroads.blocks.witchcraft.AutoInjectorTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.AutoInjectorContainer;
-import com.Da_Technomancer.crossroads.tileentities.witchcraft.AutoInjectorTileEntity;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.network.chat.Component;
@@ -12,7 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.player.Inventory;
 
-public class AutoInjectorScreen extends MachineGUI<AutoInjectorContainer, AutoInjectorTileEntity>{
+public class AutoInjectorScreen extends MachineScreen<AutoInjectorContainer, AutoInjectorTileEntity>{
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/gui/container/auto_injector_gui.png");
 

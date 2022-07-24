@@ -1,24 +1,24 @@
 package com.Da_Technomancer.crossroads.gui.container;
 
-import com.Da_Technomancer.crossroads.API.templates.MachineContainer;
-import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.tileentities.technomancy.CopshowiumCreationChamberTileEntity;
-import com.Da_Technomancer.essentials.gui.container.FluidSlotManager;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.api.templates.MachineContainer;
+import com.Da_Technomancer.crossroads.blocks.technomancy.CopshowiumCreationChamberTileEntity;
+import com.Da_Technomancer.essentials.api.FluidSlotManager;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
-import net.minecraftforge.registries.ObjectHolder;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.tuple.Pair;
 
-@ObjectHolder(Crossroads.MODID)
+import java.util.function.Supplier;
+
 public class CopshowiumMakerContainer extends MachineContainer<CopshowiumCreationChamberTileEntity>{
 
-	@ObjectHolder("copshowium_maker")
-	private static MenuType<CopshowiumMakerContainer> type = null;
+	private static final Supplier<MenuType<?>> TYPE_SPL = MiscUtil.getCRRegistryObject("copshowium_maker", ForgeRegistries.Keys.MENU_TYPES);
 
 	public CopshowiumMakerContainer(int windowId, Inventory playerInv, FriendlyByteBuf data){
-		super(type, windowId, playerInv, data);
+		super(TYPE_SPL.get(), windowId, playerInv, data);
 	}
 
 	@Override

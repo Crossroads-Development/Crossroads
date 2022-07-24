@@ -1,16 +1,13 @@
 package com.Da_Technomancer.crossroads.blocks.beams;
 
-import com.Da_Technomancer.crossroads.API.CRProperties;
-import com.Da_Technomancer.crossroads.API.CircuitUtil;
-import com.Da_Technomancer.crossroads.API.templates.BeamBlock;
-import com.Da_Technomancer.crossroads.tileentities.beams.BeamSiphonTileEntity;
-import com.Da_Technomancer.essentials.blocks.ESProperties;
-import com.Da_Technomancer.essentials.blocks.redstone.IWireConnect;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import com.Da_Technomancer.crossroads.api.CRProperties;
+import com.Da_Technomancer.crossroads.api.CircuitUtil;
+import com.Da_Technomancer.crossroads.api.templates.BeamBlock;
+import com.Da_Technomancer.essentials.api.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.redstone.IWireConnect;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -57,7 +54,7 @@ public class BeamSiphon extends BeamBlock implements IWireConnect{
 
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context){
-		return super.getStateForPlacement(context).setValue(ESProperties.REDSTONE_BOOL, context.getLevel().hasNeighborSignal(context.getClickedPos()));
+		return super.getStateForPlacement(context).setValue(CRProperties.REDSTONE_BOOL, context.getLevel().hasNeighborSignal(context.getClickedPos()));
 	}
 
 	@Override
@@ -71,8 +68,8 @@ public class BeamSiphon extends BeamBlock implements IWireConnect{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn){
-		tooltip.add(new TranslatableComponent("tt.crossroads.beam_siphon.desc"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.boilerplate.circuit"));
+		tooltip.add(Component.translatable("tt.crossroads.beam_siphon.desc"));
+		tooltip.add(Component.translatable("tt.crossroads.boilerplate.circuit"));
 	}
 
 	@Override

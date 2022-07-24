@@ -1,9 +1,8 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
+import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.tileentities.technomancy.AbstractCannonTileEntity;
-import com.Da_Technomancer.essentials.ESConfig;
-import com.Da_Technomancer.essentials.blocks.ESProperties;
+import com.Da_Technomancer.essentials.api.ConfigUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -25,27 +24,26 @@ public abstract class AbstractCannon extends BaseEntityBlock{
 
 	public AbstractCannon(String name, Properties properties){
 		super(properties);
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this);
+		CRBlocks.toRegister.put(name, this);
+		CRBlocks.blockAddQue(name, this);
 		registerDefaultState(defaultBlockState());
 	}
 
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder){
-		builder.add(ESProperties.FACING);
+		builder.add(CRProperties.FACING);
 	}
 
 	@Nullable
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context){
-		return defaultBlockState().setValue(ESProperties.FACING, context.getClickedFace());
+		return defaultBlockState().setValue(CRProperties.FACING, context.getClickedFace());
 	}
 
 	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		ItemStack held = playerIn.getItemInHand(hand);
-		if(ESConfig.isWrench(held)){
+		if(ConfigUtil.isWrench(held)){
 			if(playerIn.isShiftKeyDown()){
 				//Sneak clicking- lock/unlock
 				BlockEntity te = worldIn.getBlockEntity(pos);
@@ -55,7 +53,7 @@ public abstract class AbstractCannon extends BaseEntityBlock{
 				return InteractionResult.SUCCESS;
 			}else{
 				//Rotate this machine
-				worldIn.setBlockAndUpdate(pos, state.cycle(ESProperties.FACING));
+				worldIn.setBlockAndUpdate(pos, state.cycle(CRProperties.FACING));
 			}
 			return InteractionResult.SUCCESS;
 		}

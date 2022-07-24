@@ -1,16 +1,14 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
-import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
-import com.Da_Technomancer.crossroads.API.technomancy.IFluxLink;
 import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.api.technomancy.FluxUtil;
+import com.Da_Technomancer.crossroads.api.technomancy.IFluxLink;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.tileentities.technomancy.FluxNodeTileEntity;
-import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
-import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.redstone.IReadable;
+import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -38,9 +36,8 @@ public class FluxNode extends BaseEntityBlock implements IReadable{
 	public FluxNode(){
 		super(CRBlocks.getMetalProperty());
 		String name = "flux_node";
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this);
+		CRBlocks.toRegister.put(name, this);
+		CRBlocks.blockAddQue(name, this);
 	}
 
 	@Override
@@ -90,9 +87,9 @@ public class FluxNode extends BaseEntityBlock implements IReadable{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn){
-		tooltip.add(new TranslatableComponent("tt.crossroads.flux_node.desc", 64));
-		tooltip.add(new TranslatableComponent("tt.crossroads.flux_node.gain", CRConfig.fluxNodeGain.get()));
-		tooltip.add(new TranslatableComponent("tt.crossroads.flux_node.link"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.flux_node.circuit"));
+		tooltip.add(Component.translatable("tt.crossroads.flux_node.desc", 64));
+		tooltip.add(Component.translatable("tt.crossroads.flux_node.gain", CRConfig.fluxNodeGain.get()));
+		tooltip.add(Component.translatable("tt.crossroads.flux_node.link"));
+		tooltip.add(Component.translatable("tt.crossroads.flux_node.circuit"));
 	}
 }

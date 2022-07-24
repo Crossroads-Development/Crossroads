@@ -1,14 +1,13 @@
 package com.Da_Technomancer.crossroads.items.technomancy;
 
-import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
-import com.Da_Technomancer.crossroads.crafting.CRItemTags;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -39,8 +38,7 @@ public class ArmorEnviroBoots extends TechnomancyArmor{
 	public ArmorEnviroBoots(){
 		super(EquipmentSlot.FEET);
 		String name = "enviro_boots";
-		setRegistryName(name);
-		CRItems.toRegister.add(this);
+		CRItems.toRegister.put(name, this);
 	}
 
 	//Feather falling: Done via damage protection in EventHandlerCommon
@@ -51,9 +49,9 @@ public class ArmorEnviroBoots extends TechnomancyArmor{
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
 		super.appendHoverText(stack, worldIn, tooltip, flagIn);
-		tooltip.add(new TranslatableComponent("tt.crossroads.enviro_boots.desc"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.enviro_boots.frost"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.enviro_boots.quip").setStyle(MiscUtil.TT_QUIP));
+		tooltip.add(Component.translatable("tt.crossroads.enviro_boots.desc"));
+		tooltip.add(Component.translatable("tt.crossroads.enviro_boots.frost"));
+		tooltip.add(Component.translatable("tt.crossroads.enviro_boots.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 
 	@Override
@@ -94,7 +92,7 @@ public class ArmorEnviroBoots extends TechnomancyArmor{
 		BlockState belowState = getStateBelow(player);
 		if(!belowState.isAir()){
 			int level = CRConfig.enviroBootSoulSpeed.get();
-			if(level > 0 && !player.getAbilities().flying && CRItemTags.tagContains(BlockTags.SOUL_SPEED_BLOCKS, belowState.getBlock())){//Re-implementation of player.onSoulSpeedBlock()
+			if(level > 0 && !player.getAbilities().flying && CraftingUtil.tagContains(BlockTags.SOUL_SPEED_BLOCKS, belowState.getBlock())){//Re-implementation of player.onSoulSpeedBlock()
 				AttributeInstance speedAttribute = player.getAttribute(Attributes.MOVEMENT_SPEED);
 				if(speedAttribute != null && speedAttribute.getModifier(SOUL_SPEED_BOOT_ID) == null){
 					speedAttribute.addTransientModifier(new AttributeModifier(SOUL_SPEED_BOOT_ID, "Soul speed boost", (double) (0.03F * (1.0F + (float) level * 0.35F)), AttributeModifier.Operation.ADDITION));

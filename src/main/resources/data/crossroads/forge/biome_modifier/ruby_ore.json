@@ -1,0 +1,6 @@
+{
+	"type": "forge:add_features",
+	"biomes": "#minecraft:is_nether",
+	"features": "crossroads:ore_ruby",
+	"step": "fluid_springs"
+}

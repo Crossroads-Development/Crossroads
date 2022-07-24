@@ -18,7 +18,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -33,7 +32,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class CRBlocks{
@@ -194,25 +193,24 @@ public class CRBlocks{
 	 */
 	public static final Item.Properties itemBlockProp = new Item.Properties().tab(CRItems.TAB_CROSSROADS);
 
-	public static final ArrayList<Block> toRegister = new ArrayList<>();
+	public static final HashMap<String, Block> toRegister = new HashMap<>();
 
 	/**
-	 * Registers the item form of a block
+	 * Creates and registers the item form of a block
+	 * @param regName Registry name for the itemblock
 	 * @param block The block to register
 	 * @return The passed block for convenience. 
 	 */
-	public static <T extends Block> T blockAddQue(T block){
-		return blockAddQue(block, itemBlockProp);
+	public static <T extends Block> T blockAddQue(String regName, T block){
+		return blockAddQue(regName, block, itemBlockProp);
 	}
 
-	public static <T extends Block> T blockAddQue(T block, Item.Properties itemProp){
-		return blockAddQue(block, new BlockItem(block, itemProp));
+	public static <T extends Block> T blockAddQue(String regName, T block, Item.Properties itemProp){
+		return blockAddQue(regName, block, new BlockItem(block, itemProp));
 	}
 
-	public static <T extends Block> T blockAddQue(T block, BlockItem itemBlock){
-		assert block.getRegistryName() != null;
-		itemBlock.setRegistryName(block.getRegistryName());
-		CRItems.toRegister.add(itemBlock);
+	public static <T extends Block> T blockAddQue(String regName, T block, BlockItem itemBlock){
+		CRItems.toRegister.put(regName, itemBlock);
 		return block;
 	}
 
@@ -309,8 +307,8 @@ public class CRBlocks{
 		cavorite = new BasicBlock("block_cavorite", CRBlocks.getRockProperty()){
 			@Override
 			public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn){
-				tooltip.add(new TranslatableComponent("tt.crossroads.cavorite"));
-				tooltip.add(new TranslatableComponent("tt.crossroads.decoration"));
+				tooltip.add(Component.translatable("tt.crossroads.cavorite"));
+				tooltip.add(Component.translatable("tt.crossroads.decoration"));
 			}
 		};
 		chargingStand = new ChargingStand();
@@ -350,8 +348,8 @@ public class CRBlocks{
 
 			@Override
 			public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn){
-				tooltip.add(new TranslatableComponent("tt.crossroads.redstone_crystal.drops"));
-				tooltip.add(new TranslatableComponent("tt.crossroads.redstone_crystal.power"));
+				tooltip.add(Component.translatable("tt.crossroads.redstone_crystal.drops"));
+				tooltip.add(Component.translatable("tt.crossroads.redstone_crystal.power"));
 			}
 		};
 		detailedAutoCrafter = new DetailedAutoCrafter();
@@ -383,25 +381,27 @@ public class CRBlocks{
 
 	@OnlyIn(Dist.CLIENT)
 	public static void clientInit(){
-		setCutout(permeableGlass, rotaryPump, steamTurbine, alchemicalTubeGlass, alchemicalTubeCrystal, redsAlchemicalTubeGlass, redsAlchemicalTubeCrystal, fluidInjectorGlass, fluidInjectorCrystal, flowLimiterGlass, flowLimiterCrystal, heatedTubeGlass, heatedTubeCrystal, coolingCoilGlass, coolingCoilCrystal, reactionChamberGlass, reactionChamberCrystal, reagentTankGlass, reagentTankCrystal, reagentPumpGlass, reagentPumpCrystal, glasswareHolder, reagentFilterGlass, reagentFilterCrystal, chargingStand, medicinalMushroom, petrolCactus);
-		setTrans(hydroponicsTrough, embryoLab, cultivatorVat);
+//		setCutout(permeableGlass, rotaryPump, steamTurbine, alchemicalTubeGlass, alchemicalTubeCrystal, redsAlchemicalTubeGlass, redsAlchemicalTubeCrystal, fluidInjectorGlass, fluidInjectorCrystal, flowLimiterGlass, flowLimiterCrystal, heatedTubeGlass, heatedTubeCrystal, coolingCoilGlass, coolingCoilCrystal, reactionChamberGlass, reactionChamberCrystal, reagentTankGlass, reagentTankCrystal, reagentPumpGlass, reagentPumpCrystal, glasswareHolder, reagentFilterGlass, reagentFilterCrystal, chargingStand, medicinalMushroom, petrolCactus);
+//		setTrans(hydroponicsTrough, embryoLab, cultivatorVat);
 		setFluidTrans(CRFluids.distilledWater, CRFluids.steam, CRFluids.fertilizerSolution, CRFluids.nutrientSolution, CRFluids.dirtyWater);
 	}
 
-	@OnlyIn(Dist.CLIENT)
-	private static void setCutout(Block... blocks){
-		RenderType cutout = RenderType.cutout();
-		for(Block block : blocks){
-			ItemBlockRenderTypes.setRenderLayer(block, cutout);
-		}
-	}
-
-	private static void setTrans(Block... blocks){
-		RenderType type = RenderType.translucent();
-		for(Block block : blocks){
-			ItemBlockRenderTypes.setRenderLayer(block, type);
-		}
-	}
+//	@OnlyIn(Dist.CLIENT)
+//	@Deprecated
+//	private static void setCutout(Block... blocks){
+//		RenderType cutout = RenderType.cutout();
+//		for(Block block : blocks){
+//			ItemBlockRenderTypes.setRenderLayer(block, cutout);
+//		}
+//	}
+//
+//	@Deprecated
+//	private static void setTrans(Block... blocks){
+//		RenderType type = RenderType.translucent();
+//		for(Block block : blocks){
+//			ItemBlockRenderTypes.setRenderLayer(block, type);
+//		}
+//	}
 
 	@OnlyIn(Dist.CLIENT)
 	private static void setFluidTrans(GenericFluid.FluidData...fluids){

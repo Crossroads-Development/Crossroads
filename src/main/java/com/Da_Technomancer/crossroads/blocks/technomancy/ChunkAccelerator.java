@@ -1,12 +1,10 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
-import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
+import com.Da_Technomancer.crossroads.api.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.tileentities.technomancy.ChunkAcceleratorTileEntity;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -35,9 +33,8 @@ public class ChunkAccelerator extends BaseEntityBlock{
 	public ChunkAccelerator(){
 		super(CRBlocks.getMetalProperty());
 		String name = "chunk_accelerator";
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this);
+		CRBlocks.toRegister.put(name, this);
+		CRBlocks.blockAddQue(name, this);
 	}
 
 	@Override
@@ -73,8 +70,8 @@ public class ChunkAccelerator extends BaseEntityBlock{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn){
-		tooltip.add(new TranslatableComponent("tt.crossroads.time_accel_chunk.desc"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.time_accel_chunk.beam"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.time_accel_chunk.flux"));
+		tooltip.add(Component.translatable("tt.crossroads.time_accel_chunk.desc"));
+		tooltip.add(Component.translatable("tt.crossroads.time_accel_chunk.beam"));
+		tooltip.add(Component.translatable("tt.crossroads.time_accel_chunk.flux"));
 	}
 }

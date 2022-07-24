@@ -1,11 +1,10 @@
 package com.Da_Technomancer.crossroads.items.technomancy;
 
-import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
+import com.Da_Technomancer.crossroads.api.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -23,8 +22,7 @@ public class BeamCage extends Item{
 	public BeamCage(){
 		super(new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
 		String name = "beam_cage";
-		setRegistryName(name);
-		CRItems.toRegister.add(this);
+		CRItems.toRegister.put(name, this);
 	}
 
 	@Nonnull
@@ -51,7 +49,7 @@ public class BeamCage extends Item{
 
 	@Override
 	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items){
-		if(allowdedIn(group)){
+		if(allowedIn(group)){
 			items.add(new ItemStack(this, 1));
 			ItemStack stack = new ItemStack(this, 1);
 			storeBeam(stack, new BeamUnit(CAPACITY, CAPACITY, CAPACITY, CAPACITY));
@@ -62,9 +60,9 @@ public class BeamCage extends Item{
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag advanced){
 		BeamUnit stored = getStored(stack);
-		tooltip.add(new TranslatableComponent("tt.crossroads.beam_cage.energy", stored.getEnergy(), CAPACITY));
-		tooltip.add(new TranslatableComponent("tt.crossroads.beam_cage.potential", stored.getPotential(), CAPACITY));
-		tooltip.add(new TranslatableComponent("tt.crossroads.beam_cage.stability", stored.getStability(), CAPACITY));
-		tooltip.add(new TranslatableComponent("tt.crossroads.beam_cage.void", stored.getVoid(), CAPACITY));
+		tooltip.add(Component.translatable("tt.crossroads.beam_cage.energy", stored.getEnergy(), CAPACITY));
+		tooltip.add(Component.translatable("tt.crossroads.beam_cage.potential", stored.getPotential(), CAPACITY));
+		tooltip.add(Component.translatable("tt.crossroads.beam_cage.stability", stored.getStability(), CAPACITY));
+		tooltip.add(Component.translatable("tt.crossroads.beam_cage.void", stored.getVoid(), CAPACITY));
 	}
 }

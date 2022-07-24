@@ -1,13 +1,11 @@
 package com.Da_Technomancer.crossroads.blocks.fluid;
 
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.tileentities.fluid.FluidTankTileEntity;
-import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
-import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
+import com.Da_Technomancer.essentials.api.redstone.IReadable;
+import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import com.google.common.collect.Lists;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -37,9 +35,8 @@ public class FluidTank extends BaseEntityBlock implements IReadable{
 	public FluidTank(){
 		super(CRBlocks.getMetalProperty());
 		String name = "fluid_tank";
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this);
+		CRBlocks.toRegister.put(name, this);
+		CRBlocks.blockAddQue(name, this);
 	}
 
 	@Override
@@ -58,7 +55,7 @@ public class FluidTank extends BaseEntityBlock implements IReadable{
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
 		FluidStack fStack = getFluidOnItem(stack);
 		if(!fStack.isEmpty()){
-			tooltip.add(new TranslatableComponent("tt.crossroads.fluid_tank", fStack.getAmount(), fStack.getDisplayName().getString()));
+			tooltip.add(Component.translatable("tt.crossroads.fluid_tank", fStack.getAmount(), fStack.getDisplayName().getString()));
 		}
 	}
 
@@ -97,7 +94,7 @@ public class FluidTank extends BaseEntityBlock implements IReadable{
 				//Tanks be clicked on with buckets/equivalent
 				return FluidUtil.interactWithFluidHandler(playerIn, hand, worldIn, pos, null) ? InteractionResult.SUCCESS : InteractionResult.FAIL;
 			}else if((te = worldIn.getBlockEntity(pos)) instanceof MenuProvider){
-				NetworkHooks.openGui((ServerPlayer) playerIn, (MenuProvider) te, pos);
+				NetworkHooks.openScreen((ServerPlayer) playerIn, (MenuProvider) te, pos);
 			}
 		}
 		return InteractionResult.SUCCESS;

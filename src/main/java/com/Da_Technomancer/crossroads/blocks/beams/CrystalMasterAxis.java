@@ -1,15 +1,13 @@
 package com.Da_Technomancer.crossroads.blocks.beams;
 
+import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.tileentities.beams.CrystalMasterAxisTileEntity;
-import com.Da_Technomancer.essentials.ESConfig;
-import com.Da_Technomancer.essentials.blocks.ESProperties;
-import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
-import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.ConfigUtil;
+import com.Da_Technomancer.essentials.api.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.redstone.IReadable;
+import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -34,22 +32,21 @@ public class CrystalMasterAxis extends BaseEntityBlock implements IReadable{
 	public CrystalMasterAxis(){
 		super(CRBlocks.getRockProperty());
 		String name = "master_axis_crystal";
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this);
+		CRBlocks.toRegister.put(name, this);
+		CRBlocks.blockAddQue(name, this);
 	}
 
 	@Nullable
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context){
-		return defaultBlockState().setValue(ESProperties.FACING, context.getNearestLookingDirection().getOpposite());
+		return defaultBlockState().setValue(CRProperties.FACING, context.getNearestLookingDirection().getOpposite());
 	}
 	
 	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
-		if(ESConfig.isWrench(playerIn.getItemInHand(hand))){
+		if(ConfigUtil.isWrench(playerIn.getItemInHand(hand))){
 			if(!worldIn.isClientSide){
-				worldIn.setBlockAndUpdate(pos, state.cycle(ESProperties.FACING));
+				worldIn.setBlockAndUpdate(pos, state.cycle(CRProperties.FACING));
 			}
 			return InteractionResult.SUCCESS;
 		}
@@ -58,7 +55,7 @@ public class CrystalMasterAxis extends BaseEntityBlock implements IReadable{
 
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder){
-		builder.add(ESProperties.FACING);
+		builder.add(CRProperties.FACING);
 	}
 
 	@Override
@@ -79,12 +76,12 @@ public class CrystalMasterAxis extends BaseEntityBlock implements IReadable{
 
 	@Override
 	public BlockState rotate(BlockState state, Rotation rot){
-		return state.setValue(ESProperties.FACING, rot.rotate(state.getValue(ESProperties.FACING)));
+		return state.setValue(CRProperties.FACING, rot.rotate(state.getValue(CRProperties.FACING)));
 	}
 
 	@Override
 	public BlockState mirror(BlockState state, Mirror mirrorIn){
-		return state.rotate(mirrorIn.getRotation(state.getValue(ESProperties.FACING)));
+		return state.rotate(mirrorIn.getRotation(state.getValue(CRProperties.FACING)));
 	}
 
 	@Override
@@ -100,9 +97,9 @@ public class CrystalMasterAxis extends BaseEntityBlock implements IReadable{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn){
-		tooltip.add(new TranslatableComponent("tt.crossroads.crystal_master_axis.desc"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.crystal_master_axis.time"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.crystal_master_axis.reds"));
+		tooltip.add(Component.translatable("tt.crossroads.crystal_master_axis.desc"));
+		tooltip.add(Component.translatable("tt.crossroads.crystal_master_axis.time"));
+		tooltip.add(Component.translatable("tt.crossroads.crystal_master_axis.reds"));
 	}
 
 	@Override

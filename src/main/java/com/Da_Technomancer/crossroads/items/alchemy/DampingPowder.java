@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.items.alchemy;
 
-import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.alchemy.FlameCoresSavedData;
 import com.Da_Technomancer.crossroads.ambient.particles.CRParticles;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.api.alchemy.FlameCoresSavedData;
 import com.Da_Technomancer.crossroads.entity.EntityFlameCore;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.core.BlockPos;
@@ -11,7 +11,6 @@ import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -62,8 +61,7 @@ public class DampingPowder extends Item{
 	public DampingPowder(){
 		super(new Properties().tab(CRItems.TAB_CROSSROADS));
 		String name = "damping_powder";
-		setRegistryName(name);
-		CRItems.toRegister.add(this);
+		CRItems.toRegister.put(name, this);
 		DispenserBlock.registerBehavior(this, DAMPING_DISPENSER_BEHAVIOR);
 	}
 
@@ -74,15 +72,15 @@ public class DampingPowder extends Item{
 			held.shrink(1);
 		}
 		if(worldIn instanceof ServerLevel level){
-			performDamping(level, playerIn.eyeBlockPosition().relative(playerIn.getDirection()), false);
+			performDamping(level, new BlockPos(playerIn.getEyePosition()).relative(playerIn.getDirection()), false);
 		}
 		return new InteractionResultHolder<>(InteractionResult.SUCCESS, held);
 	}
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
-		tooltip.add(new TranslatableComponent("tt.crossroads.damp_powder.desc"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.damp_powder.quip").setStyle(MiscUtil.TT_QUIP));
+		tooltip.add(Component.translatable("tt.crossroads.damp_powder.desc"));
+		tooltip.add(Component.translatable("tt.crossroads.damp_powder.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 
 	private static boolean performDamping(ServerLevel world, BlockPos pos, boolean blockSource){

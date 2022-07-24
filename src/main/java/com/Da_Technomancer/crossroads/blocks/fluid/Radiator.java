@@ -1,14 +1,12 @@
 package com.Da_Technomancer.crossroads.blocks.fluid;
 
-import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.tileentities.fluid.RadiatorTileEntity;
-import com.Da_Technomancer.essentials.ESConfig;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.ConfigUtil;
+import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -34,9 +32,8 @@ public class Radiator extends BaseEntityBlock{
 	public Radiator(){
 		super(CRBlocks.getMetalProperty());
 		String name = "radiator";
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this);
+		CRBlocks.toRegister.put(name, this);
+		CRBlocks.blockAddQue(name, this);
 	}
 
 	@Override
@@ -58,11 +55,11 @@ public class Radiator extends BaseEntityBlock{
 	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		if(!worldIn.isClientSide && worldIn.getBlockEntity(pos) instanceof RadiatorTileEntity rte){
-			if(ESConfig.isWrench(playerIn.getItemInHand(hand))){
+			if(ConfigUtil.isWrench(playerIn.getItemInHand(hand))){
 				int mode = rte.cycleMode();
-				MiscUtil.chatMessage(playerIn, new TranslatableComponent("tt.crossroads.radiator.setting", RadiatorTileEntity.TIERS[mode] * CRConfig.steamWorth.get() / 1000));
+				MiscUtil.displayMessage(playerIn, Component.translatable("tt.crossroads.radiator.setting", RadiatorTileEntity.TIERS[mode] * CRConfig.steamWorth.get() / 1000));
 			}else{
-				NetworkHooks.openGui((ServerPlayer) playerIn, rte, pos);
+				NetworkHooks.openScreen((ServerPlayer) playerIn, rte, pos);
 			}
 		}
 		return InteractionResult.SUCCESS;
@@ -70,9 +67,9 @@ public class Radiator extends BaseEntityBlock{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
-		tooltip.add(new TranslatableComponent("tt.crossroads.radiator.desc"));
+		tooltip.add(Component.translatable("tt.crossroads.radiator.desc"));
 		for(int i = 0; i < RadiatorTileEntity.TIERS.length; i++){
-			tooltip.add(new TranslatableComponent("tt.crossroads.radiator.tier", RadiatorTileEntity.TIERS[i] * (double) CRConfig.steamWorth.get() / 1000, RadiatorTileEntity.TIERS[i]));
+			tooltip.add(Component.translatable("tt.crossroads.radiator.tier", RadiatorTileEntity.TIERS[i] * (double) CRConfig.steamWorth.get() / 1000, RadiatorTileEntity.TIERS[i]));
 		}
 	}
 }

@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.render;
 
-import com.Da_Technomancer.crossroads.render.TESR.BeamRenderer;
+import com.Da_Technomancer.crossroads.api.render.IVisualEffect;
+import com.Da_Technomancer.crossroads.render.tesr.BeamRenderer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import net.minecraft.client.renderer.MultiBufferSource;

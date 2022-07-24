@@ -1,13 +1,12 @@
 package com.Da_Technomancer.crossroads.items;
 
-import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
-import com.Da_Technomancer.crossroads.tileentities.rotary.WindingTableTileEntity;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.blocks.rotary.WindingTableTileEntity;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
@@ -31,8 +30,7 @@ public class Whirligig extends Item implements WindingTableTileEntity.IWindableI
 	protected Whirligig(){
 		super(new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
 		String name = "whirligig";
-		setRegistryName(name);
-		CRItems.toRegister.add(this);
+		CRItems.toRegister.put(name, this);
 
 		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
 		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", 5, AttributeModifier.Operation.ADDITION));
@@ -44,10 +42,10 @@ public class Whirligig extends Item implements WindingTableTileEntity.IWindableI
 	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
 		double wind = getWindLevel(stack);
 		double maxWind = getMaxWind();
-		tooltip.add(new TranslatableComponent("tt.crossroads.boilerplate.spring_speed", CRConfig.formatVal(wind), CRConfig.formatVal(maxWind)));
-		tooltip.add(new TranslatableComponent("tt.crossroads.whirligig.desc"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.whirligig.elevate", CRConfig.whirligigHover.get()));
-		tooltip.add(new TranslatableComponent("tt.crossroads.whirligig.quip").setStyle(MiscUtil.TT_QUIP));
+		tooltip.add(Component.translatable("tt.crossroads.boilerplate.spring_speed", CRConfig.formatVal(wind), CRConfig.formatVal(maxWind)));
+		tooltip.add(Component.translatable("tt.crossroads.whirligig.desc"));
+		tooltip.add(Component.translatable("tt.crossroads.whirligig.elevate", CRConfig.whirligigHover.get()));
+		tooltip.add(Component.translatable("tt.crossroads.whirligig.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 
 	@Override
@@ -127,7 +125,7 @@ public class Whirligig extends Item implements WindingTableTileEntity.IWindableI
 
 	@Override
 	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items){
-		if(allowdedIn(group)){
+		if(allowedIn(group)){
 			items.add(new ItemStack(this, 1));
 			ItemStack stack = new ItemStack(this, 1);
 			setWindLevel(stack, getMaxWind());

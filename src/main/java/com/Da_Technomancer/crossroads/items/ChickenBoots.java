@@ -17,8 +17,7 @@ public class ChickenBoots extends ArmorItem{
 	protected ChickenBoots(){
 		super(BOBO_MATERIAL, EquipmentSlot.FEET, new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
 		String name = "chicken_boots";
-		setRegistryName(name);
-		CRItems.toRegister.add(this);
+		CRItems.toRegister.put(name, this);
 	}
 
 	@Override

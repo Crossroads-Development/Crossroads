@@ -1,4 +1,6 @@
-{   "parent": "block/block",
+{
+	"render_type": "cutout",
+	"parent": "block/block",
 	"ambientocclusion": false,
 	"textures": {
 		"particle": "crossroads:block/petrol_cactus_side",

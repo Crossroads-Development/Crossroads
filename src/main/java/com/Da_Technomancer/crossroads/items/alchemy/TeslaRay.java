@@ -1,15 +1,14 @@
 package com.Da_Technomancer.crossroads.items.alchemy;
 
-import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.integration.curios.CurioHelper;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
+import com.Da_Technomancer.crossroads.blocks.electric.TeslaCoilTopTileEntity;
+import com.Da_Technomancer.crossroads.integration.curios.CurioHelperSafe;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.LeydenJar;
-import com.Da_Technomancer.crossroads.render.CRRenderUtil;
-import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTopTileEntity;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -47,8 +46,7 @@ public class TeslaRay extends Item{
 	public TeslaRay(){
 		super(new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
 		String name = "tesla_ray";
-		setRegistryName(name);
-		CRItems.toRegister.add(this);
+		CRItems.toRegister.put(name, this);
 
 		//Attributes
 		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
@@ -63,9 +61,9 @@ public class TeslaRay extends Item{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
-		tooltip.add(new TranslatableComponent("tt.crossroads.tesla_ray.desc"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.tesla_ray.leyden"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.tesla_ray.quip").setStyle(MiscUtil.TT_QUIP));
+		tooltip.add(Component.translatable("tt.crossroads.tesla_ray.desc"));
+		tooltip.add(Component.translatable("tt.crossroads.tesla_ray.leyden"));
+		tooltip.add(Component.translatable("tt.crossroads.tesla_ray.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 
 	@Override
@@ -77,7 +75,7 @@ public class TeslaRay extends Item{
 			return new InteractionResultHolder<>(InteractionResult.SUCCESS, playerIn.getItemInHand(hand));
 		}
 
-		ItemStack leyden = CurioHelper.getEquipped(CRItems.leydenJar, playerIn);
+		ItemStack leyden = CurioHelperSafe.getEquipped(CRItems.leydenJar, playerIn);
 		if(hand == InteractionHand.MAIN_HAND && !leyden.isEmpty() && LeydenJar.getCharge(leyden) >= FE_USE){
 			//Stores attack targets, in order
 			ArrayList<LivingEntity> targets = new ArrayList<>(4);

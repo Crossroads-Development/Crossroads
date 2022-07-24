@@ -1,9 +1,9 @@
 package com.Da_Technomancer.crossroads.entity;
 
-import com.Da_Technomancer.crossroads.API.beams.BeamUtil;
-import com.Da_Technomancer.crossroads.API.witchcraft.EntityTemplate;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.api.beams.BeamUtil;
+import com.Da_Technomancer.crossroads.api.witchcraft.EntityTemplate;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -20,21 +20,18 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkHooks;
-import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-@ObjectHolder(Crossroads.MODID)
 public class EntityGhostMarker extends Entity{
 
 	private static final EntityDataAccessor<Integer> LIFESPAN = SynchedEntityData.defineId(EntityGhostMarker.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<String> MARKER_TYPE = SynchedEntityData.defineId(EntityGhostMarker.class, EntityDataSerializers.STRING);
 
-	@ObjectHolder("ghost_marker")
-	public static EntityType<EntityGhostMarker> type = null;
+	public static EntityType<EntityGhostMarker> type;
 
 	private long time;
 	public CompoundTag data;

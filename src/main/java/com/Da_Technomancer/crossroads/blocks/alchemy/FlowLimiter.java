@@ -1,10 +1,9 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
+import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.tileentities.alchemy.FlowLimiterTileEntity;
-import com.Da_Technomancer.essentials.ESConfig;
-import com.Da_Technomancer.essentials.blocks.ESProperties;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.ConfigUtil;
+import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -43,9 +42,8 @@ public class FlowLimiter extends BaseEntityBlock{
 		super(CRBlocks.getGlassProperty());
 		this.crystal = crystal;
 		String name = (crystal ? "crystal_" : "") + "flow_limiter";
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this);
+		CRBlocks.toRegister.put(name, this);
+		CRBlocks.blockAddQue(name, this);
 	}
 
 	@Override
@@ -72,7 +70,7 @@ public class FlowLimiter extends BaseEntityBlock{
 	
 	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
-		if(ESConfig.isWrench(playerIn.getItemInHand(hand))){
+		if(ConfigUtil.isWrench(playerIn.getItemInHand(hand))){
 			if(!worldIn.isClientSide){
 				if(playerIn.isShiftKeyDown()){
 					BlockEntity te = worldIn.getBlockEntity(pos);
@@ -80,7 +78,7 @@ public class FlowLimiter extends BaseEntityBlock{
 						((FlowLimiterTileEntity) te).cycleLimit((ServerPlayer) playerIn);
 					}
 				}else{
-					worldIn.setBlockAndUpdate(pos, state.cycle(ESProperties.FACING));
+					worldIn.setBlockAndUpdate(pos, state.cycle(CRProperties.FACING));
 					BlockEntity te = worldIn.getBlockEntity(pos);
 					if(te instanceof FlowLimiterTileEntity){
 						((FlowLimiterTileEntity) te).wrench();
@@ -94,17 +92,17 @@ public class FlowLimiter extends BaseEntityBlock{
 
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder){
-		builder.add(ESProperties.FACING);
+		builder.add(CRProperties.FACING);
 	}
 
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context){
-		return SHAPES[state.getValue(ESProperties.FACING).getAxis().ordinal()];
+		return SHAPES[state.getValue(CRProperties.FACING).getAxis().ordinal()];
 	}
 
 	@Nullable
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context){
-		return defaultBlockState().setValue(ESProperties.FACING, context.getNearestLookingDirection());
+		return defaultBlockState().setValue(CRProperties.FACING, context.getNearestLookingDirection());
 	}
 }

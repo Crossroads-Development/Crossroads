@@ -1,16 +1,16 @@
 package com.Da_Technomancer.crossroads.gui.screen;
 
-import com.Da_Technomancer.crossroads.API.templates.MachineGUI;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.api.templates.MachineScreen;
+import com.Da_Technomancer.crossroads.blocks.rotary.StampMillTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.StampMillContainer;
-import com.Da_Technomancer.crossroads.tileentities.rotary.StampMillTileEntity;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class StampMillScreen extends MachineGUI<StampMillContainer, StampMillTileEntity>{
+public class StampMillScreen extends MachineScreen<StampMillContainer, StampMillTileEntity>{
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/gui/container/stamp_mill_gui.png");
 

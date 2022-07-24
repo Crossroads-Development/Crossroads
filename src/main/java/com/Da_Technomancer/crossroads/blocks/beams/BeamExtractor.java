@@ -1,12 +1,10 @@
 package com.Da_Technomancer.crossroads.blocks.beams;
 
-import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.templates.BeamBlock;
-import com.Da_Technomancer.crossroads.tileentities.beams.BeamExtractorTileEntity;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.api.templates.BeamBlock;
+import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -48,7 +46,7 @@ public class BeamExtractor extends BeamBlock{
 		if(!super.use(state, worldIn, pos, playerIn, hand, hit).shouldSwing() && !worldIn.isClientSide){
 			BlockEntity te = worldIn.getBlockEntity(pos);
 			if(te instanceof MenuProvider){
-				NetworkHooks.openGui((ServerPlayer) playerIn, (MenuProvider) te, pos);
+				NetworkHooks.openScreen((ServerPlayer) playerIn, (MenuProvider) te, pos);
 			}
 		}
 		return InteractionResult.SUCCESS;
@@ -56,8 +54,8 @@ public class BeamExtractor extends BeamBlock{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
-		tooltip.add(new TranslatableComponent("tt.crossroads.beam_extractor.desc"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.beam_extractor.redstone"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.beam_extractor.quip").setStyle(MiscUtil.TT_QUIP));
+		tooltip.add(Component.translatable("tt.crossroads.beam_extractor.desc"));
+		tooltip.add(Component.translatable("tt.crossroads.beam_extractor.redstone"));
+		tooltip.add(Component.translatable("tt.crossroads.beam_extractor.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 }

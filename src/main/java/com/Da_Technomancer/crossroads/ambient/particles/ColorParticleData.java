@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.ambient.particles;
 
+import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
@@ -7,6 +8,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.awt.*;
 import java.util.Locale;
@@ -75,7 +77,7 @@ public class ColorParticleData implements ParticleOptions{
 
 	@Override
 	public String writeToString(){
-		return String.format(Locale.ROOT, "%s %d %d %d %d", type.getRegistryName(), col.getRed(), col.getGreen(), col.getBlue(), col.getAlpha());
+		return String.format(Locale.ROOT, "%s %d %d %d %d", MiscUtil.getRegistryName(type, ForgeRegistries.PARTICLE_TYPES), col.getRed(), col.getGreen(), col.getBlue(), col.getAlpha());
 	}
 
 	private static class Deserializer implements ParticleOptions.Deserializer<ColorParticleData>{

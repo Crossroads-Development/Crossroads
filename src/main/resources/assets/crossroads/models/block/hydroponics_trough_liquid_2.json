@@ -1,4 +1,5 @@
 {
+	"render_type": "translucent",
 	"ambientocclusion": false,
 	"textures": {
 		"particle": "crossroads:block/fertilizer_solution_still",

@@ -1,13 +1,13 @@
 package com.Da_Technomancer.crossroads.gui.screen;
 
-import com.Da_Technomancer.crossroads.API.CircuitUtil;
-import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.api.CircuitUtil;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.api.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.gui.container.BeamExtractorCreativeContainer;
-import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
-import com.Da_Technomancer.essentials.packets.EssentialsPackets;
-import com.Da_Technomancer.essentials.packets.SendNBTToServer;
+import com.Da_Technomancer.essentials.api.packets.EssentialsPackets;
+import com.Da_Technomancer.essentials.api.packets.SendNBTToServer;
+import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -15,7 +15,6 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -35,7 +34,7 @@ public class BeamExtractorCreativeScreen extends AbstractContainerScreen<BeamExt
 		super.init();
 		searchBars = new EditBox[4];
 		for(int i = 0; i < 4; i++){
-			searchBars[i] = CircuitUtil.createFormulaInputUIComponent(this, font, 4 + 20, 8 + 18*i, new TranslatableComponent("container.search_bar"), this::entryChanged, menu.conf[i]);
+			searchBars[i] = CircuitUtil.createFormulaInputUIComponent(this, font, 4 + 20, 8 + 18*i, Component.translatable("container.search_bar"), this::entryChanged, menu.conf[i]);
 			searchBars[i].setCanLoseFocus(true);
 			addWidget(searchBars[i]);
 		}
@@ -104,9 +103,9 @@ public class BeamExtractorCreativeScreen extends AbstractContainerScreen<BeamExt
 	@Override
 	protected void renderLabels(PoseStack matrix, int p_230451_2_, int p_230451_3_){
 		//Don't render default text overlays
-		font.draw(matrix, MiscUtil.localize("container.crossroads.beam_extractor_creative.energy"), 8, 2, 0x404040);
-		font.draw(matrix, MiscUtil.localize("container.crossroads.beam_extractor_creative.potential"), 8, 20, 0x404040);
-		font.draw(matrix, MiscUtil.localize("container.crossroads.beam_extractor_creative.stability"), 8, 38, 0x404040);
-		font.draw(matrix, MiscUtil.localize("container.crossroads.beam_extractor_creative.void"), 8, 56, 0x404040);
+		font.draw(matrix, MiscUtil.localize("container.crossroads.beam_extractor_creative.energy"), 8, 6, 0x404040);
+		font.draw(matrix, MiscUtil.localize("container.crossroads.beam_extractor_creative.potential"), 8, 24, 0x404040);
+		font.draw(matrix, MiscUtil.localize("container.crossroads.beam_extractor_creative.stability"), 8, 42, 0x404040);
+		font.draw(matrix, MiscUtil.localize("container.crossroads.beam_extractor_creative.void"), 8, 60, 0x404040);
 	}
 }

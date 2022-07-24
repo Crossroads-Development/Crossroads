@@ -1,0 +1,133 @@
+package com.Da_Technomancer.crossroads.blocks;
+
+import com.Da_Technomancer.crossroads.blocks.alchemy.*;
+import com.Da_Technomancer.crossroads.blocks.beams.*;
+import com.Da_Technomancer.crossroads.blocks.electric.DynamoTileEntity;
+import com.Da_Technomancer.crossroads.blocks.electric.TeslaCoilTileEntity;
+import com.Da_Technomancer.crossroads.blocks.electric.TeslaCoilTopTileEntity;
+import com.Da_Technomancer.crossroads.blocks.fluid.*;
+import com.Da_Technomancer.crossroads.blocks.heat.*;
+import com.Da_Technomancer.crossroads.blocks.rotary.*;
+import com.Da_Technomancer.crossroads.blocks.rotary.mechanisms.MechanismTileEntity;
+import com.Da_Technomancer.crossroads.blocks.technomancy.*;
+import com.Da_Technomancer.crossroads.blocks.witchcraft.*;
+import com.mojang.datafixers.DSL;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+
+import java.util.HashMap;
+
+public class CRTileEntity{
+
+	public static void init(){
+		toRegister.put("heat_cable", HeatCableTileEntity.TYPE);
+		toRegister.put("mechanism", MechanismTileEntity.TYPE);
+		toRegister.put("master_axis", MasterAxisTileEntity.TYPE);
+		toRegister.put("millstone", MillstoneTileEntity.TYPE);
+		toRegister.put("crucible", HeatingCrucibleTileEntity.TYPE);
+		toRegister.put("fluid_tube", FluidTubeTileEntity.TYPE);
+		toRegister.put("steam_boiler", SteamBoilerTileEntity.TYPE);
+		toRegister.put("rotary_pump", RotaryPumpTileEntity.TYPE);
+		toRegister.put("steam_turbine", SteamTurbineTileEntity.TYPE);
+		toRegister.put("fluid_void", FluidVoidTileEntity.TYPE);
+		toRegister.put("heat_sink", HeatSinkTileEntity.TYPE);
+		toRegister.put("fluid_tank", FluidTankTileEntity.TYPE);
+		toRegister.put("firebox", FireboxTileEntity.TYPE);
+		toRegister.put("smelter", SmelterTileEntity.TYPE);
+		toRegister.put("salt_reactor", SaltReactorTileEntity.TYPE);
+		toRegister.put("fluid_cooling_chamber", FluidCoolingChamberTileEntity.TYPE);
+		toRegister.put("large_gear_slave", LargeGearSlaveTileEntity.TYPE);
+		toRegister.put("large_gear_master", LargeGearMasterTileEntity.TYPE);
+		toRegister.put("radiator", RadiatorTileEntity.TYPE);
+		toRegister.put("rotary_drill", RotaryDrillTileEntity.TYPE);
+		toRegister.put("fat_collector", FatCollectorTileEntity.TYPE);
+		toRegister.put("fat_congealer", FatCongealerTileEntity.TYPE);
+		toRegister.put("redstone_heat_cable", RedstoneHeatCableTileEntity.TYPE);
+		toRegister.put("redstone_fluid_tube", RedstoneFluidTubeTileEntity.TYPE);
+		toRegister.put("water_centrifuge", WaterCentrifugeTileEntity.TYPE);
+		toRegister.put("beam_extractor", BeamExtractorTileEntity.TYPE);
+		toRegister.put("quartz_stabilizer", QuartzStabilizerTileEntity.TYPE);
+		toRegister.put("crystal_prism", CrystallinePrismTileEntity.TYPE);
+		toRegister.put("beam_reflector", BeamReflectorTileEntity.TYPE);
+		toRegister.put("lens_frame", LensFrameTileEntity.TYPE);
+		toRegister.put("beam_siphon", BeamSiphonTileEntity.TYPE);
+		toRegister.put("beam_splitter", BeamSplitterTileEntity.TYPE);
+		toRegister.put("crystal_master_axis", CrystalMasterAxisTileEntity.TYPE);
+		toRegister.put("beacon_harness", BeaconHarnessTileEntity.TYPE);
+		toRegister.put("fat_feeder", FatFeederTileEntity.TYPE);
+		toRegister.put("redstone_axis", RedstoneAxisTileEntity.TYPE);
+		toRegister.put("cage_charger", CageChargerTileEntity.TYPE);
+		toRegister.put("hamster_wheel", HamsterWheelTileEntity.TYPE);
+		toRegister.put("copshowium_creation_chamber", CopshowiumCreationChamberTileEntity.TYPE);
+		toRegister.put("gateway_frame", GatewayControllerTileEntity.TYPE);
+		toRegister.put("gateway_edge", GatewayEdgeTileEntity.TYPE);
+		toRegister.put("alchemical_tube", AlchemicalTubeTileEntity.TYPE);
+		toRegister.put("fluid_injector", FluidInjectorTileEntity.TYPE);
+		toRegister.put("flow_limiter", FlowLimiterTileEntity.TYPE);
+		toRegister.put("heated_tube", HeatedTubeTileEntity.TYPE);
+		toRegister.put("cooling_coil", CoolingCoilTileEntity.TYPE);
+		toRegister.put("chemical_vent", ChemicalVentTileEntity.TYPE);
+		toRegister.put("reaction_chamber", ReactionChamberTileEntity.TYPE);
+		toRegister.put("heat_limiter_basic", HeatLimiterBasicTileEntity.TYPE);
+		toRegister.put("heat_limiter", HeatLimiterRedstoneTileEntity.TYPE);
+		toRegister.put("dynamo", DynamoTileEntity.TYPE);
+		toRegister.put("tesla_coil", TeslaCoilTileEntity.TYPE);
+		toRegister.put("reagent_tank", ReagentTankTileEntity.TYPE);
+		toRegister.put("reagent_pump", ReagentPumpTileEntity.TYPE);
+		toRegister.put("maxwell_demon", MaxwellDemonTileEntity.TYPE);
+		toRegister.put("glassware_holder", GlasswareHolderTileEntity.TYPE);
+		toRegister.put("reds_alchemical_tube", RedsAlchemicalTubeTileEntity.TYPE);
+		toRegister.put("densus_plate", DensusPlateTileEntity.TYPE);
+		toRegister.put("charging_stand", ChargingStandTileEntity.TYPE);
+		toRegister.put("atmos_charger", AtmosChargerTileEntity.TYPE);
+		toRegister.put("voltus_generator", VoltusGeneratorTileEntity.TYPE);
+		toRegister.put("reactive_spot", ReactiveSpotTileEntity.TYPE);
+		toRegister.put("clock_stab", ClockworkStabilizerTileEntity.TYPE);
+		toRegister.put("wind_turbine", WindTurbineTileEntity.TYPE);
+		toRegister.put("solar_heater", SolarHeaterTileEntity.TYPE);
+		toRegister.put("heat_reservoir", HeatReservoirTileEntity.TYPE);
+		toRegister.put("stirling_engine", StirlingEngineTileEntity.TYPE);
+		toRegister.put("stamp_mill", StampMillTileEntity.TYPE);
+		toRegister.put("icebox", IceboxTileEntity.TYPE);
+		toRegister.put("ore_cleanser", OreCleanserTileEntity.TYPE);
+		toRegister.put("ind_blast_furnace", BlastFurnaceTileEntity.TYPE);
+		toRegister.put("beam_redirector", BeamRedirectorTileEntity.TYPE);
+		toRegister.put("tesla_coil_top", TeslaCoilTopTileEntity.TYPE);
+		toRegister.put("flux_node", FluxNodeTileEntity.TYPE);
+		toRegister.put("temporal_accelerator", TemporalAcceleratorTileEntity.TYPE);
+		toRegister.put("chrono_harness", ChronoHarnessTileEntity.TYPE);
+		toRegister.put("reagent_filter", ReagentFilterTileEntity.TYPE);
+		toRegister.put("flux_sink", FluxSinkTileEntity.TYPE);
+		toRegister.put("steamer", SteamerTileEntity.TYPE);
+		toRegister.put("winding_table", WindingTableTileEntity.TYPE);
+		toRegister.put("detailed_auto_crafter", DetailedAutoCrafterTileEntity.TYPE);
+		toRegister.put("lodestone_turbine", LodestoneTurbineTileEntity.TYPE);
+		toRegister.put("lodestone_dynamo", LodestoneDynamoTileEntity.TYPE);
+		toRegister.put("sequence_box", SequenceBoxTileEntity.TYPE);
+		toRegister.put("chunk_accelerator", ChunkAcceleratorTileEntity.TYPE);
+		toRegister.put("gateway_controller_destination", GatewayControllerDestinationTileEntity.TYPE);
+		toRegister.put("beam_cannon", BeamCannonTileEntity.TYPE);
+		toRegister.put("formulation_vat", FormulationVatTileEntity.TYPE);
+		toRegister.put("brewing_vat", BrewingVatTileEntity.TYPE);
+		toRegister.put("auto_injector", AutoInjectorTileEntity.TYPE);
+		toRegister.put("cold_storage", ColdStorageTileEntity.TYPE);
+		toRegister.put("hydroponics_trough", HydroponicsTroughTileEntity.TYPE);
+		toRegister.put("stasis_storage", StasisStorageTileEntity.TYPE);
+		toRegister.put("cultivator_vat", CultivatorVatTileEntity.TYPE);
+		toRegister.put("incubator", IncubatorTileEntity.TYPE);
+		toRegister.put("blood_centrifuge", BloodCentrifugeTileEntity.TYPE);
+		toRegister.put("embryo_lab", EmbryoLabTileEntity.TYPE);
+		toRegister.put("heat_reservoir_creative", HeatReservoirCreativeTileEntity.TYPE);
+		toRegister.put("master_axis_creative", MasterAxisCreativeTileEntity.TYPE);
+		toRegister.put("beam_extractor_creative", BeamExtractorCreativeTileEntity.TYPE);
+		toRegister.put("item_cannon", ItemCannonTileEntity.TYPE);
+		toRegister.put("fire_detector", FireDetectorTileEntity.TYPE);
+	}
+
+	public static final HashMap<String, BlockEntityType<?>> toRegister = new HashMap<>();
+
+	public static <T extends BlockEntity> BlockEntityType<T> createType(BlockEntityType.BlockEntitySupplier<T> cons, Block... blocks){
+		return BlockEntityType.Builder.of(cons, blocks).build(DSL.emptyPartType());
+	}
+}

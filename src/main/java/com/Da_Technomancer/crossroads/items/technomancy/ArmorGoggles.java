@@ -1,15 +1,14 @@
 package com.Da_Technomancer.crossroads.items.technomancy;
 
-import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.packets.CRPackets;
-import com.Da_Technomancer.crossroads.API.packets.SendChatToClient;
-import com.Da_Technomancer.crossroads.API.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.api.packets.CRPackets;
+import com.Da_Technomancer.crossroads.api.packets.SendChatToClient;
+import com.Da_Technomancer.crossroads.api.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -29,8 +28,7 @@ public class ArmorGoggles extends TechnomancyArmor{
 	public ArmorGoggles(){
 		super(EquipmentSlot.HEAD);
 		String name = "module_goggles";
-		setRegistryName(name);
-		CRItems.toRegister.add(this);
+		CRItems.toRegister.put(name, this);
 	}
 
 	/**
@@ -60,7 +58,7 @@ public class ArmorGoggles extends TechnomancyArmor{
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
 		super.appendHoverText(stack, worldIn, tooltip, flagIn);
-		tooltip.add(new TranslatableComponent("tt.crossroads.goggles.lenses"));
+		tooltip.add(Component.translatable("tt.crossroads.goggles.lenses"));
 		CompoundTag nbt = stack.getTag();
 		boolean hasLens = false;
 		if(nbt != null && !nbt.isEmpty()){
@@ -69,13 +67,13 @@ public class ArmorGoggles extends TechnomancyArmor{
 			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
 				if(nbt.contains(lens.toString())){
 					//Displaying the enabled/disabled parameter is optional. By default, diamond and quartz lenses don't
-					tooltip.add(new TranslatableComponent("tt.crossroads.goggles." + lens.toString(), nbt.getBoolean(lens.toString()) ? enabled : disabled));
+					tooltip.add(Component.translatable("tt.crossroads.goggles." + lens.toString(), nbt.getBoolean(lens.toString()) ? enabled : disabled));
 					hasLens = true;
 				}
 			}
 		}
 		if(!hasLens){
-			tooltip.add(new TranslatableComponent("tt.crossroads.goggles.none"));
+			tooltip.add(Component.translatable("tt.crossroads.goggles.none"));
 		}
 	}
 
@@ -101,7 +99,7 @@ public class ArmorGoggles extends TechnomancyArmor{
 
 	@Override
 	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items){
-		if(allowdedIn(group)){
+		if(allowedIn(group)){
 			items.add(new ItemStack(this, 1));
 			items.add(setReinforced(new ItemStack(this, 1), true));
 			ItemStack unarmoredLenses = new ItemStack(this, 1);

@@ -14,8 +14,7 @@ public class SquidHelmet extends ArmorItem{
 	protected SquidHelmet(){
 		super(ChickenBoots.BOBO_MATERIAL, EquipmentSlot.HEAD, new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
 		String name = "squid_helmet";
-		setRegistryName(name);
-		CRItems.toRegister.add(this);
+		CRItems.toRegister.put(name, this);
 	}
 
 	@Override

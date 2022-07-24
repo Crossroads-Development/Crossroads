@@ -1,28 +1,28 @@
 package com.Da_Technomancer.crossroads.gui.container;
 
-import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraftforge.registries.ObjectHolder;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
+import java.util.function.Supplier;
 
-@ObjectHolder(Crossroads.MODID)
 public class SequenceBoxContainer extends AbstractContainerMenu{
 
-	@ObjectHolder("sequence_box")
-	private static MenuType<SequenceBoxContainer> type = null;
+	private static final Supplier<MenuType<?>> TYPE_SPL = MiscUtil.getCRRegistryObject("sequence_box", ForgeRegistries.Keys.MENU_TYPES);
 
 	public final BlockPos pos;
 	public final ArrayList<String> inputs;
 	public int outputIndex;
 
 	public SequenceBoxContainer(int id, Inventory playerInventory, FriendlyByteBuf data){
-		super(type, id);
+		super(TYPE_SPL.get(), id);
 		if(data == null){
 			pos = null;
 			outputIndex = 0;
@@ -42,5 +42,10 @@ public class SequenceBoxContainer extends AbstractContainerMenu{
 	@Override
 	public boolean stillValid(Player playerIn){
 		return pos != null && pos.distSqr(playerIn.blockPosition()) <= 64;
+	}
+
+	@Override
+	public ItemStack quickMoveStack(Player playerIn, int fromSlot){
+		return ItemStack.EMPTY;
 	}
 }

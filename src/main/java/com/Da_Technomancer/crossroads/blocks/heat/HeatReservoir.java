@@ -1,18 +1,16 @@
 package com.Da_Technomancer.crossroads.blocks.heat;
 
-import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.tileentities.heat.HeatReservoirTileEntity;
-import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
-import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.redstone.IReadable;
+import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import com.google.common.collect.Lists;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -36,9 +34,8 @@ public class HeatReservoir extends BaseEntityBlock implements IReadable{
 	public HeatReservoir(){
 		super(CRBlocks.getMetalProperty());
 		String name = "heat_reservoir";
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this);
+		CRBlocks.toRegister.put(name, this);
+		CRBlocks.blockAddQue(name, this);
 	}
 
 	@Override
@@ -59,11 +56,11 @@ public class HeatReservoir extends BaseEntityBlock implements IReadable{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
-		tooltip.add(new TranslatableComponent("tt.crossroads.heat_battery.info"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.heat_battery.reds"));
+		tooltip.add(Component.translatable("tt.crossroads.heat_battery.info"));
+		tooltip.add(Component.translatable("tt.crossroads.heat_battery.reds"));
 		CompoundTag nbt = stack.getTag();
 		if(nbt != null && nbt.contains("temp")){
-			tooltip.add(new TranslatableComponent("tt.crossroads.boilerplate.degrees_c", CRConfig.formatVal(nbt.getDouble("temp"))));
+			tooltip.add(Component.translatable("tt.crossroads.boilerplate.degrees_c", CRConfig.formatVal(nbt.getDouble("temp"))));
 		}
 	}
 

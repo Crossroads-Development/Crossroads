@@ -1,21 +1,19 @@
 package com.Da_Technomancer.crossroads.ambient.sounds;
 
-import com.Da_Technomancer.crossroads.API.packets.SafeCallable;
 import com.Da_Technomancer.crossroads.Crossroads;
-import net.minecraft.client.resources.sounds.Sound;
+import com.Da_Technomancer.crossroads.api.packets.SafeCallable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.registries.IForgeRegistry;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public class CRSounds{
 
-	private static final ArrayList<SoundEvent> soundsToRegister = new ArrayList<>(7);
+	public static final HashMap<String, SoundEvent> soundsToRegister = new HashMap<>(8);
 
 	public static final SoundEvent BEAM_PASSIVE = createEvent("beam_passive");
 	public static final SoundEvent BEAM_TRANSMUTE = createEvent("beam_transmute");
@@ -26,16 +24,10 @@ public class CRSounds{
 	public static final SoundEvent ITEM_CANNON = createEvent("item_cannon");
 	public static final SoundEvent FIRE_SWELL = createEvent("fire_swell");
 
-	public static void register(IForgeRegistry<SoundEvent> reg){
-		for(SoundEvent e : soundsToRegister){
-			reg.register(e);
-		}
-	}
-
 	private static SoundEvent createEvent(String name){
 		ResourceLocation id = new ResourceLocation(Crossroads.MODID, name);
-		SoundEvent created = new SoundEvent(id).setRegistryName(id);
-		soundsToRegister.add(created);
+		SoundEvent created = new SoundEvent(id);
+		soundsToRegister.put(name, created);
 		return created;
 	}
 

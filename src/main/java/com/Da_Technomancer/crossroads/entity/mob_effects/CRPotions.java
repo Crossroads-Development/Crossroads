@@ -1,9 +1,8 @@
 package com.Da_Technomancer.crossroads.entity.mob_effects;
 
 import com.Da_Technomancer.crossroads.CRConfig;
-import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.crafting.CRNBTIngredient;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
@@ -18,49 +17,48 @@ import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
-import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.common.crafting.StrictNBTIngredient;
+import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class CRPotions{
 
+	public static final HashMap<String, MobEffect> toRegisterEffect = new HashMap<>(4);
+	public static final HashMap<String, Potion> toRegisterPotion = new HashMap<>();
+
 	//We assume any effect on a mob over this duration was originally a permanent effect; this is not a flawless method
 	public static final int PERM_EFFECT_CUTOFF = Integer.MAX_VALUE / 4;
 
-	public static final Sedation SEDATION_EFFECT = new Sedation();
-	public static final Curative CURATIVE_EFFECT = new Curative();
-	public static final HealthPenalty HEALTH_PENALTY_EFFECT = new HealthPenalty();
-	public static final Transient TRANSIENT_EFFECT = new Transient();
+	public static final Sedation SEDATION_EFFECT = registerMobEffect("sedation", new Sedation());
+	public static final Curative CURATIVE_EFFECT = registerMobEffect("curative", new Curative());
+	public static final HealthPenalty HEALTH_PENALTY_EFFECT = registerMobEffect("health_penalty", new HealthPenalty());
+	public static final Transient TRANSIENT_EFFECT = registerMobEffect("transient", new Transient());
 
-	public static final Potion POTION_SEDATION = new Potion("sedation", new MobEffectInstance(SEDATION_EFFECT, 3600)).setRegistryName(new ResourceLocation(Crossroads.MODID, "sedation"));
-	public static final Potion POTION_SEDATION_LONG = new Potion("sedation", new MobEffectInstance(SEDATION_EFFECT, 9600)).setRegistryName(new ResourceLocation(Crossroads.MODID, "long_sedation"));
-	public static final Potion POTION_CURATIVE = new Potion("curative", new MobEffectInstance(CURATIVE_EFFECT, 1)).setRegistryName(new ResourceLocation(Crossroads.MODID, "curative"));
-	public static final Potion POTION_NAUSEA = new Potion("nausea", new MobEffectInstance(MobEffects.CONFUSION, 3600)).setRegistryName(new ResourceLocation(Crossroads.MODID, "nausea"));
-	public static final Potion POTION_NAUSEA_LONG = new Potion("nausea", new MobEffectInstance(MobEffects.CONFUSION, 9600)).setRegistryName(new ResourceLocation(Crossroads.MODID, "long_nausea"));
-	public static final Potion POTION_BLINDNESS = new Potion("blindness", new MobEffectInstance(MobEffects.BLINDNESS, 3600)).setRegistryName(new ResourceLocation(Crossroads.MODID, "blindness"));
-	public static final Potion POTION_BLINDNESS_LONG = new Potion("blindness", new MobEffectInstance(MobEffects.BLINDNESS, 9600)).setRegistryName(new ResourceLocation(Crossroads.MODID, "long_blindness"));
-	public static final Potion POTION_TRANSIENT = new Potion("transient", new MobEffectInstance(TRANSIENT_EFFECT, 3600)).setRegistryName(new ResourceLocation(Crossroads.MODID, "transient"));
-	public static final Potion POTION_TRANSIENT_LONG = new Potion("transient", new MobEffectInstance(TRANSIENT_EFFECT, 9600)).setRegistryName(new ResourceLocation(Crossroads.MODID, "long_transient"));
+	public static final Potion POTION_SEDATION = registerPotion("sedation", "sedation", new MobEffectInstance(SEDATION_EFFECT, 3600));
+	public static final Potion POTION_SEDATION_LONG = registerPotion("long_sedation", "sedation", new MobEffectInstance(SEDATION_EFFECT, 9600));
+	public static final Potion POTION_CURATIVE = registerPotion("curative", "curative", new MobEffectInstance(CURATIVE_EFFECT, 1));
+	public static final Potion POTION_NAUSEA = registerPotion("nausea", "nausea", new MobEffectInstance(MobEffects.CONFUSION, 3600));
+	public static final Potion POTION_NAUSEA_LONG = registerPotion("long_nausea", "nausea", new MobEffectInstance(MobEffects.CONFUSION, 9600));
+	public static final Potion POTION_BLINDNESS = registerPotion("blindness", "blindness", new MobEffectInstance(MobEffects.BLINDNESS, 3600));
+	public static final Potion POTION_BLINDNESS_LONG = registerPotion("long_blindness", "blindness", new MobEffectInstance(MobEffects.BLINDNESS, 9600));
+	public static final Potion POTION_TRANSIENT = registerPotion("transient", "transient", new MobEffectInstance(TRANSIENT_EFFECT, 3600));
+	public static final Potion POTION_TRANSIENT_LONG = registerPotion("long_transient", "transient", new MobEffectInstance(TRANSIENT_EFFECT, 9600));
 
-	public static void registerEffects(IForgeRegistry<MobEffect> reg){
-		reg.register(SEDATION_EFFECT);
-		reg.register(CURATIVE_EFFECT);
-		reg.register(HEALTH_PENALTY_EFFECT);
-		reg.register(TRANSIENT_EFFECT);
+	public static void init(){
+		registerPotionRecipes();
 	}
 
-	public static void registerPotions(IForgeRegistry<Potion> reg){
-		reg.register(POTION_SEDATION);
-		reg.register(POTION_SEDATION_LONG);
-		reg.register(POTION_CURATIVE);
-		reg.register(POTION_NAUSEA);
-		reg.register(POTION_NAUSEA_LONG);
-		reg.register(POTION_BLINDNESS);
-		reg.register(POTION_BLINDNESS_LONG);
-		reg.register(POTION_TRANSIENT);
-		reg.register(POTION_TRANSIENT_LONG);
+	private static <T extends MobEffect> T registerMobEffect(String regName, T effect){
+		toRegisterEffect.put(regName, effect);
+		return effect;
+	}
 
-		registerPotionRecipes();
+	private static Potion registerPotion(String regName, String potionName, MobEffectInstance effectInstance){
+		Potion potion = new Potion(potionName, effectInstance);
+		toRegisterPotion.put(regName, potion);
+		return potion;
 	}
 
 	public static void registerPotionRecipes(){
@@ -70,32 +68,32 @@ public class CRPotions{
 		//This needs to be re-written if we want to use tags
 
 		//Sedation potions
-		BrewingRecipeRegistry.addRecipe(new CRNBTIngredient(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.AWKWARD)), Ingredient.of(new ItemStack(CRItems.mushroomDust)), PotionUtils.setPotion(new ItemStack(Items.POTION), POTION_SEDATION));
+		BrewingRecipeRegistry.addRecipe(StrictNBTIngredient.of(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.AWKWARD)), Ingredient.of(new ItemStack(CRItems.mushroomDust)), PotionUtils.setPotion(new ItemStack(Items.POTION), POTION_SEDATION));
 		//Extend sedation
 		Ingredient redstoneIngredient = Ingredient.of(Items.REDSTONE);
-		BrewingRecipeRegistry.addRecipe(new CRNBTIngredient(PotionUtils.setPotion(new ItemStack(Items.POTION), POTION_SEDATION)), redstoneIngredient, PotionUtils.setPotion(new ItemStack(Items.POTION), POTION_SEDATION_LONG));
-		BrewingRecipeRegistry.addRecipe(new CRNBTIngredient(PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), POTION_SEDATION)), redstoneIngredient, PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), POTION_SEDATION_LONG));
-		BrewingRecipeRegistry.addRecipe(new CRNBTIngredient(PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), POTION_SEDATION)), redstoneIngredient, PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), POTION_SEDATION_LONG));
+		BrewingRecipeRegistry.addRecipe(StrictNBTIngredient.of(PotionUtils.setPotion(new ItemStack(Items.POTION), POTION_SEDATION)), redstoneIngredient, PotionUtils.setPotion(new ItemStack(Items.POTION), POTION_SEDATION_LONG));
+		BrewingRecipeRegistry.addRecipe(StrictNBTIngredient.of(PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), POTION_SEDATION)), redstoneIngredient, PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), POTION_SEDATION_LONG));
+		BrewingRecipeRegistry.addRecipe(StrictNBTIngredient.of(PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), POTION_SEDATION)), redstoneIngredient, PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), POTION_SEDATION_LONG));
 		//Curative potions
-		BrewingRecipeRegistry.addRecipe(new CRNBTIngredient(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.AWKWARD)), Ingredient.of(new ItemStack(CRBlocks.medicinalMushroom)), PotionUtils.setPotion(new ItemStack(Items.POTION), POTION_CURATIVE));
+		BrewingRecipeRegistry.addRecipe(StrictNBTIngredient.of(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.AWKWARD)), Ingredient.of(new ItemStack(CRBlocks.medicinalMushroom)), PotionUtils.setPotion(new ItemStack(Items.POTION), POTION_CURATIVE));
 		//Nausea potions
-		BrewingRecipeRegistry.addRecipe(new CRNBTIngredient(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.MUNDANE)), Ingredient.of(new ItemStack(CRItems.mushroomDust)), PotionUtils.setPotion(new ItemStack(Items.POTION), POTION_NAUSEA));
+		BrewingRecipeRegistry.addRecipe(StrictNBTIngredient.of(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.MUNDANE)), Ingredient.of(new ItemStack(CRItems.mushroomDust)), PotionUtils.setPotion(new ItemStack(Items.POTION), POTION_NAUSEA));
 		//Extend nausea
-		BrewingRecipeRegistry.addRecipe(new CRNBTIngredient(PotionUtils.setPotion(new ItemStack(Items.POTION), POTION_NAUSEA)), redstoneIngredient, PotionUtils.setPotion(new ItemStack(Items.POTION), POTION_NAUSEA_LONG));
-		BrewingRecipeRegistry.addRecipe(new CRNBTIngredient(PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), POTION_NAUSEA)), redstoneIngredient, PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), POTION_NAUSEA_LONG));
-		BrewingRecipeRegistry.addRecipe(new CRNBTIngredient(PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), POTION_NAUSEA)), redstoneIngredient, PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), POTION_NAUSEA_LONG));
+		BrewingRecipeRegistry.addRecipe(StrictNBTIngredient.of(PotionUtils.setPotion(new ItemStack(Items.POTION), POTION_NAUSEA)), redstoneIngredient, PotionUtils.setPotion(new ItemStack(Items.POTION), POTION_NAUSEA_LONG));
+		BrewingRecipeRegistry.addRecipe(StrictNBTIngredient.of(PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), POTION_NAUSEA)), redstoneIngredient, PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), POTION_NAUSEA_LONG));
+		BrewingRecipeRegistry.addRecipe(StrictNBTIngredient.of(PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), POTION_NAUSEA)), redstoneIngredient, PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), POTION_NAUSEA_LONG));
 		//Blindness potions
-		BrewingRecipeRegistry.addRecipe(new CRNBTIngredient(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.THICK)), Ingredient.of(new ItemStack(CRItems.mushroomDust)), PotionUtils.setPotion(new ItemStack(Items.POTION), POTION_BLINDNESS));
+		BrewingRecipeRegistry.addRecipe(StrictNBTIngredient.of(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.THICK)), Ingredient.of(new ItemStack(CRItems.mushroomDust)), PotionUtils.setPotion(new ItemStack(Items.POTION), POTION_BLINDNESS));
 		//Extend blindness
-		BrewingRecipeRegistry.addRecipe(new CRNBTIngredient(PotionUtils.setPotion(new ItemStack(Items.POTION), POTION_BLINDNESS)), redstoneIngredient, PotionUtils.setPotion(new ItemStack(Items.POTION), POTION_BLINDNESS_LONG));
-		BrewingRecipeRegistry.addRecipe(new CRNBTIngredient(PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), POTION_BLINDNESS)), redstoneIngredient, PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), POTION_BLINDNESS_LONG));
-		BrewingRecipeRegistry.addRecipe(new CRNBTIngredient(PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), POTION_BLINDNESS)), redstoneIngredient, PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), POTION_BLINDNESS_LONG));
+		BrewingRecipeRegistry.addRecipe(StrictNBTIngredient.of(PotionUtils.setPotion(new ItemStack(Items.POTION), POTION_BLINDNESS)), redstoneIngredient, PotionUtils.setPotion(new ItemStack(Items.POTION), POTION_BLINDNESS_LONG));
+		BrewingRecipeRegistry.addRecipe(StrictNBTIngredient.of(PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), POTION_BLINDNESS)), redstoneIngredient, PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), POTION_BLINDNESS_LONG));
+		BrewingRecipeRegistry.addRecipe(StrictNBTIngredient.of(PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), POTION_BLINDNESS)), redstoneIngredient, PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), POTION_BLINDNESS_LONG));
 		//Transient
-		BrewingRecipeRegistry.addRecipe(new CRNBTIngredient(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.AWKWARD)), Ingredient.of(new ItemStack(CRItems.soulCluster)), PotionUtils.setPotion(new ItemStack(Items.POTION), POTION_TRANSIENT));
+		BrewingRecipeRegistry.addRecipe(StrictNBTIngredient.of(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.AWKWARD)), Ingredient.of(new ItemStack(CRItems.soulCluster)), PotionUtils.setPotion(new ItemStack(Items.POTION), POTION_TRANSIENT));
 		//Extend transient
-		BrewingRecipeRegistry.addRecipe(new CRNBTIngredient(PotionUtils.setPotion(new ItemStack(Items.POTION), POTION_TRANSIENT)), redstoneIngredient, PotionUtils.setPotion(new ItemStack(Items.POTION), POTION_TRANSIENT_LONG));
-		BrewingRecipeRegistry.addRecipe(new CRNBTIngredient(PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), POTION_TRANSIENT)), redstoneIngredient, PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), POTION_TRANSIENT_LONG));
-		BrewingRecipeRegistry.addRecipe(new CRNBTIngredient(PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), POTION_TRANSIENT)), redstoneIngredient, PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), POTION_TRANSIENT_LONG));
+		BrewingRecipeRegistry.addRecipe(StrictNBTIngredient.of(PotionUtils.setPotion(new ItemStack(Items.POTION), POTION_TRANSIENT)), redstoneIngredient, PotionUtils.setPotion(new ItemStack(Items.POTION), POTION_TRANSIENT_LONG));
+		BrewingRecipeRegistry.addRecipe(StrictNBTIngredient.of(PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), POTION_TRANSIENT)), redstoneIngredient, PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), POTION_TRANSIENT_LONG));
+		BrewingRecipeRegistry.addRecipe(StrictNBTIngredient.of(PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), POTION_TRANSIENT)), redstoneIngredient, PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), POTION_TRANSIENT_LONG));
 
 		//Filling empty bottles
 		BrewingRecipeRegistry.addRecipe(Ingredient.of(Items.GLASS_BOTTLE), Ingredient.of(Blocks.ICE), PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER));
@@ -104,7 +102,7 @@ public class CRPotions{
 	public static boolean canBePermanentEffect(MobEffectInstance effect){
 		if(!effect.getEffect().isInstantenous()){
 			//Confirm the effect isn't blacklisted
-			ResourceLocation effectRegistryName = effect.getEffect().getRegistryName();
+			ResourceLocation effectRegistryName = MiscUtil.getRegistryName(effect.getEffect(), ForgeRegistries.MOB_EFFECTS);
 			List<? extends String> blacklist = CRConfig.permanentEffectBlacklist.get();
 			return blacklist.stream().noneMatch(entry -> new ResourceLocation(entry).equals(effectRegistryName));
 		}

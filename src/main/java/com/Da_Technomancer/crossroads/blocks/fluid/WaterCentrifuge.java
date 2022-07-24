@@ -1,12 +1,10 @@
 package com.Da_Technomancer.crossroads.blocks.fluid;
 
-import com.Da_Technomancer.crossroads.API.MiscUtil;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.tileentities.fluid.WaterCentrifugeTileEntity;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.*;
 import net.minecraft.world.entity.player.Player;
@@ -31,9 +29,8 @@ public class WaterCentrifuge extends BaseEntityBlock{
 	public WaterCentrifuge(){
 		super(CRBlocks.getMetalProperty());
 		String name = "water_centrifuge";
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this);
+		CRBlocks.toRegister.put(name, this);
+		CRBlocks.blockAddQue(name, this);
 	}
 
 	@Override
@@ -51,7 +48,7 @@ public class WaterCentrifuge extends BaseEntityBlock{
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		BlockEntity te;
 		if(!worldIn.isClientSide && (te = worldIn.getBlockEntity(pos)) instanceof MenuProvider){
-			NetworkHooks.openGui((ServerPlayer) playerIn, (MenuProvider) te, pos);
+			NetworkHooks.openScreen((ServerPlayer) playerIn, (MenuProvider) te, pos);
 		}
 		return InteractionResult.SUCCESS;
 	}
@@ -86,10 +83,10 @@ public class WaterCentrifuge extends BaseEntityBlock{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
-		tooltip.add(new TranslatableComponent("tt.crossroads.water_centrifuge.desc"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.water_centrifuge.spin", WaterCentrifugeTileEntity.TIP_POINT));
-		tooltip.add(new TranslatableComponent("tt.crossroads.water_centrifuge.reds"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.boilerplate.inertia", WaterCentrifugeTileEntity.INERTIA));
-		tooltip.add(new TranslatableComponent("tt.crossroads.water_centrifuge.quip").setStyle(MiscUtil.TT_QUIP));
+		tooltip.add(Component.translatable("tt.crossroads.water_centrifuge.desc"));
+		tooltip.add(Component.translatable("tt.crossroads.water_centrifuge.spin", WaterCentrifugeTileEntity.TIP_POINT));
+		tooltip.add(Component.translatable("tt.crossroads.water_centrifuge.reds"));
+		tooltip.add(Component.translatable("tt.crossroads.boilerplate.inertia", WaterCentrifugeTileEntity.INERTIA));
+		tooltip.add(Component.translatable("tt.crossroads.water_centrifuge.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 }

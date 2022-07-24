@@ -1,4 +1,5 @@
 {
+	"render_type": "translucent",
 	"parent": "crossroads:block/cultivator_vat_base",
 	"textures": {
 		"lamp": "minecraft:block/redstone_lamp"

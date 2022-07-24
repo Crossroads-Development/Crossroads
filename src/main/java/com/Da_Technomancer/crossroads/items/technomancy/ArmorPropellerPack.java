@@ -1,12 +1,11 @@
 package com.Da_Technomancer.crossroads.items.technomancy;
 
-import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.blocks.rotary.WindingTableTileEntity;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.Da_Technomancer.crossroads.tileentities.rotary.WindingTableTileEntity;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -26,8 +25,7 @@ public class ArmorPropellerPack extends TechnomancyArmor implements WindingTable
 	public ArmorPropellerPack(){
 		super(EquipmentSlot.CHEST);
 		String name = "propeller_pack";
-		setRegistryName(name);
-		CRItems.toRegister.add(this);
+		CRItems.toRegister.put(name, this);
 	}
 
 	@Override
@@ -47,7 +45,7 @@ public class ArmorPropellerPack extends TechnomancyArmor implements WindingTable
 
 	@Override
 	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items){
-		if(allowdedIn(group)){
+		if(allowedIn(group)){
 			items.add(new ItemStack(this, 1));
 			ItemStack unarmoredWound = new ItemStack(this, 1);
 			setWindLevel(unarmoredWound, getMaxWind());
@@ -62,9 +60,9 @@ public class ArmorPropellerPack extends TechnomancyArmor implements WindingTable
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
 		super.appendHoverText(stack, worldIn, tooltip, flagIn);
-		tooltip.add(new TranslatableComponent("tt.crossroads.boilerplate.spring_speed", CRConfig.formatVal(getWindLevel(stack)), CRConfig.formatVal(getMaxWind())));
-		tooltip.add(new TranslatableComponent("tt.crossroads.propeller_pack.desc"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.propeller_pack.quip").setStyle(MiscUtil.TT_QUIP));
+		tooltip.add(Component.translatable("tt.crossroads.boilerplate.spring_speed", CRConfig.formatVal(getWindLevel(stack)), CRConfig.formatVal(getMaxWind())));
+		tooltip.add(Component.translatable("tt.crossroads.propeller_pack.desc"));
+		tooltip.add(Component.translatable("tt.crossroads.propeller_pack.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 
 	public static void applyMidairBoost(Player player){

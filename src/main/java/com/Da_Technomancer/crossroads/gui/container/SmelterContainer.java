@@ -1,24 +1,24 @@
 package com.Da_Technomancer.crossroads.gui.container;
 
-import com.Da_Technomancer.crossroads.API.templates.MachineContainer;
-import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.tileentities.heat.SmelterTileEntity;
-import com.Da_Technomancer.essentials.gui.container.IntDeferredRef;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.api.templates.MachineContainer;
+import com.Da_Technomancer.crossroads.blocks.heat.SmelterTileEntity;
+import com.Da_Technomancer.essentials.api.IntDeferredRef;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraftforge.registries.ObjectHolder;
+import net.minecraftforge.registries.ForgeRegistries;
 
-@ObjectHolder(Crossroads.MODID)
+import java.util.function.Supplier;
+
 public class SmelterContainer extends MachineContainer<SmelterTileEntity>{
 
-	@ObjectHolder("smelter")
-	private static MenuType<SmelterContainer> type = null;
+	private static final Supplier<MenuType<?>> TYPE_SPL = MiscUtil.getCRRegistryObject("smelter", ForgeRegistries.Keys.MENU_TYPES);
 
 	public final IntDeferredRef cookProg;
 
 	public SmelterContainer(int id, Inventory playerInv, FriendlyByteBuf data){
-		super(type, id, playerInv, data);
+		super(TYPE_SPL.get(), id, playerInv, data);
 		cookProg = new IntDeferredRef(te::getProgress, te.getLevel().isClientSide);
 		addDataSlot(cookProg);
 	}

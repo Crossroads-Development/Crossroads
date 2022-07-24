@@ -1,13 +1,13 @@
 package com.Da_Technomancer.crossroads.blocks.rotary;
 
-import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
+import com.Da_Technomancer.crossroads.api.rotary.IMechanism;
+import com.Da_Technomancer.crossroads.api.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms.IMechanism;
-import com.Da_Technomancer.crossroads.tileentities.rotary.mechanisms.MechanismTileEntity;
-import com.Da_Technomancer.essentials.ESConfig;
-import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
-import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import com.Da_Technomancer.crossroads.blocks.rotary.mechanisms.MechanismTileEntity;
+import com.Da_Technomancer.essentials.api.ConfigUtil;
+import com.Da_Technomancer.essentials.api.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.redstone.IReadable;
+import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -50,8 +50,7 @@ public class Mechanism extends BaseEntityBlock implements IReadable{
 		//This trait name is poorly mapped by MCP- it controls whether BlockState instances are allowed to cache the results of several common methods
 		//Most importantly, the getShape() method (and its variants). As this block varies shape with TE data instead of state, we cannot use the cache
 		String name = "mechanism";
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
+		CRBlocks.toRegister.put(name, this);
 	}
 
 	@Override
@@ -211,7 +210,7 @@ public class Mechanism extends BaseEntityBlock implements IReadable{
 
 	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit){
-		if(ESConfig.isWrench(player.getItemInHand(hand))){
+		if(ConfigUtil.isWrench(player.getItemInHand(hand))){
 			BlockEntity te = worldIn.getBlockEntity(pos);
 			if(te instanceof MechanismTileEntity gear){
 				double reDist = player.getAttribute(ForgeMod.REACH_DISTANCE.get()).getValue();//Player reach distance

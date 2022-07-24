@@ -1,13 +1,10 @@
 package com.Da_Technomancer.crossroads.blocks.electric;
 
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTileEntity;
-import com.Da_Technomancer.crossroads.tileentities.electric.TeslaCoilTopTileEntity;
-import com.Da_Technomancer.essentials.tileentities.ILinkTE;
-import com.Da_Technomancer.essentials.tileentities.LinkHelper;
+import com.Da_Technomancer.essentials.api.ILinkTE;
+import com.Da_Technomancer.essentials.api.LinkHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -37,9 +34,8 @@ public class TeslaCoilTop extends BaseEntityBlock{
 		super(CRBlocks.getMetalProperty());
 		this.variant = variant;
 		String name = "tesla_coil_top_" + variant.toString();
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this);
+		CRBlocks.toRegister.put(name, this);
+		CRBlocks.blockAddQue(name, this);
 	}
 
 	@Override
@@ -67,16 +63,16 @@ public class TeslaCoilTop extends BaseEntityBlock{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn){
-		tooltip.add(new TranslatableComponent("tt.crossroads.tesla_coil_top.range", variant.range));
-		tooltip.add(new TranslatableComponent("tt.crossroads.tesla_coil_top.fe", variant.joltAmt));
-		tooltip.add(new TranslatableComponent("tt.crossroads.tesla_coil_top.eff", (100 - variant.efficiency)));
+		tooltip.add(Component.translatable("tt.crossroads.tesla_coil_top.range", variant.range));
+		tooltip.add(Component.translatable("tt.crossroads.tesla_coil_top.fe", variant.joltAmt));
+		tooltip.add(Component.translatable("tt.crossroads.tesla_coil_top.eff", (100 - variant.efficiency)));
 		if(variant == TeslaCoilVariants.ATTACK){
-			tooltip.add(new TranslatableComponent("tt.crossroads.tesla_coil_top.att"));
+			tooltip.add(Component.translatable("tt.crossroads.tesla_coil_top.att"));
 		}else if(variant == TeslaCoilVariants.DECORATIVE){
-			tooltip.add(new TranslatableComponent("tt.crossroads.tesla_coil_top.decor"));
+			tooltip.add(Component.translatable("tt.crossroads.tesla_coil_top.decor"));
 		}
 		if(variant.joltAmt > TeslaCoilTileEntity.CAPACITY){
-			tooltip.add(new TranslatableComponent("tt.crossroads.tesla_coil_top.leyden"));
+			tooltip.add(Component.translatable("tt.crossroads.tesla_coil_top.leyden"));
 		}
 	}
 

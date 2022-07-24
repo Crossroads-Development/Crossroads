@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.items.witchcraft;
 
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -20,8 +19,7 @@ public class SoulCluster extends Item{
 		super(new Item.Properties().tab(CRItems.TAB_CROSSROADS));
 		this.large = large;
 		String name = large ? "soul_cluster" : "soul_shard";
-		setRegistryName(name);
-		CRItems.toRegister.add(this);
+		CRItems.toRegister.put(name, this);
 	}
 
 	@Override
@@ -31,9 +29,9 @@ public class SoulCluster extends Item{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag){
-		tooltip.add(new TranslatableComponent("tt.crossroads.soul_cluster"));
+		tooltip.add(Component.translatable("tt.crossroads.soul_cluster"));
 		if(!large){
-			tooltip.add(new TranslatableComponent("tt.crossroads.soul_cluster.small"));
+			tooltip.add(Component.translatable("tt.crossroads.soul_cluster.small"));
 		}
 	}
 }

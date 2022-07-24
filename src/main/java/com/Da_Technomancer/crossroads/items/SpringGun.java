@@ -1,11 +1,10 @@
 package com.Da_Technomancer.crossroads.items;
 
-import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
-import com.Da_Technomancer.crossroads.tileentities.rotary.WindingTableTileEntity;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.blocks.rotary.WindingTableTileEntity;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -26,8 +25,7 @@ public class SpringGun extends ProjectileWeaponItem implements WindingTableTileE
 	protected SpringGun(){
 		super(new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
 		String name = "spring_gun";
-		setRegistryName(name);
-		CRItems.toRegister.add(this);
+		CRItems.toRegister.put(name, this);
 	}
 
 	private float calcDamage(double wind){
@@ -84,10 +82,10 @@ public class SpringGun extends ProjectileWeaponItem implements WindingTableTileE
 	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
 		double wind = getWindLevel(stack);
 		double maxWind = getMaxWind();
-		tooltip.add(new TranslatableComponent("tt.crossroads.boilerplate.spring_speed", CRConfig.formatVal(wind), CRConfig.formatVal(maxWind)));
-		tooltip.add(new TranslatableComponent("tt.crossroads.spring_gun.winding", CRConfig.formatVal(calcDamage(wind)), CRConfig.formatVal(calcDamage(maxWind))));
-		tooltip.add(new TranslatableComponent("tt.crossroads.spring_gun.desc"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.spring_gun.quip").setStyle(MiscUtil.TT_QUIP));
+		tooltip.add(Component.translatable("tt.crossroads.boilerplate.spring_speed", CRConfig.formatVal(wind), CRConfig.formatVal(maxWind)));
+		tooltip.add(Component.translatable("tt.crossroads.spring_gun.winding", CRConfig.formatVal(calcDamage(wind)), CRConfig.formatVal(calcDamage(maxWind))));
+		tooltip.add(Component.translatable("tt.crossroads.spring_gun.desc"));
+		tooltip.add(Component.translatable("tt.crossroads.spring_gun.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 
 	@Override
@@ -112,7 +110,7 @@ public class SpringGun extends ProjectileWeaponItem implements WindingTableTileE
 
 	@Override
 	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items){
-		if(allowdedIn(group)){
+		if(allowedIn(group)){
 			items.add(new ItemStack(this, 1));
 			ItemStack stack = new ItemStack(this, 1);
 			setWindLevel(stack, getMaxWind());

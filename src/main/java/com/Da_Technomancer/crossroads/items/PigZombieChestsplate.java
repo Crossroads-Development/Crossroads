@@ -1,8 +1,7 @@
 package com.Da_Technomancer.crossroads.items;
 
-import com.Da_Technomancer.crossroads.API.MiscUtil;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -24,8 +23,7 @@ public class PigZombieChestsplate extends ArmorItem{
 	protected PigZombieChestsplate(){
 		super(ChickenBoots.BOBO_MATERIAL, EquipmentSlot.CHEST, new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
 		String name = "pig_zombie_chestplate";
-		setRegistryName(name);
-		CRItems.toRegister.add(this);
+		CRItems.toRegister.put(name, this);
 	}
 
 	@Override
@@ -40,7 +38,7 @@ public class PigZombieChestsplate extends ArmorItem{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
-		tooltip.add(new TranslatableComponent("tt.crossroads.pig_zombie_chestplate.quip").setStyle(MiscUtil.TT_QUIP));
+		tooltip.add(Component.translatable("tt.crossroads.pig_zombie_chestplate.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 
 	@Override

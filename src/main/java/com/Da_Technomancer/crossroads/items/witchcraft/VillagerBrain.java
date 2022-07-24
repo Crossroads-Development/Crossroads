@@ -1,12 +1,11 @@
 package com.Da_Technomancer.crossroads.items.witchcraft;
 
-import com.Da_Technomancer.crossroads.API.witchcraft.ICultivatable;
+import com.Da_Technomancer.crossroads.api.witchcraft.ICultivatable;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -32,8 +31,7 @@ public class VillagerBrain extends Item implements ICultivatable{
 	public VillagerBrain(){
 		super(new Properties().stacksTo(1).rarity(CRItems.BOBO_RARITY));//Not added to any creative tab
 		String name = "villager_brain";
-		setRegistryName(name);
-		CRItems.toRegister.add(this);
+		CRItems.toRegister.put(name, this);
 	}
 
 	@Override
@@ -96,16 +94,16 @@ public class VillagerBrain extends Item implements ICultivatable{
 		MerchantOffer offer = getCurrentOffer(stack);
 		if(offer == null){
 			//No trades
-			tooltip.add(new TranslatableComponent("tt.crossroads.villager_brain.trade.none"));
+			tooltip.add(Component.translatable("tt.crossroads.villager_brain.trade.none"));
 		}else if(offer.getCostB().isEmpty()){
 			//Single input trade
-			tooltip.add(new TranslatableComponent("tt.crossroads.villager_brain.trade.single", getDisplayParameter(offer.getCostA()), offer.getCostA().getCount(), getDisplayParameter(offer.getResult()), offer.getResult().getCount()));
+			tooltip.add(Component.translatable("tt.crossroads.villager_brain.trade.single", getDisplayParameter(offer.getCostA()), offer.getCostA().getCount(), getDisplayParameter(offer.getResult()), offer.getResult().getCount()));
 		}else{
 			//Dual input trade
-			tooltip.add(new TranslatableComponent("tt.crossroads.villager_brain.trade.dual", getDisplayParameter(offer.getCostA()), offer.getCostA().getCount(), getDisplayParameter(offer.getCostB()), offer.getCostB().getCount(), getDisplayParameter(offer.getResult()), offer.getResult().getCount()));
+			tooltip.add(Component.translatable("tt.crossroads.villager_brain.trade.dual", getDisplayParameter(offer.getCostA()), offer.getCostA().getCount(), getDisplayParameter(offer.getCostB()), offer.getCostB().getCount(), getDisplayParameter(offer.getResult()), offer.getResult().getCount()));
 		}
 		ICultivatable.addTooltip(stack, world, tooltip);
-		tooltip.add(new TranslatableComponent("tt.crossroads.village_brain.desc"));
+		tooltip.add(Component.translatable("tt.crossroads.village_brain.desc"));
 	}
 
 	private static Object getDisplayParameter(ItemStack stack){
@@ -134,9 +132,9 @@ public class VillagerBrain extends Item implements ICultivatable{
 
 		if(firstEnchantName != null){
 			if(totalEnchants > 1){
-				return new TranslatableComponent("tt.crossroads.villager_brain.item.enchant.multi", stack.getHoverName(), firstEnchantName, totalEnchants, totalEnchants - 1);
+				return Component.translatable("tt.crossroads.villager_brain.item.enchant.multi", stack.getHoverName(), firstEnchantName, totalEnchants, totalEnchants - 1);
 			}else{
-				return new TranslatableComponent("tt.crossroads.villager_brain.item.enchant", stack.getHoverName(), firstEnchantName);
+				return Component.translatable("tt.crossroads.villager_brain.item.enchant", stack.getHoverName(), firstEnchantName);
 			}
 		}
 		return stack.getHoverName();

@@ -1,9 +1,8 @@
 package com.Da_Technomancer.crossroads.items.alchemy;
 
-import com.Da_Technomancer.crossroads.API.MiscUtil;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -30,8 +29,7 @@ public class PoisonVodka extends Item{
 	public PoisonVodka(){
 		super(new Properties().tab(CRItems.TAB_CROSSROADS));
 		String name = "poison_vodka";
-		setRegistryName(name);
-		CRItems.toRegister.add(this);
+		CRItems.toRegister.put(name, this);
 	}
 
 	@Override
@@ -104,7 +102,7 @@ public class PoisonVodka extends Item{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
-		tooltip.add(new TranslatableComponent("tt.crossroads.poison_vodka.info"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.poison_vodka.quip").setStyle(MiscUtil.TT_QUIP));
+		tooltip.add(Component.translatable("tt.crossroads.poison_vodka.info"));
+		tooltip.add(Component.translatable("tt.crossroads.poison_vodka.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 }

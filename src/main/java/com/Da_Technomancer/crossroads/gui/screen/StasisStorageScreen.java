@@ -1,16 +1,16 @@
 package com.Da_Technomancer.crossroads.gui.screen;
 
-import com.Da_Technomancer.crossroads.API.templates.MachineGUI;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.api.templates.MachineScreen;
+import com.Da_Technomancer.crossroads.blocks.witchcraft.StasisStorageTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.StasisStorageContainer;
-import com.Da_Technomancer.crossroads.tileentities.witchcraft.StasisStorageTileEntity;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class StasisStorageScreen extends MachineGUI<StasisStorageContainer, StasisStorageTileEntity>{
+public class StasisStorageScreen extends MachineScreen<StasisStorageContainer, StasisStorageTileEntity>{
 
 	private static final ResourceLocation GUI_TEXTURES = new ResourceLocation(Crossroads.MODID + ":textures/gui/container/stasis_storage_gui.png");
 

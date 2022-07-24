@@ -1,13 +1,11 @@
 package com.Da_Technomancer.crossroads.blocks.heat;
 
-import com.Da_Technomancer.crossroads.API.MiscUtil;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.tileentities.heat.HeatSinkTileEntity;
-import com.Da_Technomancer.essentials.ESConfig;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.ConfigUtil;
+import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -31,9 +29,8 @@ public class HeatSink extends BaseEntityBlock{
 	public HeatSink(){
 		super(CRBlocks.getMetalProperty());
 		String name = "heat_sink";
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this);
+		CRBlocks.toRegister.put(name, this);
+		CRBlocks.blockAddQue(name, this);
 	}
 
 	@Override
@@ -49,12 +46,12 @@ public class HeatSink extends BaseEntityBlock{
 
 	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
-		if(ESConfig.isWrench(playerIn.getItemInHand(hand))){
+		if(ConfigUtil.isWrench(playerIn.getItemInHand(hand))){
 			if(!worldIn.isClientSide){
 				BlockEntity te = worldIn.getBlockEntity(pos);
 				if(te instanceof HeatSinkTileEntity hte){
 					int mode = hte.cycleMode();
-					MiscUtil.chatMessage(playerIn, new TranslatableComponent("tt.crossroads.heat_sink.loss", HeatSinkTileEntity.MODES[mode]));
+					MiscUtil.displayMessage(playerIn, Component.translatable("tt.crossroads.heat_sink.loss", HeatSinkTileEntity.MODES[mode]));
 				}
 			}
 			return InteractionResult.SUCCESS;
@@ -71,7 +68,7 @@ public class HeatSink extends BaseEntityBlock{
 	
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
-		tooltip.add(new TranslatableComponent("tt.crossroads.heat_sink.desc"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.heat_sink.rate", HeatSinkTileEntity.MODES[0], HeatSinkTileEntity.MODES[1], HeatSinkTileEntity.MODES[2], HeatSinkTileEntity.MODES[3], HeatSinkTileEntity.MODES[4]));
+		tooltip.add(Component.translatable("tt.crossroads.heat_sink.desc"));
+		tooltip.add(Component.translatable("tt.crossroads.heat_sink.rate", HeatSinkTileEntity.MODES[0], HeatSinkTileEntity.MODES[1], HeatSinkTileEntity.MODES[2], HeatSinkTileEntity.MODES[3], HeatSinkTileEntity.MODES[4]));
 	}
 }

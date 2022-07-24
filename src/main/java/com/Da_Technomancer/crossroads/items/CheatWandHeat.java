@@ -1,9 +1,8 @@
 package com.Da_Technomancer.crossroads.items;
 
-import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
+import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -23,8 +22,7 @@ public class CheatWandHeat extends Item{
 	protected CheatWandHeat(){
 		super(new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1).rarity(CRItems.CREATIVE_RARITY));
 		String name = "cheat_wand_heat";
-		setRegistryName(name);
-		CRItems.toRegister.add(this);
+		CRItems.toRegister.put(name, this);
 	}
 
 	@Override
@@ -45,8 +43,8 @@ public class CheatWandHeat extends Item{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
-		tooltip.add(new TranslatableComponent("tt.crossroads.boilerplate.creative"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.cheat_heat.desc", RATE));
-		tooltip.add(new TranslatableComponent("tt.crossroads.cheat_heat.cold", RATE));
+		tooltip.add(Component.translatable("tt.crossroads.boilerplate.creative"));
+		tooltip.add(Component.translatable("tt.crossroads.cheat_heat.desc", RATE));
+		tooltip.add(Component.translatable("tt.crossroads.cheat_heat.cold", RATE));
 	}
 }

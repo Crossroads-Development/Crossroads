@@ -1,17 +1,15 @@
 package com.Da_Technomancer.crossroads.blocks.rotary;
 
-import com.Da_Technomancer.crossroads.API.CRProperties;
-import com.Da_Technomancer.crossroads.API.rotary.RotaryUtil;
+import com.Da_Technomancer.crossroads.api.CRProperties;
+import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
+import com.Da_Technomancer.crossroads.api.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.crafting.CRItemTags;
-import com.Da_Technomancer.crossroads.tileentities.rotary.WindTurbineTileEntity;
-import com.Da_Technomancer.essentials.ESConfig;
-import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
-import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.ConfigUtil;
+import com.Da_Technomancer.essentials.api.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.redstone.IReadable;
+import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -40,9 +38,8 @@ public class WindTurbine extends BaseEntityBlock implements IReadable{
 	public WindTurbine(){
 		super(Properties.of(Material.WOOD).strength(2));
 		String name = "wind_turbine";
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this);
+		CRBlocks.toRegister.put(name, this);
+		CRBlocks.blockAddQue(name, this);
 	}
 
 	@Override
@@ -59,13 +56,13 @@ public class WindTurbine extends BaseEntityBlock implements IReadable{
 	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		ItemStack heldItem = playerIn.getItemInHand(hand);
-		if(ESConfig.isWrench(heldItem)){
+		if(ConfigUtil.isWrench(heldItem)){
 			if(!worldIn.isClientSide){
 				worldIn.setBlockAndUpdate(pos, state.setValue(CRProperties.HORIZ_FACING, state.getValue(CRProperties.HORIZ_FACING).getClockWise()));
 				RotaryUtil.increaseMasterKey(true);
 			}
 			return InteractionResult.SUCCESS;
-		}else if(CRItemTags.tagContains(Tags.Items.DYES, heldItem.getItem())){
+		}else if(CraftingUtil.tagContains(Tags.Items.DYES, heldItem.getItem())){
 			BlockEntity te = worldIn.getBlockEntity(pos);
 			if(te instanceof WindTurbineTileEntity){
 				if(!worldIn.isClientSide){
@@ -95,11 +92,11 @@ public class WindTurbine extends BaseEntityBlock implements IReadable{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
-		tooltip.add(new TranslatableComponent("tt.crossroads.wind_turbine.desc"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.wind_turbine.power", WindTurbineTileEntity.LOW_POWER, WindTurbineTileEntity.HIGH_POWER, (WindTurbineTileEntity.LOW_POWER + WindTurbineTileEntity.HIGH_POWER) / 2D));
-		tooltip.add(new TranslatableComponent("tt.crossroads.wind_turbine.limits", WindTurbineTileEntity.MAX_SPEED));
-		tooltip.add(new TranslatableComponent("tt.crossroads.wind_turbine.env"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.boilerplate.inertia", WindTurbineTileEntity.INERTIA));
+		tooltip.add(Component.translatable("tt.crossroads.wind_turbine.desc"));
+		tooltip.add(Component.translatable("tt.crossroads.wind_turbine.power", WindTurbineTileEntity.LOW_POWER, WindTurbineTileEntity.HIGH_POWER, (WindTurbineTileEntity.LOW_POWER + WindTurbineTileEntity.HIGH_POWER) / 2D));
+		tooltip.add(Component.translatable("tt.crossroads.wind_turbine.limits", WindTurbineTileEntity.MAX_SPEED));
+		tooltip.add(Component.translatable("tt.crossroads.wind_turbine.env"));
+		tooltip.add(Component.translatable("tt.crossroads.boilerplate.inertia", WindTurbineTileEntity.INERTIA));
 	}
 
 	@Override

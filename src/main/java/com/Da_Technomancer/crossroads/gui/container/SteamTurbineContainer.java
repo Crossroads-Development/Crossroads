@@ -1,24 +1,24 @@
 package com.Da_Technomancer.crossroads.gui.container;
 
-import com.Da_Technomancer.crossroads.API.templates.MachineContainer;
-import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.tileentities.rotary.SteamTurbineTileEntity;
-import com.Da_Technomancer.essentials.gui.container.FluidSlotManager;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.api.templates.MachineContainer;
+import com.Da_Technomancer.crossroads.blocks.rotary.SteamTurbineTileEntity;
+import com.Da_Technomancer.essentials.api.FluidSlotManager;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
-import net.minecraftforge.registries.ObjectHolder;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.tuple.Pair;
 
-@ObjectHolder(Crossroads.MODID)
+import java.util.function.Supplier;
+
 public class SteamTurbineContainer extends MachineContainer<SteamTurbineTileEntity>{
 
-	@ObjectHolder("steam_turbine")
-	private static MenuType<SteamTurbineContainer> type = null;
+	private static final Supplier<MenuType<?>> TYPE_SPL = MiscUtil.getCRRegistryObject("steam_turbine", ForgeRegistries.Keys.MENU_TYPES);
 
 	public SteamTurbineContainer(int id, Inventory playerInv, FriendlyByteBuf buf){
-		super(type, id, playerInv, buf);
+		super(TYPE_SPL.get(), id, playerInv, buf);
 	}
 
 	@Override

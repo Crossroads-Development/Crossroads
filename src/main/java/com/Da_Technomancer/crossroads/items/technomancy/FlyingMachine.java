@@ -35,8 +35,7 @@ public class FlyingMachine extends Item{
 	public FlyingMachine(){
 		super(new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
 		String name = "flying_machine";
-		setRegistryName(name);
-		CRItems.toRegister.add(this);
+		CRItems.toRegister.put(name, this);
 		DispenserBlock.registerBehavior(this, SPAWN_DISPENSER_BEHAVIOR);
 	}
 

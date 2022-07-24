@@ -1,16 +1,14 @@
 package com.Da_Technomancer.crossroads.blocks.heat;
 
-import com.Da_Technomancer.crossroads.API.Capabilities;
-import com.Da_Technomancer.crossroads.API.heat.IHeatHandler;
+import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.Da_Technomancer.crossroads.tileentities.heat.HeatReservoirCreativeTileEntity;
-import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
-import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.redstone.IReadable;
+import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -38,9 +36,8 @@ public class HeatReservoirCreative extends BaseEntityBlock implements IReadable{
 	public HeatReservoirCreative(){
 		super(CRBlocks.getMetalProperty());
 		String name = "heat_reservoir_creative";
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this, new Item.Properties().tab(CRItems.TAB_CROSSROADS).rarity(CRItems.CREATIVE_RARITY));
+		CRBlocks.toRegister.put(name, this);
+		CRBlocks.blockAddQue(name, this, new Item.Properties().tab(CRItems.TAB_CROSSROADS).rarity(CRItems.CREATIVE_RARITY));
 	}
 
 	@Override
@@ -63,7 +60,7 @@ public class HeatReservoirCreative extends BaseEntityBlock implements IReadable{
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		if(!worldIn.isClientSide){
 			if(worldIn.getBlockEntity(pos) instanceof HeatReservoirCreativeTileEntity menuTE){
-				NetworkHooks.openGui((ServerPlayer) playerIn, menuTE, buf -> {buf.writeFloat(menuTE.setting); buf.writeUtf(menuTE.expression); buf.writeBlockPos(pos);});
+				NetworkHooks.openScreen((ServerPlayer) playerIn, menuTE, buf -> {buf.writeFloat(menuTE.setting); buf.writeUtf(menuTE.expression); buf.writeBlockPos(pos);});
 			}
 		}
 		return InteractionResult.SUCCESS;
@@ -71,9 +68,9 @@ public class HeatReservoirCreative extends BaseEntityBlock implements IReadable{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
-		tooltip.add(new TranslatableComponent("tt.crossroads.boilerplate.creative"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.heat_reservoir_creative.desc"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.heat_reservoir_creative.reds"));
+		tooltip.add(Component.translatable("tt.crossroads.boilerplate.creative"));
+		tooltip.add(Component.translatable("tt.crossroads.heat_reservoir_creative.desc"));
+		tooltip.add(Component.translatable("tt.crossroads.heat_reservoir_creative.reds"));
 	}
 
 	@Override

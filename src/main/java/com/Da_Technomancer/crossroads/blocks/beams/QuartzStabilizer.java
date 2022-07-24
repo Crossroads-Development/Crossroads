@@ -1,15 +1,13 @@
 package com.Da_Technomancer.crossroads.blocks.beams;
 
-import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.templates.BeamBlock;
-import com.Da_Technomancer.crossroads.tileentities.beams.QuartzStabilizerTileEntity;
-import com.Da_Technomancer.essentials.ESConfig;
-import com.Da_Technomancer.essentials.blocks.ESProperties;
-import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import com.Da_Technomancer.crossroads.api.CRProperties;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.api.templates.BeamBlock;
+import com.Da_Technomancer.essentials.api.ConfigUtil;
+import com.Da_Technomancer.essentials.api.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.redstone.IReadable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -83,18 +81,18 @@ public class QuartzStabilizer extends BeamBlock implements IReadable{
 
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context){
-		return SHAPE[state.getValue(ESProperties.FACING).get3DDataValue()];
+		return SHAPE[state.getValue(CRProperties.FACING).get3DDataValue()];
 	}
 
 	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
-		if(ESConfig.isWrench(playerIn.getItemInHand(hand))){
+		if(ConfigUtil.isWrench(playerIn.getItemInHand(hand))){
 			if(!worldIn.isClientSide){
 				BlockEntity te = worldIn.getBlockEntity(pos);
 				if(!playerIn.isShiftKeyDown()){
-					worldIn.setBlockAndUpdate(pos, state.cycle(ESProperties.FACING));
+					worldIn.setBlockAndUpdate(pos, state.cycle(CRProperties.FACING));
 				}else if(te instanceof QuartzStabilizerTileEntity){
-					MiscUtil.chatMessage(playerIn, new TranslatableComponent("tt.crossroads.quartz_stabilizer.setting", ((QuartzStabilizerTileEntity) te).adjustSetting()));
+					MiscUtil.displayMessage(playerIn, Component.translatable("tt.crossroads.quartz_stabilizer.setting", ((QuartzStabilizerTileEntity) te).adjustSetting()));
 				}
 			}
 			return InteractionResult.SUCCESS;
@@ -105,8 +103,8 @@ public class QuartzStabilizer extends BeamBlock implements IReadable{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
-		tooltip.add(new TranslatableComponent("tt.crossroads.quartz_stabilizer.desc"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.quartz_stabilizer.wrench"));
+		tooltip.add(Component.translatable("tt.crossroads.quartz_stabilizer.desc"));
+		tooltip.add(Component.translatable("tt.crossroads.quartz_stabilizer.wrench"));
 	}
 
 	@Override

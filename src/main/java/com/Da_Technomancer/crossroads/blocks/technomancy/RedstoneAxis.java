@@ -1,17 +1,14 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
-import com.Da_Technomancer.crossroads.API.CRProperties;
-import com.Da_Technomancer.crossroads.API.CircuitUtil;
+import com.Da_Technomancer.crossroads.api.CRProperties;
+import com.Da_Technomancer.crossroads.api.CircuitUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.tileentities.technomancy.RedstoneAxisTileEntity;
-import com.Da_Technomancer.essentials.ESConfig;
-import com.Da_Technomancer.essentials.blocks.ESProperties;
-import com.Da_Technomancer.essentials.blocks.redstone.IWireConnect;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.ConfigUtil;
+import com.Da_Technomancer.essentials.api.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.redstone.IWireConnect;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -38,24 +35,23 @@ public class RedstoneAxis extends BaseEntityBlock implements IWireConnect{
 	public RedstoneAxis(){
 		super(CRBlocks.getMetalProperty());
 		String name = "redstone_axis";
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this);
+		CRBlocks.toRegister.put(name, this);
+		CRBlocks.blockAddQue(name, this);
 		registerDefaultState(defaultBlockState().setValue(CRProperties.POWER_LEVEL, 0));
 	}
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter reader, List<Component> tooltip, TooltipFlag flag){
-		tooltip.add(new TranslatableComponent("tt.crossroads.redstone_axis.desc"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.redstone_axis.power"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.redstone_axis.circuit"));
+		tooltip.add(Component.translatable("tt.crossroads.redstone_axis.desc"));
+		tooltip.add(Component.translatable("tt.crossroads.redstone_axis.power"));
+		tooltip.add(Component.translatable("tt.crossroads.redstone_axis.circuit"));
 	}
 	
 	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
-		if(ESConfig.isWrench(playerIn.getItemInHand(hand))){
+		if(ConfigUtil.isWrench(playerIn.getItemInHand(hand))){
 			if(!worldIn.isClientSide){
-				worldIn.setBlockAndUpdate(pos, state.cycle(ESProperties.FACING));
+				worldIn.setBlockAndUpdate(pos, state.cycle(CRProperties.FACING));
 			}
 			return InteractionResult.SUCCESS;
 		}
@@ -64,13 +60,13 @@ public class RedstoneAxis extends BaseEntityBlock implements IWireConnect{
 
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder){
-		builder.add(ESProperties.FACING, CRProperties.POWER_LEVEL);
+		builder.add(CRProperties.FACING, CRProperties.POWER_LEVEL);
 	}
 
 	@Nullable
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context){
-		return defaultBlockState().setValue(ESProperties.FACING, context.getNearestLookingDirection().getOpposite());
+		return defaultBlockState().setValue(CRProperties.FACING, context.getNearestLookingDirection().getOpposite());
 	}
 
 	@Override

@@ -1,28 +1,28 @@
 package com.Da_Technomancer.crossroads.gui.container;
 
-import com.Da_Technomancer.crossroads.API.templates.MachineContainer;
-import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.tileentities.rotary.BlastFurnaceTileEntity;
-import com.Da_Technomancer.essentials.gui.container.FluidSlotManager;
-import com.Da_Technomancer.essentials.gui.container.IntDeferredRef;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.api.templates.MachineContainer;
+import com.Da_Technomancer.crossroads.blocks.rotary.BlastFurnaceTileEntity;
+import com.Da_Technomancer.essentials.api.FluidSlotManager;
+import com.Da_Technomancer.essentials.api.IntDeferredRef;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
-import net.minecraftforge.registries.ObjectHolder;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.tuple.Pair;
 
-@ObjectHolder(Crossroads.MODID)
+import java.util.function.Supplier;
+
 public class BlastFurnaceContainer extends MachineContainer<BlastFurnaceTileEntity>{
 
-	@ObjectHolder("ind_blast_furnace")
-	private static MenuType<BlastFurnaceContainer> type = null;
+	private static final Supplier<MenuType<?>> TYPE_SPL = MiscUtil.getCRRegistryObject("ind_blast_furnace", ForgeRegistries.Keys.MENU_TYPES);
 
 	public final IntDeferredRef carbRef;
 	public final IntDeferredRef progRef;
 
 	public BlastFurnaceContainer(int id, Inventory playerInv, FriendlyByteBuf buf){
-		super(type, id, playerInv, buf);
+		super(TYPE_SPL.get(), id, playerInv, buf);
 		carbRef = new IntDeferredRef(te::getCarbon, te.getLevel().isClientSide);
 		addDataSlot(carbRef);
 		progRef = new IntDeferredRef(te::getProgress, te.getLevel().isClientSide);

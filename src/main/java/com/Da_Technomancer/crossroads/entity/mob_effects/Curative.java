@@ -1,6 +1,5 @@
 package com.Da_Technomancer.crossroads.entity.mob_effects;
 
-import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.Entity;
@@ -14,7 +13,6 @@ public class Curative extends MobEffect{
 
 	public Curative(){
 		super(MobEffectCategory.NEUTRAL, 0xFFFFFF);
-		setRegistryName(Crossroads.MODID, "curative");
 		//Basically a milk bucket in potion form
 	}
 

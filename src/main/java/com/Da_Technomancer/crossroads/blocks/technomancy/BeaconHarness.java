@@ -1,13 +1,11 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
-import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.api.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.tileentities.technomancy.BeaconHarnessTileEntity;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -39,9 +37,9 @@ public class BeaconHarness extends BaseEntityBlock{
 
 	public BeaconHarness(){
 		super(CRBlocks.getGlassProperty().lightLevel(state -> 15));
-		setRegistryName("beacon_harness");
-		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this);
+		String name = "beacon_harness";
+		CRBlocks.toRegister.put(name, this);
+		CRBlocks.blockAddQue(name, this);
 	}
 
 	@Override
@@ -70,10 +68,10 @@ public class BeaconHarness extends BaseEntityBlock{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
-		tooltip.add(new TranslatableComponent("tt.crossroads.beacon_harness.desc"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.beacon_harness.buffer"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.beacon_harness.flux", BeaconHarnessTileEntity.FLUX_GEN));
-		tooltip.add(new TranslatableComponent("tt.crossroads.beacon_harness.quip").setStyle(MiscUtil.TT_QUIP));
+		tooltip.add(Component.translatable("tt.crossroads.beacon_harness.desc"));
+		tooltip.add(Component.translatable("tt.crossroads.beacon_harness.buffer"));
+		tooltip.add(Component.translatable("tt.crossroads.beacon_harness.flux", BeaconHarnessTileEntity.FLUX_GEN));
+		tooltip.add(Component.translatable("tt.crossroads.beacon_harness.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 
 	@Override
@@ -84,7 +82,7 @@ public class BeaconHarness extends BaseEntityBlock{
 		}else if(!worldIn.isClientSide){
 			BlockEntity te = worldIn.getBlockEntity(pos);
 			if(te instanceof MenuProvider){
-				NetworkHooks.openGui((ServerPlayer) playerIn, (MenuProvider) te, pos);
+				NetworkHooks.openScreen((ServerPlayer) playerIn, (MenuProvider) te, pos);
 			}
 		}
 		return InteractionResult.PASS;

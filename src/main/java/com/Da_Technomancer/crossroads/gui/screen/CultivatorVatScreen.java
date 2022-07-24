@@ -1,16 +1,16 @@
 package com.Da_Technomancer.crossroads.gui.screen;
 
-import com.Da_Technomancer.crossroads.API.templates.MachineGUI;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.api.templates.MachineScreen;
+import com.Da_Technomancer.crossroads.blocks.witchcraft.CultivatorVatTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.CultivatorVatContainer;
-import com.Da_Technomancer.crossroads.tileentities.witchcraft.CultivatorVatTileEntity;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class CultivatorVatScreen extends MachineGUI<CultivatorVatContainer, CultivatorVatTileEntity>{
+public class CultivatorVatScreen extends MachineScreen<CultivatorVatContainer, CultivatorVatTileEntity>{
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/gui/container/cultivator_vat_gui.png");
 

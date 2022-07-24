@@ -1,13 +1,11 @@
 package com.Da_Technomancer.crossroads.blocks.beams;
 
-import com.Da_Technomancer.crossroads.API.templates.BeamBlock;
-import com.Da_Technomancer.crossroads.tileentities.beams.CrystallinePrismTileEntity;
-import com.Da_Technomancer.essentials.ESConfig;
-import com.Da_Technomancer.essentials.blocks.ESProperties;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import com.Da_Technomancer.crossroads.api.CRProperties;
+import com.Da_Technomancer.crossroads.api.templates.BeamBlock;
+import com.Da_Technomancer.essentials.api.ConfigUtil;
+import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -46,9 +44,9 @@ public class CrystallinePrism extends BeamBlock{
 
 	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
-		if(ESConfig.isWrench(playerIn.getItemInHand(hand))){
+		if(ConfigUtil.isWrench(playerIn.getItemInHand(hand))){
 			if(!worldIn.isClientSide){
-				worldIn.setBlockAndUpdate(pos, state.cycle(ESProperties.HORIZ_FACING));
+				worldIn.setBlockAndUpdate(pos, state.cycle(CRProperties.HORIZ_FACING));
 			}
 			return InteractionResult.SUCCESS;
 		}
@@ -59,16 +57,16 @@ public class CrystallinePrism extends BeamBlock{
 	@Nullable
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context){
-		return defaultBlockState().setValue(ESProperties.HORIZ_FACING, context.getHorizontalDirection());
+		return defaultBlockState().setValue(CRProperties.HORIZ_FACING, context.getHorizontalDirection());
 	}
 
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder){
-		builder.add(ESProperties.HORIZ_FACING);
+		builder.add(CRProperties.HORIZ_FACING);
 	}
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn){
-		tooltip.add(new TranslatableComponent("tt.crossroads.crystal_prism.desc"));
+		tooltip.add(Component.translatable("tt.crossroads.crystal_prism.desc"));
 	}
 }

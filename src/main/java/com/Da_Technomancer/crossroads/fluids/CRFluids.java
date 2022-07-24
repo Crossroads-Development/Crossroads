@@ -1,13 +1,14 @@
 package com.Da_Technomancer.crossroads.fluids;
 
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.crafting.CRItemTags;
+import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public final class CRFluids{
 
@@ -26,15 +27,16 @@ public final class CRFluids{
 	public static GenericFluid.FluidData fertilizerSolution;
 	public static GenericFluid.FluidData soulEssence;
 
-	public static final TagKey<Fluid> STEAM = CRItemTags.getTagKey(ForgeRegistries.Keys.FLUIDS, new ResourceLocation("forge:steam"));
-	public static final TagKey<Fluid> DISTILLED_WATER = CRItemTags.getTagKey(ForgeRegistries.Keys.FLUIDS, new ResourceLocation(Crossroads.MODID, "distilled_water"));
-	public static final TagKey<Fluid> LIQUID_FAT = CRItemTags.getTagKey(ForgeRegistries.Keys.FLUIDS, new ResourceLocation(Crossroads.MODID, "liquid_fat"));
+	public static final TagKey<Fluid> STEAM = CraftingUtil.getTagKey(ForgeRegistries.Keys.FLUIDS, new ResourceLocation("forge:steam"));
+	public static final TagKey<Fluid> DISTILLED_WATER = CraftingUtil.getTagKey(ForgeRegistries.Keys.FLUIDS, new ResourceLocation(Crossroads.MODID, "distilled_water"));
+	public static final TagKey<Fluid> LIQUID_FAT = CraftingUtil.getTagKey(ForgeRegistries.Keys.FLUIDS, new ResourceLocation(Crossroads.MODID, "liquid_fat"));
 
-	public static ArrayList<Fluid> toRegister = new ArrayList<>();
+	public static final HashMap<String, FluidType> toRegisterType = new HashMap<>();
+	public static final HashMap<String, Fluid> toRegisterFluid = new HashMap<>();
 
 	public static void init(){
-		distilledWater = GenericFluid.create("distilled_water", false, false);
-		dirtyWater = GenericFluid.create("dirty_water", false, false);
+		distilledWater = GenericFluid.create("distilled_water", false, false, 0, true);
+		dirtyWater = GenericFluid.create("dirty_water", false, false, 0, true);
 		steam = GenericFluid.create("steam", false, true);
 		liquidFat = GenericFluid.create("liquid_fat", false, false);
 		moltenIron = GenericFluid.create("molten_iron", true, false);
@@ -42,9 +44,8 @@ public final class CRFluids{
 		moltenCopper = GenericFluid.create("molten_copper", true, false);
 		moltenTin = GenericFluid.create("molten_tin", true, false);
 		moltenCopshowium = GenericFluid.create("molten_copshowium", true, false);
-		nutrientSolution = GenericFluid.create("nutrient_solution", false, false);
-		fertilizerSolution = GenericFluid.create("fertilizer_solution", false, false);
-//		blood = GenericFluid.create("blood", false, false);
-		soulEssence = GenericFluid.create("soul_essence", false, true);
+		nutrientSolution = GenericFluid.create("nutrient_solution", false, false, 0, true);
+		fertilizerSolution = GenericFluid.create("fertilizer_solution", false, false, 0, true);
+		soulEssence = GenericFluid.create("soul_essence", false, true, 3, false);
 	}
 }

@@ -1,10 +1,10 @@
 package com.Da_Technomancer.crossroads.gui.screen;
 
-import com.Da_Technomancer.crossroads.API.MiscUtil;
-import com.Da_Technomancer.crossroads.API.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.api.beams.BeamUnit;
+import com.Da_Technomancer.crossroads.blocks.technomancy.BeaconHarnessTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.BeaconHarnessContainer;
-import com.Da_Technomancer.crossroads.tileentities.technomancy.BeaconHarnessTileEntity;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;

@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.items.witchcraft;
 
-import com.Da_Technomancer.crossroads.API.witchcraft.EntityTemplate;
-import com.Da_Technomancer.crossroads.API.witchcraft.ICultivatable;
+import com.Da_Technomancer.crossroads.api.witchcraft.EntityTemplate;
+import com.Da_Technomancer.crossroads.api.witchcraft.ICultivatable;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -22,8 +22,7 @@ public class Embryo extends Item implements ICultivatable{
 	public Embryo(){
 		super(new Item.Properties().stacksTo(1));//Not added to any creative tab
 		String name = "embryo";
-		setRegistryName(name);
-		CRItems.toRegister.add(this);
+		CRItems.toRegister.put(name, this);
 	}
 
 	@Override

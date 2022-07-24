@@ -1,13 +1,12 @@
 package com.Da_Technomancer.crossroads.items.technomancy;
 
-import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.blocks.rotary.WindingTableTileEntity;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.Da_Technomancer.crossroads.tileentities.rotary.WindingTableTileEntity;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -36,32 +35,31 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 	public RecallDevice(){
 		super(new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
 		String name = "recall_device";
-		setRegistryName(name);
-		CRItems.toRegister.add(this);
+		CRItems.toRegister.put(name, this);
 	}
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
-		tooltip.add(new TranslatableComponent("tt.crossroads.boilerplate.spring_speed", CRConfig.formatVal(getWindLevel(stack)), CRConfig.formatVal(getMaxWind())));
-		tooltip.add(new TranslatableComponent("tt.crossroads.recall_device.desc"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.recall_device.debuff"));
+		tooltip.add(Component.translatable("tt.crossroads.boilerplate.spring_speed", CRConfig.formatVal(getWindLevel(stack)), CRConfig.formatVal(getMaxWind())));
+		tooltip.add(Component.translatable("tt.crossroads.recall_device.desc"));
+		tooltip.add(Component.translatable("tt.crossroads.recall_device.debuff"));
 		if(CRConfig.recallTimeLimit.get() == 0){
 			//Disabled
-			tooltip.add(new TranslatableComponent("tt.crossroads.recall_device.config.disabled"));
+			tooltip.add(Component.translatable("tt.crossroads.recall_device.config.disabled"));
 		}else{
 			int limit = CRConfig.recallTimeLimit.get();
 			if(limit < 0){
 				//Unlimited recall
-				tooltip.add(new TranslatableComponent("tt.crossroads.recall_device.config.unlimited"));
+				tooltip.add(Component.translatable("tt.crossroads.recall_device.config.unlimited"));
 			}else{
-				tooltip.add(new TranslatableComponent("tt.crossroads.recall_device.config", limit));
+				tooltip.add(Component.translatable("tt.crossroads.recall_device.config", limit));
 			}
 			CompoundTag nbt = stack.getOrCreateTagElement("recall_data");
 			long timeElapsed;
 			if(nbt.contains("timestamp") && (timeElapsed = worldIn.getGameTime() - nbt.getLong("timestamp")) < limit * 20){
-				tooltip.add(new TranslatableComponent("tt.crossroads.recall_device.current", (int) (timeElapsed / 20)));
+				tooltip.add(Component.translatable("tt.crossroads.recall_device.current", (int) (timeElapsed / 20)));
 			}else{
-				tooltip.add(new TranslatableComponent("tt.crossroads.recall_device.current.none"));
+				tooltip.add(Component.translatable("tt.crossroads.recall_device.current.none"));
 			}
 		}
 	}
@@ -104,7 +102,7 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 	private void recall(CompoundTag data, Player player, ItemStack held){
 		if(!data.contains("timestamp")){
 			if(player.level.isClientSide){
-				MiscUtil.chatMessage(player, new TranslatableComponent("tt.crossroads.recall_device.none"));
+				MiscUtil.displayMessage(player, Component.translatable("tt.crossroads.recall_device.none"));
 			}
 			return;//No data stored
 		}
@@ -113,7 +111,7 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 		int limit = CRConfig.recallTimeLimit.get() * 20;//In ticks
 		if(limit >= 0 && delay > limit){
 			if(player.level.isClientSide){
-				MiscUtil.chatMessage(player, new TranslatableComponent("tt.crossroads.recall_device.expired"));
+				MiscUtil.displayMessage(player, Component.translatable("tt.crossroads.recall_device.expired"));
 			}
 			return;//Too old- do nothing
 		}
@@ -122,7 +120,7 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 
 		if(wind < WIND_USE){
 			if(player.level.isClientSide){
-				MiscUtil.chatMessage(player, new TranslatableComponent("tt.crossroads.recall_device.not_wound"));
+				MiscUtil.displayMessage(player, Component.translatable("tt.crossroads.recall_device.not_wound"));
 			}
 			return;//Insufficiently wound
 		}else{
@@ -132,7 +130,7 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 		String playerName = player.getGameProfile().getName();
 		if(playerName == null || !playerName.equals(data.getString("username"))){
 			if(player.level.isClientSide){
-				MiscUtil.chatMessage(player, new TranslatableComponent("tt.crossroads.recall_device.wrong_player"));
+				MiscUtil.displayMessage(player, Component.translatable("tt.crossroads.recall_device.wrong_player"));
 			}
 			return;//Wrong player or null profile
 		}
@@ -216,7 +214,7 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 
 	@Override
 	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items){
-		if(allowdedIn(group)){
+		if(allowedIn(group)){
 			items.add(new ItemStack(this, 1));
 			ItemStack stack = new ItemStack(this, 1);
 			setWindLevel(stack, getMaxWind());

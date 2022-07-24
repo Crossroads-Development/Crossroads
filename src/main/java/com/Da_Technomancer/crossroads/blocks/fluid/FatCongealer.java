@@ -1,15 +1,13 @@
 package com.Da_Technomancer.crossroads.blocks.fluid;
 
-import com.Da_Technomancer.crossroads.API.MiscUtil;
+import com.Da_Technomancer.crossroads.api.CRProperties;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.tileentities.fluid.FatCongealerTileEntity;
-import com.Da_Technomancer.essentials.ESConfig;
-import com.Da_Technomancer.essentials.blocks.ESProperties;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.ConfigUtil;
+import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.*;
 import net.minecraft.world.entity.player.Player;
@@ -37,10 +35,9 @@ public class FatCongealer extends BaseEntityBlock{
 	public FatCongealer(){
 		super(CRBlocks.getMetalProperty());
 		String name = "fat_congealer";
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this);
-		registerDefaultState(defaultBlockState().setValue(ESProperties.HORIZ_FACING, Direction.NORTH));
+		CRBlocks.toRegister.put(name, this);
+		CRBlocks.blockAddQue(name, this);
+		registerDefaultState(defaultBlockState().setValue(CRProperties.HORIZ_FACING, Direction.NORTH));
 	}
 
 	@Override
@@ -61,13 +58,13 @@ public class FatCongealer extends BaseEntityBlock{
 
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder){
-		builder.add(ESProperties.HORIZ_FACING);
+		builder.add(CRProperties.HORIZ_FACING);
 	}
 
 	@Nullable
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context){
-		return defaultBlockState().setValue(ESProperties.HORIZ_FACING, context.getHorizontalDirection().getOpposite());
+		return defaultBlockState().setValue(CRProperties.HORIZ_FACING, context.getHorizontalDirection().getOpposite());
 	}
 
 	@Override
@@ -81,21 +78,21 @@ public class FatCongealer extends BaseEntityBlock{
 	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		BlockEntity te;
-		if(ESConfig.isWrench(playerIn.getItemInHand(hand))){
+		if(ConfigUtil.isWrench(playerIn.getItemInHand(hand))){
 			if(!worldIn.isClientSide){
-				worldIn.setBlockAndUpdate(pos, state.cycle(ESProperties.HORIZ_FACING));
+				worldIn.setBlockAndUpdate(pos, state.cycle(CRProperties.HORIZ_FACING));
 			}
 		}else if(!worldIn.isClientSide && (te = worldIn.getBlockEntity(pos)) instanceof MenuProvider){
-			NetworkHooks.openGui((ServerPlayer) playerIn, (MenuProvider) te, pos);
+			NetworkHooks.openScreen((ServerPlayer) playerIn, (MenuProvider) te, pos);
 		}
 		return InteractionResult.SUCCESS;
 	}
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
-		tooltip.add(new TranslatableComponent("tt.crossroads.fat_congealer.desc"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.fat_congealer.hun", FatCongealerTileEntity.HUN_PER_SPD));
-		tooltip.add(new TranslatableComponent("tt.crossroads.fat_congealer.sat", FatCongealerTileEntity.SAT_PER_SPD));
-		tooltip.add(new TranslatableComponent("tt.crossroads.fat_congealer.quip").setStyle(MiscUtil.TT_QUIP));
+		tooltip.add(Component.translatable("tt.crossroads.fat_congealer.desc"));
+		tooltip.add(Component.translatable("tt.crossroads.fat_congealer.hun", FatCongealerTileEntity.HUN_PER_SPD));
+		tooltip.add(Component.translatable("tt.crossroads.fat_congealer.sat", FatCongealerTileEntity.SAT_PER_SPD));
+		tooltip.add(Component.translatable("tt.crossroads.fat_congealer.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 }

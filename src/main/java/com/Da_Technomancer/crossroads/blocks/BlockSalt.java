@@ -1,16 +1,16 @@
 package com.Da_Technomancer.crossroads.blocks;
 
-import com.Da_Technomancer.crossroads.API.MiscUtil;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.crafting.CRItemTags;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.essentials.blocks.FertileSoil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -27,14 +27,12 @@ import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 public class BlockSalt extends FallingBlock{
 
 	private static final DamageSource SALT_DAMAGE = new DamageSource("salt");
 	private static final HashMap<Block, Block> coralMap = new HashMap<>(20);//The field to get the dead version of a coral from the live block is private, and having a big map is better than reflection
-	private static final TagKey<EntityType<?>> SALT_VULNERABLE = CRItemTags.getTagKey(ForgeRegistries.Keys.ENTITY_TYPES, new ResourceLocation(Crossroads.MODID, "salt_vulnerable"));
-
+	private static final TagKey<EntityType<?>> SALT_VULNERABLE = CraftingUtil.getTagKey(ForgeRegistries.Keys.ENTITY_TYPES, new ResourceLocation(Crossroads.MODID, "salt_vulnerable"));
 
 	static {
 		coralMap.put(Blocks.TUBE_CORAL_BLOCK, Blocks.DEAD_TUBE_CORAL_BLOCK);
@@ -62,14 +60,13 @@ public class BlockSalt extends FallingBlock{
 	protected BlockSalt(){
 		super(Properties.of(Material.SAND).strength(.5F).sound(SoundType.SAND).randomTicks());//Mine with shovel
 		String name = "block_salt";
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this);
+		CRBlocks.toRegister.put(name, this);
+		CRBlocks.blockAddQue(name, this);
 	}
 
 	@Override
 	public void stepOn(Level worldIn, BlockPos pos, BlockState state, Entity entityIn){
-		if(!worldIn.isClientSide && CRItemTags.tagContains(SALT_VULNERABLE, entityIn.getType())){
+		if(!worldIn.isClientSide && CraftingUtil.tagContains(SALT_VULNERABLE, entityIn.getType())){
 			entityIn.hurt(SALT_DAMAGE, 20);
 		}
 
@@ -81,7 +78,7 @@ public class BlockSalt extends FallingBlock{
 		Block killBlock = killState.getBlock();
 		BlockState resultState = killState;
 
-		if(CRItemTags.tagContains(BlockTags.DIRT, killBlock) && killBlock != Blocks.COARSE_DIRT){
+		if(CraftingUtil.tagContains(BlockTags.DIRT, killBlock) && killBlock != Blocks.COARSE_DIRT){
 			//Kill dirt, grass, etc
 			resultState = Blocks.COARSE_DIRT.defaultBlockState();
 		}else if(killBlock instanceof BushBlock){
@@ -99,7 +96,7 @@ public class BlockSalt extends FallingBlock{
 		}else if(killBlock instanceof FertileSoil){
 			//Ruin fertile soil
 			resultState = Blocks.COARSE_DIRT.defaultBlockState();
-		}else if(CRItemTags.tagContains(BlockTags.LEAVES, killBlock)){
+		}else if(CraftingUtil.tagContains(BlockTags.LEAVES, killBlock)){
 			//Destroy leaves without dropping look
 			resultState = Blocks.AIR.defaultBlockState();
 		}
@@ -112,7 +109,7 @@ public class BlockSalt extends FallingBlock{
 	}
 
 	@Override
-	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random rand){
+	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, RandomSource rand){
 		if(worldIn.isClientSide){
 			return;
 		}
@@ -131,7 +128,7 @@ public class BlockSalt extends FallingBlock{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
-		tooltip.add(new TranslatableComponent("tt.crossroads.salt_block"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.salt_block.quip").setStyle(MiscUtil.TT_QUIP));
+		tooltip.add(Component.translatable("tt.crossroads.salt_block"));
+		tooltip.add(Component.translatable("tt.crossroads.salt_block.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 }

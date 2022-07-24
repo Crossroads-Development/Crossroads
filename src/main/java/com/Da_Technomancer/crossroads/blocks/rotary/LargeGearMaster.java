@@ -1,10 +1,9 @@
 package com.Da_Technomancer.crossroads.blocks.rotary;
 
+import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.Da_Technomancer.crossroads.tileentities.rotary.LargeGearMasterTileEntity;
-import com.Da_Technomancer.essentials.blocks.ESProperties;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -47,8 +46,7 @@ public class LargeGearMaster extends BaseEntityBlock{
 	public LargeGearMaster(){
 		super(CRBlocks.getMetalProperty());
 		String name = "large_gear_master";
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
+		CRBlocks.toRegister.put(name, this);
 	}
 
 	@Override
@@ -73,12 +71,12 @@ public class LargeGearMaster extends BaseEntityBlock{
 
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder){
-		builder.add(ESProperties.FACING);
+		builder.add(CRProperties.FACING);
 	}
 
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context){
-		return SHAPES[state.getValue(ESProperties.FACING).get3DDataValue()];
+		return SHAPES[state.getValue(CRProperties.FACING).get3DDataValue()];
 	}
 
 	@Override
@@ -99,7 +97,7 @@ public class LargeGearMaster extends BaseEntityBlock{
 	@Override
 	public boolean onDestroyedByPlayer(BlockState state, Level worldIn, BlockPos pos, Player player, boolean willHarvest, FluidState fluid){
 		if(willHarvest && worldIn.getBlockEntity(pos) instanceof LargeGearMasterTileEntity){
-			((LargeGearMasterTileEntity) worldIn.getBlockEntity(pos)).breakGroup(state.getValue(ESProperties.FACING), true);
+			((LargeGearMasterTileEntity) worldIn.getBlockEntity(pos)).breakGroup(state.getValue(CRProperties.FACING), true);
 		}
 		return super.onDestroyedByPlayer(state, worldIn, pos, player, willHarvest, fluid);
 	}
@@ -107,7 +105,7 @@ public class LargeGearMaster extends BaseEntityBlock{
 	@Override
 	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving){
 		if(worldIn.getBlockEntity(pos) instanceof LargeGearMasterTileEntity){
-			((LargeGearMasterTileEntity) worldIn.getBlockEntity(pos)).breakGroup(state.getValue(ESProperties.FACING), false);
+			((LargeGearMasterTileEntity) worldIn.getBlockEntity(pos)).breakGroup(state.getValue(CRProperties.FACING), false);
 		}
 		super.onRemove(state, worldIn, pos, newState, isMoving);
 	}

@@ -1,16 +1,16 @@
 package com.Da_Technomancer.crossroads.gui.screen;
 
-import com.Da_Technomancer.crossroads.API.templates.MachineGUI;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.api.templates.MachineScreen;
+import com.Da_Technomancer.crossroads.blocks.fluid.FatFeederTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.FatFeederContainer;
-import com.Da_Technomancer.crossroads.tileentities.fluid.FatFeederTileEntity;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class FatFeederScreen extends MachineGUI<FatFeederContainer, FatFeederTileEntity>{
+public class FatFeederScreen extends MachineScreen<FatFeederContainer, FatFeederTileEntity>{
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/gui/container/fat_feeder_gui.png");
 

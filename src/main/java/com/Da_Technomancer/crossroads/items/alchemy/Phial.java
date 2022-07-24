@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.items.alchemy;
 
-import com.Da_Technomancer.crossroads.API.alchemy.AlchemyUtil;
-import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
+import com.Da_Technomancer.crossroads.api.alchemy.AlchemyUtil;
+import com.Da_Technomancer.crossroads.api.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.context.UseOnContext;
@@ -11,8 +11,7 @@ public class Phial extends AbstractGlassware{
 	public Phial(boolean crystal){
 		super(GlasswareTypes.PHIAL, crystal);
 		String name = "phial_" + (crystal ? "cryst" : "glass");
-		setRegistryName(name);
-		CRItems.toRegister.add(this);
+		CRItems.toRegister.put(name, this);
 	}
 
 	@Override

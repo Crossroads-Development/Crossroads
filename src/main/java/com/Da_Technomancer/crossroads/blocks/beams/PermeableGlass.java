@@ -4,7 +4,6 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
@@ -22,9 +21,8 @@ public class PermeableGlass extends Block{
 	public PermeableGlass(){
 		super(CRBlocks.getGlassProperty().noOcclusion());
 		String name = "permeable_glass";
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this);
+		CRBlocks.toRegister.put(name, this);
+		CRBlocks.blockAddQue(name, this);
 	}
 
 	@Override
@@ -49,7 +47,7 @@ public class PermeableGlass extends Block{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter player, List<Component> tooltip, TooltipFlag advanced){
-		tooltip.add(new TranslatableComponent("tt.crossroads.boilerplate.beam_permeable"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.boilerplate.decor"));
+		tooltip.add(Component.translatable("tt.crossroads.boilerplate.beam_permeable"));
+		tooltip.add(Component.translatable("tt.crossroads.boilerplate.decor"));
 	}
 }

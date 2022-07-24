@@ -1,13 +1,12 @@
 package com.Da_Technomancer.crossroads.items.technomancy;
 
-import com.Da_Technomancer.crossroads.API.MiscUtil;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.Da_Technomancer.essentials.ESConfig;
+import com.Da_Technomancer.essentials.api.ConfigUtil;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -31,8 +30,7 @@ public class LiechWrench extends Item{
 	public LiechWrench(){
 		super(new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
 		String name = "liech_wrench";
-		setRegistryName(name);
-		CRItems.toRegister.add(this);
+		CRItems.toRegister.put(name, this);
 		//This item is registered as a wrench in the wrench tag
 
 		//Attributes
@@ -54,7 +52,7 @@ public class LiechWrench extends Item{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
-		tooltip.add(new TranslatableComponent("tt.crossroads.liech_wrench.quip").setStyle(MiscUtil.TT_QUIP));
+		tooltip.add(Component.translatable("tt.crossroads.liech_wrench.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 
 	private static boolean canDig(BlockState blockIn){
@@ -86,6 +84,6 @@ public class LiechWrench extends Item{
 
 	@Override
 	public boolean canPerformAction(ItemStack stack, ToolAction toolAction){
-		return toolAction == ESConfig.WRENCH_ACTION || ToolActions.DEFAULT_AXE_ACTIONS.contains(toolAction) || ToolActions.HOE_DIG == toolAction || ToolActions.DEFAULT_PICKAXE_ACTIONS.contains(toolAction) || ToolActions.DEFAULT_SHOVEL_ACTIONS.contains(toolAction);
+		return toolAction == ConfigUtil.WRENCH_ACTION || ToolActions.DEFAULT_AXE_ACTIONS.contains(toolAction) || ToolActions.HOE_DIG == toolAction || ToolActions.DEFAULT_PICKAXE_ACTIONS.contains(toolAction) || ToolActions.DEFAULT_SHOVEL_ACTIONS.contains(toolAction);
 	}
 }

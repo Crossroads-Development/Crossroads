@@ -1,13 +1,11 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.tileentities.alchemy.FireDetectorTileEntity;
-import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
-import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.redstone.IReadable;
+import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
@@ -27,9 +25,8 @@ public class FireDetector extends BaseEntityBlock implements IReadable{
 	public FireDetector(){
 		super(CRBlocks.getMetalProperty());
 		String name = "fire_detector";
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this);
+		CRBlocks.toRegister.put(name, this);
+		CRBlocks.blockAddQue(name, this);
 	}
 
 	@Override
@@ -50,9 +47,9 @@ public class FireDetector extends BaseEntityBlock implements IReadable{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
-		tooltip.add(new TranslatableComponent("tt.crossroads.fire_detector.desc"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.fire_detector.circuit", FireDetectorTileEntity.RANGE));
-		tooltip.add(new TranslatableComponent("tt.crossroads.fire_detector.range", FireDetectorTileEntity.RANGE));
+		tooltip.add(Component.translatable("tt.crossroads.fire_detector.desc"));
+		tooltip.add(Component.translatable("tt.crossroads.fire_detector.circuit", FireDetectorTileEntity.RANGE));
+		tooltip.add(Component.translatable("tt.crossroads.fire_detector.range", FireDetectorTileEntity.RANGE));
 	}
 
 	@Override

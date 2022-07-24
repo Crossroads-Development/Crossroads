@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.items.alchemy;
 
-import com.Da_Technomancer.crossroads.API.alchemy.ReagentMap;
+import com.Da_Technomancer.crossroads.api.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.entity.EntityShell;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.core.BlockSource;
@@ -51,8 +51,7 @@ public class Shell extends AbstractGlassware{
 	public Shell(boolean crystal){
 		super(GlasswareTypes.SHELL, crystal);
 		String name = "shell_" + (crystal ? "cryst" : "glass");
-		setRegistryName(name);
-		CRItems.toRegister.add(this);
+		CRItems.toRegister.put(name, this);
 		DispenserBlock.registerBehavior(this, SHELL_DISPENSER_BEHAVIOR);
 	}
 

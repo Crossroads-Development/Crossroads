@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.entity;
 
+import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
-import com.Da_Technomancer.crossroads.render.CRRenderUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;

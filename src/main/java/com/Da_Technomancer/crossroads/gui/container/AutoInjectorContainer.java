@@ -1,19 +1,19 @@
 package com.Da_Technomancer.crossroads.gui.container;
 
-import com.Da_Technomancer.crossroads.API.templates.MachineContainer;
-import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.tileentities.witchcraft.AutoInjectorTileEntity;
-import com.Da_Technomancer.essentials.gui.container.IntDeferredRef;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.api.templates.MachineContainer;
+import com.Da_Technomancer.crossroads.blocks.witchcraft.AutoInjectorTileEntity;
+import com.Da_Technomancer.essentials.api.IntDeferredRef;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraftforge.registries.ObjectHolder;
+import net.minecraftforge.registries.ForgeRegistries;
 
-@ObjectHolder(Crossroads.MODID)
+import java.util.function.Supplier;
+
 public class AutoInjectorContainer extends MachineContainer<AutoInjectorTileEntity>{
 
-	@ObjectHolder("auto_injector")
-	private static MenuType<AutoInjectorContainer> type = null;
+	private static final Supplier<MenuType<?>> TYPE_SPL = MiscUtil.getCRRegistryObject("auto_injector", ForgeRegistries.Keys.MENU_TYPES);
 
 	public final IntDeferredRef effectRef;
 	public final IntDeferredRef intensityRef;
@@ -21,7 +21,7 @@ public class AutoInjectorContainer extends MachineContainer<AutoInjectorTileEnti
 	public final IntDeferredRef doseRef;
 
 	public AutoInjectorContainer(int id, Inventory playerInv, FriendlyByteBuf buf){
-		super(type, id, playerInv, buf);
+		super(TYPE_SPL.get(), id, playerInv, buf);
 
 		effectRef = new IntDeferredRef(te::getStoredEffectIndex, te.getLevel().isClientSide);
 		intensityRef = new IntDeferredRef(te::getIntensity, te.getLevel().isClientSide);

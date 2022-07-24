@@ -1,11 +1,10 @@
 package com.Da_Technomancer.crossroads.items.witchcraft;
 
-import com.Da_Technomancer.crossroads.API.MiscUtil;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -25,8 +24,7 @@ public class BrainHarvester extends Item{
 	public BrainHarvester(){
 		super(new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1).rarity(CRItems.BOBO_RARITY));
 		String name = "brain_harvester";
-		setRegistryName(name);
-		CRItems.toRegister.add(this);
+		CRItems.toRegister.put(name, this);
 
 		//Attributes
 		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
@@ -43,7 +41,7 @@ public class BrainHarvester extends Item{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag){
-		tooltip.add(new TranslatableComponent("tt.crossroads.brain_harvester.desc"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.brain_harvester.quip").setStyle(MiscUtil.TT_QUIP));
+		tooltip.add(Component.translatable("tt.crossroads.brain_harvester.desc"));
+		tooltip.add(Component.translatable("tt.crossroads.brain_harvester.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 }

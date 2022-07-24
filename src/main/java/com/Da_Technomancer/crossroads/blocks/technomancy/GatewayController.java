@@ -1,18 +1,16 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
-import com.Da_Technomancer.crossroads.API.CRProperties;
-import com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments;
-import com.Da_Technomancer.crossroads.API.technomancy.FluxUtil;
-import com.Da_Technomancer.crossroads.API.technomancy.IGateway;
+import com.Da_Technomancer.crossroads.api.CRProperties;
+import com.Da_Technomancer.crossroads.api.beams.EnumBeamAlignments;
+import com.Da_Technomancer.crossroads.api.technomancy.FluxUtil;
+import com.Da_Technomancer.crossroads.api.technomancy.IGateway;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.tileentities.technomancy.GatewayControllerTileEntity;
-import com.Da_Technomancer.essentials.ESConfig;
-import com.Da_Technomancer.essentials.blocks.redstone.IReadable;
-import com.Da_Technomancer.essentials.blocks.redstone.RedstoneUtil;
-import com.Da_Technomancer.essentials.tileentities.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.ConfigUtil;
+import com.Da_Technomancer.essentials.api.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.redstone.IReadable;
+import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -39,9 +37,8 @@ public class GatewayController extends BaseEntityBlock implements IReadable{
 	public GatewayController(){
 		super(CRBlocks.getMetalProperty());
 		String name = "gateway_frame";//This registry name is bad, but kept for backwards compatibility
-		setRegistryName(name);
-		CRBlocks.toRegister.add(this);
-		CRBlocks.blockAddQue(this);
+		CRBlocks.toRegister.put(name, this);
+		CRBlocks.blockAddQue(name, this);
 		registerDefaultState(defaultBlockState().setValue(CRProperties.ACTIVE, false));
 	}
 
@@ -74,7 +71,7 @@ public class GatewayController extends BaseEntityBlock implements IReadable{
 		if(state.getValue(CRProperties.ACTIVE)){
 			//Handle linking if this is the top block
 			return FluxUtil.handleFluxLinking(world, pos, held, player);
-		}else if(ESConfig.isWrench(held)){
+		}else if(ConfigUtil.isWrench(held)){
 			//Attempt to form the multiblock
 			BlockEntity te = world.getBlockEntity(pos);
 			if(te instanceof GatewayControllerTileEntity){
@@ -96,11 +93,11 @@ public class GatewayController extends BaseEntityBlock implements IReadable{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag flag){
-		tooltip.add(new TranslatableComponent("tt.crossroads.gateway.desc"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.gateway.dial"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.gateway.proc"));
-		tooltip.add(new TranslatableComponent("tt.crossroads.gateway.flux", GatewayControllerTileEntity.FLUX_PER_CYCLE));
-		tooltip.add(new TranslatableComponent("tt.crossroads.boilerplate.inertia", GatewayControllerTileEntity.INERTIA));
+		tooltip.add(Component.translatable("tt.crossroads.gateway.desc"));
+		tooltip.add(Component.translatable("tt.crossroads.gateway.dial"));
+		tooltip.add(Component.translatable("tt.crossroads.gateway.proc"));
+		tooltip.add(Component.translatable("tt.crossroads.gateway.flux", GatewayControllerTileEntity.FLUX_PER_CYCLE));
+		tooltip.add(Component.translatable("tt.crossroads.boilerplate.inertia", GatewayControllerTileEntity.INERTIA));
 	}
 
 	@Override
