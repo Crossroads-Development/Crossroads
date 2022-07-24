@@ -50,6 +50,7 @@ public class CRTileEntity{
 		toRegister.put("quartz_stabilizer", QuartzStabilizerTileEntity.TYPE);
 		toRegister.put("crystal_prism", CrystallinePrismTileEntity.TYPE);
 		toRegister.put("beam_reflector", BeamReflectorTileEntity.TYPE);
+		toRegister.put("beam_reflector_sensitive", BeamReflectorSensitiveTileEntity.TYPE);
 		toRegister.put("lens_frame", LensFrameTileEntity.TYPE);
 		toRegister.put("beam_siphon", BeamSiphonTileEntity.TYPE);
 		toRegister.put("beam_splitter", BeamSplitterTileEntity.TYPE);

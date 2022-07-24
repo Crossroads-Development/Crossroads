@@ -85,6 +85,7 @@
 	"block.crossroads.quartz_stabilizer": "Quartz Stabilizer",
 	"block.crossroads.crystalline_prism": "Crystalline Prism",
 	"block.crossroads.beam_reflector": "Beam Reflector",
+	"block.crossroads.beam_reflector_sensitive": "Sensitive Beam Reflector",
 	"block.crossroads.lens_frame": "Lens Frame",
 	"block.crossroads.block_pure_quartz": "Block of Pure Quartz",
 	"block.crossroads.block_bright_quartz": "Block of Bright Quartz",
@@ -822,6 +823,7 @@
 	"tt.crossroads.fire_detector.desc": "Detects nearby flame clouds. Doesn't detect normal fire.",
 	"tt.crossroads.fire_detector.circuit": "Circuits read distance to nearest flame cloud, negative if inside a cloud, or %1$d if none nearby",
 	"tt.crossroads.fire_detector.range": "Maximum range is %1$d blocks",
+	"tt.crossroads.beam_reflector_sensitive": "Emitted beam collides with entities",
 
 	"container.crossroads.boilerplate.temp": "%1$d°C",
 	"container.crossroads.boilerplate.speed": "%1$f rad/s",

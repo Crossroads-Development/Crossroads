@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.render.tesr;
 
 import com.Da_Technomancer.crossroads.CRConfig;
-import com.Da_Technomancer.crossroads.api.beams.BeamManager;
+import com.Da_Technomancer.crossroads.api.beams.BeamHelper;
 import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.api.templates.IBeamRenderTE;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
@@ -100,7 +100,7 @@ public class BeamRenderer<T extends BlockEntity & IBeamRenderTE> implements Bloc
 
 		for(int dir = 0; dir < 6; dir++){
 			if(packets[dir] != 0){
-				Triple<Color, Integer, Integer> trip = BeamManager.getTriple(packets[dir]);
+				Triple<Color, Integer, Integer> trip = BeamHelper.getTriple(packets[dir]);
 				float width = trip.getRight().floatValue() / 8F / (float) Math.sqrt(2);//Convert diagonal radius to side length
 				int length = trip.getMiddle();
 

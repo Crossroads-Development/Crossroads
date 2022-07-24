@@ -2,9 +2,11 @@ package com.Da_Technomancer.crossroads.integration.curios;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.SlotResult;
 import top.theillusivec4.curios.api.SlotTypeMessage;
@@ -32,4 +34,9 @@ final class CurioCoreUnsafe{
 	static Optional<SlotResult> findFirstCurio(Item item, @Nonnull LivingEntity livingEntity){
 		return CuriosApi.getCuriosHelper().findFirstCurio(livingEntity, item);
 	}
+
+	static LazyOptional<IItemHandlerModifiable> getAllCurios(@Nonnull LivingEntity livingEntity){
+		return CuriosApi.getCuriosHelper().getEquippedCurios(livingEntity);
+	}
+
 }

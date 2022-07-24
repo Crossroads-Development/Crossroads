@@ -14,35 +14,42 @@ import org.apache.commons.lang3.tuple.Triple;
 import javax.annotation.Nonnull;
 import java.awt.*;
 
-public class BeamManager{
+/**
+ * Represents a beam output from a given start position along a given direction
+ * Handles outputting the beam and assists in syncing rendering data
+ */
+public class BeamHelper{
 
-	private final Direction dir;
-	private final BlockPos pos;
+	protected final Direction dir;
+	protected final BlockPos pos;
 
-	private int dist;
+	protected int dist;
 	@Nonnull
-	private BeamUnit lastSent = BeamUnit.EMPTY;
+	protected BeamUnit lastSent = BeamUnit.EMPTY;
 
-	public BeamManager(@Nonnull Direction dir, @Nonnull BlockPos pos){
+	public BeamHelper(@Nonnull Direction dir, @Nonnull BlockPos pos){
 		this.dir = dir;
 		this.pos = pos.immutable();
 	}
 
+	/**
+	 * Emit a beam
+	 * @param mag The beam to transmit
+	 * @param world The world
+	 * @return Whether the rendered beam has changed and a new update packet needs to be sent
+	 */
 	public boolean emit(@Nonnull BeamUnit mag, Level world){
 		for(int i = 1; i <= BeamUtil.MAX_DISTANCE; i++){
+			//Check for machine receiving beams
 			BlockEntity checkTE = world.getBlockEntity(pos.relative(dir, i));
 			LazyOptional<IBeamHandler> opt;
 			if(checkTE != null && (opt = checkTE.getCapability(Capabilities.BEAM_CAPABILITY, dir.getOpposite())).isPresent()){
 				opt.orElseThrow(NullPointerException::new).setBeam(mag);
-				if(dist != i || !mag.equals(lastSent)){
-					dist = i;
-					lastSent = mag;
-					return true;
-				}else{
-					return false;
-				}
+
+				return updateBeamRender(mag, i);
 			}
 
+			//Check for collision
 			BlockState checkState = world.getBlockState(pos.relative(dir, i));
 			if(i == BeamUtil.MAX_DISTANCE || BeamUtil.solidToBeams(checkState, world, pos.relative(dir, i), dir, mag.getPower())){
 				if(!mag.isEmpty() && !world.isClientSide){
@@ -50,16 +57,22 @@ public class BeamManager{
 					BeamEffect e = align.getEffect();
 					e.doBeamEffect(align, mag.getVoid() != 0, Math.min(64, mag.getPower()), new BeamHit((ServerLevel) world, pos.relative(dir, i), dir.getOpposite(), checkState));
 				}
-				if(dist != i || !mag.equals(lastSent)){
-					dist = i;
-					lastSent = mag;
-					return true;
-				}
-				return false;
+
+				return updateBeamRender(mag, i);
 			}
 		}
 
 		return false;
+	}
+
+	protected boolean updateBeamRender(BeamUnit newBeam, int newDist){
+		if(dist != newDist || !newBeam.equals(lastSent)){
+			dist = newDist;
+			lastSent = newBeam;
+			return true;
+		}else{
+			return false;
+		}
 	}
 
 	@Nonnull
@@ -70,7 +83,7 @@ public class BeamManager{
 	/**
 	 * Serializes information needed by this class on the client side into an integer
 	 * @param mag The beam unit to render
-	 * @param dist The length of the last beam send
+	 * @param dist The length of the last beam sent
 	 * @return A serialized form of the arguments
 	 */
 	public static int toPacket(BeamUnit mag, int dist){

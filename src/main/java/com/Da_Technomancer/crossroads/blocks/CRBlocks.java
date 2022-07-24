@@ -66,6 +66,7 @@ public class CRBlocks{
 	public static QuartzStabilizer quartzStabilizer;
 	public static CrystallinePrism crystallinePrism;
 	public static BeamReflector beamReflector;
+	public static BeamReflectorSensitive beamReflectorSensitive;
 	public static LensFrame lensFrame;
 	public static BasicBlock blockPureQuartz;
 	public static BasicBlock blockBrightQuartz;
@@ -244,6 +245,7 @@ public class CRBlocks{
 		quartzStabilizer = new QuartzStabilizer();
 		crystallinePrism = new CrystallinePrism();
 		beamReflector = new BeamReflector();
+		beamReflectorSensitive = new BeamReflectorSensitive();
 		lensFrame = new LensFrame();
 		blockPureQuartz = new BasicBlock("block_pure_quartz", CRBlocks.getRockProperty());
 		blockBrightQuartz = new BasicBlock("block_bright_quartz", CRBlocks.getRockProperty().lightLevel(state -> 15));

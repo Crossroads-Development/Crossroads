@@ -26,7 +26,7 @@ public class BeamUtil{
 	public static final int BEAM_TIME = 4;
 	public static final int POWER_LIMIT = 64_000;
 
-	public static final Predicate<Entity> BEAM_COLLIDE_ENTITY = EntitySelector.ENTITY_STILL_ALIVE.and(ent -> !(ent instanceof EntityGhostMarker));
+	public static final Predicate<Entity> BEAM_COLLIDE_ENTITY = EntitySelector.ENTITY_STILL_ALIVE.and(EntitySelector.NO_SPECTATORS).and(ent -> !(ent instanceof EntityGhostMarker));
 
 	private static final TagKey<Block> PASSABLE = CraftingUtil.getTagKey(ForgeRegistries.Keys.BLOCKS, new ResourceLocation(Crossroads.MODID, "beam_passable"));
 	private static final VoxelShape[] COLLISION_MASK = new VoxelShape[3];

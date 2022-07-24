@@ -7,21 +7,21 @@
 	},
 	"pattern": [
 		" Q ",
-		"BQB",
+		"IRI",
 		"IAI"
 	],
 	"key": {
 		"I": {
 			"tag": "forge:ingots/iron"
 		},
-		"B": {
-			"tag": "forge:ingots/bronze"
-		},
 		"Q": {
 			"tag": "crossroads:gems/pure_quartz"
 		},
 		"A": {
 			"item": "crossroads:lens_array"
+		},
+		"R": {
+			"item": "crossroads:beam_reflector_sensitive"
 		}
 	}
 }

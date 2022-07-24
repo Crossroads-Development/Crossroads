@@ -29,6 +29,7 @@ public class CRRendererRegistry{
 		registerTESR(e, QuartzStabilizerTileEntity.TYPE, BeamRenderer::new);
 		registerTESR(e, CrystallinePrismTileEntity.TYPE, BeamRenderer::new);
 		registerTESR(e, BeamReflectorTileEntity.TYPE, BeamRenderer::new);
+		registerTESR(e, BeamReflectorSensitiveTileEntity.TYPE, BeamRenderer::new);
 		registerTESR(e, LensFrameTileEntity.TYPE, LensFrameRenderer::new);
 		registerTESR(e, BeamSiphonTileEntity.TYPE, BeamRenderer::new);
 		registerTESR(e, BeamRedirectorTileEntity.TYPE, BeamRenderer::new);

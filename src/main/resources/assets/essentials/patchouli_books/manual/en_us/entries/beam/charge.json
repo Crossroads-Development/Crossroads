@@ -11,11 +11,11 @@
 			"type": "patchouli:spotlight",
 			"title": "Alignment: Charge",
 			"item": "crossroads:pure_quartz",
-			"text": "<thing>Charge/$ (yellow) will add FE to any machine it hits. By default, it adds 50FE per <thing>power/$.$(br2)<thing>Charge/$ beams with <thing>power/$ >= 16 will summon a lightning bolt if the sky is visible.$(br2)<thing>Charge/$ beams can transmute (cobble)stone into "
+			"text": "<thing>Charge/$ (yellow) will add FE to any machine it hits. By default, it adds 50FE per <thing>power/$. It will also charge items that store FE in the inventory of any player it hits. $(br2)<thing>Charge/$ beams with <thing>power/$ >= 16 will summon a lightning bolt if the sky is visible.$(br2)"
 		},
 		{
 			"type": "patchouli:text",
-			"text": "redstone blocks.$(br2)"
+			"text": "<thing>Charge/$ beams can transmute (cobble)stone into redstone blocks.$(br2)"
 		},
 		{
 			"type": "patchouli:text",

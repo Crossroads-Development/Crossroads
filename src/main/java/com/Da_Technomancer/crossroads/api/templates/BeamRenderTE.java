@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
 public abstract class BeamRenderTE extends BlockEntity implements IBeamRenderTE, ITickableTileEntity, IIntReceiver{
 
 	protected int[] beamPackets = new int[6];
-	protected BeamManager[] beamer;
+	protected BeamHelper[] beamer;
 	protected BeamUnitStorage[] queued = {new BeamUnitStorage(), new BeamUnitStorage()};
 	protected long activeCycle;//To prevent tick acceleration and deal with some chunk loading weirdness
 	protected BeamUnit[] prevMag = new BeamUnit[] {BeamUnit.EMPTY, BeamUnit.EMPTY, BeamUnit.EMPTY, BeamUnit.EMPTY, BeamUnit.EMPTY, BeamUnit.EMPTY};//Stores the last non-null beams sent for information readouts
@@ -87,7 +87,7 @@ public abstract class BeamRenderTE extends BlockEntity implements IBeamRenderTE,
 		//Can be called on both the virtual server and client side, but only actually does anything on the server side as the passed player is null
 		if(CRConfig.beamSounds.get() && beamer != null && level.getGameTime() % 60 == 0){
 			//Play a sound if ANY side is outputting a beam
-			for(BeamManager beamManager : beamer){
+			for(BeamHelper beamManager : beamer){
 				if(beamManager != null && !beamManager.getLastSent().isEmpty()){
 					//The attenuation distance defined for this sound in sounds.json is significant, and makes the sound have a very short range
 					CRSounds.playSoundServer(level, worldPosition, CRSounds.BEAM_PASSIVE, SoundSource.BLOCKS, 0.7F, 0.3F);
@@ -102,11 +102,11 @@ public abstract class BeamRenderTE extends BlockEntity implements IBeamRenderTE,
 		ITickableTileEntity.super.serverTick();
 		if(level.getGameTime() % BeamUtil.BEAM_TIME == 0 && activeCycle != level.getGameTime()){
 			if(beamer == null){
-				beamer = new BeamManager[6];
+				beamer = new BeamHelper[6];
 				boolean[] outputs = outputSides();
 				for(int i = 0; i < 6; i++){
 					if(outputs[i]){
-						beamer[i] = new BeamManager(Direction.from3DDataValue(i), worldPosition);
+						beamer[i] = createBeamManager(Direction.from3DDataValue(i));
 					}
 				}
 			}
@@ -134,6 +134,10 @@ public abstract class BeamRenderTE extends BlockEntity implements IBeamRenderTE,
 		queued[1].clear();
 		setChanged();
 		return out;
+	}
+
+	protected BeamHelper createBeamManager(Direction dir){
+		return new BeamHelper(dir, worldPosition);
 	}
 
 	protected abstract void doEmit(@Nonnull BeamUnit toEmit);
@@ -198,7 +202,7 @@ public abstract class BeamRenderTE extends BlockEntity implements IBeamRenderTE,
 		super.setRemoved();
 		lazyOptional.invalidate();
 		if(beamer != null && level != null){
-			for(BeamManager manager : beamer){
+			for(BeamHelper manager : beamer){
 				if(manager != null){
 					manager.emit(BeamUnit.EMPTY, level);
 				}

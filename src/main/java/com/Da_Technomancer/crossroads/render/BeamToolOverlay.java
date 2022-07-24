@@ -40,6 +40,9 @@ public class BeamToolOverlay implements IGuiOverlay{
 			//Use the batched renderer instead of the Tesselator
 			MultiBufferSource.BufferSource buffer = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
 //			PoseStack matrix = e.getMatrixStack();
+			matrix.pushPose();
+			//Makes the UI overlay smaller
+			matrix.scale(0.75F, 0.75F, 1);
 
 			float barUSt = 8F/39F;
 			float barUEn = 32F/39F;
@@ -95,6 +98,8 @@ public class BeamToolOverlay implements IGuiOverlay{
 
 				Minecraft.getInstance().font.draw(matrix, mainStack.getHoverName().getString(), 16, 5, Color.DARK_GRAY.getRGB());
 			}
+
+			matrix.popPose();
 		}
 	}
 }

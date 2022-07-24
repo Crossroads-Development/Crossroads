@@ -13,8 +13,12 @@ public class BeamReflectorTileEntity extends BeamRenderTE{
 
 	public static final BlockEntityType<BeamReflectorTileEntity> TYPE = CRTileEntity.createType(BeamReflectorTileEntity::new, CRBlocks.beamReflector);
 
-	public BeamReflectorTileEntity(BlockPos pos, BlockState state){
-		super(TYPE, pos, state);
+	protected BeamReflectorTileEntity(BlockPos pos, BlockState state){
+		this(TYPE, pos, state);
+	}
+
+	protected BeamReflectorTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state){
+		super(type, pos, state);
 	}
 
 	@Override

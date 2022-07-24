@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.render.tesr;
 
 import com.Da_Technomancer.crossroads.CRConfig;
-import com.Da_Technomancer.crossroads.api.beams.BeamManager;
+import com.Da_Technomancer.crossroads.api.beams.BeamHelper;
 import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.blocks.technomancy.BeaconHarnessTileEntity;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
@@ -35,7 +35,7 @@ public class BeaconHarnessRenderer extends EntropyRenderer<BeaconHarnessTileEnti
 		//Render output beam
 		int[] beamPacket = te.getRenderedBeams();
 		//Beacon harness only outputs beams down
-		Triple<Color, Integer, Integer> trip = BeamManager.getTriple(beamPacket[0]);
+		Triple<Color, Integer, Integer> trip = BeamHelper.getTriple(beamPacket[0]);
 		if(trip.getRight() != 0){
 			//We are running. Calculate angle for rods
 			angle = calcAngle(te, partialTicks);

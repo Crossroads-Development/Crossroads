@@ -149,7 +149,7 @@ public class LensFrameTileEntity extends BlockEntity implements IBeamRenderTE, I
 		return out;
 	}
 
-	private final BeamManager[] beamer = new BeamManager[2];//0: neg; 1: pos
+	private final BeamHelper[] beamer = new BeamHelper[2];//0: neg; 1: pos
 
 	@Override
 	public void receiveInt(byte identifier, int message, ServerPlayer player){
@@ -234,7 +234,7 @@ public class LensFrameTileEntity extends BlockEntity implements IBeamRenderTE, I
 		magicOptNeg.invalidate();
 		lensOpt.invalidate();
 		if(beamer != null && level != null){
-			for(BeamManager manager : beamer){
+			for(BeamHelper manager : beamer){
 				if(manager != null){
 					manager.emit(BeamUnit.EMPTY, level);
 				}
@@ -292,11 +292,11 @@ public class LensFrameTileEntity extends BlockEntity implements IBeamRenderTE, I
 		@Override
 		public void setBeam(@Nonnull BeamUnit mag){
 			if(beamer[0] == null || beamer[1] == null){
-				beamer[0] = new BeamManager(Direction.get(AxisDirection.NEGATIVE, getAxis()), worldPosition);
-				beamer[1] = new BeamManager(Direction.get(AxisDirection.POSITIVE, getAxis()), worldPosition);
+				beamer[0] = new BeamHelper(Direction.get(AxisDirection.NEGATIVE, getAxis()), worldPosition);
+				beamer[1] = new BeamHelper(Direction.get(AxisDirection.POSITIVE, getAxis()), worldPosition);
 			}
 
-			BeamManager activeBeam = beamer[dir == AxisDirection.POSITIVE ? 1 : 0];
+			BeamHelper activeBeam = beamer[dir == AxisDirection.POSITIVE ? 1 : 0];
 			BeamLensRec recipe = getCurrRec();
 			BeamMod mod = BeamMod.EMPTY;
 

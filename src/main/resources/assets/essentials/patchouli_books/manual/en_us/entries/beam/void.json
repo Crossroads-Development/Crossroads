@@ -18,7 +18,11 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "For example, while the <thing>energy/$ alignment produces heat, the void-energy (called <thing>cold/$) <thing>alignment/$ removes heat.$(br2)<thing>Void/$ is produced by sending any beam through a <item>$(l:essentials:beam/frame)lens frame/$ with a <item>$(l:essentials:intro/ores)void crystal/$. The entire <thing>power/$ of the original beam will be converted to <thing>void/$.$(br2)"
+			"text": "For example, while the <thing>energy/$ alignment produces heat, the void-energy (called <thing>cold/$) <thing>alignment/$ removes heat.$(br2)<thing>Void/$ is produced by sending any beam through a <item>$(l:essentials:beam/frame)lens frame/$ with a <item>$(l:essentials:intro/ores)void crystal/$. The entire <thing>power/$ of the original beam will be converted to <thing>void/$.$(br2)Note: If using the 'transparent beams' config "
+		},
+		{
+			"type": "patchouli:text",
+			"text": "option, <thing>Void/$ makes the beam visually more transparent instead of darker, and a pure <thing>void/$ beam is <em>totally invisible/$.$(br2)"
 		},
 		{
 			"type": "patchouli:text",

@@ -119,6 +119,7 @@ public class CRConfig{
 	public static ForgeConfigSpec.IntValue fireboxFuelMult;
 	public static ForgeConfigSpec.DoubleValue solarRate;
 	public static ForgeConfigSpec.DoubleValue medicinalMushroomSpread;
+	public static ForgeConfigSpec.BooleanValue beamTransparent;
 
 	private static final TagKey<Block> destroyBlacklist = CraftingUtil.getTagKey(ForgeRegistries.Keys.BLOCKS, new ResourceLocation(Crossroads.MODID, "destroy_blacklist"));
 
@@ -139,6 +140,7 @@ public class CRConfig{
 		ForgeConfigSpec.Builder clientBuilder = new ForgeConfigSpec.Builder();
 
 		rotateBeam = clientBuilder.comment("Should beams visually rotate?").define("rotate_beam", true);
+		beamTransparent = clientBuilder.comment("Whether beams should be transparent and glowing", "Default opaque beams are easier to see, but transparent beams are prettier", "With transparent on, void makes beams more transparent instead of darker, and pure void beams are totally invisible").define("transparent_beams", false);
 //		colorChartResolution = clientBuilder.comment("Pixel size on the color chart", "Higher values will reduce FPS lag in the color chart UI, but will make it less precise and 'smooth' looking").defineInRange("color_res", 1, 1, 4);
 		beamSounds = clientBuilder.comment("Should beams make sounds?").define("beam_sounds", true);
 		electricSounds = clientBuilder.comment("Should electrical arcs make sounds?").define("electric_sounds", true);
