@@ -45,7 +45,7 @@ public class HandCrank extends Item{
 			}
 			signMult *= RotaryUtil.getCCWSign(side);
 			axleOpt.orElseThrow(NullPointerException::new).addEnergy(getRate() * signMult, true);
-            context.getPlayer().getCooldowns().addCooldown(this,4);
+			context.getPlayer().getCooldowns().addCooldown(this, 4);
 			return InteractionResult.SUCCESS;
 		}
 		return InteractionResult.PASS;

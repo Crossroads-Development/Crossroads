@@ -36,6 +36,7 @@ public class CheatWandHeat extends Item{
 			}else{
 				cable.addHeat(RATE);
 			}
+			context.getPlayer().getCooldowns().addCooldown(this, 4);
 			return InteractionResult.SUCCESS;
 		}
 		return InteractionResult.PASS;
