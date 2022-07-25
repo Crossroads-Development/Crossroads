@@ -1,24 +1,14 @@
 package com.Da_Technomancer.crossroads.items;
 
 import com.Da_Technomancer.crossroads.api.MiscUtil;
-import net.minecraft.advancements.CriteriaTriggers;
+
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.stats.Stats;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.food.FoodData;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
@@ -66,12 +56,16 @@ public class EdibleBlob extends Item{
 
 	@Override
 	@Nullable
+	// build FoodProperties from NBT on-the-fly
 	public FoodProperties getFoodProperties(ItemStack stack, @Nullable LivingEntity entity) {
 		CompoundTag tags = stack.getTag();
 		if (tags != null) {
 			int hun = tags.getInt("food");
 			int sat = tags.getInt("sat");
-			return new FoodProperties.Builder().nutrition(hun).saturationMod(sat).meat().alwaysEat().build();
+			//make sure old 0 food blobs still give saturation (and avoid a div by 0 error)
+			if(hun == 0){hun = 1;}
+			float sat_mod = (float) sat / (float) hun;
+			return new FoodProperties.Builder().nutrition(hun).saturationMod(sat_mod).meat().alwaysEat().build();
 		}
 		return null;
 	}
