@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.items;
 
 import com.Da_Technomancer.crossroads.api.MiscUtil;
-
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
@@ -32,7 +31,7 @@ public class EdibleBlob extends Item{
 	}
 
 	public static int getHealAmount(ItemStack stack){
-		return stack.hasTag() ? stack.getTag().getInt("food") : 0;
+		return Math.max(stack.hasTag() ? stack.getTag().getInt("food") : 0, 1);
 	}
 
 	/**
@@ -58,16 +57,10 @@ public class EdibleBlob extends Item{
 	@Nullable
 	// build FoodProperties from NBT on-the-fly
 	public FoodProperties getFoodProperties(ItemStack stack, @Nullable LivingEntity entity) {
-		CompoundTag tags = stack.getTag();
-		if (tags != null) {
-			int hun = tags.getInt("food");
-			int sat = tags.getInt("sat");
-			//make sure old 0 food blobs still give saturation (and avoid a div by 0 error)
-			if(hun == 0){hun = 1;}
-			float sat_mod = (float) sat / (float) hun;
-			return new FoodProperties.Builder().nutrition(hun).saturationMod(sat_mod).meat().alwaysEat().build();
-		}
-		return null;
+		int hun = getHealAmount(stack);
+		int sat = getTrueSat(stack);
+		float sat_mod = (float) sat / (float) hun;
+		return new FoodProperties.Builder().nutrition(hun).saturationMod(sat_mod).meat().build();
 	}
 	@Override
 	public boolean isEdible(){
