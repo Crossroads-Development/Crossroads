@@ -14,6 +14,7 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -63,55 +64,19 @@ public class EdibleBlob extends Item{
 		}
 	}
 
-	/**
-	 * returns the action that specifies what animation to play when the items is being used
-	 */
 	@Override
-	public UseAnim getUseAnimation(ItemStack stack){
-		return UseAnim.EAT;
-	}
-
-	/**
-	 * How long it takes to use or consume an item
-	 */
-	@Override
-	public int getUseDuration(ItemStack stack){
-		return 32;
-	}
-
-	@Override
-	public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn){
-		ItemStack itemstack = playerIn.getItemInHand(handIn);
-		if(playerIn.canEat(false)){
-			playerIn.startUsingItem(handIn);
-			return new InteractionResultHolder<>(InteractionResult.SUCCESS, itemstack);
-		}else{
-			return new InteractionResultHolder<>(InteractionResult.FAIL, itemstack);
+	@Nullable
+	public FoodProperties getFoodProperties(ItemStack stack, @Nullable LivingEntity entity) {
+		CompoundTag tags = stack.getTag();
+		if (tags != null) {
+			int hun = tags.getInt("food");
+			int sat = tags.getInt("sat");
+			return new FoodProperties.Builder().nutrition(hun).saturationMod(sat).meat().alwaysEat().build();
 		}
+		return null;
 	}
-
-	/**
-	 * Called when the player finishes using this Item (E.g. finishes eating.). Not called when the player stops using
-	 * the Item before the action is complete.
-	 */
 	@Override
-	public ItemStack finishUsingItem(ItemStack stack, Level worldIn, LivingEntity entityLiving){
-//		return this.isFood() ? entityLiving.onFoodEaten(worldIn, stack) : stack;
-		if(entityLiving instanceof Player){
-			FoodData stats = ((Player) entityLiving).getFoodData();
-
-			MiscUtil.setPlayerFood((Player) entityLiving, stats.getFoodLevel() + getHealAmount(stack), stats.getSaturationLevel() + getTrueSat(stack));
-
-			((Player) entityLiving).awardStat(Stats.ITEM_USED.get(this));
-			worldIn.playSound(null, entityLiving.getX(), entityLiving.getY(), entityLiving.getZ(), SoundEvents.PLAYER_BURP, SoundSource.PLAYERS, 0.5F, worldIn.random.nextFloat() * 0.1F + 0.9F);
-			if(entityLiving instanceof ServerPlayer){
-				CriteriaTriggers.CONSUME_ITEM.trigger((ServerPlayer) entityLiving, stack);
-			}
-		}
-
-		worldIn.playSound(null, entityLiving.getX(), entityLiving.getY(), entityLiving.getZ(), entityLiving.getEatingSound(stack), SoundSource.NEUTRAL, 1.0F, 1.0F + (worldIn.random.nextFloat() - worldIn.random.nextFloat()) * 0.4F);
-		stack.shrink(1);
-
-		return stack;
+	public boolean isEdible(){
+		return true;
 	}
 }
