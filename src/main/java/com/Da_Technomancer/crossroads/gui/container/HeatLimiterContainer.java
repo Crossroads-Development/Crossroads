@@ -1,6 +1,5 @@
 package com.Da_Technomancer.crossroads.gui.container;
 
-import com.Da_Technomancer.crossroads.api.MiscUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -8,9 +7,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.ForgeRegistries;
-
-import java.util.function.Supplier;
 
 public class HeatLimiterContainer extends AbstractContainerMenu{
 
@@ -18,14 +14,14 @@ public class HeatLimiterContainer extends AbstractContainerMenu{
 	public String conf;
 	public BlockPos pos;
 
-	private static final Supplier<MenuType<?>> TYPE_SPL = MiscUtil.getCRRegistryObject("heat_limiter", ForgeRegistries.Keys.MENU_TYPES);
+	protected static final MenuType<HeatLimiterContainer> TYPE = CRContainers.createConType(HeatLimiterContainer::new);
 
 	public HeatLimiterContainer(int id, Inventory playerInventory, FriendlyByteBuf data){
 		this(id, playerInventory, data == null ? 0 : data.readFloat(), data == null ? null : data.readUtf(), data == null ? null : data.readBlockPos());
 	}
 
 	public HeatLimiterContainer(int id, Inventory playerInventory, float output, String settingStr, BlockPos pos){
-		super(TYPE_SPL.get(), id);
+		super(TYPE, id);
 		this.output = output;
 		this.conf = settingStr;
 		this.pos = pos;

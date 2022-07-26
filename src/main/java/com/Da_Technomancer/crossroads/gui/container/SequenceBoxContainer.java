@@ -1,6 +1,5 @@
 package com.Da_Technomancer.crossroads.gui.container;
 
-import com.Da_Technomancer.crossroads.api.MiscUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -8,21 +7,19 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
-import java.util.function.Supplier;
 
 public class SequenceBoxContainer extends AbstractContainerMenu{
 
-	private static final Supplier<MenuType<?>> TYPE_SPL = MiscUtil.getCRRegistryObject("sequence_box", ForgeRegistries.Keys.MENU_TYPES);
+	protected static final MenuType<SequenceBoxContainer> TYPE = CRContainers.createConType(SequenceBoxContainer::new);
 
 	public final BlockPos pos;
 	public final ArrayList<String> inputs;
 	public int outputIndex;
 
 	public SequenceBoxContainer(int id, Inventory playerInventory, FriendlyByteBuf data){
-		super(TYPE_SPL.get(), id);
+		super(TYPE, id);
 		if(data == null){
 			pos = null;
 			outputIndex = 0;

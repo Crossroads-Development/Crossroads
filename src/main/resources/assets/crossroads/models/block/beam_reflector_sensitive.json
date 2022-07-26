@@ -5,7 +5,7 @@
 		"south": "crossroads:block/beam_reflector_sensitive_side",
 		"east": "crossroads:block/beam_reflector_sensitive_side",
 		"west": "crossroads:block/beam_reflector_sensitive_side",
-		"up": "crossroads:block/beam_splitter_out",
+		"up": "crossroads:block/beam_reflector_sensitive_out",
 		"down": "crossroads:block/beam_reflector_sensitive_back",
 		"particle": "crossroads:block/beam_reflector_sensitive_side"
 	}

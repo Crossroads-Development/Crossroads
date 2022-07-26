@@ -23,13 +23,11 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryManager;
-import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.function.Supplier;
 
 public final class MiscUtil{
 
@@ -286,17 +284,6 @@ public final class MiscUtil{
 			throw new IllegalArgumentException();
 		}
 		return result;
-	}
-
-	/**
-	 * Treat the returned value as a generic cache-backed supplier to avoid dependence on RegistryObject implementation details
-	 * @param id Registry name of object, sans modid. Assumes Crossroads modid.
-	 * @param registryKey Registry key for the object it is registered in
-	 * @return A RegistryObject for the requested registry id
-	 * @param <T> Registry object type (ex. Block)
-	 */
-	public static <T> Supplier<T> getCRRegistryObject(String id, ResourceKey<? extends Registry<T>> registryKey){
-		return RegistryObject.create(new ResourceLocation(Crossroads.MODID, id), registryKey, Crossroads.MODID);
 	}
 
 	public static <T, U> U putReturn(Map<T, U> map, T key, U val){

@@ -204,7 +204,7 @@ public class CRConfig{
 		enchantDestruction = serverBuilder.comment("Whether Enchantment beams have a chance to destroy items").define("enchant_destroy", true);
 		fatPerValue = serverBuilder.comment("Amount of liquid fat equivalent to 1 hunger or saturation (in millibuckets)").defineInRange("fat_cost", 100, 1, 10_000);
 		hellTemperature = serverBuilder.comment("Minimum temperature of nether biomes (in degrees C)").defineInRange("nether_temp", 60, 0, 1_000D);
-		beamDamageAbsolute = serverBuilder.comment("Whether void-potential (death) beams do absolute damage", "Absolute damage ignores potion effects and enchantments").define("beam_damage_absolute", false);
+		beamDamageAbsolute = serverBuilder.comment("Whether void and void-potential (death) beams do absolute damage", "Absolute damage ignores potion effects and enchantments").define("beam_damage_absolute", false);
 		undergroundLightning = serverBuilder.comment("Whether Charge beams can summon lightning underground or under a roof").define("underground_lightning", false);
 		serverBuilder.pop();
 

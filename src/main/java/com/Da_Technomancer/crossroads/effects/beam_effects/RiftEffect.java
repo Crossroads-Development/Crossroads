@@ -69,7 +69,7 @@ public class RiftEffect extends BeamEffect{
 										//LivingEntity::dropLoot
 										ResourceLocation resourcelocation = lEnt.getLootTable();
 										LootTable loottable = worldServ.getServer().getLootTables().get(resourcelocation);
-										LootContext.Builder lootcontext$builder = new LootContext.Builder(worldServ).withRandom(worldServ.random).withParameter(LootContextParams.THIS_ENTITY, lEnt).withParameter(LootContextParams.ORIGIN, lEnt.position()).withParameter(LootContextParams.DAMAGE_SOURCE, GrowEffect.POTENTIAL_VOID).withOptionalParameter(LootContextParams.KILLER_ENTITY, null).withOptionalParameter(LootContextParams.DIRECT_KILLER_ENTITY, null);
+										LootContext.Builder lootcontext$builder = new LootContext.Builder(worldServ).withRandom(worldServ.random).withParameter(LootContextParams.THIS_ENTITY, lEnt).withParameter(LootContextParams.ORIGIN, lEnt.position()).withParameter(LootContextParams.DAMAGE_SOURCE, VoidEffect.VOID).withOptionalParameter(LootContextParams.KILLER_ENTITY, null).withOptionalParameter(LootContextParams.DIRECT_KILLER_ENTITY, null);
 										LootContext ctx = lootcontext$builder.create(LootContextParamSets.ENTITY);
 										loottable.getRandomItems(ctx).forEach(lEnt::spawnAtLocation);
 

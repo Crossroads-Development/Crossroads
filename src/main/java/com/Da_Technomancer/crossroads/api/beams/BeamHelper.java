@@ -4,10 +4,8 @@ import com.Da_Technomancer.crossroads.api.Capabilities;
 import com.Da_Technomancer.crossroads.effects.beam_effects.BeamEffect;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.util.LazyOptional;
 import org.apache.commons.lang3.tuple.Triple;
 
@@ -39,30 +37,24 @@ public class BeamHelper{
 	 * @return Whether the rendered beam has changed and a new update packet needs to be sent
 	 */
 	public boolean emit(@Nonnull BeamUnit mag, Level world){
-		for(int i = 1; i <= BeamUtil.MAX_DISTANCE; i++){
-			//Check for machine receiving beams
-			BlockEntity checkTE = world.getBlockEntity(pos.relative(dir, i));
-			LazyOptional<IBeamHandler> opt;
-			if(checkTE != null && (opt = checkTE.getCapability(Capabilities.BEAM_CAPABILITY, dir.getOpposite())).isPresent()){
-				opt.orElseThrow(NullPointerException::new).setBeam(mag);
+		BeamHit beamHit = BeamUtil.rayTraceBeamSimple(mag, world, pos, dir, BeamUtil.MAX_DISTANCE, false);
+		int newDist = beamHit.getPos().distManhattan(pos);
 
-				return updateBeamRender(mag, i);
-			}
-
-			//Check for collision
-			BlockState checkState = world.getBlockState(pos.relative(dir, i));
-			if(i == BeamUtil.MAX_DISTANCE || BeamUtil.solidToBeams(checkState, world, pos.relative(dir, i), dir, mag.getPower())){
-				if(!mag.isEmpty() && !world.isClientSide){
-					EnumBeamAlignments align = EnumBeamAlignments.getAlignment(mag);
-					BeamEffect e = align.getEffect();
-					e.doBeamEffect(align, mag.getVoid() != 0, Math.min(64, mag.getPower()), new BeamHit((ServerLevel) world, pos.relative(dir, i), dir.getOpposite(), checkState));
-				}
-
-				return updateBeamRender(mag, i);
-			}
+		//Check for machine receiving beams
+		BlockEntity checkTE = beamHit.getEndBlockEntity();
+		LazyOptional<IBeamHandler> opt;
+		if(checkTE != null && (opt = checkTE.getCapability(Capabilities.BEAM_CAPABILITY, dir.getOpposite())).isPresent()){
+			opt.orElseThrow(NullPointerException::new).setBeam(mag);
+			return updateBeamRender(mag, newDist);
 		}
 
-		return false;
+		//Do beam effect
+		if(!mag.isEmpty() && !world.isClientSide){
+			EnumBeamAlignments align = EnumBeamAlignments.getAlignment(mag);
+			BeamEffect e = align.getEffect();
+			e.doBeamEffect(align, mag.getVoid() != 0, Math.min(BeamUtil.MAX_EFFECT_POWER, mag.getPower()), beamHit);
+		}
+		return updateBeamRender(mag, newDist);
 	}
 
 	protected boolean updateBeamRender(BeamUnit newBeam, int newDist){

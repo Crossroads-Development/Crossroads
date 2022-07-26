@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.gui.container;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.api.EnumPath;
-import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
@@ -33,13 +32,12 @@ import net.minecraftforge.registries.ForgeRegistries;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Supplier;
 
 import static net.minecraftforge.common.ForgeHooks.setCraftingPlayer;
 
 public class DetailedCrafterContainer extends RecipeBookMenu<CraftingContainer>{
 
-	private static final Supplier<MenuType<?>> TYPE_SPL = MiscUtil.getCRRegistryObject("detailed_crafter", ForgeRegistries.Keys.MENU_TYPES);
+	protected static final MenuType<DetailedCrafterContainer> TYPE = CRContainers.createConType(DetailedCrafterContainer::new);
 
 	@SuppressWarnings("unchecked")
 	private static final TagKey<Item>[] unlockKeys = new TagKey[3];
@@ -61,7 +59,7 @@ public class DetailedCrafterContainer extends RecipeBookMenu<CraftingContainer>{
 	private final BlockPos pos;//Null if fake, nonnull otherwise- used for canInteractWith
 
 	public DetailedCrafterContainer(int id, Inventory playerInv, FriendlyByteBuf buf){
-		super(TYPE_SPL.get(), id);
+		super(TYPE, id);
 		player = playerInv.player;
 		world = player.level;
 

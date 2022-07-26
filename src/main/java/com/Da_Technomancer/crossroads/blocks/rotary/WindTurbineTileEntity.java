@@ -33,6 +33,7 @@ import java.util.List;
 public class WindTurbineTileEntity extends ModuleTE{
 
 	public static final BlockEntityType<WindTurbineTileEntity> TYPE = CRTileEntity.createType(WindTurbineTileEntity::new, CRBlocks.windTurbine);
+	private static final DamageSource WIND_TURB_DAMAGE = new DamageSource("windmill").bypassArmor();
 
 	public static final double MAX_SPEED = 2D;
 	public static final double INERTIA = 1200;
@@ -175,9 +176,9 @@ public class WindTurbineTileEntity extends ModuleTE{
 			List<LivingEntity> ents = level.getEntitiesOfClass(LivingEntity.class, getTargetBB(), EntitySelector.LIVING_ENTITY_STILL_ALIVE);
 			for(LivingEntity ent : ents){
 				if(ent instanceof Player && murderEasterEgg.equals(((Player) ent).getGameProfile().getName())){
-					ent.hurt(DamageSource.FLY_INTO_WALL, 100);//This seems fair
+					ent.hurt(WIND_TURB_DAMAGE, 100);//This seems fair
 				}else{
-					ent.hurt(DamageSource.FLY_INTO_WALL, 1);
+					ent.hurt(WIND_TURB_DAMAGE, 2);
 				}
 			}
 		}

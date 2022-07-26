@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.gui.container;
 
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.blocks.technomancy.BeaconHarnessTileEntity;
 import com.Da_Technomancer.essentials.api.IntDeferredRef;
 import net.minecraft.core.BlockPos;
@@ -12,19 +11,16 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.registries.ForgeRegistries;
-
-import java.util.function.Supplier;
 
 public class BeaconHarnessContainer extends AbstractContainerMenu{
 
-	private static final Supplier<MenuType<?>> TYPE_SPL = MiscUtil.getCRRegistryObject("beacon_harness", ForgeRegistries.Keys.MENU_TYPES);
+	protected static final MenuType<BeaconHarnessContainer> TYPE = CRContainers.createConType(BeaconHarnessContainer::new);
 
 	public final IntDeferredRef cycleRef;
 	public final BeaconHarnessTileEntity te;
 
 	public BeaconHarnessContainer(int id, Inventory playerInv, FriendlyByteBuf data){
-		super(TYPE_SPL.get(), id);
+		super(TYPE, id);
 
 		BlockPos pos = data.readBlockPos();
 		BlockEntity rawTE = playerInv.player.level.getBlockEntity(pos);

@@ -823,7 +823,7 @@
 	"tt.crossroads.fire_detector.desc": "Detects nearby flame clouds. Doesn't detect normal fire.",
 	"tt.crossroads.fire_detector.circuit": "Circuits read distance to nearest flame cloud, negative if inside a cloud, or %1$d if none nearby",
 	"tt.crossroads.fire_detector.range": "Maximum range is %1$d blocks",
-	"tt.crossroads.beam_reflector_sensitive": "Emitted beam collides with entities",
+	"tt.crossroads.beam_reflector_sensitive": "Emitted beam collides with entities and any non-air block",
 
 	"container.crossroads.boilerplate.temp": "%1$d°C",
 	"container.crossroads.boilerplate.speed": "%1$f rad/s",
@@ -1011,11 +1011,15 @@
 
 
 	"death.attack.drill": "%1$s had a terrible dentist",
-	"death.attack.drill.player": "%1$s had a terrible dentist!",
+	"death.attack.drill.player": "%1$s had a terrible dentist",
 	"death.attack.vodka": "%1$s dissolved their own liver",
 	"death.attack.vodka.player": "%1$s got their liver dissolved by %2$s",
 	"death.attack.potentialvoid": "%1$s has no potential",
 	"death.attack.potentialvoid.player": "%2$s destroyed %1$s's potential",
+	"death.attack.void": "%1$s was deleted",
+	"death.attack.void.player": "%2$s deleted %1$s",
+	"death.attack.windmill": "%1$s tilted at windmills",
+	"death.attach.windmill.player": "%1$s tilted at windmills",
 	"death.attack.salt": "%1$s couldn't handle the salinity",
 	"death.attack.salt.player": "%1$s was seasoned to death by %2$s",
 	"death.attack.chemical": "%1$s died from a chemical spill",

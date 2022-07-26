@@ -44,6 +44,9 @@ public class BeamEffect{
 		performTransmute(align, voi, power, worldIn, pos);
 	}
 
+	/**
+	 * @deprecated Call and override the version with BeamHit.
+	 */
 	@Deprecated
 	protected boolean performTransmute(EnumBeamAlignments align, boolean voi, int power, Level worldIn, BlockPos pos){
 		return performTransmute(align, voi, power, new BeamHit((ServerLevel) worldIn, pos, Direction.DOWN, worldIn.getBlockState(pos)));

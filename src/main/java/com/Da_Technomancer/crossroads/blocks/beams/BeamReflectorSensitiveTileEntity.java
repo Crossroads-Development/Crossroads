@@ -4,7 +4,6 @@ import com.Da_Technomancer.crossroads.api.Capabilities;
 import com.Da_Technomancer.crossroads.api.beams.*;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
-import com.Da_Technomancer.crossroads.items.technomancy.StaffTechnomancy;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -46,12 +45,14 @@ public class BeamReflectorSensitiveTileEntity extends BeamReflectorTileEntity{
 
 		@Override
 		public boolean emit(@Nonnull BeamUnit mag, Level world){
+			BeamHit beamHit;
 			if(mag.isEmpty()){
 				//Optimization: skip full raytracing for empty beams, and fallback to normal block-collision only
-				return super.emit(mag, world);
+				beamHit = BeamUtil.rayTraceBeamSimple(mag, world, pos, dir, BeamUtil.MAX_DISTANCE, true);
+			}else{
+				beamHit = BeamUtil.rayTraceBeams(mag, world, startVec, startVec, rayVec, null, pos, BeamUtil.MAX_DISTANCE, true);
 			}
 
-			BeamHit beamHit = StaffTechnomancy.rayTraceBeams(mag, world, startVec, startVec, rayVec, null, pos, BeamUtil.MAX_DISTANCE);
 
 			//Handle receiving the beam or beam effect
 			Direction effectDir = beamHit.getDirection();
@@ -62,7 +63,7 @@ public class BeamReflectorSensitiveTileEntity extends BeamReflectorTileEntity{
 			}else{
 				EnumBeamAlignments align = EnumBeamAlignments.getAlignment(mag);
 				if(!world.isOutsideBuildHeight(beamHit.getPos())){
-					align.getEffect().doBeamEffect(align, mag.getVoid() != 0, Math.min(64, mag.getPower()), beamHit);
+					align.getEffect().doBeamEffect(align, mag.getVoid() != 0, Math.min(BeamUtil.MAX_EFFECT_POWER, mag.getPower()), beamHit);
 				}
 			}
 

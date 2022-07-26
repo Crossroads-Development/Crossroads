@@ -1,6 +1,5 @@
 package com.Da_Technomancer.crossroads.gui.container;
 
-import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.templates.MachineContainer;
 import com.Da_Technomancer.crossroads.blocks.fluid.WaterCentrifugeTileEntity;
 import com.Da_Technomancer.essentials.api.FluidSlotManager;
@@ -8,17 +7,14 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.tuple.Pair;
-
-import java.util.function.Supplier;
 
 public class WaterCentrifugeContainer extends MachineContainer<WaterCentrifugeTileEntity>{
 
-	private static final Supplier<MenuType<?>> TYPE_SPL = MiscUtil.getCRRegistryObject("water_centrifuge", ForgeRegistries.Keys.MENU_TYPES);
+	protected static final MenuType<WaterCentrifugeContainer> TYPE = CRContainers.createConType(WaterCentrifugeContainer::new);
 
 	public WaterCentrifugeContainer(int id, Inventory playerInv, FriendlyByteBuf data){
-		super(TYPE_SPL.get(), id, playerInv, data);
+		super(TYPE, id, playerInv, data);
 	}
 
 	@Override

@@ -19,7 +19,11 @@
 		{
 			"type": "patchouli:text",
 			"anchor": "sensitive",
-			"text": "The <item>Sensitive Beam Reflector/$ is the same as a normal <item>Beam Reflector/$, but the emitted beam can collide with entities in its path.$(br2)This is useful when trying to hit mobs with beams, but can be annoying when used for normal beam transmission (because walking into the path of the beam means it hits you).$(br2)"
+			"text": "The <item>Sensitive Beam Reflector/$ is the same as a normal <item>Beam Reflector/$, but the emitted beam can collide with entities in its path and it will collide with any block that isn't air (normal beams can pass through non-solid blocks like crops).$(br2)This is useful when trying to hit mobs with beams, but can be annoying when used for normal beam transmission "
+		},
+		{
+			"type": "patchouli:text",
+			"text": "(because walking into the path of the beam means it hits you).$(br2)"
 		}
 	]
 }

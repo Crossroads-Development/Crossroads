@@ -8,7 +8,6 @@ import com.Da_Technomancer.crossroads.api.beams.*;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
-import com.Da_Technomancer.crossroads.items.technomancy.StaffTechnomancy;
 import com.Da_Technomancer.essentials.api.packets.SendLongToClient;
 import com.mojang.math.Vector3f;
 import net.minecraft.core.BlockPos;
@@ -93,7 +92,7 @@ public class BeamCannonTileEntity extends AbstractCannonTileEntity{
 				upShift.mul(3.5F / 16F);
 				Vec3 rayTraceSt = Vec3.atCenterOf(worldPosition).add(upShift.x(), upShift.y(), upShift.z());
 
-				BeamHit beamHitResult = StaffTechnomancy.rayTraceBeams(out, level, rayTraceSt, rayTraceSt, rayVec3, null, worldPosition, RANGE);
+				BeamHit beamHitResult = BeamUtil.rayTraceBeams(out, level, rayTraceSt, rayTraceSt, rayVec3, null, worldPosition, RANGE, false);
 				BlockPos endPos = beamHitResult.getPos();
 				if(endPos != null){//Should always be true
 					outLength = (float) beamHitResult.getHitPos().distanceTo(rayTraceSt);
@@ -105,7 +104,7 @@ public class BeamCannonTileEntity extends AbstractCannonTileEntity{
 					}else{
 						EnumBeamAlignments align = EnumBeamAlignments.getAlignment(out);
 						if(!level.isOutsideBuildHeight(endPos)){
-							align.getEffect().doBeamEffect(align, out.getVoid() != 0, Math.min(64, outPower), beamHitResult);
+							align.getEffect().doBeamEffect(align, out.getVoid() != 0, Math.min(BeamUtil.MAX_EFFECT_POWER, outPower), beamHitResult);
 						}
 					}
 				}

@@ -28,11 +28,13 @@ import com.Da_Technomancer.crossroads.world.CRWorldGen;
 import com.Da_Technomancer.essentials.api.ReflectionUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.Containers;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
@@ -545,6 +547,8 @@ public class EventHandlerCommon{
 		}
 	}
 
+	private static final TagKey<EntityType<?>> GHOST_MOB = CraftingUtil.getTagKey(ForgeRegistries.Keys.ENTITY_TYPES, new ResourceLocation(Crossroads.MODID, "ghost"));
+
 	@SubscribeEvent()
 	@SuppressWarnings("unused")
 	public void appendDrops(LivingDropsEvent e){
@@ -563,6 +567,8 @@ public class EventHandlerCommon{
 					soulCount = 1;//Undead give 1
 				}else if(ent instanceof AbstractVillager || ent.getMobType() == MobType.ILLAGER){
 					soulCount = 4;//'People' type creatures give a full soul cluster worth
+				}else if(CraftingUtil.tagContains(GHOST_MOB, ent.getType())){
+					soulCount = 4;//'Ghost' type creatures give a full soul cluster worth
 				}else{
 					soulCount = 2;//Most things give 2
 				}
