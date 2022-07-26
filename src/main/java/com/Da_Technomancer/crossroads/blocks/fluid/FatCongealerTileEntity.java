@@ -90,7 +90,7 @@ public class FatCongealerTileEntity extends InventoryTE{
 				sat = (int) Math.min(Math.abs(bottomHandler.getSpeed()) * SAT_PER_SPD, 20);
 			}
 
-			if(hun != 0 || sat != 0){
+			if(hun > 0){
 				int fluidUse = CRConfig.fatPerValue.get() * (hun + sat);
 				if(fluidUse > fluids[0].getAmount()){
 					return;
