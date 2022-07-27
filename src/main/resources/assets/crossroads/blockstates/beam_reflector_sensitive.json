@@ -1,9 +1,9 @@
 {
 	"variants": {
 		"facing=north": { "model": "crossroads:block/beam_reflector_sensitive", "x": 90},
-		"facing=south": { "model": "crossroads:block/beam_reflector_sensitive", "x": 270 },
+		"facing=south": { "model": "crossroads:block/beam_reflector_sensitive", "x": 90, "y": 180 },
 		"facing=east": { "model": "crossroads:block/beam_reflector_sensitive", "x": 90, "y": 90 },
-		"facing=west": { "model": "crossroads:block/beam_reflector_sensitive", "x": 270, "y": 90 },
+		"facing=west": { "model": "crossroads:block/beam_reflector_sensitive", "x": 90, "y": 270 },
 		"facing=up": { "model": "crossroads:block/beam_reflector_sensitive"},
 		"facing=down": { "model": "crossroads:block/beam_reflector_sensitive", "x": 180}
 	}

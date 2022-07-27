@@ -1,5 +1,5 @@
 {
-	"parent": "block/cube_all",
+	"parent": "crossroads:block/beam_base",
 	"textures": {
 		"north": "crossroads:block/beam_reflector_sensitive_side",
 		"south": "crossroads:block/beam_reflector_sensitive_side",
