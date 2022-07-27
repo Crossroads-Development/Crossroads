@@ -1,7 +1,9 @@
 package com.Da_Technomancer.crossroads;
 
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.integration.CRIntegration;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
@@ -46,6 +48,8 @@ public final class Crossroads{
 
 	private void clientInit(@SuppressWarnings("unused") FMLClientSetupEvent e){
 		MinecraftForge.EVENT_BUS.register(new EventHandlerClient());
+		CRBlocks.clientInit();
+		CRItems.clientInit();
 	}
 
 	private void serverInit(FMLDedicatedServerSetupEvent e){

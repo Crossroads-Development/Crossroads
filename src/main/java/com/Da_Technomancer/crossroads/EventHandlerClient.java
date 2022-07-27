@@ -71,13 +71,6 @@ public class EventHandlerClient{
 
 		@SuppressWarnings("unused")
 		@SubscribeEvent
-		public static void registerModels(RegisterGeometryLoaders e){
-			CRBlocks.clientInit();
-			CRItems.clientInit();
-		}
-
-		@SuppressWarnings("unused")
-		@SubscribeEvent
 		public static void registerRenderers(EntityRenderersEvent.RegisterRenderers e){
 			CRRendererRegistry.registerBlockRenderer(e);
 			CREntities.clientInit(e);
