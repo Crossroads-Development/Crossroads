@@ -10,6 +10,6 @@
 PAGES
 	],
 	"extra_recipe_mappings": {
-        MAPPINGS
+		MAPPINGS
 	}
 }
