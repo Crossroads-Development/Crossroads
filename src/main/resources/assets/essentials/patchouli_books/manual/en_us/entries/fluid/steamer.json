@@ -16,5 +16,8 @@
 			"type": "patchouli:text",
 			"text": "<thing>$(l:essentials:intro/fluid)/$ can be piped out the top or bottom.$(br2)Overall, it is twice as efficient per degree of <thing>$(l:essentials:intro/heat)heat/$ as the $(l:essentials:heat/smelter)<item>smelter/$, and twice as fast as the $(l:essentials:heat/smelter)<item>smelter/$ at maximum speed.$(br2)<thing>$(l:essentials/circuits#reader)Reader circuits/$ measure the fullness of the input.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+        "crossroads:steamer" : 0
+	}
 }

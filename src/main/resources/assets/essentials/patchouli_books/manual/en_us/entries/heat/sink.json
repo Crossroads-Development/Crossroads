@@ -16,5 +16,8 @@
 			"type": "patchouli:text",
 			"text": "It will move the temperature towards the biome temperature at the set constant rate.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+        "crossroads:heat_sink" : 0
+	}
 }

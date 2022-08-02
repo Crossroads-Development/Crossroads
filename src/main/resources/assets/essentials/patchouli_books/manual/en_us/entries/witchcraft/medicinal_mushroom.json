@@ -33,5 +33,8 @@
 			"item": "minecraft:potion{Potion:\"crossroads:curative\"}",
 			"text": "<thing>Neutralization/$ potions are milk in potion form. They remove all potion effects.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+        "crossroads:medicinal_mushroom" : 0
+	}
 }

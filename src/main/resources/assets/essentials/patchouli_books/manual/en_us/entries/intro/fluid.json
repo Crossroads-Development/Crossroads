@@ -24,5 +24,8 @@
 			"type": "patchouli:text",
 			"text": "It can be <item>$(l:essentials:heat/fcc)cooled into ingots/$.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+        "crossroads:fluid_tube" : 0
+	}
 }

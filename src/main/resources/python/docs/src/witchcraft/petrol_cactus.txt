@@ -1,4 +1,5 @@
 Combustible Cactus
 crossroads:petrol_cactus|crossroads:progress/path/witchcraft
+crossroads:petrol_cactus
 <item>Combustible Cactus/$ is a farmable crop which is a good fuel (smelts 16 items). They grow like normal cactus and act the same way.
 It is an effective fuel which is easy to mass-produce renewably. The only risk is that they are very flammable, and will explode if it catches fire.

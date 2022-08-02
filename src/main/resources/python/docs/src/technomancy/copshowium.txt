@@ -1,5 +1,6 @@
 Copshowium
 crossroads:ingot_copshowium|crossroads:progress/path/technomancy
+crossroads:ingot_copshowium,crossroads:copshowium_creation_chamber
 <item>Copshowium/$ is an important crafting ingredient in <thing><link:essentials:intro/technomancy>Technomancy/$. Is is made using a <item>Copshowium Imbuer/$.
 
 The <item>Copshowium Imbuer/$ makes <item>molten copshowium/$ using liquids and a <thing><link:essentials:beam/time>time beam/$. Some (not all!) inputs also produce <thing><link:essentials:intro/technomancy>temporal entropy/$ as a byproduct (check the JEI). The produced <item>molten copshowium/$ can be made into <item>copshowium ingots/$ <item><link:essentials:heat/fcc>the normal way/$.

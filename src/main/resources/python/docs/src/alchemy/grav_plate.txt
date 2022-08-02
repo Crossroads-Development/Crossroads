@@ -1,5 +1,6 @@
 Density Plate
 crossroads:densus_plate|crossroads:progress/path/alchemy
+crossroads:densus_plate,crossroads:anti_densus_plate,crossroads:block_cavorite;3
 <item>Density Plates/$ allow manipulating gravity. They have two variants: <item>Density Plates/$ and <item>Anti-Density Plates/$.
 They can face in any direction, and will pull (for <item>density plates/$) or push (for <item>anti-density plates/$) entities in front with a (default) range of 64 blocks. Entities are pushed/pulled at an acceleration of 240 blocks/s² (gravity is 32 blocks/s²).
 This effect stacks with multiple plates, and works through walls. One plate will easily overcome gravity if pulling up, and applies to all entity types.

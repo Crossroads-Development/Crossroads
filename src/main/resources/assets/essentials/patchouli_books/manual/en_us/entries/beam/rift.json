@@ -21,5 +21,8 @@
 			"type": "patchouli:text",
 			"text": "<thing>Void-Rift/$ AKA <thing>Isolation/$ will prevent any hostile mob spawning nearby as long as the beam maintained. The range of this effect is the beam <thing>power/$ (spherical radius), and requires the beam to be continuously maintained. Mobs can spawn while the beam isn't running.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+        
+	}
 }

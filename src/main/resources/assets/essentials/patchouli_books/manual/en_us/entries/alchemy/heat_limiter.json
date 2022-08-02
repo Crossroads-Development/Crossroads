@@ -29,5 +29,9 @@
 			"type": "patchouli:text",
 			"text": "There are two variants of the <item>temperature regulator/$: The <item>Temperature Regulator/$ has the target <thing>$(l:essentials:intro/heat)temperature/$ in Celcius set via a UI, while the <item>Redstone Temperature Regulator/$ has the target <thing>$(l:essentials:intro/heat)temperature/$ in Celcius set to the current <thing>$(l:essentials/circuit)circuit/$ input.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+        "crossroads:heat_limiter_basic" : 0,
+		"crossroads:heat_limiter" : 5
+	}
 }

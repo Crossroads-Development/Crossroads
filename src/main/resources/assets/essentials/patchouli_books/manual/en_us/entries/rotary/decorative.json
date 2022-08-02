@@ -38,5 +38,11 @@
 			"type": "patchouli:text",
 			"text": "<item>$(l:essentials:rotary/gear_base)gears & axles/$. Several can be in the same blockspace, they are solid to walk on, and they do not obstruct <item>$(l:essentials:rotary/gear_base)gear & axle/$ connections at all. They do not need a solid supporting block, and come in four varieties: Stone Bricks, Cobblestone, Iron Blocks, and Glass.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+        "crossroads:gear_facade_stone_brick" : 0,
+		"crossroads:gear_facade_iron" : 0,
+		"crossroads:gear_facade_cobble" : 0,
+		"crossroads:gear_facade_glass" : 0
+	}
 }

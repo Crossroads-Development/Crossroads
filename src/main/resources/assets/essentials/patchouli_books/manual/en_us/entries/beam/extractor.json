@@ -20,5 +20,8 @@
 			"type": "patchouli:text",
 			"text": "The <item>resonance extractor/$ can be disabled with a redstone signal.$(br2)Many fuels (such as glowstone dust or redstone dust) can be made using <thing>$(l:essentials:intro/beams)beams/$, making them easier to automate.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+        "crossroads:beam_extractor" : 0
+	}
 }

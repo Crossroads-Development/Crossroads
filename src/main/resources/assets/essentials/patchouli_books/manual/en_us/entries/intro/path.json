@@ -64,5 +64,8 @@
 			"type": "patchouli:text",
 			"text": "by people who have already unlocked the <thing>path/$.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+        
+	}
 }

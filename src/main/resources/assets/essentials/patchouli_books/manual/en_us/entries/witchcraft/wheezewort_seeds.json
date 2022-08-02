@@ -25,5 +25,8 @@
 			"type": "patchouli:text",
 			"text": "The <item>$(l:essentials:witchcraft/hydroponics_trough)hydroponics trough/$ is a good way of producing lots of <item>wheezewort seeds/$ quickly.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+        "crossroads:wheezewort_seeds" : 0
+	}
 }

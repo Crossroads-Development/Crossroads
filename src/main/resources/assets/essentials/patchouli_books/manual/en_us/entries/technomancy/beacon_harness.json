@@ -33,5 +33,8 @@
 			"type": "patchouli:text",
 			"text": "(this can be a pulse). It takes 2 seconds (10 <thing>$(l:essentials:intro/beam)cycles/$) to startup.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+        "crossroads:beacon_harness" : 0
+	}
 }

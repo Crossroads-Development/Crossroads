@@ -1,5 +1,6 @@
 Hydroponics Trough
 crossroads:hydroponics_trough|crossroads:progress/path/witchcraft
+crossroads:hydroponics_trough
 The <item>Hydroponics Trough/$ is a way to automate farming of basically any plant type (or mushroom) other than trees. It is usually less efficient than a dedicated farm purpose-built for the specific plant, but the same <item>hydroponics trough/$ setup can be used for any plant.
 It consumes Fertilizer Solution (which is made in a <item><link:essentials:witchcraft/formulation_vat>formulation vat/$).
 A single seed of the plant of interest goes in the input slot (it will not be consumed), and the <item>hydroponics trough/$ will consume fertilizer solution to produce the plant.

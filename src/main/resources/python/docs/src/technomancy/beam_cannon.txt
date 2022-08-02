@@ -1,5 +1,6 @@
 Beam Cannon
 crossroads:beam_cannon|crossroads:progress/path/technomancy
+crossroads:beam_cannon
 The <item>Beam Cannon/$ fires <thing><link:essentials:intro/beam>beams/$ huge distances (256 block range) at almost any angle. The angle can be controlled and changed using <thing><link:essentials:intro/rotary>rotary input/$.
 There are two <thing><link:essentials:intro/rotary>rotary inputs/$- one on the back, and one on the sides (any side other than the front or back). The back input controls the 'yaw' of the <item>beam cannon/$ (overall rotation firing angle), and the side input controls the 'pitch' of the <item>beam cannon/$ (firing angle from straight up/forward).
 The pitch (firing angle from forward/up, in rad) will be the <thing><link:essentials:intro/rotary>speed/$ (in rad/s) of the side <link:essentials:intro/rotary><thing>rotary/$ input, with 0 being straight forward. The pitch is capped at ±π/2 rad (±90°) from straight. The yaw (overall rotation of the cannon in rad) will be the <thing><link:essentials:intro/rotary>speed/$ (in rad/s) of the back <link:essentials:intro/rotary><thing>rotary/$ input.

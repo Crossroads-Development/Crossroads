@@ -33,5 +33,12 @@
 			"type": "patchouli:text",
 			"text": "The <item>High-Intensity Tesla Coil Head/$ will transfer 10,000FE per jolt, effectively having 10x the normal FE transfer rate. It will not work without a <item>$(l:essentials:fluid/tesla)leyden jar/$ installed in the <item>$(l:essentials:fluid/tesla)tesla coil/$.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+        "crossroads:tesla_coil_top_efficiency" : 5,
+		"crossroads:tesla_coil_top_distance" : 4,
+		"crossroads:tesla_coil_top_intensity" : 7,
+		"crossroads:tesla_coil_top_attack" : 2,
+		"crossroads:tesla_coil_top_decorative" : 3
+	}
 }

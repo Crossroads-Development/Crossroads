@@ -17,5 +17,8 @@
 			"type": "patchouli:text",
 			"text": "<thing>Void-Expansion/$ AKA <thing>Contraction/$ will break whatever block it hits and drop it as an item.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+        
+	}
 }

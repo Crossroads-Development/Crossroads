@@ -25,5 +25,8 @@
 			"type": "patchouli:text",
 			"text": "to expire.$(br2)<thing>$(l:essentials/circuits)Circuits/$ measure the potion duration stored, in ticks.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+        "crossroads:auto_injector" : 0
+	}
 }

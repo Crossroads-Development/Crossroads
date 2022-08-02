@@ -29,5 +29,8 @@
 			"type": "patchouli:text",
 			"text": "signal, however.$(br2)<item>$(l:essentials/circuits#reader)Circuits/$ and redstone control allows making 'smart' routing systems for <thing>$(l:essentials:intro/technomancy)temporal entropy/$ that sends it along a different route- or stores it- when one <item>node/$ chain is almost full. For low overall <thing>$(l:essentials:intro/technomancy)temporal entropy/$ production, this isn't a concern- but for larger bases, this could be important.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+        "crossroads:flux_node" : 0
+	}
 }

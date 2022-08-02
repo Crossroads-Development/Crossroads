@@ -1,5 +1,6 @@
 Welcome0
 minecraft:paper
+
 Welcome to Crossroads! This book is a guidebook for both Crossroads & Essentials (see the Essentials category).
 Crossroads is a mod about automation. Almost everything in the mod can be automated with the tools Crossroads adds, which are usually simple single-purpose tools that can be assembled into complex systems.
 Rube Goldberg machines will be the simplest way to do things.

@@ -20,5 +20,8 @@
 			"type": "patchouli:text",
 			"text": "There is no limit on how fast the <item>water centrifuge/$ can run.$(br2)If either output (fluid or item) fills up, the <item>water centrifuge/$ will continue running. Any product that can't fit will be <em>voided/$.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+        "crossroads:water_centrifuge" : 0
+	}
 }

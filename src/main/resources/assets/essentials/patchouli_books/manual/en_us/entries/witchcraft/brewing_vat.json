@@ -25,5 +25,8 @@
 			"type": "patchouli:text",
 			"text": "It is useful to note that <thing>Crossroads/$ adds a recipe to fill empty bottles with water by brewing them with ice, as an alternative option to normal bottle filling.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+        "crossroads:brewing_vat" : 0
+	}
 }

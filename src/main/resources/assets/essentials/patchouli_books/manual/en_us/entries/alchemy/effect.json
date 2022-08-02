@@ -53,5 +53,8 @@
 			"type": "patchouli:text",
 			"text": "with a <thing>flame phase/$ for an expanding cloud of electric death.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+        
+	}
 }

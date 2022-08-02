@@ -32,5 +32,8 @@
 			"type": "patchouli:text",
 			"text": "be consumed. On the other hand, if a turbine was going to make 100J, it would only make 10J. This has the effect of helping hold speeds steady and reducing fluctuations from the equilibrium speed.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+        "crossroads:master_axis_crystal" : 0
+	}
 }

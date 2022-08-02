@@ -20,5 +20,8 @@
 			"type": "patchouli:text",
 			"text": "Compared to the <item>$(l:essentials:rotary/stirling)stirling engine/$, the <item>steam turbine/$ has no maximum speed and is more scalable, but is less efficient and is bigger to set up. The <item>steam turbine/$ is usually better if a lot of power or high speeds are needed.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+        "crossroads:steam_turbine" : 0
+	}
 }

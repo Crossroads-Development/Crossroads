@@ -21,5 +21,8 @@
 			"type": "patchouli:text",
 			"text": "<thing>Void-Charge/$ AKA <thing>Discharge/$ drain FE from any machine it hits. By default, it drains 50FE per <thing>power/$.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+        
+	}
 }

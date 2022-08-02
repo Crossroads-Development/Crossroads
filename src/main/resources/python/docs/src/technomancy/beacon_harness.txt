@@ -1,5 +1,6 @@
 Beacon Harness
 crossroads:beacon_harness|crossroads:progress/path/technomancy
+crossroads:beacon_harness
 The <item>Beacon Harness/$ is a powerful <thing><link:essentials:intro/beam>beam/$ source, which produces <thing><link:essentials:intro/beam>power/$ 512 <thing><link:essentials:intro/beam>beams/$ of varying colors. It also produces <thing><link:essentials:intro/technomancy>temporal entropy/$ as a byproduct.
 In order to work, the <item>beacon harness/$ must be placed <em>under/$ a beacon, with no air gap. It does not need to be touching the beacon block itself- it can be under the beacon base, and it will not interfere with the beacon running. It can also share the beacon with an <item><link:essentials:technomancy/sink>entropy sink/$.
 While running, the <item>beacon harness/$ will produce a beam of <thing><link:essentials:intro/beam>power/$ 512- however, the color of the beam will continuously change in a simple pattern. If you look at a <item><link:essentials:beam/chart>color chart/$, the color produced will follow the sequence of colors on the outer rim of the <item><link:essentials:beam/chart>color chart/$, starting at red (pure <link:essentials:beam/energy>energy/$) rotating clockwise (towards green). The time to make one full loop is 24 seconds (120 <thing><link:essentials:intro/beam>cycles/$).

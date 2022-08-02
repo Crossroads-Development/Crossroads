@@ -1,5 +1,6 @@
 Stirling Engine
 crossroads:stirling_engine
+crossroads:stirling_engine
 The <item>Stirling Engine/$ is a way of producing <thing><link:essentials:intro/rotary>rotary power/$ from <thing><link:essentials:intro/heat>heat/$. Or more specifically, from a temperature difference.
 The <item>stirling engine/$ has two separate heat connections- one on bottom and one on the sides. The greater the difference in temperature between the two inputs, the more power is produced, and the more efficient the <item>stirling engine/$ is. There must be a minimum 20°C difference to produce any power. Heat will be exchanged between the two inputs- the higher the temperature difference, the faster heat is consumed (-1°C/t per 20°C difference at the hot side).
 The <item>stirling engine/$ will stop producing any power above speeds of 2rad/s [config controlled- trust the tooltip]. The <item>stirling engine/$ also has <em>no minimum temperature/$, only a minimum temperature difference.

@@ -1,5 +1,6 @@
 Aesthetic Mechanisms
 crossroads:gear_facade_stone_brick
+crossroads:gear_facade_stone_brick,crossroads:gear_facade_iron,crossroads:gear_facade_cobble,crossroads:gear_facade_glass
 There are a few purely decorative <thing><link:essentials:rotary/gear_base>mechanisms/$ that can be placed in the same blockspace as <item><link:essentials:rotary/gear_base>gears, axles, etc/$.
 <page|image||Axle Mounts|crossroads:textures/book/axle_mount.png>
 <item>Axle Mounts/$ are purely decorative 'clamps' that hold <item><link:essentials:rotary/gear_base>axles/$ and attach to a solid wall, ceiling or floor to make <item><link:essentials:rotary/gear_base>axles/$ look supported instead of being free floating.

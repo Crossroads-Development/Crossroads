@@ -1,5 +1,6 @@
 Ores
 crossroads:gem_ruby
+
 Crossroads adds a few ores to world gen. Crossroads also adds several methods for <thing><link:essentials:rotary/millstone>ore doubling/$ and a method of <thing><link:essentials:rotary/stamp>ore tripling/$.
 
 <item>Tin/$ is about as rare as gold, with the same distribution (but without being more common in mesas), spawning scattered as single ore blocks. It can spawn between y=32 and y=-64, being most common around y=-20 and y=-48. For an optional extra challenge, you can keep Crossroads tin separate from other mods' tin, and use only the Crossroads tin for Crossroads machines.

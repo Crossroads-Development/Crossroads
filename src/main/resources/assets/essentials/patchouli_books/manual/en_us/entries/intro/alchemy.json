@@ -57,5 +57,9 @@
 			"type": "patchouli:text",
 			"text": "will make things much easier. Your first goal if you want to progress should probably be to make <item>$(l:essentials:alchemy/acid)Aqua Regia/$.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+        "crossroads:reaction_chamber" : 0,
+		"crossroads:crystal_reaction_chamber" : 0
+	}
 }

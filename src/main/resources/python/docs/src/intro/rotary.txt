@@ -1,5 +1,6 @@
 Intro to Rotary2
 crossroads:gear_base
+
 <thing>Rotary/$ is one of the basic energy systems in Crossroads, and usually the first or second one you'll use (alongside <thing><link:essentials:intro/heat>Heat/$) Rotary is the transfer of mechanical energy using <item>gears/$ and <item>axles/$.
 Rotary can seem complicated at first when reading about it, but is actually pretty simple in practice.
 Every gear, axle, or other spinning device has a few basic values.

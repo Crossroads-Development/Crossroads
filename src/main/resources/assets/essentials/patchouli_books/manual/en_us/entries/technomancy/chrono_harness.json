@@ -17,5 +17,8 @@
 			"type": "patchouli:text",
 			"text": "<thing>$(l:essentials:intro/technomancy)temporal entropy/$ faster than it can be drained by <thing>$(l:essentials:technomancy/node)entropy nodes/$, causing it to inevitably explode.$(br2)It can be disabled by a redstone signal.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+        "crossroads:chrono_harness" : 0
+	}
 }

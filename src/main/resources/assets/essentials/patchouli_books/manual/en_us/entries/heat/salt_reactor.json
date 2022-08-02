@@ -16,5 +16,8 @@
 			"type": "patchouli:text",
 			"text": "The <item>Salt Reactor/$ can cool all the way down to <thing>absolute zero/$. <item>$(l:essentials:heat/cable)Heat cables/$ connect to the bottom, pipes can connect to any side both to input distilled water and output water.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+        "crossroads:salt_reactor" : 0
+	}
 }

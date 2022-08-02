@@ -1,5 +1,6 @@
 Souls
 crossroads:soul_cluster|crossroads:progress/path/witchcraft
+crossroads:soul_cluster
 <item>Soul Clusters/$ and <item>Soul Shards/$ are ingredients in several recipes. There are four <item>soul shards/$ in a <item>soul cluster/$.
 Both <item>soul shards/$ and <item>soul clusters/$ are effective fuels, <link:essentials:heat/icebox>cold fuels/$ and <link:essentials:beam/extractor>beam fuels/$.
 <item>Soul shards/$ can be produced using <thing>potions of soul transience/$.

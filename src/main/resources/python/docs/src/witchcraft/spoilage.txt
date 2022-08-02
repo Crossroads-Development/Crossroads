@@ -1,5 +1,6 @@
 Spoilage
 crossroads:cold_storage|crossroads:progress/path/witchcraft
+crossroads:cold_storage,crossroads:stasis_storage;7
 Several witchcraft ingredients will <thing>spoil/$ once a certain amount of time has passed since creation. <thing>Spoiled/$ items are less effective or useless. Items will continue to <thing>spoil/$ in unloaded chunks unless preserved.
 There are several ways to prevent <thing>spoilage/$.
 <page|spotlight|cold_storage|crossroads:cold_storage>

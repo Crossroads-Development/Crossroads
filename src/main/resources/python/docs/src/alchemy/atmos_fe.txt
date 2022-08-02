@@ -1,5 +1,6 @@
 Atmospheric Attenuator
 crossroads:atmos_charger|crossroads:progress/path/alchemy
+crossroads:atmos_charger
 The <item>Atmospheric Attenuator/$ is a way of wirelessly transmitting FE globally and sharing it with other players. There is no range limit or FE loss. In order to function, there must be a pillar of 4 lightning rods (vanilla block) over the <item>atmospheric attenuator/$.
 There is a global shared <thing>'atmospheric' storage/$ of FE with a (default) capacity of 1,000,000,000FE (1 billion FE). All players share the <thing>atmospheric FE/$, and there is no way of 'cutting off' other players from the shared <thing>atmosphere pool/$.
 The <item>atmospheric attenuator/$ has two modes (toggle by shift-right-clicking with a <item><link:essentials/wrench>wrench/$) to charge the <thing>atmosphere/$ with FE or drain FE from the <thing>atmosphere/$. One <item>atmospheric attenuator/$ can drain/charge a maximum of 20,000FE/t.

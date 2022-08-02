@@ -1,5 +1,6 @@
 Philosopher & Practitioner
 crossroads:phil_stone|crossroads:progress/path/alchemy
+crossroads:phil_stone,crossroads:prac_stone;3
 The <item>Philosopher's Stone/$ and <item>Practitioner's Stone/$ are important items/<thing>reagents/$ which are used as <thing><link:essentials:intro/alchemy>catalysts/$ in some important reactions.
 The <item>philosopher's stone/$ can be considered to unlock 'tier 2 alchemy'. The <item>practitioner's stone/$ can be considered to unlock 'tier 3 alchemy'.
 

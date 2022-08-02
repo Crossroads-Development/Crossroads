@@ -20,5 +20,8 @@
 			"type": "patchouli:text",
 			"text": "<thing>speeds/$, draining (2 * (speed in rad/s)) J/t, and requiring 100 J total per bucket pumped.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+        "crossroads:rotary_pump" : 0
+	}
 }

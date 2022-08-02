@@ -21,5 +21,8 @@
 			"type": "patchouli:text",
 			"text": "By default, saved moments will expire if not used within 5 minutes. The <item>Personal Time Rewinder/$ must be wound up in a <item>$(l:essentials:rotary/winding_table)Spring Winding Stand/$ in order to be used. It uses 0.4 $(l:essentials:rotary/winding_table)<thing>spring speed/$ each use, and can be wound to a maximum of 10.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+        "crossroads:recall_device" : 0
+	}
 }

@@ -57,5 +57,8 @@
 			"type": "patchouli:text",
 			"text": "For such a large and complicated mix being released, it is suggested to release it using a <item>$(l:essentials:alchemy/glassware)shell/$ or <item>$(l:essentials:alchemy/glassware)phial/$.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+        
+	}
 }

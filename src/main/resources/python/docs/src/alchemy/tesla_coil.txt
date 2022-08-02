@@ -1,5 +1,6 @@
 Upgraded Tesla Coils
 crossroads:tesla_coil_top_efficiency|crossroads:progress/path/alchemy
+crossroads:tesla_coil_top_efficiency;5,crossroads:tesla_coil_top_distance;4,crossroads:tesla_coil_top_intensity;7,crossroads:tesla_coil_top_attack;2,crossroads:tesla_coil_top_decorative;3
 <thing><link:essentials:intro/alchemy>Alchemy/$ unlocks several upgraded <item><link:essentials:fluid/tesla>tesla coil tops/$, which can be used on top of a <item><link:essentials:fluid/tesla>tesla coil/$.
 There are 5 variants. Some have slightly different stats, while 2 do something completely different from transferring FE.
 

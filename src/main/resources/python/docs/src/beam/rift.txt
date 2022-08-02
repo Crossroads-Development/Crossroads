@@ -1,5 +1,6 @@
 Alignment: Rift-1
 crossroads:pure_quartz|crossroads:progress/alignment/rift
+
 <thing>Rift/$ (purple) will spawn hostile mobs native to the biome. It has a <thing>power/$ / 256 chance to spawn a mob, with the chance capped at 1/4.
 It can spawn mobs in solid blocks, and ignores the mob spawning cap.
 In peaceful mode, it will spawn the drops of the mobs it would have spawned instead of spawning mobs. 

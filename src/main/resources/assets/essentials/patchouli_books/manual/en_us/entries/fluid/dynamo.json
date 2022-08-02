@@ -24,5 +24,8 @@
 			"type": "patchouli:text",
 			"text": "<bobo>BLUE shiny rok, smidge o' gOLD!$(br2)<bobo>*Note: Performing a Rain Dance may trigger 'sticky keys'. Terms and conditions apply. By performing a rain dance, you waive your right to your soul.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+        "crossroads:dynamo" : 0
+	}
 }

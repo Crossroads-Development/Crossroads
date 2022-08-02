@@ -17,5 +17,8 @@
 			"type": "patchouli:text",
 			"text": "before release. This is significant for things like the range of liquids/gasses, or for blending <thing>$(l:essentials:alchemy/effect)effects/$ for a flame cloud. As a <item>$(l:essentials:alchemy/conduit)conduit/$ can only transfer 5 units per tick, 1 second means it can group up to 100 units of <thing>$(l:essentials:intro/alchemy)reagents/$.$(br2)<item>Chemical vents/$ can handle <thing>$(l:essentials:intro/alchemy)reagents/$ that normally need to be contained in crystal safely.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+        "crossroads:chemical_vent" : 0
+	}
 }

@@ -1,5 +1,6 @@
 Fat Congealer
 crossroads:fat_congealer
+crossroads:fat_congealer
 The <item>Fat Congealer/$ uses <thing>liquid fat/$ (from a <item><link:essentials:fluid/fat_collector>fat collector/$) to produce <item>edible blobs/$, which are food with custom stats. The <item>fat congealer/$ has <em>two rotary connections/$ (top and bottom), instead of the usual one. It accepts <thing>liquid fat/$ in the sides, and has an output side where it will eject <item>edible blobs/$.
 The hunger value of the <item>edible blobs/$ is equal to 4 times the <thing><link:essentials:intro/rotary>speed/$ of the top gear. The saturation value is 4 times the <thing><link:essentials:intro/rotary>speed/$ of the bottom gear.
 Each <item>edible blob/$ consumes 100mB of <thing>liquid fat/$ per point of hunger and saturation, and a small amount of <thing><link:essentials:intro/rotary>rotary energy/$. A redstone signal will disable the machine.

@@ -1,5 +1,6 @@
 Wheezewort
 crossroads:wheezewort_seeds|crossroads:progress/path/witchcraft
+crossroads:wheezewort_seeds
 <item>Wheezewort/$ is a plant that produces <thing><link:essentials:intro/heat>cold/$ for free and can reach <thing><link:essentials:intro/heat>absolute zero/$.
 It has three growth stages. In the first stage, it is one block tall and will quickly grow to the second stage.
 In the second growth stage, it two blocks tall and is active. It will randomly shoot cold spurts upwards, causing the block directly above the top of the <item>wheezewort/$ will be cooled enormously. Most of this cooling would normally be wasted from capping out at <thing><link:essentials:intro/heat>absolute zero/$. However, if the block directly above it is <item><link:essentials:heat/reserve>heat reservoir/$, then it will be able to take advantage of much more of the cooling.

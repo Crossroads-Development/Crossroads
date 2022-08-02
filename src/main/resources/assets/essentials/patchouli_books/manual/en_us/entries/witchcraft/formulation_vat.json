@@ -17,5 +17,8 @@
 			"type": "patchouli:text",
 			"text": "at all, it totally stops working but still consumes heat, so ideally it should be kept at just slightly below 100°C.$(br2)<thing>$(l:essentials/circuits)Circuits/$ measure the fullness of the item input, as a value from 0 to 15.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+        "crossroads:formulation_vat" : 0
+	}
 }

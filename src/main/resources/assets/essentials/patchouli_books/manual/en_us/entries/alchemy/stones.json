@@ -41,5 +41,9 @@
 			"type": "patchouli:text",
 			"text": "The main use of the <thing>elemental reagents/$ made with a <item>practitioner's stone/$ is their effects. See the $(l:essentials:alchemy/terraforming)terraforming entry/$ for more.$(br2)<item>Voltus/$ can also be used as an FE source in a <item>$(l:essentials:alchemy/generator)Voltus Generator/$, or used to deal damage (see the $(l:essentials:alchemy/effect)effects page/$ for details).$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+        "crossroads:phil_stone" : 0,
+		"crossroads:prac_stone" : 3
+	}
 }

@@ -25,5 +25,11 @@
 			"type": "patchouli:text",
 			"text": "<item>Redstone Alchemy Conduits/$ are like normal <item>alchemy conduits/$, except they will only connect to their neighbors while they have a redstone signal.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+        "crossroads:alch_tube" : 0,
+		"crossroads:crystal_alch_tube" : 0,
+		"crossroads:reds_alch_tube" : 3,
+		"crossroads:crystal_reds_alch_tube" : 3
+	}
 }

@@ -17,5 +17,8 @@
 			"type": "patchouli:text",
 			"text": "if it catches fire.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+        "crossroads:petrol_cactus" : 0
+	}
 }

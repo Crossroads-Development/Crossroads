@@ -17,5 +17,8 @@
 			"type": "patchouli:text",
 			"text": "It has an attack cooldown like a melee weapon, and will do less damage and <em>won't chain attacks unless fully cooled-down/$.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+        "crossroads:tesla_ray" : 0
+	}
 }

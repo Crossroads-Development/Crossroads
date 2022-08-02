@@ -24,5 +24,8 @@
 			"type": "patchouli:text",
 			"text": "<bobo>caAAAAnnnnn YOU HEAr dAAA LUV 2NITE~~~$(br2)<bobo>iIIII\"m bACK!!;! hI bACK, i\"m $(l:essentials:intro/welcome#bobo)bobo/$<bobo>$(br2)<bobo>sPR3AD da luve t0 da biG-noSES wih A bIG SHInY mOn€¥ bl0ck under-knees dA fAT machine! kApEESH?/$$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+        "crossroads:fat_feeder" : 0
+	}
 }

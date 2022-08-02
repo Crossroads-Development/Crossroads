@@ -25,5 +25,8 @@
 			"type": "patchouli:text",
 			"text": "<thing>Void-Enchantment/$ AKA <thing>Disenchantment/$ will disenchant all items dropped in the world within range. The range is a radius of sqrt(<thing>power/$) / 2 blocks. This can also remove curses from items.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+        
+	}
 }

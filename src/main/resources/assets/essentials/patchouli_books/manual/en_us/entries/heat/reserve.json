@@ -20,5 +20,8 @@
 			"type": "patchouli:text",
 			"text": "This block pairs well with <item>$(l:essentials:heat/solar)Solar Heaters/$ to make them viable at night.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+        "crossroads:heat_reservoir" : 0
+	}
 }

@@ -24,5 +24,8 @@
 			"type": "patchouli:text",
 			"text": "on the <item>Table/$ itself.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+        "crossroads:winding_table" : 0
+	}
 }

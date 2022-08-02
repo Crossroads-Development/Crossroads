@@ -43,5 +43,9 @@
 			"item": "crossroads:cultivator_vat",
 			"text": "There are certain items which <thing>spoil/$ but are damaged by freezing, such as <item>embryos/$. These items can be preserved without damaging them using a <thing>$(l:essentials:witchcraft/cultivator_vat)Nutrition Vat/$ which is stocked with <thing>nutrient solution/$.$(br2)See the <item>$(l:essentials:witchcraft/cultivator_vat)Nutrition Vat/$ page for more details.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+        "crossroads:cold_storage" : 0,
+		"crossroads:stasis_storage" : 7
+	}
 }

@@ -28,5 +28,8 @@
 			"type": "patchouli:text",
 			"text": "<bobo>p0ISON POTATO!: mUCH iMPORTANT FOR $(l:essentials:intro/welcome#bobo)b0B0 tings!/$$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+        
+	}
 }

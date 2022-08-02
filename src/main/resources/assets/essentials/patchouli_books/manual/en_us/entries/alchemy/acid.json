@@ -29,5 +29,11 @@
 			"type": "patchouli:text",
 			"text": "<bobo>$(l:essentials:intro/welcome#bobo)iz BOBO!/$<bobo> KABANG! KABOOM! KABLOOEY! (bles U)$(br2)<bobo>I HAZ BANG BOTTEL! bUTtt b33 KaRE_UN_EMTPY!! eLES U g0->> bUUM!$(br2)<bobo>y3LLOW dUST! fRRRESH BAkCC0ON!! und bUTT:E for SHOP-AGGE!$(br2)<bobo>bOBO AWAY!/$$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+        "crossroads:solid_regia" : 2,
+		"crossroads:solid_vitriol" : 0,
+		"crossroads:solid_muriatic" : 0,
+		"crossroads:solid_fortis" : 0
+	}
 }

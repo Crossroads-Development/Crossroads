@@ -21,5 +21,8 @@
 			"type": "patchouli:text",
 			"text": "A good way of transferring and storing the FE it makes is with an <item>$(l:essentials:alchemy/atmos_fe)Atmospheric Attenuator/$.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+        "crossroads:voltus_generator" : 0
+	}
 }

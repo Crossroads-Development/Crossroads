@@ -17,5 +17,8 @@
 			"type": "patchouli:text",
 			"text": "above. The beacon does not have to be active, but the <item>entropy sink/$ will not block the beacon beam.$(br2)Use <item>$(l:essentials:technomancy/node)Entropy Nodes/$ to get <thing>$(l:essentials:intro/technomancy)temporal entropy/$ from machines to the <item>entropy sink/$.$(br2)The <item>entropy sink/$ can share the beacon with a <item>$(l:essentials:technomancy/beacon_harness)Beacon Harness/$.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+        "crossroads:flux_sink" : 0
+	}
 }

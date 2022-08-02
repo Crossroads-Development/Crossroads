@@ -37,5 +37,9 @@
 			"type": "patchouli:text",
 			"text": "of the gears be zero mass. There is a <item>$(l:essentials:technomancy/redstone_axis)special master axis/$ that can have only copshowium gears.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+        "crossroads:ingot_copshowium" : 0,
+		"crossroads:copshowium_creation_chamber" : 0
+	}
 }

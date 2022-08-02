@@ -25,5 +25,9 @@
 			"type": "patchouli:text",
 			"text": "16mB $(l:essentials:intro/fluid)molten copper/$ <-> <item>copper/$ (1 unit = 1 nugget)$(br2)16mB $(l:essentials:intro/fluid)molten tin/$ <-> <item>tin/$ (1 unit = 1 nugget)$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+        "crossroads:fluid_injector" : 0,
+		"crossroads:crystal_fluid_injector" : 0
+	}
 }

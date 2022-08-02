@@ -17,5 +17,9 @@
 			"type": "patchouli:text",
 			"text": "variant.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+        "crossroads:cooling_coil" : 0,
+		"crossroads:crystal_cooling_coil" : 0
+	}
 }

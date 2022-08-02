@@ -7,6 +7,8 @@
 # Expects the FIRST LINE of the txt to be the title. If the title ends with a digit, that digit becomes the sortnum. A dash can be placed before the sortnum to prevent priority mode
 # Expects the SECOND LINE of the txt to be the item path used for icon and spotlight page
 # If the SECOND LINE contains a | (pipe symbol), it will treat everything after the | as an advancement to lock the entry behind
+# Expects the THIRD LINE of the txt to be empty, or a comma-separated list of ItemStack strings representing items/blocks to link to this entry.
+# If an ItemStack string is followed by a ; and a number, the number will be treated as the page in the entry that should be opened by the item
 # Makes the first page a spotlight, with the entry title
 # Will make all other pages text
 # Each line in the txt after the first two are considered the body
@@ -90,17 +92,32 @@ def run():
 					advancement = icon[index + 1:]
 					icon = icon[:index]
 
-				pages = parseBody(rawLinesIn[2:], icon, name, 2)
+				# Parse the ItemStack:entry mappings
+				mappingsRaw = rawLinesIn[2].strip().split(",")
+				mappings = []
+				for mapping in mappingsRaw:
+					if mapping == "":
+						continue
+
+					# page number within entry is optional, defaults 0
+					if ';' in mapping:
+						mappings.append(mapping.split(';'))
+					else:
+						mappings.append((mapping, 0))
+
+				mappings = formatMappings(mappings, indent=2)
+
+				pages = parseBody(rawLinesIn[3:], icon, name, 2)
 
 				with open(outDir + file.replace(".txt", ".json"), mode='w+', encoding='utf-8') as fOut:
 					fOut.truncate(0)  # Remove previous version
 
 					if len(advancement) == 0:
 						for line in tempLines:
-							fOut.write(line.replace('CAT', category).replace('NAME', name).replace('ICON', icon).replace('PAGES', pages).replace('SORT', sort).replace("PRIO", priority))
+							fOut.write(line.replace('CAT', category).replace('NAME', name).replace('ICON', icon).replace('PAGES', pages).replace('SORT', sort).replace("PRIO", priority).replace("MAPPINGS", mappings))
 					else:
 						for line in tempAdvLines:
-							fOut.write(line.replace('CAT', category).replace('NAME', name).replace('ICON', icon).replace('PAGES', pages).replace('SORT', sort).replace("PRIO", priority).replace('ADV', advancement))
+							fOut.write(line.replace('CAT', category).replace('NAME', name).replace('ICON', icon).replace('PAGES', pages).replace('SORT', sort).replace("PRIO", priority).replace('ADV', advancement).replace("MAPPINGS", mappings))
 
 					fOut.close()
 
@@ -353,6 +370,20 @@ def parseBody(text: [str, ...], icon: str, title: str, indents: int) -> str:
 			pageSpaceRemain = pageCharLimit[pageType]
 
 	return output
+
+
+def formatMappings(mappings: list[tuple[str, int]], indent: int) -> str:
+	"""
+	Generates the formatted item -> entry mappings from some lightly parsed input
+	:param mappings:
+	:param indent:
+	:return:
+	"""
+	leadingTabs = '\t' * indent
+
+	out = f",\n{leadingTabs}".join(f"\"{mapping[0]}\" : {mapping[1]}" for mapping in mappings)
+
+	return out
 
 
 def getFormCode(line: str) -> str:
