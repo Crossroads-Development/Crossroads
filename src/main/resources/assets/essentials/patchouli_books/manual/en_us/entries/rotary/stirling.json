@@ -46,6 +46,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:stirling_engine" : 0
+		"crossroads:stirling_engine" : 0
 	}
 }

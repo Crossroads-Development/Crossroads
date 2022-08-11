@@ -22,6 +22,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:solar_heater" : 0
+		"crossroads:solar_heater" : 0
 	}
 }

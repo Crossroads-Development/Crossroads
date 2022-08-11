@@ -29,7 +29,7 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:damping_powder" : 0,
-		"crossroads:fire_detector" : 4
+		"crossroads:damping_powder" : 0,
+		"crossroads:fire_detector" : 2
 	}
 }

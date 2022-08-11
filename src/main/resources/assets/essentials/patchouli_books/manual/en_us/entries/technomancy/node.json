@@ -31,6 +31,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:flux_node" : 0
+		"crossroads:flux_node" : 0
 	}
 }

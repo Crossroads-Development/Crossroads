@@ -39,7 +39,7 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:ingot_copshowium" : 0,
+		"crossroads:ingot_copshowium" : 0,
 		"crossroads:copshowium_creation_chamber" : 0
 	}
 }

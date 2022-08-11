@@ -43,7 +43,7 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:phil_stone" : 0,
+		"crossroads:phil_stone" : 0,
 		"crossroads:prac_stone" : 3
 	}
 }

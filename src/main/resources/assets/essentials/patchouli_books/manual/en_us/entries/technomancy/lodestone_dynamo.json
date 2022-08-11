@@ -15,6 +15,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:lodestone_dynamo" : 0
+		"crossroads:lodestone_dynamo" : 0
 	}
 }

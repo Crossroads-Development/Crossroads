@@ -32,6 +32,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:embryo_lab" : 0
+		"crossroads:embryo_lab" : 0
 	}
 }

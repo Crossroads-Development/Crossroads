@@ -18,6 +18,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:fat_congealer" : 0
+		"crossroads:fat_congealer" : 0
 	}
 }

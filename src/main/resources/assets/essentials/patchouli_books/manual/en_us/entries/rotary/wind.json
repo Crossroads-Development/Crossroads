@@ -30,6 +30,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:wind_turbine" : 0
+		"crossroads:wind_turbine" : 0
 	}
 }

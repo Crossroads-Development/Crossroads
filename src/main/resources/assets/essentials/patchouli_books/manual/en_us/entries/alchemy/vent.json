@@ -19,6 +19,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:chemical_vent" : 0
+		"crossroads:chemical_vent" : 0
 	}
 }

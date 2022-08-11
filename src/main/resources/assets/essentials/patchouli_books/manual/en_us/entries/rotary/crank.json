@@ -18,6 +18,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:hand_crank" : 0
+		"crossroads:hand_crank" : 0
 	}
 }

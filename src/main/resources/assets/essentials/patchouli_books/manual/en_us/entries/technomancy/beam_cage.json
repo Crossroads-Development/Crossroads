@@ -23,7 +23,7 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:beam_cage" : 0,
-		"crossroads:cage_charger" : 3
+		"crossroads:beam_cage" : 0,
+		"crossroads:cage_charger" : 1
 	}
 }

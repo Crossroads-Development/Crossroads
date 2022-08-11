@@ -23,6 +23,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:lodestone_turbine" : 0
+		"crossroads:lodestone_turbine" : 0
 	}
 }

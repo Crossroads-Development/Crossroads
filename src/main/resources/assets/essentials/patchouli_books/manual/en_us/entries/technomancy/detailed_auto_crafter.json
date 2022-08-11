@@ -19,6 +19,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:detailed_auto_crafter" : 0
+		"crossroads:detailed_auto_crafter" : 0
 	}
 }

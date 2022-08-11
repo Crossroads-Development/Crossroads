@@ -41,7 +41,7 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:temporal_accelerator" : 0,
-		"crossroads:chunk_accelerator" : 5
+		"crossroads:temporal_accelerator" : 0,
+		"crossroads:chunk_accelerator" : 4
 	}
 }

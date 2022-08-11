@@ -23,6 +23,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:recall_device" : 0
+		"crossroads:recall_device" : 0
 	}
 }

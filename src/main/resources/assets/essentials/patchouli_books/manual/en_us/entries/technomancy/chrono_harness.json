@@ -19,6 +19,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:chrono_harness" : 0
+		"crossroads:chrono_harness" : 0
 	}
 }

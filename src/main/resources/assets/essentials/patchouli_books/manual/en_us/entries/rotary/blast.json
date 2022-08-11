@@ -26,6 +26,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:blast_furnace" : 0
+		"crossroads:blast_furnace" : 0
 	}
 }

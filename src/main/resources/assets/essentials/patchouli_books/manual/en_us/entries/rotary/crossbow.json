@@ -26,6 +26,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:spring_gun" : 0
+		"crossroads:spring_gun" : 0
 	}
 }

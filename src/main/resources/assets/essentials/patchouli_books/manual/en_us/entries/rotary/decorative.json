@@ -40,7 +40,7 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:gear_facade_stone_brick" : 0,
+		"crossroads:gear_facade_stone_brick" : 0,
 		"crossroads:gear_facade_iron" : 0,
 		"crossroads:gear_facade_cobble" : 0,
 		"crossroads:gear_facade_glass" : 0

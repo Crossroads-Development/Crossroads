@@ -47,10 +47,10 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:florence_flask_glass" : 6,
+		"crossroads:phial_glass" : 5,
+		"crossroads:phial_cryst" : 5,
+		"crossroads:florence_flask_glass" : 6,
 		"crossroads:florence_flask_cryst" : 6,
-		"crossroads:phial_glass" : 4,
-		"crossroads:phial_cryst" : 4,
 		"crossroads:shell_glass" : 8,
 		"crossroads:shell_cryst" : 8
 	}

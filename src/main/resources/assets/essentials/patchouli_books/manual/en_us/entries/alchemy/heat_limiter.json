@@ -31,7 +31,7 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:heat_limiter_basic" : 0,
-		"crossroads:heat_limiter" : 5
+		"crossroads:heat_limiter_basic" : 0,
+		"crossroads:heat_limiter" : 4
 	}
 }

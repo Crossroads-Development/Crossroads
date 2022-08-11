@@ -19,7 +19,7 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:cooling_coil" : 0,
+		"crossroads:cooling_coil" : 0,
 		"crossroads:crystal_cooling_coil" : 0
 	}
 }

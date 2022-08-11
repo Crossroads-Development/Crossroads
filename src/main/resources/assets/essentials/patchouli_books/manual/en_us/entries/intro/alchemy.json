@@ -59,7 +59,7 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:reaction_chamber" : 0,
+		"crossroads:reaction_chamber" : 0,
 		"crossroads:crystal_reaction_chamber" : 0
 	}
 }

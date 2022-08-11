@@ -22,6 +22,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:radiator" : 0
+		"crossroads:radiator" : 0
 	}
 }

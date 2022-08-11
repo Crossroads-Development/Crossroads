@@ -42,6 +42,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:gear_base" : 0
+		"crossroads:gear_base" : 0
 	}
 }

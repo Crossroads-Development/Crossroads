@@ -22,6 +22,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:omnimeter" : 0
+		"crossroads:omnimeter" : 0
 	}
 }

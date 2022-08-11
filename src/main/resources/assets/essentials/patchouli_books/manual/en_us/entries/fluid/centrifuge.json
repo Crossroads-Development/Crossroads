@@ -22,6 +22,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:water_centrifuge" : 0
+		"crossroads:water_centrifuge" : 0
 	}
 }

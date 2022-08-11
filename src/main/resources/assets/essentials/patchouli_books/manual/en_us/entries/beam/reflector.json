@@ -18,6 +18,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:beam_reflector" : 0
+		"crossroads:beam_reflector" : 0
 	}
 }

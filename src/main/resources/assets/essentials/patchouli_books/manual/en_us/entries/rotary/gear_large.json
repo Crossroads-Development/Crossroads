@@ -26,6 +26,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:gear_base_large" : 0
+		"crossroads:gear_base_large" : 0
 	}
 }

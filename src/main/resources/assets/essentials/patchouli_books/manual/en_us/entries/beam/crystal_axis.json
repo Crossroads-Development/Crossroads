@@ -34,6 +34,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:master_axis_crystal" : 0
+		"crossroads:master_axis_crystal" : 0
 	}
 }

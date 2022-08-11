@@ -45,7 +45,7 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:cold_storage" : 0,
-		"crossroads:stasis_storage" : 7
+		"crossroads:cold_storage" : 0,
+		"crossroads:stasis_storage" : 4
 	}
 }

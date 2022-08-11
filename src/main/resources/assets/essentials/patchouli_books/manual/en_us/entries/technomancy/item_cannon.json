@@ -31,6 +31,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:item_cannon" : 0
+		"crossroads:item_cannon" : 0
 	}
 }

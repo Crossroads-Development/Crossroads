@@ -23,6 +23,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:voltus_generator" : 0
+		"crossroads:voltus_generator" : 0
 	}
 }

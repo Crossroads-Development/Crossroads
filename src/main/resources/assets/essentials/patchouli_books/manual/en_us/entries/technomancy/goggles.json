@@ -75,6 +75,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:module_goggles" : 0
+		"crossroads:module_goggles" : 0
 	}
 }

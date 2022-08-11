@@ -22,6 +22,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:steam_turbine" : 0
+		"crossroads:steam_turbine" : 0
 	}
 }

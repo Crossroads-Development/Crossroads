@@ -1,6 +1,6 @@
 Temperature Regulator
 crossroads:heat_limiter_basic|crossroads:progress/path/alchemy
-crossroads:heat_limiter_basic,crossroads:heat_limiter;5
+crossroads:heat_limiter_basic,crossroads:heat_limiter;7
 The <item>Temperature Regulator/$ is a powerful tool for controlling <thing><link:essentials:intro/heat>temperature/$. It allows precisely controlling the <thing><link:essentials:intro/heat>temperature/$ of a <item><link:essentials:heat/cable>heat cable/$ and connected machines.
 The <item>temperature regulator/$ connects to two <item><link:essentials:heat/cable>heat cables/$- on the front and back- with the front being the side with the red 'ring'.
 

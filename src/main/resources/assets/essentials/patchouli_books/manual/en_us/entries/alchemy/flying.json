@@ -23,6 +23,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:flying_machine" : 0
+		"crossroads:flying_machine" : 0
 	}
 }

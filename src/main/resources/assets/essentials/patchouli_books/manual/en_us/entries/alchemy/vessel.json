@@ -27,7 +27,7 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:reagent_tank" : 0,
+		"crossroads:reagent_tank" : 0,
 		"crossroads:crystal_reagent_tank" : 0
 	}
 }

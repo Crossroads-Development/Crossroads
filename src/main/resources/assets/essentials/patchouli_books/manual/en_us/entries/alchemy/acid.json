@@ -31,7 +31,7 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:solid_regia" : 2,
+		"crossroads:solid_regia" : 2,
 		"crossroads:solid_vitriol" : 0,
 		"crossroads:solid_muriatic" : 0,
 		"crossroads:solid_fortis" : 0

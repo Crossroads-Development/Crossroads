@@ -22,6 +22,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:ore_cleanser" : 0
+		"crossroads:ore_cleanser" : 0
 	}
 }

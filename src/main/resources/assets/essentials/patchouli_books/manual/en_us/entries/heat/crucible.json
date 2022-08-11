@@ -22,6 +22,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:heating_crucible" : 0
+		"crossroads:heating_crucible" : 0
 	}
 }

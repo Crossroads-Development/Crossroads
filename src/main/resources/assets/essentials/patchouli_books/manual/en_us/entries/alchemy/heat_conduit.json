@@ -23,7 +23,7 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:heated_tube" : 0,
+		"crossroads:heated_tube" : 0,
 		"crossroads:crystal_heated_tube" : 0
 	}
 }

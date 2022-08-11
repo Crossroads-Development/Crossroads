@@ -23,7 +23,7 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:reagent_pump" : 0,
+		"crossroads:reagent_pump" : 0,
 		"crossroads:crystal_reagent_pump" : 0
 	}
 }

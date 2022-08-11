@@ -26,6 +26,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:fat_feeder" : 0
+		"crossroads:fat_feeder" : 0
 	}
 }

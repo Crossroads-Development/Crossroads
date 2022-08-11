@@ -30,7 +30,7 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:heat_cable_wool" : 0,
+		"crossroads:heat_cable_wool" : 0,
 		"crossroads:heat_cable_slime" : 0,
 		"crossroads:heat_cable_ice" : 0,
 		"crossroads:heat_cable_obsidian" : 0,

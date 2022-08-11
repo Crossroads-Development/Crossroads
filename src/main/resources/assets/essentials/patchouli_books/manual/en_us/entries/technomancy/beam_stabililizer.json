@@ -19,6 +19,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:clock_stabilizer" : 0
+		"crossroads:clock_stabilizer" : 0
 	}
 }

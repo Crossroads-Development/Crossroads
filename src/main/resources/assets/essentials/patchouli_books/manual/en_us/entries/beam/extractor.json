@@ -22,6 +22,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:beam_extractor" : 0
+		"crossroads:beam_extractor" : 0
 	}
 }

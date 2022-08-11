@@ -23,6 +23,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:redstone_axis" : 0
+		"crossroads:redstone_axis" : 0
 	}
 }

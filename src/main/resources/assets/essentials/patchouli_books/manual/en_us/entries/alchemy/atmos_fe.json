@@ -27,6 +27,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:atmos_charger" : 0
+		"crossroads:atmos_charger" : 0
 	}
 }

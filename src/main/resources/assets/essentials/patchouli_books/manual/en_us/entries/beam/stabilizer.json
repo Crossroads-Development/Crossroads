@@ -22,6 +22,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:quartz_stabilizer" : 0
+		"crossroads:quartz_stabilizer" : 0
 	}
 }

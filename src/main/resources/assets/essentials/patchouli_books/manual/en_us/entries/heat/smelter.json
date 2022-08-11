@@ -18,6 +18,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:heating_chamber" : 0
+		"crossroads:heating_chamber" : 0
 	}
 }

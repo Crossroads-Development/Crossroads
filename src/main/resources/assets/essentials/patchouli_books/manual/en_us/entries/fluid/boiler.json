@@ -22,6 +22,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:steam_boiler" : 0
+		"crossroads:steam_boiler" : 0
 	}
 }

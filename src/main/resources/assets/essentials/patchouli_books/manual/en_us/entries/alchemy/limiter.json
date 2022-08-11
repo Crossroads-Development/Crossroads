@@ -23,7 +23,7 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:flow_limiter" : 0,
+		"crossroads:flow_limiter" : 0,
 		"crossroads:crystal_flow_limiter" : 0
 	}
 }

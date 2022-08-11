@@ -26,6 +26,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:stamp_mill" : 0
+		"crossroads:stamp_mill" : 0
 	}
 }

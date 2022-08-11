@@ -35,6 +35,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:beacon_harness" : 0
+		"crossroads:beacon_harness" : 0
 	}
 }

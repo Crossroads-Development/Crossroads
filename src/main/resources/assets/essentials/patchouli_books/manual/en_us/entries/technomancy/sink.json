@@ -19,6 +19,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:flux_sink" : 0
+		"crossroads:flux_sink" : 0
 	}
 }

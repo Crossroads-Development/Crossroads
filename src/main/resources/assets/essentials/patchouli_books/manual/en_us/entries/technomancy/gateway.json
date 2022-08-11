@@ -78,8 +78,8 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:gateway_frame" : 0,
+		"crossroads:gateway_frame" : 0,
 		"crossroads:gateway_edge" : 0,
-		"crossroads:gateway_controller_destination" : 12
+		"crossroads:gateway_controller_destination" : 11
 	}
 }

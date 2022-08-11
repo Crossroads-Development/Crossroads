@@ -31,6 +31,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-        "crossroads:hydroponics_trough" : 0
+		"crossroads:hydroponics_trough" : 0
 	}
 }
