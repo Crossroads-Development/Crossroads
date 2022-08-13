@@ -25,5 +25,8 @@
 			"type": "patchouli:text",
 			"text": "operation, but will always be within 35-140°C.$(br2)<thing>$(l:essentials/circuits)Circuits/$ read the current target <thing>$(l:essentials:intro/heat)temperature/$, in degrees C.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:incubator" : 0
+	}
 }

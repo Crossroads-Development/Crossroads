@@ -1,5 +1,6 @@
 Blood Centrifuge
 crossroads:blood_centrifuge|crossroads:progress/path/witchcraft
+crossroads:blood_centrifuge
 The <item>blood centrifuge/$ is used as part of the <thing><link:essentials:witchcraft/cloning>cloning process/$, to turn <item><link:essentials:witchcraft/syringe#blood>blood pouches/$ into <item>centrifuged blood pouches/$.
 It can process two items at a time and takes a <thing><link:essentials:intro/rotary>rotary/$ connection to the top. One operation <em>always/$ takes 5 seconds, regardless of whether it has <thing><link:essentials:intro/rotary>rotary/$ power or not.
 The created <item>centrifuged blood pouch/$ will gain <thing><link:essentials:witchcraft/cloning#degradation>degradation/$ based on the <thing><link:essentials:intro/rotary>rotary speed/$ while running. If it isn't powered at all, all the <thing><link:essentials:witchcraft/cloning#degradation>degradation/$ may make it totally useless.

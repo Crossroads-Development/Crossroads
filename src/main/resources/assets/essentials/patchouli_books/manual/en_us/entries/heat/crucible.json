@@ -20,5 +20,8 @@
 			"type": "patchouli:text",
 			"text": "metal, which can be cooled into ingots in a <item>$(l:essentials:heat/fcc)Fluid Cooling Chamber/$.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:heating_crucible" : 0
+	}
 }

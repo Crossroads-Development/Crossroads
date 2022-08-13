@@ -28,5 +28,10 @@
 			"type": "patchouli:text",
 			"text": "<item>Light Clusters/$ are small, non-solid light sources that can float in mid air and that entities can pass through. Beams can pass through them, and they can be dyed colors by right-clicking with dyes (dye not consumed).$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:permeable_quartz" : 0,
+		"crossroads:permeable_obsidian" : 0,
+		"crossroads:permeable_glass" : 0
+	}
 }

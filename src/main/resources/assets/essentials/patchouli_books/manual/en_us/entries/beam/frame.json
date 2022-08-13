@@ -32,5 +32,8 @@
 			"type": "patchouli:text",
 			"text": "under uses for the <item>lens frame/$.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:lens_frame" : 0
+	}
 }

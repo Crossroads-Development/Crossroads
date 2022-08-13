@@ -1,5 +1,6 @@
 Item Cannon
 crossroads:item_cannon|crossroads:progress/path/technomancy
+crossroads:item_cannon
 The <item>Item Cannon/$ launches items at almost any angle and can send them huge distances (100+ blocks possible). The angle can be controlled and changed using <thing><link:essentials:intro/rotary>rotary input/$.
 While the <item>item cannon/$ has a redstone signal, it will launch any items in its inventory in the direction aimed. It can launch up to a full stack at once. The launch speed is the redstone signal strength (<thing><link:essentials/circuits>circuit/$ signals work) in blocks/tick, capped at 4 blocks/tick (80 blocks/second). A redstone pulse can be used to only fire once instead of running continuously.
 If the <item>item cannon/$ launches a <item>shell/$ (from <thing><link:essentials:intro/alchemy>Alchemy/$), it will be launched as a projectile and burst on impact, releasing the contents.

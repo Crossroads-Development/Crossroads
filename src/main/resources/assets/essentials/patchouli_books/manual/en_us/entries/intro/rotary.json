@@ -48,5 +48,8 @@
 			"type": "patchouli:text",
 			"text": "All networks of gears/axles/whatever <em>MUST HAVE/$ a <item>$(l:essentials:rotary/axis)Master Axis/$ connected somewhere in the network- otherwise nothing will work!$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		
+	}
 }

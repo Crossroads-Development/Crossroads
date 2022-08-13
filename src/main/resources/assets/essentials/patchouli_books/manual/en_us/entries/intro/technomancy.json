@@ -25,5 +25,8 @@
 			"type": "patchouli:text",
 			"text": "A good first <thing>Technomancy/$ machine is the <item>$(l:essentials:technomancy/beacon_harness)Beacon Harness/$, which produces massive amounts of <thing>$(l:essentials:intro/beam)beams/$ cheaply.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		
+	}
 }

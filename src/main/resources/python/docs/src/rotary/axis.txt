@@ -1,5 +1,6 @@
 Master Axis
 crossroads:master_axis
+crossroads:master_axis
 The <item>Master Axis/$ is a core part of any <thing>rotary/$ network. Without one, gears, axles, and the like will not spin or transfer energy between each other.
 Each network only needs one <item>master axis/$. Simple attach any gear or axle to the front face of the <item>master axis/$.
 The <item>master axis/$ doesn't have any <thing>I value/$ or anything else like that- in early game it just exists to make everything work.

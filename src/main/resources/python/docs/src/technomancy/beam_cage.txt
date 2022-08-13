@@ -1,5 +1,6 @@
 Beam Cage
 crossroads:beam_cage|crossroads:progress/path/technomancy
+crossroads:beam_cage,crossroads:cage_charger;3
 The <item>Beam Cage/$ is a way of storing <thing><link:essentials:intro/beam>beams/$ in an item- it acts as a 'battery' for <thing><link:essentials:intro/beam>beams/$. It can store 2048 each of <thing><link:essentials:intro/beam>Energy, Potential, Stability, and Void/$.
 If a <item>beam cage/$ is put in a <item><link:essentials:beam/extractor>resonance extractor/$, the <item><link:essentials:beam/extractor>resonance extractor/$ will output the entire stored <thing><link:essentials:intro/beam>beam/$ at once. The empty <item>beam cage/$ will not be destroyed, and can be extracted by automation.
 <item><link:essentials:technomancy/staff>Certain items/$ use the <item>beam cage/$ as a power source when the <item>beam cage/$ is in the offhand slot or in a baubles slot (if the Curios mod is installed).

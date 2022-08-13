@@ -24,5 +24,8 @@
 			"type": "patchouli:text",
 			"text": "<bobo>hhOI! iz m3 $(l:essentials:intro/welcome#bobo)BOQR/$<bobo>! eyE HAS amAZEng tELE-pOTat0-ION sTICK! me smoogled yte oUT uv OTHER DIMENSHUN!!$(br2)<bobo>h0t R0d!$(br2)<bobo>dA PRIZE dat stART da WOOD HORSE WAR!$(br2)<bobo>dRaGON holy-t0e-zis!$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		
+	}
 }

@@ -21,5 +21,8 @@
 			"type": "patchouli:text",
 			"text": "<thing>Void-Energy/$ AKA <thing>Cold/$ will remove <thing>$(l:essentials:intro/heat)heat/$ from heat machines and cables, at a rate of -100°C/power every 4 ticks, or -25°C/power/tick.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		
+	}
 }

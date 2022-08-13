@@ -1,5 +1,6 @@
 Intro to Fluids3
 crossroads:fluid_tube
+crossroads:fluid_tube
 <thing>Fluids/$ in Crossroads act the same as in all other mods. They can be moved with <item><link:essentials:fluid/pipe>pipes/$, stored in <item><link:essentials:fluid/tank>tanks/$, and so on.
 The typical fluids added by Crossroads are:
 <thing>Distilled Water/$: This is usually used to produce <thing><link:essentials:fluid/steam>steam/$, and is treated as "pure" water in the mod.

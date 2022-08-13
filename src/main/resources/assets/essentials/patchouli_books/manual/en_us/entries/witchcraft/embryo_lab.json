@@ -30,5 +30,8 @@
 			"anchor": "bobo",
 			"text": "<bobo>heWO !!! izME $(l:essentials:intro/welcome#bobo)(.)^(.)/$<bobo>$(br2)<bobo>biLD @ buDy! a HOPPERH0CK! sTahrt wiv bErd DAT tok! nOT da tiCk-Tokc (cuKoo?)! out-n't-gect won hoPre! uR bUdddie lIek 2 ete mure hohpyre!$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:embryo_lab" : 0
+	}
 }

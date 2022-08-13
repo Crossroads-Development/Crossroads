@@ -20,5 +20,8 @@
 			"type": "patchouli:text",
 			"text": "giant iron stick. $(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:whirligig" : 0
+	}
 }

@@ -1,5 +1,6 @@
 Technomancy Armor
 crossroads:module_goggles|crossroads:progress/path/technomancy
+crossroads:module_goggles
 There is an augmented armor set with special abilities. Every part of the armor set has a utility ability, is unbreakable, is enchantable, and doesn't burn in fire/lava.
 The armor set provides no protection normally, but can be combined with the corresponding piece of netherite armor (not an ingot) in an anvil to provide netherite-tier armor protection. The enchantments of the armor itself (not the netherite armor) are kept when combining them in an anvil.
 If upgraded with netherite, the armor will have durability, but won't be destroyed when it runs out of durability, and will still provide the utility power (but won't provide armor until repaired with netherite).

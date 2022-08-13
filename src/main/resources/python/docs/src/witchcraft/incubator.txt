@@ -1,5 +1,6 @@
 Incubator
 crossroads:incubator|crossroads:progress/path/witchcraft
+crossroads:incubator
 The <item>incubator/$ has two purposes. It can create <item>genetic plasmids/$, which are used with the <item><link:essentials:witchcraft/syringe#potions>syringe/$, and it can create <item>spawn eggs/$ from <item><link:essentials:witchcraft/cloning#process>embryos/$, making it the final stage of the <thing><link:essentials:witchcraft/cloning>cloning process/$.
 To create <item>genetic plasmids/$, it uses 1 <item>mutagen/$ and 1 (vanilla chicken) egg. <item>Genetic plasmids/$ will spoil after 30 minutes.
 To create <item>spawn eggs/$, it uses 1 (<thing><link:essentials:witchcraft/spoilage>non-spoiled/$) <item><link:essentials:witchcraft/cloning#process>embryo/$ and 1 (vanilla chicken) egg.

@@ -1,5 +1,6 @@
 Entropy Sink
 crossroads:flux_sink|crossroads:progress/path/technomancy
+crossroads:flux_sink
 The <item>Entropy Sink/$ is the main way of destroying <thing><link:essentials:intro/technomancy>temporal entropy/$. It can destroy a massive amount of <thing><link:essentials:intro/technomancy>temporal entropy/$ each cycle (256).
 In order to work, it must be placed directly over a (vanilla) beacon. It can be placed floating in the air several blocks above. The beacon does not have to be active, but the <item>entropy sink/$ will not block the beacon beam.
 Use <item><link:essentials:technomancy/node>Entropy Nodes/$ to get <thing><link:essentials:intro/technomancy>temporal entropy/$ from machines to the <item>entropy sink/$.

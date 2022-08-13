@@ -16,5 +16,8 @@
 			"type": "patchouli:text",
 			"text": "<thing>$(l:essentials:intro/beam)/$ to show all the colors that create that <thing>$(l:essentials:intro/beam)alignment/$.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:color_chart" : 0
+	}
 }

@@ -24,5 +24,8 @@
 			"type": "patchouli:text",
 			"text": "The <item>Industrial Blast Furnace/$ uses <thing>$(l:essentials:intro/rotary)rotary power/$ to run. An axle/gear can connect to the top, and the machine has a minimum speed of 2.5rad/s.$(br2)<thing>$(l:essentials/circuits)Reader circuits/$ measure the fullness of the input.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:blast_furnace" : 0
+	}
 }

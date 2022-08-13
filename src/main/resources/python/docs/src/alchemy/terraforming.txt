@@ -1,5 +1,6 @@
 Terraforming
 minecraft:grass_block|crossroads:progress/path/alchemy
+
 There are several <thing><link:essentials:intro/alchemy>reagents/$ which have <thing><link:essentials:alchemy/effect>effects/$ that change the biome and transmute blocks.
 By combining one of these <thing><link:essentials:intro/alchemy>reagents/$ with <link:essentials:alchemy/stones><item>phelostogen/$ or <link:essentials:alchemy/stones><item>ignis infernum/$, the <thing><link:essentials:alchemy/effect>effect/$ can be spread over a large area by the <thing><link:essentials:alchemy/effect>flame cloud/$ for terraforming.
 

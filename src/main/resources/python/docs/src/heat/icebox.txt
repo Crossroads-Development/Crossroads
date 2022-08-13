@@ -1,5 +1,6 @@
 Icebox
 crossroads:icebox
+crossroads:icebox
 The <item>Icebox/$ is the simplest way to produce cold (aka remove heat). It's the cold equivalent of the <item><link:essentials:heat/firebox>firebox/$, burning cold items to cool at a constant rate. It can not cool below -20°C.
 It connects to a <item><link:essentials:heat/cable>cable/$ on the top.
 

@@ -31,5 +31,9 @@
 			"type": "patchouli:text",
 			"text": "The <item>$(l:essentials:witchcraft/auto_injector)auto-injector/$ is helpful for automating soul production using <thing>Soul Transience/$.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:soul_cluster" : 0,
+		"crossroads:soul_shard" : 0
+	}
 }

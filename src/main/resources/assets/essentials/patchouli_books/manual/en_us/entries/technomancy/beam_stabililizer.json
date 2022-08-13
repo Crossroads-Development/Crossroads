@@ -17,5 +17,8 @@
 			"type": "patchouli:text",
 			"text": "each $(l:essentials:intro/beam)cycle/$, with the same color as the total stored $(l:essentials:intro/beam)beam/$.$(br2)This has the effect of 'smoothing' out received <thing>$(l:essentials:intro/beam)beams/$, turning pulses into continuous <thing>$(l:essentials:intro/beam)beams/$ and reducing fluctuations in input.$(br2)<item>$(l:essentials/circuits#reader)Circuits/$ measure the total stored <thing>$(l:essentials:intro/beam)power/$.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:clock_stabilizer" : 0
+	}
 }

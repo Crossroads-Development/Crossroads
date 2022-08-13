@@ -8,5 +8,8 @@
 	"read_by_default": "true",
 	"pages": [
 PAGES
-	]
+	],
+	"extra_recipe_mappings": {
+		MAPPINGS
+	}
 }

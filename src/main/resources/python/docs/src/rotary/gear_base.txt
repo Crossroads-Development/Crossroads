@@ -1,5 +1,6 @@
 Axles & Small Gears
 crossroads:gear_base
+crossroads:gear_base
 The most basic components for moving <thing><link:essentials:intro/rotary>rotary energy/$ around are <item>small gears/$ and <item>axles/$.
 Up to 6 <item>small/$ gears can be placed in one blockspace- one on each face. <item>Small gears/$ must be placed against a solid surface, and can be individually removed using a <item><link:essentials/wrench>wrench/$.
 <item>Small gears/$ will connect to gears that are in the same block as them on an adjacent side, with neighboring gears, with axles connecting to them (either on the front or back), or around outside corners. Basically, if it looks like they should connect, they will.

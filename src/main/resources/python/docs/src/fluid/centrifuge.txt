@@ -1,5 +1,6 @@
 Water Centrifuge
 crossroads:water_centrifuge
+crossroads:water_centrifuge
 The <item>Water Centrifuge/$ produces <thing><link:essentials:intro/fluid>distilled water/$ and <item>salt/$ using normal water. It can also reprocess <thing><link:essentials:intro/fluid>dirty water/$ into <thing><link:essentials:intro/fluid>distilled water/$ and various different outputs (chosen randomly, see JEI).
 There is a <link:essentials:intro/rotary>gear/axle/$ connection on the top. <item><link:essentials:fluid/pipe>Fluid pipes/$ can connect to any side.
 In order to perform a crafting operation, it must have a <thing><link:essentials:intro/rotary>speed/$ of at least 0.5rad/s. Every time the <thing><link:essentials:intro/rotary>speed/$ reaches 0.5rad/s, it performs one operation, and <em>expects the gear to spin in the opposite direction/$ for the next batch. This means that to run, the attached gear/axle must <em>keep switching direction/$ every time it reaches 0.5rad/s. There is no limit on how fast the <item>water centrifuge/$ can run.

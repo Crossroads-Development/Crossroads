@@ -30,5 +30,8 @@
 			"type": "patchouli:text",
 			"text": "<bobo>and sumtyng pokey dat takie-awayie crimsunie-goopy~goop$(br2)<bobo>&nd suhmtng shiney-wimey-greenie-monie-rok$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:cultivator_vat" : 0
+	}
 }

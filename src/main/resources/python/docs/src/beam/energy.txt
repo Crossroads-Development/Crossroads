@@ -1,5 +1,6 @@
 Alignment: Energy-1
 crossroads:gem_ruby|crossroads:progress/alignment/energy
+
 <thing>Energy/$ (red) is one of the basic <thing>alignments/$- the <thing>alignment/$ of a pure <thing>energy/$ beam.
 <thing>Energy/$ will add <thing><link:essentials:intro/heat>heat/$ to heat machines and cables, at a rate of 100°C/power every 4 ticks, or 25°C/power/tick.
 If it hits anything other than a <thing><link:essentials:intro/heat>heat/$ machine, it will start a fire.

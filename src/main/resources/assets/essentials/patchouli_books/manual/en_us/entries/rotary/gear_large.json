@@ -24,5 +24,8 @@
 			"type": "patchouli:text",
 			"text": "Remember, all gear networks need at least one <item>$(l:essentials:rotary/axis)master axis/$ to work.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:gear_base_large" : 0
+	}
 }

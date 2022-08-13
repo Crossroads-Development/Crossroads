@@ -36,5 +36,8 @@
 			"type": "patchouli:text",
 			"text": "adds a 4 tick (fifth second) delay (this is called 1 <thing>cycle/$), and beams have a 16 block range between machines for transmission. Beams have a <thing>power/$ cap of 64,000.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		
+	}
 }

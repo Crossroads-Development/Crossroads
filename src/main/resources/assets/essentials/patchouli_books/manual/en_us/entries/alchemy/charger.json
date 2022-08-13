@@ -29,5 +29,8 @@
 			"type": "patchouli:text",
 			"text": "<bobo>lIVER! b0B0 AWAY/$$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:charging_stand" : 0
+	}
 }

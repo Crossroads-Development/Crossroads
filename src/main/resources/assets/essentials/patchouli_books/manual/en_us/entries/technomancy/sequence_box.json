@@ -25,5 +25,8 @@
 			"type": "patchouli:text",
 			"text": "UI while a line is selected will skip to that value in the sequence.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:sequence_box" : 0
+	}
 }

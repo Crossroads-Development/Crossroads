@@ -29,5 +29,8 @@
 			"type": "patchouli:text",
 			"text": "with a wrench, which will hold the pitch and yaw permanently constant at the current value, even if all the $(l:essentials:intro/rotary)<thing>rotary/$ attachments are removed. The pitch and yaw do not immediately change with the <thing>$(l:essentials:intro/rotary)speed/$- they re-orient into the new position, fairly quickly but not instantly.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:item_cannon" : 0
+	}
 }

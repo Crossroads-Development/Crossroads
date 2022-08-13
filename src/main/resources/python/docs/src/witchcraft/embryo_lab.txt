@@ -1,5 +1,6 @@
 Miller-Urey Capsule
 crossroads:embryo_lab|crossroads:progress/path/witchcraft
+crossroads:embryo_lab
 The <item>Miller-Urey capsule/$ creates an <item><link:essentials:witchcraft/cloning#process>embryo/$ from a <item><link:essentials:witchcraft/blood_centrifuge>centrifuged blood pouch/$, as part of the <thing><link:essentials:witchcraft/cloning>cloning process/$.
 Ingredients have to be added to the <item>Miller-Urey capsule/$ using either a <item><link:essentials:witchcraft/syringe#embryo_lab>syringe/$ or a dispenser. If adding items using a <item><link:essentials:witchcraft/syringe#embryo_lab>syringe/$, hold the <item><link:essentials:witchcraft/syringe#embryo_lab>syringe/$ in the main hand and the item being added in the offhand, and right click.
 The <item><link:essentials:witchcraft/blood_centrifuge>centrifuged blood pouch/$ must be added first- the <item>empty blood pouch/$ will be returned.
