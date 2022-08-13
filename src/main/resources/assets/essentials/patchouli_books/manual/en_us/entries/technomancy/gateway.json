@@ -76,5 +76,10 @@
 			"type": "patchouli:text",
 			"text": "This means you can setup one normal <thing>gateway/$ with a full dialing system to act as a hub, that goes to many different simple <thing>endpoint gateways/$, all of which connect back to the hub.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:gateway_frame" : 0,
+		"crossroads:gateway_edge" : 0,
+		"crossroads:gateway_controller_destination" : 11
+	}
 }

@@ -21,5 +21,9 @@
 			"type": "patchouli:text",
 			"text": "is a high throughput.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:heated_tube" : 0,
+		"crossroads:crystal_heated_tube" : 0
+	}
 }

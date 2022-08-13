@@ -17,5 +17,8 @@
 			"type": "patchouli:text",
 			"text": "<thing>$(l:essentials:intro/path)path sigil/$. The <thing>$(l:essentials:intro/path#sigils)path sigil/$ is required to craft recipes from that <thing>$(l:essentials:intro/path)path/$, but the <thing>$(l:essentials:intro/path#sigils)path sigil/$ will not be consumed.$(br2)It works the same as a normal <item>$(l:essentials/autocrafter)Auto-Crafter/$ other than these differences.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:detailed_auto_crafter" : 0
+	}
 }

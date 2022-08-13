@@ -17,5 +17,8 @@
 			"type": "patchouli:text",
 			"text": "<thing>$(l:essentials:witchcraft/cloning)cloning/$, which has many applications.$(br2)Other highlights include the <item>$(l:essentials:witchcraft/hydroponics_trough)hydroponics trough/$, for mass-producing plants, and new <thing>$(l:essentials:witchcraft/medicinal_mushroom)potions effects and recipes/$.$(br2)There's no set or recommended order for using Witchcraft. Pick whatever looks interesting and try it out!$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		
+	}
 }

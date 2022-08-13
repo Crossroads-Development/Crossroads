@@ -24,5 +24,9 @@
 			"type": "patchouli:text",
 			"text": "<bobo>hAPPY $(l:essentials:intro/welcome#bobo)BOBO/$<bobo> dAY!$(br2)<bobo>u cAN usE a TUBE to MAKE a VACUUM HOPPPER! alSo da HOPPER &nd s0me cLOTH!$(br2)<bobo>bOBO AWAY!/$$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:fluid_tube" : 0,
+		"crossroads:redstone_fluid_tube" : 2
+	}
 }

@@ -1,5 +1,6 @@
 Reagent Conduits
 crossroads:alch_tube|crossroads:progress/path/alchemy
+crossroads:alch_tube,crossroads:crystal_alch_tube,crossroads:reds_alch_tube;4,crossroads:crystal_reds_alch_tube;4
 <item>Alchemy Conduits/$ are the automated way of moving <thing><link:essentials:intro/alchemy>reagents/$. They will move <thing><link:essentials:intro/alchemy>reagents/$ like <item><link:essentials:fluid/pipe>pipes/$, and can have connections adjusted with a <item><link:essentials/wrench>wrench/$.
 <thing><link:essentials:intro/alchemy>Solid and liquid reagents/$ <em>will not flow up/$, while <thing><link:essentials:intro/alchemy>gas and flame reagents/$ will not flow down. This is useful for separating <thing><link:essentials:intro/alchemy>reagents/$ by <thing><link:essentials:intro/alchemy>phase/$, or by type by taking advantage of different <thing><thing><link:essentials:intro/alchemy>boiling/melting temperatures/$. <thing><link:essentials:intro/alchemy>Reagents/$ can be forced to flow up/down using a <item><link:essentials:alchemy/pump>reagent pump/$.
 There are both crystal and glass versions of <item>alchemy conduits/$, and they will not connect. Some <thing><link:essentials:intro/alchemy>reagents/$ can not be safely contained in glass. Up to 10 units of <thing><link:essentials:intro/alchemy>reagent$ can be stored in a <item>conduit/$.

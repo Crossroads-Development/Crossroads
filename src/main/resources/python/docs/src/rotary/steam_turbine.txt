@@ -1,5 +1,6 @@
 Steam Turbine
 crossroads:steam_turbine
+crossroads:steam_turbine
 The <item>Steam Turbine/$ is a way of making <thing><link:essentials:intro/rotary>rotary power/$ using <thing><link:essentials:intro/heat>heat/$. The other way to do this is with a <item><link:essentials:rotary/stirling>stirling engine/$.
 A <item>Steam Turbine/$ consumes <thing><link:essentials:fluid/steam>steam/$ and makes <thing>distilled water/$ and power. An axle or gear can be connected to the top. An equal amount of <thing>distilled water/$ is produced as <thing><link:essentials:fluid/steam>steam/$ is consumed.
 

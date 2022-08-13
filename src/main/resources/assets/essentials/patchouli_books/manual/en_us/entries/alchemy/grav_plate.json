@@ -29,5 +29,10 @@
 			"type": "patchouli:text",
 			"text": "<bobo>1 ITeM!/$$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:densus_plate" : 0,
+		"crossroads:anti_densus_plate" : 0,
+		"crossroads:block_cavorite" : 2
+	}
 }

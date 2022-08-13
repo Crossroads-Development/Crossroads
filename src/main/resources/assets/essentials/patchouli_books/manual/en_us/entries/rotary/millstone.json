@@ -20,5 +20,8 @@
 			"type": "patchouli:text",
 			"text": "For ore tripling, a heavier duty version called a <item>$(l:essentials:rotary/stamp)stamp mill/$ is needed.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:millstone" : 0
+	}
 }

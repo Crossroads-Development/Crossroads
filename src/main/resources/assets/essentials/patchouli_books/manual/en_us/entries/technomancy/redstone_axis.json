@@ -21,5 +21,8 @@
 			"type": "patchouli:text",
 			"text": "It is generally better to use a larger (higher <thing>$(l:essentials:intro/rotary)I value/$) gear on the back as an <thing>$(l:essentials:intro/rotary)energy/$ source, as that allows the <item>redstone master axis/$ to draw <thing>$(l:essentials:intro/rotary)energy/$ more quickly.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:redstone_axis" : 0
+	}
 }

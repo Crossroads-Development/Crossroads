@@ -16,5 +16,8 @@
 			"type": "patchouli:text",
 			"text": "Even at the lowest working temperature, it is faster than a furnace.$(br2)<item>$(l:essentials:heat/cable)Heat cables/$ connect on the top. <thing>$(l:essentials/circuits)Circuits/$ measure the fullness of the item input, as a value from 0 to 15.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:heating_chamber" : 0
+	}
 }

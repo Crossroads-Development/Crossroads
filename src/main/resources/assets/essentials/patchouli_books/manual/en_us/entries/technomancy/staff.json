@@ -29,5 +29,8 @@
 			"type": "patchouli:text",
 			"text": "<bobo>hI hII hIII hIV;;;; iz ME! $(l:essentials:intro/welcome#bobo)b0Bo!/$<bobo>$(br2)<bobo>mE nO uther multi-mega-omni-all-tule!$(br2)<bobo>dIs sTICK! cONFigURaTIOn sTIcK! gEAR pOWEr sTICK/$$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:staff_technomancy" : 0
+	}
 }

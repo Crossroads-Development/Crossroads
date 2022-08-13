@@ -1,5 +1,6 @@
 Reagent Effects
 crossroads:shell_glass|crossroads:progress/path/alchemy
+
 Most <thing>reagents/$ (but not all) have an <thing>effect/$ when released into the world. Unlike <thing><link:essentials:intro/beams>beam effects/$ which get more powerful as power/quantity increases, all <thing>reagent effects/$ will stay the same strength at all quantities. Instead, as quantity increases, the distance the <thing>effect/$ spreads increases.
 Easy ways to release <thing>reagents/$ are by <link:essentials:alchemy/glassware>pouring out a Phial, throwing a Shell/$, or <link:essentials:alchemy/vent>piping out a Chemical Vent/$.
 

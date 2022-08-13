@@ -1,5 +1,6 @@
 Alignment: Equilibrium-1
 crossroads:pure_quartz|crossroads:progress/alignment/equilibrium
+
 <thing>Force/$ (pink) pushes blocks like a piston and acts as a tractor beam for entities. When it pushes 'sticky' blocks (like slime or honey), it treats them as normal blocks instead of them sticking to things. The maximum number of blocks pushed at a time is <thing>power/$/4 (capped at 16 blocks).
 If the beam hits an entity (which requires <link:essentials:intro/paths#technomancy>special beam equipment/$), it will drag them into the beam and slowly push them along the beam direction like a 'tractor beam', holding them up in the air against gravity if necessary. Entities will be moved faster at higher beam powers. It works on all entities, including players and items. A player can escape by sneaking.
 

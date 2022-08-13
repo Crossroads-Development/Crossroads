@@ -20,5 +20,8 @@
 			"type": "patchouli:text",
 			"text": "<bobo>Bobojour! Glüten tag! Comichiewa! iT's $(l:essentials:intro/welcome#bobo)BOBO/$<bobo> tIME!$(br2)<bobo>i haz plumping tiP!!$(br2)<bobo>black shiny rock, plumbinG, spoonge!$(br2)<bobo>boqr AWAY/$$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:ore_cleanser" : 0
+	}
 }

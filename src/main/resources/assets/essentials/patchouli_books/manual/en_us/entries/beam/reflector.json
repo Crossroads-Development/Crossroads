@@ -25,5 +25,8 @@
 			"type": "patchouli:text",
 			"text": "(because walking into the path of the beam means it hits you).$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:beam_reflector" : 0
+	}
 }

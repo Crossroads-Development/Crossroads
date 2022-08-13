@@ -1,5 +1,6 @@
 Crystal Master Axis
 crossroads:master_axis_crystal
+crossroads:master_axis_crystal
 The <item>Crystal Master Axis/$ is an alternative version of the normal <item><link:essentials:rotary/axis>master axis/$ used for gears. It would be used in place of the normal <item><link:essentials:rotary/axis>master axis/$ (do not place both on the same system).
 It accepts <thing><link:essentials:intro/beam>beams/$ from any side. The <thing><link:essentials:intro/beam>alignment/$ of the beam adds a special rule to the <item>crystal master axis/$ and all gears/axles it controls. The <thing><link:essentials:intro/beam>beam/$ does not need to be continuously supplied- higher power beams will last for longer, with 1 point of power lasting 5 ticks (added every 5 ticks).
 Only one <thing><link:essentials:intro/beam>alignment/$ can be active at a time, and the <thing><link:essentials:beam/void>void/$ versions of the <thing><link:essentials:intro/beam>alignments/$ can not be used.

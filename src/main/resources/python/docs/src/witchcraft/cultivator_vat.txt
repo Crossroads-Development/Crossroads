@@ -1,5 +1,6 @@
 Nutrition Vat
 crossroads:cultivator_vat|crossroads:progress/path/witchcraft
+crossroads:cultivator_vat
 The <item>nutrition vat/$ has two purposes: It can preserve items which can <thing><link:essentials:witchcraft/spoilage>spoil/$ but are damaged by freezing and it can duplicate <item><link:essentials:witchcraft/cloning#process>embryos/$, making it part of the <thing><link:essentials:witchcraft/cloning>cloning process/$.
 It stores a single <thing><link:essentials:witchcraft/spoilage>perishable/$ item, draining Nutrient Solution but preventing the item from <thing><link:essentials:witchcraft/spoilage>spoiling/$. It can't store items which can be safely frozen without penalty.
 While it has nutrient solution, it will also create <thing><link:essentials:witchcraft/spoilage>fresh/$ copies of the stored <item><link:essentials:witchcraft/cloning#process>embryo/$.

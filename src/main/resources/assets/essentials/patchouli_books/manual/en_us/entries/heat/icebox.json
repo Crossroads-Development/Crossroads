@@ -24,5 +24,8 @@
 			"type": "patchouli:text",
 			"text": "<bobo>4 pOISON! STAKE an' malk!$(br2)<bobo>4 gravIty! fEATHER aND bIG SWAMP LEAF!/$$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:icebox" : 0
+	}
 }

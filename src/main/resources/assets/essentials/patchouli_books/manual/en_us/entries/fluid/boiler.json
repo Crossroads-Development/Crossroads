@@ -20,5 +20,8 @@
 			"type": "patchouli:text",
 			"text": "important for automation.$(br2)<thing>$(l:essentials:intro/fluid)Steam/$ can be used to generate power both as <item>$(l:essentials:heat/radiator)heat/$ or <item>$(l:essentials:rotary/turbine)rotary/$. Doing this will output <thing>$(l:essentials:intro/fluid)distilled water/$, regardless of what liquid was used to make the <thing>$(l:essentials:intro/fluid)steam/$. <thing>$(l:essentials:intro/fluid)Distilled water/$ can also be produced in a <item>$(l:essentials:fluid/centrifuge)water centrifuge/$.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:steam_boiler" : 0
+	}
 }

@@ -39,5 +39,9 @@
 			"type": "patchouli:text",
 			"text": "16TEn/cycle, +200% boost is 32TEn/cycle, +300% is 64TEn/cycle)$(br2)Multiple overlapping <item>distributed temporal accelerators/$ stack additively. The <item>distributed temporal accelerator/$ itself can not be time-accelerated.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:temporal_accelerator" : 0,
+		"crossroads:chunk_accelerator" : 4
+	}
 }

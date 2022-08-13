@@ -25,5 +25,8 @@
 			"type": "patchouli:text",
 			"text": "have 0 <thing>$(l:essentials:witchcraft/cloning#degradation)degradation/$ gain.$(br2)The created <item>centrifuged blood pouch/$ will <thing>$(l:essentials:witchcraft/spoilage)spoil/$ at the same time that the original <item>$(l:essentials:witchcraft/syringe#blood)blood pouches/$ would have (the <item>blood centrifuge/$ doesn't reset the <thing>$(l:essentials:witchcraft/spoilage)spoilage/$ timer).$(br2)<thing>$(l:essentials/circuits)Circuits/$ read the current target speed, in rad/s.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:blood_centrifuge" : 0
+	}
 }

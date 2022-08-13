@@ -28,5 +28,8 @@
 			"type": "patchouli:text",
 			"text": "with things like <item>$(l:essentials:rotary/gear_base)toggle gears & clutches/$ makes it possible to ensure your turbine is <em>never/$ fighting momentum. <em>This is probably a good idea!/$$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:wind_turbine" : 0
+	}
 }

@@ -32,5 +32,10 @@
 			"type": "patchouli:text",
 			"text": "beam power is unknown.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:beam_redirector" : 1,
+		"crossroads:beam_splitter" : 3,
+		"crossroads:beam_siphon" : 4
+	}
 }

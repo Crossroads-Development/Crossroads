@@ -1,4 +1,5 @@
 # Generates patchouli entry JSONs in generated based on txt files in src
+# Requires Python 3.9+
 # Do not try to use this for unusual entries that don't fit my format- make those manually
 # Expects a certain format for the src, detailed below
 # Navigates the folder structure
@@ -7,6 +8,8 @@
 # Expects the FIRST LINE of the txt to be the title. If the title ends with a digit, that digit becomes the sortnum. A dash can be placed before the sortnum to prevent priority mode
 # Expects the SECOND LINE of the txt to be the item path used for icon and spotlight page
 # If the SECOND LINE contains a | (pipe symbol), it will treat everything after the | as an advancement to lock the entry behind
+# Expects the THIRD LINE of the txt to be empty, or a comma-separated list of ItemStack strings representing items/blocks to link to this entry.
+# If an ItemStack string is followed by a ; and a number, the number will be treated as the line in the body that should be opened. 0-indexed, only counts lines in the body (including blank lines)
 # Makes the first page a spotlight, with the entry title
 # Will make all other pages text
 # Each line in the txt after the first two are considered the body
@@ -90,17 +93,34 @@ def run():
 					advancement = icon[index + 1:]
 					icon = icon[:index]
 
-				pages = parseBody(rawLinesIn[2:], icon, name, 2)
+
+
+				(pages, lineStartPageNumbers) = parseBody(rawLinesIn[3:], icon, name, 2)
+
+				# Parse the ItemStack:entry mappings
+				mappingsRaw = rawLinesIn[2].strip().split(",")
+				mappings = []
+				for mapping in mappingsRaw:
+					if mapping == "":
+						continue
+
+					# page number within entry is optional, defaults 0
+					if ';' in mapping:
+						mappings.append(mapping.split(';'))
+					else:
+						mappings.append((mapping, 0))
+
+				mappings = formatMappings(mappings, lineStartPageNumbers, indent=2)
 
 				with open(outDir + file.replace(".txt", ".json"), mode='w+', encoding='utf-8') as fOut:
 					fOut.truncate(0)  # Remove previous version
 
 					if len(advancement) == 0:
 						for line in tempLines:
-							fOut.write(line.replace('CAT', category).replace('NAME', name).replace('ICON', icon).replace('PAGES', pages).replace('SORT', sort).replace("PRIO", priority))
+							fOut.write(line.replace('CAT', category).replace('NAME', name).replace('ICON', icon).replace('PAGES', pages).replace('SORT', sort).replace("PRIO", priority).replace("MAPPINGS", mappings))
 					else:
 						for line in tempAdvLines:
-							fOut.write(line.replace('CAT', category).replace('NAME', name).replace('ICON', icon).replace('PAGES', pages).replace('SORT', sort).replace("PRIO", priority).replace('ADV', advancement))
+							fOut.write(line.replace('CAT', category).replace('NAME', name).replace('ICON', icon).replace('PAGES', pages).replace('SORT', sort).replace("PRIO", priority).replace('ADV', advancement).replace("MAPPINGS", mappings))
 
 					fOut.close()
 
@@ -272,14 +292,15 @@ def writeEntityPage(output: str, text: str, lineSt: str, data: [str, ...]) -> st
 	return output
 
 
-def parseBody(text: [str, ...], icon: str, title: str, indents: int) -> str:
+def parseBody(text: [str, ...], icon: str, title: str, indents: int) -> tuple[str, list[int]]:
 	"""
 	Generates pages from the raw input
 	:param text: The list of strings where each string is one body line in the source file
 	:param icon: The icon path
 	:param title: The title of this entry
 	:param indents: The number of indentations to include at minimum on each output line
-	:return: A string (with many new lines) containing the page definitions
+	:return: A 2-tuple containing: a string (with many new lines) containing the page definitions, and a list of ints
+	representing the page numbers that lines of the input ended up on
 	"""
 
 	lineSt = '\t' * indents  # Placed at the beginning of every line- for indentation
@@ -287,6 +308,11 @@ def parseBody(text: [str, ...], icon: str, title: str, indents: int) -> str:
 	pageCharLimit = {'text': 380, 'spotlight': 300, 'image': 80, 'entity': 80}
 	charPerNewline = 45  # Number of characters to consider a newline
 	jsonWriters = {'text': writeTextPage, 'spotlight': writeSpotlightPage, 'image': writeImagePage, 'entity': writeEntityPage}
+
+	currentPageNumber = 0
+
+	# Line number x in the input starts at the page number given by lineStartPageNumbers[x]
+	lineStartPageNumbers = []
 
 	# First page is always a spotlight page
 	pageType = 'spotlight'
@@ -297,6 +323,7 @@ def parseBody(text: [str, ...], icon: str, title: str, indents: int) -> str:
 	pageSpaceRemain = pageCharLimit[pageType]
 
 	for line in text:
+		lineStartPageNumbers.append(currentPageNumber)
 		if line == '\n' or line == '':
 			# Empty line. Treat as <page:text>
 			line = '<page|text>\n'
@@ -305,6 +332,7 @@ def parseBody(text: [str, ...], icon: str, title: str, indents: int) -> str:
 			# Create page with previous text
 			output = jsonWriters[pageType](output, pageText, lineSt, pageData)
 			pageText = ''
+			currentPageNumber += 1
 
 			# Parse data for following page
 			parts = [x if x is not None else '' for x in line[6:-2].split('|')]  # Sanitize the input, replace None entries with empty string
@@ -321,6 +349,7 @@ def parseBody(text: [str, ...], icon: str, title: str, indents: int) -> str:
 				pageType = 'text'
 				pageData = []
 				pageSpaceRemain = pageCharLimit[pageType]
+				currentPageNumber += 1
 
 			# Add text from the line, and divide the line into pages until finished
 			lineText = line
@@ -338,6 +367,7 @@ def parseBody(text: [str, ...], icon: str, title: str, indents: int) -> str:
 					pageType = 'text'
 					pageData = []
 					pageSpaceRemain = pageCharLimit[pageType]
+					currentPageNumber += 1
 
 			# Add paragraph break- the next line will do the check for if this forces a new page
 			if pageText != '':
@@ -352,7 +382,21 @@ def parseBody(text: [str, ...], icon: str, title: str, indents: int) -> str:
 			pageData = []
 			pageSpaceRemain = pageCharLimit[pageType]
 
-	return output
+	return (output, lineStartPageNumbers)
+
+
+def formatMappings(mappings: list[tuple[str, int]], lineStartPageNumbers: list[int], indent: int = 0) -> str:
+	"""
+	Generates the formatted item -> entry mappings from some lightly parsed input
+	:param mappings:
+	:param indent:
+	:return:
+	"""
+	leadingTabs = '\t' * indent
+
+	out = f",\n{leadingTabs}".join(f"\"{mapping[0]}\" : {lineStartPageNumbers[int(mapping[1])]}" for mapping in mappings)
+
+	return out
 
 
 def getFormCode(line: str) -> str:

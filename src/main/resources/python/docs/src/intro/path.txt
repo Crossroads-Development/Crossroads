@@ -1,5 +1,6 @@
 Intro to Paths5
 crossroads:detailed_crafter
+
 Wait! This is a late-mid-game feature. By this point you should have used <thing><link:essentials:intro/beam>beams/$.
 <thing>Alchemy/$, <thing>Technomancy/$, and <thing>Witchcraft/$ are the three <thing>paths/$ you can spec into. By default (config controlled- may have been changed in your modpack), you can take every <thing>path/$ in singleplayer, but <em>can only pick one/$ <thing>path/$ in multiplayer.
 If you can only take one <thing>path/$, pick carefully. A description of each <thing>path/$ is given below. When you unlock a <thing>path/$, you gain access to a huge number of new recipes, machines, and items. These recipes have to be made in a <item>Detailed Crafter/$, which is a special crafting table that can also craft <thing>path/$ specific recipes. In order to unlock any <thing>path/$, you <em>must/$ have discovered every <thing><link:essentials:intro/beam>alignment/$ (other than <thing><link:essentials:beam/void>void/$)- otherwise the <thing>path/$ will not unlock.

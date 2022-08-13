@@ -25,5 +25,8 @@
 			"type": "patchouli:text",
 			"text": "spawn will spawn as charged creepers. <em>It would be a good idea to setup a system to prevent the charge from getting too high!/$$(br2)<thing>$(l:essentials/circuits#reader)Circuits/$ will measure the percentage fullness of the shared <thing>atmospheric storage/$ in FE. As the total storage is 1 billion FE, 500,000,000 is 50% full.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:atmos_charger" : 0
+	}
 }

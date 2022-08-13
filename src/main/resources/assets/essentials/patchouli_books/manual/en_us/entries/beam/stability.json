@@ -21,5 +21,8 @@
 			"type": "patchouli:text",
 			"text": "<thing>Void-Stability/$ AKA <thing>Chaos/$ will create explosions with a strength=<thing>power/$/4. These explosions will drop all items, similar to TNT explosions.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		
+	}
 }

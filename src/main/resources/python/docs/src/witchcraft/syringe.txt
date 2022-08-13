@@ -1,5 +1,6 @@
 Syringe
 crossroads:syringe|crossroads:progress/path/witchcraft
+crossroads:syringe
 The <item>Syringe/$ can be used to apply potion effects more efficiently (or even make potions <em>permanent/$). It can also take blood samples.
 To use the <item>syringe/$, it is held in the main hand while the item being used with it is held in the offhand. Right clicking or shift-right-clicking will target the entity you're looking at if there is one, otherwise it targets you.
 Using a <item>syringe/$ does one point of damage to the target.

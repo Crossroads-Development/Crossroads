@@ -1,5 +1,6 @@
 Lens Frame
 crossroads:lens_frame
+crossroads:lens_frame
 The <item>Lens Frame/$ is a utility device for manipulating <thing><link:essentials:intro/beam>beams/$, and has many uses. Beams can travel through it along the axis with the giant hole, and the <item>lens frame/$ <em>will not delay the beam at all/$, even if it is performing an effect.
 
 Several different items can be used as a 'lens' by right-clicking it into the <item>frame/$. Only one lens per <item>frame/$ at a time (but multiple <item>frames/$ can be used in a row).

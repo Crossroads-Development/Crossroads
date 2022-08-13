@@ -21,5 +21,8 @@
 			"type": "patchouli:text",
 			"text": "<thing>Void-Force/$ AKA <thing>Disruption/$ acts the same as <thing>Force/$, except it pulls blocks instead of pushing and pulls entities in instead of pushing them out.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		
+	}
 }

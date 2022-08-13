@@ -1,5 +1,6 @@
 Misc Ingredients
 crossroads:slag
+
 Crossroads adds a few crafting ingredients and byproducts. The important ones are listed here.
 
 <item>Salt/$: A crafting ingredient. Also <link:essentials:fluid/centrifuge>produced/$ or <link:essentials:heat/salt_reactor>consumed/$ by a few machines.

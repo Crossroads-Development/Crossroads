@@ -1,5 +1,6 @@
 Rotary Drill
 crossroads:rotary_drill
+crossroads:rotary_drill,crossroads:rotary_drill_gold;4
 <item>Rotary Drills/$ are <thing><link:essentials:intro/rotary>rotary powered/$ block breakers and damage dealers. They connect to an axle or gear on the back, and will break/attack things on the front.
 <item>Rotary Drills/$ drain power constantly, regardless of whether they are doing anything.
 When breaking blocks, the higher the block's hardness, the higher the required speed (.2rad/s per hardness). When attacking mobs, the higher the speed, the more damage dealt (5 damage per rad/s).

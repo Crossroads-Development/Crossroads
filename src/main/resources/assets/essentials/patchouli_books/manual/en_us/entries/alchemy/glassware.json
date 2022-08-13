@@ -45,5 +45,13 @@
 			"type": "patchouli:text",
 			"text": "<item>Shells/$ are used for throwing <thing>$(l:essentials:intro/alchemy)reagents/$ to use their <thing>$(l:essentials:alchemy/effect)effects/$ far away from the user. They act like <item>phials/$ while in a <item>stand/$ (capacity 20, no reactions), but can be thrown with a right click. They will shatter where they land, releasing their <thing>$(l:essentials:intro/alchemy)reagents/$ to perform their <thing>$(l:essentials:alchemy/effect)effects/$. They can also be thrown by dispensors.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:phial_glass" : 5,
+		"crossroads:phial_cryst" : 5,
+		"crossroads:florence_flask_glass" : 6,
+		"crossroads:florence_flask_cryst" : 6,
+		"crossroads:shell_glass" : 8,
+		"crossroads:shell_cryst" : 8
+	}
 }

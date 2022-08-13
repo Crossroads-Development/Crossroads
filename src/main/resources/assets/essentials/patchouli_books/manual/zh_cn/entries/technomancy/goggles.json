@@ -37,7 +37,7 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<item>$(l:crossroads:intro/path)合成器/$的合成UI，只需要在空手时按下“稳定控制键”。$(br2)$(l:crossroads:fluid/ingr)纯石英/$镜片可作为一个永久的<item>$(l:crossroads:intro/omnimeter)万用表/$，并在看向机械时提供其完整信息（查看的范围很大）。这个镜片非常方便。$(br2)"
+			"text": "<item>$(l:crossroads:intro/path)合成器/$的合成UI，只需要在空手时按下“稳定控制键”。$(br2)$(l:crossroads:fluid/ingr)纯石英/$镜片可作为一个永久的<item>$(l:crossroads:intro/omnimeter)万用表/$，并在看向机械时提供其完整信息（查看的范围很大）。这个镜片非常方便。$(br2)紫水晶镜片则给目镜带来了望远镜的功能。空手时按下对应的触发按键即可激活。"
 		},
 		{
 			"type": "patchouli:spotlight",

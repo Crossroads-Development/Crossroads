@@ -1,5 +1,6 @@
 Wind Turbine
 crossroads:wind_turbine
+crossroads:wind_turbine
 The <item>Wind Turbine/$ is a renewable way to generate <thing><link:essentials:intro/rotary>rotary power/$ at a low <thing><link:essentials:intro/rotary>speed/$.
 The <item>wind turbine/$ requires a 5x5 empty space in front of it, and the ability for its blades to see the sky. As long as these conditions are met, it will produce a random amount of power based on the wind- anywhere between 5J/t and 25J/t, producing 15J/t on average. All wind turbines in the world produce the same power at any given moment. The only issue is that <em>the wind doesn't always blow the same direction/$. The direction the <item>wind turbine/$ tries to turn will randomly swap- which may mean it's fighting against energy stored in a rotary system due to momentum.
 The <item>wind turbine/$ will also stop producing power at speeds above 2rad/s- the wind is never that fast.

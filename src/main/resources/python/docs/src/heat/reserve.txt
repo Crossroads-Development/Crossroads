@@ -1,5 +1,6 @@
 Heat Reservoir
 crossroads:heat_reservoir
+crossroads:heat_reservoir
 The <item>Heat Reservoir/$ is effectively a heat "battery". The temperature of the <item>reservoir/$ changes <em>extremely/$ slowly, making a <item>reservoir/$ smooth out temperature fluctuations over minutes or hours.
 <item><link:essentials:heat/cable>Cables/$ can connect to any side, and the <item>heat reservoir/$ keeps its temperature when broken.
 

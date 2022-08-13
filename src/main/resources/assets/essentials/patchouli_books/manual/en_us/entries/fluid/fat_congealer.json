@@ -20,5 +20,8 @@
 			"type": "patchouli:text",
 			"text": "<thing>$(l:essentials:intro/rotary)energy/$. A redstone signal will disable the machine.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:fat_congealer" : 0
+	}
 }

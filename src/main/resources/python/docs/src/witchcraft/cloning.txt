@@ -1,5 +1,6 @@
 Cloning
 crossroads:mutagen|crossroads:progress/path/witchcraft
+crossroads:mutagen
 <thing>Cloning/$ is a major automatable production path in <thing><link:essentials:intro/path#witchcraft>witchcraft/$ which allows cheaply mass-producing almost any mob (other than bosses, configurable), and creating custom-variants with buffs, debuffs, or special traits.
 Potential applications for cloning include: Mass-production of rare mob drops, creating large numbers of super-strong tamed pets, creating better mounts, and more.
 <page|text|traits>

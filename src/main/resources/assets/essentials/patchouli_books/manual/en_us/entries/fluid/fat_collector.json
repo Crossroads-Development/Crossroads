@@ -24,5 +24,8 @@
 			"type": "patchouli:text",
 			"text": "<thing>Liquid fat/$ can be made into custom food in a <item>$(l:essentials:fluid/fat_congealer)fat congealer/$, or used to feed nearby players and animals in a <item>$(l:essentials:fluid/fat_feeder)fat feeder/$.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:fat_collector" : 0
+	}
 }

@@ -1,5 +1,6 @@
 Acids & Aqua Regia
 crossroads:solid_regia|crossroads:progress/path/alchemy
+crossroads:solid_regia;3,crossroads:solid_vitriol,crossroads:solid_muriatic,crossroads:solid_fortis
 <thing>Alchemy/$ adds four different reagents that are acids: <item>Vitriol Salt (Sulfuric Acid)/$, <item>Muriatic Salt (Hydrochloric Acid)/$, <item>Aziotic Salt (Nitric Acid)/$, and <item>Regia Salt (Aqua Regia)/$. Three of these (Sulfuric, Muriatic, and Aziotic) act identically. <item>Aqua Regia/$ is more powerful than the other three, and allows <em>breaking bedrock/$ and getting <item>Bedrock Dust/$.
 The three normal acids have the same <thing><link:essentials:alchemy/effect>effect/$: They deal 8 damage to any entity they hit, and will break metal blocks other than gold.
 

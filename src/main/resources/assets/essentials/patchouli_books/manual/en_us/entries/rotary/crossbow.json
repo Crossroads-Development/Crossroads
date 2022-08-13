@@ -24,5 +24,8 @@
 			"type": "patchouli:text",
 			"text": "at <em>point blank range/$. As with a normal crossbow, actual damage dealt drops as the arrow travels further.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:spring_gun" : 0
+	}
 }

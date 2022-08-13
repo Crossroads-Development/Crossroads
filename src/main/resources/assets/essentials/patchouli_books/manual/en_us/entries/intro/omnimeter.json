@@ -20,5 +20,8 @@
 			"type": "patchouli:text",
 			"text": "Another basic tool that Crossroads uses a lot is the <item>$(l:essentials/wrench)wrench/$- though basically any mods' wrench will work.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:omnimeter" : 0
+	}
 }

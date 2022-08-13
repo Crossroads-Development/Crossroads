@@ -20,5 +20,8 @@
 			"type": "patchouli:text",
 			"text": "there may be small color-mismatches due to rounding. $(br2)<item>$(l:essentials/circuits#reader)Circuits/$ measure the total stored <thing>$(l:essentials:intro/beam)power/$.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:quartz_stabilizer" : 0
+	}
 }

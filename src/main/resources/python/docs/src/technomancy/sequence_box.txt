@@ -1,5 +1,6 @@
 Sequencer
 crossroads:sequence_box|crossroads:progress/path/technomancy
+crossroads:sequence_box
 The <item>Sequencer/$ is a redstone device that allows setting a sequence of redstone <thing><link:essentials/circuits>circuit/$ values and outputting them in order.
 It can remember a sequence of up to 99 values, and outputs one at a time to <thing><link:essentials/circuits>circuit/$. It does <em>not/$ output to vanilla redstone. It advances one step in the sequence every time it receives a strong redstone pulse (strong signals come from repeaters, comparators, and torches). The sequences loops back to the beginning when it reaches the end.
 The sequence is set via the UI, which accepts mathematical expressions as well as constant numbers. In the UI, which can be navigated with arrow keys or the scroll wheel, each line is one value in the sequence. Any line where the line number is in red is the currently output signal, any line where the line number is in yellow is part of the current sequence, and any line where the number is in grey is not currently part of the defined sequence.

@@ -56,5 +56,8 @@
 			"type": "patchouli:text",
 			"text": "into clones.$(br2)Finally, the <item>embryo/$ is made into a <item>spawn egg/$ for the final cloned mob, using an <item>$(l:essentials:witchcraft/incubator)incubator/$. These <item>spawn eggs/$ can be used by hand or by dispensers.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:mutagen" : 0
+	}
 }

@@ -29,5 +29,8 @@
 			"type": "patchouli:text",
 			"text": "yaw do not immediately change with the <thing>$(l:essentials:intro/rotary)speed/$- they re-orient into the new position, fairly quickly but not instantly.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:beam_cannon" : 0
+	}
 }

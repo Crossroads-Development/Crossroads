@@ -21,5 +21,8 @@
 			"type": "patchouli:text",
 			"text": "<thing>Void-Time/$ AKA <thing>Temporal Entropy/$ is EXTREMELY dangerous. DO NOT USE THIS! When you inevitably do anyway, don't say we didn't warn you...$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		
+	}
 }

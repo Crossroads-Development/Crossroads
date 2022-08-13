@@ -21,5 +21,8 @@
 			"type": "patchouli:text",
 			"text": "Note that the <item>flying machine/$ requires ingredients from both $(l:essentials:intro/path)Alchemy & Technomancy/$ to craft by default.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:flying_machine" : 0
+	}
 }

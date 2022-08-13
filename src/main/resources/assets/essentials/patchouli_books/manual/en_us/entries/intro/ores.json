@@ -24,5 +24,8 @@
 			"type": "patchouli:text",
 			"text": "<item>Void ore/$ only spawns in the end on the outer end islands in endstone. It fairly easy to find. It drops <item>void crystals/$, which are used for late game <thing>$(l:essentials:intro/beam)beams/$ (specifically creating <thing>$(l:essentials:beam/void)void/$).$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		
+	}
 }

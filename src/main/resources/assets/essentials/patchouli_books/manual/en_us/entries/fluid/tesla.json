@@ -24,5 +24,8 @@
 			"type": "patchouli:text",
 			"text": "A <item>leyden jar/$ is a 'battery' that can be placed into a <item>tesla coil base/$ to increase FE capacity. The <item>leyden jar/$ is removed by shift-right-clicking with an empty hand on the base, and maintains its FE charge when removed.$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:tesla_coil" : 0
+	}
 }
