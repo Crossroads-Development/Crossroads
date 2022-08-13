@@ -1,4 +1,5 @@
 # Generates patchouli entry JSONs in generated based on txt files in src
+# Requires Python 3.9+
 # Do not try to use this for unusual entries that don't fit my format- make those manually
 # Expects a certain format for the src, detailed below
 # Navigates the folder structure
@@ -8,7 +9,7 @@
 # Expects the SECOND LINE of the txt to be the item path used for icon and spotlight page
 # If the SECOND LINE contains a | (pipe symbol), it will treat everything after the | as an advancement to lock the entry behind
 # Expects the THIRD LINE of the txt to be empty, or a comma-separated list of ItemStack strings representing items/blocks to link to this entry.
-# If an ItemStack string is followed by a ; and a number, the number will be treated as the line in the body that should be opened 
+# If an ItemStack string is followed by a ; and a number, the number will be treated as the line in the body that should be opened. 0-indexed, only counts lines in the body (including blank lines)
 # Makes the first page a spotlight, with the entry title
 # Will make all other pages text
 # Each line in the txt after the first two are considered the body

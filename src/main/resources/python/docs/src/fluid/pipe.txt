@@ -1,6 +1,6 @@
 Fluid Tube
 crossroads:fluid_tube
-crossroads:fluid_tube;crossroads:redstone_fluid_tube;3
+crossroads:fluid_tube,crossroads:redstone_fluid_tube;3
 <item>Fluid Tubes/$ are the normal way to move fluids around. They have a capacity (and maximum transfer rate) of 2 buckets. <item>Fluid tubes/$ connect to any adjacent fluid inventory/machine/pipe/tank, and can transfer fluids between them.
 <item>Fluid tubes/$ can be adjusted with a <item><link:essentials/wrench>wrench/$ on their connections to adjust the mode. Each connection has 4 modes: Input, Output, Locked, and Share. Input or Output modes only input/output fluid with a neighbor, Locked will be disconnected, and Share only applies to other pipes and <item><link:essentials:fluid/tank>tanks/$ (including tanks from other mods). In Share mode, pipes will balance their contents to be the same % fullness.
 

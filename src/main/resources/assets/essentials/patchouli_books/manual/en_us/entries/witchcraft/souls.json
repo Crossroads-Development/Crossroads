@@ -33,6 +33,7 @@
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:soul_cluster" : 0
+		"crossroads:soul_cluster" : 0,
+		"crossroads:soul_shard" : 0
 	}
 }

@@ -26,6 +26,7 @@
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:fluid_tube" : 0
+		"crossroads:fluid_tube" : 0,
+		"crossroads:redstone_fluid_tube" : 2
 	}
 }
