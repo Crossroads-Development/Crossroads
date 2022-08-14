@@ -32,7 +32,7 @@ public class ColorChartScreen extends AbstractContainerScreen<ColorChartContaine
 	public ColorChartScreen(ColorChartContainer cont, Inventory playerInv, Component name){
 		super(cont, playerInv, name);
 		imageWidth = 300;
-		imageHeight = 300;
+		imageHeight = 318;
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class ColorChartScreen extends AbstractContainerScreen<ColorChartContaine
 
 		AdvancementTracker.listen();//Used for beam alignments
 
-		searchBar = new EditBox(font, leftPos, topPos + imageHeight, imageWidth, 18, Component.translatable("container.search_bar"));
+		searchBar = new EditBox(font, leftPos + 4, topPos + imageHeight - 18 + 8, imageWidth, 18, Component.translatable("container.search_bar"));
 		searchBar.setCanLoseFocus(false);
 		searchBar.setTextColor(-1);
 		searchBar.setTextColorUneditable(-1);
@@ -92,7 +92,7 @@ public class ColorChartScreen extends AbstractContainerScreen<ColorChartContaine
 		RenderSystem.setShaderTexture(0, BACKGROUND);
 		int i = leftPos;
 		int j = topPos;
-		blit(matrix, i, j, 300, 0, imageWidth, imageHeight, 1200, 1200);
+		blit(matrix, i, j, imageWidth, 0, imageWidth, imageHeight, 1200, 1272);
 
 		String search = searchBar.getValue().toUpperCase();
 
@@ -103,7 +103,7 @@ public class ColorChartScreen extends AbstractContainerScreen<ColorChartContaine
 			if(elem.isDiscovered(minecraft.player) && (search.isEmpty() || elem.getLocalName(false).toLowerCase(Locale.US).startsWith(search.toLowerCase(Locale.US)))){
 				//Render the colored overlay that alignment over the B&W base
 				int imageIndex = elem.ordinal() + 2;
-				blit(matrix, leftPos, topPos, imageWidth * (imageIndex % 4), imageWidth * (int) (imageIndex / 4), imageWidth, imageHeight, 1200, 1200);
+				blit(matrix, leftPos, topPos, imageWidth * (imageIndex % 4), imageHeight * (int) (imageIndex / 4), imageWidth, imageHeight, 1200, 1272);
 			}
 		}
 	}
