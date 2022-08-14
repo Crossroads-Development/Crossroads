@@ -8,6 +8,6 @@
 	"fluid": {
 		"tag": "forge:molten_copshowium"
 	},
-	"fluid_amount": 16,
+	"fluid_amount": 10,
 	"color": "FF8200"
 }
