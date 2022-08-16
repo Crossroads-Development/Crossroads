@@ -292,6 +292,7 @@
 	"block.crossroads.master_axis_creative": "Creative Master Axis",
 	"block.crossroads.beam_extractor_creative": "Creative Resonance Extractor",
 	"block.crossroads.fire_detector": "Fire Detector",
+	"item.crossroads.blood_compass": "Hemophiliac Compass",
 
 	"item.crossroads.distilled_water_bucket": "Distilled Water Bucket",
 	"item.crossroads.dirty_water_bucket": "Dirty Water Bucket",
@@ -824,6 +825,8 @@
 	"tt.crossroads.fire_detector.circuit": "Circuits read distance to nearest flame cloud, negative if inside a cloud, or %1$d if none nearby",
 	"tt.crossroads.fire_detector.range": "Maximum range is %1$d blocks",
 	"tt.crossroads.beam_reflector_sensitive": "Emitted beam collides with entities and any non-air block",
+	"tt.crossroads.blood_compass.desc": "Points towards the owner of the blood held in the offhand",
+	"tt.crossroads.blood_compass.spoil": "Requires a fresh sample",
 
 	"container.crossroads.boilerplate.temp": "%1$d°C",
 	"container.crossroads.boilerplate.speed": "%1$f rad/s",

@@ -14,6 +14,7 @@ import com.Da_Technomancer.crossroads.items.technomancy.*;
 import com.Da_Technomancer.crossroads.items.witchcraft.*;
 import com.Da_Technomancer.essentials.api.ReflectionUtil;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.item.CompassItemPropertyFunction;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.item.ItemPropertyFunction;
 import net.minecraft.core.BlockSource;
@@ -147,6 +148,7 @@ public final class CRItems{
 	public static VillagerBrain villagerBrain;
 	public static BrainHarvester brainHarvester;
 	public static Item hopperHawkSpawnEgg;
+	public static BloodCompass bloodCompass;
 
 	public static OreProfileItem oreGravel;
 	public static OreProfileItem oreClump;
@@ -277,6 +279,7 @@ public final class CRItems{
 		villagerBrain = new VillagerBrain();
 		brainHarvester = new BrainHarvester();
 		hopperHawkSpawnEgg = MiscUtil.putReturn(toRegister, "hopper_hawk_spawn_egg", new ForgeSpawnEggItem(() -> EntityHopperHawk.type, 0x555555, 0x999999, (new Item.Properties()).tab(CreativeModeTab.TAB_MISC)));
+		bloodCompass = new BloodCompass();
 
 		registerDispenserOverrides();
 	}
@@ -340,6 +343,8 @@ public final class CRItems{
 		//Syringe treatment
 		ItemPropertyFunction syringePropertyGetter = (ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity, int unmapped) -> CRItems.syringe.isTreated(stack) ? 1 : 0;
 		ItemProperties.register(syringe, new ResourceLocation("treated"), syringePropertyGetter);
+		//Blood compass
+		ItemProperties.register(bloodCompass, new ResourceLocation("angle"), new CompassItemPropertyFunction((world, stack, player) -> bloodCompass.getTarget(stack, player, world)));
 	}
 
 	/**

@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.essentials.api.packets.*;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.GlobalPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.FriendlyByteBuf;
@@ -18,6 +19,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.UUID;
 
 public class CRPackets{
 
@@ -27,6 +29,7 @@ public class CRPackets{
 
 	public static void init(){
 		channel = NetworkRegistry.newSimpleChannel(new ResourceLocation(Crossroads.MODID, "channel"), () -> "1.0.0", (s) -> s.equals("1.0.0"), (s) -> s.equals("1.0.0"));
+		//Create codecs for additional data types
 		PacketManager.addCodec(int[].class, (val, buf) -> buf.writeVarIntArray((int[]) val), FriendlyByteBuf::readVarIntArray);
 		PacketManager.addCodec(ParticleOptions.class,
 				(Object val, FriendlyByteBuf buf) -> {
@@ -36,6 +39,9 @@ public class CRPackets{
 				},
 				(FriendlyByteBuf buf) -> readParticleData(ForgeRegistries.PARTICLE_TYPES.getValue(buf.readResourceLocation()), buf)
 		);
+		PacketManager.addCodec(ResourceLocation.class, (val, buf) -> buf.writeResourceLocation((ResourceLocation) val), FriendlyByteBuf::readResourceLocation);
+		PacketManager.addCodec(GlobalPos.class, (val, buf) -> buf.writeGlobalPos((GlobalPos) val), FriendlyByteBuf::readGlobalPos);
+		PacketManager.addCodec(UUID.class, (val, buf) -> buf.writeUUID((UUID) val), FriendlyByteBuf::readUUID);
 
 		registerPacket(SendIntToClient.class);
 		registerPacket(SendStringToClient.class);
@@ -64,6 +70,7 @@ public class CRPackets{
 		registerPacket(SendElytraBoostToServer.class);
 		registerPacket(SendIntArrayToClient.class);
 		registerPacket(CreateParticlesOnClient.class);
+		registerPacket(SendCompassTargetToClient.class);
 	}
 
 	private static <T extends Packet> void registerPacket(Class<T> clazz){

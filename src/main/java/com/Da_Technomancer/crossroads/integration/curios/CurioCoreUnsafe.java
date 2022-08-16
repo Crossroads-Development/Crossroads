@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.integration.curios;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.InterModComms;
@@ -13,6 +14,7 @@ import top.theillusivec4.curios.api.SlotTypeMessage;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 /**
  * Interaction with the Curios mod
@@ -32,6 +34,12 @@ final class CurioCoreUnsafe{
 	//Just calls the method in CuriosAPI.
 	//This exists to add an additional layer between the class which may not exist at runtime, and Crossroads
 	static Optional<SlotResult> findFirstCurio(Item item, @Nonnull LivingEntity livingEntity){
+		return CuriosApi.getCuriosHelper().findFirstCurio(livingEntity, item);
+	}
+
+	//Just calls the method in CuriosAPI.
+	//This exists to add an additional layer between the class which may not exist at runtime, and Crossroads
+	static Optional<SlotResult> findFirstCurio(Predicate<ItemStack> item, @Nonnull LivingEntity livingEntity){
 		return CuriosApi.getCuriosHelper().findFirstCurio(livingEntity, item);
 	}
 

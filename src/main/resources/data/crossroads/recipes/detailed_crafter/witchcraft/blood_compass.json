@@ -1,0 +1,21 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "witchcraft",
+	"result": {
+		"item": "crossroads:blood_compass",
+		"count": 1
+	},
+	"pattern": [
+		" N ",
+		"NCN",
+		" N "
+	],
+	"key": {
+		"N": {
+			"tag": "forge:nuggets/copper"
+		},
+		"C": {
+			"item": "minecraft:compass"
+		}
+	}
+}

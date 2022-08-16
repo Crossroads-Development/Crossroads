@@ -13,6 +13,7 @@ import top.theillusivec4.curios.api.SlotResult;
 
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * Interacts with the Curios mod
@@ -42,20 +43,31 @@ public class CurioHelperSafe{
 	 * @return The itemstack in the player inventory containing the item. It is mutable, and will write back. Returns ItemStack.EMPTY if not found
 	 */
 	public static ItemStack getEquipped(Item item, LivingEntity player){
+		return getEquipped(stack -> stack.getItem() == item, player);
+	}
+
+	/**
+	 * Finds an item on a player. Checks the mainhand and offhand first, then curios slots
+	 * Safe to call when Curios is not installed
+	 * @param itemFilter A predicate matching the item types to search for
+	 * @param player The player for search
+	 * @return The itemstack in the player inventory containing the item. It is mutable, and will write back. Returns ItemStack.EMPTY if not found
+	 */
+	public static ItemStack getEquipped(Predicate<ItemStack> itemFilter, LivingEntity player){
 		//Check mainhand
 		ItemStack held = player.getMainHandItem();
-		if(held.getItem() == item){
+		if(itemFilter.test(held)){
 			return held;
 		}
 		//Check offhand
 		held = player.getOffhandItem();
-		if(held.getItem() == item){
+		if(itemFilter.test(held)){
 			return held;
 		}
 
 		//Check curios, if applicable
 		if(foundCurios){
-			Optional<SlotResult> result = CurioCoreUnsafe.findFirstCurio(item, player);
+			Optional<SlotResult> result = CurioCoreUnsafe.findFirstCurio(itemFilter, player);
 			if(result.isPresent()){
 				return result.get().stack();
 			}

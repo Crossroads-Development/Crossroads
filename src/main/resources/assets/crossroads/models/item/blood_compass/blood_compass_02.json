@@ -1,0 +1,6 @@
+{
+	"parent": "minecraft:item/generated",
+	"textures": {
+		"layer0": "crossroads:item/blood_compass/blood_compass_02"
+	}
+}
