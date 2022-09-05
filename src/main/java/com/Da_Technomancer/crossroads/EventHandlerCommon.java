@@ -142,6 +142,7 @@ public class EventHandlerCommon{
 			e.register(ForgeRegistries.Keys.POTIONS, helper -> {
 				CRPotions.init();
 				registerAll(helper, CRPotions.toRegisterPotion);
+				CRPotions.registerPotionRecipes();
 			});
 
 			e.register(ForgeRegistries.Keys.PARTICLE_TYPES, helper -> {

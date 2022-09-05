@@ -47,7 +47,7 @@ public class CRPotions{
 	public static final Potion POTION_TRANSIENT_LONG = registerPotion("long_transient", "transient", new MobEffectInstance(TRANSIENT_EFFECT, 9600));
 
 	public static void init(){
-		registerPotionRecipes();
+		//No-op
 	}
 
 	private static <T extends MobEffect> T registerMobEffect(String regName, T effect){
