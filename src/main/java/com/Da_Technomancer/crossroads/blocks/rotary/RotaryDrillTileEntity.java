@@ -78,16 +78,16 @@ public class RotaryDrillTileEntity extends ModuleTE{
 	public void serverTick(){
 		super.serverTick();
 
-		double powerDrain = isGolden() ? ENERGY_USE_GOLD : ENERGY_USE_IRON;
-		if(Math.abs(energy) >= powerDrain && Math.abs(axleHandler.getSpeed()) >= 0.05D){
-			axleHandler.addEnergy(-powerDrain, false);
+		double axleSpeed = axleHandler.getSpeed();
+		axleHandler.addEnergy(-(isGolden() ? ENERGY_USE_GOLD : ENERGY_USE_IRON), false);
+		if(Math.abs(axleSpeed) >= 0.05D){
 			if(++ticksExisted % 2 == 0){//Activate once every redstone tick
 				Direction facing = getFacing();
 				BlockPos targetPos = worldPosition.relative(facing);
 				BlockState targetState = level.getBlockState(targetPos);
 				if(!targetState.isAir()){
 					float hardness = targetState.getDestroySpeed(level, targetPos);
-					if(hardness >= 0 && Math.abs(axleHandler.getSpeed()) >= hardness * SPEED_PER_HARDNESS){
+					if(hardness >= 0 && Math.abs(axleSpeed) >= hardness * SPEED_PER_HARDNESS){
 						FakePlayer fakePlayer = PlaceEffect.getBlockFakePlayer((ServerLevel) level);
 						ItemStack tool = new ItemStack(Items.IRON_PICKAXE);//This shouldn't make a difference as we call the drops method directly, but some blocks may add a tool requirement in the loot table
 						level.destroyBlock(targetPos, false);//Don't drop items; we do that separately on the next line
