@@ -4,8 +4,6 @@ import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.Capabilities;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
-import com.Da_Technomancer.crossroads.api.packets.IStringReceiver;
-import com.Da_Technomancer.crossroads.api.packets.SendStringToClient;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
@@ -13,6 +11,8 @@ import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.CrucibleRec;
 import com.Da_Technomancer.crossroads.gui.container.CrucibleContainer;
 import com.Da_Technomancer.essentials.api.BlockUtil;
+import com.Da_Technomancer.essentials.api.packets.INBTReceiver;
+import com.Da_Technomancer.essentials.api.packets.SendNBTToClient;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -38,7 +38,7 @@ import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.Optional;
 
-public class HeatingCrucibleTileEntity extends InventoryTE implements IStringReceiver{
+public class HeatingCrucibleTileEntity extends InventoryTE implements INBTReceiver{
 
 	public static final BlockEntityType<HeatingCrucibleTileEntity> TYPE = CRTileEntity.createType(HeatingCrucibleTileEntity::new, CRBlocks.heatingCrucible);
 
@@ -47,7 +47,12 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 	public static final int REQUIRED = 1000;
 	private int progress = 0;
 	/**
-	 * The texture to be displayed, if any.
+	 * The fluid to be displayed for rendering in-world. Quantity is NOT synced; only type, NBT, empty or not empty
+	 * On server side, acts as a record of what was sent to client
+	 */
+	private FluidStack renderFluid = FluidStack.EMPTY;
+	/**
+	 * Cache for the texture and color to be displayed, if any.
 	 */
 	@Nullable
 	private ResourceLocation activeText = null;
@@ -74,18 +79,18 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 	}
 
 	@Override
-	public void receiveString(byte context, String message, @Nullable ServerPlayer sender){
-		if(level.isClientSide){
-			if(context == 0){
-				activeText = message.length() == 0 ? null : new ResourceLocation(message);
-			}else if(context == 1){
-				try{
-					col = Integer.valueOf(message);
-				}catch(NumberFormatException e){
-					col = null;
-				}
-			}
+	public void receiveNBT(CompoundTag nbt, @Nullable ServerPlayer sender){
+		if(level.isClientSide && nbt.contains("render_fluid")){
+			renderFluid = FluidStack.loadFluidStackFromNBT(nbt);
+			updateRendering();
 		}
+	}
+
+	private void updateRendering(){
+		//Call on the client-side only
+		IClientFluidTypeExtensions renderProps = IClientFluidTypeExtensions.of(renderFluid.getFluid());
+		activeText = renderProps.getStillTexture(renderFluid);
+		col = renderProps.getTintColor(renderFluid);
 	}
 
 	public ResourceLocation getActiveTexture(){
@@ -112,18 +117,11 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 				level.setBlock(worldPosition, state.setValue(CRProperties.FULLNESS, fullness), 18);
 			}
 
-			if(fullness != 0 && !fluids[0].isEmpty()){
-				IClientFluidTypeExtensions renderProps = IClientFluidTypeExtensions.of(fluids[0].getFluid());
-				ResourceLocation goal = renderProps.getStillTexture(fluids[0]);
-				if(!goal.equals(activeText)){
-					activeText = goal;
-					col = renderProps.getTintColor(fluids[0]);
-					CRPackets.sendPacketAround(level, worldPosition, new SendStringToClient(0, activeText.toString(), worldPosition));
-					CRPackets.sendPacketAround(level, worldPosition, new SendStringToClient(1, Integer.toString(col), worldPosition));
-				}
-			}else if(activeText != null){
-				activeText = null;
-				CRPackets.sendPacketAround(level, worldPosition, new SendStringToClient(0, "", worldPosition));
+			if(!BlockUtil.sameFluid(renderFluid, fluids[0])){
+				renderFluid = fluids[0].copy();
+				CompoundTag nbt = renderFluid.writeToNBT(new CompoundTag());
+				nbt.putBoolean("render_fluid", true);
+				CRPackets.sendPacketAround(level, worldPosition, new SendNBTToClient(nbt, worldPosition));
 			}
 		}
 
@@ -162,34 +160,25 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements IStringRec
 	@Override
 	public void load(CompoundTag nbt){
 		super.load(nbt);
-		String textStr = nbt.getString("act");
-		if(textStr.length() == 0){
-			activeText = null;
-		}else{
-			activeText = new ResourceLocation(textStr);
+		renderFluid = FluidStack.loadFluidStackFromNBT(nbt.getCompound("render_fluid"));
+		if(nbt.getBoolean("is_client")){
+			updateRendering();
 		}
-		col = nbt.contains("col") ? nbt.getInt("col") : null;
 		progress = nbt.getInt("prog");
 	}
 
 	@Override
 	public void saveAdditional(CompoundTag nbt){
 		super.saveAdditional(nbt);
-		nbt.putString("act", activeText == null ? "" : activeText.toString());
-		if(col != null){
-			nbt.putInt("col", col);
-		}
+		nbt.put("render_fluid", renderFluid.writeToNBT(new CompoundTag()));
+		nbt.putBoolean("is_client", true);
 		nbt.putInt("prog", progress);
-
 	}
 
 	@Override
 	public CompoundTag getUpdateTag(){
 		CompoundTag nbt = super.getUpdateTag();
-		nbt.putString("act", activeText == null ? "" : activeText.toString());
-		if(col != null){
-			nbt.putInt("col", col);
-		}
+		nbt.put("render_fluid", renderFluid.writeToNBT(new CompoundTag()));
 		return nbt;
 	}
 
