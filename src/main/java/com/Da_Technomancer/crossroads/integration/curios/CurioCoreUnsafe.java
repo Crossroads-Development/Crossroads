@@ -21,7 +21,7 @@ import java.util.function.Predicate;
  * This class requires the Curios mod to be loaded to not crash
  * DO NOT interact directly- go through CurioHelper instead
  */
-final class CurioCoreUnsafe{
+final class CurioCoreUnsafe {
 
 	@SubscribeEvent
 	@SuppressWarnings("unused")
@@ -34,16 +34,31 @@ final class CurioCoreUnsafe{
 	//Just calls the method in CuriosAPI.
 	//This exists to add an additional layer between the class which may not exist at runtime, and Crossroads
 	static Optional<SlotResult> findFirstCurio(Item item, @Nonnull LivingEntity livingEntity){
+		try {
+			Class.forName("top.theillusivec4.curios.api.CuriosApi", false, ClassLoader.getPlatformClassLoader());
+		} catch(Throwable e) {
+			return Optional.empty();
+		}
 		return CuriosApi.getCuriosHelper().findFirstCurio(livingEntity, item);
 	}
 
 	//Just calls the method in CuriosAPI.
 	//This exists to add an additional layer between the class which may not exist at runtime, and Crossroads
-	static Optional<SlotResult> findFirstCurio(Predicate<ItemStack> item, @Nonnull LivingEntity livingEntity){
+	static Optional<SlotResult> findFirstCurio(Predicate<ItemStack> item, @Nonnull LivingEntity livingEntity) {
+		try {
+			Class.forName("top.theillusivec4.curios.api.CuriosApi", false, ClassLoader.getPlatformClassLoader());
+		} catch(Throwable e) {
+			return Optional.empty();
+		}
 		return CuriosApi.getCuriosHelper().findFirstCurio(livingEntity, item);
 	}
 
 	static LazyOptional<IItemHandlerModifiable> getAllCurios(@Nonnull LivingEntity livingEntity){
+		try {
+			Class.forName("top.theillusivec4.curios.api.CuriosApi", false, ClassLoader.getPlatformClassLoader());
+		} catch(Throwable e) {
+			return LazyOptional.empty();
+		}
 		return CuriosApi.getCuriosHelper().getEquippedCurios(livingEntity);
 	}
 
