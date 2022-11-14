@@ -27,7 +27,7 @@ public class IceEffect implements IBeamEffect{
 			return;
 		}
 
-		if(worldIn.dimension() == Level.NETHER){
+		if(worldIn.dimensionType().ultraWarm()){
 			worldIn.playSound(null, pos, SoundEvents.GENERIC_BURN, SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
 			worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
 			return;
