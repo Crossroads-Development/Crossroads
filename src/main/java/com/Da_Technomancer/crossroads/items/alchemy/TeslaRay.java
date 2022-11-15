@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.items.alchemy;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.blocks.electric.TeslaCoilTopTileEntity;
-import com.Da_Technomancer.crossroads.integration.curios.CurioHelperSafe;
+import com.Da_Technomancer.crossroads.integration.curios.CurioHelper;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.LeydenJar;
 import com.google.common.collect.ImmutableMultimap;
@@ -75,7 +75,7 @@ public class TeslaRay extends Item{
 			return new InteractionResultHolder<>(InteractionResult.SUCCESS, playerIn.getItemInHand(hand));
 		}
 
-		ItemStack leyden = CurioHelperSafe.getEquipped(CRItems.leydenJar, playerIn);
+		ItemStack leyden = CurioHelper.getEquipped(CRItems.leydenJar, playerIn);
 		if(hand == InteractionHand.MAIN_HAND && !leyden.isEmpty() && LeydenJar.getCharge(leyden) >= FE_USE){
 			//Stores attack targets, in order
 			ArrayList<LivingEntity> targets = new ArrayList<>(4);

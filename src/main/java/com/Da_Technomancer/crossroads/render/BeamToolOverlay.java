@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.render;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.beams.BeamUnit;
-import com.Da_Technomancer.crossroads.integration.curios.CurioHelperSafe;
+import com.Da_Technomancer.crossroads.integration.curios.CurioHelper;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamCage;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamUsingItem;
@@ -30,7 +30,7 @@ public class BeamToolOverlay implements IGuiOverlay{
 		}
 
 		//Beam cage overlay
-		ItemStack cageStack = CurioHelperSafe.getEquipped(CRItems.beamCage, player);
+		ItemStack cageStack = CurioHelper.getEquipped(CRItems.beamCage, player);
 		ItemStack mainStack = player.getItemInHand(InteractionHand.MAIN_HAND);
 
 		boolean renderToolOverlay = mainStack.getItem() instanceof BeamUsingItem;

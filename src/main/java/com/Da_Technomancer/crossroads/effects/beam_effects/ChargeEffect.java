@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.effects.beam_effects;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.beams.BeamHit;
 import com.Da_Technomancer.crossroads.api.beams.EnumBeamAlignments;
-import com.Da_Technomancer.crossroads.integration.curios.CurioHelperSafe;
+import com.Da_Technomancer.crossroads.integration.curios.CurioHelper;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.player.Player;
@@ -33,7 +33,7 @@ public class ChargeEffect extends BeamEffect{
 				final int[] availableFE = new int [] {CRConfig.fePerCharge.get() * power};
 				List<Player> players = beamHit.getNearbyEntities(Player.class, BeamHit.WITHIN_BLOCK_RANGE, null);
 				for(Player player : players){
-					CurioHelperSafe.forAllInventoryItems(player, (ItemStack item) -> {
+					CurioHelper.forAllInventoryItems(player, (ItemStack item) -> {
 						if(!item.isEmpty() && item.getCapability(CapabilityEnergy.ENERGY).isPresent()){
 							LazyOptional<IEnergyStorage> energyStor;
 							ItemStack copy = item.copy();
@@ -60,7 +60,7 @@ public class ChargeEffect extends BeamEffect{
 				final int[] availableFE = new int [] {CRConfig.fePerCharge.get() * power};
 				List<Player> players = beamHit.getNearbyEntities(Player.class, BeamHit.WITHIN_BLOCK_RANGE, null);
 				for(Player player : players){
-					CurioHelperSafe.forAllInventoryItems(player, (ItemStack item) -> {
+					CurioHelper.forAllInventoryItems(player, (ItemStack item) -> {
 						if(!item.isEmpty() && item.getCapability(CapabilityEnergy.ENERGY).isPresent()){
 							LazyOptional<IEnergyStorage> energyStor;
 							ItemStack copy = item.copy();

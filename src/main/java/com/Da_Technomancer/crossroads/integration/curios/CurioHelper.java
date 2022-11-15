@@ -1,17 +1,13 @@
 package com.Da_Technomancer.crossroads.integration.curios;
 
+import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import top.theillusivec4.curios.api.SlotResult;
 
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -20,18 +16,27 @@ import java.util.function.Predicate;
  * This class is safe to interact with even when Curios is not installed. All interaction with Curios should be done through the class.
  * Non-safe code that requires Curios is done in CurioCRCore.java, which should only be accessed through this class
  */
-public class CurioHelperSafe{
+public class CurioHelper{
 
 	protected static final String CURIOS_ID = "curios";
-	private static boolean foundCurios;
+	private static IInventoryProxy inventoryProxy;
 
 	/**
 	 * Initializes integration with Curios if installed, and tracks whether to use code in CurioCRCore
 	 */
 	public static void initIntegration(){
-		foundCurios = ModList.get().isLoaded(CURIOS_ID);
-		if(foundCurios){
-			FMLJavaModLoadingContext.get().getModEventBus().register(CurioCoreUnsafe.class);
+		if(ModList.get().isLoaded(CURIOS_ID)){
+			// reflection to avoid hard dependency
+			try{
+				inventoryProxy = Class.forName("com.Da_Technomancer.crossroads.integration.curios.CuriosInventoryProxy").asSubclass(IInventoryProxy.class).getDeclaredConstructor().newInstance();
+			}catch(Exception e){
+				inventoryProxy = new VanillaInventoryProxy();
+				Crossroads.logger.error("Error while initiating Curios integration; report to mod author", e);
+			}
+			//Register the proxy so it can request slots
+			FMLJavaModLoadingContext.get().getModEventBus().register(inventoryProxy);
+		}else{
+			inventoryProxy = new VanillaInventoryProxy();
 		}
 	}
 
@@ -43,7 +48,7 @@ public class CurioHelperSafe{
 	 * @return The itemstack in the player inventory containing the item. It is mutable, and will write back. Returns ItemStack.EMPTY if not found
 	 */
 	public static ItemStack getEquipped(Item item, LivingEntity player){
-		return getEquipped(stack -> stack.getItem() == item, player);
+		return inventoryProxy.getEquipped(item, player);
 	}
 
 	/**
@@ -54,26 +59,7 @@ public class CurioHelperSafe{
 	 * @return The itemstack in the player inventory containing the item. It is mutable, and will write back. Returns ItemStack.EMPTY if not found
 	 */
 	public static ItemStack getEquipped(Predicate<ItemStack> itemFilter, LivingEntity player){
-		//Check mainhand
-		ItemStack held = player.getMainHandItem();
-		if(itemFilter.test(held)){
-			return held;
-		}
-		//Check offhand
-		held = player.getOffhandItem();
-		if(itemFilter.test(held)){
-			return held;
-		}
-
-		//Check curios, if applicable
-		if(foundCurios){
-			Optional<SlotResult> result = CurioCoreUnsafe.findFirstCurio(itemFilter, player);
-			if(result.isPresent()){
-				return result.get().stack();
-			}
-		}
-
-		return ItemStack.EMPTY;
+		return inventoryProxy.getEquipped(itemFilter, player);
 	}
 
 	/**
@@ -83,25 +69,6 @@ public class CurioHelperSafe{
 	 * @param stackModifier A function to modify ItemStacks. DO NOT modify the incoming stack directly, only return the target variant
 	 */
 	public static void forAllInventoryItems(Player player, Function<ItemStack, ItemStack> stackModifier){
-		LazyOptional<IItemHandlerModifiable> curioOpt = CurioCoreUnsafe.getAllCurios(player);
-		if(curioOpt.isPresent()){
-			IItemHandlerModifiable curioCont = curioOpt.orElseThrow(NullPointerException::new);
-			for(int i = 0; i < curioCont.getSlots(); i++){
-				ItemStack srcStack = curioCont.getStackInSlot(i);
-				ItemStack resStack = stackModifier.apply(srcStack);
-				if(!srcStack.equals(resStack, false)){
-					curioCont.setStackInSlot(i, resStack);
-				}
-			}
-		}
-
-		Inventory inv = player.getInventory();
-		for(int i = 0; i < inv.getContainerSize(); i++){
-			ItemStack srcStack = inv.getItem(i);
-			ItemStack resStack = stackModifier.apply(srcStack);
-			if(!srcStack.equals(resStack, false)){
-				inv.setItem(i, resStack);
-			}
-		}
+		inventoryProxy.forAllInventoryItems(player, stackModifier);
 	}
 }

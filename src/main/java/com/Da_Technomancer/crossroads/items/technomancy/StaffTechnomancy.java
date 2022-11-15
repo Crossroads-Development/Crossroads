@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.items.technomancy;
 import com.Da_Technomancer.crossroads.api.Capabilities;
 import com.Da_Technomancer.crossroads.api.beams.*;
 import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
-import com.Da_Technomancer.crossroads.integration.curios.CurioHelperSafe;
+import com.Da_Technomancer.crossroads.integration.curios.CurioHelper;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
@@ -56,7 +56,7 @@ public class StaffTechnomancy extends BeamUsingItem{
 	@Override
 	public void onUsingTick(ItemStack stack, LivingEntity player, int count){
 		if(!player.level.isClientSide && player.isAlive() && (getUseDuration(stack) - count) % BeamUtil.BEAM_TIME == 0){
-			ItemStack cage = CurioHelperSafe.getEquipped(CRItems.beamCage, player);//player.getHeldItem(player.getActiveHand() == Hand.MAIN_HAND ? Hand.OFF_HAND : Hand.MAIN_HAND);
+			ItemStack cage = CurioHelper.getEquipped(CRItems.beamCage, player);//player.getHeldItem(player.getActiveHand() == Hand.MAIN_HAND ? Hand.OFF_HAND : Hand.MAIN_HAND);
 			byte[] setting = getSetting(stack);
 			BeamUnit cageBeam = BeamCage.getStored(cage);
 			if(setting[0] <= cageBeam.getEnergy() && setting[1] <= cageBeam.getPotential() && setting[2] <= cageBeam.getStability() && setting[3] <= cageBeam.getVoid() && setting[0] + setting[1] + setting[2] + setting[3] != 0){
