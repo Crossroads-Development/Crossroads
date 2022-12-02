@@ -280,8 +280,9 @@ public final class MiscUtil{
 	public static <T> ResourceLocation getRegistryName(T registeredObject, IForgeRegistry<T> registry){
 		ResourceLocation result = registry.getKey(registeredObject);
 		if(result == null){
-			Crossroads.logger.error("Attempted to lookup unregistered object: " + registeredObject + "; in registry: " + registry.getRegistryName());
-			throw new IllegalArgumentException();
+			IllegalArgumentException ex = new IllegalArgumentException("Attempted to lookup unregistered object: " + registeredObject + "; in registry: " + registry.getRegistryName());
+			Crossroads.logger.throwing(ex);
+			throw ex;
 		}
 		return result;
 	}

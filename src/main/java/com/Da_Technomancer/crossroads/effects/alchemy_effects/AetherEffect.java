@@ -81,10 +81,17 @@ public class AetherEffect implements IAlchEffect{
 
 		//sulfur dioxide prevents biome changing
 		if(contents.getQty(EnumReagents.SULFUR_DIOXIDE.id()) == 0){
-			ResourceKey<Biome> biomeKey = biome();
-			if(!biomeKey.location().equals(MiscUtil.getRegistryName(world.getBiome(pos).value(), ForgeRegistries.BIOMES))){
-				setBiomeAtPos(world, pos, getBiomeHolder(biomeKey.location()));
-				CRPackets.sendPacketToDimension(world, new SendBiomeUpdateToClient(pos, biomeKey.location()));
+			try{
+				ResourceKey<Biome> biomeKey = biome();
+				if(!world.getBiome(pos).is(biomeKey)){
+					setBiomeAtPos(world, pos, getBiomeHolder(biomeKey.location()));
+					CRPackets.sendPacketToDimension(world, new SendBiomeUpdateToClient(pos, biomeKey.location()));
+				}
+			}catch(Exception ex){
+				// As a precaution against the biome registry being tampered with and missing the biomes we need,
+				// Just don't set the biome if it's missing
+				Crossroads.logger.error("Failed while attempting to set the biome");
+				Crossroads.logger.catching(ex);
 			}
 		}
 
