@@ -30,5 +30,8 @@
 			"anchor": "bobo",
 			"text": "<bobo>尼豪！！！似我$(l:essentials:intro/welcome#bobo)(.)^(.)/$<bobo>$(br2)<bobo>比利河火伴！漏斗嘤！不是嘀嗒（卜谷？）那个！漏斗打进基因！泥伙伴还喜浣其他两哥漏斗！$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:embryo_lab" : 0
+	}
 }

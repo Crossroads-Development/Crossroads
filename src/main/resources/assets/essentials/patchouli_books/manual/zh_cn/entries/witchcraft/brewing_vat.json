@@ -21,5 +21,8 @@
 			"type": "patchouli:text",
 			"text": "值得一提的是，<thing>交错道途/$还添加了将空瓶和冰酿造能变成水瓶的配方，能作为普通装瓶方式外的另一个选择。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:brewing_vat" : 0
+	}
 }

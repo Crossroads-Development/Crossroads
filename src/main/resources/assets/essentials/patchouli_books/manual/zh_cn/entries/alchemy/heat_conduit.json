@@ -17,5 +17,9 @@
 			"type": "patchouli:text",
 			"text": "<item>$(l:crossroads:heat/cable)热导管/$可连接到<item>加热导管/$的顶面或底面。$(br2)任何流经的<thing>$(l:crossroads:intro/alchemy)试剂/$的温度会被调整为所连接<item>$(l:crossroads:heat/cable)热导管/$的温度。这也会使<item>$(l:crossroads:heat/cable)热导管/$的温度朝<thing>$(l:crossroads:intro/alchemy)试剂/$的温度变化，所以你可能需要在大流量情况下将多个<item>加热导管/$首尾相接。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:heated_tube" : 0,
+		"crossroads:crystal_heated_tube" : 0
+	}
 }

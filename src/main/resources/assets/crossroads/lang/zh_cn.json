@@ -85,6 +85,7 @@
 	"block.crossroads.quartz_stabilizer": "石英稳定器",
 	"block.crossroads.crystalline_prism": "结晶棱镜",
 	"block.crossroads.beam_reflector": "光束反射器",
+	"block.crossroads.beam_reflector_sensitive": "敏感型光束反射器",
 	"block.crossroads.lens_frame": "透镜框架",
 	"block.crossroads.block_pure_quartz": "纯石英块",
 	"block.crossroads.block_bright_quartz": "明亮石英块",
@@ -291,6 +292,7 @@
 	"block.crossroads.master_axis_creative": "创造主轴",
 	"block.crossroads.beam_extractor_creative": "创造共振提取器",
 	"block.crossroads.fire_detector": "火灾探测器",
+	"item.crossroads.blood_compass": "血友指南针",
 	
 	"item.crossroads.distilled_water_bucket": "蒸馏水桶",
 	"item.crossroads.dirty_water_bucket": "脏水桶",
@@ -822,6 +824,9 @@
 	"tt.crossroads.fire_detector.desc": "探测附近的火焰云。不会探测普通火焰.",
 	"tt.crossroads.fire_detector.circuit": "电路可读取探测器到最近火焰云的距离。数值为负数代表探测器在云内，数值为 %1$d 代表未发现火焰云",
 	"tt.crossroads.fire_detector.range": "最大探测范围为 %1$d 格",
+	"tt.crossroads.beam_reflector_sensitive": "发出的光束会与实体和非空气方块碰撞",
+	"tt.crossroads.blood_compass.desc": "指向副手所持血样的主人",
+	"tt.crossroads.blood_compass.spoil": "需要血样保持新鲜",
 
 	"container.crossroads.boilerplate.temp": "%1$d℃",
 	"container.crossroads.boilerplate.speed": "%1$frad/s",
@@ -1010,11 +1015,15 @@
 
 
 	"death.attack.drill": "%1$s有一个可怕的牙医",
-	"death.attack.drill.player": "%1$s有一个可怕的牙医！",
+	"death.attack.drill.player": "%1$s有一个可怕的牙医",
 	"death.attack.vodka": "%1$s溶解了自己的肝",
 	"death.attack.vodka.player": "%1$s的肝被%2$s溶解",
 	"death.attack.potentialvoid": "%1$s的潜能消失了",
 	"death.attack.potentialvoid.player": "%2$s销毁了%1$s的潜能",
+	"death.attack.void": "%1$s被删除了",
+	"death.attack.void.player": "%2$s把%1$s删除了",
+	"death.attack.windmill": "%1$s向风车发起了冲锋",
+	"death.attach.windmill.player": "%1$s向风车发起了冲锋",
 	"death.attack.salt": "%1$s盐碱化了",
 	"death.attack.salt.player": "%1$s被%2$s过度调味",
 	"death.attack.chemical": "%1$s死于化学泄漏",

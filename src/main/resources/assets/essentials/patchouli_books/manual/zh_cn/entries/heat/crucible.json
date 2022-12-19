@@ -24,5 +24,8 @@
 			"type": "patchouli:text",
 			"text": "这台机器常见的其他用途有生产熔岩和将金属物品熔化成液体。工业坩埚也可以将矿石熔化成含两个锭的熔融金属，从而使矿物产出变成双倍。熔融金属可在<item>$(l:crossroads:heat/fcc)流体冷却室/$冷却成锭。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:heating_crucible" : 0
+	}
 }

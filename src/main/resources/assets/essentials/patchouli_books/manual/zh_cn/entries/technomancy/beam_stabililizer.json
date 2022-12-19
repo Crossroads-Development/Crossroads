@@ -17,5 +17,8 @@
 			"type": "patchouli:text",
 			"text": "颜色和总存储$(l:crossroads:intro/beam)光束/$相同。$(br2)这种特性可以“平滑”收到的<thing>$(l:crossroads:intro/beam)光束/$，将脉冲转换为持续<thing>$(l:crossroads:intro/beam)光束/$并减少输入的波动。$(br2)<item>$(l:essentials/circuits#reader)电路/$可测量存储的总<thing>$(l:crossroads:intro/beam)功率/$。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:clock_stabilizer" : 0
+	}
 }

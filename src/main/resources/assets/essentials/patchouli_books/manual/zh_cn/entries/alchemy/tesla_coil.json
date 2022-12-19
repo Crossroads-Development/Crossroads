@@ -33,5 +33,12 @@
 			"type": "patchouli:text",
 			"text": "<item>高强度特斯拉线圈顶部/$一次传输 10,000 FE，FE 传输效率是普通顶部的 10 倍。需要在<item>$(l:crossroads:fluid/tesla)特斯拉线圈/$内放一个<item>$(l:crossroads:fluid/tesla)莱顿瓶/$。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:tesla_coil_top_efficiency" : 4,
+		"crossroads:tesla_coil_top_distance" : 3,
+		"crossroads:tesla_coil_top_intensity" : 5,
+		"crossroads:tesla_coil_top_attack" : 1,
+		"crossroads:tesla_coil_top_decorative" : 2
+	}
 }

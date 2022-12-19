@@ -26,5 +26,8 @@
 			"type": "patchouli:text",
 			"text": "<bobo>盒什么抽走红涩水的东西$(br2)<bobo>海有什么闪量绿色的前$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:cultivator_vat" : 0
+	}
 }

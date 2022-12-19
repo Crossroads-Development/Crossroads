@@ -20,5 +20,9 @@
 			"type": "patchouli:text",
 			"text": "也有一种<item>黄金旋转钻头/$，击杀生物时会被视作玩家击杀，使得生物会掉落经验和特有掉落，但会吸取更多旋转能。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:rotary_drill" : 0,
+		"crossroads:rotary_drill_gold" : 2
+	}
 }

@@ -24,5 +24,8 @@
 			"type": "patchouli:text",
 			"text": "只有一半的处理能够成功，更低速度下依此类推。$(br2)<thing>$(l:essentials/circuits)读取器电路/$可测量输入槽的充满程度。$(br2)是要把未处理的矿石过滤出来再送回去，还是增加<thing>转速/$，取决于你的选择。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:stamp_mill" : 0
+	}
 }

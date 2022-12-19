@@ -17,5 +17,8 @@
 			"type": "patchouli:text",
 			"text": "<thing>$(l:crossroads:intro/technomancy)时间熵/$的速度将大于<thing>$(l:crossroads:technomancy/node)熵结点/$吸收的速度，导致不可避免的爆炸。$(br2)通入红石信号可以停止<item>时空操纵器/$工作。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:chrono_harness" : 0
+	}
 }

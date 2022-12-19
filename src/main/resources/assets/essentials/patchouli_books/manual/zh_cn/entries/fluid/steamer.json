@@ -16,5 +16,8 @@
 			"type": "patchouli:text",
 			"text": "<thing>$(l:crossroads:intro/fluid)/$可以从顶面输出。$(br2)总的来说，<item>蒸柜/$每摄氏度<thing>$(l:crossroads:intro/heat)热量/$的工作效率是$(l:crossroads:heat/smelter)<item>冶炼炉/$的两倍，工作速度也是$(l:crossroads:heat/smelter)<item>冶炼炉/$最高速度的两倍。$(br2)<thing>$(l:essentials/circuits#reader)读取器电路/$可测量输入槽的充满程度。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:steamer" : 0
+	}
 }

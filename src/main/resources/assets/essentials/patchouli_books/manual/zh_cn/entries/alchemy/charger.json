@@ -29,5 +29,8 @@
 			"type": "patchouli:text",
 			"text": "<bobo>b0B0离开/$$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:charging_stand" : 0
+	}
 }

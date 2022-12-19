@@ -16,5 +16,8 @@
 			"type": "patchouli:text",
 			"text": "即便是在其最低工作温度，<item>冶炼炉/$的速度也比熔炉快。$(br2)<item>$(l:crossroads:heat/cable)热导管/$需要从顶部连接。<thing>$(l:essentials/circuits)读取器电路/$可测量输入槽的充满程度。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:heating_chamber" : 0
+	}
 }

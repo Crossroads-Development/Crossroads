@@ -20,5 +20,8 @@
 			"type": "patchouli:text",
 			"text": "对于自动化来说非常重要。$(br2)<thing>$(l:crossroads:intro/fluid)蒸汽/$可以同时为<item>$(l:crossroads:heat/radiator)热/$或<item>$(l:crossroads:rotary/turbine)旋转能/$产生能量。不论<thing>$(l:crossroads:intro/fluid)蒸汽/$是从什么液体而来，产能后总会产生<thing>$(l:crossroads:intro/fluid)蒸馏水/$。<thing>$(l:crossroads:intro/fluid)蒸馏水/$也可以在<item>$(l:crossroads:fluid/centrifuge)水离心机/$中产生。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:steam_boiler" : 0
+	}
 }

@@ -53,5 +53,8 @@
 			"type": "patchouli:text",
 			"text": "与<thing>火焰态/$试剂混合可得到膨胀的死亡雷电云。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		
+	}
 }

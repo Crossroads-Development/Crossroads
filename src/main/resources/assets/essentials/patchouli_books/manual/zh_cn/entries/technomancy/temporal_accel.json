@@ -39,5 +39,9 @@
 			"type": "patchouli:text",
 			"text": "产生 16 时间熵/周期，+200% 时产生 32 时间熵/周期，+300% 时产生 64 时间熵/周期）。$(br2)多个重叠的<item>分布式时间加速器/$的效果也会叠加。<item>分布式时间加速器/$本身的时间不能被加速。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:temporal_accelerator" : 0,
+		"crossroads:chunk_accelerator" : 4
+	}
 }

@@ -21,5 +21,9 @@
 			"type": "patchouli:text",
 			"text": "<item>试剂泵/$有玻璃和水晶两种变体。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:reagent_pump" : 0,
+		"crossroads:crystal_reagent_pump" : 0
+	}
 }

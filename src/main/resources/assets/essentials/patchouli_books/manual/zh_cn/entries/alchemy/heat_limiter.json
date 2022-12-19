@@ -25,5 +25,9 @@
 			"type": "patchouli:text",
 			"text": "<item>温度调节器/$有两种变体：普通<item>温度调节器/$，通过UI设置目标温度；<item>红石温度调节器/$，通过<thing>$(l:essentials/circuit)电路/$设置目标<thing>$(l:crossroads:intro/heat)温度/$。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:heat_limiter_basic" : 0,
+		"crossroads:heat_limiter" : 4
+	}
 }

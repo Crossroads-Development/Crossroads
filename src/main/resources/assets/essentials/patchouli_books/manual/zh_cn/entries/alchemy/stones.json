@@ -37,5 +37,9 @@
 			"type": "patchouli:text",
 			"text": "用<item>实践者之石/$制造的<thing>元素试剂/$的主要用途是其效果。参见$(l:crossroads:alchemy/terraforming)环境改造条目/$获取更多信息。$(br2)<item>电压素也能通过<item>$(l:crossroads:alchemy/generator)电压素发电机/$作为 FE 源，或者用来造成伤害（更多细节参见$(l:crossroads:alchemy/effect)效果条目/$）。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:phil_stone" : 0,
+		"crossroads:prac_stone" : 3
+	}
 }

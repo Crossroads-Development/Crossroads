@@ -25,5 +25,8 @@
 			"type": "patchouli:text",
 			"text": "大多数植物（非下界、非水下、非真菌）都需要光。<item>水培槽/$只会在光照等级9或以上产出物品。火把之类的人工光源也是可以的。$(br2)<thing>$(l:essentials/circuits)电路/$可测量物品输出槽的充满程度，范围为0到15。"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:hydroponics_trough" : 0
+	}
 }

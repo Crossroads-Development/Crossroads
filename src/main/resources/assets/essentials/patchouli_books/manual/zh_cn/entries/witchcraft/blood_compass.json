@@ -1,0 +1,24 @@
+{
+	"category": "essentials:witchcraft",
+	"name": "血友指南针",
+	"icon": "crossroads:blood_compass",
+	"sortnum": 0,
+	"priority": false,
+	"advancement": "crossroads:progress/path/witchcraft",
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "patchouli:spotlight",
+			"title": "血友指南针",
+			"item": "crossroads:blood_compass",
+			"text": "<item>血友指南针/$能通过<item>$(l:essentials:witchcraft/syringe#blood)血样/$追踪其他玩家或生物。副手手持<item>$(l:essentials:witchcraft/syringe#blood)血样/$时，如果目标与你在同一维度，指南针就会指向目标。若维度不同，指针只会随机乱转。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "<item>$(l:essentials:witchcraft/syringe#blood)血样/$$(l:essentials:witchcraft/spoilage)腐坏/$后指南针将不再起作用。$(br2)另外，指南针也无法追踪下线的玩家和位于未加载区块的生物。$(br2)"
+		}
+	],
+	"extra_recipe_mappings": {
+		"crossroads:blood_compass" : 0
+	}
+}

@@ -36,5 +36,8 @@
 			"type": "patchouli:text",
 			"text": "都会给光束添加一个 4 tick（0.2 秒）的延迟（这个长度被称为 1 个<thing>周期/$），光束在机器间则会最多传播 16 格。光束<thing>功率/$的上限为 64,000。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		
+	}
 }

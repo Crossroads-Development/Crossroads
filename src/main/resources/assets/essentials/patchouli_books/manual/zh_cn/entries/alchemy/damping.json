@@ -27,5 +27,9 @@
 			"type": "patchouli:text",
 			"text": "探测器会根据其位置深度输出一个负值。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:damping_powder" : 0,
+		"crossroads:fire_detector" : 2
+	}
 }

@@ -17,5 +17,8 @@
 			"type": "patchouli:text",
 			"text": "<thing>虚空-膨胀/$，也就是<thing>收缩/$，会破坏击中的方块并使其以物品形式掉落。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		
+	}
 }

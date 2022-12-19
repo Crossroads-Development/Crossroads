@@ -17,5 +17,8 @@
 			"type": "patchouli:text",
 			"text": "有一个类似近战武器的攻击冷却，冷却时会造成更少伤害而且<em>不会连锁攻击/$。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:tesla_ray" : 0
+	}
 }

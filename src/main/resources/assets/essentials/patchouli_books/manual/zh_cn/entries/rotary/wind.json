@@ -28,5 +28,8 @@
 			"type": "patchouli:text",
 			"text": "和<item>$(l:crossroads:rotary/gear_base)可切换齿轮和离合器/$结合，将有可能保证涡轮机<em>永远不/$对抗动量。<em>这可能是个好主意！/$$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:wind_turbine" : 0
+	}
 }

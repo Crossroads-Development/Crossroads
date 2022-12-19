@@ -37,5 +37,9 @@
 			"type": "patchouli:text",
 			"text": "齿轮质量为 0。有一种<item>$(l:crossroads:technomancy/redstone_axis)特殊主轴/$只能使用锞齿轮。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:ingot_copshowium" : 0,
+		"crossroads:copshowium_creation_chamber" : 0
+	}
 }

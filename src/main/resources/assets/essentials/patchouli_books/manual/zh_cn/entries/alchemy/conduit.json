@@ -21,5 +21,11 @@
 			"type": "patchouli:text",
 			"text": "<item>红石炼金术导管/$就像普通<item>炼金术导管/$，不过只在收到红石信号时连接到相邻导管和设备。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:alch_tube" : 0,
+		"crossroads:crystal_alch_tube" : 0,
+		"crossroads:reds_alch_tube" : 3,
+		"crossroads:crystal_reds_alch_tube" : 3
+	}
 }

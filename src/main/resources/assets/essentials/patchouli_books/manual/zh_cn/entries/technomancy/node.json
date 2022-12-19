@@ -29,5 +29,8 @@
 			"type": "patchouli:text",
 			"text": "<item>$(l:essentials/circuits#reader)电路/$和红石控制能够实现<thing>$(l:crossroads:intro/technomancy)时间熵/$的智能路由系统，能够在某条<item>结点/$链快充满时将<thing>$(l:crossroads:intro/technomancy)时间熵/$送到另一条路或存储起来。对于低<thing>$(l:crossroads:intro/technomancy)时间熵/$产出的情况来说，这不足为虑，但对于大型基地来说，这会很重要。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:flux_node" : 0
+	}
 }

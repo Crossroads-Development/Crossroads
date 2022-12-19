@@ -29,5 +29,8 @@
 			"type": "patchouli:text",
 			"text": "锁定或解锁，锁定后的角度会永久维持在锁定时的值，哪怕所有相连$(l:crossroads:intro/rotary)<thing>旋转/$设备都已被移除。偏角和仰角不会随着<thing>$(l:crossroads:intro/rotary)转速/$改变而立即改变——炮管会指向新角度，相当快，但不是即时完成。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:item_cannon" : 0
+	}
 }

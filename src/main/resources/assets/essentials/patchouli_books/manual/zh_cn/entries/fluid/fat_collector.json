@@ -24,5 +24,8 @@
 			"type": "patchouli:text",
 			"text": "<thing>液态脂肪/$可使用<item>$(l:crossroads:fluid/fat_congealer)脂肪冷却器/$制成自定义食物，或在<item>$(l:crossroads:fluid/fat_feeder)脂肪喂食器/$直接用于喂食附近的玩家和动物。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:fat_collector" : 0
+	}
 }

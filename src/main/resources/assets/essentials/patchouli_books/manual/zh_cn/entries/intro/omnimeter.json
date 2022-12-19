@@ -20,5 +20,8 @@
 			"type": "patchouli:text",
 			"text": "另一个交错道途中常常使用的基础工具是<item>$(l:essentials/wrench)扳手/$——不过基本任何模组的扳手都可以。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:omnimeter" : 0
+	}
 }

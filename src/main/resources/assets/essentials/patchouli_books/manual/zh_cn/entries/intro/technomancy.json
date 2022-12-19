@@ -25,5 +25,8 @@
 			"type": "patchouli:text",
 			"text": "一个好的初始<thing>科技魔法/$机器是<item>$(l:crossroads:technomancy/beacon_harness)信标操纵器/$，它可以廉价地大量产出<thing>$(l:crossroads:intro/beam)光束/$。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		
+	}
 }

@@ -16,5 +16,8 @@
 			"type": "patchouli:text",
 			"text": "<item>盐反应器/$制冷可一直降到<thing>绝对零度/$。<item>$(l:crossroads:heat/cable)热导管/$需要从底部连接，输入蒸馏水和输出普通水的管道可以连接到 4 个侧面。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:salt_reactor" : 0
+	}
 }

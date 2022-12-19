@@ -25,5 +25,8 @@
 			"type": "patchouli:text",
 			"text": "但总是位于35到140℃之间。$(br2)<thing>$(l:essentials/circuits)电路/$可以读取当前目标<thing>$(l:essentials:intro/heat)温度/$，单位为摄氏度。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:incubator" : 0
+	}
 }

@@ -29,5 +29,8 @@
 			"type": "patchouli:text",
 			"text": "<bobo>hI hII hIII hIV；；；；寺我！$(l:crossroads:intro/welcome#bobo)b0Bo！/$<bobo>$(br2)<bobo>窝卜要多用巨型全能功具！$(br2)<bobo>这跟棒！配置棒！齿伦能亮棒/$$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:staff_technomancy" : 0
+	}
 }

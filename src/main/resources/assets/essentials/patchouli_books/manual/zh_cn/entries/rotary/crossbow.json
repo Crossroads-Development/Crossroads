@@ -24,5 +24,8 @@
 			"type": "patchouli:text",
 			"text": "是<em>近距离射程/$的伤害。就像普通十字弩一样，实际伤害会随着距离增加而衰减。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:spring_gun" : 0
+	}
 }

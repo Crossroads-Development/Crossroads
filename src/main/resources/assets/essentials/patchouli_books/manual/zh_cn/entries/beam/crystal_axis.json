@@ -32,5 +32,8 @@
 			"type": "patchouli:text",
 			"text": "另一方面，如果一个涡轮机要产生 100J，旋现在也会变成 10J。这有助于保持速度稳定，减少其波动。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:master_axis_crystal" : 0
+	}
 }

@@ -24,5 +24,8 @@
 			"type": "patchouli:text",
 			"text": "<item>莱顿瓶/$是一种能放在<item>特斯拉线圈基座/$以增加 FE 容量的“电池”。<item>莱顿瓶/$可通过空手 shift 右击基座移除，并在移除时保留内部 FE 电荷。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:tesla_coil" : 0
+	}
 }

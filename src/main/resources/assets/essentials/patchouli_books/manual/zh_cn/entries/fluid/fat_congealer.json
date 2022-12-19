@@ -14,7 +14,10 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<item>食物团/$回复的饥饿值等于 4 乘以顶部齿轮的<thing>$(l:crossroads:intro/rotary)转速/$。其饱和度等于 4 乘以底部齿轮的<thing>$(l:crossroads:intro/rotary)转速/$。$(br2)每个<item>食物团/$的每点饥饿值和饱和度之和消耗 100 mB 的<thing>液态脂肪/$和少量的<thing>$(l:crossroads:intro/rotary)旋转能/$。通入红石信号会关闭该机器。$(br2)"
+			"text": "<item>食物团/$回复的饥饿值等于 4 乘以顶部齿轮的<thing>$(l:crossroads:intro/rotary)转速/$。其饱和度等于 4 乘以底部齿轮的<thing>$(l:crossroads:intro/rotary)转速/$。另外，<item>食物团/$的饥饿值必须大于等于 1。$(br2)每个<item>食物团/$的每点饥饿值和饱和度之和消耗 100 mB 的<thing>液态脂肪/$和少量的<thing>$(l:crossroads:intro/rotary)旋转能/$。通入红石信号会关闭该机器。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:fat_congealer" : 0
+	}
 }

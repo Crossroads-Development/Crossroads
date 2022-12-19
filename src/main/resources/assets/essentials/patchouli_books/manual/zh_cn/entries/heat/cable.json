@@ -28,5 +28,19 @@
 			"type": "patchouli:text",
 			"text": "<bobo>$(l:crossroads:intro/welcome#bobo)b0b0题示时尖！/$<bobo>$(br2)<bobo>羊毛卜行！用抽咔热导管！！泥！土！壤！地！$(br2)<bobo>容掉揪可以开桨！/$$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:heat_cable_wool" : 0,
+		"crossroads:heat_cable_slime" : 0,
+		"crossroads:heat_cable_ice" : 0,
+		"crossroads:heat_cable_obsidian" : 0,
+		"crossroads:heat_cable_ceramic" : 0,
+		"crossroads:heat_cable_densus" : 0,
+		"crossroads:redstone_heat_cable_wool" : 0,
+		"crossroads:redstone_heat_cable_slime" : 0,
+		"crossroads:redstone_heat_cable_ice" : 0,
+		"crossroads:redstone_heat_cable_obsidian" : 0,
+		"crossroads:redstone_heat_cable_ceramic" : 0,
+		"crossroads:redstone_heat_cable_densus" : 0
+	}
 }

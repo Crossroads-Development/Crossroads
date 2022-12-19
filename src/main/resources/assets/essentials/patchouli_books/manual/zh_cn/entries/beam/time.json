@@ -21,5 +21,8 @@
 			"type": "patchouli:text",
 			"text": "<thing>虚空-时间/$，也就是<thing>时间熵/$，$(l)极端$()危险。$(l)不要使用这个光束！当你不可避免地要这样做的时候，不要说我们没有警告你……$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		
+	}
 }

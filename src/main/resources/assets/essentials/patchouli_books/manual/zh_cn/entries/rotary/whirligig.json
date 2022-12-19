@@ -16,5 +16,8 @@
 			"type": "patchouli:text",
 			"text": "转速超过 6 rad/s 甚至还会提升玩家。使用时，设备会每秒吸取 0.02 rad 的<thing>$(l:crossroads:rotary/winding_table)发条速度/$，上满发条可持续 8 分钟。$(br2)<item>竹蜻蜓/$能方便地提供缓降，也能用于飞上悬崖或进入建筑。$(br2)<item>竹蜻蜓/$也是合适的近战武器，毕竟是一根大铁棒。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:whirligig" : 0
+	}
 }

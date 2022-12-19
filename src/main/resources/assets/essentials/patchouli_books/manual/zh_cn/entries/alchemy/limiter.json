@@ -21,5 +21,9 @@
 			"type": "patchouli:text",
 			"text": "<item>限流导管/$有水晶和玻璃两种变体。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:flow_limiter" : 0,
+		"crossroads:crystal_flow_limiter" : 0
+	}
 }

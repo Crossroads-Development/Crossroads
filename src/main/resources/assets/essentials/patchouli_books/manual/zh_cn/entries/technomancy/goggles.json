@@ -69,5 +69,8 @@
 			"type": "patchouli:text",
 			"text": "<bobo>素窝！$(l:crossroads:intro/welcome#bobo)bOBO/$<bobo>！！$(br2)<bobo>孩有另一个木境镜片！瞰川嘿暗！/$$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:module_goggles" : 0
+	}
 }

@@ -19,7 +19,10 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<thing>虚空-能量/$，也就是<thing>寒冷/$，会从热能机器和导管中移除<thing>$(l:crossroads:intro/heat)热量/$，速度为每单位功率每 5 tick 移除 100℃，或者 -20℃/功率/tick。$(br2)"
+			"text": "<thing>虚空-能量/$，也就是<thing>寒冷/$，会从热能机器和导管中移除<thing>$(l:crossroads:intro/heat)热量/$，速度为每单位功率每 5 tick 移除 100℃，或者 -20℃/功率/tick。这种光束还能灭火。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		
+	}
 }

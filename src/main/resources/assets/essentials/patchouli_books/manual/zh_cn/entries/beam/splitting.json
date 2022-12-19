@@ -28,5 +28,10 @@
 			"type": "patchouli:text",
 			"text": "<item>光束虹吸器/$会将射入光束分出指定功率大小的一部分并从正面射出（侧面箭头指向的那一端），剩余的从背面射出。从正面离开的光束功率等于方块收到的红石信号。它可接受<thing>$(l:essentials/circuits)电路/$输入以输出更高的功率。虹吸器是在输入功率未知的情况下制造特定功率光束的好办法。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:beam_redirector" : 1,
+		"crossroads:beam_splitter" : 3,
+		"crossroads:beam_siphon" : 4
+	}
 }

@@ -20,5 +20,8 @@
 			"type": "patchouli:text",
 			"text": "与<item>$(l:crossroads:heat/stirling)斯特林引擎/$相比，<item>蒸气轮机/$没有转速上限，更容易扩大规模，但其效率更低，需要的空间也比较大。如果需要很多能量或很高的转速，<item>蒸气轮机/$通常更好。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:steam_turbine" : 0
+	}
 }

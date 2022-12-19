@@ -24,5 +24,8 @@
 			"type": "patchouli:text",
 			"text": "这台机器常见的其他用途有制冰和将熔融金属冷却成锭。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:fluid_cooling_chamber" : 0
+	}
 }

@@ -29,5 +29,8 @@
 			"type": "patchouli:text",
 			"text": "偏角和仰角不会随着<thing>$(l:crossroads:intro/rotary)转速/$改变而立即改变——炮管会指向新角度，相当快，但不是即时完成。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:beam_cannon" : 0
+	}
 }

@@ -44,5 +44,8 @@
 			"type": "patchouli:text",
 			"text": "所有齿轮/轴/随便什么的网络里<em>必须有/$连上一个<item>$(l:crossroads:rotary/axis)主轴/$——不然什么都不会转！$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		
+	}
 }

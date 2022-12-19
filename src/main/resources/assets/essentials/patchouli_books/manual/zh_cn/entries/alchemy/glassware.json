@@ -45,5 +45,13 @@
 			"type": "patchouli:text",
 			"text": "<item>壳/$可用于扔出<thing>$(l:crossroads:intro/alchemy)试剂/$，从而使<thing>$(l:crossroads:alchemy/effect)效果/$在远离玩家的地方发生。在<item>架子/$中，它们能充当<item>试管/$（容量 20 单位，无反应），但可以通过右键扔出。落地时它们会破碎，释放<thing>$(l:crossroads:intro/alchemy)试剂/$并产生<thing>$(l:crossroads:alchemy/effect)效果/$。它们也能用发射器发射。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:phial_glass" : 5,
+		"crossroads:phial_cryst" : 5,
+		"crossroads:florence_flask_glass" : 6,
+		"crossroads:florence_flask_cryst" : 6,
+		"crossroads:shell_glass" : 8,
+		"crossroads:shell_cryst" : 8
+	}
 }

@@ -38,5 +38,11 @@
 			"type": "patchouli:text",
 			"text": "一个方块内可以有多个<item>贴面/$，它们是固体方块所以能允许站立，而且它们不会阻挡<item>$(l:crossroads:rotary/gear_base)齿轮/$的连接。<item>贴面/$不需要固体方块支撑，而且有四种变体：石砖、圆石、铁块和玻璃。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:gear_facade_stone_brick" : 0,
+		"crossroads:gear_facade_iron" : 0,
+		"crossroads:gear_facade_cobble" : 0,
+		"crossroads:gear_facade_glass" : 0
+	}
 }

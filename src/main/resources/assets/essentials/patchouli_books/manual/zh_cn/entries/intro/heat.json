@@ -28,5 +28,8 @@
 			"type": "patchouli:text",
 			"text": "<bobo>g0TTa g0 FAST！！！/$$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		
+	}
 }
