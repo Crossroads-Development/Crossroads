@@ -20,5 +20,8 @@
 			"type": "patchouli:text",
 			"text": "对于三倍矿物产出，你需要一个更重量级的磨石——<item>$(l:crossroads:rotary/stamp)捣磨机/$。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:millstone" : 0
+	}
 }

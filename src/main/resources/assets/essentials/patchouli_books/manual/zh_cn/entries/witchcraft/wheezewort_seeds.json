@@ -25,5 +25,8 @@
 			"type": "patchouli:text",
 			"text": "<item>$(l:essentials:witchcraft/hydroponics_trough)水培槽/$是快速生产大量<item>喘气草种子/$的好办法。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:wheezewort_seeds" : 0
+	}
 }

@@ -16,5 +16,8 @@
 			"type": "patchouli:text",
 			"text": "<thing>$(l:crossroads:intro/beam)/$的名字来突出显示<thing>$(l:crossroads:intro/beam)色域/$内的所有颜色。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:color_chart" : 0
+	}
 }

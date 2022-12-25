@@ -25,5 +25,8 @@
 			"type": "patchouli:text",
 			"text": "<thing>$(l:essentials/circuits)电路/$可读取存储的药水持续时间，单位为tick。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:auto_injector" : 0
+	}
 }

@@ -33,5 +33,8 @@
 			"type": "patchouli:text",
 			"text": "(可以是脉冲)。启动需要 2 秒（10 个<thing>$(l:crossroads:intro/beam)周期/$）。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:beacon_harness" : 0
+	}
 }

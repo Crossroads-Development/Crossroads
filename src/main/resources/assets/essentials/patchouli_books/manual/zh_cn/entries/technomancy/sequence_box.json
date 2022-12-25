@@ -25,5 +25,8 @@
 			"type": "patchouli:text",
 			"text": "会使序列的当前输出跳到该行。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:sequence_box" : 0
+	}
 }

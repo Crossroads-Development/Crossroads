@@ -20,5 +20,8 @@
 			"type": "patchouli:text",
 			"text": "并主动减慢转速。它会产生（或者说减少）-20 * <thing>(物品发条转速)/$ J/t。上发条时一定要小心，不要上过头，让阻力把速度降下来并把物品破坏掉！$(br2)<thing>$(l:essentials/circuits#reader)电路/$可读取正在上发条的<em>物品/$的<thing>发条转速/$，而不是<item>架/$的转速。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:winding_table" : 0
+	}
 }

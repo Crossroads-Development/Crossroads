@@ -40,5 +40,8 @@
 			"type": "patchouli:text",
 			"text": "记住，所有齿轮网络需要至少一个<item>$(l:crossroads:rotary/axis)主轴/$来运行。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:gear_base" : 0
+	}
 }

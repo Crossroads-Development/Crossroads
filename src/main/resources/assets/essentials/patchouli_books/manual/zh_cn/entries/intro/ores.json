@@ -24,5 +24,8 @@
 			"type": "patchouli:text",
 			"text": "<item>虚空矿石/$只在末地和末地外岛的末地石中生成。这种矿石比较容易发现。挖掘后掉落<item>虚空水晶/$，用于游戏末期的<thing>$(l:crossroads:intro/beam)光束/$（特别是创造<thing>$(l:crossroads:beam/void)虚空/$）。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		
+	}
 }

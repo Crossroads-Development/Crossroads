@@ -16,5 +16,8 @@
 			"type": "patchouli:text",
 			"text": "<item>手摇曲柄/$应该用于<em>非常/$早期游戏下进行测试——如果你发现你正靠这个来供能，请试试用<item>$(l:crossroads:rotary/wind)风力涡轮机/$之类的代替。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:hand_crank" : 0
+	}
 }

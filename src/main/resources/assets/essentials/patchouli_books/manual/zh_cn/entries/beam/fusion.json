@@ -17,5 +17,8 @@
 			"type": "patchouli:text",
 			"text": "<thing>虚空-融合/$，也就是<thing>分裂/$，也没有“效果”，但能够将<thing>融合/$光束的效果反转。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		
+	}
 }

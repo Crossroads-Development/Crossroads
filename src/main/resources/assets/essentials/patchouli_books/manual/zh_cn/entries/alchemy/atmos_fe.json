@@ -25,5 +25,8 @@
 			"type": "patchouli:text",
 			"text": "都是闪电苦力怕。<em>设置一个防止充得太满的系统会是个好主意！/$$(br2)<thing>$(l:essentials/circuits#reader)电路/$可以百分比值测量共享<thing>大气存储/$的FE充满程度。总存储为十亿FE，500000000就是50%充满。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:atmos_charger" : 0
+	}
 }

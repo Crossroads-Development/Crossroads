@@ -25,5 +25,9 @@
 			"type": "patchouli:text",
 			"text": "<item>反应容器/$可存储 200 单位<thing>$(l:crossroads:intro/alchemy)试剂/$。这种容器<em>允许/$内部发生<thing>$(l:crossroads:intro/alchemy)反应/$。容器也可以使用 FE，消耗速度为 10 FE/t。如果在消耗 FE，容器可作为<thing>充能环境/$供<thing>$(l:crossroads:intro/alchemy)反应/$进行。<item>反应容器/$主要用于自动进行<thing>$(l:crossroads:intro/alchemy)反应/$。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:reagent_tank" : 0,
+		"crossroads:crystal_reagent_tank" : 0
+	}
 }

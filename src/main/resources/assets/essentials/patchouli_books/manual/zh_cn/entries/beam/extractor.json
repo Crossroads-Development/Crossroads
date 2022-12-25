@@ -20,5 +20,8 @@
 			"type": "patchouli:text",
 			"text": "<item>共振提取器/$可用红石信号关闭。$(br2)许多可提取的物品（例如荧石粉和红石粉）可以用<thing>$(l:crossroads:intro/beams)光束/$制造，使得它们的生产能更容易自动化。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:beam_extractor" : 0
+	}
 }

@@ -24,5 +24,9 @@
 			"type": "patchouli:text",
 			"text": "<bobo>$(l:crossroads:intro/welcome#bobo)BOBO/$<bobo>节快乐！$(br2)<bobo>尼可以用管造真空漏斗！另歪还药漏斗何一些毛衣！$(br2)<bobo>bOBO离开！/$$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:fluid_tube" : 0,
+		"crossroads:redstone_fluid_tube" : 2
+	}
 }

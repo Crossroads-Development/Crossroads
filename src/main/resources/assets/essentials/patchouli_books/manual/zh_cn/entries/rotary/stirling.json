@@ -28,5 +28,8 @@
 			"type": "patchouli:text",
 			"text": "与<item>$(l:crossroads:rotary/steam_turbine)蒸气轮机/$相比，<item>斯特林引擎/$的效率可以高很多，而且没有最小工作温度。但是，扩大<item>斯特林引擎/$规模比<item>$(l:crossroads:rotary/steam_turbine)蒸气轮机/$更难，而且<item>斯特林引擎/$较低的上限速度意味着不能在没有<thing>$(l:crossroads:rotary/gear_large)大型齿轮/$变速的情况下让大多数机器工作。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:stirling_engine" : 0
+	}
 }

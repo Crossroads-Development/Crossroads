@@ -28,5 +28,8 @@
 			"type": "patchouli:text",
 			"text": "<bobo>赌土豆！：兑$(l:crossroads:intro/welcome#bobo)b0B0东吸/$很重药！$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		
+	}
 }

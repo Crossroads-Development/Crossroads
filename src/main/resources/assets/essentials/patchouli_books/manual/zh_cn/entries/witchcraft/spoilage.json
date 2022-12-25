@@ -43,5 +43,9 @@
 			"item": "crossroads:cultivator_vat",
 			"text": "有一些会<thing>腐坏/$的物品会因为冻结受到损伤，比如<item>胚胎/$。这些物品可以通过装满<thing>营养液/$的<thing>$(l:essentials:witchcraft/cultivator_vat)营养缸/$进行无损保存。$(br2)请参阅<item>$(l:essentials:witchcraft/cultivator_vat)营养缸/$条目了解更多信息。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:cold_storage" : 0,
+		"crossroads:stasis_storage" : 4
+	}
 }

@@ -16,5 +16,8 @@
 			"type": "patchouli:text",
 			"text": "<item>主轴/$没有任何<thing> I 值/$或任何类似的东西——在游戏早期，它的存在只是让所有东西能够运行。$(br2)在游戏后期，有一些有着特殊效果的<item>$(l:crossroads:beam/crystal_axis)特殊主轴/$。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:master_axis" : 0
+	}
 }

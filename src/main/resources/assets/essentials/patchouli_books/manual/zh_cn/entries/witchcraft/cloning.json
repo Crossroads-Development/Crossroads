@@ -52,5 +52,8 @@
 			"type": "patchouli:text",
 			"text": "克隆。$(br2)最后，<item>胚胎/$被<item>$(l:essentials:witchcraft/incubator)孵化器/$制作成生成生物的<item>刷怪蛋/$。这些<item>刷怪蛋/$也能被发射器使用。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:mutagen" : 0
+	}
 }

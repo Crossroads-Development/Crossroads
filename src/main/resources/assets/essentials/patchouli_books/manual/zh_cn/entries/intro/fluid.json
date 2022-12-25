@@ -24,5 +24,8 @@
 			"type": "patchouli:text",
 			"text": "熔融金属能被<item>$(l:crossroads:heat/fcc)冷却成锭/$。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:fluid_tube" : 0
+	}
 }

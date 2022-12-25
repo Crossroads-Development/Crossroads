@@ -21,5 +21,8 @@
 			"type": "patchouli:text",
 			"text": "注意，默认情况下<item>飞行机器/$同时需要来自$(l:crossroads:intro/path)炼金术和科技魔法/$的原料合成。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:flying_machine" : 0
+	}
 }

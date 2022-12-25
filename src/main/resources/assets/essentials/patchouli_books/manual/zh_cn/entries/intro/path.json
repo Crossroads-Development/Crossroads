@@ -58,5 +58,8 @@
 			"anchor": "sigils",
 			"text": "<item>道途印记/$（即<item>炼金术印记/$、<item>科技魔法印记/$和<item>巫术印记/$)是用于分享<thing>道途/$的物品。任何玩家都可以使用一个来立刻解锁一条<thing>道途/$，或者shift右击<item>印记/$来忘记一条道途。用这种方式解锁<thing>道途/$不需要先发现<thing>$(l:crossroads:intro/beam)色域/$。$(br2)印记是一次性物品，而且只能让已解锁<thing>道途/$的玩家合成。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		
+	}
 }

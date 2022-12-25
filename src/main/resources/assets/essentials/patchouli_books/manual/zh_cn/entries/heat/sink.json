@@ -16,5 +16,8 @@
 			"type": "patchouli:text",
 			"text": "它会以设定的速度将自身温度改变至群系温度。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:heat_sink" : 0
+	}
 }

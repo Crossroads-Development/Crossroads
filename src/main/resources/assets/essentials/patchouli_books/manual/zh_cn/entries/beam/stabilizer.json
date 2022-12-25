@@ -16,5 +16,8 @@
 			"type": "patchouli:text",
 			"text": "并随时间经过缓慢射出。射出光束功率可用<item>$(l:essentials/wrench)扳手/$ shift 右击配置。$(br2)这种特性能够将大光束平摊成有恒定功率的持续光束。$(br2)<item>$(l:essentials/circuits#reader)电路/$可测量总储存<thing>$(l:crossroads:intro/beam)功率/$。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:quartz_stabilizer" : 0
+	}
 }

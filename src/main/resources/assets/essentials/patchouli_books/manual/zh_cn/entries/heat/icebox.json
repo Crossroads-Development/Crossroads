@@ -24,5 +24,8 @@
 			"type": "patchouli:text",
 			"text": "<bobo>毒！牛爬河乃！$(br2)<bobo>众力！雨毛和大沼泽叶！/$$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:icebox" : 0
+	}
 }

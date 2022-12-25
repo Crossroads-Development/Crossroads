@@ -17,5 +17,8 @@
 			"type": "patchouli:text",
 			"text": "<thing>$(l:essentials:witchcraft/cloning)克隆/$系统，有着多种应用。$(br2)其他值得一提的还有用于大规模生产植物的<item>$(l:essentials:witchcraft/hydroponics_trough)水培槽/$和新的<thing>$(l:essentials:witchcraft/medicinal_mushroom)药水效果和配方/$。$(br2)巫术道途没有设计好的或者推荐的推进顺序。选择看起来有趣的内容然后试试吧！$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		
+	}
 }

@@ -24,5 +24,8 @@
 			"type": "patchouli:text",
 			"text": "这种方法能廉价生产明亮石英，而且不消耗光束。$(br2)<thing>$(l:essentials/circuits#reader)电路/$会读取当前穿过<item>透镜框架/$的光束的<thing>功率/$。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:lens_frame" : 0
+	}
 }

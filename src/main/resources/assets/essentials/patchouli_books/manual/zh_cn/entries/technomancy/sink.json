@@ -17,5 +17,8 @@
 			"type": "patchouli:text",
 			"text": "信标不一定需要激活，不过<item>熵槽/$也不会阻挡信标光束。$(br2)一般使用<item>$(l:crossroads:technomancy/node)熵结点/$将<thing>$(l:crossroads:intro/technomancy)时间熵/$从机器传输到<item>熵槽/$。$(br2)<item>熵槽/$可以和<item>$(l:crossroads:technomancy/beacon_harness)信标操纵器/$共享同一个信标。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:flux_sink" : 0
+	}
 }

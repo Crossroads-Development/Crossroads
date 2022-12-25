@@ -29,5 +29,8 @@
 			"item": "minecraft:potion{Potion:\"crossroads:curative\"}",
 			"text": "<thing>中和/$药水是药水形式的牛奶。它们能移除所有药水效果。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:medicinal_mushroom" : 0
+	}
 }

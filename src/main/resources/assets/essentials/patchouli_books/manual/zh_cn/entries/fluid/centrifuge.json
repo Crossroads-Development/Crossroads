@@ -20,5 +20,8 @@
 			"type": "patchouli:text",
 			"text": "<item>水离心机/$的转速没有上限。$(br2)如果两个输出（流体或物品）溢出了，<item>水离心机/$仍会运行。任何放不下的产品都会被<em>销毁/$。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:water_centrifuge" : 0
+	}
 }

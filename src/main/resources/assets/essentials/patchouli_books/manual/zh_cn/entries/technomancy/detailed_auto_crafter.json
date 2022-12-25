@@ -17,5 +17,8 @@
 			"type": "patchouli:text",
 			"text": "一个<thing>$(l:crossroads:intro/path)道途印记/$。需要放置<thing>$(l:crossroads:intro/path)道途印记/$才能合成该<thing>$(l:crossroads:intro/path)道途/$的专属配方，而且<thing>$(l:crossroads:intro/path)道途印记/$不会被消耗。$(br2)除此上述特性外，它的工作方式和<item>$(l:essentials/autocrafter)自动合成器/$相同。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:detailed_auto_crafter" : 0
+	}
 }

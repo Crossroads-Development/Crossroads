@@ -29,5 +29,11 @@
 			"type": "patchouli:text",
 			"text": "<bobo>$(l:crossroads:intro/welcome#bobo)寺BOBO！/$<bobo>KABANG！KABOOM！KABLOOEY！（祝福尼）$(br2)<bobo>窝有BANG瓶子！旦要小星！！布然尼->>bUUM！$(br2)<bobo>黄色粉！新新新鲜陪根根！！何用来放的平子！$(br2)<bobo>bOBO离开！/$$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:solid_regia" : 2,
+		"crossroads:solid_vitriol" : 0,
+		"crossroads:solid_muriatic" : 0,
+		"crossroads:solid_fortis" : 0
+	}
 }

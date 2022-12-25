@@ -21,5 +21,8 @@
 			"type": "patchouli:text",
 			"text": "默认情况下，存储的时刻如果不使用会在 5 分钟后过期。要使用<item>个人时间倒带器/$，必须在<item>$(l:crossroads:rotary/winding_table)上发条架/$上好发条。每次使用会消耗0.4$(l:crossroads:rotary/winding_table)<thing>发条转速/$，而设备的最高转速为 10。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:recall_device" : 0
+	}
 }

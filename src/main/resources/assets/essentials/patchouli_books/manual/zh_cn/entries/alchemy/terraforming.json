@@ -61,5 +61,8 @@
 			"type": "patchouli:text",
 			"text": "对于这种大量复杂的混合物释放，建议使用<item>$(l:crossroads:alchemy/glassware)壳/$或者<item>$(l:crossroads:alchemy/glassware)试管/$进行。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		
+	}
 }

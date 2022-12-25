@@ -20,5 +20,8 @@
 			"type": "patchouli:text",
 			"text": "<bobo>Bobojour！Glüten tag！Comichiewa！右到勒$(l:crossroads:intro/welcome#bobo)BOBO/$<bobo>时间！$(br2)<bobo>窝有蹦题示！！$(br2)<bobo>黑闪亮石头，管，海绵！$(br2)<bobo>boqr离开/$$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:ore_cleanser" : 0
+	}
 }

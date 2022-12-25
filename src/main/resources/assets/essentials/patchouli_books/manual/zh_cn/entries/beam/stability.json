@@ -17,5 +17,8 @@
 			"type": "patchouli:text",
 			"text": "<thing>虚空-稳定/$，也就是<thing>混沌/$，会创造爆炸，强度=<thing>功率/$/4。这种爆炸必定掉落所有破坏的方块，类似于 TNT 爆炸。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		
+	}
 }

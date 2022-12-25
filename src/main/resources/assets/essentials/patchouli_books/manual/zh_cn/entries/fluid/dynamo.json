@@ -24,5 +24,8 @@
 			"type": "patchouli:text",
 			"text": "<bobo>蓝色闪亮石投，一丶点金！$(br2)<bobo>*注：进行求雨舞可能会触发“粘滞键”。须符合条款及条件。表演一场雨舞，你就放弃了你对你灵魂的权利。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:dynamo" : 0
+	}
 }

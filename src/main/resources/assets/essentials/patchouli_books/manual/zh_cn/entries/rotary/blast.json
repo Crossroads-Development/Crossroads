@@ -20,5 +20,8 @@
 			"type": "patchouli:text",
 			"text": "<item>工业高炉/$使用<thing>$(l:crossroads:intro/rotary)旋转能/$运行。轴/齿轮可连接到顶部，机器工作需要的最小转速为 2.5 rad/s。$(br2)<thing>$(l:essentials/circuits)读取器电路/$可测量输入槽的充满程度。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:blast_furnace" : 0
+	}
 }

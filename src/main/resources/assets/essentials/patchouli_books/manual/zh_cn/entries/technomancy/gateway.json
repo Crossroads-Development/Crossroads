@@ -76,5 +76,10 @@
 			"type": "patchouli:text",
 			"text": "这意味着你可以建造一个有全套拨号系统的普通<thing>传送门/$，然后使其通向许多不同的可以连接回来的简单<thing>端点传送门/$，从而实现一个传送枢纽。$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:gateway_frame" : 0,
+		"crossroads:gateway_edge" : 0,
+		"crossroads:gateway_controller_destination" : 11
+	}
 }

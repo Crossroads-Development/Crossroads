@@ -24,5 +24,8 @@
 			"type": "patchouli:text",
 			"text": "<bobo>caAAAAnnnnn YOU HEAr dAAA LUV 2NITE~~~$(br2)<bobo>窝我我回来了！！；！嗨，我四$(l:crossroads:intro/welcome#bobo)bobo/$<bobo>$(br2)<bobo>向哒鼻子船播爱，把大陕亮钱快放在脂肪机下面！kApEESH？/$$(br2)"
 		}
-	]
+	],
+	"extra_recipe_mappings": {
+		"crossroads:fat_feeder" : 0
+	}
 }
