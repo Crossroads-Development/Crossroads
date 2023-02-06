@@ -64,7 +64,9 @@ public class DensusPlate extends BaseEntityBlock{
 			if(layers < 4){
 				if(!worldIn.isClientSide){
 					worldIn.setBlockAndUpdate(pos, state.setValue(CRProperties.LAYERS, layers + 1));
-					stack.shrink(1);
+					if(playerIn == null || !playerIn.isCreative()){
+						stack.shrink(1);
+					}
 				}
 				return InteractionResult.SUCCESS;
 			}
