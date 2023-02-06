@@ -43,8 +43,6 @@ import java.util.List;
 
 public class EntityHopperHawk extends ShoulderRidingEntity implements FlyingAnimal{
 
-	private static final Ingredient FOOD_INGREDIENT = Ingredient.of(Items.HOPPER, ESBlocks.sortingHopper, ESBlocks.speedHopper);
-
 	public static EntityType<EntityHopperHawk> type;
 
 	protected float flap;
@@ -65,6 +63,16 @@ public class EntityHopperHawk extends ShoulderRidingEntity implements FlyingAnim
 
 	public static AttributeSupplier createAttributes(){
 		return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 6.0D).add(Attributes.FLYING_SPEED, 0.8F).add(Attributes.MOVEMENT_SPEED, 0.4F).build();
+	}
+
+	private static Ingredient FOOD_INGREDIENT;
+
+	private static Ingredient getFoodIngredient(){
+		//Lazy-load the ingredient to prevent evaluation of the itemblocks before they've been registered
+		if(FOOD_INGREDIENT == null){
+			FOOD_INGREDIENT = Ingredient.of(Items.HOPPER, ESBlocks.sortingHopper, ESBlocks.speedHopper);
+		}
+		return FOOD_INGREDIENT;
 	}
 
 	@Override
@@ -142,7 +150,7 @@ public class EntityHopperHawk extends ShoulderRidingEntity implements FlyingAnim
 
 		ItemStack itemstack = player.getItemInHand(hand);
 		//Try taming
-		if(!isTame() && FOOD_INGREDIENT.test(itemstack)){
+		if(!isTame() && getFoodIngredient().test(itemstack)){
 			if(!player.getAbilities().instabuild){
 				itemstack.shrink(1);
 			}
@@ -191,7 +199,7 @@ public class EntityHopperHawk extends ShoulderRidingEntity implements FlyingAnim
 
 	@Override
 	public boolean isFood(ItemStack stack){
-		return FOOD_INGREDIENT.test(stack);
+		return getFoodIngredient().test(stack);
 	}
 
 	public boolean isFlying(){
