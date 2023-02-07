@@ -15,7 +15,7 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "The <item>$(l:essentials:witchcraft/syringe#blood)blood sample/$ won't work once it's $(l:essentials:witchcraft/spoilage)spoiled/$.$(br2)The compass also won't track players who are logged out or mobs in unloaded chunks. $(br2)"
+			"text": "The <item>$(l:essentials:witchcraft/syringe#blood)blood sample/$ won't work once it's $(l:essentials:witchcraft/spoilage)spoiled/$.$(br2)The compass also won't track players who are logged out or mobs in unloaded chunks.$(br2)"
 		}
 	],
 	"extra_recipe_mappings": {

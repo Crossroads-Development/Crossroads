@@ -1024,6 +1024,8 @@
 	"death.attack.potentialvoid.player": "%2$s destroyed %1$s's potential",
 	"death.attack.void": "%1$s was deleted",
 	"death.attack.void.player": "%2$s deleted %1$s",
+	"death.attack.non_viable": "%1$s was genetically non-viable",
+	"death.attack.non_viable.player": "%1$s was genetically non-viable",
 	"death.attack.windmill": "%1$s tilted at windmills",
 	"death.attach.windmill.player": "%1$s tilted at windmills",
 	"death.attack.salt": "%1$s couldn't handle the salinity",

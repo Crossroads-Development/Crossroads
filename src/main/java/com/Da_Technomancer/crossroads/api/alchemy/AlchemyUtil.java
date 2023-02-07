@@ -30,11 +30,11 @@ public class AlchemyUtil{
 	public static final int ALCHEMY_TIME = 2;
 
 	private static int getGasRange(int gasQty){
-		return Math.min(8, Math.max(1, gasQty / 3));
+		return Math.min(8, Math.max(2, gasQty / 3));
 	}
 
 	private static int getSplashRange(int liquidQty){
-		return Math.min(3, Math.max(1, liquidQty / 8));
+		return Math.min(4, Math.max(2, liquidQty / 5));
 	}
 
 	/**
@@ -124,16 +124,16 @@ public class AlchemyUtil{
 				liqCol[2] = (liqCol[2] + solCol[2]) / (liqQty + solQty);
 				liqCol[3] = (liqCol[3] + solCol[3]) / (liqQty + solQty);
 				for(int i = 0; i < 32; i++){
-					float horizSpeed = maxRange / 20F;
+					float horizSpeed = maxRange / 20F * 0.5F;
 					float offset = i < 16 ? 0 : 1;
-					((ServerLevel) world).sendParticles(new ColorParticleData(CRParticles.COLOR_SPLASH, new Color(liqCol[0], liqCol[1], liqCol[2], liqCol[3])), pos.getX() + 0.5D, pos.getY() + 1.3F, pos.getZ() + 0.5D, 1, Math.cos((i + offset) * Math.PI / 8), (3 * offset + 1) / 8D, Math.sin((i + offset) * Math.PI / 8), horizSpeed);
+					((ServerLevel) world).sendParticles(new ColorParticleData(CRParticles.COLOR_SPLASH, new Color(liqCol[0], liqCol[1], liqCol[2], liqCol[3])), pos.getX() + 0.5D, pos.getY() + 1.3F, pos.getZ() + 0.5D, 1, 0.5 * Math.cos((i + offset) * Math.PI / 8), (3 * offset + 1) / 8D, 0.5 * Math.sin((i + offset) * Math.PI / 8), horizSpeed);
 				}
 				for(int i = -maxRange; i <= maxRange; i++){
 					for(int j = -maxRange; j <= maxRange; j++){
 						for(int k = -maxRange; k <= maxRange; k++){
 							for(QueuedEffect eff : effectsLiq){
-								//Pythagorean distance- not taxicab
-								if(maxRange * maxRange >= i * i + j * j + k * k){
+								//Taxicab distance
+								if(maxRange >= Math.abs(i) + Math.abs(j) + Math.abs(k)){
 									eff.perform(world, pos.offset(i, j, k), reags, EnumMatterPhase.LIQUID);
 								}
 							}
@@ -164,8 +164,8 @@ public class AlchemyUtil{
 					for(int j = -maxRange; j <= maxRange; j++){
 						for(int k = -maxRange; k <= maxRange; k++){
 							for(QueuedEffect eff : effectsGas){
-								//Pythagorean distance- not taxicab
-								if(maxRange * maxRange >= i * i + j * j + k * k){
+								//Taxicab distance
+								if(maxRange >= Math.abs(i) + Math.abs(j) + Math.abs(k)){
 									eff.perform(world, pos.offset(i, j, k), reags, EnumMatterPhase.GAS);
 									((ServerLevel) world).sendParticles(new ColorParticleData(CRParticles.COLOR_GAS, new Color(gasCol[0], gasCol[1], gasCol[2], gasCol[3])), (float) pos.getX() + Math.random(), (float) pos.getY() + Math.random(), (float) pos.getZ() + Math.random(), 1, (Math.random() * 2D - 1D), Math.random(), (Math.random() * 2D - 1D), 0.015D);
 								}

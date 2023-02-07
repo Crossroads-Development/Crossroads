@@ -23,19 +23,19 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<thing>liquid/$ water.$(br2)<thing>Liquids/$ will splash out over a small area- the splash radius is <thing>total liquid qty/$ / 8, capped at 3 blocks. All <thing>liquids/$ will splash together, and will apply their <thing>effects/$ along with the <thing>effects/$ of any <thing>solids/$ in the mix.$(br2)<thing>Gasses/$ will spread out over a medium area- the splash radius "
+			"text": "<thing>liquid/$ water.$(br2)<thing>Liquids/$ will splash out over a small area- the splash radius increases with amount of liquid, capped at 4 blocks. All <thing>liquids/$ will splash together, and will apply their <thing>effects/$ along with the <thing>effects/$ of any <thing>solids/$ in the mix.$(br2)<thing>Gasses/$ will spread out over a medium area- the splash "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "is <thing>total gas qty/$ / 3, capped at 8 blocks. All <thing>gasses/$ will spread together, applying their <thing>effects/$ over the entire volume. However, <thing>gasses/$ <em>will not apply/$ any <thing>liquid/$ or <thing>solid/$ <thing>effects/$ over the affected volume.$(br2)<thing>Flame/$ is a special <thing>phase/$ which only applies to two reagents- <item>Phelostogen/$ and <item>Ignis Infernum/$- both of which are always <thing>flame phase/$ "
+			"text": "radius increased with amount of gas, capped at 8 blocks. All <thing>gasses/$ will spread together, applying their <thing>effects/$ over the entire volume. However, <thing>gasses/$ <em>will not apply/$ any <thing>liquid/$ or <thing>solid/$ <thing>effects/$ over the affected volume.$(br2)<thing>Flame/$ is a special <thing>phase/$ which only applies to two reagents- <item>Phelostogen/$ and <item>Ignis Infernum/$- both of which are always "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "regardless of temperature. When a <thing>flame reagent/$ is released, it will spread over an extremely large area: Radius is <thing>phelostogen qty/$ / 2 (cap 8 blocks) or <thing>ignis infernum qty/$ * 4 (cap <em>64/$ blocks). This means the range caps out at 16 units of <thing>flame/$ reagent. Any and all <thing>reagents/$ will have their <thing>effects/$ applied over the entire area. Pure <thing>flame reagents/$ will destroy any blocks they touch- "
+			"text": "<thing>flame phase/$ regardless of temperature. When a <thing>flame reagent/$ is released, it will spread over an extremely large area: Radius is <thing>phelostogen qty/$ / 2 (cap 8 blocks) or <thing>ignis infernum qty/$ * 4 (cap <em>64/$ blocks). This means the range caps out at 16 units of <thing>flame/$ reagent. Any and all <thing>reagents/$ will have their <thing>effects/$ applied over the entire area. Pure <thing>flame reagents/$ will destroy any blocks "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<em>unless there is any <item>alchemical salt/$<em> in the mix/$. That means any <thing>effect/$ can be spread out over a massive area using 16 of a <thing>flame reagent/$, 1 unit of <item>alchemical salt/$ to prevent destroying blocks, and the <thing>reagents/$ you want applied. As flame clouds are extremely destructive, it is recommended to keep some <item>$(l:essentials:alchemy/damping)damping powder/$ on hand for accidents.$(br2)"
+			"text": "they touch- <em>unless there is any <item>alchemical salt/$<em> in the mix/$. That means any <thing>effect/$ can be spread out over a massive area using 16 of a <thing>flame reagent/$, 1 unit of <item>alchemical salt/$ to prevent destroying blocks, and the <thing>reagents/$ you want applied. As flame clouds are extremely destructive, it is recommended to keep some <item>$(l:essentials:alchemy/damping)damping powder/$ on hand for accidents.$(br2)"
 		},
 		{
 			"type": "patchouli:text",
@@ -47,11 +47,11 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "released. Locked to <thing>flame phase/$, spreading <thing>effects/$ over a massive area (see above).$(br2)<item>Aether, Lumen, Eldrine, Fusas, and Stasisol:/$ See the $(l:essentials:alchemy/terraforming)Terraforming entry/$.$(br2)<item>Voltus:/$ Electrocutes any nearby entities with lightning arcs (10 damage per hit, may hit several times). Can charge creepers/pigs/etc. Combine "
+			"text": "released. Locked to <thing>flame phase/$, spreading <thing>effects/$ over a massive area (see above).$(br2)<item>Aether, Lumen, Eldrine, Fusas, Magicae, Expandus, and Stasisol:/$ See the $(l:essentials:alchemy/terraforming)Terraforming entry/$.$(br2)<item>Voltus:/$ Electrocutes any nearby entities with lightning arcs (10 damage per hit, may hit several times). Can charge creepers/pigs/etc. "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "with a <thing>flame phase/$ for an expanding cloud of electric death.$(br2)"
+			"text": "Combine with a <thing>flame phase/$ for an expanding cloud of electric death.$(br2)"
 		}
 	],
 	"extra_recipe_mappings": {
