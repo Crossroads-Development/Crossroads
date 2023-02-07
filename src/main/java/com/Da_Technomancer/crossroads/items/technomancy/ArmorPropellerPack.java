@@ -60,7 +60,7 @@ public class ArmorPropellerPack extends TechnomancyArmor implements WindingTable
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
 		super.appendHoverText(stack, worldIn, tooltip, flagIn);
-		tooltip.add(Component.translatable("tt.crossroads.boilerplate.spring_speed", CRConfig.formatVal(getWindLevel(stack)), CRConfig.formatVal(getMaxWind())));
+		appendTooltip(stack, tooltip, flagIn);
 		tooltip.add(Component.translatable("tt.crossroads.propeller_pack.desc"));
 		tooltip.add(Component.translatable("tt.crossroads.propeller_pack.quip").setStyle(MiscUtil.TT_QUIP));
 	}

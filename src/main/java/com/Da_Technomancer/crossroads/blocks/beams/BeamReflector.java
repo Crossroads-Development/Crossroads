@@ -34,9 +34,4 @@ public class BeamReflector extends BeamBlock{
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> type){
 		return ITickableTileEntity.createTicker(type, BeamReflectorTileEntity.TYPE);
 	}
-
-	@Override
-	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
-		tooltip.add(Component.translatable("tt.crossroads.beam_reflector_sensitive"));
-	}
 }

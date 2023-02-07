@@ -16,6 +16,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -26,6 +27,7 @@ import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.List;
 
 public class WindingTableTileEntity extends InventoryTE{
 
@@ -63,7 +65,7 @@ public class WindingTableTileEntity extends InventoryTE{
 	public void redstoneTrigger(boolean reds){
 		if(reds != redstone){
 			redstone = reds;
-			if(reds && inventory[0].getItem() instanceof IWindableItem item){
+			if(reds && inventory[0].getItem() instanceof IWindableItem item && !item.isBroken(inventory[0])){
 				double itemSpeed = item.getWindLevel(inventory[0]);
 
 				if(itemSpeed < item.getMaxWind()){
@@ -119,7 +121,7 @@ public class WindingTableTileEntity extends InventoryTE{
 			level.playSound(null, worldPosition, SoundEvents.GLASS_BREAK, SoundSource.BLOCKS, 1F, 1F);
 			if(CRConfig.windingDestroy.get()){
 				//Break the item
-				inventory[0] = ItemStack.EMPTY;
+				item.setBrokenState(inventory[0], true);
 				setChanged();
 			}else{
 				//Remove all stored energy
@@ -192,7 +194,25 @@ public class WindingTableTileEntity extends InventoryTE{
 		}
 
 		default double getWindLevel(ItemStack stack){
-			return stack.getOrCreateTag().getDouble("winding_energy");
+			return isBroken(stack) ? 0 : stack.getOrCreateTag().getDouble("winding_energy");
+		}
+
+		default void setBrokenState(ItemStack stack, boolean isBroken){
+			stack.getOrCreateTag().putBoolean("winding_broken", isBroken);
+		}
+
+		default boolean isBroken(ItemStack stack){
+			return stack.getOrCreateTag().getBoolean("winding_broken");
+		}
+
+		default void appendTooltip(ItemStack stack, List<Component> tooltip, TooltipFlag flagIn){
+			if(isBroken(stack)){
+				tooltip.add(Component.translatable("tt.crossroads.boilerplate.spring_broken"));
+			}else{
+				double wind = getWindLevel(stack);
+				double maxWind = getMaxWind();
+				tooltip.add(Component.translatable("tt.crossroads.boilerplate.spring_speed", CRConfig.formatVal(wind), CRConfig.formatVal(maxWind)));
+			}
 		}
 	}
 }

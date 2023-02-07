@@ -5,7 +5,7 @@
 		"count": 1
 	},
 	"pattern": [
-		"BIB",
+		"BMB",
 		" I ",
 		" I "
 	],
@@ -15,6 +15,9 @@
 		},
 		"I": {
 			"tag": "forge:ingots/iron"
+		},
+		"M": {
+			"item": "crossroads:mainspring"
 		}
 	}
 }

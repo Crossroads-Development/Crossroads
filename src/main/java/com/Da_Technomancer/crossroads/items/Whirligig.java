@@ -40,9 +40,7 @@ public class Whirligig extends Item implements WindingTableTileEntity.IWindableI
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
-		double wind = getWindLevel(stack);
-		double maxWind = getMaxWind();
-		tooltip.add(Component.translatable("tt.crossroads.boilerplate.spring_speed", CRConfig.formatVal(wind), CRConfig.formatVal(maxWind)));
+		appendTooltip(stack, tooltip, flagIn);
 		tooltip.add(Component.translatable("tt.crossroads.whirligig.desc"));
 		tooltip.add(Component.translatable("tt.crossroads.whirligig.elevate", CRConfig.whirligigHover.get()));
 		tooltip.add(Component.translatable("tt.crossroads.whirligig.quip").setStyle(MiscUtil.TT_QUIP));

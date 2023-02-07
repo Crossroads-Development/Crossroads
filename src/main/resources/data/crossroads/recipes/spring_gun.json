@@ -7,11 +7,11 @@
 	"pattern": [
 		"TTT",
 		"ICI",
-		" S "
+		" M "
 	],
 	"key": {
-		"S": {
-			"tag": "forge:string"
+		"M": {
+			"item": "crossroads:mainspring"
 		},
 		"T": {
 			"tag": "forge:ingots/tin"

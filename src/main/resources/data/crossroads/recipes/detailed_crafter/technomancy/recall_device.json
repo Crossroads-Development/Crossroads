@@ -6,8 +6,8 @@
 		"count": 1
 	},
 	"pattern": [
-		" G ",
-		"ITI",
+		" T ",
+		"GMG",
 		"ICI"
 	],
 	"key": {
@@ -22,6 +22,9 @@
 		},
 		"T": {
 			"item": "minecraft:clock"
+		},
+		"M": {
+			"item": "crossroads:mainspring"
 		}
 	}
 }

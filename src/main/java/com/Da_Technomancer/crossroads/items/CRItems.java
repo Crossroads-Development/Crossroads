@@ -20,6 +20,7 @@ import net.minecraft.client.renderer.item.ItemPropertyFunction;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.*;
@@ -28,11 +29,13 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import org.apache.logging.log4j.Level;
+import org.stringtemplate.v4.misc.Misc;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public final class CRItems{
@@ -149,6 +152,7 @@ public final class CRItems{
 	public static BrainHarvester brainHarvester;
 	public static Item hopperHawkSpawnEgg;
 	public static BloodCompass bloodCompass;
+	public static Item mainspring;
 
 	public static OreProfileItem oreGravel;
 	public static OreProfileItem oreClump;
@@ -280,6 +284,12 @@ public final class CRItems{
 		brainHarvester = new BrainHarvester();
 		hopperHawkSpawnEgg = MiscUtil.putReturn(toRegister, "hopper_hawk_spawn_egg", new ForgeSpawnEggItem(() -> EntityHopperHawk.type, 0x555555, 0x999999, (new Item.Properties()).tab(CreativeModeTab.TAB_MISC)));
 		bloodCompass = new BloodCompass();
+		mainspring = MiscUtil.putReturn(toRegister, "mainspring", new Item(new Item.Properties().tab(TAB_CROSSROADS)){
+			@Override
+			public void appendHoverText(ItemStack stack, @Nullable net.minecraft.world.level.Level world, List<Component> tooltip, TooltipFlag flag){
+				tooltip.add(Component.translatable("tt.crossroads.mainspring"));
+			}
+		});
 
 		registerDispenserOverrides();
 	}

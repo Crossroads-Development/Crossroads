@@ -11,6 +11,7 @@ import com.Da_Technomancer.crossroads.api.technomancy.RespawnInventorySavedData;
 import com.Da_Technomancer.crossroads.api.witchcraft.EntityTemplate;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
+import com.Da_Technomancer.crossroads.blocks.rotary.WindingTableTileEntity;
 import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.crafting.CRLootModifiers;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
@@ -321,14 +322,16 @@ public class EventHandlerCommon{
 
 	@SubscribeEvent
 	@SuppressWarnings("unused")
-	public void technoArmorCrafting(AnvilUpdateEvent e){
+	public void anvilCrafting(AnvilUpdateEvent e){
 		ItemStack inputLeft = e.getLeft();
+		ItemStack inputRight = e.getRight();
+
+		//Technomancy armor
 		if(inputLeft.getItem() instanceof TechnomancyArmor){
 			CompoundTag nbt = e.getLeft().getOrCreateTag();
 
 			//Add netherite armor
 			if(!TechnomancyArmor.isReinforced(inputLeft) && CRConfig.technoArmorReinforce.get()){
-				ItemStack inputRight = e.getRight();
 				if(inputLeft.getItem() == CRItems.armorGoggles && inputRight.getItem() == Items.NETHERITE_HELMET || inputLeft.getItem() == CRItems.propellerPack && inputRight.getItem() == Items.NETHERITE_CHESTPLATE || inputLeft.getItem() == CRItems.armorToolbelt && inputRight.getItem() == Items.NETHERITE_LEGGINGS || inputLeft.getItem() == CRItems.armorEnviroBoots && inputRight.getItem() == Items.NETHERITE_BOOTS){
 					e.setOutput(TechnomancyArmor.setReinforced(inputLeft.copy(), true));
 					e.setMaterialCost(1);
@@ -340,7 +343,7 @@ public class EventHandlerCommon{
 			//Add lenses to goggles
 			if(inputLeft.getItem() == CRItems.armorGoggles){
 				for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
-					if(lens.matchesRecipe(e.getRight()) && !nbt.contains(lens.toString())){
+					if(lens.matchesRecipe(inputRight) && !nbt.contains(lens.toString())){
 						ItemStack out = inputLeft.copy();
 						int cost = CRConfig.technoArmorCost.get();
 						for(EnumGoggleLenses otherLens : EnumGoggleLenses.values()){
@@ -356,6 +359,17 @@ public class EventHandlerCommon{
 					}
 				}
 			}
+		}
+
+		//Repair broken mainspring
+		if(inputLeft.getItem() instanceof WindingTableTileEntity.IWindableItem windingItem && inputRight.getItem() == CRItems.mainspring && windingItem.isBroken(inputLeft)){
+			ItemStack out = inputLeft.copy();
+			windingItem.setBrokenState(out, false);
+			windingItem.setWindLevel(out, 0);
+			e.setCost(2);
+			e.setOutput(out);
+			e.setMaterialCost(1);
+			return;
 		}
 	}
 

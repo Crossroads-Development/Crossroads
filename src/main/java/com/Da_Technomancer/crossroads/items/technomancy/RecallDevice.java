@@ -40,7 +40,7 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
-		tooltip.add(Component.translatable("tt.crossroads.boilerplate.spring_speed", CRConfig.formatVal(getWindLevel(stack)), CRConfig.formatVal(getMaxWind())));
+		appendTooltip(stack, tooltip, flagIn);
 		tooltip.add(Component.translatable("tt.crossroads.recall_device.desc"));
 		tooltip.add(Component.translatable("tt.crossroads.recall_device.debuff"));
 		if(CRConfig.recallTimeLimit.get() == 0){

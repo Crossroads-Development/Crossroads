@@ -293,6 +293,7 @@
 	"block.crossroads.beam_extractor_creative": "Creative Resonance Extractor",
 	"block.crossroads.fire_detector": "Fire Detector",
 	"item.crossroads.blood_compass": "Hemophiliac Compass",
+	"item.crossroads.mainspring": "Mainspring",
 
 	"item.crossroads.distilled_water_bucket": "Distilled Water Bucket",
 	"item.crossroads.dirty_water_bucket": "Dirty Water Bucket",
@@ -684,6 +685,7 @@
 	"tt.crossroads.winding_table.circuit": "Circuits read the spring speed of the item being wound, in rad/s",
 	"tt.crossroads.copshowium.quip": "COPper-SHiny-Orange-Weirdness-ium",
 	"tt.crossroads.boilerplate.spring_speed": "Spring Speed: %1$s/%2$s",
+	"tt.crossroads.boilerplate.spring_broken": "Mainspring is broken and needs to be replaced in an anvil",
 	"tt.crossroads.whirligig.desc": "Provides slowfall and even flight if wound in a Spring Winding Table",
 	"tt.crossroads.whirligig.elevate": "Elevates the player when Spring Speed is above %1$frad/s",
 	"tt.crossroads.whirligig.quip": "Chim-Chim-iney",
@@ -827,6 +829,7 @@
 	"tt.crossroads.beam_reflector_sensitive": "Emitted beam collides with entities and any non-air block",
 	"tt.crossroads.blood_compass.desc": "Points towards the owner of the blood held in the offhand",
 	"tt.crossroads.blood_compass.spoil": "Requires a fresh sample",
+	"tt.crossroads.mainspring": "Combine in an anvil to repair items with a damaged spring",
 
 	"container.crossroads.boilerplate.temp": "%1$d°C",
 	"container.crossroads.boilerplate.speed": "%1$f rad/s",
