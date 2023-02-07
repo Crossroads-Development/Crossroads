@@ -19,6 +19,7 @@ import com.Da_Technomancer.crossroads.entity.CREntities;
 import com.Da_Technomancer.crossroads.entity.EntityGhostMarker;
 import com.Da_Technomancer.crossroads.entity.EntityHopperHawk;
 import com.Da_Technomancer.crossroads.entity.mob_effects.CRPotions;
+import com.Da_Technomancer.crossroads.entity.mob_effects.HealthPenalty;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.item_sets.GearFactory;
@@ -553,7 +554,7 @@ public class EventHandlerCommon{
 			delay *= 20;//Convert from seconds to ticks
 			//Ensure it doesn't have the marker effect and this is enabled in config
 			//Or, if non-viable (max health less than or equal to 0), don't let it respawn
-			if(!entity.hasEffect(EntityTemplate.getRespawnMarkerEffect()) && delay > 0 && entity.getMaxHealth() > 0){
+			if(!entity.hasEffect(EntityTemplate.getRespawnMarkerEffect()) && delay > 0 && e.getSource() != HealthPenalty.NON_VIABLE){
 				EntityGhostMarker marker = new EntityGhostMarker(entity.level, EntityGhostMarker.EnumMarkerType.RESPAWNING, delay);
 				marker.setPos(entity.getX(), entity.getY(), entity.getZ());
 				marker.data = template.serializeNBT();

@@ -10,6 +10,8 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 
 public class HealthPenalty extends MobEffect{
 
+	public static final DamageSource NON_VIABLE = new DamageSource("non_viable").bypassArmor().bypassInvul();
+
 	public HealthPenalty(){
 		super(MobEffectCategory.HARMFUL, 0x006D00);
 
@@ -27,7 +29,7 @@ public class HealthPenalty extends MobEffect{
 			entity.setHealth(entity.getMaxHealth());
 		}
 		if(shouldKill){
-			entity.hurt(DamageSource.OUT_OF_WORLD, 1);
+			entity.hurt(NON_VIABLE, 1);
 		}
 	}
 }
