@@ -52,8 +52,8 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 	public CopshowiumCreationChamberTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state, 0);
 		fluxHelper = new FluxHelper(TYPE, pos, state, this, Behaviour.SOURCE);
-		fluidProps[0] = new TankProperty(CAPACITY, true, true, f -> f != null && f != CRFluids.moltenCopshowium.still);//Input
-		fluidProps[1] = new TankProperty(CAPACITY, false, true);//Copshowium
+		fluidProps[0] = new TankProperty(CAPACITY, true, true, f -> true);//Input
+		fluidProps[1] = new TankProperty(CAPACITY, false, true);//Copshowium output
 		initFluidManagers();
 	}
 

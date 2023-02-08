@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:crucible",
+	"input": {
+		"tag": "crossroads:ingots/copshowium"
+	},
+	"output": {
+		"fluid": "crossroads:molten_copshowium",
+		"amount": 90
+	}
+}

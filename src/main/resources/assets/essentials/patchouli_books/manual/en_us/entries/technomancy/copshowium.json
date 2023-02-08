@@ -15,19 +15,19 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "The <item>Copshowium Imbuer/$ makes <item>molten copshowium/$ using liquids and a <thing>$(l:essentials:beam/time)time beam/$. Some (not all!) inputs also produce <thing>$(l:essentials:intro/technomancy)temporal entropy/$ as a byproduct (check the JEI). The produced <item>molten copshowium/$ can be made into <item>copshowium ingots/$ <item>$(l:essentials:heat/fcc)the normal way/$.$(br2)The <item>copshowium imbuer/$ has a capacity of only 1 bucket, and unlike most machines, can have the "
+			"text": "The <item>Copshowium Imbuer/$ makes <item>molten copshowium/$ using liquids and a <thing>$(l:essentials:beam/time)time beam/$. Some (not all!) inputs also produce <thing>$(l:essentials:intro/technomancy)temporal entropy/$ as a byproduct (check JEI). The produced <item>molten copshowium/$ can be made into <item>copshowium ingots/$ <item>$(l:essentials:heat/fcc)the normal way/$.$(br2)The <item>copshowium imbuer/$ has a capacity of only 1 bucket, and unlike most machines, can have the <item>molten "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<item>molten copshowium/$ output overfill. If it does, <em>the machine will break/$. This is a bad thing.$(br2)It has two <item>$(l:essentials:fluid/pipe)fluid pipe/$ connections- on the top and bottom. The bottom connection is for outputting <item>molten copshowium/$, and is extract only as expected. The top output is unusual- it can accept <em>and extract/$, and can do a fluid-sharing connection with "
+			"text": "<item>copshowium/$ output overfill, which <em>breaks the machine/$. This is a bad thing.$(br2)It has two <item>$(l:essentials:fluid/pipe)fluid pipe/$ connections- on the top and bottom. The bottom connection is for outputting <item>molten copshowium/$, and is extract only as expected. The top output is unusual- it can both accept <em>and extract/$, and can do a fluid-sharing connection with <item>$(l:essentials:fluid/pipe)fluid pipes"
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<item>$(l:essentials:fluid/pipe)fluid pipes/$. This allows regulating how full the input tank is, which is important for preventing the output from overflowing.$(br2)When hit by a <thing>$(l:essentials:beam/time)time beam/$ (by default), any fluid in the input is converted into <item>molten copshowium/$ at the ratio set by the recipe for that fluid (check JEI for all the valid input fluids). This is when overflowing "
+			"text": "<item>$(l:essentials:fluid/pipe)/$. This allows regulating how full the input tank is, which is important for preventing the output from overflowing.$(br2)When hit by a <thing>$(l:essentials:beam/time)time beam/$ (by default), any fluid in the input is converted into <item>molten copshowium/$ at the ratio set by the recipe for that fluid (check JEI). This is when overflowing the output is possible.$(br2)"
 		},
 		{
 			"type": "patchouli:text",
-			"text": "the output is possible.$(br2)If the recipe produces <thing>$(l:essentials:intro/technomancy)temporal entropy/$, it will produce 4 per ingot of <item>molten copshowium/$ made.$(br2)<item>$(l:essentials/circuits#reader)Circuits/$ measure how full the <item>copshowium imbuer/$ is of the input fluid in total mB. Total capacity is 1440mB.$(br2)"
+			"text": "If the recipe produces <thing>$(l:essentials:intro/technomancy)temporal entropy/$, it will produce 4 per ingot of <item>molten copshowium/$ made.$(br2)<item>$(l:essentials/circuits#reader)Circuits/$ measure how full the <item>copshowium imbuer/$ is of the input fluid in total mB. Total capacity is 1440mB.$(br2)"
 		},
 		{
 			"type": "patchouli:text",

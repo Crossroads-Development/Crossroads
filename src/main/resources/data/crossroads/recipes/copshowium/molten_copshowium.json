@@ -1,0 +1,8 @@
+{
+	"type": "crossroads:copshowium",
+	"input": {
+		"fluid": "crossroads:molten_copshowium"
+	},
+	"mult": 4,
+	"entropy": true
+}
