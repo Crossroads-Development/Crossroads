@@ -17,7 +17,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -96,16 +95,21 @@ public class BeamCannonTileEntity extends AbstractCannonTileEntity{
 				BlockPos endPos = beamHitResult.getPos();
 				if(endPos != null){//Should always be true
 					outLength = (float) beamHitResult.getHitPos().distanceTo(rayTraceSt);
-					Direction effectDir = beamHitResult.getDirection();
-					BlockEntity te = level.getBlockEntity(endPos);
-					LazyOptional<IBeamHandler> opt;
-					if(te != null && (opt = te.getCapability(Capabilities.BEAM_CAPABILITY, effectDir)).isPresent()){
-						opt.orElseThrow(NullPointerException::new).setBeam(out);
-					}else{
-						EnumBeamAlignments align = EnumBeamAlignments.getAlignment(out);
-						if(!level.isOutsideBuildHeight(endPos)){
-							align.getEffect().doBeamEffect(align, out.getVoid() != 0, Math.min(BeamUtil.MAX_EFFECT_POWER, outPower), beamHitResult);
-						}
+//					Direction effectDir = beamHitResult.getDirection();
+//					BlockEntity te = level.getBlockEntity(endPos);
+//					LazyOptional<IBeamHandler> opt;
+//					if(te != null && (opt = te.getCapability(Capabilities.BEAM_CAPABILITY, effectDir)).isPresent()){
+//						opt.orElseThrow(NullPointerException::new).setBeam(out);
+//					}else{
+//						EnumBeamAlignments align = EnumBeamAlignments.getAlignment(out);
+//						if(!level.isOutsideBuildHeight(endPos)){
+//							align.getEffect().doBeamEffect(align, out.getVoid() != 0, Math.min(BeamUtil.MAX_EFFECT_POWER, outPower), beamHitResult);
+//						}
+//					}
+
+					EnumBeamAlignments align = out.getAlignment();
+					if(!level.isOutsideBuildHeight(endPos)){
+						align.getEffect().doBeamEffect(align, out.getVoid() != 0, Math.min(BeamUtil.MAX_EFFECT_POWER, outPower), beamHitResult);
 					}
 				}
 			}

@@ -2,12 +2,11 @@ package com.Da_Technomancer.crossroads.effects.beam_effects;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.api.CRReflection;
+import com.Da_Technomancer.crossroads.api.beams.BeamHit;
 import com.Da_Technomancer.crossroads.api.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.api.technomancy.FluxUtil;
 import com.Da_Technomancer.essentials.api.ReflectionUtil;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.TickingBlockEntity;
@@ -25,20 +24,20 @@ public class TimeEffect extends BeamEffect{
 	private static final Field chunkTickerField = ReflectionUtil.reflectField(CRReflection.CHUNK_TICKER_MAP);
 
 	@Override
-	public void doBeamEffect(EnumBeamAlignments align, boolean voi, int power, Level worldIn, BlockPos pos, @Nullable Direction dir){
-		if(!performTransmute(align, voi, power, worldIn, pos)){
+	public void doBeamEffect(EnumBeamAlignments align, boolean voi, int power, BeamHit beamHit){
+		if(!performTransmute(align, voi, power, beamHit)){
 			if(voi){
-				FluxUtil.fluxEvent(worldIn, pos);
+				FluxUtil.fluxEvent(beamHit.getWorld(), beamHit.getPos());
 			}else{
-				if(worldIn.random.nextInt(64) < power){
-					TickingBlockEntity ticker = getTicker(worldIn, pos);
+				if(beamHit.getWorld().random.nextInt(64) < power){
+					TickingBlockEntity ticker = getTicker(beamHit.getWorld(), beamHit.getPos());
 					if(ticker != null){
 						ticker.tick();
 					}
 
-					BlockState state = worldIn.getBlockState(pos);
+					BlockState state = beamHit.getEndState();
 					if(state.isRandomlyTicking()){
-						state.randomTick((ServerLevel) worldIn, pos, worldIn.random);
+						state.randomTick(beamHit.getWorld(), beamHit.getPos(), beamHit.getWorld().random);
 					}
 				}
 			}

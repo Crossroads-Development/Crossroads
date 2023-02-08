@@ -1,17 +1,14 @@
 package com.Da_Technomancer.crossroads.blocks.beams;
 
-import com.Da_Technomancer.crossroads.api.Capabilities;
 import com.Da_Technomancer.crossroads.api.beams.*;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 
@@ -54,17 +51,23 @@ public class BeamReflectorSensitiveTileEntity extends BeamReflectorTileEntity{
 			}
 
 
-			//Handle receiving the beam or beam effect
-			Direction effectDir = beamHit.getDirection();
-			BlockEntity te = world.getBlockEntity(beamHit.getPos());
-			LazyOptional<IBeamHandler> opt;
-			if(te != null && (opt = te.getCapability(Capabilities.BEAM_CAPABILITY, effectDir)).isPresent()){
-				opt.orElseThrow(NullPointerException::new).setBeam(mag);
-			}else{
-				EnumBeamAlignments align = EnumBeamAlignments.getAlignment(mag);
-				if(!world.isOutsideBuildHeight(beamHit.getPos())){
-					align.getEffect().doBeamEffect(align, mag.getVoid() != 0, Math.min(BeamUtil.MAX_EFFECT_POWER, mag.getPower()), beamHit);
-				}
+//			//Handle receiving the beam or beam effect
+//			Direction effectDir = beamHit.getDirection();
+//			BlockEntity te = world.getBlockEntity(beamHit.getPos());
+//			LazyOptional<IBeamHandler> opt;
+//			if(te != null && (opt = te.getCapability(Capabilities.BEAM_CAPABILITY, effectDir)).isPresent()){
+//				opt.orElseThrow(NullPointerException::new).setBeam(mag);
+//			}else{
+//				EnumBeamAlignments align = EnumBeamAlignments.getAlignment(mag);
+//				if(!world.isOutsideBuildHeight(beamHit.getPos())){
+//					align.getEffect().doBeamEffect(align, mag.getVoid() != 0, Math.min(BeamUtil.MAX_EFFECT_POWER, mag.getPower()), beamHit);
+//				}
+//			}
+
+			//Handle beam effect
+			EnumBeamAlignments align = mag.getAlignment();
+			if(!world.isOutsideBuildHeight(beamHit.getPos())){
+				align.getEffect().doBeamEffect(align, mag.getVoid() != 0, Math.min(BeamUtil.MAX_EFFECT_POWER, mag.getPower()), beamHit);
 			}
 
 			//Update the values used for rendering

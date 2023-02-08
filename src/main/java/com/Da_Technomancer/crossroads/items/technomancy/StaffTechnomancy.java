@@ -1,7 +1,9 @@
 package com.Da_Technomancer.crossroads.items.technomancy;
 
-import com.Da_Technomancer.crossroads.api.Capabilities;
-import com.Da_Technomancer.crossroads.api.beams.*;
+import com.Da_Technomancer.crossroads.api.beams.BeamHit;
+import com.Da_Technomancer.crossroads.api.beams.BeamUnit;
+import com.Da_Technomancer.crossroads.api.beams.BeamUtil;
+import com.Da_Technomancer.crossroads.api.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.integration.curios.CurioHelper;
 import com.Da_Technomancer.crossroads.items.CRItems;
@@ -20,9 +22,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.util.LazyOptional;
 
 public class StaffTechnomancy extends BeamUsingItem{
 
@@ -70,7 +70,7 @@ public class StaffTechnomancy extends BeamUsingItem{
 
 				Vec3 ray = player.getLookAngle();
 				BeamHit beamHitResult = BeamUtil.rayTraceBeams(mag, player.level, start, player.getEyePosition(1), ray, player, null, MAX_RANGE, false);
-				Direction effectDir = beamHitResult.getDirection();
+//				Direction effectDir = beamHitResult.getDirection();
 
 //				double[] end = new double[] {player.getPosX(), player.getEyeHeight() + player.getPosY(), player.getPosZ()};
 //				BlockPos endPos = null;
@@ -117,15 +117,20 @@ public class StaffTechnomancy extends BeamUsingItem{
 //					}
 //				}
 
-				BlockEntity te = player.level.getBlockEntity(beamHitResult.getPos());
-				LazyOptional<IBeamHandler> opt;
-				if(te != null && (opt = te.getCapability(Capabilities.BEAM_CAPABILITY, effectDir)).isPresent()){
-					opt.orElseThrow(NullPointerException::new).setBeam(mag);
-				}else{
-					EnumBeamAlignments align = EnumBeamAlignments.getAlignment(mag);
-					if(!player.level.isOutsideBuildHeight(beamHitResult.getPos())){
-						align.getEffect().doBeamEffect(align, mag.getVoid() != 0, Math.min(BeamUtil.MAX_EFFECT_POWER, mag.getPower()), beamHitResult);
-					}
+//				BlockEntity te = player.level.getBlockEntity(beamHitResult.getPos());
+//				LazyOptional<IBeamHandler> opt;
+//				if(te != null && (opt = te.getCapability(Capabilities.BEAM_CAPABILITY, effectDir)).isPresent()){
+//					opt.orElseThrow(NullPointerException::new).setBeam(mag);
+//				}else{
+//					EnumBeamAlignments align = mag.getAlignment();
+//					if(!player.level.isOutsideBuildHeight(beamHitResult.getPos())){
+//						align.getEffect().doBeamEffect(align, mag.getVoid() != 0, Math.min(BeamUtil.MAX_EFFECT_POWER, mag.getPower()), beamHitResult);
+//					}
+//				}
+
+				EnumBeamAlignments align = mag.getAlignment();
+				if(!player.level.isOutsideBuildHeight(beamHitResult.getPos())){
+					align.getEffect().doBeamEffect(align, mag.getVoid() != 0, Math.min(BeamUtil.MAX_EFFECT_POWER, mag.getPower()), beamHitResult);
 				}
 
 				Vec3 beamVec = beamHitResult.getHitPos().subtract(start);

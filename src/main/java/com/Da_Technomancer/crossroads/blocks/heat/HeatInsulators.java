@@ -1,10 +1,11 @@
 package com.Da_Technomancer.crossroads.blocks.heat;
 
-import com.Da_Technomancer.crossroads.api.beams.IBeamEffect;
-import com.Da_Technomancer.crossroads.effects.beam_effects.BlockEffect;
-import com.Da_Technomancer.crossroads.effects.beam_effects.DirtEffect;
-import com.Da_Technomancer.crossroads.effects.beam_effects.IceEffect;
-import com.Da_Technomancer.crossroads.effects.beam_effects.SlimeEffect;
+import com.Da_Technomancer.crossroads.effects.overheat_effects.BlockEffect;
+import com.Da_Technomancer.crossroads.effects.overheat_effects.DirtEffect;
+import com.Da_Technomancer.crossroads.effects.overheat_effects.IceEffect;
+import com.Da_Technomancer.crossroads.effects.overheat_effects.SlimeEffect;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 
 public enum HeatInsulators{
@@ -19,9 +20,9 @@ public enum HeatInsulators{
 
 	private final double rate;
 	private final double limit;
-	private final IBeamEffect effect;
+	private final IOverheatEffect effect;
 
-	HeatInsulators(double rate, double limit, IBeamEffect effect){
+	HeatInsulators(double rate, double limit, IOverheatEffect effect){
 		this.rate = rate;
 		this.limit = limit;
 		this.effect = effect;
@@ -35,7 +36,7 @@ public enum HeatInsulators{
 		return limit;
 	}
 
-	public IBeamEffect getEffect(){
+	public IOverheatEffect getEffect(){
 		return effect;
 	}
 
@@ -50,5 +51,17 @@ public enum HeatInsulators{
 		name = name.toLowerCase();
 		name = char1 + name;
 		return name;
+	}
+
+	public interface IOverheatEffect{
+
+		/**
+		 * @param worldIn The world of the effect
+		 * @param pos The position of the effect
+		 *
+		 * This should only ever be called on the server side.
+		 */
+		void doEffect(Level worldIn, BlockPos pos);
+
 	}
 }

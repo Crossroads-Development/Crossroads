@@ -1,14 +1,14 @@
-package com.Da_Technomancer.crossroads.effects.beam_effects;
+package com.Da_Technomancer.crossroads.effects.overheat_effects;
 
 import com.Da_Technomancer.crossroads.CRConfig;
-import com.Da_Technomancer.crossroads.api.beams.IBeamEffect;
+import com.Da_Technomancer.crossroads.blocks.heat.HeatInsulators;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class BlockEffect implements IBeamEffect{
+public class BlockEffect implements HeatInsulators.IOverheatEffect{
 
 	private final BlockState block;
 

@@ -58,7 +58,7 @@ public enum EnumBeamAlignments{
 
 	@Nonnull
 	public static EnumBeamAlignments getAlignment(@Nonnull BeamUnit magic){
-		return magic.isEmpty() ? NO_MATCH : getAlignment(magic.getValuedRGB());
+		return magic.getAlignment();
 	}
 
 	@Nonnull

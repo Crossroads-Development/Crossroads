@@ -40,17 +40,18 @@ public class BeamHelper{
 		BeamHit beamHit = BeamUtil.rayTraceBeamSimple(mag, world, pos, dir, BeamUtil.MAX_DISTANCE, false);
 		int newDist = beamHit.getPos().distManhattan(pos);
 
-		//Check for machine receiving beams
-		BlockEntity checkTE = beamHit.getEndBlockEntity();
-		LazyOptional<IBeamHandler> opt;
-		if(checkTE != null && (opt = checkTE.getCapability(Capabilities.BEAM_CAPABILITY, dir.getOpposite())).isPresent()){
-			opt.orElseThrow(NullPointerException::new).setBeam(mag);
-			return updateBeamRender(mag, newDist);
-		}
+//		Moved to BeamEffect::performTransmute
+//		//Check for machine receiving beams
+//		BlockEntity checkTE = beamHit.getEndBlockEntity();
+//		LazyOptional<IBeamHandler> opt;
+//		if(checkTE != null && (opt = checkTE.getCapability(Capabilities.BEAM_CAPABILITY, dir.getOpposite())).isPresent()){
+//			opt.orElseThrow(NullPointerException::new).setBeam(mag);
+//			return updateBeamRender(mag, newDist);
+//		}
 
 		//Do beam effect
 		if(!mag.isEmpty() && !world.isClientSide){
-			EnumBeamAlignments align = EnumBeamAlignments.getAlignment(mag);
+			EnumBeamAlignments align = mag.getAlignment();
 			BeamEffect e = align.getEffect();
 			e.doBeamEffect(align, mag.getVoid() != 0, Math.min(BeamUtil.MAX_EFFECT_POWER, mag.getPower()), beamHit);
 		}

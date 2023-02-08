@@ -128,18 +128,19 @@ public class BeamUtil{
 			checkPos = startPos.relative(dir, i);
 			checkState = world.getBlockState(checkPos);
 
-			//Check for machine receiving beams
-			BlockEntity checkTE = world.getBlockEntity(checkPos);
-			if(checkTE != null && checkTE.getCapability(Capabilities.BEAM_CAPABILITY, dir.getOpposite()).isPresent()){
-				return new BeamHit((ServerLevel) world, checkPos, dir.getOpposite(), checkState);
-			}
+//			//Check for machine receiving beams
+//			BlockEntity checkTE = world.getBlockEntity(checkPos);
+//			if(checkTE != null && checkTE.getCapability(Capabilities.BEAM_CAPABILITY, dir.getOpposite()).isPresent()){
+//				return new BeamHit((ServerLevel) world, checkPos, dir.getOpposite(), checkState, beam);
+//			}
 
-			//Check for collision
-			if(i == maxRange || solidToBeams(checkState, world, checkPos, dir, beam.getPower(), sensitive)){
-				return new BeamHit((ServerLevel) world, checkPos, dir.getOpposite(), checkState);
+			//Check for collision or machine receiving beams
+			BlockEntity checkTE;
+			if(i == maxRange || solidToBeams(checkState, world, checkPos, dir, beam.getPower(), sensitive) || (checkTE = world.getBlockEntity(checkPos)) != null && checkTE.getCapability(Capabilities.BEAM_CAPABILITY, dir.getOpposite()).isPresent()){
+				return new BeamHit((ServerLevel) world, checkPos, dir.getOpposite(), checkState, beam);
 			}
 		}
-		return new BeamHit((ServerLevel) world, checkPos, dir.getOpposite(), checkState);
+		return new BeamHit((ServerLevel) world, checkPos, dir.getOpposite(), checkState, beam);
 	}
 
 	/**
@@ -191,7 +192,7 @@ public class BeamUtil{
 				end[0] = lineVec.x;
 				end[1] = lineVec.y;
 				end[2] = lineVec.z;
-				return new BeamHit((ServerLevel) world, endPos.immutable(), effectDir, state, ray, new Vec3(end[0], end[1], end[2]));
+				return new BeamHit((ServerLevel) world, endPos.immutable(), effectDir, state, beam, ray, new Vec3(end[0], end[1], end[2]));
 			}
 
 			//Check for block collisions
@@ -208,12 +209,12 @@ public class BeamUtil{
 						end[1] = hitVec.y;
 						end[2] = hitVec.z;
 						effectDir = res.getDirection();
-						return new BeamHit((ServerLevel) world, endPos.immutable(), effectDir, state, ray, new Vec3(end[0], end[1], end[2]));
+						return new BeamHit((ServerLevel) world, endPos.immutable(), effectDir, state, beam, ray, new Vec3(end[0], end[1], end[2]));
 					}
 				}
 			}
 		}
 
-		return new BeamHit((ServerLevel) world, endPos.immutable(), effectDir, state, ray, new Vec3(end[0], end[1], end[2]));
+		return new BeamHit((ServerLevel) world, endPos.immutable(), effectDir, state, beam, ray, new Vec3(end[0], end[1], end[2]));
 	}
 }

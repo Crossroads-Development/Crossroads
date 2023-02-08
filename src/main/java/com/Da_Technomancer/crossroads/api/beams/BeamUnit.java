@@ -17,6 +17,8 @@ public class BeamUnit{
 
 	private final int[] contents = new int[4];//0: Energy, 1: Potential, 2: stability, 3: Void
 
+	private EnumBeamAlignments alignmentCache;
+
 	public BeamUnit(int[] magic){
 		this(magic[0], magic[1], magic[2], magic[3]);
 	}
@@ -91,6 +93,18 @@ public class BeamUnit{
 
 		Color col = getValuedRGB();
 		return new Color((int) Math.round(((double) col.getRed()) * mult), (int) Math.round(((double) col.getGreen()) * mult), (int) Math.round(((double) col.getBlue()) * mult));
+	}
+
+	@Nonnull
+	public EnumBeamAlignments getAlignment(){
+		if(alignmentCache == null){
+			if(isEmpty()){
+				alignmentCache = EnumBeamAlignments.NO_MATCH;
+			}else{
+				alignmentCache = EnumBeamAlignments.getAlignment(getValuedRGB());
+			}
+		}
+		return alignmentCache;
 	}
 
 	public BeamUnit mult(double multiplier, boolean floor){

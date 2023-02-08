@@ -1,6 +1,6 @@
-package com.Da_Technomancer.crossroads.effects.beam_effects;
+package com.Da_Technomancer.crossroads.effects.overheat_effects;
 
-import com.Da_Technomancer.crossroads.api.beams.IBeamEffect;
+import com.Da_Technomancer.crossroads.blocks.heat.HeatInsulators;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EntityType;
@@ -17,7 +17,7 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.Random;
 
-public class DirtEffect implements IBeamEffect{
+public class DirtEffect implements HeatInsulators.IOverheatEffect{
 
 	private final Random rand = new Random();
 

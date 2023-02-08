@@ -5,7 +5,6 @@ import com.Da_Technomancer.crossroads.api.alchemy.AlchemyUtil;
 import com.Da_Technomancer.crossroads.api.alchemy.EnumReagents;
 import com.Da_Technomancer.crossroads.api.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.api.beams.BeamUtil;
-import com.Da_Technomancer.crossroads.effects.beam_effects.GrowEffect;
 import com.Da_Technomancer.essentials.api.ILinkTE;
 import com.Da_Technomancer.essentials.api.LinkHelper;
 import net.minecraft.core.BlockPos;
@@ -193,14 +192,11 @@ public class FluxUtil{
 				map.addReagent(EnumReagents.ALCHEMICAL_SALT.id(), 4, 100);
 				map.addReagent(EnumReagents.AETHER.id(), 4, 100);
 				AlchemyUtil.releaseChemical(worldIn, pos, map);
-			}else if(selector < 75){
+			}else{
 				//Alchemy pure-phelostogen cloud
 				ReagentMap map = new ReagentMap();
 				map.addReagent(EnumReagents.PHELOSTOGEN.id(), 6, 100);
 				AlchemyUtil.releaseChemical(worldIn, pos, map);
-			}else{
-				//potential-void kill area of effect
-				GrowEffect.aoeKill(64, worldIn, pos);
 			}
 		}else{
 			//small explode (everything else disabled in config)

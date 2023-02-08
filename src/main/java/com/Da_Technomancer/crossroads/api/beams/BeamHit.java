@@ -39,7 +39,7 @@ public class BeamHit{
 	/**
 	 * The blockstate at the end position of the beam.
 	 */
-	@Nonnull
+	@Nullable
 	private BlockState endState;
 	/**
 	 * A normalized vector pointing in the direction of the travel path of the beam.
@@ -52,15 +52,22 @@ public class BeamHit{
 	@Nullable
 	private Vec3 hitPos;
 
-	public BeamHit(@Nonnull ServerLevel world, @Nonnull BlockPos pos, @Nonnull Direction direction, @Nonnull BlockState endState){
+	/**
+	 * The beam unit being applied
+	 * This should NOT be used to determine the beam effect (should be based on alignment/power/void only); it should only be used when the beam is being re-absorbed by a machine/item/etc
+	 */
+	private final BeamUnit beamUnit;
+
+	public BeamHit(@Nonnull ServerLevel world, @Nonnull BlockPos pos, @Nonnull Direction direction, @Nullable BlockState endState, @Nonnull BeamUnit beamUnit){
 		this.world = world;
 		this.pos = pos;
 		this.direction = direction;
 		this.endState = endState;
+		this.beamUnit = beamUnit;
 	}
 
-	public BeamHit(@Nonnull ServerLevel world, @Nonnull BlockPos pos, @Nonnull Direction direction, @Nonnull BlockState endState, @Nonnull Vec3 ray, @Nonnull Vec3 hitPos){
-		this(world, pos, direction, endState);
+	public BeamHit(@Nonnull ServerLevel world, @Nonnull BlockPos pos, @Nonnull Direction direction, @Nullable BlockState endState, @Nonnull BeamUnit beamUnit, @Nonnull Vec3 ray, @Nonnull Vec3 hitPos){
+		this(world, pos, direction, endState, beamUnit);
 		this.ray = ray;
 		this.hitPos = hitPos;
 	}
@@ -105,6 +112,15 @@ public class BeamHit{
 		return hitPos;
 	}
 
+	/**
+	 * This should NOT be used to determine the beam effect (should be based on alignment/power/void only); it should only be used when the beam is being re-absorbed by a machine/item/etc
+	 * @return The beam unit being applied
+	 */
+	@Nonnull
+	public BeamUnit getBeamUnit(){
+		return beamUnit;
+	}
+
 	@Override
 	public boolean equals(Object o){
 		if(this == o){
@@ -114,12 +130,12 @@ public class BeamHit{
 			return false;
 		}
 		BeamHit beamHit = (BeamHit) o;
-		return world.equals(beamHit.world) && pos.equals(beamHit.pos) && direction == beamHit.direction && getEndState().equals(beamHit.getEndState()) && getRay().equals(beamHit.getRay()) && getHitPos().equals(beamHit.getHitPos());
+		return world.equals(beamHit.world) && pos.equals(beamHit.pos) && direction == beamHit.direction && getEndState().equals(beamHit.getEndState()) && beamUnit.equals(beamHit.beamUnit) && getRay().equals(beamHit.getRay()) && getHitPos().equals(beamHit.getHitPos());
 	}
 
 	@Override
 	public int hashCode(){
-		return Objects.hash(world, pos, direction, getEndState(), getRay(), getHitPos());
+		return Objects.hash(world, pos, direction, getEndState(), beamUnit, getRay(), getHitPos());
 	}
 
 	@Override
@@ -129,6 +145,7 @@ public class BeamHit{
 				", pos=" + pos +
 				", direction=" + direction +
 				", endState=" + getEndState() +
+				", beamUnit=" + beamUnit +
 				", ray=" + getRay() +
 				", hitPos=" + getHitPos() +
 				'}';

@@ -1,35 +1,29 @@
 package com.Da_Technomancer.crossroads.effects.beam_effects;
 
 import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.api.beams.BeamHit;
 import com.Da_Technomancer.crossroads.api.beams.EnumBeamAlignments;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
 
-import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
 
 public class EnchantEffect extends BeamEffect{
 
 	@Override
-	public void doBeamEffect(EnumBeamAlignments align, boolean voi, int power, Level worldIn, BlockPos pos, @Nullable Direction dir){
-		if(!performTransmute(align, voi, power, worldIn, pos)){
+	public void doBeamEffect(EnumBeamAlignments align, boolean voi, int power, BeamHit beamHit){
+		if(!performTransmute(align, voi, power, beamHit)){
 			int range = (int) Math.sqrt(power) / 2;
-			ArrayList<ItemEntity> items = (ArrayList<ItemEntity>) worldIn.getEntitiesOfClass(ItemEntity.class, new AABB(pos.offset(-range, -range, -range), pos.offset(range + 1, range + 1, range + 1)), EntitySelector.ENTITY_STILL_ALIVE);
+			List<ItemEntity> items = beamHit.getNearbyEntities(ItemEntity.class, range, null);
 			if(voi){
 				if(items.size() != 0){
 					for(ItemEntity ent : items){
@@ -51,7 +45,7 @@ public class EnchantEffect extends BeamEffect{
 						continue;
 					}
 
-					List<EnchantmentInstance> ench = EnchantmentHelper.selectEnchantment(worldIn.random, stack, Math.min(power, 45), power >= 64);
+					List<EnchantmentInstance> ench = EnchantmentHelper.selectEnchantment(beamHit.getWorld().random, stack, Math.min(power, 45), power >= 64);
 
 					if(ench.isEmpty()){
 						//Non-enchantable items should be skipped
@@ -61,11 +55,11 @@ public class EnchantEffect extends BeamEffect{
 //						for(int i = 0; i < stack.getCount(); i++){
 					ItemStack created;
 
-					if(CRConfig.enchantDestruction.get() && worldIn.random.nextInt(100) < power){
+					if(CRConfig.enchantDestruction.get() && beamHit.getWorld().random.nextInt(100) < power){
 						//Destroy the item
 						created = ItemStack.EMPTY;
-						worldIn.addParticle(ParticleTypes.SMOKE, ent.getX(), ent.getY(), ent.getZ(), 0, 0, 0);
-						worldIn.playSound(null, ent.getX(), ent.getY(), ent.getZ(), SoundEvents.REDSTONE_TORCH_BURNOUT, SoundSource.BLOCKS, 1, 1);
+						beamHit.getWorld().addParticle(ParticleTypes.SMOKE, ent.getX(), ent.getY(), ent.getZ(), 0, 0, 0);
+						beamHit.getWorld().playSound(null, ent.getX(), ent.getY(), ent.getZ(), SoundEvents.REDSTONE_TORCH_BURNOUT, SoundSource.BLOCKS, 1, 1);
 					}else{
 						if(stack.getItem() == Items.BOOK){
 							created = new ItemStack(Items.ENCHANTED_BOOK, 1);
@@ -86,7 +80,7 @@ public class EnchantEffect extends BeamEffect{
 						}
 					}
 
-					Containers.dropItemStack(worldIn, ent.getX(), ent.getY(), ent.getZ(), created);
+					Containers.dropItemStack(beamHit.getWorld(), ent.getX(), ent.getY(), ent.getZ(), created);
 					ent.getItem().shrink(1);
 					if(ent.getItem().isEmpty()){
 						ent.remove(Entity.RemovalReason.DISCARDED);
