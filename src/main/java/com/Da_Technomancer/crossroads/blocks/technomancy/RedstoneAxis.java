@@ -37,7 +37,7 @@ public class RedstoneAxis extends BaseEntityBlock implements IWireConnect{
 		String name = "redstone_axis";
 		CRBlocks.toRegister.put(name, this);
 		CRBlocks.blockAddQue(name, this);
-		registerDefaultState(defaultBlockState().setValue(CRProperties.POWER_LEVEL, 0));
+		registerDefaultState(defaultBlockState().setValue(CRProperties.POWER_LEVEL_3, 0));
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public class RedstoneAxis extends BaseEntityBlock implements IWireConnect{
 
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder){
-		builder.add(CRProperties.FACING, CRProperties.POWER_LEVEL);
+		builder.add(CRProperties.FACING, CRProperties.POWER_LEVEL_3);
 	}
 
 	@Nullable

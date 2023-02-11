@@ -32,7 +32,7 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "to kill.$(br2)"
+			"text": "to kill. Permanent effects are limited to power level 1 (configurable).$(br2)"
 		},
 		{
 			"type": "patchouli:text",

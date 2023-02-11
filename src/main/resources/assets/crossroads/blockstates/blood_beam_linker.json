@@ -1,0 +1,15 @@
+{
+	"multipart": [
+		{
+			"apply": { "model": "crossroads:block/blood_beam_linker_base" }
+		},
+		{
+			"when": { "contents": "1" },
+			"apply": { "model": "crossroads:block/blood_beam_linker_spoiled" }
+		},
+		{
+			"when": { "contents": "2" },
+			"apply": { "model": "crossroads:block/blood_beam_linker_fresh" }
+		}
+	]
+}

@@ -1,6 +1,6 @@
 {
 	"category": "essentials:witchcraft",
-	"name": "Miller-Urey Capsule",
+	"name": "Life-Spark Capsule",
 	"icon": "crossroads:embryo_lab",
 	"sortnum": 0,
 	"priority": false,
@@ -9,17 +9,17 @@
 	"pages": [
 		{
 			"type": "patchouli:spotlight",
-			"title": "Miller-Urey Capsule",
+			"title": "Life-Spark Capsule",
 			"item": "crossroads:embryo_lab",
-			"text": "The <item>Miller-Urey capsule/$ creates an <item>$(l:essentials:witchcraft/cloning#process)embryo/$ from a <item>$(l:essentials:witchcraft/blood_centrifuge)centrifuged blood pouch/$, as part of the <thing>$(l:essentials:witchcraft/cloning)cloning process/$.$(br2)Ingredients have to be added to the <item>Miller-Urey capsule/$ using either a <item>$(l:essentials:witchcraft/syringe#embryo_lab)syringe/$ or a dispenser. If adding items using a <item>$(l:essentials:witchcraft/syringe#embryo_lab)syringe/$, hold the <item>$(l:essentials:witchcraft/syringe#embryo_lab)syringe/$ in the "
+			"text": "The <item>Life-Spark capsule/$ creates an <item>$(l:essentials:witchcraft/cloning#process)embryo/$ from a <item>$(l:essentials:witchcraft/blood_centrifuge)centrifuged blood pouch/$, as part of the <thing>$(l:essentials:witchcraft/cloning)cloning process/$.$(br2)Ingredients have to be added to the <item>Life-Spark capsule/$ using either a <item>$(l:essentials:witchcraft/syringe#embryo_lab)syringe/$ or a dispenser. If adding items using a <item>$(l:essentials:witchcraft/syringe#embryo_lab)syringe/$, hold the <item>$(l:essentials:witchcraft/syringe#embryo_lab)syringe/$ in the main "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "main hand and the item being added in the offhand, and right click.$(br2)The <item>$(l:essentials:witchcraft/blood_centrifuge)centrifuged blood pouch/$ must be added first- the <item>empty blood pouch/$ will be returned.$(br2)Additional items can be added to add special <thing>$(l:essentials:witchcraft/cloning#traits)traits/$. Adding a potion will add the potion effect (returning the empty bottle), adding a nametag "
+			"text": "hand and the item being added in the offhand, and right click.$(br2)The <item>$(l:essentials:witchcraft/blood_centrifuge)centrifuged blood pouch/$ must be added first- the <item>empty blood pouch/$ will be returned.$(br2)Additional items can be added to add special <thing>$(l:essentials:witchcraft/cloning#traits)traits/$. Adding a potion will add the potion effect (returning the empty bottle), adding a nametag "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "will add <thing>$(l:essentials:witchcraft/cloning#traits)imprinting/$, and adding a <item>$(l:essentials:witchcraft/souls)soul cluster/$ will add <thing>$(l:essentials:witchcraft/cloning#traits)respawning/$. An (uncentrifuged) <item>blood sample/$ from a player can be added to add <thing>imprinting/$, specifically targeting the player the sample is from rather than the player who spawns the mob.$(br2)To finalize the crafting, a lightning rod (the vanilla block) on top of the <item>Miller-Urey capsule"
+			"text": "will add <thing>$(l:essentials:witchcraft/cloning#traits)imprinting/$, and adding a <item>$(l:essentials:witchcraft/souls)soul cluster/$ will add <thing>$(l:essentials:witchcraft/cloning#traits)respawning/$. An (uncentrifuged) <item>blood sample/$ from a player can be added to add <thing>imprinting/$, specifically targeting the player the sample is from rather than the player who spawns the mob.$(br2)To finalize the crafting, a lightning rod/<item>$(l:essentials:fluid/dynamo#lightning_rod)lightning rod/$ extension on top of the <item>Life-Spark capsule"
 		},
 		{
 			"type": "patchouli:text",

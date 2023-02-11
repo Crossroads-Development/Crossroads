@@ -35,7 +35,7 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "timer, by (<thing>beam power/$ * 4) ticks per cycle. If the stored item has been <thing>spoiled/$ for a very long time, it may take a lot of rewinding.$(br2)<thing>$(l:essentials/circuits)Circuits/$ read the remaining lifetime of the stored item, in seconds before they spoil. Already spoiled items are measured as 0.$(br2)"
+			"text": "timer, by (<thing>beam power/$ * 4) ticks per cycle.$(br2)<thing>$(l:essentials/circuits)Circuits/$ read the remaining lifetime of the stored item, in seconds before they spoil. Already spoiled items are measured as 0.$(br2)"
 		},
 		{
 			"type": "patchouli:spotlight",

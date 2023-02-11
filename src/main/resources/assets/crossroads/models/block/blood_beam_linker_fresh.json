@@ -1,0 +1,21 @@
+{
+	"ambientocclusion": false,
+	"textures": {
+		"particle": "crossroads:block/block_void_crystal",
+		"main": "crossroads:block/color_sheet"
+	},
+	"elements": [
+		{
+			"from": [ 6, 6, 6 ],
+			"to": [ 10, 10, 10 ],
+			"faces": {
+				"up": { "uv": [ 4, 0, 5, 1 ], "texture": "#main" },
+				"down": { "uv": [ 4, 0, 5, 1 ], "texture": "#main" },
+				"north": { "uv": [ 4, 0, 5, 1 ], "texture": "#main" },
+				"south": { "uv": [ 4, 0, 5, 1 ], "texture": "#main" },
+				"east": { "uv": [ 4, 0, 5, 1 ], "texture": "#main" },
+				"west": { "uv": [ 4, 0, 5, 1 ], "texture": "#main" }
+			}
+		}
+	]
+}

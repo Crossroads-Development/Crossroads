@@ -124,6 +124,7 @@ public class CRTileEntity{
 		toRegister.put("beam_extractor_creative", BeamExtractorCreativeTileEntity.TYPE);
 		toRegister.put("item_cannon", ItemCannonTileEntity.TYPE);
 		toRegister.put("fire_detector", FireDetectorTileEntity.TYPE);
+		toRegister.put("blood_beam_linker", BloodBeamLinkerTileEntity.TYPE);
 	}
 
 	public static final HashMap<String, BlockEntityType<?>> toRegister = new HashMap<>();

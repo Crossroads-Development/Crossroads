@@ -91,8 +91,8 @@ public class StirlingEngineTileEntity extends ModuleTE{
 			}
 		}
 		target += 2;//Change from [-2, 2] to [0, 4]
-		if(worldState.getBlock() instanceof StirlingEngine && worldState.getValue(CRProperties.RATE_SIGNED) != target){
-			level.setBlock(worldPosition, worldState.setValue(CRProperties.RATE_SIGNED, target), 2);//Doesn't create block updates
+		if(worldState.getBlock() instanceof StirlingEngine && worldState.getValue(CRProperties.POWER_LEVEL_5) != target){
+			level.setBlock(worldPosition, worldState.setValue(CRProperties.POWER_LEVEL_5, target), 2);//Doesn't create block updates
 		}
 	}
 

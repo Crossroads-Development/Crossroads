@@ -17,6 +17,12 @@
 			"text": "Crossroads itself has very few uses for FE. Crossroads adds a way of transmitting FE using <item>$(l:essentials:fluid/tesla)tesla coils/$.$(br2)"
 		},
 		{
+			"type": "patchouli:spotlight",
+			"anchor": "lightning_rod",
+			"item": "crossroads:lightning_rod_extension",
+			"text": "<item>Lightning rod extensions/$ are a (mostly) decorative block that can be used to extend vanilla <item>lightning rods/$, so that the entire line of lightning rods gets charged up when the tip gets struck by lightning. Similarly to normal <item>lightning rods/$, the extension will emit a redstone signal while charged.$(br2)"
+		},
+		{
 			"type": "patchouli:text",
 			"text": "<bobo>top O' da mourning 2 ya! $(l:essentials:intro/welcome#bobo)iTT\"S ME, bOBO!/$<bobo>$(br2)<bobo>mEE no liik wether. iT neVER be da waY I WANT! dIS WHY EYE INTRODUUS dA rAIN ID0L! sIMPLY h0ld &nd d0 a RAIN DANCE*, an BAM! rAIN! wANT rAIN gONE? dO oPPOSITE 0f RAIN DANCE*! BAM!$(br2)<bobo>maKE wid grae dull rock, "
 		},
@@ -26,6 +32,7 @@
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:dynamo" : 0
+		"crossroads:dynamo" : 0,
+		"crossroads:lightning_rod_extension" : 1
 	}
 }

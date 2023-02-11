@@ -1,0 +1,16 @@
+{
+	"variants": {
+		"facing=down,powered=false": {"model": "crossroads:block/lightning_rod_extension"},
+		"facing=down,powered=true": {"model": "crossroads:block/lightning_rod_extension_on"},
+		"facing=east,powered=false": {"model": "crossroads:block/lightning_rod_extension", "x": 90, "y": 90},
+		"facing=east,powered=true": {"model": "crossroads:block/lightning_rod_extension_on", "x": 90, "y": 90},
+		"facing=north,powered=false": {"model": "crossroads:block/lightning_rod_extension", "x": 90},
+		"facing=north,powered=true": {"model": "crossroads:block/lightning_rod_extension_on", "x": 90},
+		"facing=south,powered=false": {"model": "crossroads:block/lightning_rod_extension", "x": 90},
+		"facing=south,powered=true": {"model": "crossroads:block/lightning_rod_extension_on", "x": 90},
+		"facing=up,powered=false": {"model": "crossroads:block/lightning_rod_extension"},
+		"facing=up,powered=true": {"model": "crossroads:block/lightning_rod_extension_on"},
+		"facing=west,powered=false": {"model": "crossroads:block/lightning_rod_extension", "x": 90, "y": 90},
+		"facing=west,powered=true": {"model": "crossroads:block/lightning_rod_extension_on", "x": 90, "y": 90}
+	}
+}

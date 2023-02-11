@@ -1,21 +1,70 @@
 {
 	"ambientocclusion": false,
+	"render_type": "translucent",
 	"textures": {
 		"particle": "crossroads:block/brewing_vat_side",
+		"top": "block/cauldron_top",
 		"bottom": "block/cauldron_bottom",
-		"inside": "block/cauldron_inner",
 		"side": "crossroads:block/brewing_vat_side",
-		"top": "crossroads:block/brewing_vat_top"
+		"inside": "block/cauldron_inner",
+		"water": "essentials:block/brazier_water"
 	},
 	"elements": [
 		{
+			"from": [ 2, 3, 2 ],
+			"to": [ 14, 10, 14 ],
+			"faces": {
+				"up": { "texture": "#inside" },
+				"down": { "texture": "#inside" }
+			}
+		},
+		{
+			"from": [ 2, 10, 2 ],
+			"to": [ 14, 12.5, 14 ],
+			"faces": {
+				"up":    { "uv": [ 2, 2, 14, 14 ], "texture": "#water" }
+			}
+		},
+		{
 			"from": [ 0, 3, 0 ],
-			"to": [ 16, 16, 16 ],
+			"to": [ 2, 13, 16 ],
+			"faces": {
+				"north": { "texture": "#side", "cullface": "north" },
+				"east": { "texture": "#side" },
+				"south": { "texture": "#side", "cullface": "south" },
+				"west": { "texture": "#side", "cullface": "west" },
+				"up": { "texture": "#top", "cullface": "up" },
+				"down": { "texture": "#inside" }
+			}
+		},
+		{
+			"from": [ 14, 3, 0 ],
+			"to": [ 16, 13, 16 ],
 			"faces": {
 				"north": { "texture": "#side", "cullface": "north" },
 				"east": { "texture": "#side", "cullface": "east" },
 				"south": { "texture": "#side", "cullface": "south" },
-				"west": { "texture": "#side", "cullface": "west" },
+				"west": { "texture": "#side" },
+				"up": { "texture": "#top", "cullface": "up" },
+				"down": { "texture": "#inside" }
+			}
+		},
+		{
+			"from": [ 2, 3, 0 ],
+			"to": [ 14, 13, 2 ],
+			"faces": {
+				"north": { "texture": "#side", "cullface": "north" },
+				"south": { "texture": "#side" },
+				"up": { "texture": "#top", "cullface": "up" },
+				"down": { "texture": "#inside" }
+			}
+		},
+		{
+			"from": [ 2, 3, 14 ],
+			"to": [ 14, 13, 16 ],
+			"faces": {
+				"north": { "texture": "#side" },
+				"south": { "texture": "#side", "cullface": "south" },
 				"up": { "texture": "#top", "cullface": "up" },
 				"down": { "texture": "#inside" }
 			}

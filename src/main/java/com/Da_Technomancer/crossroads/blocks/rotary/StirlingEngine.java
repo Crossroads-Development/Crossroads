@@ -29,7 +29,7 @@ public class StirlingEngine extends BaseEntityBlock{
 		String name = "stirling_engine";
 		CRBlocks.toRegister.put(name, this);
 		CRBlocks.blockAddQue(name, this);
-		registerDefaultState(defaultBlockState().setValue(CRProperties.RATE_SIGNED, 2));
+		registerDefaultState(defaultBlockState().setValue(CRProperties.POWER_LEVEL_5, 2));
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class StirlingEngine extends BaseEntityBlock{
 
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder){
-		builder.add(CRProperties.RATE_SIGNED);
+		builder.add(CRProperties.POWER_LEVEL_5);
 	}
 
 	@Override

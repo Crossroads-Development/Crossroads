@@ -50,13 +50,13 @@ public class BeamSplitter extends BeamBlock implements IWireConnect{
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder){
 		super.createBlockStateDefinition(builder);
-		builder.add(CRProperties.POWER_LEVEL);
+		builder.add(CRProperties.POWER_LEVEL_3);
 	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context){
 		int power = RedstoneUtil.getRedstoneAtPos(context.getLevel(), context.getClickedPos());
-		return super.getStateForPlacement(context).setValue(CRProperties.POWER_LEVEL, power >= 15 ? 2 : power == 0 ? 0 : 1);
+		return super.getStateForPlacement(context).setValue(CRProperties.POWER_LEVEL_3, power >= 15 ? 2 : power == 0 ? 0 : 1);
 	}
 
 	@Override

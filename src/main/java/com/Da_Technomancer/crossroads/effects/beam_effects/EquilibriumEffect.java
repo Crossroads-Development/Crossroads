@@ -38,7 +38,7 @@ public class EquilibriumEffect extends BeamEffect{
 			if(willPushEntity){
 				List<Entity> entities = beamHit.getNearbyEntities(Entity.class, BeamHit.WITHIN_BLOCK_RANGE, ent -> !ent.isShiftKeyDown());
 				for(Entity ent : entities){
-					attractEntity(ent, beamHit.getHitPos(), ray, power / 32F, 0.2F);
+					attractEntity(ent, beamHit.getHitPos(), ray, Math.max(power / 32F, 5F/32F), 0.2F);
 				}
 			}
 		}

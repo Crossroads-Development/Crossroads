@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.blocks;
 import com.Da_Technomancer.crossroads.blocks.alchemy.*;
 import com.Da_Technomancer.crossroads.blocks.beams.*;
 import com.Da_Technomancer.crossroads.blocks.electric.Dynamo;
+import com.Da_Technomancer.crossroads.blocks.electric.LightningRodExtension;
 import com.Da_Technomancer.crossroads.blocks.electric.TeslaCoil;
 import com.Da_Technomancer.crossroads.blocks.electric.TeslaCoilTop;
 import com.Da_Technomancer.crossroads.blocks.fluid.*;
@@ -175,6 +176,8 @@ public class CRBlocks{
 	public static BeamExtractorCreative beamExtractorCreative;
 	public static ItemCannon itemCannon;
 	public static FireDetector fireDetector;
+	public static BloodBeamLinker bloodBeamLinker;
+	public static LightningRodExtension lightningRodExtension;
 
 	public static BlockBehaviour.Properties getRockProperty(){
 		return BlockBehaviour.Properties.of(Material.STONE).strength(3).requiresCorrectToolForDrops().sound(SoundType.STONE);
@@ -379,6 +382,8 @@ public class CRBlocks{
 		beamExtractorCreative = new BeamExtractorCreative();
 		itemCannon = new ItemCannon();
 		fireDetector = new FireDetector();
+		bloodBeamLinker = new BloodBeamLinker();
+		lightningRodExtension = new LightningRodExtension();
 	}
 
 	@OnlyIn(Dist.CLIENT)

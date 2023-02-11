@@ -1,0 +1,23 @@
+{
+	"ambientocclusion": false,
+	"render_type": "cutout",
+	"textures": {
+		"particle": "crossroads:block/brewing_vat_side",
+		"stand": "crossroads:block/brewing_vat_bottle"
+	},
+	"elements": [
+		{
+			"from": [ 7, 10, 10 ],
+			"to": [ 7, 16, 15 ],
+			"rotation": {
+				"origin": [ 8, 8, 8 ],
+				"axis": "y",
+				"angle": 45
+			},
+			"faces": {
+				"east": { "uv": [ 0, 0, 5, 6 ], "texture": "#stand" },
+				"west": { "uv": [ 5, 0, 0, 6 ], "texture": "#stand" }
+			}
+		}
+	]
+}

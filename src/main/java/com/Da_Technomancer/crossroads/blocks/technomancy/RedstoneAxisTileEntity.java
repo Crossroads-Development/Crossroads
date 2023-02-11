@@ -37,8 +37,8 @@ public class RedstoneAxisTileEntity extends MasterAxisTileEntity{
 		if(!level.isClientSide){
 			BlockState state = getBlockState();
 			int targetProp = targetSpeed > 0 ? 1 : targetSpeed < 0 ? 2 : 0;
-			if(state.getValue(CRProperties.POWER_LEVEL) != targetProp){
-				level.setBlock(worldPosition, state.setValue(CRProperties.POWER_LEVEL, targetProp), 2);
+			if(state.getValue(CRProperties.POWER_LEVEL_3) != targetProp){
+				level.setBlock(worldPosition, state.setValue(CRProperties.POWER_LEVEL_3, targetProp), 2);
 			}
 		}
 	}

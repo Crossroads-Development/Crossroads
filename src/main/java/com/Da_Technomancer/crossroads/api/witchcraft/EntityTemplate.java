@@ -269,9 +269,15 @@ public class EntityTemplate implements INBTSerializable<CompoundTag>{
 
 			int effectCount = effects.size();
 			int needExtension = Math.max(0, effectCount - (maxLines - linesUsed));
+			boolean limitPower = CRConfig.limitPermanentPotionStrength.get();
 			for(MobEffectInstance effect : effects){
 				if(linesUsed < maxLines || needExtension > 0 && linesUsed < maxLines - 1){
-					tooltips.add(Component.translatable("tt.crossroads.boilerplate.entity_template.potion").append(effect.getEffect().getDisplayName()).append(" ").append(Component.translatable("enchantment.level." + (effect.getAmplifier() + 1))));
+					if(limitPower){
+						//Don't display the potion level
+						tooltips.add(Component.translatable("tt.crossroads.boilerplate.entity_template.potion").append(effect.getEffect().getDisplayName()));
+					}else{
+						tooltips.add(Component.translatable("tt.crossroads.boilerplate.entity_template.potion").append(effect.getEffect().getDisplayName()).append(" ").append(Component.translatable("enchantment.level." + (effect.getAmplifier() + 1))));
+					}
 					linesUsed++;
 				}else{
 					break;
@@ -317,7 +323,7 @@ public class EntityTemplate implements INBTSerializable<CompoundTag>{
 			//Degradation
 			int degradeConfig = CRConfig.degradationPenalty.get();
 			if(template.getDegradation() > 0 && degradeConfig > 0){
-				entity.addEffect(new MobEffectInstance(CRPotions.HEALTH_PENALTY_EFFECT, Integer.MAX_VALUE, template.getDegradation() * degradeConfig - 1));
+				CRPotions.applyAsPermanent(entity, new MobEffectInstance(CRPotions.HEALTH_PENALTY_EFFECT, Integer.MAX_VALUE, template.getDegradation() * degradeConfig - 1));
 			}
 
 			//Potion effects

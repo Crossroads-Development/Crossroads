@@ -36,6 +36,19 @@ public final class MiscUtil{
 	 */
 	public static final Style TT_QUIP = ConfigUtil.TT_QUIP;
 
+	//Useful flags for Level::setBlock
+	public static final int BLOCK_FLAG_UPDATE = 1;
+	public static final int BLOCK_FLAG_SYNC_TO_CLIENT = 2;
+	public static final int BLOCK_FLAG_SUPPRESS_OBSERVERS = 16;
+	/**
+	 * For most usecases of setting blocks on the server-side
+	 */
+	public static final int BLOCK_FLAGS_NORMAL = BLOCK_FLAG_UPDATE | BLOCK_FLAG_SYNC_TO_CLIENT;
+	/**
+	 * For changing a blockstate property which is purely visual
+	 */
+	public static final int BLOCK_FLAGS_VISUAL = BLOCK_FLAG_SYNC_TO_CLIENT | BLOCK_FLAG_SUPPRESS_OBSERVERS;
+
 	/**
 	 * Rounds to a set number of decimal places
 	 * @param numIn The value to round

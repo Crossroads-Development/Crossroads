@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.blocks.witchcraft;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.api.witchcraft.EntityTemplate;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -136,7 +137,7 @@ public class BloodCentrifugeTileEntity extends InventoryTE{
 			int inputCount = (inventory[0].isEmpty() ? 0 : 1) + (inventory[1].isEmpty() ? 0 : 1);
 			if(state.getValue(CRProperties.CONTENTS) != inputCount){
 				//No block update
-				level.setBlock(worldPosition, state.setValue(CRProperties.CONTENTS, inputCount), 2);
+				level.setBlock(worldPosition, state.setValue(CRProperties.CONTENTS, inputCount), MiscUtil.BLOCK_FLAGS_VISUAL);
 			}
 		}
 	}

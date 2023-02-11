@@ -1,9 +1,11 @@
 Dynamo
 crossroads:dynamo
-crossroads:dynamo
+crossroads:dynamo,crossroads:lightning_rod_extension;3
 The <item>Dynamo/$ produce <thing>Forge Energy (FE)/$ using <thing><link:essentials:intro/rotary>rotary power/$.
 Higher <thing><link:essentials:intro/rotary>speeds/$ will produce more power, using more rotary power in the process (the conversion efficiency is constant). FE is output on the side opposite the axle.
 Crossroads itself has very few uses for FE. Crossroads adds a way of transmitting FE using <item><link:essentials:fluid/tesla>tesla coils/$.
+<page|spotlight|lightning_rod|crossroads:lightning_rod_extension>
+<item>Lightning rod extensions/$ are a (mostly) decorative block that can be used to extend vanilla <item>lightning rods/$, so that the entire line of lightning rods gets charged up when the tip gets struck by lightning. Similarly to normal <item>lightning rods/$, the extension will emit a redstone signal while charged.
 
 <bobo>top O' da mourning 2 ya! <link:essentials:intro/welcome#bobo>iTT"S ME, bOBO!/$<bobo>
 mEE no liik wether. iT neVER be da waY I WANT! dIS WHY EYE INTRODUUS dA rAIN ID0L! sIMPLY h0ld &nd d0 a RAIN DANCE*, an BAM! rAIN! wANT rAIN gONE? dO oPPOSITE 0f RAIN DANCE*! BAM!

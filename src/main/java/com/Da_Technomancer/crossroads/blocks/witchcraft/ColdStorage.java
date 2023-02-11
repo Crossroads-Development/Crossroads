@@ -2,19 +2,19 @@ package com.Da_Technomancer.crossroads.blocks.witchcraft;
 
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.TEBlock;
 import com.Da_Technomancer.essentials.api.redstone.IReadable;
-import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.*;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
-import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -25,7 +25,7 @@ import net.minecraftforge.network.NetworkHooks;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class ColdStorage extends BaseEntityBlock implements IReadable{
+public class ColdStorage extends TEBlock implements IReadable{
 
 	public ColdStorage(){
 		super(CRBlocks.getMetalProperty());
@@ -46,15 +46,6 @@ public class ColdStorage extends BaseEntityBlock implements IReadable{
 	}
 
 	@Override
-	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving){
-		BlockEntity te = world.getBlockEntity(pos);
-		if(te instanceof Container cont && newState.getBlock() != state.getBlock()){
-			Containers.dropContents(world, pos, cont);
-		}
-		super.onRemove(state, world, pos, newState, isMoving);
-	}
-
-	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		BlockEntity te;
 		if(!worldIn.isClientSide && (te = worldIn.getBlockEntity(pos)) instanceof MenuProvider){
@@ -64,26 +55,10 @@ public class ColdStorage extends BaseEntityBlock implements IReadable{
 	}
 
 	@Override
-	public RenderShape getRenderShape(BlockState state){
-		return RenderShape.MODEL;
-	}
-
-	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
 		tooltip.add(Component.translatable("tt.crossroads.cold_storage.desc"));
 		tooltip.add(Component.translatable("tt.crossroads.cold_storage.drain", ColdStorageTileEntity.LOSS_PER_ITEM));
 		tooltip.add(Component.translatable("tt.crossroads.cold_storage.redstone"));
-
-	}
-
-	@Override
-	public boolean hasAnalogOutputSignal(BlockState state){
-		return true;
-	}
-
-	@Override
-	public int getAnalogOutputSignal(BlockState state, Level world, BlockPos pos){
-		return RedstoneUtil.clampToVanilla(read(world, pos, state));
 	}
 
 	@Override

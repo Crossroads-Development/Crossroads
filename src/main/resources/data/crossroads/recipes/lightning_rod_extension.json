@@ -1,0 +1,12 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"result": {
+		"item": "crossroads:lightning_rod_extension",
+		"count": 1
+	},
+	"ingredients": [
+		{
+			"item": "minecraft:lightning_rod"
+		}
+	]
+}

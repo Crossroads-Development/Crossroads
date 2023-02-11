@@ -1,0 +1,21 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "witchcraft",
+	"result": {
+		"item": "crossroads:blood_beam_linker",
+		"count": 1
+	},
+	"pattern": [
+		" Q ",
+		"QVQ",
+		" Q "
+	],
+	"key": {
+		"Q": {
+			"tag": "crossroads:gems/pure_quartz"
+		},
+		"V": {
+			"tag": "crossroads:gems/void"
+		}
+	}
+}

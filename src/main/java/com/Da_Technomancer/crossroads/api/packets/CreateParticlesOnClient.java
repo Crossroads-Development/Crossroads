@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.api.packets;
 
+import com.Da_Technomancer.crossroads.ambient.particles.CRParticles;
 import com.Da_Technomancer.essentials.api.packets.ClientPacket;
 import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nonnull;
@@ -61,18 +61,7 @@ public class CreateParticlesOnClient extends ClientPacket{
 	protected void run(){
 		Level world = SafeCallable.getClientWorld();
 		if(world != null){
-			RandomSource rand = world.getRandom();
-			for(int i = 0; i < count; i++){
-				world.addParticle(particle, false, x + deviate(rand, xDeviation, gaussian), y + deviate(rand, yDeviation, gaussian), z + deviate(rand, zDeviation, gaussian), xVel + deviate(rand, xVelDeviation, gaussian), yVel + deviate(rand, yVelDeviation, gaussian), zVel + deviate(rand, zVelDeviation, gaussian));
-			}
-		}
-	}
-
-	private double deviate(RandomSource rand, float deviation, boolean gaussian){
-		if(gaussian){
-			return rand.nextGaussian() * deviation;
-		}else{
-			return (rand.nextFloat() - 0.5F) * deviation * 2F;
+			CRParticles.summonParticlesFromClient(world, particle, count, x, y, z, xDeviation, yDeviation, zDeviation, xVel, yVel, zVel, xVelDeviation, yVelDeviation, zVelDeviation, gaussian);
 		}
 	}
 }

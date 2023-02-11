@@ -105,13 +105,13 @@ public class BeamSplitterTileEntity extends BeamRenderTE{
 		setChanged();
 		BlockState state = getBlockState();
 		float powerLevel = getPowerMultiplier();
-		int prevPowerLevel = state.getValue(CRProperties.POWER_LEVEL);
+		int prevPowerLevel = state.getValue(CRProperties.POWER_LEVEL_3);
 		if(powerLevel <= 0 && prevPowerLevel != 0){
-			level.setBlockAndUpdate(worldPosition, state.setValue(CRProperties.POWER_LEVEL, 0));
+			level.setBlockAndUpdate(worldPosition, state.setValue(CRProperties.POWER_LEVEL_3, 0));
 		}else if(powerLevel >= 1F && prevPowerLevel != 2){
-			level.setBlockAndUpdate(worldPosition, state.setValue(CRProperties.POWER_LEVEL, 2));
+			level.setBlockAndUpdate(worldPosition, state.setValue(CRProperties.POWER_LEVEL_3, 2));
 		}else if(powerLevel > 0 && powerLevel < 1F && prevPowerLevel != 1){
-			level.setBlockAndUpdate(worldPosition, state.setValue(CRProperties.POWER_LEVEL, 1));
+			level.setBlockAndUpdate(worldPosition, state.setValue(CRProperties.POWER_LEVEL_3, 1));
 		}
 	}
 

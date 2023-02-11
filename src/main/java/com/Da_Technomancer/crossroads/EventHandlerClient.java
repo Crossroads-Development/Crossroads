@@ -9,7 +9,6 @@ import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.api.render.IVisualEffect;
 import com.Da_Technomancer.crossroads.api.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.api.witchcraft.EntityTemplate;
-import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.entity.CREntities;
 import com.Da_Technomancer.crossroads.gui.container.CRContainers;
 import com.Da_Technomancer.crossroads.items.CRItems;
@@ -41,7 +40,6 @@ import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.*;
-import net.minecraftforge.client.event.ModelEvent.RegisterGeometryLoaders;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -99,7 +97,7 @@ public class EventHandlerClient{
 		@SuppressWarnings("unused")
 		@SubscribeEvent
 		public static void registerParticleFactories(RegisterParticleProvidersEvent e){
-			CRParticles.clientInit();
+			CRParticles.clientInit(e);
 		}
 
 		@SuppressWarnings("unused")

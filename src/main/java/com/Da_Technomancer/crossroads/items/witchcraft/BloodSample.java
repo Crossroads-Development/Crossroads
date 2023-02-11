@@ -61,7 +61,7 @@ public class BloodSample extends Item implements IPerishable{
 			tooltip.add(Component.translatable("tt.crossroads.blood_sample.craft"));
 		}
 		EntityTemplate template = getEntityTypeData(stack);
-		template.addTooltip(tooltip, 2);
+		template.addTooltip(tooltip, 4);
 		IPerishable.addTooltip(stack, world, tooltip);
 	}
 }

@@ -159,7 +159,12 @@ public class StasisStorageTileEntity extends InventoryTE{
 						long limit = perishable.getLifetime();
 						if(remaining < limit){
 							//Don't allow rewinding beyond the original lifetime
-							long singleRewind = Math.min(rewind, limit - remaining);
+							long singleRewind = 0;
+							if(remaining < 0){
+								//Instantly fully unspoil spoiled items
+								singleRewind += -remaining;
+							}
+							singleRewind = Math.min(rewind + singleRewind, limit - remaining);
 							perishable.setSpoilTime(stack, remaining + singleRewind, gameTime);
 						}
 					}

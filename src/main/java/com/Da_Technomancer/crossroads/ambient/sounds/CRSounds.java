@@ -23,6 +23,7 @@ public class CRSounds{
 	public static final SoundEvent STEAM_RELEASE = createEvent("steam_release");
 	public static final SoundEvent ITEM_CANNON = createEvent("item_cannon");
 	public static final SoundEvent FIRE_SWELL = createEvent("fire_swell");
+	public static final SoundEvent WATER_BUBBLING = createEvent("bubbling_water");
 
 	private static SoundEvent createEvent(String name){
 		ResourceLocation id = new ResourceLocation(Crossroads.MODID, name);

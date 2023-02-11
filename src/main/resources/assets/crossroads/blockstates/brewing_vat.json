@@ -1,5 +1,19 @@
 {
-	"variants": {
-		"": { "model": "crossroads:block/brewing_vat" }
-	}
+	"multipart": [
+		{
+			"apply": { "model": "crossroads:block/brewing_vat_base" }
+		},
+		{
+			"when": { "slot_filled_0": "true" },
+			"apply": { "model": "crossroads:block/brewing_vat_slot_0" }
+		},
+		{
+			"when": { "slot_filled_1": "true" },
+			"apply": { "model": "crossroads:block/brewing_vat_slot_1" }
+		},
+		{
+			"when": { "slot_filled_2": "true" },
+			"apply": { "model": "crossroads:block/brewing_vat_slot_2" }
+		}
+	]
 }

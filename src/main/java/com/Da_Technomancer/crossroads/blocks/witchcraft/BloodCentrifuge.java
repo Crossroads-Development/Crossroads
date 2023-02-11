@@ -4,20 +4,20 @@ import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.TEBlock;
 import com.Da_Technomancer.essentials.api.redstone.IReadable;
-import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.*;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -32,7 +32,7 @@ import net.minecraftforge.network.NetworkHooks;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class BloodCentrifuge extends BaseEntityBlock implements IReadable{
+public class BloodCentrifuge extends TEBlock implements IReadable{
 
 	private static final VoxelShape SHAPE = Shapes.or(box(0, 0, 0, 16, 4, 16), box(6, 4, 6, 10, 16, 10));
 
@@ -76,36 +76,12 @@ public class BloodCentrifuge extends BaseEntityBlock implements IReadable{
 	}
 
 	@Override
-	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving){
-		BlockEntity te = world.getBlockEntity(pos);
-		if(te instanceof Container cont && newState.getBlock() != state.getBlock()){
-			Containers.dropContents(world, pos, cont);
-		}
-		super.onRemove(state, world, pos, newState, isMoving);
-	}
-
-	@Override
-	public RenderShape getRenderShape(BlockState state){
-		return RenderShape.MODEL;
-	}
-
-	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
 		tooltip.add(Component.translatable("tt.crossroads.blood_centrifuge.desc", BloodCentrifugeTileEntity.HIGH_SPEED));
 		tooltip.add(Component.translatable("tt.crossroads.blood_centrifuge.degradation"));
 		tooltip.add(Component.translatable("tt.crossroads.blood_centrifuge.redstone"));
 		tooltip.add(Component.translatable("tt.crossroads.boilerplate.inertia", BloodCentrifugeTileEntity.INERTIA));
 		tooltip.add(Component.translatable("tt.crossroads.blood_centrifuge.quip").setStyle(MiscUtil.TT_QUIP));
-	}
-
-	@Override
-	public boolean hasAnalogOutputSignal(BlockState state){
-		return true;
-	}
-
-	@Override
-	public int getAnalogOutputSignal(BlockState state, Level world, BlockPos pos){
-		return RedstoneUtil.clampToVanilla(read(world, pos, state));
 	}
 
 	@Override

@@ -29,11 +29,11 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "potion (with a duration) injected will last <em>forever/$. However, every permanent potion effect added this way will reduce the target's maximum health by 1 heart (by default, configurable).$(br2)Permanent potion effects and the associated decrease in maximum health can be removed with milk or a $(l:essentials:witchcraft/medicinal_mushroom#neutralization)neutralization potion/$ as usual.$(br2)"
+			"text": "potion (with a duration) injected will last <em>forever/$, but be limited to power 1 (ex. trying to give yourself permanent regeneration 2 will give you permanent regeneration 1 instead; configurable). However, every permanent potion effect added this way will reduce the target's maximum health by 1 heart (by default, configurable).$(br2)Permanent "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<item>Genetic plasmids/$ will $(l:essentials:witchcraft/spoilage)spoil/$ after 30 minutes.$(br2)"
+			"text": "potion effects and the associated decrease in maximum health can be removed with milk or a $(l:essentials:witchcraft/medicinal_mushroom#neutralization)neutralization potion/$ as usual.$(br2)<item>Genetic plasmids/$ will $(l:essentials:witchcraft/spoilage)spoil/$ after 30 minutes.$(br2)"
 		},
 		{
 			"type": "patchouli:spotlight",

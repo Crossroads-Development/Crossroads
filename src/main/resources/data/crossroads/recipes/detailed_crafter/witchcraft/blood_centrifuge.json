@@ -21,7 +21,7 @@
 			"item": "crossroads:water_centrifuge"
 		},
 		"S": {
-			"item": "minecraft:smooth_stone"
+			"tag": "minecraft:planks"
 		}
 	}
 }

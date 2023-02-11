@@ -1,5 +1,5 @@
 {
-	"parent": "crossroads:block/brewing_vat",
+	"parent": "crossroads:block/brewing_vat_base",
 	"display": {
 		"thirdperson": {
 			"rotation": [ 10, -45, 170],

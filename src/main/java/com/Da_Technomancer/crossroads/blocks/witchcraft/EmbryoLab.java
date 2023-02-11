@@ -126,7 +126,7 @@ public class EmbryoLab extends TEBlock implements IReadable{
 
 	@Override
 	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block fromBlock, BlockPos fromPos, boolean isMoving){
-		if(fromBlock == Blocks.LIGHTNING_ROD && fromPos.equals(pos.above())){
+		if(fromBlock instanceof LightningRodBlock && fromPos.equals(pos.above())){
 			BlockState fromState = world.getBlockState(fromPos);
 			if(fromState.getBlock() == fromBlock && fromState.getValue(LightningRodBlock.POWERED)){
 				//This block finalizes a craft when a lightning rod on top is struck by lightning

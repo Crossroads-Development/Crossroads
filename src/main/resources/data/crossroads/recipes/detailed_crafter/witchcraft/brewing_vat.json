@@ -6,14 +6,10 @@
 		"count": 1
 	},
 	"pattern": [
-		"ICI",
-		"IBI",
-		"ISI"
+		" S ",
+		"CBC"
 	],
 	"key": {
-		"I": {
-			"tag": "forge:ingots/bronze"
-		},
 		"C": {
 			"tag": "forge:ingots/copper"
 		},

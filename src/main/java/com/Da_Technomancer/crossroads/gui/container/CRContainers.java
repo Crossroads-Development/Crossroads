@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.gui.container;
 
+import com.Da_Technomancer.crossroads.blocks.witchcraft.BloodBeamLinkerTileEntity;
 import com.Da_Technomancer.crossroads.gui.screen.*;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -57,6 +58,7 @@ public final class CRContainers{
 		registerContainerType(HeatReservoirCreativeContainer.TYPE, "heat_reservoir_creative");
 		registerContainerType(MasterAxisCreativeContainer.TYPE, "master_axis_creative");
 		registerContainerType(BeamExtractorCreativeContainer.TYPE, "beam_extractor_creative");
+		registerContainerType(BloodBeamLinkerContainer.TYPE, "blood_beam_linker");
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -104,6 +106,7 @@ public final class CRContainers{
 		registerConClient(HeatReservoirCreativeContainer.TYPE, HeatReservoirCreativeScreen::new, "heat_reservoir_creative");
 		registerConClient(MasterAxisCreativeContainer.TYPE, MasterAxisCreativeScreen::new, "master_axis_creative");
 		registerConClient(BeamExtractorCreativeContainer.TYPE, BeamExtractorCreativeScreen::new, "beam_extractor_creative");
+		registerConClient(BloodBeamLinkerContainer.TYPE, BloodBeamLinkerScreen::new, "blood_beam_linked");
 	}
 
 	public static <T extends AbstractContainerMenu> MenuType<T> createConType(IContainerFactory<T> cons){

@@ -72,5 +72,14 @@
 				"name": "crossroads:fire_swell"
 			}
 		]
+	},
+	"bubbling_water": {
+		"category": "block",
+		"subtitle": "subtitle.crossroads.bubbling_water",
+		"sounds": [
+			{
+				"name": "crossroads:bubbling_water"
+			}
+		]
 	}
 }
