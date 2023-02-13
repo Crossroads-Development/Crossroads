@@ -1,6 +1,11 @@
 package com.Da_Technomancer.crossroads.blocks.witchcraft;
 
+import com.Da_Technomancer.crossroads.ambient.particles.CRParticles;
+import com.Da_Technomancer.crossroads.ambient.particles.ColorParticleData;
+import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
+import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -13,6 +18,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -28,6 +34,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -36,7 +43,7 @@ public class FormulationVatTileEntity extends InventoryTE{
 	public static final BlockEntityType<FormulationVatTileEntity> TYPE = CRTileEntity.createType(FormulationVatTileEntity::new, CRBlocks.formulationVat);
 
 	public static final int[] TEMP_TIERS = {0, 75, 85, 95, 98, 100};
-	public static final double[] SPEED_MULT = {0.25D, 0.5D, 1, 2, 4, 0};
+	public static final double[] SPEED_MULT = {0.1D, 0.5D, 1, 2, 4, 0};
 	public static final int[] HEAT_DRAIN = {0, 2, 4, 8, 8, 8};
 	public static final int REQUIRED = 200;
 	private double progress = 0;
@@ -117,6 +124,42 @@ public class FormulationVatTileEntity extends InventoryTE{
 		}
 	}
 
+	private static ColorParticleData bubbleParticle;
+	private static ColorParticleData steamParticle;
+
+	@Override
+	public void clientTick(){
+		super.clientTick();
+
+		BlockState state;
+		long gametime = level.getGameTime();
+		if(gametime % 4 == 0 && (state = getBlockState()).getBlock() instanceof FormulationVat){
+			int powerLevel = state.getValue(CRProperties.POWER_LEVEL_7);
+
+			if(powerLevel > 0 && powerLevel < 6){
+				//running, bubbling
+				if(bubbleParticle == null){
+					bubbleParticle = new ColorParticleData(CRParticles.COLOR_GAS, Color.CYAN);
+				}
+				double runSpeed = SPEED_MULT[powerLevel - 1];
+				int count = (int) runSpeed + (level.random.nextFloat() < runSpeed % 1.0 ? 1 : 0);
+				CRParticles.summonParticlesFromClient(level, bubbleParticle, count, worldPosition.getX() + 0.5, worldPosition.getY() + 1.75, worldPosition.getZ() + 0.5, 0.05, 0, 0.05, 0, 0.03, 0, 0, 0.01, 0, false);
+				if(gametime % 40 == 0 && powerLevel > 1){
+					CRSounds.playSoundClientLocal(level, worldPosition, CRSounds.WATER_BUBBLING, SoundSource.BLOCKS, 0.4F, 1);
+				}
+			}else if(powerLevel == 6){
+				//too hot, steam
+				if(steamParticle == null){
+					steamParticle = new ColorParticleData(CRParticles.COLOR_SOLID, Color.LIGHT_GRAY);
+				}
+				CRParticles.summonParticlesFromClient(level, steamParticle, 2, worldPosition.getX() + 0.5, worldPosition.getY() + 1.75F, worldPosition.getZ() + 0.5, 0.05, 0, 0.05, 0, 0.04, 0, 0, 0.02, 0, false);
+				if(gametime % 24 == 0){
+					CRSounds.playSoundClientLocal(level, worldPosition, CRSounds.STEAM_RELEASE, SoundSource.BLOCKS, 0.1F, 1);
+				}
+			}
+		}
+	}
+
 	@Override
 	public void load(CompoundTag nbt){
 		super.load(nbt);
@@ -135,20 +178,37 @@ public class FormulationVatTileEntity extends InventoryTE{
 		itemOpt.invalidate();
 	}
 
+	@Override
+	public void setChanged(){
+		super.setChanged();
+		if(level != null && !level.isClientSide){
+			//Update the blockstate in the world
+			BlockState state = getBlockState();
+			int powerLevel = 0;
+			if(!fluids[0].isEmpty()){
+				powerLevel = HeatUtil.getHeatTier(temp, TEMP_TIERS)+1;
+			}
+			BlockState newState = state.setValue(CRProperties.POWER_LEVEL_7, powerLevel);
+			if(state != newState){
+				level.setBlock(worldPosition, newState, MiscUtil.BLOCK_FLAGS_VISUAL);
+			}
+		}
+	}
+
 	private final LazyOptional<IItemHandler> itemOpt = LazyOptional.of(ItemHandler::new);
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing != Direction.UP){
 			return (LazyOptional<T>) globalFluidOpt;
 		}
 
-		if(capability == Capabilities.HEAT_CAPABILITY){
+		if(capability == Capabilities.HEAT_CAPABILITY && facing != Direction.UP){
 			return (LazyOptional<T>) heatOpt;
 		}
 
-		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
+		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && facing != Direction.UP){
 			return (LazyOptional<T>) itemOpt;
 		}
 

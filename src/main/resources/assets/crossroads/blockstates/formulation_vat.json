@@ -1,5 +1,11 @@
 {
 	"variants": {
-		"": { "model": "crossroads:block/formulation_vat" }
+		"power_level=0": { "model": "crossroads:block/formulation_vat_0"},
+		"power_level=1": { "model": "crossroads:block/formulation_vat_1"},
+		"power_level=2": { "model": "crossroads:block/formulation_vat_2"},
+		"power_level=3": { "model": "crossroads:block/formulation_vat_3"},
+		"power_level=4": { "model": "crossroads:block/formulation_vat_4"},
+		"power_level=5": { "model": "crossroads:block/formulation_vat_5"},
+		"power_level=6": { "model": "crossroads:block/formulation_vat_6"}
 	}
 }

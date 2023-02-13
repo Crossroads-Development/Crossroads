@@ -1,0 +1,7 @@
+{
+	"parent": "crossroads:block/formulation_vat",
+	"textures": {
+		"side": "crossroads:block/formulation_vat_side_4"
+	}
+}
+

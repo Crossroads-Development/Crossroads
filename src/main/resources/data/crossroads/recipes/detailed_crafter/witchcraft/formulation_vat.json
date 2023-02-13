@@ -6,19 +6,13 @@
 		"count": 1
 	},
 	"pattern": [
-		"ICI",
-		"IBI",
-		"ISI"
+		" C ",
+		"C C",
+		"CSC"
 	],
 	"key": {
-		"I": {
-			"tag": "forge:ingots/iron"
-		},
 		"C": {
 			"tag": "forge:ingots/copper"
-		},
-		"B": {
-			"item": "crossroads:salt_reactor"
 		},
 		"S": {
 			"item": "minecraft:cauldron"
