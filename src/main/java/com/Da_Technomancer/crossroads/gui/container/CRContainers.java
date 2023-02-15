@@ -106,7 +106,7 @@ public final class CRContainers{
 		registerConClient(HeatReservoirCreativeContainer.TYPE, HeatReservoirCreativeScreen::new, "heat_reservoir_creative");
 		registerConClient(MasterAxisCreativeContainer.TYPE, MasterAxisCreativeScreen::new, "master_axis_creative");
 		registerConClient(BeamExtractorCreativeContainer.TYPE, BeamExtractorCreativeScreen::new, "beam_extractor_creative");
-		registerConClient(BloodBeamLinkerContainer.TYPE, BloodBeamLinkerScreen::new, "blood_beam_linked");
+		registerConClient(BloodBeamLinkerContainer.TYPE, BloodBeamLinkerScreen::new, "blood_beam_linker");
 	}
 
 	public static <T extends AbstractContainerMenu> MenuType<T> createConType(IContainerFactory<T> cons){
