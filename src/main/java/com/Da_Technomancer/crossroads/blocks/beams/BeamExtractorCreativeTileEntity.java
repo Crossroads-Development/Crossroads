@@ -96,7 +96,7 @@ public class BeamExtractorCreativeTileEntity extends BeamRenderTE implements Men
 	@Override
 	protected void doEmit(BeamUnit toEmit){
 		Direction dir = getFacing();
-		if(beamer[dir.get3DDataValue()].emit(level.hasNeighborSignal(worldPosition) ? BeamUnit.EMPTY : output, level)){
+		if(getBeamHelpers()[dir.get3DDataValue()].emit(level.hasNeighborSignal(worldPosition) ? BeamUnit.EMPTY : output, level)){
 			refreshBeam(dir.get3DDataValue());
 		}
 	}

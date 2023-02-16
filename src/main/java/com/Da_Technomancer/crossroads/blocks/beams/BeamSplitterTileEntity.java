@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.blocks.beams;
 import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.CircuitUtil;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.api.beams.BeamHelper;
 import com.Da_Technomancer.crossroads.api.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.api.templates.BeamRenderTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -75,10 +76,11 @@ public class BeamSplitterTileEntity extends BeamRenderTE{
 			remain = new BeamUnit(out.getEnergy() - toDraw.getEnergy(), out.getPotential() - toDraw.getPotential(), out.getStability() - toDraw.getStability(), out.getVoid() - toDraw.getVoid());
 		}
 
-		if(beamer[facing.get3DDataValue()].emit(toDraw, level)){
+		BeamHelper[] beamers = getBeamHelpers();
+		if(beamers[facing.get3DDataValue()].emit(toDraw, level)){
 			refreshBeam(facing.get3DDataValue());
 		}
-		if(beamer[facing.getOpposite().get3DDataValue()].emit(remain, level)){
+		if(beamers[facing.getOpposite().get3DDataValue()].emit(remain, level)){
 			refreshBeam(facing.getOpposite().get3DDataValue());
 		}
 	}
@@ -107,11 +109,11 @@ public class BeamSplitterTileEntity extends BeamRenderTE{
 		float powerLevel = getPowerMultiplier();
 		int prevPowerLevel = state.getValue(CRProperties.POWER_LEVEL_3);
 		if(powerLevel <= 0 && prevPowerLevel != 0){
-			level.setBlockAndUpdate(worldPosition, state.setValue(CRProperties.POWER_LEVEL_3, 0));
+			level.setBlock(worldPosition, state.setValue(CRProperties.POWER_LEVEL_3, 0), MiscUtil.BLOCK_FLAGS_VISUAL);
 		}else if(powerLevel >= 1F && prevPowerLevel != 2){
-			level.setBlockAndUpdate(worldPosition, state.setValue(CRProperties.POWER_LEVEL_3, 2));
+			level.setBlock(worldPosition, state.setValue(CRProperties.POWER_LEVEL_3, 2), MiscUtil.BLOCK_FLAGS_VISUAL);
 		}else if(powerLevel > 0 && powerLevel < 1F && prevPowerLevel != 1){
-			level.setBlockAndUpdate(worldPosition, state.setValue(CRProperties.POWER_LEVEL_3, 1));
+			level.setBlock(worldPosition, state.setValue(CRProperties.POWER_LEVEL_3, 1), MiscUtil.BLOCK_FLAGS_VISUAL);
 		}
 	}
 

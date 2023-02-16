@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.blocks.beams;
 import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.CircuitUtil;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.api.beams.BeamHelper;
 import com.Da_Technomancer.crossroads.api.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.api.templates.BeamRenderTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -75,10 +76,11 @@ public class BeamSiphonTileEntity extends BeamRenderTE{
 			remain = new BeamUnit(out.getEnergy() - toDraw.getEnergy(), out.getPotential() - toDraw.getPotential(), out.getStability() - toDraw.getStability(), out.getVoid() - toDraw.getVoid());
 		}
 
-		if(beamer[facing.get3DDataValue()].emit(toDraw, level)){
+		BeamHelper[] beamers = getBeamHelpers();
+		if(beamers[facing.get3DDataValue()].emit(toDraw, level)){
 			refreshBeam(facing.get3DDataValue());
 		}
-		if(beamer[facing.getOpposite().get3DDataValue()].emit(remain, level)){
+		if(beamers[facing.getOpposite().get3DDataValue()].emit(remain, level)){
 			refreshBeam(facing.getOpposite().get3DDataValue());
 		}
 //		if(toFill < out.getPower()){
@@ -145,10 +147,10 @@ public class BeamSiphonTileEntity extends BeamRenderTE{
 		int powerLevel = getPowerInput();
 		if(powerLevel > 0){
 			if(!state.getValue(CRProperties.REDSTONE_BOOL)){
-				level.setBlockAndUpdate(worldPosition, state.setValue(CRProperties.REDSTONE_BOOL, true));
+				level.setBlock(worldPosition, state.setValue(CRProperties.REDSTONE_BOOL, true), MiscUtil.BLOCK_FLAGS_VISUAL);
 			}
 		}else if(state.getValue(CRProperties.REDSTONE_BOOL)){
-			level.setBlockAndUpdate(worldPosition, state.setValue(CRProperties.REDSTONE_BOOL, false));
+			level.setBlock(worldPosition, state.setValue(CRProperties.REDSTONE_BOOL, false), MiscUtil.BLOCK_FLAGS_VISUAL);
 		}
 	}
 

@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.beams;
 
 import com.Da_Technomancer.crossroads.api.CRProperties;
+import com.Da_Technomancer.crossroads.api.beams.BeamHelper;
 import com.Da_Technomancer.crossroads.api.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.api.templates.BeamRenderTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -41,10 +42,11 @@ public class BeamRedirectorTileEntity extends BeamRenderTE{
 	protected void doEmit(BeamUnit out){
 		Direction facing = getDir();
 		boolean reds = getBlockState().getValue(CRProperties.REDSTONE_BOOL);//Store this before emitting, as the redstone field can be modified during execution
-		if(beamer[facing.get3DDataValue()].emit(reds ? out : BeamUnit.EMPTY, level)){
+		BeamHelper[] beamers = getBeamHelpers();
+		if(beamers[facing.get3DDataValue()].emit(reds ? out : BeamUnit.EMPTY, level)){
 			refreshBeam(facing.get3DDataValue());
 		}
-		if(beamer[facing.getOpposite().get3DDataValue()].emit(reds ? BeamUnit.EMPTY : out, level)){
+		if(beamers[facing.getOpposite().get3DDataValue()].emit(reds ? BeamUnit.EMPTY : out, level)){
 			refreshBeam(facing.getOpposite().get3DDataValue());
 		}
 	}

@@ -82,10 +82,10 @@ public class ClockworkStabilizerTileEntity extends BeamRenderTE{
 			}
 			BeamUnit output = new BeamUnit(MiscUtil.withdrawExact(storage.getOutput().getValues(), (int) toWithdraw));
 			storage.subtractBeam(output);
-			if(beamer[dir.get3DDataValue()].emit(output, level)){
+			if(getBeamHelpers()[dir.get3DDataValue()].emit(output, level)){
 				refreshBeam(dir.get3DDataValue());
 			}
-		}else if(beamer[dir.get3DDataValue()].emit(BeamUnit.EMPTY, level)){
+		}else if(getBeamHelpers()[dir.get3DDataValue()].emit(BeamUnit.EMPTY, level)){
 			refreshBeam(dir.get3DDataValue());
 		}
 	}

@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.beams;
 
 import com.Da_Technomancer.crossroads.api.CRProperties;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.templates.BeamBlock;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
@@ -53,10 +54,10 @@ public class BeamRedirector extends BeamBlock{
 	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving){
 		if(worldIn.hasNeighborSignal(pos)){
 			if(!state.getValue(CRProperties.REDSTONE_BOOL)){
-				worldIn.setBlockAndUpdate(pos, state.setValue(CRProperties.REDSTONE_BOOL, true));
+				worldIn.setBlock(pos, state.setValue(CRProperties.REDSTONE_BOOL, true), MiscUtil.BLOCK_FLAGS_VISUAL);
 			}
 		}else if(state.getValue(CRProperties.REDSTONE_BOOL)){
-			worldIn.setBlockAndUpdate(pos, state.setValue(CRProperties.REDSTONE_BOOL, false));
+			worldIn.setBlock(pos, state.setValue(CRProperties.REDSTONE_BOOL, false), MiscUtil.BLOCK_FLAGS_VISUAL);
 		}
 	}
 

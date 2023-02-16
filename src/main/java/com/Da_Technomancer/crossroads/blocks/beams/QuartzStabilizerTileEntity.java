@@ -84,10 +84,10 @@ public class QuartzStabilizerTileEntity extends BeamRenderTE implements IInfoTE{
 			BeamUnit toDraw = new BeamUnit(MiscUtil.withdrawExact(storage.getOutput().getValues(), toFill));
 			storage.subtractBeam(toDraw);
 
-			if(beamer[dir.get3DDataValue()].emit(toDraw, level)){
+			if(getBeamHelpers()[dir.get3DDataValue()].emit(toDraw, level)){
 				refreshBeam(dir.get3DDataValue());
 			}
-		}else if(beamer[dir.get3DDataValue()].emit(BeamUnit.EMPTY, level)){
+		}else if(getBeamHelpers()[dir.get3DDataValue()].emit(BeamUnit.EMPTY, level)){
 			refreshBeam(dir.get3DDataValue());
 		}
 	}

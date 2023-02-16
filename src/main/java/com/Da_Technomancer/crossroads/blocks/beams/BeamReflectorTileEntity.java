@@ -44,7 +44,7 @@ public class BeamReflectorTileEntity extends BeamRenderTE{
 	
 	@Override
 	protected void doEmit(BeamUnit toEmit){
-		if(beamer[facing].emit(toEmit, level)){
+		if(getBeamHelpers()[facing].emit(toEmit, level)){
 			refreshBeam(facing);
 		}
 		if(!toEmit.isEmpty()){

@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
 public abstract class BeamRenderTE extends BlockEntity implements IBeamRenderTE, ITickableTileEntity, IIntReceiver{
 
 	protected int[] beamPackets = new int[6];
-	protected BeamHelper[] beamer;
+	private BeamHelper[] beamer;
 	protected BeamUnitStorage[] queued = {new BeamUnitStorage(), new BeamUnitStorage()};
 	protected long activeCycle;//To prevent tick acceleration and deal with some chunk loading weirdness
 	protected BeamUnit[] prevMag = new BeamUnit[] {BeamUnit.EMPTY, BeamUnit.EMPTY, BeamUnit.EMPTY, BeamUnit.EMPTY, BeamUnit.EMPTY, BeamUnit.EMPTY};//Stores the last non-null beams sent for information readouts
@@ -46,6 +46,19 @@ public abstract class BeamRenderTE extends BlockEntity implements IBeamRenderTE,
 
 	protected int getLimit(){
 		return BeamUtil.POWER_LIMIT;
+	}
+
+	protected BeamHelper[] getBeamHelpers(){
+		if(beamer == null){
+			beamer = new BeamHelper[6];
+			boolean[] outputs = outputSides();
+			for(int i = 0; i < 6; i++){
+				if(outputs[i]){
+					beamer[i] = createBeamManager(Direction.from3DDataValue(i));
+				}
+			}
+		}
+		return beamer;
 	}
 
 	@Override
@@ -101,16 +114,6 @@ public abstract class BeamRenderTE extends BlockEntity implements IBeamRenderTE,
 	public void serverTick(){
 		ITickableTileEntity.super.serverTick();
 		if(level.getGameTime() % BeamUtil.BEAM_TIME == 0 && activeCycle != level.getGameTime()){
-			if(beamer == null){
-				beamer = new BeamHelper[6];
-				boolean[] outputs = outputSides();
-				for(int i = 0; i < 6; i++){
-					if(outputs[i]){
-						beamer[i] = createBeamManager(Direction.from3DDataValue(i));
-					}
-				}
-			}
-
 			BeamUnit out = shiftStorage();
 			activeCycle = level.getGameTime();
 			if(out.getPower() > getLimit()){

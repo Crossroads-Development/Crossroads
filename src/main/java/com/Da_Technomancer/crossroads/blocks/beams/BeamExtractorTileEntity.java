@@ -206,7 +206,7 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements Container, 
 			consumeFuel();
 		}
 
-		if(beamer[dir.get3DDataValue()].emit(output, level)){
+		if(getBeamHelpers()[dir.get3DDataValue()].emit(output, level)){
 			refreshBeam(dir.get3DDataValue());
 		}
 	}

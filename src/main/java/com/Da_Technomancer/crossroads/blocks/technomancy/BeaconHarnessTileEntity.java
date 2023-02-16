@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.api.beams.BeamHelper;
 import com.Da_Technomancer.crossroads.api.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.api.technomancy.FluxUtil;
@@ -187,17 +188,18 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, 
 			cycles %= LOOP_TIME;
 			BeamUnit out = getOutput(cycles);
 			if(cycles >= 0){
+				BeamHelper beamHelper = getBeamHelpers()[0];
 				//Don't check color during a safety period
 				if(!isSafetyPeriod(cycles) && invalid(out.getRGB(), input)){
 					//Wrong input- shut down
 					running = false;
 					cycles = -11;//Easy way of adding a startup cooldown- 10 cycles
 
-					if(beamer[0].emit(BeamUnit.EMPTY, level)){
+					if(beamHelper.emit(BeamUnit.EMPTY, level)){
 						refreshBeam(0);
 					}
 				}else{
-					beamer[0].emit(out, level);
+					beamHelper.emit(out, level);
 					refreshBeam(0);//Assume the beam changed as the color constantly cycles
 					prevMag[0] = out;
 					addFlux(FLUX_GEN);
