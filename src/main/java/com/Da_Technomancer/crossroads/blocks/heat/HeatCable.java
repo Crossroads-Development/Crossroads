@@ -37,7 +37,7 @@ import java.util.List;
 
 public class HeatCable extends ConduitBlock<EnumTransferMode>{
 
-	private static final double SIZE = 0.2D;
+	private static final double SIZE = 0.25D;
 	protected static final VoxelShape[] SHAPES = generateShapes(SIZE);
 	private static final Item.Properties itemProp = new Item.Properties().tab(CRItems.TAB_HEAT_CABLE);
 
