@@ -77,7 +77,7 @@ public abstract class BeamRenderTE extends BlockEntity implements IBeamRenderTE,
 			refreshBeam(i);
 		}
 		lazyOptional.invalidate();
-		lazyOptional = LazyOptional.of(BeamHandler::new);
+		lazyOptional = LazyOptional.of(this::createBeamHandler);
 	}
 
 	protected void refreshBeam(int index){
@@ -198,7 +198,11 @@ public abstract class BeamRenderTE extends BlockEntity implements IBeamRenderTE,
 		}
 	}
 
-	protected LazyOptional<IBeamHandler> lazyOptional = LazyOptional.of(BeamHandler::new);
+	protected IBeamHandler createBeamHandler(){
+		return new BeamHandler();
+	}
+
+	protected LazyOptional<IBeamHandler> lazyOptional = LazyOptional.of(this::createBeamHandler);
 
 	@Override
 	public void setRemoved(){

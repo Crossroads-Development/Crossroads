@@ -5,8 +5,9 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.essentials.api.ConfigUtil;
+import com.Da_Technomancer.essentials.api.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.TEBlock;
 import com.Da_Technomancer.essentials.api.redstone.IReadable;
-import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
@@ -18,10 +19,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.phys.BlockHitResult;
@@ -30,7 +31,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
 
-public class LensFrame extends BaseEntityBlock implements IReadable{
+public class LensFrame extends TEBlock implements IReadable{
 
 	private static final VoxelShape[] SHAPE = new VoxelShape[3];
 
@@ -57,16 +58,10 @@ public class LensFrame extends BaseEntityBlock implements IReadable{
 		return new LensFrameTileEntity(pos, state);
 	}
 
-//	Non-ticking tile entity
-//	@Nullable
-//	@Override
-//	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> type){
-//		return ITickableTileEntity.createTicker(type, LensFrameTileEntity.TYPE);
-//	}
-
+	@Nullable
 	@Override
-	public RenderShape getRenderShape(BlockState state){
-		return RenderShape.MODEL;
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> type){
+		return ITickableTileEntity.createTicker(type, LensFrameTileEntity.TYPE);
 	}
 
 //	@Override
@@ -132,27 +127,17 @@ public class LensFrame extends BaseEntityBlock implements IReadable{
 	@Override
 	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving){
 		BlockEntity te = world.getBlockEntity(pos);
-		if(newState.getBlock() != this && te instanceof LensFrameTileEntity){
-			Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), ((LensFrameTileEntity) te).getLensItem());
+		if(newState.getBlock() != this && te instanceof LensFrameTileEntity lte){
+			Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), lte.getLensItem());
 		}
 		super.onRemove(state, world, pos, newState, isMoving);
 	}
 
 	@Override
-	public boolean hasAnalogOutputSignal(BlockState state){
-		return true;
-	}
-
-	@Override
-	public int getAnalogOutputSignal(BlockState blockState, Level world, BlockPos pos){
-		return RedstoneUtil.clampToVanilla(read(world, pos, blockState));
-	}
-
-	@Override
 	public float read(Level world, BlockPos pos, BlockState blockState){
 		BlockEntity te = world.getBlockEntity(pos);
-		if(te instanceof LensFrameTileEntity){
-			return ((LensFrameTileEntity) te).getRedstone();
+		if(te instanceof LensFrameTileEntity lte){
+			return lte.getRedstone();
 		}
 		return 0;
 	}

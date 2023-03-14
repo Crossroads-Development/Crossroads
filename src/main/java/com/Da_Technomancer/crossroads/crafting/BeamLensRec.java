@@ -165,7 +165,7 @@ public class BeamLensRec implements IOptionalRecipe<Container>{
 
 				return new BeamLensRec(recipeId, s, ingredient, new BeamMod(mults), transform, alignment, transformVoid, true);
 			}
-			return new BeamLensRec(recipeId, s, ingredient, BeamMod.EMPTY, transform, alignment, transformVoid, false);
+			return new BeamLensRec(recipeId, s, ingredient, BeamMod.IDENTITY, transform, alignment, transformVoid, false);
 		}
 
 		@Nullable
@@ -186,7 +186,7 @@ public class BeamLensRec implements IOptionalRecipe<Container>{
 				}
 				return new BeamLensRec(recipeId, s, ingredient, new BeamMod(units), stack, alignment, transformVoid, true);
 			}else{
-				return new BeamLensRec(recipeId, s, Ingredient.EMPTY, BeamMod.EMPTY, ItemStack.EMPTY, EnumBeamAlignments.NO_MATCH, false, false);
+				return new BeamLensRec(recipeId, s, Ingredient.EMPTY, BeamMod.IDENTITY, ItemStack.EMPTY, EnumBeamAlignments.NO_MATCH, false, false);
 			}
 		}
 

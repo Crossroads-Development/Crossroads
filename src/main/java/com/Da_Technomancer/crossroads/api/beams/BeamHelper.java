@@ -1,12 +1,9 @@
 package com.Da_Technomancer.crossroads.api.beams;
 
-import com.Da_Technomancer.crossroads.api.Capabilities;
 import com.Da_Technomancer.crossroads.effects.beam_effects.BeamEffect;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.common.util.LazyOptional;
 import org.apache.commons.lang3.tuple.Triple;
 
 import javax.annotation.Nonnull;
@@ -50,7 +47,7 @@ public class BeamHelper{
 //		}
 
 		//Do beam effect
-		if(!mag.isEmpty() && !world.isClientSide){
+		if(!world.isClientSide){
 			EnumBeamAlignments align = mag.getAlignment();
 			BeamEffect e = align.getEffect();
 			e.doBeamEffect(align, mag.getVoid() != 0, Math.min(BeamUtil.MAX_EFFECT_POWER, mag.getPower()), beamHit);

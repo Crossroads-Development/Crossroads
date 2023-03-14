@@ -31,7 +31,7 @@ public class BeamHit{
 	@Nonnull
 	private final BlockPos pos;
 	/**
-	 * The cardinal direction side of the block this beam hit, or the cardinal direction the beam is travelling if N/A
+	 * The cardinal direction side of the block this beam hit, or opposite the cardinal direction the beam is travelling if N/A
 	 * Used as a fallback for ray if not specified.
 	 */
 	@Nonnull

@@ -11,7 +11,7 @@ import java.util.Arrays;
  */
 public class BeamMod {
 
-	public static final BeamMod EMPTY = new BeamMod(1, 1, 1, 1, 0);
+	public static final BeamMod IDENTITY = new BeamMod(1, 1, 1, 1, 0);
 
 	private final float[] multipliers = new float[5];//0: Energy, 1: Potential, 2: stability, 3: Void, 4: Void Convert
 
@@ -52,7 +52,7 @@ public class BeamMod {
 	}
 
 	public boolean isEmpty(){
-		return this == BeamMod.EMPTY ||
+		return this == BeamMod.IDENTITY ||
 				multipliers[0] == 1
 				&& multipliers[1] == 1
 				&& multipliers[2] == 1
@@ -126,6 +126,6 @@ public class BeamMod {
 					compound.getFloat("voidConvert")
 			);
 		}
-		return BeamMod.EMPTY;
+		return BeamMod.IDENTITY;
 	}
 }

@@ -49,6 +49,10 @@ public class BeamEffect{
 	 * @return Whether this did anything (in which case, don't run the normal beam effect)
 	 */
 	protected boolean performTransmute(EnumBeamAlignments align, boolean voi, int power, BeamHit beamHit){
+		if(align == EnumBeamAlignments.NO_MATCH){
+			return false;//Optimization; empty beams don't do anything
+		}
+
 		//Go into a machine
 		IBeamHandler receivingMachine = beamHit.getEndCapability(Capabilities.BEAM_CAPABILITY, false);
 		if(receivingMachine != null){
