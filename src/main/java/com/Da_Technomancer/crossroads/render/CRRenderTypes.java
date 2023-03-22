@@ -24,13 +24,17 @@ public class CRRenderTypes extends RenderType{
 	public static final ResourceLocation AXLE_SIDE_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/axle");
 	public static final ResourceLocation HAMSTER_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/hamster");
 	public static final ResourceLocation GEAR_8_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/gear_oct");
+	public static final ResourceLocation GEAR_8_RIM_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/gear_oct_rim");
+	public static final ResourceLocation GEAR_8_TOOTH_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/gear_oct_tooth");
 	public static final ResourceLocation GEAR_24_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/gear_24");
 	public static final ResourceLocation GEAR_24_RIM_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/gear_24_rim");
+	public static final ResourceLocation GEAR_24_TOOTH_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/gear_24_tooth");
 	public static final ResourceLocation CLUTCH_SIDE_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/clutch");
 	public static final ResourceLocation CLUTCH_SIDE_INVERTED_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/clutch_inv");
 	public static final ResourceLocation GATEWAY_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/gateway");
 	public static final ResourceLocation AXLE_MOUNT_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/axle_mount");
 	public static final ResourceLocation AXLE_MOUNT_OCT_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/axle_mount_oct");
+	public static final ResourceLocation AXLE_MOUNT_RIM_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/axle_mount_rim");
 	public static final ResourceLocation BRONZE_TEXTURE = new ResourceLocation(Crossroads.MODID, "block/block_bronze");
 	public static final ResourceLocation BEAM_CANNON_BARREL_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/beam_cannon");
 	public static final ResourceLocation ITEM_CANNON_BARREL_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/item_cannon");

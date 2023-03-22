@@ -49,10 +49,11 @@ public class DynamoRenderer implements BlockEntityRenderer<ModuleTE>{
 		matrix.scale(0.7F, 0.7F, 0.7F);
 
 		TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(CRRenderTypes.GEAR_8_TEXTURE);
+		TextureAtlasSprite spriteRim = CRRenderUtil.getTextureSprite(CRRenderTypes.GEAR_8_RIM_TEXTURE);
 		float lHalf = 7F / 16F;//Half the side length of the octagon
 
 		//Renders the core of the gear, leaving only the prongs
 		matrix.scale(2F * lHalf, 1, 2F * lHalf);
-		CRModels.draw8Core(buffer.getBuffer(RenderType.solid()), matrix, CRRenderUtil.convertColor(CRMaterialLibrary.findMaterial("copper").getColor()), combinedLight, sprite);
+		CRModels.draw8Core(buffer.getBuffer(RenderType.solid()), matrix, CRRenderUtil.convertColor(CRMaterialLibrary.findMaterial("copper").getColor()), combinedLight, sprite, spriteRim);
 	}
 }

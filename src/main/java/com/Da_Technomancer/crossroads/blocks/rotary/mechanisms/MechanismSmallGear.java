@@ -164,7 +164,7 @@ public class MechanismSmallGear implements IMechanism<CRMaterialLibrary.GearMate
 		float angle = handler.getAngle(partialTicks);
 		matrix.translate(0, -0.4375D, 0);
 		matrix.mulPose(Axis.YP.rotationDegrees(-(float) RotaryUtil.getCCWSign(side) * angle));
-		CRModels.draw8Gear(matrix, buffer.getBuffer(RenderType.solid()), CRRenderUtil.convertColor(mat instanceof CRMaterialLibrary.GearMaterial ? ((CRMaterialLibrary.GearMaterial) mat).getColor() : Color.WHITE), combinedLight);
+		CRModels.draw8Gear(matrix, buffer.getBuffer(RenderType.solid()), CRRenderUtil.convertColor(mat instanceof CRMaterialLibrary.GearMaterial ? ((CRMaterialLibrary.GearMaterial) mat).getColor() : Color.WHITE), combinedLight, CRModels.generateZFightFactor(te.getBlockPos(), side == null ? 0 : side.ordinal()));
 	}
 
 	@Override
