@@ -84,6 +84,7 @@ public class TemporalAcceleratorRenderer extends EntropyRenderer<TemporalAcceler
 		//Render the two rotating octagons
 
 		TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(CRRenderTypes.GEAR_8_TEXTURE);
+		TextureAtlasSprite spriteRim = CRRenderUtil.getTextureSprite(CRRenderTypes.GEAR_8_RIM_TEXTURE);
 		VertexConsumer builder = buffer.getBuffer(RenderType.solid());
 		int[] col = CRRenderUtil.convertColor(GearFactory.findMaterial("copshowium").getColor());
 		float angle = CRRenderUtil.getRenderTime(partialTicks, te.getLevel());
@@ -93,11 +94,11 @@ public class TemporalAcceleratorRenderer extends EntropyRenderer<TemporalAcceler
 		matrix.mulPose(Vector3f.YP.rotationDegrees(angle));
 		matrix.translate(0, 5F / 16F, 0);
 		matrix.scale(2F * lHalf, 1, 2F * lHalf);
-		CRModels.draw8Core(builder, matrix, col, medLight, sprite);
+		CRModels.draw8Core(builder, matrix, col, medLight, sprite, spriteRim);
 
 		matrix.mulPose(Vector3f.YP.rotationDegrees(-2F * angle));
 		matrix.translate(0, -4F / 16F, 0);
 		matrix.scale(0.8F, 1, 0.8F);
-		CRModels.draw8Core(builder, matrix, col, medLight, sprite);
+		CRModels.draw8Core(builder, matrix, col, medLight, sprite, spriteRim);
 	}
 }

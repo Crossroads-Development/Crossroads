@@ -95,14 +95,16 @@ public class MechanismAxleMount implements IMechanism<GearFactory.GearMaterial>{
 		int[] matCol = CRRenderUtil.convertColor(mat instanceof GearFactory.GearMaterial ? ((GearFactory.GearMaterial) mat).getColor() : Color.WHITE);
 		TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(CRRenderTypes.AXLE_MOUNT_TEXTURE);
 		TextureAtlasSprite octSprite = CRRenderUtil.getTextureSprite(CRRenderTypes.AXLE_MOUNT_OCT_TEXTURE);
+		TextureAtlasSprite rimSprite = CRRenderUtil.getTextureSprite(CRRenderTypes.AXLE_MOUNT_RIM_TEXTURE);
 
 		if(axis == null || selfAxis == axis){
 			//The axle is pointing into this mount
 
 			matrix.translate(0, -7F / 16F, 0);
 			matrix.pushPose();
-			matrix.scale(OCT_SCALE, 1 - 0.001F, OCT_SCALE);
-			CRModels.draw8Core(builder, matrix, matCol, matCol, combinedLight, octSprite);
+			matrix.scale(OCT_SCALE, OCT_SCALE, OCT_SCALE);
+			matrix.translate(0, 1F / 16F, 0);
+			CRModels.draw8Core(builder, matrix, matCol, matCol, combinedLight, octSprite, rimSprite);
 			matrix.popPose();
 
 			//Wall mount
@@ -123,8 +125,11 @@ public class MechanismAxleMount implements IMechanism<GearFactory.GearMaterial>{
 
 			matrix.pushPose();
 			matrix.mulPose(Vector3f.ZP.rotationDegrees(90));
-			matrix.scale(OCT_SCALE + antiZFightModifier, 1 + antiZFightModifier, OCT_SCALE + antiZFightModifier);
-			CRModels.draw8Core(builder, matrix, matCol, matCol, combinedLight, octSprite);
+			matrix.scale(OCT_SCALE + antiZFightModifier, OCT_SCALE + antiZFightModifier, OCT_SCALE + antiZFightModifier);
+			matrix.translate(0, 1F/16, 0);
+			CRModels.draw8Core(builder, matrix, matCol, matCol, combinedLight, octSprite, rimSprite);
+			matrix.translate(0, -2F/16, 0);
+			CRModels.draw8Core(builder, matrix, matCol, matCol, combinedLight, octSprite, rimSprite);
 			matrix.popPose();
 
 			//Shaft

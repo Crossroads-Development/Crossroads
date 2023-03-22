@@ -33,10 +33,7 @@ public class LargeGearRenderer implements BlockEntityRenderer<LargeGearMasterTil
 
 		if(handler.isPresent()){
 			matrix.mulPose(Vector3f.YP.rotationDegrees(handler.orElseThrow(NullPointerException::new).getAngle(partialTicks) * dirMult));
-			matrix.pushPose();
-			matrix.scale(3, 1, 3);
-			CRModels.draw24Gear(matrix, buffer, combinedLight, gear.getMember().getColor());
-			matrix.popPose();
+			CRModels.draw24Gear(matrix, buffer, combinedLight, gear.getMember().getColor(), CRModels.generateZFightFactor(gear.getBlockPos(), 0));
 
 			if(gear.isRenderedOffset()){
 				matrix.mulPose(Vector3f.YP.rotationDegrees(-7.5F));

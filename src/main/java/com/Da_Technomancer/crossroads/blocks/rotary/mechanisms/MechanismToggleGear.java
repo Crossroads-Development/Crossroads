@@ -161,6 +161,7 @@ public class MechanismToggleGear extends MechanismSmallGear{
 		matrix.mulPose(Vector3f.YP.rotationDegrees(- (float) RotaryUtil.getCCWSign(side) * angle));
 
 		TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(CRRenderTypes.GEAR_8_TEXTURE);
+		TextureAtlasSprite spriteRim = CRRenderUtil.getTextureSprite(CRRenderTypes.GEAR_8_RIM_TEXTURE);
 		float top = 0.0625F;
 
 		//If inverted, renders the core as red
@@ -186,12 +187,12 @@ public class MechanismToggleGear extends MechanismSmallGear{
 
 		if(te.redstoneIn != 0 ^ inverted){
 			//Render normally when active
-			CRModels.draw8Gear(matrix, builder, color, combinedLight);
+			CRModels.draw8Gear(matrix, builder, color, combinedLight, CRModels.generateZFightFactor(te.getBlockPos(), side == null ? 0 : side.ordinal()));
 		}else{
 			//Render without prongs
 			float lHalf = 7F / 16F;//Half the side length of the octagon
 			matrix.scale(2F * lHalf, 1, 2F * lHalf);
-			CRModels.draw8Core(builder, matrix, color, combinedLight, sprite);
+			CRModels.draw8Core(builder, matrix, color, combinedLight, sprite, spriteRim);
 		}
 	}
 }

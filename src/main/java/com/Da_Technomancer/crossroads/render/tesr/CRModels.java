@@ -9,6 +9,7 @@ import com.mojang.math.Vector3f;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.Vec3;
 
 import java.awt.*;
@@ -18,9 +19,9 @@ public class CRModels{
 	//These contain trigonometry, so shouldn't be calculated every frame.
 	//In some cases, these are going to be used in place of cos in order to store fewer variables. cos(X) = sin(90 - X), so this is allowed.
 	private static final float[] sin24 = new float[5];
-	private static final float radius_24 = 11F / 24F;
+	private static final float radius_24 = 23F / (7F / 8F * 4F) / 16F;//Radius of ~6.57/16 blocks
 	static{
-		final float buffer_24 = 3E-3F;//3 * 10^-3
+		final float buffer_24 = 3E-3F;
 		sin24[0] = (float) (Math.sin(Math.toRadians(7.5)) * radius_24) + buffer_24;
 		sin24[1] = (float) (Math.sin(Math.toRadians(22.5)) * radius_24) + buffer_24;
 		sin24[2] = (float) (Math.sin(Math.toRadians(37.5)) * radius_24) + buffer_24;
@@ -185,16 +186,24 @@ public class CRModels{
 	 * @param buffer A generic buffer
 	 * @param light The combined light value
 	 * @param color The color to shade this by
+	 * @param zFightFactor Value very close to 1. Adjacent gears with different zFightFactors will not have z-fighting
 	 */
-	public static void draw24Gear(PoseStack matrix, MultiBufferSource buffer, int light, Color color){
+	public static void draw24Gear(PoseStack matrix, MultiBufferSource buffer, int light, Color color, float zFightFactor){
+		//Work at a scale such that 1/16 distance in vertex space is 1/16 of the texture file
+		//1 distance in vertex space is 21/8 distance in the world
+		//(1px in the world ~= 1/64 of a block in vertex space)
+		float pixelScale = 7F / 8F * 4F;
 
-		float top = -0.375F;
-		float bottom = -.5F;
+		matrix.pushPose();
+		matrix.translate(0, -0.5F, 0);
+		matrix.scale(pixelScale, pixelScale, pixelScale);
 
-		float extend = 25F / 48F;
-		float topProng = -.376F;
-		float bottomProng = -.495F;
-		float widthProng = 1F / 48F;
+		float top = 2F / 64F;
+		float bottom = 0F;
+		float extend = radius_24 + 2F / 64F;
+		float topProng = top * zFightFactor;
+		float bottomProng = bottom + (zFightFactor - 1F);
+		float prongWidthHalf = 2F / 64F;
 
 		int[] col = CRRenderUtil.convertColor(color);
 		VertexConsumer builder = buffer.getBuffer(RenderType.solid());
@@ -209,21 +218,23 @@ public class CRModels{
 		draw24Polygon(matrix, builder, light, col, sprite);//Bottom
 		matrix.popPose();
 
-		//Sides (spriteSide)
+		//Sides
 		TextureAtlasSprite spriteSide = CRRenderUtil.getTextureSprite(CRRenderTypes.GEAR_24_RIM_TEXTURE);
 		Quaternion rotation = Vector3f.YP.rotationDegrees(15);
 
-		float vSt = spriteSide.getV0();
-		float vEn = spriteSide.getV(1);
+		float sideLength = 2 * sin24[0];
+
+		float vSt = spriteSide.getV(8 - sideLength * 16 / 2);
+		float vEn = spriteSide.getV(8 + sideLength * 16 / 2);
 
 		matrix.pushPose();
 		for(float i = 0; i < 6; i++){
 			matrix.mulPose(rotation);//15 deg
 
-			float uSt = spriteSide.getU(i);
-			float uEn = spriteSide.getU(i + 1);
-			float u0St = spriteSide.getU(5 - i);
-			float u0En = spriteSide.getU(6 - i);
+			float uSt = spriteSide.getU(i * 2);
+			float uEn = spriteSide.getU((i + 1) * 2);
+			float u0St = uSt;
+			float u0En = uEn;
 
 			CRRenderUtil.addVertexBlock(builder, matrix, radius_24, bottom, sin24[0], uEn, vSt, 1, 0, 0, light, col);
 			CRRenderUtil.addVertexBlock(builder, matrix, radius_24, bottom, -sin24[0], uEn, vSt, 1, 0, 0, light, col);
@@ -247,41 +258,61 @@ public class CRModels{
 		}
 		matrix.popPose();
 
-		//Prongs (spriteSide)
+		//Prongs
 
-		float u1 = spriteSide.getU(1);
-		float u2 = spriteSide.getU(2);
-		float u3 = spriteSide.getU(3);
-		float u4 = spriteSide.getU(4);
-		float u5 = spriteSide.getU(5);
+		TextureAtlasSprite spriteTooth = CRRenderUtil.getTextureSprite(CRRenderTypes.GEAR_24_TOOTH_TEXTURE);
+
+		//Texture coords
+		//top is u=0px->3px, v=0px->2px
+		//bottom is u=3px->6px, v=0px->2px
+		//tip is u=0px->3px, v=2px->4px
+		//left is u=0px->2px, v=4px->6px
+		//right is u=2px->4px, v=4px->6px
+
+		float uSt = spriteTooth.getU0();
+		float uMidTop = spriteTooth.getU(2 * 16 * prongWidthHalf);
+		float uEndTop = spriteTooth.getU(4 * 16 * prongWidthHalf);
+		float uEndTip = uMidTop;
+		float uMidSide = spriteTooth.getU(16 * (extend - radius_24));
+		float uEndSide = spriteTooth.getU(2 * 16 * (extend - radius_24));
+		float vStTop = spriteTooth.getV0();
+		float vEndTop = spriteTooth.getV(2);
+		float vStTip = vEndTop;
+		float vEndTip = spriteTooth.getV(4);
+		float vStSide = vEndTip;
+		float vEndSide = spriteTooth.getV(6);
+		
 		for(int i = 0; i < 24; i++){
 			matrix.mulPose(rotation);//15 deg
 
-			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomProng, widthProng, u4, vSt, 1, 0, 0, light, col);
-			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomProng, -widthProng, u4, vSt, 1, 0, 0, light, col);
-			CRRenderUtil.addVertexBlock(builder, matrix, extend, topProng, -widthProng, u3, vEn, 1, 0, 0, light, col);
-			CRRenderUtil.addVertexBlock(builder, matrix, extend, topProng, widthProng, u3, vEn, 1, 0, 0, light, col);
-
-			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomProng, -widthProng, u4, vSt, 0, 0, -1, light, col);
-			CRRenderUtil.addVertexBlock(builder, matrix, radius_24, bottomProng, -widthProng, u4, vSt, 0, 0, -1, light, col);
-			CRRenderUtil.addVertexBlock(builder, matrix, radius_24, topProng, -widthProng, u5, vEn, 0, 0, -1, light, col);
-			CRRenderUtil.addVertexBlock(builder, matrix, extend, topProng, -widthProng, u5, vEn, 0, 0, -1, light, col);
-
-			CRRenderUtil.addVertexBlock(builder, matrix, extend, topProng, widthProng, u1, vSt, 0, 0, 1, light, col);
-			CRRenderUtil.addVertexBlock(builder, matrix, radius_24, topProng, widthProng, u1, vSt, 0, 0, 1, light, col);
-			CRRenderUtil.addVertexBlock(builder, matrix, radius_24, bottomProng, widthProng, u2, vEn, 0, 0, 1, light, col);
-			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomProng, widthProng, u2, vEn, 0, 0, 1, light, col);
-
-			CRRenderUtil.addVertexBlock(builder, matrix, extend, topProng, -widthProng, u2, vSt, 0, 1, 0, light, col);
-			CRRenderUtil.addVertexBlock(builder, matrix, radius_24, topProng, -widthProng, u2, vSt, 0, 1, 0, light, col);
-			CRRenderUtil.addVertexBlock(builder, matrix, radius_24, topProng, widthProng, u3, vEn, 0, 1, 0, light, col);
-			CRRenderUtil.addVertexBlock(builder, matrix, extend, topProng, widthProng, u3, vEn, 0, 1, 0, light, col);
-
-			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomProng, widthProng, u3, vEn, 0, -1, 0, light, col);
-			CRRenderUtil.addVertexBlock(builder, matrix, radius_24, bottomProng, widthProng, u3, vEn, 0, -1, 0, light, col);
-			CRRenderUtil.addVertexBlock(builder, matrix, radius_24, bottomProng, -widthProng, u2, vSt, 0, -1, 0, light, col);
-			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomProng, -widthProng, u2, vSt, 0, -1, 0, light, col);
+			//Tip
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomProng, prongWidthHalf, uSt, vEndTip, 1, 0, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomProng, -prongWidthHalf, uEndTip, vEndTip, 1, 0, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, topProng, -prongWidthHalf, uEndTip, vStTip, 1, 0, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, topProng, prongWidthHalf, uSt, vStTip, 1, 0, 0, light, col);
+			//Side
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomProng, -prongWidthHalf, uMidSide, vStSide, 0, 0, -1, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, radius_24, bottomProng, -prongWidthHalf, uMidSide, vEndSide, 0, 0, -1, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, radius_24, topProng, -prongWidthHalf, uSt, vEndSide, 0, 0, -1, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, topProng, -prongWidthHalf, uSt, vStSide, 0, 0, -1, light, col);
+			//Side
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, topProng, prongWidthHalf, uMidSide, vStSide, 0, 0, 1, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, radius_24, topProng, prongWidthHalf, uMidSide, vEndSide, 0, 0, 1, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, radius_24, bottomProng, prongWidthHalf, uEndSide, vEndSide, 0, 0, 1, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomProng, prongWidthHalf, uEndSide, vStSide, 0, 0, 1, light, col);
+			//Top
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, topProng, -prongWidthHalf, uSt, vStTop, 0, 1, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, radius_24, topProng, -prongWidthHalf, uSt, vEndTop, 0, 1, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, radius_24, topProng, prongWidthHalf, uMidTop, vEndTop, 0, 1, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, topProng, prongWidthHalf, uMidTop, vStTop, 0, 1, 0, light, col);
+			//Bottom
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomProng, prongWidthHalf, uEndTop, vStTop, 0, -1, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, radius_24, bottomProng, prongWidthHalf, uEndTop, vEndTop, 0, -1, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, radius_24, bottomProng, -prongWidthHalf, uMidTop, vEndTop, 0, -1, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomProng, -prongWidthHalf, uMidTop, vStTop, 0, -1, 0, light, col);
 		}
+
+		matrix.popPose();
 	}
 
 	//These contain sqrt, so I don't want to calculate them every frame.
@@ -336,10 +367,11 @@ public class CRModels{
 	 * @param sideCol The color to shade the edges by, as a size 4 array
 	 * @param light The combined light value
 	 * @param sprite The sprite that will be mapped onto the octagon
+	 * @param spriteRim The sprite that will be mapped onto the rim  
 	 */
-	public static void draw8Core(VertexConsumer builder, PoseStack matrix, int[] color, int[] sideCol, int light, TextureAtlasSprite sprite){
-		float top = 0.0625F;//Half of height
-		float lHalf = 0.5F;//Half the side length of the octagon
+	public static void draw8Core(VertexConsumer builder, PoseStack matrix, int[] color, int[] sideCol, int light, TextureAtlasSprite sprite, TextureAtlasSprite spriteRim){
+		float top = 1F / 16F;//Half of height
+		float lHalf = 8F / 16F;//Half the side length of the octagon
 		float sHalf8S = sHalf8;//Scaled version of sHalf8 for gears
 
 		//Draw 2 octagons
@@ -358,65 +390,62 @@ public class CRModels{
 		drawOctagon(builder, matrix, color, light, sprite);
 		matrix.popPose();
 
-		float tHeight = 1F / 16F;
 
 		//Texture coords
-		float tHeightT = tHeight * 16F;
-		float uSt = sprite.getU0();
-		float uEn = sprite.getU1();
-		float uSSt = sprite.getU(8 - sHalfT8);
-		float uSEn = sprite.getU(8 + sHalfT8);
-		float uHSt = sprite.getU(tHeightT);
-		float uHEn = sprite.getU(16 - tHeightT);
-		float vSt = sprite.getV0();
-		float vEn = sprite.getV1();
-		float vSSt = sprite.getV(8 - sHalfT8);
-		float vSEn = sprite.getV(8 + sHalfT8);
-		float vHSt = sprite.getV(tHeightT);
-		float vHEn = sprite.getV(16 - tHeightT);
+		float tHeight = 2F;
+		float uSt = spriteRim.getU(8 - sHalf8S * 16);
+		float uEn = spriteRim.getU(8 + sHalf8S * 16);
+		float v0 = spriteRim.getV0();
+		float v1 = spriteRim.getV(1 * tHeight);
+		float v2 = spriteRim.getV(2 * tHeight);
+		float v3 = spriteRim.getV(3 * tHeight);
+		float v4 = spriteRim.getV(4 * tHeight);
+		float v5 = spriteRim.getV(5 * tHeight);
+		float v6 = spriteRim.getV(6 * tHeight);
+		float v7 = spriteRim.getV(7 * tHeight);
+		float v8 = spriteRim.getV(8 * tHeight);
 
 		//Sides
-		//Can't be done via loop due to distinct texture mapping
 
-		CRRenderUtil.addVertexBlock(builder, matrix, lHalf, -top, sHalf8S, uEn, vSSt, 1, 0, 0, light, sideCol);
-		CRRenderUtil.addVertexBlock(builder, matrix, lHalf, -top, -sHalf8S, uEn, vSEn, 1, 0, 0, light, sideCol);
-		CRRenderUtil.addVertexBlock(builder, matrix, lHalf, top, -sHalf8S, uHEn, vSEn, 1, 0, 0, light, sideCol);
-		CRRenderUtil.addVertexBlock(builder, matrix, lHalf, top, sHalf8S, uHEn, vSSt, 1, 0, 0, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, lHalf, -top, sHalf8S, uEn, v1, 1, 0, 0, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, lHalf, -top, -sHalf8S, uSt, v1, 1, 0, 0, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, lHalf, top, -sHalf8S, uSt, v0, 1, 0, 0, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, lHalf, top, sHalf8S, uEn, v0, 1, 0, 0, light, sideCol);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, -lHalf, top, sHalf8S, uHSt, vSSt, -1, 0, 0, light, sideCol);
-		CRRenderUtil.addVertexBlock(builder, matrix, -lHalf, top, -sHalf8S, uHSt, vSEn, -1, 0, 0, light, sideCol);
-		CRRenderUtil.addVertexBlock(builder, matrix, -lHalf, -top, -sHalf8S, uSt, vSEn, -1, 0, 0, light, sideCol);
-		CRRenderUtil.addVertexBlock(builder, matrix, -lHalf, -top, sHalf8S, uSt, vSSt, -1, 0, 0, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, sHalf8S, -top, lHalf, uSt, v2, 1, 0, 1, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, lHalf, -top, sHalf8S, uEn, v2, 1, 0, 1, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, lHalf, top, sHalf8S, uEn, v1, 1, 0, 1, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, sHalf8S, top, lHalf, uSt, v1, 1, 0, 1, light, sideCol);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, sHalf8S, top, lHalf, uSEn, vSt, 0, 0, 1, light, sideCol);
-		CRRenderUtil.addVertexBlock(builder, matrix, -sHalf8S, top, lHalf, uSSt, vSt, 0, 0, 1, light, sideCol);
-		CRRenderUtil.addVertexBlock(builder, matrix, -sHalf8S, -top, lHalf, uSSt, vHSt, 0, 0, 1, light, sideCol);
-		CRRenderUtil.addVertexBlock(builder, matrix, sHalf8S, -top, lHalf, uSEn, vHSt, 0, 0, 1, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, sHalf8S, top, lHalf, uSt, v2, 0, 0, 1, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, -sHalf8S, top, lHalf, uEn, v2, 0, 0, 1, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, -sHalf8S, -top, lHalf, uEn, v3, 0, 0, 1, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, sHalf8S, -top, lHalf, uSt, v3, 0, 0, 1, light, sideCol);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, sHalf8S, -top, -lHalf, uSEn, vHEn, 0, 0, -1, light, sideCol);
-		CRRenderUtil.addVertexBlock(builder, matrix, -sHalf8S, -top, -lHalf, uSSt, vHEn, 0, 0, -1, light, sideCol);
-		CRRenderUtil.addVertexBlock(builder, matrix, -sHalf8S, top, -lHalf, uSSt, vEn, 0, 0, -1, light, sideCol);
-		CRRenderUtil.addVertexBlock(builder, matrix, sHalf8S, top, -lHalf, uSEn, vEn, 0, 0, -1, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, -sHalf8S, top, lHalf, uSt, v3, -1, 0, 1, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, -lHalf, top, sHalf8S, uEn, v3, -1, 0, 1, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, -lHalf, -top, sHalf8S, uEn, v4, -1, 0, 1, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, -sHalf8S, -top, lHalf, uSt, v4, -1, 0, 1, light, sideCol);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, sHalf8S, top, -lHalf, uSEn, vEn, 1, 0, -1, light, sideCol);
-		CRRenderUtil.addVertexBlock(builder, matrix, lHalf, top, -sHalf8S, uEn, vSEn, 1, 0, -1, light, sideCol);
-		CRRenderUtil.addVertexBlock(builder, matrix, lHalf, -top, -sHalf8S, uEn, vSEn, 1, 0, -1, light, sideCol);
-		CRRenderUtil.addVertexBlock(builder, matrix, sHalf8S, -top, -lHalf, uSEn, vEn, 1, 0, -1, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, -lHalf, top, sHalf8S, uSt, v4, -1, 0, 0, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, -lHalf, top, -sHalf8S, uEn, v4, -1, 0, 0, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, -lHalf, -top, -sHalf8S, uEn, v5, -1, 0, 0, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, -lHalf, -top, sHalf8S, uSt, v5, -1, 0, 0, light, sideCol);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, -sHalf8S, -top, -lHalf, uSSt, vEn, -1, 0, -1, light, sideCol);
-		CRRenderUtil.addVertexBlock(builder, matrix, -lHalf, -top, -sHalf8S, uSt, vSEn, -1, 0, -1, light, sideCol);
-		CRRenderUtil.addVertexBlock(builder, matrix, -lHalf, top, -sHalf8S, uSt, vSEn, -1, 0, -1, light, sideCol);
-		CRRenderUtil.addVertexBlock(builder, matrix, -sHalf8S, top, -lHalf, uSSt, vEn, -1, 0, -1, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, -sHalf8S, -top, -lHalf, uSt, v6, -1, 0, -1, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, -lHalf, -top, -sHalf8S, uEn, v6, -1, 0, -1, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, -lHalf, top, -sHalf8S, uEn, v5, -1, 0, -1, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, -sHalf8S, top, -lHalf, uSt, v5, -1, 0, -1, light, sideCol);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, sHalf8S, -top, lHalf, uSEn, vSt, 1, 0, 1, light, sideCol);
-		CRRenderUtil.addVertexBlock(builder, matrix, lHalf, -top, sHalf8S, uEn, vSSt, 1, 0, 1, light, sideCol);
-		CRRenderUtil.addVertexBlock(builder, matrix, lHalf, top, sHalf8S, uEn, vSSt, 1, 0, 1, light, sideCol);
-		CRRenderUtil.addVertexBlock(builder, matrix, sHalf8S, top, lHalf, uSEn, vSt, 1, 0, 1, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, sHalf8S, -top, -lHalf, uSt, v7, 0, 0, -1, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, -sHalf8S, -top, -lHalf, uEn, v7, 0, 0, -1, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, -sHalf8S, top, -lHalf, uEn, v6, 0, 0, -1, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, sHalf8S, top, -lHalf, uSt, v6, 0, 0, -1, light, sideCol);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, -sHalf8S, top, lHalf, uSSt, vSt, -1, 0, 1, light, sideCol);
-		CRRenderUtil.addVertexBlock(builder, matrix, -lHalf, top, sHalf8S, uSt, vSSt, -1, 0, 1, light, sideCol);
-		CRRenderUtil.addVertexBlock(builder, matrix, -lHalf, -top, sHalf8S, uSt, vSSt, -1, 0, 1, light, sideCol);
-		CRRenderUtil.addVertexBlock(builder, matrix, -sHalf8S, -top, lHalf, uSSt, vSt, -1, 0, 1, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, sHalf8S, top, -lHalf, uSt, v7, 1, 0, -1, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, lHalf, top, -sHalf8S, uEn, v7, 1, 0, -1, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, lHalf, -top, -sHalf8S, uEn, v8, 1, 0, -1, light, sideCol);
+		CRRenderUtil.addVertexBlock(builder, matrix, sHalf8S, -top, -lHalf, uSt, v8, 1, 0, -1, light, sideCol);
 	}
 
 	/**
@@ -428,9 +457,10 @@ public class CRModels{
 	 * @param color The color to shade by, as a size 4 array
 	 * @param light The combined light value
 	 * @param sprite The sprite that will be mapped onto the octagon
+	 * @param spriteRim The sprite that will be mapped onto the edge   
 	 */
-	public static void draw8Core(VertexConsumer builder, PoseStack matrix, int[] color, int light, TextureAtlasSprite sprite){
-		draw8Core(builder, matrix, color, new int[] {Math.max(color[0] - 130, 0), Math.max(color[1] - 130, 0), Math.max(color[2] - 130, 0), color[3]}, light, sprite);
+	public static void draw8Core(VertexConsumer builder, PoseStack matrix, int[] color, int light, TextureAtlasSprite sprite, TextureAtlasSprite spriteRim){
+		draw8Core(builder, matrix, color, new int[] {Math.max(color[0] - 130, 0), Math.max(color[1] - 130, 0), Math.max(color[2] - 130, 0), color[3]}, light, sprite, spriteRim);
 	}
 
 	/**
@@ -440,59 +470,76 @@ public class CRModels{
 	 * @param builder A vertex builder with BLOCK vertex buffer format
 	 * @param color The color to shade by, as a size 4 array
 	 * @param light The combined light value
+	 * @param zFightFactor Value very close to 1. Adjacent gears with different zFightFactors will not have z-fighting
 	 */
-	public static void draw8Gear(PoseStack matrix, VertexConsumer builder, int[] color, int light){
-		matrix.pushPose();
-
-		TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(CRRenderTypes.GEAR_8_TEXTURE);
+	public static void draw8Gear(PoseStack matrix, VertexConsumer builder, int[] color, int light, float zFightFactor){
+		TextureAtlasSprite spriteCore = CRRenderUtil.getTextureSprite(CRRenderTypes.GEAR_8_TEXTURE);
+		TextureAtlasSprite spriteRim = CRRenderUtil.getTextureSprite(CRRenderTypes.GEAR_8_RIM_TEXTURE);
+		TextureAtlasSprite spriteTooth = CRRenderUtil.getTextureSprite(CRRenderTypes.GEAR_8_TOOTH_TEXTURE);
 		float lHalf = 7F / 16F;//Half the side length of the octagon
+		float radius = 8F /16F;
+
+		matrix.pushPose();
+		//Work in full pixels, rescale everything to lHalf scale
+		matrix.scale(2F * lHalf, 2F * lHalf, 2F * lHalf);
 
 		//Renders the core of the gear, leaving only the prongs
-		matrix.pushPose();
-		matrix.scale(2F * lHalf, 1, 2F * lHalf);
-		draw8Core(builder, matrix, color, light, sprite);
-		matrix.popPose();
+		draw8Core(builder, matrix, color, light, spriteCore, spriteRim);
 
 		//Prongs
 		//Given the option of hand coding 8 orientations for each 5 sided prong or using matrix transformations and a loop, I took the path of sanity retention
-		float tHeight = 1F / 16F;
+		float prongWidthHalf = 2F / 16F;
 		Quaternion rotation = Vector3f.YP.rotationDegrees(360F / 8F);
-		float extend = .5625F;
-		float topP = 0.0575F;
-		float bottomP = -0.0575F;
+		float extend = 10F / 16F;
+		float topP = 1F / 16F * zFightFactor;
+		float bottomP = -topP;
 
 		//Texture coords
-		float tHeightT = tHeight * 16F;
-		float uEn = sprite.getU1();
-		float uHEn = sprite.getU(16 - tHeightT);
-		float vHMSt = sprite.getV(8 - tHeightT);
-		float vHMEn = sprite.getV(8 + tHeightT);
+		//top is u=0px->3px, v=0px->2px
+		//bottom is u=3px->6px, v=0px->2px
+		//tip is u=0px->3px, v=2px->4px
+		//left is u=0px->2px, v=4px->6px
+		//right is u=2px->4px, v=4px->6px
+
+		float uSt = spriteTooth.getU0();
+		float uMidTop = spriteTooth.getU(2 * 16 * prongWidthHalf);
+		float uEndTop = spriteTooth.getU(4 * 16 * prongWidthHalf);
+		float uEndTip = uMidTop;
+		float uMidSide = spriteTooth.getU(16 * (extend - radius));
+		float uEndSide = spriteTooth.getU(2 * 16 * (extend - radius));
+		float vStTop = spriteTooth.getV0();
+		float vEndTop = spriteTooth.getV(2);
+		float vStTip = vEndTop;
+		float vEndTip = spriteTooth.getV(4);
+		float vStSide = vEndTip;
+		float vEndSide = spriteTooth.getV(6);
 
 		for(int i = 0; i < 8; i++){
-			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomP, tHeight, uEn, vHMSt, 1, 0, 0, light, color);
-			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomP, -tHeight, uEn, vHMEn, 1, 0, 0, light, color);
-			CRRenderUtil.addVertexBlock(builder, matrix, extend, topP, -tHeight, uHEn, vHMEn, 1, 0, 0, light, color);
-			CRRenderUtil.addVertexBlock(builder, matrix, extend, topP, tHeight, uHEn, vHMSt, 1, 0, 0, light, color);
-
-			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomP, -tHeight, uEn, vHMSt, 0, 0, -1, light, color);
-			CRRenderUtil.addVertexBlock(builder, matrix, lHalf, bottomP, -tHeight, uEn, vHMEn, 0, 0, -1, light, color);
-			CRRenderUtil.addVertexBlock(builder, matrix, lHalf, topP, -tHeight, uHEn, vHMEn, 0, 0, -1, light, color);
-			CRRenderUtil.addVertexBlock(builder, matrix, extend, topP, -tHeight, uHEn, vHMSt, 0, 0, -1, light, color);
-
-			CRRenderUtil.addVertexBlock(builder, matrix, extend, topP, tHeight, uHEn, vHMSt, 0, 0, 1, light, color);
-			CRRenderUtil.addVertexBlock(builder, matrix, lHalf, topP, tHeight, uHEn, vHMEn, 0, 0, 1, light, color);
-			CRRenderUtil.addVertexBlock(builder, matrix, lHalf, bottomP, tHeight, uEn, vHMEn, 0, 0, 1, light, color);
-			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomP, tHeight, uEn, vHMSt, 0, 0, 1, light, color);
-
-			CRRenderUtil.addVertexBlock(builder, matrix, extend, topP, -tHeight, uHEn, vHMSt, 0, 1, 0, light, color);
-			CRRenderUtil.addVertexBlock(builder, matrix, lHalf, topP, -tHeight, uHEn, vHMEn, 0, 1, 0, light, color);
-			CRRenderUtil.addVertexBlock(builder, matrix, lHalf, topP, tHeight, uEn, vHMEn, 0, 1, 0, light, color);
-			CRRenderUtil.addVertexBlock(builder, matrix, extend, topP, tHeight, uEn, vHMSt, 0, 1, 0, light, color);
-
-			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomP, tHeight, uEn, vHMSt, 0, -1, 0, light, color);
-			CRRenderUtil.addVertexBlock(builder, matrix, lHalf, bottomP, tHeight, uEn, vHMEn, 0, -1, 0, light, color);
-			CRRenderUtil.addVertexBlock(builder, matrix, lHalf, bottomP, -tHeight, uHEn, vHMEn, 0, -1, 0, light, color);
-			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomP, -tHeight, uHEn, vHMSt, 0, -1, 0, light, color);
+			//Tip
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomP, prongWidthHalf, uSt, vEndTip, 1, 0, 0, light, color);
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomP, -prongWidthHalf, uEndTip, vEndTip, 1, 0, 0, light, color);
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, topP, -prongWidthHalf, uEndTip, vStTip, 1, 0, 0, light, color);
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, topP, prongWidthHalf, uSt, vStTip, 1, 0, 0, light, color);
+			//Side
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomP, -prongWidthHalf, uMidSide, vStSide, 0, 0, -1, light, color);
+			CRRenderUtil.addVertexBlock(builder, matrix, radius, bottomP, -prongWidthHalf, uMidSide, vEndSide, 0, 0, -1, light, color);
+			CRRenderUtil.addVertexBlock(builder, matrix, radius, topP, -prongWidthHalf, uSt, vEndSide, 0, 0, -1, light, color);
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, topP, -prongWidthHalf, uSt, vStSide, 0, 0, -1, light, color);
+			//Side
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, topP, prongWidthHalf, uMidSide, vStSide, 0, 0, 1, light, color);
+			CRRenderUtil.addVertexBlock(builder, matrix, radius, topP, prongWidthHalf, uMidSide, vEndSide, 0, 0, 1, light, color);
+			CRRenderUtil.addVertexBlock(builder, matrix, radius, bottomP, prongWidthHalf, uEndSide, vEndSide, 0, 0, 1, light, color);
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomP, prongWidthHalf, uEndSide, vStSide, 0, 0, 1, light, color);
+			//Top
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, topP, -prongWidthHalf, uSt, vStTop, 0, 1, 0, light, color);
+			CRRenderUtil.addVertexBlock(builder, matrix, radius, topP, -prongWidthHalf, uSt, vEndTop, 0, 1, 0, light, color);
+			CRRenderUtil.addVertexBlock(builder, matrix, radius, topP, prongWidthHalf, uMidTop, vEndTop, 0, 1, 0, light, color);
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, topP, prongWidthHalf, uMidTop, vStTop, 0, 1, 0, light, color);
+			//Bottom
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomP, prongWidthHalf, uEndTop, vStTop, 0, -1, 0, light, color);
+			CRRenderUtil.addVertexBlock(builder, matrix, radius, bottomP, prongWidthHalf, uEndTop, vEndTop, 0, -1, 0, light, color);
+			CRRenderUtil.addVertexBlock(builder, matrix, radius, bottomP, -prongWidthHalf, uMidTop, vEndTop, 0, -1, 0, light, color);
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomP, -prongWidthHalf, uMidTop, vStTop, 0, -1, 0, light, color);
 
 			matrix.mulPose(rotation);
 		}
@@ -629,5 +676,15 @@ public class CRModels{
 		CRRenderUtil.addVertexBlock(builder, matrix, lenHalf, mid, edgeOut, uEnT, vStT, 1, 0, 0, light);
 		CRRenderUtil.addVertexBlock(builder, matrix, lenHalf, bottom, edgeOut, uEnT, vEnS, 1, 0, 0, light);
 		CRRenderUtil.addVertexBlock(builder, matrix, lenHalf, bottom, edgeIn, uStT, vEnS, 1, 0, 0, light);
+	}
+
+	/**
+	 * Generates a suitable 'z-fight-factor' based on position, a value very close to 1 which has slightly different values for adjacent block positions and discriminators
+	 * @param pos A block position
+	 * @param discriminator Value within -9 to 9 inclusive. Use 0 if not necessary
+	 * @return A suitable z-fight-factor, within 0.99 to 1.01
+	 */
+	public static float generateZFightFactor(BlockPos pos, int discriminator){
+		return 1F + 0.001F * ((pos.getX() + pos.getY() + pos.getZ()) % 10) + 0.0001F * discriminator;
 	}
 }
