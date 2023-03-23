@@ -1,6 +1,8 @@
 package com.Da_Technomancer.crossroads.blocks.heat;
 
 import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.ambient.particles.CRParticles;
+import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
 import com.Da_Technomancer.crossroads.api.Capabilities;
 import com.Da_Technomancer.crossroads.api.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
@@ -11,7 +13,13 @@ import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.items.item_sets.HeatCableFactory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -122,11 +130,26 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 			setChanged();
 		}
 
-		if(temp > insulator.getLimit()){
+		double tempBuffer = insulator.getLimit() - temp;
+		//Used to vary the visual effect timing with position
+		int blockPosOffset = Math.abs(worldPosition.getX() * 3 + worldPosition.getY() * 3 + worldPosition.getZ() * 3) % 8;
+		if(tempBuffer < 0){
 			if(CRConfig.heatEffects.get()){
 				insulator.getEffect().doEffect(level, worldPosition);
 			}else{
 				level.setBlock(worldPosition, Blocks.FIRE.defaultBlockState(), 3);
+			}
+		}else if(tempBuffer < 10 && level.getGameTime() % 10 == blockPosOffset || tempBuffer < 20 && level.getGameTime() % 20 == blockPosOffset){
+			int count = level.random.nextInt(tempBuffer < 10 ? 2 : 1);
+			ParticleOptions particle = insulator.dripsWhenMelting() ? ParticleTypes.DRIPPING_WATER : ParticleTypes.SMOKE;
+			double yVel = insulator.dripsWhenMelting() ? -0.07 : 0.06;
+			double posDev = insulator.dripsWhenMelting() ? 0.3 : 0.35;
+			double horizVelDev = insulator.dripsWhenMelting() ? 0 : 0.04;
+			CRParticles.summonParticlesFromServer((ServerLevel) level, particle, count, worldPosition.getX() + 0.5F, worldPosition.getY() + 0.5F, worldPosition.getZ() + 0.5F, posDev, posDev, posDev, 0, yVel, 0, horizVelDev, 0.03, horizVelDev, false);
+
+			if(tempBuffer < 8){
+				//Very close to melting, play sounds
+				CRSounds.playSoundServer(level, worldPosition, SoundEvents.BLASTFURNACE_FIRE_CRACKLE, SoundSource.BLOCKS, 1F, 0.6F);
 			}
 		}
 	}
@@ -198,11 +221,7 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 		@Override
 		public void init(){
 			if(!initHeat){
-				if(insulator == HeatInsulators.ICE){
-					temp = -10;
-				}else{
-					temp = getBiomeTemp();
-				}
+				temp = Math.min(getBiomeTemp(), insulator.getLimit() - 20);
 				initHeat = true;
 				setChanged();
 			}

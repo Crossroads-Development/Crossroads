@@ -13,7 +13,7 @@ public enum HeatInsulators{
 	WOOL(.25D, 300D, new BlockEffect(Blocks.FIRE.defaultBlockState())),
 	SLIME(.2D, 500D, new SlimeEffect()),
 	DIRT(.5D, 42D, new DirtEffect()),
-	ICE(.001D, 0D, new IceEffect()),
+	ICE(.001D, 0D, new IceEffect(), true),
 	OBSIDIAN(.015D, 2_000D, new BlockEffect(Blocks.LAVA.defaultBlockState())),
 	CERAMIC(.05D, 3_000D, new BlockEffect(Blocks.LAVA.defaultBlockState())),
 	DENSUS(0, 10_000D, new BlockEffect(Blocks.LAVA.defaultBlockState()));
@@ -21,11 +21,17 @@ public enum HeatInsulators{
 	private final double rate;
 	private final double limit;
 	private final IOverheatEffect effect;
+	private final boolean dripsWhenMelting;
 
 	HeatInsulators(double rate, double limit, IOverheatEffect effect){
+		this(rate, limit, effect, false);
+	}
+
+	HeatInsulators(double rate, double limit, IOverheatEffect effect, boolean dripsWhenMelting){
 		this.rate = rate;
 		this.limit = limit;
 		this.effect = effect;
+		this.dripsWhenMelting = dripsWhenMelting;
 	}
 
 	public double getRate(){
@@ -38,6 +44,10 @@ public enum HeatInsulators{
 
 	public IOverheatEffect getEffect(){
 		return effect;
+	}
+
+	public boolean dripsWhenMelting(){
+		return dripsWhenMelting;
 	}
 
 	/**This will return the name with all but the first char being lowercase,
