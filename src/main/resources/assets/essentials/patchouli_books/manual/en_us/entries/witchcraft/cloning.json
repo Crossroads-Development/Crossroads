@@ -46,15 +46,15 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<item>$(l:essentials:witchcraft/blood_centrifuge)centrifuge/$ setup is flawed, it can cause additional <thing>degradation/$.$(br2)The <item>centrifuged blood sample/$ is used to create the first <item>embryo/$. After the first <item>embryo/$ is created, it can be easily duplicated in a <item>$(l:essentials:witchcraft/cultivator_vat)nutrition vat/$ without needing more <item>$(l:essentials:witchcraft/syringe#blood)blood samples/$.$(br2)The first <item>embryo/$ is created in a <item>$(l:essentials:witchcraft/embryo_lab)Miller-Urey "
+			"text": "<item>$(l:essentials:witchcraft/blood_centrifuge)centrifuge/$ setup is flawed, it can cause additional <thing>degradation/$.$(br2)The <item>centrifuged blood sample/$ is used to create the first <item>embryo/$. After the first <item>embryo/$ is created, it can be easily duplicated in a <item>$(l:essentials:witchcraft/cultivator_vat)nutrition vat/$ without needing more <item>$(l:essentials:witchcraft/syringe#blood)blood samples/$.$(br2)The first <item>embryo/$ is created in a <item>$(l:essentials:witchcraft/embryo_lab)Life-Spark capsule"
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<item>$(l:essentials:witchcraft/embryo_lab)capsule/$, where it can be customized to add <thing>traits/$.$(br2)<item>Embryos/$ <thing>$(l:essentials:witchcraft/spoilage)spoil/$ after 30minutes, and will be damaged by being <thing>$(l:essentials:witchcraft/spoilage)frozen/$, increasing <thing>degradation/$ by one point on them and any copied <item>embryos/$. Instead, they can be preserved using a <item>$(l:essentials:witchcraft/cultivator_vat)nutrition vat/$, where they can also be duplicated. <thing>$(l:essentials:witchcraft/spoilage)Spoiled/$ <item>embryos/$ are worthless, and can't be duplicated or turned "
+			"text": "<item>$(l:essentials:witchcraft/embryo_lab)/$, where it can be customized to add <thing>traits/$.$(br2)<item>Embryos/$ <thing>$(l:essentials:witchcraft/spoilage)spoil/$ after 30minutes, and will be damaged by being <thing>$(l:essentials:witchcraft/spoilage)frozen/$, increasing <thing>degradation/$ by one point on them and any copied <item>embryos/$. Instead, they can be preserved using a <item>$(l:essentials:witchcraft/cultivator_vat)nutrition vat/$, where they can also be duplicated. <thing>$(l:essentials:witchcraft/spoilage)Spoiled/$ <item>embryos/$ are worthless, and can't be duplicated or turned into "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "into clones.$(br2)Finally, the <item>embryo/$ is made into a <item>spawn egg/$ for the final cloned mob, using an <item>$(l:essentials:witchcraft/incubator)incubator/$. These <item>spawn eggs/$ can be used by hand or by dispensers.$(br2)"
+			"text": "clones.$(br2)Finally, the <item>embryo/$ is made into a <item>spawn egg/$ for the final cloned mob, using an <item>$(l:essentials:witchcraft/incubator)incubator/$. These <item>spawn eggs/$ can be used by hand or by dispensers.$(br2)"
 		}
 	],
 	"extra_recipe_mappings": {

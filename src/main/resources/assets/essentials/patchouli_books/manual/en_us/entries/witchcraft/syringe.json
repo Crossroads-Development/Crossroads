@@ -48,7 +48,7 @@
 		{
 			"type": "patchouli:text",
 			"anchor": "embryo_lab",
-			"text": "The <item>syringe/$ also has an interaction with the <item>$(l:essentials:witchcraft/embryo_lab)Miller-Urey Capsule/$. See that entry for more details.$(br2)"
+			"text": "The <item>syringe/$ also has an interaction with the <item>$(l:essentials:witchcraft/embryo_lab)Life-Spark Capsule/$. See that entry for more details.$(br2)"
 		}
 	],
 	"extra_recipe_mappings": {

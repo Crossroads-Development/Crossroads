@@ -13,4 +13,4 @@ Permanent potion effects and the associated decrease in maximum health can be re
 The <item>syringe/$ can also be used to create <item>blood samples/$. With an <item>Empty Blood Pouch/$ in an offhand, it will create a filled <item>Blood Pouch/$ based on the target. It will copy any permanent effects, traits, or deterioration of the mob into the blood sample.
 Filled <item>Blood Pouches/$ will <link:essentials:witchcraft/spoilage>spoil/$ after 2 hours. <item>Empty Blood Pouches/$ can also be used by a dispenser to fill them from an entity.
 <page|text|embryo_lab>
-The <item>syringe/$ also has an interaction with the <item><link:essentials:witchcraft/embryo_lab>Miller-Urey Capsule/$. See that entry for more details.
+The <item>syringe/$ also has an interaction with the <item><link:essentials:witchcraft/embryo_lab>Life-Spark Capsule/$. See that entry for more details.
