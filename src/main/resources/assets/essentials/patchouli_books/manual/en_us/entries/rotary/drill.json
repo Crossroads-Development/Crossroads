@@ -14,7 +14,7 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "When breaking blocks, the higher the block's hardness, the higher the required speed (.2rad/s per hardness). When attacking mobs, the higher the speed, the more damage dealt (5 damage per rad/s).$(br2)"
+			"text": "When breaking blocks, the higher the block's hardness, the higher the required speed (.2rad/s per hardness). When attacking mobs, the higher the speed, the more damage dealt (0.5 damage per rad/s, applied 5 times per second).$(br2)"
 		},
 		{
 			"type": "patchouli:text",

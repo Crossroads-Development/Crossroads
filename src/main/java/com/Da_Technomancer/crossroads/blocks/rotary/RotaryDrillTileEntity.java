@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.rotary;
 
+import com.Da_Technomancer.crossroads.ambient.particles.CRParticles;
 import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.Capabilities;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
@@ -10,6 +11,7 @@ import com.Da_Technomancer.crossroads.effects.beam_effects.PlaceEffect;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.EntityDamageSource;
@@ -20,6 +22,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
@@ -37,11 +40,10 @@ public class RotaryDrillTileEntity extends ModuleTE{
 		super(TYPE, pos, state);
 	}
 
-	private int ticksExisted = 0;
 	public static final double ENERGY_USE_IRON = 3D;
 	public static final double ENERGY_USE_GOLD = 5D;
 	private static final double SPEED_PER_HARDNESS = .2D;
-	private static final float DAMAGE_PER_SPEED = 5F;
+	private static final float DAMAGE_PER_SPEED = 0.5F;
 	public static final double[] INERTIA = {50, 100};
 
 	public boolean isGolden(){
@@ -81,7 +83,7 @@ public class RotaryDrillTileEntity extends ModuleTE{
 		double axleSpeed = axleHandler.getSpeed();
 		axleHandler.addEnergy(-(isGolden() ? ENERGY_USE_GOLD : ENERGY_USE_IRON), false);
 		if(Math.abs(axleSpeed) >= 0.05D){
-			if(++ticksExisted % 2 == 0){//Activate once every redstone tick
+			if(level.getGameTime() % 4 == 0){//Activate 5 times per second
 				Direction facing = getFacing();
 				BlockPos targetPos = worldPosition.relative(facing);
 				BlockState targetState = level.getBlockState(targetPos);
@@ -94,14 +96,9 @@ public class RotaryDrillTileEntity extends ModuleTE{
 						//Make sure to call through this method, as it is often overriden with extra effects
 						//By calling directly, we shortcut any tool requirement that isn't explicitly in the loot table
 						targetState.getBlock().playerDestroy(level, fakePlayer, targetPos, targetState, null, tool);
-
-//						boolean isSnow = targetState.getBlock() == Blocks.SNOW;
-//						//Snow layers have an unusual loot table that requires it to be broken by an entity holding a shovel
-//						//As we want snow layers to be able to drop items with a drill, we special case it
-//						world.destroyBlock(targetPos, !isSnow);
-//						if(isSnow){
-//							Block.spawnAsEntity(world, targetPos, new ItemStack(Items.SNOWBALL, targetState.get(SnowBlock.LAYERS)));
-//						}
+					}else if(level.random.nextInt(5) == 0){
+						//Spawn particles to show that the speed is too low to break the block
+						CRParticles.summonParticlesFromServer((ServerLevel) level, ParticleTypes.ANGRY_VILLAGER, 1, worldPosition.getX() + 0.5D + facing.getStepX() * 0.5D, worldPosition.getY() + 0.5D + facing.getStepY() * 0.5D, worldPosition.getZ() + 0.5D + facing.getStepZ() * 0.5D, 0.2D, 0.2D, 0.2D, 0, 0, 0, 0, 0, 0, false);
 					}
 				}
 
