@@ -76,8 +76,7 @@ public class CultivatorVatTileEntity extends AbstractNutrientEnvironmentTileEnti
 		//Preserving the target item is handled in the superclass
 
 		//If the target item is expired, attempt to eject it to the output
-		Item targetItem = inventory[0].getItem();
-		if(targetItem instanceof IPerishable && ((IPerishable) targetItem).isSpoiled(inventory[0], level)){
+		if(IPerishable.isSpoiled(inventory[0], level)){
 			if(inventory[3].isEmpty()){
 				inventory[3] = inventory[0];
 				inventory[0] = ItemStack.EMPTY;
@@ -96,7 +95,7 @@ public class CultivatorVatTileEntity extends AbstractNutrientEnvironmentTileEnti
 					inventory[3] = activeTrade.created.copy();
 					if(inventory[3].getItem() instanceof IPerishable){
 						//Initializes the spoil time
-						((IPerishable) inventory[3].getItem()).getSpoilTime(inventory[3], level);
+						IPerishable.getAndInitSpoilTime(inventory[3], level);
 					}
 				}else{
 					inventory[3].grow(activeTrade.created.getCount());

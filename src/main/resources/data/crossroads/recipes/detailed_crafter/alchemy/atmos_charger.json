@@ -18,7 +18,7 @@
 			"tag": "forge:ingots/iron"
 		},
 		"b": {
-			"item": "minecraft:iron_bars"
+			"tag": "crossroads:atmos_antenna"
 		},
 		"L": {
 			"item": "crossroads:leyden_jar"

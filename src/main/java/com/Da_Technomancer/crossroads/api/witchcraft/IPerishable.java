@@ -20,13 +20,13 @@ public interface IPerishable{
 	 * Whether this item has already spoiled
 	 * @param stack The stack
 	 * @param world A world instance. Used to get the time
-	 * @return Whether the item is spoiled
+	 * @return Whether the item is spoiled. Returns false for non-perishable input item
 	 */
-	default boolean isSpoiled(ItemStack stack, Level world){
+	static boolean isSpoiled(ItemStack stack, Level world){
 		if(world == null){
 			return false;
 		}
-		long spoilTime = getSpoilTime(stack, world);
+		long spoilTime = getAndInitSpoilTime(stack, world);
 		return spoilTime >= 0 && spoilTime < world.getGameTime();
 	}
 
@@ -37,17 +37,20 @@ public interface IPerishable{
 	 * @param world A world instance. Used to get the time
 	 * @return The timestamp (in ticks, in the form of a gametime) when this will spoil; -1 if this has no spoiltime set and we couldn't set one
 	 */
-	default long getSpoilTime(ItemStack stack, @Nullable Level world){
-		CompoundTag nbt = stack.getOrCreateTag();
-		//Correct broken stacks, by setting a spoil time for a fresh item
-		if(!nbt.contains(SPOIL_KEY)){
-			if(world != null && !world.isClientSide()){
-				setSpoilTime(stack, getLifetime(), world.getGameTime());
-			}else{
-				return -1;
+	static long getAndInitSpoilTime(ItemStack stack, @Nullable Level world){
+		if(stack.getItem() instanceof IPerishable perishable){
+			CompoundTag nbt = stack.getOrCreateTag();
+			//Correct broken stacks, by setting a spoil time for a fresh item
+			if(!nbt.contains(SPOIL_KEY)){
+				if(world != null && !world.isClientSide()){
+					setSpoilTime(stack, perishable.getLifetime(), world.getGameTime());
+				}else{
+					return -1;
+				}
 			}
+			return nbt.getLong(SPOIL_KEY);
 		}
-		return nbt.getLong(SPOIL_KEY);
+		return -1;
 	}
 
 	/**
@@ -57,7 +60,7 @@ public interface IPerishable{
 	 * @param worldTime The current game time
 	 * @return The modified stack
 	 */
-	default ItemStack setSpoilTime(ItemStack stack, long spoilTime, long worldTime){
+	static ItemStack setSpoilTime(ItemStack stack, long spoilTime, long worldTime){
 		CompoundTag nbt = stack.getOrCreateTag();
 		nbt.putLong(SPOIL_KEY, spoilTime + worldTime);
 		return stack;
@@ -87,7 +90,7 @@ public interface IPerishable{
 	 */
 	default ItemStack freeze(ItemStack stack, Level world, double temp, long duration){
 		if(temp <= getFreezeTemperature()){
-			setSpoilTime(stack, getSpoilTime(stack, world) + duration, 0);
+			setSpoilTime(stack, getAndInitSpoilTime(stack, world) + duration, 0);
 		}
 		return stack;
 	}
@@ -95,12 +98,12 @@ public interface IPerishable{
 	public static void addTooltip(ItemStack stack, @Nullable Level world, List<Component> tooltip){
 		Item item = stack.getItem();
 		if(item instanceof IPerishable sItem){
-			long spoilTimestamp = sItem.getSpoilTime(stack, world);
+			long spoilTimestamp = getAndInitSpoilTime(stack, world);
 			if(spoilTimestamp < 0){
 				//Broken/new item; hasn't been configured properly
 				tooltip.add(Component.translatable("tt.crossroads.boilerplate.spoilage.error"));
 			}else if(world != null){
-				if(sItem.isSpoiled(stack, world)){
+				if(isSpoiled(stack, world)){
 					tooltip.add(Component.translatable("tt.crossroads.boilerplate.spoilage.spoiled"));
 				}else{
 					spoilTimestamp -= world.getGameTime();

@@ -152,7 +152,7 @@ public class EntityTemplate implements INBTSerializable<CompoundTag>{
 	@Override
 	public CompoundTag serializeNBT(){
 		CompoundTag nbt = new CompoundTag();
-		nbt.putString("entity_name", entityName.toString());
+		nbt.putString("entity_name", entityName == null ? "" : entityName.toString());
 		nbt.putBoolean("loyal", loyal);
 		nbt.putBoolean("respawning", respawning);
 		ListTag potions = new ListTag();
@@ -177,7 +177,8 @@ public class EntityTemplate implements INBTSerializable<CompoundTag>{
 
 	@Override
 	public void deserializeNBT(CompoundTag nbt){
-		entityName = new ResourceLocation(nbt.getString("entity_name"));
+		String name = nbt.getString("entity_name");
+		entityName = name == null || name.length() == 0 ? null : new ResourceLocation(name);
 		entityType = null;
 		loyal = nbt.getBoolean("loyal");
 		respawning = nbt.getBoolean("respawning");
@@ -215,12 +216,21 @@ public class EntityTemplate implements INBTSerializable<CompoundTag>{
 		return Objects.hash(entityName, customName, loyal, respawning, effects, degradation, imprintingPlayer, originatingUUID);
 	}
 
+	public boolean isDummyTemplate(){
+		return entityName == null;
+	}
+
 	/**
 	 * Adds a tooltip based on the information in this template
 	 * @param tooltips The tooltip to append to
 	 * @param maxLines The maximum lines to append. This value will be ignored for essential information
 	 */
 	public void addTooltip(List<Component> tooltips, int maxLines){
+		if(isDummyTemplate()){
+			tooltips.add(Component.translatable("tt.crossroads.boilerplate.entity_template.dummy"));
+			return;
+		}
+
 		getEntityType();//Builds the cache
 
 		int linesUsed = 0;

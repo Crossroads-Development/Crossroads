@@ -1,0 +1,13 @@
+{
+	"type": "crossroads:incubator",
+	"main_input": {
+		"item": "crossroads:mutagen"
+	},
+	"secondary_input": {
+		"tag": "crossroads:incubator_egg"
+	},
+	"output": {
+		"item": "crossroads:potion_extension"
+	},
+	"datacopy": "false"
+}

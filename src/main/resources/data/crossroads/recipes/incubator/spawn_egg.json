@@ -1,0 +1,13 @@
+{
+	"type": "crossroads:incubator",
+	"main_input": {
+		"item": "crossroads:embryo"
+	},
+	"secondary_input": {
+		"tag": "crossroads:incubator_egg"
+	},
+	"output": {
+		"item": "crossroads:spawn_egg"
+	},
+	"datacopy": "true"
+}

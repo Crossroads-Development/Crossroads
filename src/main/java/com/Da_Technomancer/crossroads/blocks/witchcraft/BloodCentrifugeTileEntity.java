@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.api.Capabilities;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.api.witchcraft.EntityTemplate;
+import com.Da_Technomancer.crossroads.api.witchcraft.IPerishable;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.BloodCentrifugeContainer;
@@ -94,7 +95,7 @@ public class BloodCentrifugeTileEntity extends InventoryTE{
 						template.setDegradation(template.getDegradation() + degradation);
 						//Sets the output to a copy of the input with the item as a separated blood sample instead of normal blood sample
 						//Has to copy spoil time and template
-						inventory[2 + i] = CRItems.separatedBloodSample.setSpoilTime(CRItems.separatedBloodSample.withEntityData(new ItemStack(CRItems.separatedBloodSample, 1), template), CRItems.bloodSample.getSpoilTime(inventory[i], level), 0);
+						inventory[2 + i] = IPerishable.setSpoilTime(CRItems.separatedBloodSample.withEntityData(new ItemStack(CRItems.separatedBloodSample, 1), template), IPerishable.getAndInitSpoilTime(inventory[i], level), 0);
 						inventory[i] = ItemStack.EMPTY;
 					}
 				}

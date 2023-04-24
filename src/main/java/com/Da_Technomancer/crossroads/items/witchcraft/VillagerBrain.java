@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.items.witchcraft;
 
 import com.Da_Technomancer.crossroads.api.witchcraft.ICultivatable;
+import com.Da_Technomancer.crossroads.api.witchcraft.IPerishable;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
@@ -144,7 +145,7 @@ public class VillagerBrain extends Item implements ICultivatable{
 	@Override
 	public CultivationTrade getCultivationTrade(ItemStack self, Level world){
 		//Performs villager trades
-		if(isSpoiled(self, world)){
+		if(IPerishable.isSpoiled(self, world)){
 			return null;
 		}
 

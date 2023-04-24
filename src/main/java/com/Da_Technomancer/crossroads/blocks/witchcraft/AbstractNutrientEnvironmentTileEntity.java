@@ -29,7 +29,7 @@ public abstract class AbstractNutrientEnvironmentTileEntity extends InventoryTE{
 		long currentTime = world.getGameTime();
 		for(ItemStack stack : perishableStacks){
 			if(stack.getItem() instanceof IPerishable){
-				long spoilTime = ((IPerishable) stack.getItem()).getSpoilTime(stack, world);
+				long spoilTime = IPerishable.getAndInitSpoilTime(stack, world);
 				itemCount++;
 				if(spoilTime > currentTime){
 					totalLifetime += spoilTime - currentTime;

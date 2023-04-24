@@ -761,6 +761,7 @@
 	"tt.crossroads.potion_extension.quip": "We're out of Pfizer, is AstraZeneca OK?",
 	"tt.crossroads.blood_sample.craft": "Needs processing in a Blood Centrifuge",
 	"tt.crossroads.blood_sample_empty.desc": "Can be filled with blood with a syringe or dispenser",
+	"tt.crossroads.boilerplate.entity_template.dummy": "Some mob type",
 	"tt.crossroads.boilerplate.entity_template.type": "",
 	"tt.crossroads.boilerplate.entity_template.type.missing": "Missing data",
 	"tt.crossroads.boilerplate.entity_template.degradation": "Deterioration: %1$d",

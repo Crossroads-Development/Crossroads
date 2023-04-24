@@ -1,14 +1,13 @@
 package com.Da_Technomancer.crossroads.blocks.witchcraft;
 
 import com.Da_Technomancer.crossroads.api.Capabilities;
-import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.api.witchcraft.IPerishable;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
-import com.Da_Technomancer.crossroads.crafting.CRItemTags;
+import com.Da_Technomancer.crossroads.crafting.CRRecipes;
+import com.Da_Technomancer.crossroads.crafting.IncubatorRec;
 import com.Da_Technomancer.crossroads.gui.container.IncubatorContainer;
-import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.essentials.api.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -17,9 +16,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -30,6 +27,8 @@ import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class IncubatorTileEntity extends InventoryTE{
 
@@ -84,10 +83,24 @@ public class IncubatorTileEntity extends InventoryTE{
 		super.serverTick();
 
 		boolean validRecipe = false;
-		if(isValidMutator(inventory[0], level)){
-			ItemStack toCreate = getCreatedItem(inventory[0], level);
+
+		if(!inventory[0].isEmpty() && !inventory[1].isEmpty()){
+			if(IPerishable.isSpoiled(inventory[0], level)){
+				if(inventory[2].isEmpty()){
+					//Eject the invalid input item, including spoiled embryos
+					inventory[2] = inventory[0];
+					inventory[0] = ItemStack.EMPTY;
+					setChanged();
+				}
+				return;
+			}
+		}
+
+		Optional<IncubatorRec> recipeOpt = level.getRecipeManager().getRecipeFor(CRRecipes.INCUBATOR_TYPE, this, level);
+		if(recipeOpt.isPresent()){
+			ItemStack toCreate = recipeOpt.get().getCreatedItem(this, level);
 			//Check that we have the other ingredient, and that there is space for the output
-			if(!inventory[1].isEmpty() && (inventory[2].isEmpty() || BlockUtil.sameItem(inventory[2], toCreate) && toCreate.getCount() + inventory[2].getCount() <= toCreate.getMaxStackSize())){
+			if((inventory[2].isEmpty() || BlockUtil.sameItem(inventory[2], toCreate) && toCreate.getCount() + inventory[2].getCount() <= toCreate.getMaxStackSize())){
 				validRecipe = true;
 
 				//Increase progress
@@ -111,40 +124,12 @@ public class IncubatorTileEntity extends InventoryTE{
 					setChanged();
 				}
 			}
-		}else if(inventory[2].isEmpty()){
-			//Eject the invalid input item, including spoiled embryos
-			inventory[2] = inventory[0];
-			inventory[0] = ItemStack.EMPTY;
-			setChanged();
 		}
 
 		if(!validRecipe){
 			//Reset any accumulated progress
 			progress = 0;
 		}
-	}
-
-	private static ItemStack getCreatedItem(ItemStack mutator, Level world){
-		Item item = mutator.getItem();
-		if(item == CRItems.embryo){
-			ItemStack out = new ItemStack(CRItems.geneticSpawnEgg, 1);
-			CRItems.geneticSpawnEgg.withEntityTypeData(out, CRItems.embryo.getEntityTypeData(mutator));
-			return out;
-		}
-		if(item == CRItems.mutagen){
-			ItemStack out = new ItemStack(CRItems.potionExtension);
-			CRItems.potionExtension.getSpoilTime(out, world);
-			return out;
-		}
-		return ItemStack.EMPTY;
-	}
-
-	private static boolean isValidMutator(ItemStack stack, Level world){
-		Item item = stack.getItem();
-		if(item instanceof IPerishable && ((IPerishable) item).isSpoiled(stack, world)){
-			return false;
-		}
-		return stack.getItem() == CRItems.embryo || stack.getItem() == CRItems.mutagen;
 	}
 
 	@Override
@@ -163,7 +148,15 @@ public class IncubatorTileEntity extends InventoryTE{
 
 	@Override
 	public boolean canPlaceItem(int index, ItemStack stack){
-		return index == 0 && isValidMutator(stack, level) || index == 1 && CraftingUtil.tagContains(CRItemTags.INCUBATOR_EGG, stack.getItem());
+		//Only accept inputs listed in one of the recipes for each slot to make it clearer what-goes-where
+		if(index == 0){
+			List<IncubatorRec> recipes = level.getRecipeManager().getAllRecipesFor(CRRecipes.INCUBATOR_TYPE);
+			return recipes.stream().anyMatch(rec -> rec.getMainInput().test(stack));
+		}else if(index == 1){
+			List<IncubatorRec> recipes = level.getRecipeManager().getAllRecipesFor(CRRecipes.INCUBATOR_TYPE);
+			return recipes.stream().anyMatch(rec -> rec.getSecondaryInput().test(stack));
+		}
+		return false;
 	}
 
 	@Override

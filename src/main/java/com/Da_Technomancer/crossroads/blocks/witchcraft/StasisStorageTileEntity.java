@@ -53,7 +53,7 @@ public class StasisStorageTileEntity extends InventoryTE{
 			for(ItemStack stack : inventory){
 				if(stack.getItem() instanceof IPerishable perishable){
 					//We reverse the age, without freezing, to prevent damage of ICultivatable
-					perishable.setSpoilTime(stack, perishable.getSpoilTime(stack, level) + 1, 0);
+					IPerishable.setSpoilTime(stack, IPerishable.getAndInitSpoilTime(stack, level) + 1, 0);
 				}
 			}
 		}
@@ -71,7 +71,7 @@ public class StasisStorageTileEntity extends InventoryTE{
 		if(gameTime > lastTick){
 			for(ItemStack stack : inventory){
 				if(stack.getItem() instanceof IPerishable perishable){
-					perishable.setSpoilTime(stack, perishable.getSpoilTime(stack, level) + gameTime - lastTick + 1, 0);
+					IPerishable.setSpoilTime(stack, IPerishable.getAndInitSpoilTime(stack, level) + gameTime - lastTick + 1, 0);
 				}
 			}
 		}
@@ -155,7 +155,7 @@ public class StasisStorageTileEntity extends InventoryTE{
 				long gameTime = level.getGameTime();
 				for(ItemStack stack : inventory){
 					if(stack.getItem() instanceof IPerishable perishable){
-						long remaining = perishable.getSpoilTime(stack, level) - gameTime;
+						long remaining = IPerishable.getAndInitSpoilTime(stack, level) - gameTime;
 						long limit = perishable.getLifetime();
 						if(remaining < limit){
 							//Don't allow rewinding beyond the original lifetime
@@ -165,7 +165,7 @@ public class StasisStorageTileEntity extends InventoryTE{
 								singleRewind += -remaining;
 							}
 							singleRewind = Math.min(rewind + singleRewind, limit - remaining);
-							perishable.setSpoilTime(stack, remaining + singleRewind, gameTime);
+							IPerishable.setSpoilTime(stack, remaining + singleRewind, gameTime);
 						}
 					}
 				}

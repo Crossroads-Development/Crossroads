@@ -9,6 +9,7 @@ import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.api.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.api.technomancy.RespawnInventorySavedData;
 import com.Da_Technomancer.crossroads.api.witchcraft.EntityTemplate;
+import com.Da_Technomancer.crossroads.api.witchcraft.IPerishable;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.blocks.rotary.WindingTableTileEntity;
@@ -600,7 +601,7 @@ public class EventHandlerCommon{
 				if(damageSource.getClass() == EntityDamageSource.class && damageSource.getDirectEntity() instanceof LivingEntity && ((LivingEntity) damageSource.getDirectEntity()).getMainHandItem().getItem() == CRItems.brainHarvester){
 					ItemStack brain = new ItemStack(CRItems.villagerBrain, 1);
 					CRItems.villagerBrain.setOffers(brain, ((Merchant) ent).getOffers());
-					CRItems.villagerBrain.getSpoilTime(brain, ent.level);
+					IPerishable.getAndInitSpoilTime(brain, ent.level);
 					e.getDrops().add(new ItemEntity(ent.level, ent.getX(), ent.getY(), ent.getZ(), brain));
 				}
 			}

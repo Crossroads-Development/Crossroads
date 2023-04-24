@@ -48,9 +48,9 @@ public class CRWorldGen{
 		//Construct our configured features
 
 		//Both deepslate and normal variants. Size 1 vein
-		//50% chance to discard if exposed to air for buried
+		//no chance to discard if exposed to air for buried
 		List<OreConfiguration.TargetBlockState> tinTarget = List.of(OreConfiguration.target(new ConfigTagRuleTest(BlockTags.STONE_ORE_REPLACEABLES, "cr_tin"), OreSetup.oreTin.defaultBlockState()), OreConfiguration.target(new ConfigTagRuleTest(BlockTags.DEEPSLATE_ORE_REPLACEABLES, "cr_tin"), OreSetup.oreTinDeep.defaultBlockState()));
-		TIN_ORE_BURIED = createAndRegisterConfiguredFeature(new ResourceLocation(Crossroads.MODID, "ore_tin_buried"), GEM_FEATURE, new OreConfiguration(tinTarget, 1, 0.5F));
+		TIN_ORE_BURIED = createAndRegisterConfiguredFeature(new ResourceLocation(Crossroads.MODID, "ore_tin_buried"), GEM_FEATURE, new OreConfiguration(tinTarget, 1));
 		//Size 1 vein
 		VOID_ORE = createAndRegisterConfiguredFeature(new ResourceLocation(Crossroads.MODID, "ore_void"), GEM_FEATURE, new OreConfiguration(new ConfigTagRuleTest(Tags.Blocks.END_STONES, "cr_void"), OreSetup.oreVoid.defaultBlockState(), 1));
 		//Size 1 vein

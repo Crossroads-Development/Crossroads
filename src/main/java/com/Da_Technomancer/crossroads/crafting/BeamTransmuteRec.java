@@ -68,7 +68,7 @@ public class BeamTransmuteRec implements IOptionalRecipe<Container>{
 
 	@Override
 	public boolean matches(Container inv, Level worldIn){
-		return true;//The entire condition of this recipe is based on block type and power, which can't be determined here
+		return active;//The entire condition of this recipe is based on block type and power, which can't be determined here
 	}
 
 	/**

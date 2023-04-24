@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.api.witchcraft.EntityTemplate;
+import com.Da_Technomancer.crossroads.api.witchcraft.IPerishable;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
@@ -74,7 +75,7 @@ public class EmbryoLabTileEntity extends InventoryTE implements INBTReceiver{
 		if(template != null && inventory[0].isEmpty()){
 			inventory[0] = new ItemStack(CRItems.embryo);
 			CRItems.embryo.withEntityTypeData(inventory[0], template, false);
-			CRItems.embryo.setSpoilTime(inventory[0], CRItems.embryo.getLifetime(), level.getGameTime());
+			IPerishable.setSpoilTime(inventory[0], CRItems.embryo.getLifetime(), level.getGameTime());
 			template = null;
 			level.setBlockAndUpdate(worldPosition, getBlockState().setValue(CRProperties.ACTIVE, false));
 			setChanged();
@@ -95,7 +96,7 @@ public class EmbryoLabTileEntity extends InventoryTE implements INBTReceiver{
 			template = bloodTemplate;
 
 			//If the blood sample was spoiled, increase degradation
-			if(CRItems.separatedBloodSample.isSpoiled(stack, level)){
+			if(IPerishable.isSpoiled(stack, level)){
 				template.setDegradation(template.getDegradation() + 1);
 			}
 			level.setBlockAndUpdate(worldPosition, getBlockState().setValue(CRProperties.ACTIVE, true));

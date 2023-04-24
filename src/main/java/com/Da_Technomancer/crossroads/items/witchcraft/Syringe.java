@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.items.witchcraft;
 
 import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.api.witchcraft.IPerishable;
 import com.Da_Technomancer.crossroads.entity.mob_effects.CRPotions;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.alchemy.PoisonVodka;
@@ -35,7 +36,7 @@ public class Syringe extends Item{
 	private static void populateSyringeMap(){
 		//Be careful about when this is called, that the item references are initialized beforehand
 		SYRINGE_ITEM_EFFECTS.put(CRItems.potionExtension, (item, syringe, world, target, user) -> {
-			if(!isTreated(syringe) && !CRItems.potionExtension.isSpoiled(item, world)){
+			if(!isTreated(syringe) && !IPerishable.isSpoiled(item, world)){
 				setTreated(syringe, true);
 				return InteractionResultHolder.success(ItemStack.EMPTY);
 			}
@@ -165,7 +166,7 @@ public class Syringe extends Item{
 	 * @return The filled blood sample pouch
 	 */
 	public static ItemStack drawBlood(ItemStack samplePouch, LivingEntity target, @Nullable Player attacker){
-		ItemStack result = CRItems.bloodSample.withEntityData(CRItems.bloodSample.setSpoilTime(new ItemStack(CRItems.bloodSample, 1), CRItems.bloodSample.getLifetime(), target.level.getGameTime()), target);
+		ItemStack result = CRItems.bloodSample.withEntityData(IPerishable.setSpoilTime(new ItemStack(CRItems.bloodSample, 1), CRItems.bloodSample.getLifetime(), target.level.getGameTime()), target);
 		target.hurt(syringeAttackSource(attacker), 1);
 		return result;
 	}

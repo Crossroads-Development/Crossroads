@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.api.Capabilities;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.beams.*;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
+import com.Da_Technomancer.crossroads.api.witchcraft.IPerishable;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.BloodBeamLinkerContainer;
@@ -66,7 +67,7 @@ public class BloodBeamLinkerTileEntity extends InventoryTE{
 				int contents = state.getValue(CRProperties.CONTENTS);
 				int newContents = 0;
 				if(!inventory[0].isEmpty()){
-					newContents = CRItems.bloodSample.isSpoiled(inventory[0], level) ? 1 : 2;
+					newContents = IPerishable.isSpoiled(inventory[0], level) ? 1 : 2;
 				}
 				if(newContents != contents){
 					//No block update
@@ -140,7 +141,7 @@ public class BloodBeamLinkerTileEntity extends InventoryTE{
 				//Target null when missing/dead, in another dimension, or in unloaded chunks
 				if(target != null){
 					//10% of applying penalty while the sample is spoiled
-					boolean spoiledBeam = CRItems.bloodSample.isSpoiled(inventory[0], level) && level.random.nextInt(10) < 1;
+					boolean spoiledBeam = IPerishable.isSpoiled(inventory[0], level) && level.random.nextInt(10) < 1;
 					//Base the alignment/effect on the full incoming beam, but only transmit the power-limited version
 					EnumBeamAlignments align;
 					boolean voidBeam = beamIn.getVoid() != 0;;

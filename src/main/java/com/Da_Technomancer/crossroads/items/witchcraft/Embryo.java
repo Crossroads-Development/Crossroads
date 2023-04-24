@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.items.witchcraft;
 
 import com.Da_Technomancer.crossroads.api.witchcraft.EntityTemplate;
 import com.Da_Technomancer.crossroads.api.witchcraft.ICultivatable;
+import com.Da_Technomancer.crossroads.api.witchcraft.IPerishable;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -78,7 +79,7 @@ public class Embryo extends Item implements ICultivatable{
 	public CultivationTrade getCultivationTrade(ItemStack self, Level world){
 		//Produces (near)-copies of itself, using soul clusters &/or genetic plasmids as applicable
 		
-		if(isSpoiled(self, world)){
+		if(IPerishable.isSpoiled(self, world)){
 			return null;
 		}
 		ItemStack created = new ItemStack(this, 1);

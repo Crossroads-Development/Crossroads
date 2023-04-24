@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.items.witchcraft;
 
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.crossroads.api.packets.SendCompassTargetToClient;
+import com.Da_Technomancer.crossroads.api.witchcraft.IPerishable;
 import com.Da_Technomancer.crossroads.integration.curios.CurioHelper;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.core.GlobalPos;
@@ -61,7 +62,7 @@ public class BloodCompass extends Item{
 	@Nullable
 	private UUID getTargetUUID(ItemStack stack, @Nonnull LivingEntity player, @Nonnull Level world){
 		ItemStack targetItem = CurioHelper.getEquipped(filtStack -> filtStack.getItem() instanceof BloodSample, player);
-		if(!targetItem.isEmpty() && !CRItems.bloodSample.isSpoiled(targetItem, world)){
+		if(!targetItem.isEmpty() && !IPerishable.isSpoiled(targetItem, world)){
 			return BloodSample.getEntityTypeData(targetItem).getOriginatingUUID();
 		}
 		return null;

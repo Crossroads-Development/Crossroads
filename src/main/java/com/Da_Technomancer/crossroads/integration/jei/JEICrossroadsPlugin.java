@@ -65,6 +65,7 @@ public class JEICrossroadsPlugin implements IModPlugin{
 		registry.addRecipeCatalyst(new ItemStack(CRBlocks.formulationVat, 1), FormulationVatCategory.TYPE);
 		registry.addRecipeCatalyst(new ItemStack(CRBlocks.icebox, 1), IceboxFuelCategory.TYPE);
 		registry.addRecipeCatalyst(new ItemStack(CRBlocks.lensFrame, 1), BeamLensCategory.TYPE);
+		registry.addRecipeCatalyst(new ItemStack(CRBlocks.incubator, 1), IncubatorCategory.TYPE);
 
 		//Add relevant crossroads machines to vanilla recipe types
 		registry.addRecipeCatalyst(new ItemStack(CRBlocks.smelter, 1), RecipeTypes.SMELTING);
@@ -100,6 +101,7 @@ public class JEICrossroadsPlugin implements IModPlugin{
 		registration.addRecipes(BeamLensCategory.TYPE, getRecipes(recipeManager, CRRecipes.BEAM_LENS_TYPE));
 		registration.addRecipes(ReagInfoCategory.TYPE, new ArrayList<>(ReagentManager.getRegisteredReags()));
 		registration.addRecipes(IceboxFuelCategory.TYPE, getRecipes(recipeManager, CRRecipes.COOLING_TYPE));
+		registration.addRecipes(IncubatorCategory.TYPE, getRecipes(recipeManager, CRRecipes.INCUBATOR_TYPE));
 
 		//Add anvil recipes for Technomancy items
 		IVanillaRecipeFactory vanillaFactory = registration.getVanillaRecipeFactory();
@@ -141,7 +143,8 @@ public class JEICrossroadsPlugin implements IModPlugin{
 				new CopshowiumCategory(guiHelper),
 				new FormulationVatCategory(guiHelper),
 				new IceboxFuelCategory(guiHelper),
-				new BeamLensCategory(guiHelper)
+				new BeamLensCategory(guiHelper),
+				new IncubatorCategory(guiHelper)
 		);
 	}
 

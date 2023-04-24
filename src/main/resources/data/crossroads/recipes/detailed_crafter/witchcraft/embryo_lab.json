@@ -6,13 +6,16 @@
 		"count": 1
 	},
 	"pattern": [
-		" C ",
+		" R ",
 		"G G",
 		"CCC"
 	],
 	"key": {
 		"C": {
 			"tag": "forge:ingots/copper"
+		},
+		"R": {
+			"tag": "crossroads:atmos_antenna"
 		},
 		"G": {
 			"tag": "forge:glass/colorless"
