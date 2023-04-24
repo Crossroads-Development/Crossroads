@@ -29,8 +29,9 @@ public class CRRenderTypes extends RenderType{
 	public static final ResourceLocation GEAR_24_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/gear_24");
 	public static final ResourceLocation GEAR_24_RIM_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/gear_24_rim");
 	public static final ResourceLocation GEAR_24_TOOTH_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/gear_24_tooth");
-	public static final ResourceLocation CLUTCH_SIDE_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/clutch");
-	public static final ResourceLocation CLUTCH_SIDE_INVERTED_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/clutch_inv");
+	public static final ResourceLocation CLUTCH_END_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/clutch_end");
+	public static final ResourceLocation CLUTCH_SIDE_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/clutch_side");
+	public static final ResourceLocation CLUTCH_SIDE_INVERTED_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/clutch_side_inv");
 	public static final ResourceLocation GATEWAY_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/gateway");
 	public static final ResourceLocation AXLE_MOUNT_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/axle_mount");
 	public static final ResourceLocation AXLE_MOUNT_OCT_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/axle_mount_oct");
