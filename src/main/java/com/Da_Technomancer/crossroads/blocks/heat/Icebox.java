@@ -32,7 +32,7 @@ import java.util.List;
 public class Icebox extends BaseEntityBlock implements IReadable{
 
 	public Icebox(){
-		super(CRBlocks.getRockProperty());
+		super(CRBlocks.getRockProperty().lightLevel(state -> state.getValue(CRProperties.ACTIVE) ? 2 : 0));
 		String name = "icebox";
 		CRBlocks.toRegister.put(name, this);
 		CRBlocks.blockAddQue(name, this);

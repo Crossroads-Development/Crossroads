@@ -45,8 +45,8 @@ public class StampMill extends BaseEntityBlock implements IReadable{
 
 	static{
 		VoxelShape base = box(0, 0, 0, 16, 4, 16);
-		SHAPES[0] = Shapes.or(base, box(0, 4, 3, 1, 16, 11), box(15, 4, 3, 16, 16, 11));
-		SHAPES[1] = Shapes.or(base, box(3, 4, 0, 11, 16, 1), box(3, 4, 15, 11, 16, 16));
+		SHAPES[0] = Shapes.or(base, box(0, 4, 0, 1, 16, 16), box(15, 4, 0, 16, 16, 16));
+		SHAPES[1] = Shapes.or(base, box(0, 4, 0, 16, 16, 1), box(0, 4, 15, 16, 16, 16));
 	}
 
 	public StampMill(){

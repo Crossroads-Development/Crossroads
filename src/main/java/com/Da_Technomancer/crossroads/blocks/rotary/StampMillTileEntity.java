@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.Capabilities;
 import com.Da_Technomancer.crossroads.api.rotary.IAxisHandler;
-import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
+import com.Da_Technomancer.crossroads.api.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
@@ -22,7 +22,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -204,17 +203,7 @@ public class StampMillTileEntity extends InventoryTE{
 			Direction.Axis ax = state.getValue(CRProperties.HORIZ_AXIS);
 			for(Direction.AxisDirection dir : Direction.AxisDirection.values()){
 				Direction side = Direction.get(dir, ax);
-				BlockEntity te = level.getBlockEntity(worldPosition.relative(side));
-				if(te != null){
-					LazyOptional<IAxisHandler> axisOpt = te.getCapability(Capabilities.AXIS_CAPABILITY, side.getOpposite());
-					if(axisOpt.isPresent()){
-						axisOpt.orElseThrow(NullPointerException::new).trigger(masterIn, key);
-					}
-					LazyOptional<IAxleHandler> oAxleOpt = te.getCapability(Capabilities.AXLE_CAPABILITY, side.getOpposite());
-					if(oAxleOpt.isPresent()){
-						oAxleOpt.orElseThrow(NullPointerException::new).propagate(masterIn, key, rotRatioIn, lastRadius, renderOffset);
-					}
-				}
+				RotaryUtil.propagateAxially(level.getBlockEntity(worldPosition.relative(side)), side.getOpposite(), this, masterIn, key, renderOffset);
 			}
 		}
 	}
