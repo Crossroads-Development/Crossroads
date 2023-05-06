@@ -539,7 +539,7 @@
 	"tt.crossroads.tesla_coil_top.att": "Cannot transfer power. Attacks nearby entities with electric shocks",
 	"tt.crossroads.tesla_coil_top.decor": "Cannot transfer power. Shoots decorative arcs",
 	"tt.crossroads.tesla_coil_top.leyden": "Requires a Leyden Jar installed in the Tesla Coil",
-	"tt.crossroads.heat_cable.loss": "Loss Rate: -%1$f°C/t",
+	"tt.crossroads.heat_cable.loss": "Loss Rate: %1$f°C/t",
 	"tt.crossroads.heat_cable.melt": "Melting Point: %1$f°C",
 	"tt.crossroads.redstone_heat_cable.reader": "Circuits read the temperature",
 	"tt.crossroads.redstone_heat_cable.control": "[Dis]connected with redstone",

@@ -10,12 +10,12 @@ import net.minecraft.world.level.block.Blocks;
 
 public enum HeatInsulators{
 
-	WOOL(.25D, 300D, new BlockEffect(Blocks.FIRE.defaultBlockState())),
-	SLIME(.2D, 500D, new SlimeEffect()),
-	DIRT(.5D, 42D, new DirtEffect()),
-	ICE(.001D, 0D, new IceEffect()),
-	OBSIDIAN(.015D, 2_000D, new BlockEffect(Blocks.LAVA.defaultBlockState())),
-	CERAMIC(.05D, 3_000D, new BlockEffect(Blocks.LAVA.defaultBlockState())),
+	WOOL(.1D, 500D, new BlockEffect(Blocks.FIRE.defaultBlockState())),
+	SLIME(.05D, 300D, new SlimeEffect()),
+	DIRT(1D, 42D, new DirtEffect()),
+	ICE(.025D, 0D, new IceEffect()),
+	OBSIDIAN(.2D, 2_000D, new BlockEffect(Blocks.LAVA.defaultBlockState())),
+	CERAMIC(.25D, 3_000D, new BlockEffect(Blocks.LAVA.defaultBlockState())),
 	DENSUS(0, 10_000D, new BlockEffect(Blocks.LAVA.defaultBlockState()));
 
 	private final double rate;
