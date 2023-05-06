@@ -17,5 +17,4 @@ public interface IInfoTE{
 	 * @param hit Portion of the block clicked/viewed
 	 */
 	void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit);
-
 }

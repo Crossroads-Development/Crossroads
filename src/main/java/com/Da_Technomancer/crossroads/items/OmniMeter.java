@@ -88,31 +88,10 @@ public class OmniMeter extends Item{
 				IRedstoneHandler redstoneHandler = redsOpt.orElseThrow(NullPointerException::new);
 				chat.add(Component.translatable("tt.crossroads.meter.circuit", CRConfig.formatVal(redstoneHandler.getOutput())));
 			}
-		}
 
-//		if(te instanceof IBeamRenderTE){
-//			BeamUnit[] mag = ((IBeamRenderTE) te).getLastSent();
-//			boolean output = false;
-//			if(mag != null){
-//				for(int i = 0; i < mag.length; i++){
-//					BeamUnit check = mag[i];
-//					if(!check.isEmpty()){
-//						output = true;
-//						EnumBeamAlignments.getAlignment(check).discover(player, true);
-//						String dir = Direction.byIndex(i).toString();
-//						dir = Character.toUpperCase(dir.charAt(0)) + dir.substring(1);
-//						chat.add(new TranslationTextComponent("tt.crossroads.meter.beam", dir, check.toString()));
-//					}
-//				}
-//			}
-//			if(!output){
-//				//Generic message so it doesn't output nothing to the user
-//				chat.add(new TranslationTextComponent("tt.crossroads.meter.beam.none"));
-//			}
-//		}
-
-		if(te instanceof IInfoTE){
-			((IInfoTE) te).addInfo(chat, player, hit);
+			if(te instanceof IInfoTE infoTE){
+				infoTE.addInfo(chat, player, hit);
+			}
 		}
 	}
 

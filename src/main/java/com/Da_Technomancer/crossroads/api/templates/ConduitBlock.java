@@ -192,7 +192,7 @@ public abstract class ConduitBlock<T extends Comparable<T>> extends BaseEntityBl
 	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		//Handle wrenching
-		if(playerIn != null && hand != null){
+		if(playerIn != null && hand != null && !playerIn.isCrouching()){
 			ItemStack held = playerIn.getItemInHand(hand);
 			if(held.isEmpty()){
 				return InteractionResult.PASS;

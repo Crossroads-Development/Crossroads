@@ -18,7 +18,7 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "There are also <item>redstone fluid tubes/$, which will only connect to/transfer with their neighbors at all while they have a redstone signal.$(br2)"
+			"text": "There are also <item>redstone fluid tubes/$, which will only connect to/transfer with their neighbors at all while they have a redstone signal; invert the redstone by shift-clicking with a wrench.$(br2)"
 		},
 		{
 			"type": "patchouli:text",
