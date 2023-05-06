@@ -54,16 +54,31 @@ public class StampMillRenderer implements BlockEntityRenderer<StampMillTileEntit
 
 		matrix.popPose();
 
-		double offset0 = (Math.sin(2D * Math.toRadians(prog)) + 1D) / 2D * 9D / 32D;
-		double offset1 = (Math.sin(2D * Math.toRadians(prog - 90D)) + 1D) / 2D * 9D / 32D;
-		matrix.translate(-5F/ 16F, offset1, -2F / 8F);
+		double[] offset = new double[2];
+		for(int i = 0; i < 2; i++){
+			double angle = ((2D * Math.toRadians(prog - (i == 1 ? 90D : 0))) % (2D * Math.PI) + 2D * Math.PI) % (2D * Math.PI);
+			//Pattern of up-down movement where it rises slowly with the turn of the axle (sin(angle)), but drops quickly and has a rest period at the bottom
+			double position = 0;//In [0, 1]
+			double dropStart = Math.PI / 2;
+			double dropEnd = Math.PI * 0.7;
+			if(angle > 3 * Math.PI / 2 || angle < dropStart){
+				//Slow rise
+				position = (Math.sin(angle) + 1D) / 2D;
+			}else if(angle < dropEnd){
+				//Rapid drop
+				position = 1 - (angle - dropStart) / (dropEnd - dropStart);
+			}
+			offset[i] = position * 8.3D / 32D;
+		}
+		matrix.translate(-5F/ 16F, offset[1], -2F / 8F);
 
 		TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(CRRenderTypes.CAST_IRON_TEXTURE);
 		VertexConsumer builder = buffer.getBuffer(RenderType.solid());
 
 		//Stamps
 		for(int i = 0; i < 3; i++){
-			matrix.translate(0, i % 2 == 0 ? offset0 - offset1 : offset1 - offset0, 0);
+			//Alternates the vertical offset between offset[0] and offset[1]
+			matrix.translate(0, i % 2 == 0 ? offset[0] - offset[1] : offset[1] - offset[0], 0);
 
 			//Rod
 			float rodRad = 1F / 16F;

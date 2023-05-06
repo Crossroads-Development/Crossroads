@@ -11,13 +11,13 @@
 	],
 	"key": {
 		"*": {
-			"tag": "forge:cobblestone"
+			"tag": "minecraft:planks"
 		},
 		"C": {
 			"tag": "forge:ingots/copper"
 		},
 		"#": {
-			"tag": "forge:gems/lapis"
+			"item": "minecraft:furnace"
 		}
 	}
 }

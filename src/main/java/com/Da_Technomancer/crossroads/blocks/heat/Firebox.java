@@ -33,7 +33,7 @@ import java.util.List;
 public class Firebox extends BaseEntityBlock implements IReadable{
 
 	public Firebox(){
-		super(CRBlocks.getRockProperty());
+		super(CRBlocks.getRockProperty().lightLevel(state -> state.getValue(CRProperties.ACTIVE) ? 13 : 0));
 		String name = "firebox";
 		CRBlocks.queueForRegister(name, this);
 		registerDefaultState(defaultBlockState().setValue(CRProperties.ACTIVE, false));
