@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.gui.screen;
 
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.templates.MachineScreen;
 import com.Da_Technomancer.crossroads.blocks.heat.FluidCoolingChamberTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.FluidCoolerContainer;
@@ -28,8 +29,25 @@ public class FluidCoolerScreen extends MachineScreen<FluidCoolerContainer, Fluid
 	protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY){
 		RenderSystem.setShaderTexture(0, TEXTURE);
 		blit(matrix, leftPos, topPos, 0, 0, imageWidth, imageHeight);
-
+		if(menu.totalHeatRef.get() > 0){
+			blit(matrix, leftPos + 24, topPos + 32, 176, 0, (int) Math.ceil(46F * menu.releasedHeatRef.get() / menu.totalHeatRef.get()), 16);
+		}
 
 		super.renderBg(matrix, partialTicks, mouseX, mouseY);
+	}
+
+	@Override
+	protected void renderLabels(PoseStack matrix, int mouseX, int mouseY){
+		super.renderLabels(matrix, mouseX, mouseY);
+
+		//Render a label for maximum temperature
+		if(menu.totalHeatRef.get() >= 0){
+			int maxTemp = menu.maxTempRef.get();
+			String s0 = MiscUtil.localize("tt.crossroads.fcc.max_temp.0", maxTemp);
+			String s1 = MiscUtil.localize("tt.crossroads.fcc.max_temp.1", maxTemp);
+			boolean overMax = maxTemp - menu.heatRef.get() < 0;
+			font.draw(matrix, s0, imageWidth - 8 - font.width(s0), 24, overMax ? 0x800000 : 0x008000);
+			font.draw(matrix, s1, imageWidth - 8 - font.width(s1), 32, overMax ? 0x800000 : 0x008000);
+		}
 	}
 }

@@ -67,6 +67,7 @@ public abstract class MachineContainer<U extends InventoryTE> extends BlockMenuC
 
 	@Override
 	protected int slotCount(){
+		//If using FluidSlotManager slots, override to increase returned value by 2
 		return te.inventory.length;
 	}
 

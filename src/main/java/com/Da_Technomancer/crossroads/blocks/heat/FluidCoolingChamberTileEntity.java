@@ -28,13 +28,16 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 public class FluidCoolingChamberTileEntity extends InventoryTE{
 
 	public static final BlockEntityType<FluidCoolingChamberTileEntity> TYPE = CRTileEntity.createType(FluidCoolingChamberTileEntity::new, CRBlocks.fluidCoolingChamber);
 
 	public static final int HEATING_RATE = 40;
-	private double storedHeat = 0;//The buffered heat that will be added to the temperature over time at a constant rate
+	private double releasedHeat = 0;//Released heat to this point for the active recipe. 0 for no active recipe
+	private double totalHeat = -1;//Total heat for the recipe. Negative value for no active recipe.
+	private double maxRecipeTemp;//Maximum temperature at which this recipe can proceed. Undefined value for no active recipe.
 
 	public FluidCoolingChamberTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state, 1);
@@ -56,47 +59,95 @@ public class FluidCoolingChamberTileEntity extends InventoryTE{
 		return fluids[0];
 	}
 
+	public int getReleasedHeat(){
+		return (int) Math.round(releasedHeat);
+	}
+
+	public int getTotalHeat(){
+		return (int) Math.round(totalHeat);
+	}
+
+	public int getMaxRecipeTemp(){
+		return (int) Math.floor(maxRecipeTemp);
+	}
+
 	@Override
 	public void serverTick(){
 		super.serverTick();
 
-		double moved = Math.min(storedHeat, HEATING_RATE);
-		if(moved > 0){
-			storedHeat -= moved;
-			temp += moved;
-			setChanged();
-		}
+		if(totalHeat >= 0){
+			double moved = Math.min(maxRecipeTemp - temp, Math.min(totalHeat - releasedHeat, HEATING_RATE));
+			if(moved > 0){
+				//Ongoing recipe
+				releasedHeat += moved;
+				temp += moved;
 
-		//We can not use the recipe manager to filter recipes due to the fluid input
-		List<FluidCoolingRec> recipes = level.getRecipeManager().getRecipesFor(CRRecipes.FLUID_COOLING_TYPE, this, level);
-		//Filter the recipes by fluid type, fluid qty, temperature, and item type of output, and take the first recipe that matches the laundry list of specifications
-		Optional<FluidCoolingRec> recOpt = recipes.parallelStream().filter(rec -> rec.getMaxTemp() > temp + storedHeat && rec.inputMatches(fluids[0]) && (inventory[0].isEmpty() || BlockUtil.sameItem(inventory[0], rec.getResultItem()))).findFirst();
-		if(recOpt.isPresent()){
-			FluidCoolingRec rec = recOpt.get();
-			//Check the output will fit
-			if(inventory[0].getMaxStackSize() - inventory[0].getCount() >= rec.getResultItem().getCount()){
-				storedHeat += rec.getAddedHeat();
-				fluids[0].shrink(rec.getInputQty());
-				if(inventory[0].isEmpty()){
-					inventory[0] = rec.assemble(this);
-				}else{
-					inventory[0].grow(rec.getResultItem().getCount());
+				if(releasedHeat >= totalHeat - 0.01D){//0.01 to compensate for floating point errors
+					//Finished crafting
+					temp += totalHeat - releasedHeat;//compensate for floating point errors
+					releasedHeat = 0;
+					totalHeat = -1;
+					FluidCoolingRec rec = getRecipe();
+					if(rec != null){
+						fluids[0].shrink(rec.getInputQty());
+						if(inventory[0].isEmpty()){
+							inventory[0] = rec.assemble(this);
+						}else{
+							inventory[0].grow(rec.getResultItem().getCount());
+						}
+					}
+					startNewRecipe(rec);
 				}
+
 				setChanged();
 			}
+		}else{
+			startNewRecipe(null);
 		}
+	}
+
+	private void startNewRecipe(@Nullable FluidCoolingRec recipeHint){
+		Predicate<FluidCoolingRec> recipeValidator = rec -> rec.inputMatches(fluids[0]) && (inventory[0].isEmpty() || BlockUtil.sameItem(inventory[0], rec.getResultItem()));
+		FluidCoolingRec rec;
+		if(recipeHint != null && recipeValidator.test(recipeHint)){
+			rec = recipeHint;
+		}else{
+			rec = getRecipe();
+		}
+		if(rec != null){
+			totalHeat = rec.getAddedHeat();
+			maxRecipeTemp = rec.getMaxTemp();
+			setChanged();
+		}
+	}
+
+	@Nullable
+	private FluidCoolingRec getRecipe(){
+		//We can not use the recipe manager to filter recipes due to the fluid input
+		List<FluidCoolingRec> recipes = level.getRecipeManager().getRecipesFor(CRRecipes.FLUID_COOLING_TYPE, this, level);
+		Optional<FluidCoolingRec> recOpt = recipes.parallelStream().filter(rec -> rec.inputMatches(fluids[0]) && (inventory[0].isEmpty() || BlockUtil.sameItem(inventory[0], rec.getResultItem()))).findAny();
+		return recOpt.orElse(null);
 	}
 
 	@Override
 	public void load(CompoundTag nbt){
 		super.load(nbt);
-		storedHeat = nbt.getDouble("heat_stored");
+		if(nbt.contains("heat_stored")){
+			//Backwards compatibility to CR1.19-2.9.4 and older
+			//TODO remove
+			temp += nbt.getDouble("heat_stored");
+		}
+		releasedHeat = nbt.getDouble("released_heat");
+		totalHeat = nbt.getDouble("total_heat");
+		maxRecipeTemp = nbt.getDouble("max_recipe_temp");
 	}
 
 	@Override
 	public void saveAdditional(CompoundTag nbt){
 		super.saveAdditional(nbt);
-		nbt.putDouble("heat_stored", storedHeat);
+		nbt.putDouble("released_heat", releasedHeat);
+		nbt.putDouble("total_heat", totalHeat);
+		nbt.putDouble("max_recipe_temp", maxRecipeTemp);
 	}
 
 	private final LazyOptional<ItemHandler> itemOpt = LazyOptional.of(ItemHandler::new);
