@@ -4,9 +4,13 @@ import com.Da_Technomancer.crossroads.api.Capabilities;
 import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.blocks.fluid.RotaryPumpTileEntity;
+import com.Da_Technomancer.crossroads.items.item_sets.GearFactory;
+import com.Da_Technomancer.crossroads.render.CRRenderTypes;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import com.mojang.math.Quaternion;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -31,12 +35,45 @@ public class RotaryPumpRenderer implements BlockEntityRenderer<RotaryPumpTileEnt
 	public void render(RotaryPumpTileEntity te, float partialTicks, PoseStack matrix, MultiBufferSource buffer, int combinedLight, int combinedOverlay){
 		//Render the screw
 		matrix.pushPose();
-		matrix.translate(0.5D, 0, 0.5D);
+		matrix.translate(0.5D, 0.5D, 0.5D);
 		LazyOptional<IAxleHandler> opt = te.getCapability(Capabilities.AXLE_CAPABILITY, null);
-		if(opt.isPresent()){
-			matrix.mulPose(Axis.YP.rotationDegrees(opt.orElseThrow(NullPointerException::new).getAngle(partialTicks)));
+
+		double screwOffset = 0.1D;
+		float screwScale = 0.45F;
+		for(int i = 0; i < 2; i++){
+			matrix.pushPose();
+			matrix.translate((2 * i - 1) * screwOffset, -0.25D, 0);
+			if(opt.isPresent()){
+				matrix.mulPose(Axis.YP.rotationDegrees((1F - 2F * i) * opt.orElseThrow(NullPointerException::new).getAngle(partialTicks)));
+			}
+			//Draw central axle
+			CRModels.drawAxle(matrix, buffer, combinedLight, GearFactory.findMaterial("iron").getColor());
+
+			//Draw screw threads
+			matrix.scale(screwScale, screwScale, screwScale);
+			TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(CRRenderTypes.CAST_IRON_TEXTURE);
+
+			VertexConsumer vb = buffer.getBuffer(RenderType.solid());
+
+			Quaternion rotation = Axis.YP.rotationDegrees(90 * (2F*i - 1F));
+			Quaternion rotationToReverseStupidHardCodedBladeAngle = null;
+			if(i == 1){
+				rotationToReverseStupidHardCodedBladeAngle = Axis.ZP.rotation((float) Math.atan(1F / 3F));
+			}
+			float screwDensity = 30;
+			for(int j = 0; j < 1.5 * screwDensity; j++){
+				matrix.pushPose();
+				matrix.translate(0, (j - screwDensity / 2) / screwDensity - 0.5F + i * 2F / screwDensity, 0);
+				if(i == 1){
+					matrix.mulPose(rotationToReverseStupidHardCodedBladeAngle);
+				}
+				CRModels.drawTurbineBlade(vb, matrix, -1F / 16F, combinedLight, sprite);
+				matrix.popPose();
+				matrix.mulPose(rotation);
+			}
+
+			matrix.popPose();
 		}
-		CRModels.renderScrew(matrix, buffer, combinedLight);
 		matrix.popPose();
 
 		//Render the liquid
@@ -56,19 +93,21 @@ public class RotaryPumpRenderer implements BlockEntityRenderer<RotaryPumpTileEnt
 
 			int[] cols = {fCol.getRed(), fCol.getGreen(), fCol.getBlue(), fCol.getAlpha()};
 
-			float xSt = 3F / 16F;
-			float ySt = 0;
-			float zSt = 3F / 16F;
-			float xEn = 13F / 16F;
-			float yEn = 7F / 16F * te.getCompletion();
-			float zEn = 13F / 16F;
+			float xSt = 4F / 16F;
+			float ySt = -0.25F;
+			float zSt = 6F / 16F;
+			float xEn = 12F / 16F;
+			float yEn = (8F / 16F - ySt) * te.getCompletion() + ySt;
+			float zEn = 10F / 16F;
 			float uSt = lText.getU(xSt * 16);
 			float uEn = lText.getU(xEn * 16);
-			float vSt = lText.getV(16 - (ySt * 16));
-			float vEn = lText.getV(16 - (yEn * 16));
+			float vSt = lText.getV(16);
+			float vEn = lText.getV(16 - (yEn - ySt) * 16);
 
 			//Draw liquid layer
-			VertexConsumer builder = buffer.getBuffer(RenderType.translucentNoCrumbling());
+//			VertexConsumer builder = buffer.getBuffer(RenderType.translucentNoCrumbling());
+			//Not really sure why this works, but it lets the fluid be rendered through translucent models
+			VertexConsumer builder = buffer.getBuffer(CRRenderTypes.STABLE_TRANSLUCENT_TYPE);
 
 			CRRenderUtil.addVertexBlock(builder, matrix, xEn, ySt, zSt, uEn, vSt, 0, 0, -1, combinedLight, cols);
 			CRRenderUtil.addVertexBlock(builder, matrix, xSt, ySt, zSt, uSt, vSt, 0, 0, -1, combinedLight, cols);

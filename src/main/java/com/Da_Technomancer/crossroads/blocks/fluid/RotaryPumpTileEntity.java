@@ -25,6 +25,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
@@ -160,6 +161,13 @@ public class RotaryPumpTileEntity extends InventoryTE{
 			packet |= (long) Float.floatToIntBits((float) progress) << 32L;
 			CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient(1, packet, worldPosition));
 		}
+	}
+
+	private static final AABB RENDER_BOX = new AABB(0, -1, 0, 1, 1, 1);
+
+	@Override
+	public AABB getRenderBoundingBox(){
+		return RENDER_BOX.move(worldPosition);
 	}
 
 	public float getCompletion(){

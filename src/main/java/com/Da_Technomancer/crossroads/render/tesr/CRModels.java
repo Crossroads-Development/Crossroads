@@ -604,27 +604,6 @@ public class CRModels{
 	}
 
 	/**
-	 * Draws a vertical screw for pumps and turbines
-	 */
-	public static void renderScrew(PoseStack matrix, MultiBufferSource buffer, int light){
-		//Draw central axle
-		matrix.pushPose();
-		matrix.translate(0, 0.5D, 0);
-		drawAxle(matrix, buffer, light, new Color(160, 160, 160));
-		matrix.popPose();
-
-		TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(CRRenderTypes.CAST_IRON_TEXTURE);
-
-		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
-
-		Quaternionf rotation = Axis.YP.rotationDegrees(-90);
-		for(int i = 0; i < 8; i++){
-			drawTurbineBlade(vb, matrix, i / 16F, light, sprite);
-			matrix.mulPose(rotation);
-		}
-	}
-
-	/**
 	 * Draws a turbine blade. Does not bind the texture
 	 * Draws at a horizontal offset in the +x
 	 * @param builder A builder in BLOCK vertex format
