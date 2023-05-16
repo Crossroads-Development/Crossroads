@@ -1,6 +1,9 @@
 {
 	"variants": {
-		"": {
+		"active=false": {
+			"model": "crossroads:block/steam_turbine"
+		},
+		"active=true": {
 			"model": "crossroads:block/steam_turbine"
 		}
 	}

@@ -1,7 +1,11 @@
 package com.Da_Technomancer.crossroads.blocks.rotary;
 
 import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.ambient.particles.CRParticles;
+import com.Da_Technomancer.crossroads.ambient.particles.ColorParticleData;
+import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -23,6 +27,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
 import javax.annotation.Nullable;
+import java.awt.*;
 
 public class SteamTurbineTileEntity extends InventoryTE{
 
@@ -54,12 +59,14 @@ public class SteamTurbineTileEntity extends InventoryTE{
 		return INERTIA;
 	}
 
+	private static ColorParticleData steamParticle;
+
 	@Override
 	public void serverTick(){
 		super.serverTick();
-
+		int limit = 0;
 		if(!fluids[1].isEmpty()){
-			int limit = fluids[1].getAmount() / 100;
+			limit = fluids[1].getAmount() / 100;
 			limit = Math.min(limit, (CAPACITY - fluids[0].getAmount()) / 100);
 			limit = Math.min(limit, LIMIT);
 			if(limit != 0){
@@ -73,6 +80,24 @@ public class SteamTurbineTileEntity extends InventoryTE{
 					axleHandler.addEnergy(((double) limit) * .1D * (double) CRConfig.steamWorth.get() * CRConfig.jouleWorth.get(), true);
 				}
 			}
+		}
+
+		//Update blockstate
+		if(getBlockState().getValue(CRProperties.ACTIVE) != (limit > 0)){
+			level.setBlock(worldPosition, getBlockState().setValue(CRProperties.ACTIVE, limit > 0), MiscUtil.BLOCK_FLAGS_VISUAL);
+		}
+	}
+
+	@Override
+	public void clientTick(){
+		super.clientTick();
+
+		//Particles
+		if(level.getGameTime() % 4 == 0 && getBlockState().getValue(CRProperties.ACTIVE)){
+			if(steamParticle == null){
+				steamParticle = new ColorParticleData(CRParticles.COLOR_SOLID, Color.LIGHT_GRAY);
+			}
+			CRParticles.summonParticlesFromClient(level, steamParticle, 2, worldPosition.getX() + 0.5, worldPosition.getY() + 4F / 16, worldPosition.getZ() + 0.5, 0.1, 0, 0.1, 0, 0.06, 0, 0.01, 0.02, 0.01, true);
 		}
 	}
 

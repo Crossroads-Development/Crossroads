@@ -31,7 +31,7 @@ import java.util.List;
 
 public class RotaryPump extends BaseEntityBlock{
 
-	private static final VoxelShape SHAPE = Shapes.or(Shapes.joinUnoptimized(box(2, 0, 2, 14, 15, 14), box(3, 0, 3, 13, 7, 13), BooleanOp.ONLY_SECOND), box(6, 15, 6, 10, 16, 10), box(0, 5, 5, 16, 11, 11), box(5, 5, 0, 11, 11, 16));
+	private static final VoxelShape SHAPE = Shapes.or(box(3, 0, 5, 13, 5, 11), box(2, 5, 2, 14, 16, 14), box(0, 5, 5, 16, 11, 11), box(5, 5, 0, 11, 11, 16));
 
 	public RotaryPump(){
 		super(CRBlocks.getMetalProperty());
