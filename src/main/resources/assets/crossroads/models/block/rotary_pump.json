@@ -5,7 +5,7 @@
 		"particle": "crossroads:block/block_bronze_no_rivet",
 		"bronze": "crossroads:block/block_bronze_no_rivet",
 		"inner_valve": "crossroads:block/bronze_fluid",
-		"iron": "crossroads:block/block_cast_iron",
+		"iron": "block/iron_block",
 		"glass": "block/white_stained_glass",
 		"valve_base": "crossroads:block/valve",
 		"valve": "crossroads:block/valve"
