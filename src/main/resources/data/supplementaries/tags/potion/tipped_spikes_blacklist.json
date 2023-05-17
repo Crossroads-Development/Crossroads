@@ -1,0 +1,7 @@
+{
+	"replace": false,
+	"values": [
+		"crossroads:transient",
+		"crossroads:health_penalty"
+	]
+}
