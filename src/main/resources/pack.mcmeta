@@ -1,6 +1,6 @@
 {
     "pack": {
-        "description": "Crossroads resources",
-        "pack_format": 6
+        "description": "Crossroads resources and python scripts for 1.19 - 1.19.2",
+        "pack_format": 9
     }
 }
