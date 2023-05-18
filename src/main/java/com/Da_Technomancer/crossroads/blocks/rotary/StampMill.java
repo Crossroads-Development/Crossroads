@@ -50,7 +50,7 @@ public class StampMill extends BaseEntityBlock implements IReadable{
 	}
 
 	public StampMill(){
-		super(Properties.of(Material.WOOD).strength(1).sound(SoundType.METAL));
+		super(Properties.of(Material.WOOD).strength(1).sound(SoundType.METAL).noOcclusion());
 		String name = "stamp_mill";
 		CRBlocks.queueForRegister(name, this);
 	}
