@@ -1,11 +1,14 @@
 package com.Da_Technomancer.crossroads.blocks.fluid;
 
+import com.Da_Technomancer.crossroads.ambient.particles.CRParticles;
 import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.blocks.heat.RedstoneHeatCableTileEntity;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.util.RandomSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -86,6 +89,13 @@ public class RedstoneFluidTube extends FluidTube{
 		boolean statePowered = state.getValue(CRProperties.REDSTONE_BOOL);
 		if(isPowered != statePowered){
 			worldIn.setBlockAndUpdate(pos, state.setValue(CRProperties.REDSTONE_BOOL, isPowered));
+		}
+	}
+
+	@Override
+	public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random){
+		if(state.getValue(CRProperties.REDSTONE_BOOL)){
+			CRParticles.summonParticlesFromClient(level, DustParticleOptions.REDSTONE, 1, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, 0.4, 0.4, 0.4, 0, 0, 0, 0, 0, 0, false);
 		}
 	}
 
