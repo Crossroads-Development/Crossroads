@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.gui.screen;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.api.CircuitUtil;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
+import com.Da_Technomancer.crossroads.api.templates.WidgetUtil;
 import com.Da_Technomancer.crossroads.blocks.technomancy.SequenceBoxTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.SequenceBoxContainer;
 import com.Da_Technomancer.essentials.Essentials;
@@ -48,21 +49,14 @@ public class SequenceBoxScreen extends AbstractContainerScreen<SequenceBoxContai
 		for(int i = 0; i < inputBars.length; i++){
 			inputBars[i] = CircuitUtil.createFormulaInputUIComponent(this, font, 24, 24 + 18 * i, Component.literal(""), this::entryChanged, menu.inputs.size() > i ? menu.inputs.get(i) : "");
 			inputBars[i].setCanLoseFocus(true);
-			addWidget(inputBars[i]);
+			addRenderableWidget(inputBars[i]);
 		}
 		shiftingUI = false;
 	}
 
 	@Override
 	public void resize(Minecraft minecraft, int width, int height){
-		String[] text = new String[inputBars.length];
-		for(int i = 0; i < inputBars.length; i++){
-			text[i] = inputBars[i].getValue();
-		}
-		init(minecraft, width, height);
-		for(int i = 0; i < inputBars.length; i++){
-			inputBars[i].setValue(text[i]);
-		}
+		WidgetUtil.resize(this, minecraft, width, height);
 	}
 
 
@@ -96,10 +90,7 @@ public class SequenceBoxScreen extends AbstractContainerScreen<SequenceBoxContai
 		renderBackground(matrix);
 		super.render(matrix, mouseX, mouseY, partialTicks);
 //		RenderSystem.disableLighting();
-		RenderSystem.disableBlend();
-		for(EditBox bar : inputBars){
-			bar.render(matrix, mouseX, mouseY, partialTicks);
-		}
+//		RenderSystem.disableBlend();
 	}
 
 	private void moveToIndex(int newTopIndex){
@@ -174,12 +165,7 @@ public class SequenceBoxScreen extends AbstractContainerScreen<SequenceBoxContai
 			menu.outputIndex = Math.min(getSelection() + topIndex, menu.inputs.size() - 1);
 			updateTEWithPacket();
 		}else{
-			for(EditBox bar : inputBars){
-				if(bar.keyPressed(keyCode, scanCode, modifiers) || bar.canConsumeInput()){
-					return true;
-				}
-			}
-			return super.keyPressed(keyCode, scanCode, modifiers);
+			return WidgetUtil.keyPressed(keyCode, scanCode, modifiers, inputBars) || super.keyPressed(keyCode, scanCode, modifiers);
 		}
 
 		return true;
@@ -193,7 +179,7 @@ public class SequenceBoxScreen extends AbstractContainerScreen<SequenceBoxContai
 
 			for(int barIndex = inputBars.length - 1; barIndex >= 0; barIndex--){
 				int inputIndex = barIndex + topIndex;
-				if(inputIndex + 1 >= SequenceBoxTileEntity.MAX_VALUES){
+				if(inputIndex + 1 > SequenceBoxTileEntity.MAX_VALUES){
 					continue;//Should never happen
 				}
 				String barContents = inputBars[barIndex].getValue();

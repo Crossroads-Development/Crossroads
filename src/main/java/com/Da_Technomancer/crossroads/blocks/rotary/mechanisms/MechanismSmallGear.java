@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.rotary.mechanisms;
 
 import com.Da_Technomancer.crossroads.api.Capabilities;
-import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.api.MathUtil;
 import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.api.rotary.*;
 import com.Da_Technomancer.crossroads.items.CRItems;
@@ -44,7 +44,7 @@ public class MechanismSmallGear implements IMechanism<GearFactory.GearMaterial>{
 		// assume each gear is 1/8 of a cubic meter and has a radius of 1/2 meter.
 		// mass is rounded to make things nicer for everyone
 		if(mat instanceof GearFactory.GearMaterial){
-			return MiscUtil.preciseRound(0.125D * ((GearFactory.GearMaterial) mat).getDensity() / 8, 3);// .125 because r*r/2 so .5*.5/2
+			return MathUtil.preciseRound(0.125D * ((GearFactory.GearMaterial) mat).getDensity() / 8, 3);// .125 because r*r/2 so .5*.5/2
 		}else{
 			return 0;
 		}

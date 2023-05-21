@@ -2,14 +2,15 @@ package com.Da_Technomancer.crossroads.blocks.rotary;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.CRProperties;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
+import com.Da_Technomancer.essentials.api.ConfigUtil;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -72,9 +73,13 @@ public class SteamTurbine extends BaseEntityBlock{
 
 	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
-		BlockEntity te;
-		if(!worldIn.isClientSide && (te = worldIn.getBlockEntity(pos)) instanceof MenuProvider){
-			NetworkHooks.openScreen((ServerPlayer) playerIn, (MenuProvider) te, pos);
+		if(!worldIn.isClientSide && worldIn.getBlockEntity(pos) instanceof SteamTurbineTileEntity rte){
+			if(ConfigUtil.isWrench(playerIn.getItemInHand(hand))){
+				int mode = rte.cycleMode();
+				MiscUtil.displayMessage(playerIn, Component.translatable("tt.crossroads.steam_turbine.setting", SteamTurbineTileEntity.TIERS[mode]));
+			}else{
+				NetworkHooks.openScreen((ServerPlayer) playerIn, rte, rte::encodeBuf);
+			}
 		}
 		return InteractionResult.SUCCESS;
 	}
@@ -87,8 +92,9 @@ public class SteamTurbine extends BaseEntityBlock{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
-		tooltip.add(Component.translatable("tt.crossroads.steam_turbine.input", 100 * SteamTurbineTileEntity.LIMIT));
-		tooltip.add(Component.translatable("tt.crossroads.steam_turbine.output", ((double) SteamTurbineTileEntity.LIMIT) * 0.1D * (double) CRConfig.steamWorth.get() * CRConfig.jouleWorth.get()));
+		tooltip.add(Component.translatable("tt.crossroads.steam_turbine.desc"));
+		tooltip.add(Component.translatable("tt.crossroads.steam_turbine.tier", 100 * (double) CRConfig.steamWorth.get() / 1000 * CRConfig.jouleWorth.get(), 100, SteamTurbineTileEntity.TIERS[SteamTurbineTileEntity.TIERS.length - 1]));
 		tooltip.add(Component.translatable("tt.crossroads.boilerplate.inertia", SteamTurbineTileEntity.INERTIA));
+
 	}
 }

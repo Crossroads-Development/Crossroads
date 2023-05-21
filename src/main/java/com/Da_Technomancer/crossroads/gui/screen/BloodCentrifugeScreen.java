@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.gui.screen;
 
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.api.MathUtil;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.templates.MachineScreen;
 import com.Da_Technomancer.crossroads.blocks.witchcraft.BloodCentrifugeTileEntity;
@@ -32,7 +33,7 @@ public class BloodCentrifugeScreen extends MachineScreen<BloodCentrifugeContaine
 	protected void renderLabels(PoseStack matrix, int mouseX, int mouseY){
 		super.renderLabels(matrix, mouseX, mouseY);
 
-		String s = MiscUtil.localize("container.crossroads.blood_centrifuge.target", MiscUtil.preciseRound(BloodCentrifugeTileEntity.getTargetSpeed(menu.progRef.get()), 1));
+		String s = MiscUtil.localize("container.crossroads.blood_centrifuge.target", MathUtil.preciseRound(BloodCentrifugeTileEntity.getTargetSpeed(menu.progRef.get()), 1));
 		font.draw(matrix, s, imageWidth - 8 - font.width(s), 18, 0x404040);
 	}
 }

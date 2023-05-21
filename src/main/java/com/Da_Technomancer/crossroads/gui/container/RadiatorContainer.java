@@ -20,6 +20,9 @@ public class RadiatorContainer extends MachineContainer<RadiatorTileEntity>{
 		super(TYPE, id, playerInv, buf);
 		mode = new IntDeferredRef(te::getMode, te.getLevel().isClientSide);
 		addDataSlot(mode);
+		if(te.getLevel().isClientSide){
+			mode.set(buf.readByte());
+		}
 	}
 
 	@Override

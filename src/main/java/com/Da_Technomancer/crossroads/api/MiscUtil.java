@@ -50,38 +50,6 @@ public final class MiscUtil{
 	public static final int BLOCK_FLAGS_VISUAL = BLOCK_FLAG_SYNC_TO_CLIENT | BLOCK_FLAG_SUPPRESS_OBSERVERS;
 
 	/**
-	 * Rounds to a set number of decimal places
-	 * @param numIn The value to round
-	 * @param decPlac The number of decimal places to round to
-	 * @return The rounded value
-	 */
-	public static double preciseRound(double numIn, int decPlac){
-		return Math.round(numIn * Math.pow(10, decPlac)) / Math.pow(10D, decPlac);
-	}
-
-	/**
-	 * The same as Math.round except if the decimal
-	 * is exactly .5 then it rounds down.
-	 *
-	 * This is for systems that require rounding and
-	 * NEED the distribution of output to not be higher than
-	 * the input to prevent dupe bugs.
-	 * @param in The value to round
-	 * @return The rounded value
-	 */
-	public static int safeRound(double in){
-		if(in % 1 <= .5D){
-			return (int) Math.floor(in);
-		}else{
-			return (int) Math.ceil(in);
-		}
-	}
-
-	public static float clockModulus(float a, float b){
-		return ((a % b) + b) % b;
-	}
-
-	/**
 	 * A server-side friendly version of Entity.class' raytrace (currently called Entity#pick(double, float, boolean))
 	 */
 	public static BlockHitResult rayTrace(Entity ent, double blockReachDistance){

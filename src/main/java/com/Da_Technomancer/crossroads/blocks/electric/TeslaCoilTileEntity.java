@@ -2,13 +2,13 @@ package com.Da_Technomancer.crossroads.blocks.electric;
 
 import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
-import com.Da_Technomancer.crossroads.api.packets.IIntReceiver;
-import com.Da_Technomancer.crossroads.api.packets.SendIntToClient;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.LeydenJar;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.packets.ILongReceiver;
+import com.Da_Technomancer.essentials.api.packets.SendLongToClient;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -25,7 +25,7 @@ import net.minecraftforge.energy.IEnergyStorage;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class TeslaCoilTileEntity extends BlockEntity implements ITickableTileEntity, IIntReceiver{
+public class TeslaCoilTileEntity extends BlockEntity implements ITickableTileEntity, ILongReceiver{
 
 	public static final BlockEntityType<TeslaCoilTileEntity> TYPE = CRTileEntity.createType(TeslaCoilTileEntity::new, CRBlocks.teslaCoil);
 
@@ -49,7 +49,7 @@ public class TeslaCoilTileEntity extends BlockEntity implements ITickableTileEnt
 			message |= 1;
 		}
 		message |= stored << 1;
-		CRPackets.sendPacketAround(level, worldPosition, new SendIntToClient((byte) 0, message, worldPosition));
+		CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient((byte) 0, message, worldPosition));
 	}
 
 	public void setStored(int storedIn){
@@ -70,10 +70,10 @@ public class TeslaCoilTileEntity extends BlockEntity implements ITickableTileEnt
 	}
 
 	@Override
-	public void receiveInt(byte identifier, int message, @Nullable ServerPlayer sendingPlayer){
+	public void receiveLong(byte identifier, long message, @Nullable ServerPlayer sendingPlayer){
 		if(identifier == 0){
 			redstone = (message & 1) == 1;
-			stored = message >>> 1;
+			stored = (int) (message >>> 1);
 		}
 	}
 
@@ -178,7 +178,7 @@ public class TeslaCoilTileEntity extends BlockEntity implements ITickableTileEnt
 	@SuppressWarnings("unchecked")
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 		if(cap == CapabilityEnergy.ENERGY){
-			return (LazyOptional<T>) (side == level.getBlockState(worldPosition).getValue(CRProperties.HORIZ_FACING) ? optOut : optIn);
+			return (LazyOptional<T>) (side == getBlockState().getValue(CRProperties.HORIZ_FACING) ? optOut : optIn);
 		}
 		return super.getCapability(cap, side);
 	}

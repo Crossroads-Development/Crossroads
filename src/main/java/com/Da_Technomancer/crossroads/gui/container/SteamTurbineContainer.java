@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.gui.container;
 import com.Da_Technomancer.crossroads.api.templates.MachineContainer;
 import com.Da_Technomancer.crossroads.blocks.rotary.SteamTurbineTileEntity;
 import com.Da_Technomancer.essentials.api.FluidSlotManager;
+import com.Da_Technomancer.essentials.api.IntDeferredRef;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
@@ -13,8 +14,15 @@ public class SteamTurbineContainer extends MachineContainer<SteamTurbineTileEnti
 
 	protected static final MenuType<SteamTurbineContainer> TYPE = CRContainers.createConType(SteamTurbineContainer::new);
 
+	public final IntDeferredRef mode;
+
 	public SteamTurbineContainer(int id, Inventory playerInv, FriendlyByteBuf buf){
 		super(TYPE, id, playerInv, buf);
+		mode = new IntDeferredRef(te::getMode, te.getLevel().isClientSide);
+		addDataSlot(mode);
+		if(te.getLevel().isClientSide){
+			mode.set(buf.readByte());
+		}
 	}
 
 	@Override
