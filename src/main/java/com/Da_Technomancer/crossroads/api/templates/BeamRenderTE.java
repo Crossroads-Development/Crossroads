@@ -5,9 +5,9 @@ import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
 import com.Da_Technomancer.crossroads.api.Capabilities;
 import com.Da_Technomancer.crossroads.api.beams.*;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
-import com.Da_Technomancer.crossroads.api.packets.IIntReceiver;
-import com.Da_Technomancer.crossroads.api.packets.SendIntToClient;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.packets.ILongReceiver;
+import com.Da_Technomancer.essentials.api.packets.SendLongToClient;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -22,7 +22,7 @@ import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 
-public abstract class BeamRenderTE extends BlockEntity implements IBeamRenderTE, ITickableTileEntity, IIntReceiver{
+public abstract class BeamRenderTE extends BlockEntity implements IBeamRenderTE, ITickableTileEntity, ILongReceiver{
 
 	protected int[] beamPackets = new int[6];
 	private BeamHelper[] beamer;
@@ -84,7 +84,7 @@ public abstract class BeamRenderTE extends BlockEntity implements IBeamRenderTE,
 		int packet = beamer == null || beamer[index] == null ? 0 : beamer[index].genPacket();
 		beamPackets[index] = packet;
 		if(!level.isClientSide){
-			CRPackets.sendPacketAround(level, worldPosition, new SendIntToClient((byte) index, packet, worldPosition));
+			CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient(index, packet, worldPosition));
 		}
 		if(beamer != null && beamer[index] != null && !beamer[index].getLastSent().isEmpty()){
 			prevMag[index] = beamer[index].getLastSent();
@@ -146,9 +146,9 @@ public abstract class BeamRenderTE extends BlockEntity implements IBeamRenderTE,
 	protected abstract void doEmit(@Nonnull BeamUnit toEmit);
 
 	@Override
-	public void receiveInt(byte identifier, int message, ServerPlayer player){
+	public void receiveLong(byte identifier, long message, ServerPlayer player){
 		if(identifier < 6 && identifier >= 0){
-			beamPackets[identifier] = message;
+			beamPackets[identifier] = (int) message;
 		}
 	}
 

@@ -2,8 +2,12 @@ package com.Da_Technomancer.crossroads.gui.screen;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.api.MathUtil;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.api.packets.CRPackets;
+import com.Da_Technomancer.crossroads.api.packets.SendLongToServer;
 import com.Da_Technomancer.crossroads.api.templates.MachineScreen;
+import com.Da_Technomancer.crossroads.api.templates.WidgetUtil;
 import com.Da_Technomancer.crossroads.blocks.fluid.RadiatorTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.RadiatorContainer;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -11,10 +15,15 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraftforge.client.gui.widget.ExtendedButton;
 
 public class RadiatorScreen extends MachineScreen<RadiatorContainer, RadiatorTileEntity>{
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/gui/container/radiator_gui.png");
+
+	private ExtendedButton upButton;
+	private ExtendedButton downButton;
+	private WidgetUtil.SettingAdjustListener listener;
 
 	public RadiatorScreen(RadiatorContainer cont, Inventory playerInv, Component name){
 		super(cont, playerInv, name);
@@ -25,6 +34,23 @@ public class RadiatorScreen extends MachineScreen<RadiatorContainer, RadiatorTil
 		super.init();
 		initFluidManager(0, 10, 70);
 		initFluidManager(1, 70, 70);
+		upButton = new ExtendedButton(getGuiLeft() + imageWidth - 40, getGuiTop() + 18, 16, 16, Component.literal("˄"), button -> adjustMode(1));
+		downButton = new ExtendedButton(getGuiLeft() + imageWidth - 40, getGuiTop() + 54, 16, 16, Component.literal("˅"), button -> adjustMode(-1));
+		addRenderableWidget(upButton);
+		addRenderableWidget(downButton);
+		listener = new WidgetUtil.SettingAdjustListener(0, 0, RadiatorTileEntity.TIERS.length - 1, downButton, upButton);
+		menu.addSlotListener(listener);
+		listener.updateButtons(menu.mode.get());
+	}
+
+	private void adjustMode(int change){
+		int newMode = menu.mode.get() + change;
+		newMode = MathUtil.clamp(newMode, 0, RadiatorTileEntity.TIERS.length - 1);
+		menu.mode.set(newMode);
+		listener.updateButtons(newMode);
+		if(te != null){
+			CRPackets.channel.sendToServer(new SendLongToServer(5, newMode, te.getBlockPos()));
+		}
 	}
 
 	@Override
@@ -43,7 +69,9 @@ public class RadiatorScreen extends MachineScreen<RadiatorContainer, RadiatorTil
 		//Render a label for heat production rate
 		if(menu.mode != null){
 			String s = MiscUtil.localize("tt.crossroads.radiator.yield", RadiatorTileEntity.TIERS[menu.mode.get()] * CRConfig.steamWorth.get() / 1000);
-			font.draw(matrix, s, imageWidth - 8 - font.width(s), 16, 0x404040);
+			font.draw(matrix, s, imageWidth - 32 - font.width(s) / 2, 36, 0x404040);
+			s = MiscUtil.localize("tt.crossroads.boilerplate.fluid_rate", RadiatorTileEntity.TIERS[menu.mode.get()]);
+			font.draw(matrix, s, imageWidth - 32 - font.width(s) / 2, 44, 0x404040);
 		}
 	}
 }

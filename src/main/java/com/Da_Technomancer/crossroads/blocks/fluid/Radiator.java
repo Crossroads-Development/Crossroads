@@ -56,9 +56,9 @@ public class Radiator extends BaseEntityBlock{
 		if(!worldIn.isClientSide && worldIn.getBlockEntity(pos) instanceof RadiatorTileEntity rte){
 			if(ConfigUtil.isWrench(playerIn.getItemInHand(hand))){
 				int mode = rte.cycleMode();
-				MiscUtil.displayMessage(playerIn, Component.translatable("tt.crossroads.radiator.setting", RadiatorTileEntity.TIERS[mode] * CRConfig.steamWorth.get() / 1000));
+				MiscUtil.displayMessage(playerIn, Component.translatable("tt.crossroads.radiator.setting", RadiatorTileEntity.TIERS[mode]));
 			}else{
-				NetworkHooks.openScreen((ServerPlayer) playerIn, rte, pos);
+				NetworkHooks.openScreen((ServerPlayer) playerIn, rte, rte::encodeBuf);
 			}
 		}
 		return InteractionResult.SUCCESS;
@@ -67,8 +67,6 @@ public class Radiator extends BaseEntityBlock{
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
 		tooltip.add(Component.translatable("tt.crossroads.radiator.desc"));
-		for(int i = 0; i < RadiatorTileEntity.TIERS.length; i++){
-			tooltip.add(Component.translatable("tt.crossroads.radiator.tier", RadiatorTileEntity.TIERS[i] * (double) CRConfig.steamWorth.get() / 1000, RadiatorTileEntity.TIERS[i]));
-		}
+		tooltip.add(Component.translatable("tt.crossroads.radiator.tier", 100 * (double) CRConfig.steamWorth.get() / 1000, 100, RadiatorTileEntity.TIERS[RadiatorTileEntity.TIERS.length - 1]));
 	}
 }

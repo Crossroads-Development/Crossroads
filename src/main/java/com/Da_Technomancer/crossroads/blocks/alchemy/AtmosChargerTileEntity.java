@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.api.MathUtil;
 import com.Da_Technomancer.crossroads.api.alchemy.AtmosChargeSavedData;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
@@ -71,7 +71,7 @@ public class AtmosChargerTileEntity extends BlockEntity implements ITickableTile
 	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
 		if(player.level instanceof ServerLevel){
 			int charge = AtmosChargeSavedData.getCharge((ServerLevel) player.level);
-			chat.add(Component.translatable("tt.crossroads.atmos_charger.reading", charge, AtmosChargeSavedData.getCapacity(), MiscUtil.preciseRound(100D * charge / AtmosChargeSavedData.getCapacity(), 1)));
+			chat.add(Component.translatable("tt.crossroads.atmos_charger.reading", charge, AtmosChargeSavedData.getCapacity(), MathUtil.preciseRound(100D * charge / AtmosChargeSavedData.getCapacity(), 1)));
 		}
 	}
 

@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.blocks.rotary;
 
 import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.Capabilities;
-import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.api.MathUtil;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.crossroads.api.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
@@ -82,7 +82,7 @@ public class LargeGearMasterTileEntity extends BlockEntity implements ILongRecei
 			newTE = true;
 		}
 
-		inertia = type == null ? 0 : MiscUtil.preciseRound(type.getDensity() * 1.125D * 9D / 8D, 2);//1.125 because r*r/2 so 1.5*1.5/2
+		inertia = type == null ? 0 : MathUtil.preciseRound(type.getDensity() * 1.125D * 9D / 8D, 2);//1.125 because r*r/2 so 1.5*1.5/2
 	}
 
 	public CRMaterialLibrary.GearMaterial getMember(){
@@ -136,7 +136,7 @@ public class LargeGearMasterTileEntity extends BlockEntity implements ILongRecei
 		energy = nbt.getDouble("[1]mot");
 		// member
 		type = CRMaterialLibrary.findMaterial(nbt.getString("type"));
-		inertia = type == null ? 0 : MiscUtil.preciseRound(type.getDensity() * 1.125D * 9D / 8D, 3);
+		inertia = type == null ? 0 : MathUtil.preciseRound(type.getDensity() * 1.125D * 9D / 8D, 3);
 		//1.125 because r*r/2 so 1.5*1.5/2
 
 		angleW[0] = nbt.getFloat("angle");

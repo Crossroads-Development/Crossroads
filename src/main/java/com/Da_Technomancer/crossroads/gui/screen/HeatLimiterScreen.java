@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.gui.screen;
 
 import com.Da_Technomancer.crossroads.api.CircuitUtil;
+import com.Da_Technomancer.crossroads.api.templates.WidgetUtil;
 import com.Da_Technomancer.crossroads.gui.container.HeatLimiterContainer;
 import com.Da_Technomancer.essentials.Essentials;
 import com.Da_Technomancer.essentials.api.packets.EssentialsPackets;
@@ -31,7 +32,7 @@ public class HeatLimiterScreen extends AbstractContainerScreen<HeatLimiterContai
 	protected void init(){
 		super.init();
 		searchBar = CircuitUtil.createFormulaInputUIComponent(this, font, 4, 8, Component.translatable("container.search_bar"), this::entryChanged, menu.conf);
-		addWidget(searchBar);
+		addRenderableWidget(searchBar);
 		setInitialFocus(searchBar);
 	}
 
@@ -48,7 +49,7 @@ public class HeatLimiterScreen extends AbstractContainerScreen<HeatLimiterContai
 			minecraft.player.closeContainer();
 		}
 
-		return searchBar.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_) || searchBar.canConsumeInput() || super.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_);
+		return WidgetUtil.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_, searchBar) || super.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_);
 	}
 
 	@Override
@@ -57,7 +58,6 @@ public class HeatLimiterScreen extends AbstractContainerScreen<HeatLimiterContai
 		super.render(matrix, mouseX, mouseY, partialTicks);
 //		RenderSystem.disableLighting();
 		RenderSystem.disableBlend();
-		searchBar.render(matrix, mouseX, mouseY, partialTicks);
 	}
 
 	@Override

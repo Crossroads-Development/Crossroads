@@ -8,10 +8,13 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.RadiatorContainer;
+import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -57,6 +60,15 @@ public class RadiatorTileEntity extends InventoryTE{
 		mode = (mode + 1) % TIERS.length;
 		setChanged();
 		return mode;
+	}
+
+	@Override
+	public void receiveLong(byte identifier, long message, @Nullable ServerPlayer sendingPlayer){
+		super.receiveLong(identifier, message, sendingPlayer);
+		if(identifier == 5 && message >= 0 && message < TIERS.length){
+			mode = (int) message;
+			setChanged();
+		}
 	}
 
 	@Override
@@ -108,10 +120,17 @@ public class RadiatorTileEntity extends InventoryTE{
 		return Component.translatable("container.radiator");
 	}
 
+	public void encodeBuf(FriendlyByteBuf buf){
+		buf.writeBlockPos(worldPosition);
+		buf.writeByte(mode);
+	}
+
 	@Nullable
 	@Override
 	public AbstractContainerMenu createMenu(int id, Inventory playerInventory, Player playerEntity){
-		return new RadiatorContainer(id, playerInventory, createContainerBuf());
+		FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+		encodeBuf(buf);
+		return new RadiatorContainer(id, playerInventory, buf);
 	}
 
 	@Override

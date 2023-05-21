@@ -43,17 +43,17 @@ public class CRPackets{
 		PacketManager.addCodec(GlobalPos.class, (val, buf) -> buf.writeGlobalPos((GlobalPos) val), FriendlyByteBuf::readGlobalPos);
 		PacketManager.addCodec(UUID.class, (val, buf) -> buf.writeUUID((UUID) val), FriendlyByteBuf::readUUID);
 
-		registerPacket(SendIntToClient.class);
-		registerPacket(SendStringToClient.class);
-		registerPacket(SendDoubleToClient.class);
+//		registerPacket(SendIntToClient.class);
+//		registerPacket(SendStringToClient.class);
+//		registerPacket(SendDoubleToClient.class);
 //		registerPacket(StoreNBTToClient.class);
 		registerPacket(SendChatToClient.class);
 		registerPacket(SendBeamItemToServer.class);
 //		registerPacket(SendDimLoadToClient.class);
-		registerPacket(SendDoubleToServer.class);
-		registerPacket(SendIntToServer.class);
+//		registerPacket(SendDoubleToServer.class);
+//		registerPacket(SendIntToServer.class);
 //		registerPacket(SendLogToClient.class);
-		registerPacket(SendStringToServer.class);
+//		registerPacket(SendStringToServer.class);
 //		registerPacket(SendNBTToClient.class);
 		registerPacket(SendPlayerTickCountToClient.class);
 //		registerPacket(SendDoubleArrayToServer.class);
@@ -71,6 +71,7 @@ public class CRPackets{
 		registerPacket(SendIntArrayToClient.class);
 		registerPacket(CreateParticlesOnClient.class);
 		registerPacket(SendCompassTargetToClient.class);
+		registerPacket(SendLongToServer.class);
 	}
 
 	private static <T extends Packet> void registerPacket(Class<T> clazz){

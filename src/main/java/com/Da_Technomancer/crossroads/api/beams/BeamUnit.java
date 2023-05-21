@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.api.beams;
 
-import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.api.MathUtil;
 import net.minecraft.nbt.CompoundTag;
 
 import javax.annotation.Nonnull;
@@ -112,7 +112,7 @@ public class BeamUnit{
 	}
 
 	public BeamUnit mult(double e, double p, double s, double v, boolean floor){
-		return floor ? new BeamUnit((int) Math.floor(e * (double) contents[0]), (int) Math.floor(p * (double) contents[1]), (int) Math.floor(s * (double) contents[2]), (int) Math.floor(v * (double) contents[3])) : new BeamUnit(MiscUtil.safeRound(e * (double) contents[0]), MiscUtil.safeRound(p * (double) contents[1]), MiscUtil.safeRound(s * (double) contents[2]), MiscUtil.safeRound(v * (double) contents[3]));
+		return floor ? new BeamUnit((int) Math.floor(e * (double) contents[0]), (int) Math.floor(p * (double) contents[1]), (int) Math.floor(s * (double) contents[2]), (int) Math.floor(v * (double) contents[3])) : new BeamUnit(MathUtil.safeRound(e * (double) contents[0]), MathUtil.safeRound(p * (double) contents[1]), MathUtil.safeRound(s * (double) contents[2]), MathUtil.safeRound(v * (double) contents[3]));
 	}
 
 	@Override

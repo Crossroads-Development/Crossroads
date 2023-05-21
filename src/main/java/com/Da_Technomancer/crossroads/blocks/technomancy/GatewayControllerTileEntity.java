@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.blocks.technomancy;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.MathUtil;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.api.beams.EnumBeamAlignments;
@@ -474,7 +475,7 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 	private static float calcAngleChange(float target, float current){
 		final float pi2 = (float) Math.PI * 2F;
 		//Due to circular path, the two routes to the target need to be compared, and the shortest taken
-		float angleChange = MiscUtil.clockModulus(target, pi2) - MiscUtil.clockModulus(current, pi2);
+		float angleChange = MathUtil.clockModulus(target, pi2) - MathUtil.clockModulus(current, pi2);
 		if(angleChange > Math.PI || angleChange < -Math.PI){
 			if(angleChange > 0){
 				angleChange -= pi2;

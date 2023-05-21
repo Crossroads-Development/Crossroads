@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.MathUtil;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.crossroads.api.rotary.IAxisHandler;
@@ -54,11 +55,11 @@ public abstract class AbstractCannonTileEntity extends BlockEntity implements IT
 	@Override
 	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
 		if(locked){
-			chat.add(Component.translatable("tt.crossroads.beam_cannon.base.angle.lock", MiscUtil.preciseRound(angle[0], 3)));
-			chat.add(Component.translatable("tt.crossroads.beam_cannon.side.angle.lock", MiscUtil.preciseRound(angle[1], 3)));
+			chat.add(Component.translatable("tt.crossroads.beam_cannon.base.angle.lock", MathUtil.preciseRound(angle[0], 3)));
+			chat.add(Component.translatable("tt.crossroads.beam_cannon.side.angle.lock", MathUtil.preciseRound(angle[1], 3)));
 		}else{
-			chat.add(Component.translatable("tt.crossroads.beam_cannon.base.angle", MiscUtil.preciseRound(angle[0], 3), MiscUtil.preciseRound(MiscUtil.clockModulus((float) baseAxleHandler.getSpeed(), (float) Math.PI * 2F), 3)));
-			chat.add(Component.translatable("tt.crossroads.beam_cannon.side.angle", MiscUtil.preciseRound(angle[1], 3), MiscUtil.preciseRound(Mth.clamp(sideAxleHandler.getSpeed(), -Math.PI / 2F, Math.PI / 2F), 3)));
+			chat.add(Component.translatable("tt.crossroads.beam_cannon.base.angle", MathUtil.preciseRound(angle[0], 3), MathUtil.preciseRound(MathUtil.clockModulus((float) baseAxleHandler.getSpeed(), (float) Math.PI * 2F), 3)));
+			chat.add(Component.translatable("tt.crossroads.beam_cannon.side.angle", MathUtil.preciseRound(angle[1], 3), MathUtil.preciseRound(Mth.clamp(sideAxleHandler.getSpeed(), -Math.PI / 2F, Math.PI / 2F), 3)));
 		}
 		RotaryUtil.addRotaryInfo(chat, baseAxleHandler, true);
 		RotaryUtil.addRotaryInfo(chat, sideAxleHandler, true);
@@ -124,7 +125,7 @@ public abstract class AbstractCannonTileEntity extends BlockEntity implements IT
 		final float pi2 = (float) Math.PI * 2F;
 		float angleChange;
 		if(allowLooping){
-			angleChange = MiscUtil.clockModulus(target, pi2) - MiscUtil.clockModulus(current, pi2);
+			angleChange = MathUtil.clockModulus(target, pi2) - MathUtil.clockModulus(current, pi2);
 			//Due to circular path, the two routes to the target need to be compared, and the shortest taken
 			if(angleChange > Math.PI || angleChange < -Math.PI){
 				if(angleChange > 0){
