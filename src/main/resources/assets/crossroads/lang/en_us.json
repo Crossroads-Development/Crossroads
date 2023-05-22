@@ -506,7 +506,7 @@
 	"tt.crossroads.radiator.tier": "Produces %1$d°C/t and %2$dmB/t distilled water per %2$dmB/t of steam, up to %3$dmB/t",
 	"tt.crossroads.radiator.yield": "+%1$d°C/t",
 	"tt.crossroads.radiator.setting": "Set to consume %1$dmB/t",
-	"tt.crossroads.pump.desc": "Pumps the liquid source directly under it",
+	"tt.crossroads.pump.desc": "Picks up or places a liquid source directly underneath based on spin direction",
 	"tt.crossroads.pump.energy_use": "Consumes: %1$d J/bucket pumped",
 	"tt.crossroads.pump.power": "Consumes: (%1$d * speed) J/t while running",
 	"tt.crossroads.steam_boiler.tier": "Boils %2$dmB/t of water using %3$d°C/t when above %1$d°C",

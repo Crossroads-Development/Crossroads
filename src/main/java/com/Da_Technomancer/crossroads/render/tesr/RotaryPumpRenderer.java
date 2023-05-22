@@ -6,7 +6,6 @@ import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.blocks.fluid.RotaryPumpTileEntity;
 import com.Da_Technomancer.crossroads.items.item_sets.GearFactory;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -16,12 +15,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
 
 import java.awt.*;
 
@@ -77,32 +71,38 @@ public class RotaryPumpRenderer implements BlockEntityRenderer<RotaryPumpTileEnt
 		matrix.popPose();
 
 		//Render the liquid
-		if(te.getCompletion() != 0){
-			BlockPos fPos = te.getBlockPos().relative(Direction.DOWN);
-			FluidStack pumpedFluid = RotaryPumpTileEntity.getFluidFromBlock(te.getLevel().getBlockState(fPos), te.getLevel(), fPos);
-			TextureAtlasSprite lText;
-			Color fCol;
-			if(!pumpedFluid.isEmpty()){
-				IClientFluidTypeExtensions renderProps = IClientFluidTypeExtensions.of(pumpedFluid.getFluid());
-				ResourceLocation textLoc = renderProps.getStillTexture();
-				lText = CRRenderUtil.getTextureSprite(textLoc);
-				fCol = new Color(renderProps.getTintColor(te.getLevel().getFluidState(fPos), te.getLevel(), fPos));
-			}else{
-				return;
-			}
+		float completion = te.getCompletion(partialTicks);
+		if(completion != 0 && te.getActiveTexture() != null){
+			TextureAtlasSprite lText = CRRenderUtil.getTextureSprite(te.getActiveTexture());
+			Color fCol = te.getCol();
 
 			int[] cols = {fCol.getRed(), fCol.getGreen(), fCol.getBlue(), fCol.getAlpha()};
 
 			float xSt = 4F / 16F;
-			float ySt = -0.25F;
+			float ySt;
 			float zSt = 6F / 16F;
 			float xEn = 12F / 16F;
-			float yEn = (8F / 16F - ySt) * te.getCompletion() + ySt;
+			float yEn;
 			float zEn = 10F / 16F;
 			float uSt = lText.getU(xSt * 16);
 			float uEn = lText.getU(xEn * 16);
-			float vSt = lText.getV(16);
-			float vEn = lText.getV(16 - (yEn - ySt) * 16);
+			float vSt;
+			float vEn;
+			if(completion > 0){
+				//Pumping up
+				ySt = -0.25F;
+				yEn = (8F / 16F - ySt) * completion + ySt;
+				vSt = lText.getV(16);
+				vEn = lText.getV(16 - (yEn - ySt) * 16);
+			}else{
+				//Pumping down
+				completion = -completion;//Now ranges from 0 to +1
+				yEn = 8F / 16F;
+				ySt = (-0.25F - yEn) * completion + yEn;
+				float vEnCoord = 16 - (yEn - -0.25F) * 16;
+				vSt = lText.getV((16 - vEnCoord) * completion + vEnCoord);
+				vEn = lText.getV(vEnCoord);
+			}
 
 			//Draw liquid layer
 //			VertexConsumer builder = buffer.getBuffer(RenderType.translucentNoCrumbling());
@@ -133,6 +133,11 @@ public class RotaryPumpRenderer implements BlockEntityRenderer<RotaryPumpTileEnt
 			CRRenderUtil.addVertexBlock(builder, matrix, xSt, yEn, zEn, lText.getU0(), lText.getV1(), 0, 1, 0, combinedLight, cols);
 			CRRenderUtil.addVertexBlock(builder, matrix, xEn, yEn, zEn, lText.getU1(), lText.getV1(), 0, 1, 0, combinedLight, cols);
 			CRRenderUtil.addVertexBlock(builder, matrix, xEn, yEn, zSt, lText.getU1(), lText.getV0(), 0, 1, 0, combinedLight, cols);
+
+			CRRenderUtil.addVertexBlock(builder, matrix, xSt, ySt, zSt, lText.getU0(), lText.getV0(), 0, -1, 0, combinedLight, cols);
+			CRRenderUtil.addVertexBlock(builder, matrix, xEn, ySt, zSt, lText.getU1(), lText.getV0(), 0, -1, 0, combinedLight, cols);
+			CRRenderUtil.addVertexBlock(builder, matrix, xEn, ySt, zEn, lText.getU1(), lText.getV1(), 0, -1, 0, combinedLight, cols);
+			CRRenderUtil.addVertexBlock(builder, matrix, xSt, ySt, zEn, lText.getU0(), lText.getV1(), 0, -1, 0, combinedLight, cols);
 		}
 	}
 }
