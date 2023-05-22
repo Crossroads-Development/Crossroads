@@ -1,19 +1,26 @@
 package com.Da_Technomancer.crossroads.blocks.fluid;
 
 import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
 import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.MathUtil;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.RotaryPumpContainer;
 import com.Da_Technomancer.essentials.api.BlockUtil;
+import com.Da_Technomancer.essentials.api.packets.INBTReceiver;
 import com.Da_Technomancer.essentials.api.packets.SendLongToClient;
+import com.Da_Technomancer.essentials.api.packets.SendNBTToClient;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -26,14 +33,17 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.minecraftforge.common.SoundActions;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
 import javax.annotation.Nullable;
+import java.awt.*;
 
-public class RotaryPumpTileEntity extends InventoryTE{
+public class RotaryPumpTileEntity extends InventoryTE implements INBTReceiver{
 
 	public static final BlockEntityType<RotaryPumpTileEntity> TYPE = CRTileEntity.createType(RotaryPumpTileEntity::new, CRBlocks.rotaryPump);
 
@@ -42,12 +52,24 @@ public class RotaryPumpTileEntity extends InventoryTE{
 	public static final double REQUIRED = 100;
 	private static final int CAPACITY = 4_000;
 
-	private double progress = 0;
+	private double progress = 0;//Positive progress: progress towards pumping 'up'; Negative progress: progress towards pumping 'down'
 	private float progChange = 0;//Last change in progress per tick sent to the client. On the client, used for animation
+
+	/**
+	 * The fluid to be displayed for rendering in-world. Quantity is NOT synced; only type, NBT, empty or not empty
+	 * On server side, acts as a record of what was sent to client
+	 */
+	private FluidStack renderFluid = FluidStack.EMPTY;
+	/**
+	 * Cache for the texture and color to be displayed, if any.
+	 */
+	@Nullable
+	private ResourceLocation activeText = null;
+	private Integer col = null;//Color applied to the liquid texture
 
 	public RotaryPumpTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state, 0);
-		fluidProps[0] = new TankProperty(CAPACITY, false, true);
+		fluidProps[0] = new TankProperty(CAPACITY, true, true);
 		initFluidManagers();
 	}
 
@@ -66,11 +88,17 @@ public class RotaryPumpTileEntity extends InventoryTE{
 		return INERTIA;
 	}
 
+	private boolean didClientInit = false;
+
 	@Override
 	public void clientTick(){
 		super.clientTick();
 		progress += progChange;
 		progress %= REQUIRED;
+		if(!didClientInit){
+			didClientInit = true;
+			updateRendering();
+		}
 	}
 
 	@Override
@@ -78,26 +106,65 @@ public class RotaryPumpTileEntity extends InventoryTE{
 		super.serverTick();
 
 		BlockPos targetPos = worldPosition.below();
-		BlockState state = level.getBlockState(targetPos);
-		FluidStack pumpedFluid = getFluidFromBlock(state, level, targetPos);
-		if(!pumpedFluid.isEmpty() && (fluids[0].isEmpty() || BlockUtil.sameFluid(fluids[0], pumpedFluid) && CAPACITY - fluids[0].getAmount() >= pumpedFluid.getAmount())){
-			//Only gain progress if spinning in positive direction
-			double powerDrained = energy < 0 ? 0 : POWER_PER_SPEED * Math.abs(axleHandler.getSpeed());
-			powerDrained = Math.min(Math.abs(axleHandler.getEnergy()), Math.min(REQUIRED - progress, powerDrained));
-			progress += powerDrained;
-			axleHandler.addEnergy(-powerDrained, false);
-			updateProgressToClients(powerDrained);
+		BlockState belowState = level.getBlockState(targetPos);
+		if(energy > 0){
+			//Spinning in positive direction; pump from world into pump inventory
+			FluidStack pumpedFluid = getFluidFromBlock(belowState, level, targetPos);
+			boolean canPump = !pumpedFluid.isEmpty() && (fluids[0].isEmpty() || BlockUtil.sameFluid(fluids[0], pumpedFluid) && CAPACITY - fluids[0].getAmount() >= pumpedFluid.getAmount());
+			if(progress < 0 || canPump){
+				updateRenderFluid(pumpedFluid);
 
-			if(progress >= REQUIRED){
+				double powerDrained = POWER_PER_SPEED * Math.abs(axleHandler.getSpeed());
+				//When we're on negative progress, allowed to reverse negative progress regardless of circumstances, but must meet requirements to make positive progress
+				powerDrained = MathUtil.min(Math.abs(axleHandler.getEnergy()), !canPump ? -progress : REQUIRED - progress, powerDrained);
+				progress += powerDrained;
+				axleHandler.addEnergy(-powerDrained, false);
+				updateProgressToClients(powerDrained);
+
+				if(progress >= REQUIRED){
+					progress = 0;
+					level.setBlockAndUpdate(targetPos, getPumpedBlockState(belowState, level, targetPos));
+					int prevAmount = fluids[0].getAmount();
+					fluids[0] = pumpedFluid.copy();
+					fluids[0].grow(prevAmount);
+					SoundEvent sound = fluids[0].getFluid().getFluidType().getSound(SoundActions.BUCKET_FILL);
+					if(sound != null){
+						CRSounds.playSoundServer(level, targetPos, sound, SoundSource.BLOCKS, 0.5F, 1F);
+					}
+				}
+			}else{
 				progress = 0;
-				level.setBlockAndUpdate(targetPos, getPumpedBlockState(state, level, targetPos));
-				int prevAmount = fluids[0].getAmount();
-				fluids[0] = pumpedFluid.copy();
-				fluids[0].grow(prevAmount);
+				updateProgressToClients(0);
 			}
 		}else{
-			updateProgressToClients(0);
-			progress = 0;
+			//Spinning in negative direction; pump from pump inventory into world
+			BlockState filledState = getFilledBlockState(fluids[0], belowState, level, targetPos);
+			boolean canPump = filledState != null;
+			if(progress > 0 || canPump){
+				updateRenderFluid(fluids[0]);
+
+				double powerDrained = POWER_PER_SPEED * Math.abs(axleHandler.getSpeed());
+				//When we're on positive progress, allowed to reverse positive progress regardless of circumstances, but must meet requirements to make negative progress
+				powerDrained = MathUtil.min(Math.abs(axleHandler.getEnergy()), !canPump ? progress : REQUIRED + progress, powerDrained);
+				progress -= powerDrained;
+				axleHandler.addEnergy(-powerDrained, false);
+				updateProgressToClients(-powerDrained);
+
+				if(progress <= -REQUIRED){
+					progress = 0;
+					if(canPump){
+						level.setBlockAndUpdate(targetPos, filledState);
+						SoundEvent sound = fluids[0].getFluid().getFluidType().getSound(SoundActions.BUCKET_EMPTY);
+						if(sound != null){
+							CRSounds.playSoundServer(level, targetPos, sound, SoundSource.BLOCKS, 0.5F, 1F);
+						}
+						fluids[0].shrink(1000);
+					}
+				}
+			}else{
+				progress = 0;
+				updateProgressToClients(0);
+			}
 		}
 
 		/*
@@ -117,13 +184,57 @@ public class RotaryPumpTileEntity extends InventoryTE{
 		*/
 	}
 
+	private void updateRenderFluid(FluidStack newRenderFluid){
+		//Doesn't send empty render fluids to the client (unnecessary)
+		if(!newRenderFluid.isEmpty() && !BlockUtil.sameFluid(renderFluid, newRenderFluid)){
+			renderFluid = newRenderFluid.copy();
+			CompoundTag nbt = renderFluid.writeToNBT(new CompoundTag());
+			nbt.putBoolean("render_fluid", true);
+			CRPackets.sendPacketAround(level, worldPosition, new SendNBTToClient(nbt, worldPosition));
+		}
+	}
+
+	/*
+	 * Return null if cannot be filled with fluid toAdd
+	 * Otherwise, return the resulting blockstate
+	 * Assumes that 1000mB would be consumed to perform this operation
+	 */
+	@Nullable
+	public static BlockState getFilledBlockState(FluidStack toAdd, BlockState state, Level world, BlockPos targetPos){
+		if(toAdd.getAmount() < 1000){
+			return null;
+		}
+		Block block = state.getBlock();
+		if(block == Blocks.CAULDRON){
+			if(toAdd.getFluid() == Fluids.WATER){
+				return Blocks.WATER_CAULDRON.defaultBlockState().setValue(LayeredCauldronBlock.LEVEL, 3);
+			}
+			if(toAdd.getFluid() == Fluids.LAVA){
+				return Blocks.LAVA_CAULDRON.defaultBlockState();
+			}
+		}else if(block == Blocks.WATER_CAULDRON && toAdd.getFluid() == Fluids.WATER){
+			//Allow perpetual filling of water cauldrons as the converse of the infinite draining
+			return Blocks.WATER_CAULDRON.defaultBlockState().setValue(LayeredCauldronBlock.LEVEL, 3);
+		}else if(toAdd.getFluid() == Fluids.WATER && block instanceof SimpleWaterloggedBlock && state.hasProperty(BlockStateProperties.WATERLOGGED) && !state.getValue(BlockStateProperties.WATERLOGGED)){
+			//Waterlogged blocks
+			return state.setValue(BlockStateProperties.WATERLOGGED, true);
+		}else if(!(block instanceof LiquidBlock) && state.canBeReplaced(toAdd.getFluid())){
+			//Normal fluids
+			BlockState newState = toAdd.getFluid().defaultFluidState().createLegacyBlock();
+			if(newState != Blocks.AIR.defaultBlockState()){
+				return newState;
+			}
+		}
+		return null;
+	}
+
 	public static BlockState getPumpedBlockState(BlockState state, Level world, BlockPos targetPos){
 		Block block = state.getBlock();
 		if(block == Blocks.WATER_CAULDRON && state.getValue(LayeredCauldronBlock.LEVEL) == 3){
 			//Pumps can generate water from a filled water cauldron, without consuming the fluid.
 			//This is a special case- they do consume fluid from lava cauldrons
 			return state;
-		}else if(block == Blocks.LAVA_CAULDRON && state.getValue(LayeredCauldronBlock.LEVEL) == 3){
+		}else if(block == Blocks.LAVA_CAULDRON){
 			return Blocks.CAULDRON.defaultBlockState();
 		}else if(block instanceof LiquidBlock lblock && lblock.getFluid().isSource(world.getFluidState(targetPos))){
 			//Normal fluids
@@ -141,7 +252,7 @@ public class RotaryPumpTileEntity extends InventoryTE{
 			//Pumps can generate water from a filled water cauldron, without consuming the fluid.
 			//This is a special case- they do consume fluid from lava cauldrons
 			return new FluidStack(Fluids.WATER, 1000);
-		}else if(block == Blocks.LAVA_CAULDRON && state.getValue(LayeredCauldronBlock.LEVEL) == 3){
+		}else if(block == Blocks.LAVA_CAULDRON){
 			return new FluidStack(Fluids.LAVA, 1000);
 		}else if(block instanceof LiquidBlock lblock && lblock.getFluid().isSource(world.getFluidState(targetPos))){
 			//Normal fluids
@@ -155,10 +266,10 @@ public class RotaryPumpTileEntity extends InventoryTE{
 	}
 
 	private void updateProgressToClients(double progressChange){
-		if(((progChange == 0) != (progressChange == 0)) || Math.abs(progressChange - progChange) >= CRConfig.speedPrecision.get().floatValue() / 20F){
+		if(Math.signum(progChange) != Math.signum(progressChange) || Math.abs(progressChange - progChange) >= CRConfig.speedPrecision.get().floatValue() / 20F){
 			progChange = (float) progressChange;
-			long packet = Float.floatToIntBits(progChange);
-			packet |= (long) Float.floatToIntBits((float) progress) << 32L;
+			long packet = (long) Float.floatToIntBits(progChange) & 0xFFFFFFFFL;
+			packet |= ((long) Float.floatToIntBits((float) progress) & 0xFFFFFFFFL) << 32L;
 			CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient(1, packet, worldPosition));
 		}
 	}
@@ -170,8 +281,8 @@ public class RotaryPumpTileEntity extends InventoryTE{
 		return RENDER_BOX.move(worldPosition);
 	}
 
-	public float getCompletion(){
-		return ((float) progress) / ((float) REQUIRED);
+	public float getCompletion(float partialTicks){
+		return MathUtil.clamp(((float) progress + partialTicks * progChange) / (float) REQUIRED, -1F, 1F);
 	}
 
 	@Override
@@ -184,10 +295,34 @@ public class RotaryPumpTileEntity extends InventoryTE{
 	}
 
 	@Override
+	public void receiveNBT(CompoundTag nbt, @Nullable ServerPlayer sender){
+		if(level.isClientSide && nbt.contains("render_fluid")){
+			renderFluid = FluidStack.loadFluidStackFromNBT(nbt);
+			updateRendering();
+		}
+	}
+
+	private void updateRendering(){
+		//Call on the client-side only
+		IClientFluidTypeExtensions renderProps = IClientFluidTypeExtensions.of(renderFluid.getFluid());
+		activeText = renderProps.getStillTexture(renderFluid);
+		col = renderProps.getTintColor(renderFluid.getFluid().defaultFluidState(), level, worldPosition);
+	}
+
+	public ResourceLocation getActiveTexture(){
+		return activeText;
+	}
+
+	public Color getCol(){
+		return activeText == null ? Color.WHITE : col == null ? Color.WHITE : new Color(col);
+	}
+
+	@Override
 	public void load(CompoundTag nbt){
 		super.load(nbt);
 		progress = nbt.getDouble("prog");
 		progChange = nbt.getFloat("prog_change");
+		renderFluid = FluidStack.loadFluidStackFromNBT(nbt.getCompound("render_fluid"));
 	}
 
 	@Override
@@ -195,6 +330,7 @@ public class RotaryPumpTileEntity extends InventoryTE{
 		super.saveAdditional(nbt);
 		nbt.putDouble("prog", progress);
 		nbt.putFloat("prog_change", progChange);
+		nbt.put("render_fluid", renderFluid.writeToNBT(new CompoundTag()));
 	}
 
 	@Override
@@ -202,6 +338,7 @@ public class RotaryPumpTileEntity extends InventoryTE{
 		CompoundTag nbt =  super.getUpdateTag();
 		nbt.putDouble("prog", progress);
 		nbt.putFloat("prog_change", progChange);
+		nbt.put("render_fluid", renderFluid.writeToNBT(new CompoundTag()));
 		return nbt;
 	}
 

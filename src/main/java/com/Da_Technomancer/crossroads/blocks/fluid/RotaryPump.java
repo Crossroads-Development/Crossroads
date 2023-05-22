@@ -80,7 +80,7 @@ public class RotaryPump extends BaseEntityBlock{
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
 		tooltip.add(Component.translatable("tt.crossroads.pump.desc"));
 		tooltip.add(Component.translatable("tt.crossroads.pump.power", RotaryPumpTileEntity.POWER_PER_SPEED));
-		tooltip.add(Component.translatable("tt.crossroads.pump.energy", RotaryPumpTileEntity.REQUIRED));
+		tooltip.add(Component.translatable("tt.crossroads.pump.energy_use", RotaryPumpTileEntity.REQUIRED));
 		tooltip.add(Component.translatable("tt.crossroads.boilerplate.inertia", RotaryPumpTileEntity.INERTIA));
 	}
 }
