@@ -20,6 +20,7 @@ import com.Da_Technomancer.crossroads.items.technomancy.BeamUsingItem;
 import com.Da_Technomancer.crossroads.items.witchcraft.GeneticSpawnEgg;
 import com.Da_Technomancer.crossroads.render.BeamToolOverlay;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
+import com.Da_Technomancer.crossroads.render.MultiLineMessageOverlay;
 import com.Da_Technomancer.crossroads.render.tesr.CRRendererRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.KeyMapping;
@@ -28,6 +29,8 @@ import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -110,8 +113,9 @@ public class EventHandlerClient{
 
 		@SuppressWarnings("unused")
 		@SubscribeEvent
-		public static void registerKeyMappings(RegisterGuiOverlaysEvent e){
+		public static void registerOverlays(RegisterGuiOverlaysEvent e){
 			e.registerAboveAll("crossroad_beam_tool_overlay", new BeamToolOverlay());
+			e.registerBelow(new ResourceLocation("record_overlay"), "crossroad_multi_line_overlay", new MultiLineMessageOverlay());
 		}
 
 		@SuppressWarnings("unused")
@@ -434,6 +438,11 @@ public class EventHandlerClient{
 					boolean wasEnabled = nbt.getBoolean(lens.toString());
 					CRSounds.playSoundClientLocal(play.level, new BlockPos(play.getEyePosition()), SoundEvents.SPYGLASS_USE, SoundSource.PLAYERS, 1.0F, 1.0F);
 					CRPackets.channel.sendToServer(new SendGoggleConfigureToServer(lens, !wasEnabled));
+					if(!wasEnabled || !lens.useKey()){
+						MiscUtil.displayMessage(play, Component.translatable("tt.crossroads.goggles.enabled"));
+					}else{
+						MiscUtil.displayMessage(play, Component.translatable("tt.crossroads.goggles.disabled"));
+					}
 					return;
 				}
 			}

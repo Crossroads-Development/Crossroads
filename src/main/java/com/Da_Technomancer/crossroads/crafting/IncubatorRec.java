@@ -91,7 +91,7 @@ public class IncubatorRec implements IOptionalRecipe<Container>{
 
 	@Override
 	public RecipeSerializer<?> getSerializer(){
-		return CRRecipes.EMBRYO_LAB_MORPH_SERIAL;
+		return CRRecipes.INCUBATOR_SERIAL;
 	}
 
 	@Override

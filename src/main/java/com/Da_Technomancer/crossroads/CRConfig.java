@@ -122,6 +122,7 @@ public class CRConfig{
 	public static ForgeConfigSpec.DoubleValue solarRate;
 	public static ForgeConfigSpec.DoubleValue medicinalMushroomSpread;
 	public static ForgeConfigSpec.BooleanValue beamTransparent;
+	public static ForgeConfigSpec.BooleanValue readoutChat;
 
 	private static final TagKey<Block> destroyBlacklist = CraftingUtil.getTagKey(ForgeRegistries.Keys.BLOCKS, new ResourceLocation(Crossroads.MODID, "destroy_blacklist"));
 
@@ -148,6 +149,7 @@ public class CRConfig{
 		electricSounds = clientBuilder.comment("Should electrical arcs make sounds?").define("electric_sounds", true);
 		fluxSounds = clientBuilder.comment("Should temporal entropy transfer make sounds?").define("entropy_sounds", true);
 		cageMeterOverlay = clientBuilder.comment("Should the overlay for the beam cage render while not holding a beam staff?", "Regardless of setting, it only shows while a beam cage is equipped.").define("beam_cage_overlay", true);
+		readoutChat = clientBuilder.comment("Should omnimeters and similar print to vanilla chat?", "Default is a formatted message overlay").define("message_chat", false);
 		clientSpec = clientBuilder.build();
 		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, clientSpec);
 

@@ -13,17 +13,16 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import java.util.ArrayList;
@@ -36,7 +35,7 @@ public class OmniMeter extends Item{
 		CRItems.toRegister.put(name, this);
 	}
 
-	private static final int CHAT_ID = 279478;//Value chosen at random
+	public static final int CHAT_ID = 279478;//Value chosen at random
 
 	/**
 	 * For calling on the server side only
@@ -51,7 +50,7 @@ public class OmniMeter extends Item{
 		BlockEntity te = world.getBlockEntity(pos);
 		if(te != null){
 			LazyOptional<IFluidHandler> fluidOpt;
-			if((fluidOpt = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)).isPresent()){
+			if((fluidOpt = te.getCapability(ForgeCapabilities.FLUID_HANDLER, null)).isPresent()){
 				IFluidHandler pipe = fluidOpt.orElseThrow(NullPointerException::new);
 
 				int tanks = pipe.getTanks();
@@ -77,7 +76,7 @@ public class OmniMeter extends Item{
 			}
 
 			LazyOptional<IEnergyStorage> engOpt;
-			if((engOpt = te.getCapability(CapabilityEnergy.ENERGY, null)).isPresent()){
+			if((engOpt = te.getCapability(ForgeCapabilities.ENERGY, null)).isPresent()){
 				IEnergyStorage batt = engOpt.orElseThrow(NullPointerException::new);
 				chat.add(Component.translatable("tt.crossroads.meter.fe", batt.getEnergyStored(), batt.getMaxEnergyStored()));
 			}
@@ -96,18 +95,17 @@ public class OmniMeter extends Item{
 	}
 
 	@Override
-	public InteractionResult useOn(UseOnContext context){
-		if(!context.getLevel().isClientSide){
+	public void inventoryTick(ItemStack stack, Level worldIn, Entity entityIn, int itemSlot, boolean isSelected){
+		if(!worldIn.isClientSide && isSelected && entityIn instanceof Player player){
+			BlockHitResult ray = MiscUtil.rayTrace(player, 8);
+			if(ray == null){
+				return;
+			}
 			ArrayList<Component> chat = new ArrayList<>();
-
-			BlockHitResult result = new BlockHitResult(context.getClickLocation(), context.getClickedFace(), context.getClickedPos(), false);
-			measure(chat, context.getPlayer(), context.getLevel(), context.getClickedPos(), context.getClickedFace(), result);
-
+			OmniMeter.measure(chat, player, player.level, ray.getBlockPos(), ray.getDirection(), ray);
 			if(!chat.isEmpty()){
-				CRPackets.sendPacketToPlayer((ServerPlayer) context.getPlayer(), new SendChatToClient(chat, CHAT_ID));
+				CRPackets.sendPacketToPlayer((ServerPlayer) player, new SendChatToClient(chat, OmniMeter.CHAT_ID, ray.getBlockPos()));
 			}
 		}
-
-		return InteractionResult.SUCCESS;
 	}
 }

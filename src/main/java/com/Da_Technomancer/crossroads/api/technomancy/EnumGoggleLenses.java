@@ -6,20 +6,17 @@ import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.effects.goggles_effects.EmeraldGoggleEffect;
 import com.Da_Technomancer.crossroads.effects.goggles_effects.QuartzGoggleEffect;
 import com.Da_Technomancer.crossroads.effects.goggles_effects.RubyGoggleEffect;
-import net.minecraft.network.chat.Component;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.extensions.IForgeKeyMapping;
 import net.minecraftforge.common.Tags;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.Locale;
 import java.util.function.Supplier;
 
@@ -73,8 +70,8 @@ public enum EnumGoggleLenses{
 	/**
 	 * Call on the server side ONLY.
 	 */
-	public void doEffect(Level world, Player player, ArrayList<Component> chat, BlockHitResult ray){
-		effect.armorTick(world, player, chat, ray);
+	public void doEffect(Level world, Player player){
+		effect.armorTick(world, player);
 	}
 
 	@Override

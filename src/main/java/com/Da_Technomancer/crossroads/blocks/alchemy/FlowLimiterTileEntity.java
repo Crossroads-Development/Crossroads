@@ -2,9 +2,8 @@ package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.alchemy.*;
-import com.Da_Technomancer.crossroads.api.packets.CRPackets;
-import com.Da_Technomancer.crossroads.api.packets.SendChatToClient;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import net.minecraft.core.BlockPos;
@@ -17,8 +16,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-
-import java.util.ArrayList;
 
 public class FlowLimiterTileEntity extends AlchemyCarrierTE{
 
@@ -57,9 +54,7 @@ public class FlowLimiterTileEntity extends AlchemyCarrierTE{
 		limitIndex += 1;
 		limitIndex %= LIMITS.length;
 		setChanged();
-		ArrayList<Component> chat = new ArrayList<>(1);
-		chat.add(Component.translatable("tt.crossroads.flow_limiter.mode", LIMITS[limitIndex]));
-		CRPackets.sendPacketToPlayer(player, new SendChatToClient(chat, 25856));//CHAT_ID chosen at random
+		MiscUtil.displayMessage(player, Component.translatable("tt.crossroads.flow_limiter.mode", LIMITS[limitIndex]));
 	}
 
 	@Override

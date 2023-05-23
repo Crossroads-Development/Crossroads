@@ -2,14 +2,11 @@ package com.Da_Technomancer.crossroads.items.technomancy;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
-import com.Da_Technomancer.crossroads.api.packets.CRPackets;
-import com.Da_Technomancer.crossroads.api.packets.SendChatToClient;
 import com.Da_Technomancer.crossroads.api.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
@@ -17,10 +14,8 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.BlockHitResult;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ArmorGoggles extends TechnomancyArmor{
@@ -31,26 +26,16 @@ public class ArmorGoggles extends TechnomancyArmor{
 		CRItems.toRegister.put(name, this);
 	}
 
-	/**
-	 * Value chosen at random.
-	 */
-	private static final int CHAT_ID = 718749;
-
 	@Override
 	public void onArmorTick(ItemStack stack, Level world, Player player){
 		CompoundTag nbt;
 		if(!world.isClientSide && (nbt = stack.getTag()) != null){
-			ArrayList<Component> chat = new ArrayList<>();
-			BlockHitResult ray = MiscUtil.rayTrace(player, 8);
 			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
 				if(nbt.contains(lens.toString())){
 					if(!lens.useKey() || nbt.getBoolean(lens.toString())){
-						lens.doEffect(world, player, chat, ray);
+						lens.doEffect(world, player);
 					}
 				}
-			}
-			if(!chat.isEmpty()){
-				CRPackets.sendPacketToPlayer((ServerPlayer) player, new SendChatToClient(chat, CHAT_ID));
 			}
 		}
 	}

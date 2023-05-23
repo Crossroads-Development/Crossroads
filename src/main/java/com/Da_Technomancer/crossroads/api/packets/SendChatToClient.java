@@ -1,14 +1,13 @@
 package com.Da_Technomancer.crossroads.api.packets;
 
-import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.render.MultiLineMessageOverlay;
 import com.Da_Technomancer.essentials.api.packets.ClientPacket;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.ChatComponent;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,8 +15,9 @@ public class SendChatToClient extends ClientPacket{
 
 	public String chat;
 	public int id;
+	public BlockPos targetPos;
 
-	private static final Field[] FIELDS = fetchFields(SendChatToClient.class, "chat", "id");
+	private static final Field[] FIELDS = fetchFields(SendChatToClient.class, "chat", "id", "targetPos");
 
 	//An arbitrarily chosen unicode character to divide the serialized ITextComponents in the string
 	//Why a Ϫ? I just thought it looked neat.
@@ -28,7 +28,7 @@ public class SendChatToClient extends ClientPacket{
 
 	}
 
-	public SendChatToClient(List<Component> chat, int id){
+	public SendChatToClient(List<Component> chat, int id, BlockPos targetPos){
 		StringBuilder s = new StringBuilder();
 		for(Component comp : chat){
 			s.append(DIVIDER);
@@ -37,6 +37,7 @@ public class SendChatToClient extends ClientPacket{
 
 		this.chat = s.toString();
 		this.id = id;
+		this.targetPos = targetPos;
 	}
 
 	@Nonnull
@@ -47,7 +48,7 @@ public class SendChatToClient extends ClientPacket{
 
 	@Override
 	protected void run(){
-		List<Component> components = new ArrayList<>();
+		ArrayList<Component> components = new ArrayList<>();
 
 		String active = chat;
 		while(active.length() != 0){
@@ -64,26 +65,25 @@ public class SendChatToClient extends ClientPacket{
 			}
 		}
 
-		Component combined;
-		StringBuilder combo = new StringBuilder();
-		for(int i = 0; i < components.size(); i++){
-			combo.append(components.get(i).getString());
-			if(i + 1 < components.size()){
-				combo.append("§f\n");
-			}
-		}
-		combined = Component.literal(combo.toString());
+//		//Combine into single multi-line component
+//		//Support for multi-line components is generally poor
+//		Component combined;
+//		StringBuilder combo = new StringBuilder();
+//		for(int i = 0; i < components.size(); i++){
+//			combo.append(components.get(i).getString());
+//			if(i + 1 < components.size()){
+//				combo.append("§f\n");
+//			}
+//		}
+//		combined = Component.literal(combo.toString());
 
-		ChatComponent chatGui = Minecraft.getInstance().gui.getChat();
-		if(SafeCallable.getPrintChatNoLog() == null){
-			chatGui.addMessage(combined);
-		}else{
-			//Print it to the chat without logging it, to avoid flooding the log
-			try{
-				SafeCallable.getPrintChatNoLog().invoke(chatGui, combined, id, Minecraft.getInstance().gui.getGuiTicks(), false);
-			}catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException e){
-				Crossroads.logger.catching(e);
+		if(CRConfig.readoutChat.get()){
+			//1.19.2: There used to be a system for deleting the old omnimeter messages to prevent spamming chat, but it's been removed
+			for(Component component : components){
+				SafeCallable.getClientPlayer().displayClientMessage(component, false);
 			}
+		}else{
+			MultiLineMessageOverlay.setMessage(components, 60, targetPos);
 		}
 	}
 }

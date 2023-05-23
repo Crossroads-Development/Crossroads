@@ -5,7 +5,6 @@ import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.api.technomancy.IGoggleEffect;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.player.Player;
@@ -17,7 +16,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class RubyGoggleEffect implements IGoggleEffect{
@@ -25,7 +23,7 @@ public class RubyGoggleEffect implements IGoggleEffect{
 	private static final int RANGE = 32;
 
 	@Override
-	public void armorTick(Level world, Player player, ArrayList<Component> chat, BlockHitResult ray){
+	public void armorTick(Level world, Player player){
 		if(world.getGameTime() % 5 == 0){
 			Entity entHit = null;
 			Vec3 start = new Vec3(player.getX() - Math.cos(Math.toRadians(player.getYHeadRot())) * 0.18D, player.getY() + player.getEyeHeight() + 0.03D, player.getZ() - Math.sin(Math.toRadians(player.getYHeadRot())) * 0.18D);

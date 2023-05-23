@@ -19,6 +19,10 @@ import java.util.function.Predicate;
 
 public class CuriosInventoryProxy implements IInventoryProxy{
 
+	protected static IInventoryProxy create(){
+		return new CuriosInventoryProxy();
+	}
+
 	@SubscribeEvent
 	@SuppressWarnings("unused")
 	public void requestSlots(InterModEnqueueEvent evt){

@@ -1,6 +1,5 @@
 package com.Da_Technomancer.crossroads.integration.curios;
 
-import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -26,13 +25,7 @@ public class CurioHelper{
 	 */
 	public static void initIntegration(){
 		if(ModList.get().isLoaded(CURIOS_ID)){
-			// reflection to avoid hard dependency
-			try{
-				inventoryProxy = Class.forName("com.Da_Technomancer.crossroads.integration.curios.CuriosInventoryProxy").asSubclass(IInventoryProxy.class).getDeclaredConstructor().newInstance();
-			}catch(Exception e){
-				inventoryProxy = new VanillaInventoryProxy();
-				Crossroads.logger.error("Error while initiating Curios integration; report to mod author", e);
-			}
+			inventoryProxy = CuriosInventoryProxy.create();
 			//Register the proxy so it can request slots
 			FMLJavaModLoadingContext.get().getModEventBus().register(inventoryProxy);
 		}else{
