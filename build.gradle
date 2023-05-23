@@ -81,10 +81,14 @@ minecraft {
 }
 
 repositories {
-	maven { url "https://dvs1.progwml6.com/files/maven" } //JEI
-	maven { url "https://maven.blamejared.com" } //Patchouli
+	maven { url "https://maven.blamejared.com" } //Patchouli, JEI
 //	maven {url "https://tehnut.info/maven"} //hwyla
 	maven {url "https://maven.theillusivec4.top/"} //Curios
+	maven {
+		//Create, Flywheel, Registrate
+		name = 'tterrag maven'
+		url = 'https://maven.tterrag.com/'
+	}
 	flatDir { dirs 'libs' }//Lets us grab dependencies from the libs folder
 }
 
@@ -106,6 +110,10 @@ dependencies {
 
 	//No special CR integration for hwayla- only used for testing, so no compile inclusion needed
 //	runtimeOnly(fg.deobf("mcp.mobius.waila:Hwyla:$hwyla_version"))
+
+	implementation fg.deobf("com.simibubi.create:create-${create_minecraft_version}:${create_version}:slim") { transitive = false }
+	implementation fg.deobf("com.jozufozu.flywheel:flywheel-forge-${flywheel_minecraft_version}:${flywheel_version}")
+	implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
 
 	//When setting up a dev environment for Crossroads, make sure to have an essentials jar in a folder called "libs", in the same parent folder as "src"
 	implementation(fg.deobf("com.technomancer.essentials:essentials-$essentials_version:dev"))

@@ -1,9 +1,12 @@
 package com.Da_Technomancer.crossroads.blocks.heat;
 
+import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.api.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
+import com.Da_Technomancer.crossroads.integration.create.CreateHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -25,6 +28,9 @@ public class HeatSinkTileEntity extends ModuleTE{
 
 	public static final int[] MODES = {5, 10, 15, 20, 25};
 	private int mode = 0;
+	//Used for Create integration
+	public static final int[] CREATE_DRAIN_TIERS = new int[] {0, 1, 4};
+	public static final double[] CREATE_TEMP_TIERS = new double[] {50, 100, 5000};
 
 	public HeatSinkTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state);
@@ -45,6 +51,10 @@ public class HeatSinkTileEntity extends ModuleTE{
 		return biomeTempCache;
 	}
 
+	public int getCreateIntegrationHeatTier(){
+		return getBlockState().getValue(CRProperties.POWER_LEVEL_4) - 1;
+	}
+
 	@Override
 	protected boolean useHeat(){
 		return true;
@@ -54,6 +64,11 @@ public class HeatSinkTileEntity extends ModuleTE{
 	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
 		chat.add(Component.translatable("tt.crossroads.heat_sink.loss",  MODES[mode]));
 		super.addInfo(chat, player, hit);
+
+		if(CreateHelper.hasCreate()){
+			int tier = getCreateIntegrationHeatTier();
+			chat.add(Component.translatable("tt.crossroads.heat_sink.create_" + tier, tier < 0 ? 0 : MODES[CREATE_DRAIN_TIERS[tier]], tier < 0 ? HeatUtil.ABSOLUTE_ZERO : CREATE_TEMP_TIERS[tier]));
+		}
 	}
 
 	@Override
@@ -65,6 +80,21 @@ public class HeatSinkTileEntity extends ModuleTE{
 		temp += Math.min(MODES[mode], Math.abs(temp - biomeTemp)) * Math.signum(biomeTemp - temp);
 		if(temp != prevTemp){
 			setChanged();
+		}
+
+		//Create integration
+		if(CreateHelper.hasCreate()){
+			int tier = -1;
+			for(int i = CREATE_DRAIN_TIERS.length - 1; i >= 0; i--){
+				if(mode >= CREATE_DRAIN_TIERS[i] && temp >= CREATE_TEMP_TIERS[i]){
+					tier = i;
+					break;
+				}
+			}
+			BlockState state = getBlockState();
+			if(tier + 1 != state.getValue(CRProperties.POWER_LEVEL_4)){
+				level.setBlock(worldPosition, state.setValue(CRProperties.POWER_LEVEL_4, tier + 1), MiscUtil.BLOCK_FLAG_UPDATE);
+			}
 		}
 	}
 

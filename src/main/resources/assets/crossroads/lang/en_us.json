@@ -414,6 +414,12 @@
 	"tt.crossroads.heat_sink.desc": "Has a large configurable heat loss (adjust w/ wrench)",
 	"tt.crossroads.heat_sink.rate": "Loss Rate: -%1$d, -%2$d, -%3$d, -%4$d, or -%5$d°C/t",
 	"tt.crossroads.heat_sink.loss": "Current Loss: -%1$d°C/t",
+	"tt.crossroads.heat_sink.create.desc": "Heat source for Create boilers based on temperature, including blazing heat",
+	"tt.crossroads.heat_sink.create_-1": "Too cold for Create boilers",
+	"tt.crossroads.heat_sink.create_0": "Warm for Create boilers (above %2$d°C, using at least %1$d°C/t)",
+	"tt.crossroads.heat_sink.create_1": "Burning heat for Create boilers (above %2$d°C, using at least %1$d°C/t)",
+	"tt.crossroads.heat_sink.create_2": "Blazing heat for Create boilers (above %2$d°C, using at least %1$d°C/t)",
+
 	"tt.crossroads.icebox.desc": "Adds: -%1$d°C/t while using cold items as fuel",
 	"tt.crossroads.icebox.min": "Minimum temp: %1$d°C",
 	"tt.crossroads.salt_reactor.desc": "Mixes salt and distilled water into water for cooling, can reach absolute zero",

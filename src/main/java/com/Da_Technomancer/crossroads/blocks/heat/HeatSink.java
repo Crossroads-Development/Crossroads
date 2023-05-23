@@ -1,7 +1,9 @@
 package com.Da_Technomancer.crossroads.blocks.heat;
 
+import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
+import com.Da_Technomancer.crossroads.integration.create.CreateHelper;
 import com.Da_Technomancer.essentials.api.ConfigUtil;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
@@ -14,11 +16,13 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.phys.BlockHitResult;
 
 import javax.annotation.Nullable;
@@ -31,6 +35,12 @@ public class HeatSink extends BaseEntityBlock{
 		String name = "heat_sink";
 		CRBlocks.toRegister.put(name, this);
 		CRBlocks.blockAddQue(name, this);
+		registerDefaultState(defaultBlockState().setValue(CRProperties.POWER_LEVEL_4, 0));
+	}
+
+	@Override
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder){
+		builder.add(CRProperties.POWER_LEVEL_4);//Used for Create integration
 	}
 
 	@Override
@@ -70,5 +80,8 @@ public class HeatSink extends BaseEntityBlock{
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
 		tooltip.add(Component.translatable("tt.crossroads.heat_sink.desc"));
 		tooltip.add(Component.translatable("tt.crossroads.heat_sink.rate", HeatSinkTileEntity.MODES[0], HeatSinkTileEntity.MODES[1], HeatSinkTileEntity.MODES[2], HeatSinkTileEntity.MODES[3], HeatSinkTileEntity.MODES[4]));
+		if(CreateHelper.hasCreate()){
+			tooltip.add(Component.translatable("tt.crossroads.heat_sink.create.desc"));
+		}
 	}
 }

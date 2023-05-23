@@ -1,5 +1,8 @@
 {
 	"variants": {
-		"": { "model": "crossroads:block/heat_sink" }
+		"power_level=0": { "model": "crossroads:block/heat_sink" },
+		"power_level=1": { "model": "crossroads:block/heat_sink" },
+		"power_level=2": { "model": "crossroads:block/heat_sink" },
+		"power_level=3": { "model": "crossroads:block/heat_sink" }
 	}
 }

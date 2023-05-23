@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.integration;
 
+import com.Da_Technomancer.crossroads.integration.create.CreateHelper;
 import com.Da_Technomancer.crossroads.integration.curios.CurioHelper;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.essentials.integration.ESIntegration;
@@ -11,5 +12,6 @@ public class CRIntegration{
 		ESIntegration.bookName = "book.crossroads_essentials.name";
 
 		CurioHelper.initIntegration();
+		CreateHelper.initIntegration();
 	}
 }
