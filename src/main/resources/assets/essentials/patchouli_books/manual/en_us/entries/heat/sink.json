@@ -14,7 +14,7 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "If the Create mod installed, the <item>heat sink/$ can be used as a heat source for the Create boiler, allowing using Crossroads heat to produce Create rotary power.$(br2)The strength of the heat sink as a boiler heat source depends on the heat sink temperature and on the loss rate. For 'warm' heat (like fire), needs to be above 50°C and draining at "
+			"text": "If the <em>Create mod/$ installed, the <item>heat sink/$ can be used as a heat source for the Create boiler, allowing using Crossroads heat to produce Create rotary power.$(br2)The strength of the heat sink as a boiler heat source depends on the heat sink temperature and on the loss rate. For 'warm' heat (like fire), needs to be above 50°C and draining at "
 		},
 		{
 			"type": "patchouli:text",
