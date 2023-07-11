@@ -31,8 +31,7 @@ public class AlchemicalTube extends ConduitBlock<EnumTransferMode>{
 	protected AlchemicalTube(boolean crystal, String name){
 		super(CRBlocks.getGlassProperty());
 		this.crystal = crystal;
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Override

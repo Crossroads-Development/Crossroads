@@ -1,9 +1,9 @@
 {
 	"variants": {
-		"rate=0": { "model": "crossroads:block/stirling_engine_rev_fast" },
-		"rate=1": { "model": "crossroads:block/stirling_engine_rev_slow" },
-		"rate=2": { "model": "crossroads:block/stirling_engine_still" },
-		"rate=3": { "model": "crossroads:block/stirling_engine_for_slow" },
-		"rate=4": { "model": "crossroads:block/stirling_engine_for_fast" }
+		"power_level=0": { "model": "crossroads:block/stirling_engine_rev_fast" },
+		"power_level=1": { "model": "crossroads:block/stirling_engine_rev_slow" },
+		"power_level=2": { "model": "crossroads:block/stirling_engine_still" },
+		"power_level=3": { "model": "crossroads:block/stirling_engine_for_slow" },
+		"power_level=4": { "model": "crossroads:block/stirling_engine_for_fast" }
 	}
 }

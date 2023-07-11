@@ -39,8 +39,7 @@ public class CultivatorVat extends TEBlock implements IReadable{
 	public CultivatorVat(){
 		super(CRBlocks.getMetalProperty().lightLevel(state -> state.getValue(CRProperties.ACTIVE) ? 10 : 0).noOcclusion());//They glow a little
 		String name = "cultivator_vat";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 		registerDefaultState(defaultBlockState().setValue(CRProperties.ACTIVE, false).setValue(CRProperties.CONTENTS, 0));
 	}
 

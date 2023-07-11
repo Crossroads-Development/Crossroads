@@ -24,6 +24,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -93,7 +94,7 @@ public class BloodBeamLinkerTileEntity extends InventoryTE{
 		if(capability == Capabilities.BEAM_CAPABILITY){
 			return (LazyOptional<T>) beamOpt;
 		}
-		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
+		if(capability == ForgeCapabilities.ITEM_HANDLER){
 			return (LazyOptional<T>) itemOpt;
 		}
 

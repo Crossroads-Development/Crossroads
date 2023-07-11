@@ -20,8 +20,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
 import javax.annotation.Nullable;
@@ -100,7 +100,7 @@ public class ChronoHarnessTileEntity extends IFluxLink.FluxHelper{
 			//Transfer FE to a machine above
 			BlockEntity neighbor = level.getBlockEntity(worldPosition.relative(Direction.UP));
 			LazyOptional<IEnergyStorage>  otherOpt;
-			if(neighbor != null && (otherOpt = neighbor.getCapability(CapabilityEnergy.ENERGY, Direction.DOWN)).isPresent()){
+			if(neighbor != null && (otherOpt = neighbor.getCapability(ForgeCapabilities.ENERGY, Direction.DOWN)).isPresent()){
 				IEnergyStorage storage = otherOpt.orElseThrow(NullPointerException::new);
 				if(storage.canReceive()){
 					fe -= storage.receiveEnergy(fe, false);
@@ -109,7 +109,7 @@ public class ChronoHarnessTileEntity extends IFluxLink.FluxHelper{
 			}
 			//Transfer FE to a machine below
 			neighbor = level.getBlockEntity(worldPosition.relative(Direction.DOWN));
-			if(neighbor != null && (otherOpt = neighbor.getCapability(CapabilityEnergy.ENERGY, Direction.UP)).isPresent()){
+			if(neighbor != null && (otherOpt = neighbor.getCapability(ForgeCapabilities.ENERGY, Direction.UP)).isPresent()){
 				IEnergyStorage storage = otherOpt.orElseThrow(NullPointerException::new);
 				if(storage.canReceive()){
 					fe -= storage.receiveEnergy(fe, false);
@@ -161,7 +161,7 @@ public class ChronoHarnessTileEntity extends IFluxLink.FluxHelper{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
-		if(cap == CapabilityEnergy.ENERGY){
+		if(cap == ForgeCapabilities.ENERGY){
 			return (LazyOptional<T>) energyOpt;
 		}
 

@@ -36,8 +36,7 @@ public class SteamTurbine extends BaseEntityBlock{
 	public SteamTurbine(){
 		super(CRBlocks.getMetalProperty());
 		String name = "steam_turbine";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Override

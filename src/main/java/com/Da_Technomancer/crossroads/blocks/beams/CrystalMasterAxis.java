@@ -32,8 +32,7 @@ public class CrystalMasterAxis extends BaseEntityBlock implements IReadable{
 	public CrystalMasterAxis(){
 		super(CRBlocks.getRockProperty());
 		String name = "master_axis_crystal";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Nullable

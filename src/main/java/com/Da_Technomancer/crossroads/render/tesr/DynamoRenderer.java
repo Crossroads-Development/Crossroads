@@ -7,10 +7,10 @@ import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.api.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.blocks.electric.Dynamo;
 import com.Da_Technomancer.crossroads.blocks.technomancy.LodestoneDynamo;
-import com.Da_Technomancer.crossroads.items.item_sets.GearFactory;
+import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -40,10 +40,10 @@ public class DynamoRenderer implements BlockEntityRenderer<ModuleTE>{
 		}
 
 		matrix.translate(0.5D, 0.5D, 0.5D);
-		matrix.mulPose(Vector3f.YP.rotationDegrees(270F - facing.toYRot()));
-		matrix.mulPose(Vector3f.ZP.rotationDegrees(90));
-		matrix.mulPose(Vector3f.YP.rotationDegrees(-facing.getAxisDirection().getStep() * axle.orElseThrow(NullPointerException::new).getAngle(partialTicks)));
-		CRModels.drawAxle(matrix, buffer, combinedLight, GearFactory.findMaterial("iron").getColor());
+		matrix.mulPose(Axis.YP.rotationDegrees(270F - facing.toYRot()));
+		matrix.mulPose(Axis.ZP.rotationDegrees(90));
+		matrix.mulPose(Axis.YP.rotationDegrees(-facing.getAxisDirection().getStep() * axle.orElseThrow(NullPointerException::new).getAngle(partialTicks)));
+		CRModels.drawAxle(matrix, buffer, combinedLight, CRMaterialLibrary.findMaterial("iron").getColor());
 
 		matrix.translate(0, 0.45626D, 0);
 		matrix.scale(0.7F, 0.7F, 0.7F);
@@ -53,6 +53,6 @@ public class DynamoRenderer implements BlockEntityRenderer<ModuleTE>{
 
 		//Renders the core of the gear, leaving only the prongs
 		matrix.scale(2F * lHalf, 1, 2F * lHalf);
-		CRModels.draw8Core(buffer.getBuffer(RenderType.solid()), matrix, CRRenderUtil.convertColor(GearFactory.findMaterial("copper").getColor()), combinedLight, sprite);
+		CRModels.draw8Core(buffer.getBuffer(RenderType.solid()), matrix, CRRenderUtil.convertColor(CRMaterialLibrary.findMaterial("copper").getColor()), combinedLight, sprite);
 	}
 }

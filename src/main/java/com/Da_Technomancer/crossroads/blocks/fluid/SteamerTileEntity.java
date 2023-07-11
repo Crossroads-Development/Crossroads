@@ -22,9 +22,9 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import javax.annotation.Nullable;
@@ -66,11 +66,11 @@ public class SteamerTileEntity extends InventoryTE{
 		super.serverTick();
 
 		SmokingRecipe rec;
-		if(!inventory[0].isEmpty() && (rec = level.getRecipeManager().getRecipeFor(RecipeType.SMOKING, this, level).orElse(null)) != null && (inventory[1].isEmpty() || BlockUtil.sameItem(rec.getResultItem(), inventory[1]) && inventory[1].getCount() < inventory[1].getMaxStackSize())){
+		if(!inventory[0].isEmpty() && (rec = level.getRecipeManager().getRecipeFor(RecipeType.SMOKING, this, level).orElse(null)) != null && (inventory[1].isEmpty() || BlockUtil.sameItem(rec.getResultItem(level.registryAccess()), inventory[1]) && inventory[1].getCount() < inventory[1].getMaxStackSize())){
 			//Check fluids
 			if(fluids[0].getAmount() >= FLUID_USE && fluidProps[1].capacity - fluids[1].getAmount() >= FLUID_USE){
 				if(fluids[1].isEmpty()){
-					fluids[1] = new FluidStack(CRFluids.distilledWater.still, FLUID_USE);
+					fluids[1] = new FluidStack(CRFluids.distilledWater.getStill(), FLUID_USE);
 				}else{
 					fluids[1].grow(FLUID_USE);
 				}
@@ -80,7 +80,7 @@ public class SteamerTileEntity extends InventoryTE{
 				if(++progress >= REQUIRED){
 					progress = 0;
 					if(inventory[1].isEmpty()){
-						inventory[1] = rec.assemble(this);
+						inventory[1] = rec.assemble(this, level.registryAccess());
 					}else{
 						inventory[1].grow(1);
 					}
@@ -129,8 +129,7 @@ public class SteamerTileEntity extends InventoryTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
-
-		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
+		if(cap == ForgeCapabilities.FLUID_HANDLER){
 			if(side == Direction.UP || side == Direction.DOWN){
 				return (LazyOptional<T>) waterOpt;
 			}else if(side != null){

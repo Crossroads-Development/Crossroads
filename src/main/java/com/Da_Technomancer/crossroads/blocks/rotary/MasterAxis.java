@@ -25,8 +25,7 @@ public class MasterAxis extends BaseEntityBlock{
 	public MasterAxis(){
 		super(CRBlocks.getMetalProperty());
 		String name = "master_axis";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Nullable

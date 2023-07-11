@@ -29,9 +29,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import javax.annotation.Nullable;
@@ -202,7 +202,7 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
+		if(capability == ForgeCapabilities.FLUID_HANDLER){
 			return facing == null ? (LazyOptional<T>) globalFluidOpt : facing == Direction.UP ? (LazyOptional<T>) inputOpt : facing == Direction.DOWN ? (LazyOptional<T>) outputOpt : LazyOptional.empty();
 		}
 
@@ -243,7 +243,7 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 					CopshowiumRec rec = recOpt.get();
 					int created = (int) (fluids[0].getAmount() * rec.getMult());
 					if(fluids[1].isEmpty()){
-						fluids[1] = new FluidStack(CRFluids.moltenCopshowium.still, created);
+						fluids[1] = new FluidStack(CRFluids.moltenCopshowium.getStill(), created);
 					}else{
 						fluids[1].grow(created);
 					}
@@ -253,7 +253,7 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 					//Check for overflowing
 					if(fluids[1].getAmount() > CAPACITY){
 						if(CRConfig.allowOverflow.get()){
-							level.setBlockAndUpdate(worldPosition, CRFluids.moltenCopshowium.block.defaultBlockState());
+							level.setBlockAndUpdate(worldPosition, CRFluids.moltenCopshowium.getBlock().defaultBlockState());
 						}else{
 							fluids[1].setAmount(CAPACITY);//The config is disabled- just delete any excess fluid
 						}

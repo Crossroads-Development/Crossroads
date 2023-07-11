@@ -26,6 +26,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -112,7 +113,7 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements Container, 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
-		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && facing != getFacing()){
+		if(capability == ForgeCapabilities.ITEM_HANDLER && facing != getFacing()){
 			return (LazyOptional<T>) itemOpt;
 		}
 

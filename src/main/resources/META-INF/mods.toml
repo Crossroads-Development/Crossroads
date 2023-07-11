@@ -31,7 +31,7 @@ A large tech mod filled with interesting automation puzzles.
 [[dependencies.crossroads]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.19,]"
+    versionRange="[1.19.3,]"
     ordering="NONE"
     side="BOTH"
 [[dependencies.crossroads]]

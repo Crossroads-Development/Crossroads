@@ -35,8 +35,7 @@ public class HeatLimiterRedstone extends BaseEntityBlock implements IWireConnect
 	public HeatLimiterRedstone(){
 		super(CRBlocks.getRockProperty());
 		String name = "heat_limiter";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 		registerDefaultState(defaultBlockState().setValue(CRProperties.ACTIVE, false));
 	}
 

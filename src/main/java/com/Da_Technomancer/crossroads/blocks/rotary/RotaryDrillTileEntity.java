@@ -8,13 +8,12 @@ import com.Da_Technomancer.crossroads.api.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.effects.beam_effects.PlaceEffect;
+import com.Da_Technomancer.crossroads.entity.CRMobDamage;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -22,7 +21,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
@@ -33,8 +31,6 @@ import java.util.List;
 public class RotaryDrillTileEntity extends ModuleTE{
 
 	public static final BlockEntityType<RotaryDrillTileEntity> TYPE = CRTileEntity.createType(RotaryDrillTileEntity::new, CRBlocks.rotaryDrill, CRBlocks.rotaryDrillGold);
-
-	private static final DamageSource DRILL = new DamageSource("drill");
 
 	public RotaryDrillTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state);
@@ -104,7 +100,7 @@ public class RotaryDrillTileEntity extends ModuleTE{
 
 				List<LivingEntity> ents = level.getEntitiesOfClass(LivingEntity.class, new AABB(worldPosition.relative(facing)), EntitySelector.ENTITY_STILL_ALIVE);
 				for(LivingEntity ent : ents){
-					ent.hurt(isGolden() ? new EntityDamageSource("drill", FakePlayerFactory.get((ServerLevel) level, new GameProfile(null, "drill_player_" + MiscUtil.getDimensionName(level)))) : DRILL, (float) Math.abs(axleHandler.getSpeed()) * DAMAGE_PER_SPEED);
+					ent.hurt(isGolden() ? CRMobDamage.damageSource(CRMobDamage.DRILL, level, FakePlayerFactory.get((ServerLevel) level, new GameProfile(null, "drill_player_" + MiscUtil.getDimensionName(level)))) : CRMobDamage.damageSource(CRMobDamage.DRILL, level), (float) Math.abs(axleHandler.getSpeed()) * DAMAGE_PER_SPEED);
 				}
 			}
 		}

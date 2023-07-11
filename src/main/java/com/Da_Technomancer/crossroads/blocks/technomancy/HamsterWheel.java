@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.blocks.technomancy;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.api.templates.ICustomItemBlock;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.essentials.api.ConfigUtil;
@@ -12,7 +13,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -34,7 +35,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class HamsterWheel extends BaseEntityBlock{
+public class HamsterWheel extends BaseEntityBlock implements ICustomItemBlock{
 
 	private static final VoxelShape[] SHAPES = new VoxelShape[4];
 
@@ -48,8 +49,12 @@ public class HamsterWheel extends BaseEntityBlock{
 	public HamsterWheel(){
 		super(CRBlocks.getMetalProperty().sound(SoundType.NETHER_WART));//Tried to find a fleshy sound
 		String name = "hamster_wheel";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this, new Item.Properties().tab(CRItems.TAB_CROSSROADS).rarity(CRItems.BOBO_RARITY));
+		CRBlocks.queueForRegister(name, this);
+	}
+
+	@Override
+	public BlockItem createItemBlock(){
+		return new BlockItem(this, CRItems.baseItemProperties().rarity(CRItems.BOBO_RARITY));
 	}
 
 	@Override

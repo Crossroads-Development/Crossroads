@@ -315,12 +315,16 @@ public class EntityTemplate implements INBTSerializable<CompoundTag>{
 		//Don't pass the itemstack to the spawn method
 		//That parameter is designed for the vanilla spawn egg NBT structure, which we don't use
 		//We have to adjust the mob manually after spawning as a result
-		//The custom name parameter is used preferentially, with a custom name on the template as a fallback
-		Entity created = type.spawn(world, null, customName == null ? template.customName : customName, player, pos, reason, offset, unmapped);
+		Entity created = type.spawn(world, null, player, pos, reason, offset, unmapped);
 		if(created == null){
 			return null;
 		}
-
+		//Custom name
+		//The custom name parameter is used preferentially, with a custom name on the template as a fallback
+		customName = customName == null ? template.customName : customName;
+		if(customName != null){
+			created.setCustomName(customName);
+		}
 		//NBT traits
 		CompoundTag nbt = created.getPersistentData();
 		nbt.putBoolean(EntityTemplate.LOYAL_KEY, template.isLoyal());

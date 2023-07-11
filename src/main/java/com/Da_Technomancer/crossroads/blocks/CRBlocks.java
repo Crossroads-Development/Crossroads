@@ -1,5 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks;
 
+import com.Da_Technomancer.crossroads.EventHandlerCommon;
+import com.Da_Technomancer.crossroads.api.templates.ICustomItemBlock;
 import com.Da_Technomancer.crossroads.blocks.alchemy.*;
 import com.Da_Technomancer.crossroads.blocks.beams.*;
 import com.Da_Technomancer.crossroads.blocks.electric.Dynamo;
@@ -31,6 +33,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.registries.RegisterEvent;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -38,6 +41,8 @@ import java.util.List;
 
 public class CRBlocks{
 
+	public static final HashMap<HeatInsulators, HeatCable> HEAT_CABLES = new HashMap<>();
+	public static final HashMap<HeatInsulators, RedstoneHeatCable> REDSTONE_HEAT_CABLES = new HashMap<>();
 	public static Mechanism mechanism;
 	public static MasterAxis masterAxis;
 	public static FluidTube fluidTube;
@@ -178,6 +183,15 @@ public class CRBlocks{
 	public static FireDetector fireDetector;
 	public static BloodBeamLinker bloodBeamLinker;
 	public static LightningRodExtension lightningRodExtension;
+	public static BasicBlock blockTin;
+	public static BasicBlock blockRawTin;
+	public static BasicBlock oreTin;
+	public static BasicBlock oreTinDeep;
+	public static BasicBlock blockBronze;
+	public static BasicBlock blockRuby;
+	public static BasicBlock oreRuby;
+	public static BasicBlock blockCopshowium;
+	public static BasicBlock oreVoid;
 
 	public static BlockBehaviour.Properties getRockProperty(){
 		return BlockBehaviour.Properties.of(Material.STONE).strength(3).requiresCorrectToolForDrops().sound(SoundType.STONE);
@@ -195,46 +209,80 @@ public class CRBlocks{
 	 * Public for read only
 	 * Do NOT modify this value, as it is mutable
 	 */
-	public static final Item.Properties itemBlockProp = new Item.Properties().tab(CRItems.TAB_CROSSROADS);
+	public static final Item.Properties itemBlockProp = new Item.Properties();
 
-	public static final HashMap<String, Block> toRegister = new HashMap<>();
+	private static final HashMap<String, Block> toRegister = new HashMap<>();
 
 	/**
-	 * Creates and registers the item form of a block
-	 * @param regName Registry name for the itemblock
-	 * @param block The block to register
-	 * @return The passed block for convenience. 
+	 * Queues up a block to be registered, along with an itemblock added to the creative tab
+	 * @param regName Block registry name (without essentials: prefix)
+	 * @param block Block. Supports ICustomItemBlock.
+	 * @return The block
+	 * @param <T> Block class
 	 */
-	public static <T extends Block> T blockAddQue(String regName, T block){
-		return blockAddQue(regName, block, itemBlockProp);
+	public static <T extends Block> T queueForRegister(String regName, T block){
+		return queueForRegister(regName, block, true, CRItems.MAIN_CREATIVE_TAB_ID);
 	}
 
-	public static <T extends Block> T blockAddQue(String regName, T block, Item.Properties itemProp){
-		return blockAddQue(regName, block, new BlockItem(block, itemProp));
-	}
-
-	public static <T extends Block> T blockAddQue(String regName, T block, BlockItem itemBlock){
-		CRItems.toRegister.put(regName, itemBlock);
+	/**
+	 * Queues up a block to be registered, optionally along with an itemblock added to the creative tab
+	 * @param regName Block registry name (without essentials: prefix)
+	 * @param block Block. Supports ICustomItemBlock.
+	 * @param itemblock Whether to create an itemblock.
+	 * @param tab Creative tab id to register the itemblock in. Null to not add to creative tab.
+	 * @return The block
+	 * @param <T> Block class
+	 */
+	public static <T extends Block> T queueForRegister(String regName, T block, boolean itemblock, @Nullable String tab){
+		toRegister.put(regName, block);
+		if(itemblock){
+			Item item;
+			if(block instanceof ICustomItemBlock customBlock){
+				item = customBlock.createItemBlock();
+			}else{
+				item = new BlockItem(block, itemBlockProp);
+			}
+			CRItems.queueForRegister(regName, item, tab);
+		}
 		return block;
 	}
 
 	public static void init(){
+		for(HeatInsulators insul : HeatInsulators.values()){
+			HEAT_CABLES.put(insul, new HeatCable(insul));
+			REDSTONE_HEAT_CABLES.put(insul, new RedstoneHeatCable(insul));
+		}
+
+		//Ores
+		blockTin = new BasicBlock("block_tin", getMetalProperty());
+		blockRawTin = new BasicBlock("block_raw_tin", getRockProperty());
+		oreTin = new BasicBlock("ore_tin", getRockProperty().strength(3));
+		oreTinDeep = new BasicBlock("ore_tin_deep", getRockProperty().strength(4.5F, 3).sound(SoundType.DEEPSLATE));
+		blockBronze = new BasicBlock("block_bronze", getMetalProperty());
+		blockRuby = new BasicBlock("block_ruby", getRockProperty());
+		oreRuby = new BasicBlock("ore_ruby", getRockProperty().strength(3));
+		blockCopshowium = new BasicBlock("block_copshowium", getMetalProperty());
+		oreVoid = new BasicBlock("ore_void", getRockProperty().strength(3, 9));
+
 		masterAxis = new MasterAxis();
+		masterAxisCreative = new MasterAxisCreative();
 		millstone = new Millstone();
 		mechanism = new Mechanism();
 		largeGearMaster = new LargeGearMaster();
 		largeGearSlave = new LargeGearSlave();
 		heatingCrucible = new HeatingCrucible();
 		fluidTube = new FluidTube();
+		redstoneFluidTube = new RedstoneFluidTube();
 		steamBoiler = new SteamBoiler();
 		rotaryPump = new RotaryPump();
 		steamTurbine = new SteamTurbine();
 		blockSalt = new BlockSalt();
-		fluidVoid = new FluidVoid();
 		heatSink = new HeatSink();
 		fluidTank = new FluidTank();
 		firebox = new Firebox();
+		icebox = new Icebox();
 		smelter = new Smelter();
+		steamer = new Steamer();
 		saltReactor = new SaltReactor();
 		fluidCoolingChamber = new FluidCoolingChamber();
 		radiator = new Radiator();
@@ -242,38 +290,89 @@ public class CRBlocks{
 		rotaryDrillGold = new RotaryDrill(true);
 		fatCollector = new FatCollector();
 		fatCongealer = new FatCongealer();
-		redstoneFluidTube = new RedstoneFluidTube();
+		fatFeeder = new FatFeeder();
 		waterCentrifuge = new WaterCentrifuge();
+		lightningRodExtension = new LightningRodExtension();
+		dynamo = new Dynamo();
+		windTurbine = new WindTurbine();
+		solarHeater = new SolarHeater();
+		heatReservoir = new HeatReservoir();
+		heatReservoirCreative = new HeatReservoirCreative();
+		stirlingEngine = new StirlingEngine();
+		stampMill = new StampMill();
+		stampMillTop = new StampMillTop();
+		oreCleanser = new OreCleanser();
+		blastFurnace = new BlastFurnace();
+		windingTable = new WindingTable();
+		detailedCrafter = new DetailedCrafter();
+
+		//Beams
+		blockPureQuartz = new BasicBlock("block_pure_quartz", getRockProperty());
+		blockBrightQuartz = new BasicBlock("block_bright_quartz", getRockProperty().lightLevel(state -> 15));
+		permeableGlass = new PermeableGlass();
+		permeableQuartz = new PermeableQuartz();
+		permeableObsidian = new PermeableObsidian();
+		redstoneCrystal = new BasicBlock("redstone_crystal", getGlassProperty().strength(0.3F)){
+			@Override
+			public boolean isSignalSource(BlockState state){
+				return true;
+			}
+
+			@Override
+			public int getSignal(BlockState state, BlockGetter world, BlockPos pos, Direction side) {
+				return 15;
+			}
+
+			@Override
+			public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn){
+				tooltip.add(Component.translatable("tt.crossroads.redstone_crystal.drops"));
+				tooltip.add(Component.translatable("tt.crossroads.redstone_crystal.power"));
+			}
+		};
 		beamExtractor = new BeamExtractor();
+		beamExtractorCreative = new BeamExtractorCreative();
 		quartzStabilizer = new QuartzStabilizer();
 		crystallinePrism = new CrystallinePrism();
 		beamReflector = new BeamReflector();
 		beamReflectorSensitive = new BeamReflectorSensitive();
 		lensFrame = new LensFrame();
-		blockPureQuartz = new BasicBlock("block_pure_quartz", CRBlocks.getRockProperty());
-		blockBrightQuartz = new BasicBlock("block_bright_quartz", CRBlocks.getRockProperty().lightLevel(state -> 15));
+		beamRedirector = new BeamRedirector();
 		beamSiphon = new BeamSiphon();
 		beamSplitter = new BeamSplitter();
 		colorChart = new ColorChart();
 		lightCluster = new LightCluster();
 		crystalMasterAxis = new CrystalMasterAxis();
 //		ratiator = new Ratiator();
+
+		//Technomancy
+		copshowiumCreationChamber = new CopshowiumCreationChamber();
+		clockworkStabilizer = new ClockworkStabilizer();
+		detailedAutoCrafter = new DetailedAutoCrafter();
 		beaconHarness = new BeaconHarness();
-		fatFeeder = new FatFeeder();
+		chronoHarness = new ChronoHarness();
 		redstoneAxis = new RedstoneAxis();
 		cageCharger = new CageCharger();
-		hamsterWheel = new HamsterWheel();
-		copshowiumCreationChamber = new CopshowiumCreationChamber();
+		beamCannon = new BeamCannon();
+		itemCannon = new ItemCannon();
 //		mathAxis = new MathAxis();
 		gatewayController = new GatewayController();
+		gatewayControllerDestination = new GatewayControllerDestination();
 		gatewayEdge = new GatewayFrameEdge();
 //		redstoneKeyboard = new RedstoneKeyboard();
-		detailedCrafter = new DetailedCrafter();
 //		prototypingTable = new PrototypingTable();
 //		prototype = new Prototype();
 //		prototypePort = new PrototypePort();
 //		mechanicalArm = new MechanicalArm();
 //		redstoneRegistry = new RedstoneRegistry();
+		lodestoneTurbine = new LodestoneTurbine();
+		lodestoneDynamo = new LodestoneDynamo();
+		sequenceBox = new SequenceBox();
+		temporalAccelerator = new TemporalAccelerator();
+		chunkAccelerator = new ChunkAccelerator();
+		fluxNode = new FluxNode();
+		fluxSink = new FluxSink();
+
+		//Alchemy
 		alchemicalTubeGlass = new AlchemicalTube(false);
 		redsAlchemicalTubeGlass = new RedsAlchemicalTube(false);
 		fluidInjectorGlass = new FluidInjector(false);
@@ -297,7 +396,6 @@ public class CRBlocks{
 		heatLimiterRedstone = new HeatLimiterRedstone();
 		reagentFilterGlass = new ReagentFilter(false);
 		reagentFilterCrystal = new ReagentFilter(true);
-		dynamo = new Dynamo();
 		teslaCoil = new TeslaCoil();
 		teslaCoilTopNormal = new TeslaCoilTop(TeslaCoilTop.TeslaCoilVariants.NORMAL);
 		teslaCoilTopDistance = new TeslaCoilTop(TeslaCoilTop.TeslaCoilVariants.DISTANCE);
@@ -305,11 +403,10 @@ public class CRBlocks{
 		teslaCoilTopAttack = new TeslaCoilTop(TeslaCoilTop.TeslaCoilVariants.ATTACK);
 		teslaCoilTopEfficiency = new TeslaCoilTop(TeslaCoilTop.TeslaCoilVariants.EFFICIENCY);
 		teslaCoilTopDecorative = new TeslaCoilTop(TeslaCoilTop.TeslaCoilVariants.DECORATIVE);
-		maxwellDemon = new MaxwellDemon();
 		glasswareHolder = new GlasswareHolder();
 		densusPlate = new DensusPlate(false);
 		antiDensusPlate = new DensusPlate(true);
-		cavorite = new BasicBlock("block_cavorite", CRBlocks.getRockProperty()){
+		cavorite = new BasicBlock("block_cavorite", getRockProperty()){
 			@Override
 			public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn){
 				tooltip.add(Component.translatable("tt.crossroads.cavorite"));
@@ -320,70 +417,32 @@ public class CRBlocks{
 		atmosCharger = new AtmosCharger();
 		voltusGenerator = new VoltusGenerator();
 		reactiveSpot = new ReactiveSpot();
-		clockworkStabilizer = new ClockworkStabilizer();
-		windTurbine = new WindTurbine();
-		solarHeater = new SolarHeater();
-		heatReservoir = new HeatReservoir();
-		stirlingEngine = new StirlingEngine();
-		icebox = new Icebox();
-		stampMill = new StampMill();
-		stampMillTop = new StampMillTop();
-		oreCleanser = new OreCleanser();
-		blastFurnace = new BlastFurnace();
-		beamRedirector = new BeamRedirector();
-		permeableGlass = new PermeableGlass();
-		permeableQuartz = new PermeableQuartz();
-		permeableObsidian = new PermeableObsidian();
-		fluxNode = new FluxNode();
-		temporalAccelerator = new TemporalAccelerator();
-		chronoHarness = new ChronoHarness();
-		fluxSink = new FluxSink();
-		steamer = new Steamer();
-		windingTable = new WindingTable();
-		redstoneCrystal = new BasicBlock("redstone_crystal", CRBlocks.getGlassProperty().strength(0.3F)){
-			@Override
-			public boolean isSignalSource(BlockState state){
-				return true;
-			}
+		fireDetector = new FireDetector();
 
-			@Override
-			public int getSignal(BlockState state, BlockGetter world, BlockPos pos, Direction side) {
-				return 15;
-			}
-
-			@Override
-			public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn){
-				tooltip.add(Component.translatable("tt.crossroads.redstone_crystal.drops"));
-				tooltip.add(Component.translatable("tt.crossroads.redstone_crystal.power"));
-			}
-		};
-		detailedAutoCrafter = new DetailedAutoCrafter();
-		lodestoneTurbine = new LodestoneTurbine();
-		lodestoneDynamo = new LodestoneDynamo();
-		sequenceBox = new SequenceBox();
-		chunkAccelerator = new ChunkAccelerator();
-		gatewayControllerDestination = new GatewayControllerDestination();
-		beamCannon = new BeamCannon();
+		//Witchcraft
 		formulationVat = new FormulationVat();
+		cultivatorVat = new CultivatorVat();
+		bloodCentrifuge = new BloodCentrifuge();
+		embryoLab = new EmbryoLab();
+		incubator = new Incubator();
 		brewingVat = new BrewingVat();
 		autoInjector = new AutoInjector();
 		coldStorage = new ColdStorage();
+		stasisStorage = new StasisStorage();
+		bloodBeamLinker = new BloodBeamLinker();
 		hydroponicsTrough = new HydroponicsTrough();
 		medicinalMushroom = new MedicinalMushroom();
 		petrolCactus = new PetrolCactus();
 		wheezewort = new Wheezewort();
-		stasisStorage = new StasisStorage();
-		cultivatorVat = new CultivatorVat();
-		incubator = new Incubator();
-		bloodCentrifuge = new BloodCentrifuge();
-		embryoLab = new EmbryoLab();
-		heatReservoirCreative = new HeatReservoirCreative();
-		masterAxisCreative = new MasterAxisCreative();
-		beamExtractorCreative = new BeamExtractorCreative();
-		itemCannon = new ItemCannon();
-		fireDetector = new FireDetector();
-		bloodBeamLinker = new BloodBeamLinker();
-		lightningRodExtension = new LightningRodExtension();
+
+		//Bobo
+		hamsterWheel = new HamsterWheel();
+		maxwellDemon = new MaxwellDemon();
+		fluidVoid = new FluidVoid();
+	}
+
+	public static void registerBlocks(RegisterEvent.RegisterHelper<Block> helper){
+		EventHandlerCommon.CRModEventsCommon.registerAll(helper, toRegister);
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -414,8 +473,8 @@ public class CRBlocks{
 	private static void setFluidTrans(GenericFluid.FluidData...fluids){
 		RenderType type = RenderType.translucent();
 		for(GenericFluid.FluidData f : fluids){
-			ItemBlockRenderTypes.setRenderLayer(f.still, type);
-			ItemBlockRenderTypes.setRenderLayer(f.flowing, type);
+			ItemBlockRenderTypes.setRenderLayer(f.getStill(), type);
+			ItemBlockRenderTypes.setRenderLayer(f.getFlowing(), type);
 		}
 	}
 }

@@ -7,13 +7,13 @@ import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.crossroads.api.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
+import com.Da_Technomancer.crossroads.entity.CRMobDamage;
 import com.Da_Technomancer.essentials.api.packets.SendLongToClient;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -33,7 +33,6 @@ import java.util.List;
 public class WindTurbineTileEntity extends ModuleTE{
 
 	public static final BlockEntityType<WindTurbineTileEntity> TYPE = CRTileEntity.createType(WindTurbineTileEntity::new, CRBlocks.windTurbine);
-	private static final DamageSource WIND_TURB_DAMAGE = new DamageSource("windmill").bypassArmor();
 
 	public static final double MAX_SPEED = 2D;
 	public static final double INERTIA = 1200;
@@ -176,9 +175,9 @@ public class WindTurbineTileEntity extends ModuleTE{
 			List<LivingEntity> ents = level.getEntitiesOfClass(LivingEntity.class, getTargetBB(), EntitySelector.LIVING_ENTITY_STILL_ALIVE);
 			for(LivingEntity ent : ents){
 				if(ent instanceof Player && murderEasterEgg.equals(((Player) ent).getGameProfile().getName())){
-					ent.hurt(WIND_TURB_DAMAGE, 100);//This seems fair
+					ent.hurt(CRMobDamage.damageSource(CRMobDamage.WINDMILL, level), 100);//This seems fair
 				}else{
-					ent.hurt(WIND_TURB_DAMAGE, 2);
+					ent.hurt(CRMobDamage.damageSource(CRMobDamage.WINDMILL, level), 2);
 				}
 			}
 		}

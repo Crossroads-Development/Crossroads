@@ -1,11 +1,10 @@
 package com.Da_Technomancer.crossroads.items.technomancy;
 
 import com.Da_Technomancer.crossroads.api.beams.BeamUnit;
+import com.Da_Technomancer.crossroads.api.templates.ICreativeTabPopulatingItem;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -15,14 +14,14 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class BeamCage extends Item{
+public class BeamCage extends Item implements ICreativeTabPopulatingItem{
 
 	public static final int CAPACITY = 2048;
 
 	public BeamCage(){
-		super(new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
+		super(new Properties().stacksTo(1));
 		String name = "beam_cage";
-		CRItems.toRegister.put(name, this);
+		CRItems.queueForRegister(name, this);
 	}
 
 	@Nonnull
@@ -48,13 +47,10 @@ public class BeamCage extends Item{
 	}
 
 	@Override
-	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items){
-		if(allowedIn(group)){
-			items.add(new ItemStack(this, 1));
-			ItemStack stack = new ItemStack(this, 1);
-			storeBeam(stack, new BeamUnit(CAPACITY, CAPACITY, CAPACITY, CAPACITY));
-			items.add(stack);
-		}
+	public ItemStack[] populateCreativeTab(){
+		ItemStack chargedStack = new ItemStack(this);
+		storeBeam(chargedStack, new BeamUnit(CAPACITY, CAPACITY, CAPACITY, CAPACITY));
+		return new ItemStack[] {new ItemStack(this), chargedStack};
 	}
 
 	@Override

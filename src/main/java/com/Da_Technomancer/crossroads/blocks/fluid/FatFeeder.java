@@ -30,8 +30,7 @@ public class FatFeeder extends BaseEntityBlock{
 	public FatFeeder(){
 		super(CRBlocks.getMetalProperty());
 		String name = "fat_feeder";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Override

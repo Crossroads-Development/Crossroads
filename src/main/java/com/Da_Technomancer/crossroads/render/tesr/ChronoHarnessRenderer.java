@@ -5,7 +5,7 @@ import com.Da_Technomancer.crossroads.blocks.technomancy.ChronoHarnessTileEntity
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -31,7 +31,7 @@ public class ChronoHarnessRenderer extends EntropyRenderer<ChronoHarnessTileEnti
 		float smallOffset = 0.0928F;
 		float largeOffset = 5F / 16F;
 
-		matrix.mulPose(Vector3f.YP.rotationDegrees(angle));
+		matrix.mulPose(Axis.YP.rotationDegrees(angle));
 
 		TextureAtlasSprite innerSprite = CRRenderUtil.getTextureSprite(CRRenderTypes.COPSHOWIUM_TEXTURE);
 		addRod(builder, matrix, smallOffset, smallOffset, innerSprite, medLight);
@@ -39,7 +39,7 @@ public class ChronoHarnessRenderer extends EntropyRenderer<ChronoHarnessTileEnti
 		addRod(builder, matrix, -smallOffset, -smallOffset, innerSprite, medLight);
 		addRod(builder, matrix, -smallOffset, smallOffset, innerSprite, medLight);
 
-		matrix.mulPose(Vector3f.YP.rotationDegrees(-2F * angle));
+		matrix.mulPose(Axis.YP.rotationDegrees(-2F * angle));
 
 		TextureAtlasSprite outerSprite = CRRenderUtil.getTextureSprite(CRRenderTypes.CAST_IRON_TEXTURE);
 		addRod(builder, matrix, smallOffset, largeOffset, outerSprite, medLight);

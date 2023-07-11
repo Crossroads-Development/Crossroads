@@ -4,13 +4,13 @@ import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.beams.LensFrameTileEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -41,14 +41,14 @@ public class LensFrameRenderer extends BeamRenderer<LensFrameTileEntity> {
 				Direction.Axis axis = state.getValue(CRProperties.AXIS);
 				switch(axis){
 					case X:
-						matrix.mulPose(Vector3f.YP.rotationDegrees(90));
+						matrix.mulPose(Axis.YP.rotationDegrees(90));
 						break;
 					case Y:
-						matrix.mulPose(Vector3f.XP.rotationDegrees(90));
+						matrix.mulPose(Axis.XP.rotationDegrees(90));
 						break;
 				}
 
-				itemRenderer.renderStatic(stack, ItemTransforms.TransformType.FIXED, combinedLight, combinedOverlay, matrix, buffer, (int) beam.getBlockPos().asLong());
+				itemRenderer.renderStatic(stack, ItemDisplayContext.FIXED, combinedLight, combinedOverlay, matrix, buffer, beam.getLevel(), (int) beam.getBlockPos().asLong());
 			}
 
 			matrix.popPose();

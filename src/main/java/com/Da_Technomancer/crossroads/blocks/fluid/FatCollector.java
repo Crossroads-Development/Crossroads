@@ -28,8 +28,7 @@ public class FatCollector extends BaseEntityBlock{
 	public FatCollector(){
 		super(CRBlocks.getMetalProperty());
 		String name = "fat_collector";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Override

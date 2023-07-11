@@ -24,8 +24,7 @@ public abstract class AbstractCannon extends BaseEntityBlock{
 
 	public AbstractCannon(String name, Properties properties){
 		super(properties);
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 		registerDefaultState(defaultBlockState());
 	}
 

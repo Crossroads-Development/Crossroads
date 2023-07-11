@@ -36,8 +36,7 @@ public class FluxNode extends BaseEntityBlock implements IReadable{
 	public FluxNode(){
 		super(CRBlocks.getMetalProperty());
 		String name = "flux_node";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Override

@@ -51,8 +51,7 @@ public class AutoInjector extends TEBlock implements IReadable{
 	public AutoInjector(){
 		super(CRBlocks.getMetalProperty());
 		String name = "auto_injector";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Override

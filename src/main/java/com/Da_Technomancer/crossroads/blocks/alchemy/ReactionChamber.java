@@ -42,8 +42,7 @@ public class ReactionChamber extends BaseEntityBlock implements IReadable{
 		super(CRBlocks.getGlassProperty().noOcclusion());
 		this.crystal = crystal;
 		String name = (crystal ? "crystal_" : "") + "reaction_chamber";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Override

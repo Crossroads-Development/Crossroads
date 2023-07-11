@@ -34,8 +34,7 @@ public class HeatReservoir extends BaseEntityBlock implements IReadable{
 	public HeatReservoir(){
 		super(CRBlocks.getMetalProperty());
 		String name = "heat_reservoir";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Override

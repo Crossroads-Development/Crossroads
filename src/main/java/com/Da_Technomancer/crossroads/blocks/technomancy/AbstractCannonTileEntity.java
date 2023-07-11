@@ -11,8 +11,6 @@ import com.Da_Technomancer.crossroads.api.templates.IInfoTE;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import com.Da_Technomancer.essentials.api.packets.ILongReceiver;
 import com.Da_Technomancer.essentials.api.packets.SendLongToClient;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -27,6 +25,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -96,35 +96,12 @@ public abstract class AbstractCannonTileEntity extends BlockEntity implements IT
 	 */
 	protected Vec3 getAimedVec(){
 		Direction facing = getBlockState().getValue(CRProperties.FACING);
-		//Done via several multiplied rotation matrices simplified into a single multiplied quaternion for facing and a single vector
+		//Done via several multiplied rotation matrices simplified into a single multiplied Quaternionf for facing and a single vector
 		float sinPhi = (float) Math.sin(getPitch());
 		Vector3f ray = new Vector3f(-(float) Math.sin(getYaw()) * sinPhi, (float) Math.cos(getPitch()), (float) Math.cos(getYaw()) * sinPhi);
-		Quaternion directionRotation = getRotationFromDirection(facing);
-		ray.transform(directionRotation);
+		Quaternionf directionRotation = facing.getRotation();
+		ray.rotate(directionRotation);
 		return new Vec3(ray);
-	}
-
-	private static Quaternion getRotationFromDirection(Direction dir){
-		//Reimplementation of Direction.getRotation(), as that method is client side only
-		Quaternion quaternion = new Quaternion(Vector3f.XP, 90, true);//Quaternion for XP axis with 90 degree rotation
-		switch(dir) {
-			case DOWN:
-				return new Quaternion(Vector3f.XP, 180, true);//XP axis, rotated 180 degrees
-			case UP:
-				return Quaternion.ONE;
-			case NORTH:
-				quaternion.mul(new Quaternion(Vector3f.ZP, 180, true));//ZP, rotated 180 deg
-				return quaternion;
-			case SOUTH:
-				return quaternion;
-			case WEST:
-				quaternion.mul(new Quaternion(Vector3f.ZP, 90, true));//ZP, rotated 90 deg
-				return quaternion;
-			case EAST:
-			default:
-				quaternion.mul(new Quaternion(Vector3f.ZP, -90.0F, true));//ZP, rotated -90 deg
-				return quaternion;
-		}
 	}
 
 	private void updateMotionToClient(){

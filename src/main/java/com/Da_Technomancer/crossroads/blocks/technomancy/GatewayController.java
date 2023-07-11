@@ -37,8 +37,7 @@ public class GatewayController extends BaseEntityBlock implements IReadable{
 	public GatewayController(){
 		super(CRBlocks.getMetalProperty());
 		String name = "gateway_frame";//This registry name is bad, but kept for backwards compatibility
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 		registerDefaultState(defaultBlockState().setValue(CRProperties.ACTIVE, false));
 	}
 

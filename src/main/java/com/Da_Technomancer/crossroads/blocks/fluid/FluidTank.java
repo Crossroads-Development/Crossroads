@@ -35,8 +35,7 @@ public class FluidTank extends BaseEntityBlock implements IReadable{
 	public FluidTank(){
 		super(CRBlocks.getMetalProperty());
 		String name = "fluid_tank";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Override

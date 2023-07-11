@@ -7,6 +7,6 @@ public class FlorenceFlask extends AbstractGlassware{
 	public FlorenceFlask(boolean crystal){
 		super(GlasswareTypes.FLORENCE, crystal);
 		String name = "florence_flask_" + (crystal ? "cryst" : "glass");
-		CRItems.toRegister.put(name, this);
+		CRItems.queueForRegister(name, this);
 	}
 }

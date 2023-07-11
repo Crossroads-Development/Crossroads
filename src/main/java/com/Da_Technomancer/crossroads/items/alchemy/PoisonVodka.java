@@ -1,14 +1,13 @@
 package com.Da_Technomancer.crossroads.items.alchemy;
 
 import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.entity.CRMobDamage;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.network.chat.Component;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
@@ -24,12 +23,11 @@ public class PoisonVodka extends Item{
 
 	private static final int BASE_DURATION = 20 * 60 * 3;
 	private static final int BASE_DAMAGE = 8;
-	private static final DamageSource VODKA_DAMAGE = new DamageSource("vodka");
 
 	public PoisonVodka(){
-		super(new Properties().tab(CRItems.TAB_CROSSROADS));
+		super(new Properties());
 		String name = "poison_vodka";
-		CRItems.toRegister.put(name, this);
+		CRItems.queueForRegister(name, this);
 	}
 
 	@Override
@@ -49,11 +47,7 @@ public class PoisonVodka extends Item{
 
 	public static void applyToEntity(Level world, LivingEntity target, LivingEntity source, float multiplier){
 		if(!world.isClientSide){
-			if(target == source || source == null){
-				target.hurt(VODKA_DAMAGE, BASE_DAMAGE * multiplier);
-			}else{
-				target.hurt(new EntityDamageSource("vodka", source), BASE_DAMAGE * multiplier);
-			}
+			target.hurt(CRMobDamage.damageSource(CRMobDamage.VODKA, world, target == source ? null : source), BASE_DAMAGE * multiplier);
 
 			int duration = (int) (BASE_DURATION * multiplier);
 			target.addEffect(new MobEffectInstance(MobEffects.CONFUSION, duration, 0));

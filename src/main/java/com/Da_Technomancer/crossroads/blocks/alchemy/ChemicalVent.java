@@ -24,8 +24,7 @@ public class ChemicalVent extends BaseEntityBlock{
 	public ChemicalVent(){
 		super(CRBlocks.getGlassProperty());
 		String name = "chemical_vent";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Override

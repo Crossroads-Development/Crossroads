@@ -9,7 +9,6 @@ import com.Da_Technomancer.crossroads.integration.curios.CurioHelper;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -30,9 +29,9 @@ public class StaffTechnomancy extends BeamUsingItem{
 	private final Multimap<Attribute, AttributeModifier> attributeModifiers;
 
 	public StaffTechnomancy(){
-		super(new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
+		super(new Properties().stacksTo(1));
 		String name = "staff_technomancy";
-		CRItems.toRegister.put(name, this);
+		CRItems.queueForRegister(name, this);
 
 		//Attributes
 		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
@@ -54,8 +53,8 @@ public class StaffTechnomancy extends BeamUsingItem{
 	}
 
 	@Override
-	public void onUsingTick(ItemStack stack, LivingEntity player, int count){
-		if(!player.level.isClientSide && player.isAlive() && (getUseDuration(stack) - count) % BeamUtil.BEAM_TIME == 0){
+	public void onUseTick(Level world, LivingEntity player, ItemStack stack, int count){
+		if(!world.isClientSide && player.isAlive() && (getUseDuration(stack) - count) % BeamUtil.BEAM_TIME == 0){
 			ItemStack cage = CurioHelper.getEquipped(CRItems.beamCage, player);//player.getHeldItem(player.getActiveHand() == Hand.MAIN_HAND ? Hand.OFF_HAND : Hand.MAIN_HAND);
 			byte[] setting = getSetting(stack);
 			BeamUnit cageBeam = BeamCage.getStored(cage);
@@ -69,7 +68,7 @@ public class StaffTechnomancy extends BeamUsingItem{
 				Vec3 start = new Vec3(player.getX() - (heldOffset * Math.cos(Math.toRadians(player.getYRot()))), player.getY() + player.getEyeHeight() + 0.4D, player.getZ() - (heldOffset * Math.sin(Math.toRadians(player.getYRot()))));
 
 				Vec3 ray = player.getLookAngle();
-				BeamHit beamHitResult = BeamUtil.rayTraceBeams(mag, player.level, start, player.getEyePosition(1), ray, player, null, MAX_RANGE, false);
+				BeamHit beamHitResult = BeamUtil.rayTraceBeams(mag, world, start, player.getEyePosition(1), ray, player, null, MAX_RANGE, false);
 //				Direction effectDir = beamHitResult.getDirection();
 
 //				double[] end = new double[] {player.getPosX(), player.getEyeHeight() + player.getPosY(), player.getPosZ()};
@@ -117,24 +116,24 @@ public class StaffTechnomancy extends BeamUsingItem{
 //					}
 //				}
 
-//				BlockEntity te = player.level.getBlockEntity(beamHitResult.getPos());
+//				BlockEntity te = world.getBlockEntity(beamHitResult.getPos());
 //				LazyOptional<IBeamHandler> opt;
 //				if(te != null && (opt = te.getCapability(Capabilities.BEAM_CAPABILITY, effectDir)).isPresent()){
 //					opt.orElseThrow(NullPointerException::new).setBeam(mag);
 //				}else{
 //					EnumBeamAlignments align = mag.getAlignment();
-//					if(!player.level.isOutsideBuildHeight(beamHitResult.getPos())){
+//					if(!world.isOutsideBuildHeight(beamHitResult.getPos())){
 //						align.getEffect().doBeamEffect(align, mag.getVoid() != 0, Math.min(BeamUtil.MAX_EFFECT_POWER, mag.getPower()), beamHitResult);
 //					}
 //				}
 
 				EnumBeamAlignments align = mag.getAlignment();
-				if(!player.level.isOutsideBuildHeight(beamHitResult.getPos())){
+				if(!world.isOutsideBuildHeight(beamHitResult.getPos())){
 					align.getEffect().doBeamEffect(align, mag.getVoid() != 0, Math.min(BeamUtil.MAX_EFFECT_POWER, mag.getPower()), beamHitResult);
 				}
 
 				Vec3 beamVec = beamHitResult.getHitPos().subtract(start);
-				CRRenderUtil.addBeam(player.level, start.x, start.y, start.z, beamVec.length(), (float) Math.toDegrees(Math.atan2(-beamVec.y, Math.sqrt(beamVec.x * beamVec.x + beamVec.z * beamVec.z))), (float) Math.toDegrees(Math.atan2(-beamVec.x, beamVec.z)), (byte) Math.round(Math.sqrt(mag.getPower())), mag.getRGB().getRGB());
+				CRRenderUtil.addBeam(world, start.x, start.y, start.z, beamVec.length(), (float) Math.toDegrees(Math.atan2(-beamVec.y, Math.sqrt(beamVec.x * beamVec.x + beamVec.z * beamVec.z))), (float) Math.toDegrees(Math.atan2(-beamVec.x, beamVec.z)), (byte) Math.round(Math.sqrt(mag.getPower())), mag.getRGB().getRGB());
 			}
 		}
 	}

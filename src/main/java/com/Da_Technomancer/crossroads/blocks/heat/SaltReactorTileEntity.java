@@ -21,10 +21,9 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
@@ -103,7 +102,7 @@ public class SaltReactorTileEntity extends InventoryTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
+		if(capability == ForgeCapabilities.FLUID_HANDLER){
 			return (LazyOptional<T>) globalFluidOpt;
 		}
 
@@ -111,7 +110,7 @@ public class SaltReactorTileEntity extends InventoryTE{
 			return (LazyOptional<T>) heatOpt;
 		}
 
-		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
+		if(capability == ForgeCapabilities.ITEM_HANDLER){
 			return (LazyOptional<T>) itemOpt;
 		}
 

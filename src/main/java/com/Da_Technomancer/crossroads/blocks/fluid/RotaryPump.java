@@ -36,8 +36,7 @@ public class RotaryPump extends BaseEntityBlock{
 	public RotaryPump(){
 		super(CRBlocks.getMetalProperty());
 		String name = "rotary_pump";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Override

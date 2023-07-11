@@ -52,9 +52,9 @@ public class BoboRod extends Item{
 	private static final TagKey<Item> offering = CraftingUtil.getTagKey(ForgeRegistries.Keys.ITEMS, new ResourceLocation(Crossroads.MODID, "bobo_unlock_key"));
 
 	protected BoboRod(){
-		super(new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
+		super(new Properties().stacksTo(1));
 		String name = "bobo_rod";
-		CRItems.toRegister.put(name, this);
+		CRItems.queueForRegister(name, this);
 		DispenserBlock.registerBehavior(this, BOBO_DISPENSER_BEHAVIOR);
 	}
 

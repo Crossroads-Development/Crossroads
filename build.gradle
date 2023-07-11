@@ -40,8 +40,8 @@ minecraft {
 
 	runs {
 		client {
-			workingDirectory project.file('run')
-
+			workingDirectory project.file('run\\client')
+			jvmArgs '-ea' //Enable assert keyword
 			// Recommended logging data for a userdev environment
 			property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
 
@@ -60,8 +60,8 @@ minecraft {
 		}
 
 		server {
-			workingDirectory project.file('run')
-
+			workingDirectory project.file('run\\server')
+			jvmArgs '-ea' //Enable assert keyword
 			// Recommended logging data for a userdev environment
 			property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
 
@@ -89,11 +89,28 @@ repositories {
 		name = 'tterrag maven'
 		url = 'https://maven.tterrag.com/'
 	}
-	flatDir { dirs 'libs' }//Lets us grab dependencies from the libs folder
+	maven {
+		url "https://cursemaven.com"
+		content {
+			includeGroup "curse.maven"
+		}
+	} // Essentials (release versions)
+	flatDir { dirs 'libs' }//Essentials (dev versions); lets us grab dependencies from the libs folder
 }
 
 dependencies {
 	minecraft("net.minecraftforge:forge:$mc_version-$fg_version")
+
+	assert essentials_dev_variant == 'false' || essentials_dev_variant == 'true'
+	//Essentials
+	//Can either depend on a file published to Curse or an essentials jar in a folder called "libs", in the same parent folder as "src"
+	if(essentials_dev_variant == 'false'){
+		//See https://www.cursemaven.com/ for explanation
+		implementation(fg.deobf("curse.maven:essentials-293752:$essentials_file_id"))
+	}else{
+		//When setting up a dev environment for Crossroads, make sure to have an essentials jar in a folder called "libs", in the same parent folder as "src"
+		implementation(fg.deobf("com.technomancer.essentials:essentials-$essentials_version:dev"))
+	}
 
 	//Compile against APIs
 	//JEI
@@ -105,18 +122,21 @@ dependencies {
 	runtimeOnly fg.deobf("mezz.jei:jei-$jei_mc_version-forge:$jei_version")//JEI
 	runtimeOnly(fg.deobf("top.theillusivec4.curios:curios-forge:$curios_version"))//Curios
 
-	compileOnly(fg.deobf("vazkii.patchouli:Patchouli:$patchouli_version"))
-	runtimeOnly(fg.deobf("vazkii.patchouli:Patchouli:$patchouli_version"))
+	compileOnly(fg.deobf("vazkii.patchouli:Patchouli:$patchouli_version-FORGE:api"))
+	runtimeOnly(fg.deobf("vazkii.patchouli:Patchouli:$patchouli_version-FORGE"))
 
 	//No special CR integration for hwayla- only used for testing, so no compile inclusion needed
 //	runtimeOnly(fg.deobf("mcp.mobius.waila:Hwyla:$hwyla_version"))
 
-	implementation fg.deobf("com.simibubi.create:create-${create_minecraft_version}:${create_version}:slim") { transitive = false }
-	implementation fg.deobf("com.jozufozu.flywheel:flywheel-forge-${flywheel_minecraft_version}:${flywheel_version}")
-	implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
+	compileOnly fg.deobf("com.simibubi.create:create-${create_minecraft_version}:${create_version}:slim") { transitive = false }
+	compileOnly fg.deobf("com.jozufozu.flywheel:flywheel-forge-${flywheel_minecraft_version}:${flywheel_version}")
+	compileOnly fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
 
-	//When setting up a dev environment for Crossroads, make sure to have an essentials jar in a folder called "libs", in the same parent folder as "src"
-	implementation(fg.deobf("com.technomancer.essentials:essentials-$essentials_version:dev"))
+//	TODO Create skipped MC1.19.4
+//	runtimeOnly fg.deobf("com.simibubi.create:create-${create_minecraft_version}:${create_version}:slim") { transitive = false }
+//	runtimeOnly fg.deobf("com.jozufozu.flywheel:flywheel-forge-${flywheel_minecraft_version}:${flywheel_version}")
+//	runtimeOnly fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
+
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..

@@ -33,10 +33,9 @@ import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import org.apache.commons.lang3.tuple.Triple;
 
@@ -87,7 +86,7 @@ public class HydroponicsTroughTileEntity extends InventoryTE{
 
 	public HydroponicsTroughTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state, 5);//Slot 0 is the seed; 1, 2, 3, 4 are output
-		fluidProps[0] = new TankProperty(CAPACITY, true, false, f -> f == CRFluids.fertilizerSolution.still);
+		fluidProps[0] = new TankProperty(CAPACITY, true, false, f -> f == CRFluids.fertilizerSolution.getStill());
 		initFluidManagers();
 	}
 
@@ -259,10 +258,10 @@ public class HydroponicsTroughTileEntity extends InventoryTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
-		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && facing != Direction.UP){
+		if(capability == ForgeCapabilities.ITEM_HANDLER && facing != Direction.UP){
 			return (LazyOptional<T>) itemOpt;
 		}
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing != Direction.UP){
+		if(capability == ForgeCapabilities.FLUID_HANDLER && facing != Direction.UP){
 			return (LazyOptional<T>) globalFluidOpt;
 		}
 

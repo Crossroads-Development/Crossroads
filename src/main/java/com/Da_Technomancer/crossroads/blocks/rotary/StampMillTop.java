@@ -40,8 +40,7 @@ public class StampMillTop extends Block{
 	public StampMillTop(){
 		super(Properties.of(Material.WOOD).strength(1).sound(SoundType.METAL));
 		String name = "stamp_mill_top";
-		CRBlocks.toRegister.put(name, this);
-		//Not added to queue to prevent registering item form
+		CRBlocks.queueForRegister(name, this, false, null);
 	}
 
 	@Override

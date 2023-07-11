@@ -39,8 +39,7 @@ public class GlasswareHolder extends BaseEntityBlock{
 
 	protected GlasswareHolder(String name){
 		super(CRBlocks.getMetalProperty());
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Override

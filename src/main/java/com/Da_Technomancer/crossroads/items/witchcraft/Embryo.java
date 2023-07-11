@@ -23,7 +23,7 @@ public class Embryo extends Item implements ICultivatable{
 	public Embryo(){
 		super(new Item.Properties().stacksTo(1));//Not added to any creative tab
 		String name = "embryo";
-		CRItems.toRegister.put(name, this);
+		CRItems.queueForRegister(name, this, null);
 	}
 
 	@Override

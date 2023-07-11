@@ -21,8 +21,7 @@ public class PermeableGlass extends Block{
 	public PermeableGlass(){
 		super(CRBlocks.getGlassProperty().noOcclusion());
 		String name = "permeable_glass";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Override

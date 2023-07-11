@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -26,13 +26,13 @@ public class RenderFlyingMachine extends EntityRenderer<EntityFlyingMachine>{
 
 	@Override
 	public void render(EntityFlyingMachine entity, float entityYaw, float partialTicks, PoseStack matrix, MultiBufferSource buffer, int light){
-		matrix.mulPose(Vector3f.YP.rotationDegrees(-entityYaw));
+		matrix.mulPose(Axis.YP.rotationDegrees(-entityYaw));
 
 		VertexConsumer builder = buffer.getBuffer(RenderType.entitySolid(getTextureLocation(entity)));
 
 		matrix.pushPose();
 		matrix.translate(0, 0.5D, 0);
-		matrix.mulPose(Vector3f.XP.rotation(-entity.getAngle()));
+		matrix.mulPose(Axis.XP.rotation(-entity.getAngle()));
 
 		//All of these texture coords were originally specified as literals, and now that I have to port it to the new renderer, I regret this fact
 		//But am also too lazy to fix this for the future

@@ -27,10 +27,10 @@ public class GearFacade extends Item{
 	private final FacadeBlock block;
 
 	public GearFacade(FacadeBlock block){
-		super(new Item.Properties().tab(CRItems.TAB_CROSSROADS));
+		super(new Item.Properties());
 		this.block = block;
 		String name = "gear_facade_" + block.getSaveName();
-		CRItems.toRegister.put(name, this);
+		CRItems.queueForRegister(name, this);
 	}
 
 	protected IMechanism<?> mechanismToPlace(){

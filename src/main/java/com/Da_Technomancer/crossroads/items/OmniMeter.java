@@ -30,9 +30,9 @@ import java.util.ArrayList;
 public class OmniMeter extends Item{
 
 	protected OmniMeter(){
-		super(new Item.Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
+		super(new Item.Properties().stacksTo(1));
 		String name = "omnimeter";
-		CRItems.toRegister.put(name, this);
+		CRItems.queueForRegister(name, this);
 	}
 
 	public static final int CHAT_ID = 279478;//Value chosen at random

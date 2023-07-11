@@ -53,7 +53,7 @@ public abstract class AbstractNutrientEnvironmentTileEntity extends InventoryTE{
 	}
 
 	protected boolean canCultivate(){
-		return fluids[nutrientTankIndex].getFluid() == CRFluids.nutrientSolution.still && fluids[nutrientTankIndex].getAmount() > 0;
+		return fluids[nutrientTankIndex].getFluid() == CRFluids.nutrientSolution.getStill() && fluids[nutrientTankIndex].getAmount() > 0;
 	}
 
 	@Override

@@ -33,8 +33,7 @@ public class ChunkAccelerator extends BaseEntityBlock{
 	public ChunkAccelerator(){
 		super(CRBlocks.getMetalProperty());
 		String name = "chunk_accelerator";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Override

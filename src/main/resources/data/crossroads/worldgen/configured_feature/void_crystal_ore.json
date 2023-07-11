@@ -1,0 +1,18 @@
+{
+	"type": "crossroads:single_gen",
+	"config": {
+		"size": 1,
+		"discard_chance_on_air_exposure": 0,
+		"targets": [
+			{
+				"state": {
+					"Name": "crossroads:ore_void"
+				},
+				"target": {
+					"predicate_type": "minecraft:tag_match",
+					"tag": "forge:end_stones"
+				}
+			}
+		]
+	}
+}

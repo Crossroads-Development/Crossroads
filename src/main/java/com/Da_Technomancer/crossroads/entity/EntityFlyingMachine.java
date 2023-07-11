@@ -5,22 +5,21 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.IndirectEntityDamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkHooks;
-
-import java.util.List;
 
 public class EntityFlyingMachine extends Entity{
 
@@ -141,20 +140,16 @@ public class EntityFlyingMachine extends Entity{
 		if(isInvulnerableTo(source)){
 			return false;
 		}else if(!level.isClientSide && isAlive()){
-			if(source instanceof IndirectEntityDamageSource && source.getEntity() != null && hasPassenger(source.getEntity())){
-				return false;
-			}else{
-				damage += amount * 10F;
-				markHurt();
-				boolean flag = source.getEntity() instanceof Player && ((Player) source.getEntity()).isCreative();
+			damage += amount * 10F;
+			markHurt();
+			boolean flag = source.getEntity() instanceof Player && ((Player) source.getEntity()).isCreative();
 
-				if(flag || damage > 40){
-					if(!flag && level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)){
-						spawnAtLocation(CRItems.flyingMachine);
-					}
-
-					remove(RemovalReason.KILLED);
+			if(flag || damage > 40){
+				if(!flag && level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)){
+					spawnAtLocation(CRItems.flyingMachine);
 				}
+
+				remove(RemovalReason.KILLED);
 			}
 		}
 		return true;
@@ -176,13 +171,17 @@ public class EntityFlyingMachine extends Entity{
 	}
 
 	@Override
-	public Entity getControllingPassenger(){
-		List<Entity> list = getPassengers();
-		return list.isEmpty() ? null : list.get(0);
+	public LivingEntity getControllingPassenger(){
+		Entity entity = getFirstPassenger();
+		if(entity instanceof LivingEntity living){
+			return living;
+		}else{
+			return null;
+		}
 	}
 
 	@Override
-	public Packet<?> getAddEntityPacket(){
+	public Packet<ClientGamePacketListener> getAddEntityPacket(){
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 

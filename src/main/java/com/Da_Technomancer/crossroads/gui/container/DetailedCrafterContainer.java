@@ -255,7 +255,7 @@ public class DetailedCrafterContainer extends RecipeBookMenu<CraftingContainer>{
 			if(recipeOpt.isPresent()){
 				CraftingRecipe recipe = recipeOpt.get();
 				if(outInv.setRecipeUsed(world, serverplayerentity, recipe)){
-					itemstack = recipe.assemble(inInv);
+					itemstack = recipe.assemble(inInv, world.registryAccess());
 				}
 			}
 			outInv.setItem(0, itemstack);

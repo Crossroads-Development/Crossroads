@@ -17,8 +17,7 @@ public class PermeableObsidian extends Block{
 	public PermeableObsidian(){
 		super(Properties.of(Material.STONE, MaterialColor.COLOR_BLACK).strength(50, 1200));
 		String name = "permeable_obsidian";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Override

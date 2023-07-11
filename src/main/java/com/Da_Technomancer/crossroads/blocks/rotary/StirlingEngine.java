@@ -27,8 +27,7 @@ public class StirlingEngine extends BaseEntityBlock{
 	public StirlingEngine(){
 		super(CRBlocks.getMetalProperty());
 		String name = "stirling_engine";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 		registerDefaultState(defaultBlockState().setValue(CRProperties.POWER_LEVEL_5, 2));
 	}
 

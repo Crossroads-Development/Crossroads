@@ -31,9 +31,9 @@ public class BloodCompass extends Item{
 	public EntitySyncRecord syncedEntity = null;
 
 	public BloodCompass(){
-		super(new Item.Properties().tab(CRItems.TAB_CROSSROADS));
+		super(new Item.Properties());
 		String name = "blood_compass";
-		CRItems.toRegister.put(name, this);
+		CRItems.queueForRegister(name, this);
 	}
 
 	@Nullable

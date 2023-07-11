@@ -1,33 +1,32 @@
 package com.Da_Technomancer.crossroads.items;
 
 import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.api.templates.ICreativeTabPopulatingItem;
 import net.minecraft.core.Direction;
-import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class LeydenJar extends Item{
+public class LeydenJar extends Item implements ICreativeTabPopulatingItem{
 
 	public static final int MAX_CHARGE = 100_000;
 	
 	protected LeydenJar(){
-		super(new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
+		super(new Properties().stacksTo(1));
 		String name = "leyden_jar";
 //		hasSubtypes = true;
-		CRItems.toRegister.put(name, this);
+		CRItems.queueForRegister(name, this);
 	}
 	
 	public static int getCharge(ItemStack stack){
@@ -58,13 +57,10 @@ public class LeydenJar extends Item{
 	}
 
 	@Override
-	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items){
-		if(allowedIn(group)){
-			items.add(new ItemStack(this, 1));
-			ItemStack stack = new ItemStack(this, 1);
-			setCharge(stack, MAX_CHARGE);
-			items.add(stack);
-		}
+	public ItemStack[] populateCreativeTab(){
+		ItemStack chargedStack = new ItemStack(this, 1);
+		setCharge(chargedStack, MAX_CHARGE);
+		return new ItemStack[] {new ItemStack(this, 1), chargedStack};
 	}
 
 	@Override
@@ -86,7 +82,7 @@ public class LeydenJar extends Item{
 		@Override
 		@SuppressWarnings("unchecked")
 		public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction dir){
-			if(cap == CapabilityEnergy.ENERGY){
+			if(cap == ForgeCapabilities.ENERGY){
 				return (LazyOptional<T>) holder;
 			}
 			return LazyOptional.empty();

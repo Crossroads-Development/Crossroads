@@ -23,8 +23,8 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
@@ -127,7 +127,7 @@ public class ItemCannonTileEntity extends AbstractCannonTileEntity{
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side){
-		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
+		if(cap == ForgeCapabilities.ITEM_HANDLER){
 			return (LazyOptional<T>) itemOpt;
 		}
 		if(cap == RedstoneUtil.REDSTONE_CAPABILITY){

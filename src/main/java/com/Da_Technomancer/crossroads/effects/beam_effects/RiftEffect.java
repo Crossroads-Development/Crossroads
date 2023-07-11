@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.effects.beam_effects;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.beams.BeamHit;
 import com.Da_Technomancer.crossroads.api.beams.EnumBeamAlignments;
+import com.Da_Technomancer.crossroads.entity.CRMobDamage;
 import com.Da_Technomancer.crossroads.entity.EntityGhostMarker;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -18,7 +19,6 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.eventbus.api.Event;
 
 public class RiftEffect extends BeamEffect{
 
@@ -59,27 +59,24 @@ public class RiftEffect extends BeamEffect{
 							Entity ent = entry.type.create(worldServ);
 							Vec3 endPos = beamHit.getHitPos();
 							ent.setPos(endPos.x, endPos.y, endPos.z);
-							Event.Result r = ent instanceof Mob ? ForgeEventFactory.canEntitySpawn((Mob) ent, worldServ, endPos.x, endPos.y, endPos.z, null, MobSpawnType.SPAWNER) : Event.Result.DEFAULT;
-							if(r == Event.Result.ALLOW || r == Event.Result.DEFAULT){
-								if(peaceful){//In peaceful, we spawn the mob drops instead of the entity
-									if(ent instanceof LivingEntity lEnt && worldServ.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT)){
-										//All the methods for this are protected, so we re-implement them here
+							if(peaceful){//In peaceful, we spawn the mob drops instead of the entity
+								if(ent instanceof LivingEntity lEnt && worldServ.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT)){
+									//All the methods for this are protected, so we re-implement them here
 
-										//LivingEntity::dropLoot
-										ResourceLocation resourcelocation = lEnt.getLootTable();
-										LootTable loottable = worldServ.getServer().getLootTables().get(resourcelocation);
-										LootContext.Builder lootcontext$builder = new LootContext.Builder(worldServ).withRandom(worldServ.random).withParameter(LootContextParams.THIS_ENTITY, lEnt).withParameter(LootContextParams.ORIGIN, lEnt.position()).withParameter(LootContextParams.DAMAGE_SOURCE, VoidEffect.VOID).withOptionalParameter(LootContextParams.KILLER_ENTITY, null).withOptionalParameter(LootContextParams.DIRECT_KILLER_ENTITY, null);
-										LootContext ctx = lootcontext$builder.create(LootContextParamSets.ENTITY);
-										loottable.getRandomItems(ctx).forEach(lEnt::spawnAtLocation);
+									//LivingEntity::dropLoot
+									ResourceLocation resourcelocation = lEnt.getLootTable();
+									LootTable loottable = worldServ.getServer().getLootTables().get(resourcelocation);
+									LootContext.Builder lootcontext$builder = new LootContext.Builder(worldServ).withRandom(worldServ.random).withParameter(LootContextParams.THIS_ENTITY, lEnt).withParameter(LootContextParams.ORIGIN, lEnt.position()).withParameter(LootContextParams.DAMAGE_SOURCE, CRMobDamage.damageSource(CRMobDamage.VOID, worldServ)).withOptionalParameter(LootContextParams.KILLER_ENTITY, null).withOptionalParameter(LootContextParams.DIRECT_KILLER_ENTITY, null);
+									LootContext ctx = lootcontext$builder.create(LootContextParamSets.ENTITY);
+									loottable.getRandomItems(ctx).forEach(lEnt::spawnAtLocation);
 
-										//We don't implement/access LivingEntity::dropSpecialItems, because that is entity specific and usually irrelevant for newly spawned mobs
-									}
-								}else{
-									if(ent instanceof Mob){
-										((Mob) ent).finalizeSpawn(worldServ, worldServ.getCurrentDifficultyAt(beamHit.getPos()), MobSpawnType.SPAWNER, null, null);//Gives mobs weapons/armor, makes slimes not have glitched health, and other essential things
-									}
-									worldServ.addFreshEntity(ent);
+									//We don't implement/access LivingEntity::dropSpecialItems, because that is entity specific and usually irrelevant for newly spawned mobs
 								}
+							}else{
+								if(ent instanceof Mob){
+									ForgeEventFactory.onFinalizeSpawn((Mob) ent, worldServ, worldServ.getCurrentDifficultyAt(beamHit.getPos()), MobSpawnType.SPAWNER, null, null);//Gives mobs weapons/armor, makes slimes not have glitched health, and other essential things
+								}
+								worldServ.addFreshEntity(ent);
 							}
 						}
 					}catch(Exception e){

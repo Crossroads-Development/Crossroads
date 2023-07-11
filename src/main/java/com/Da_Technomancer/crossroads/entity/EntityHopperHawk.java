@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.entity;
 import com.Da_Technomancer.essentials.blocks.ESBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -182,7 +183,7 @@ public class EntityHopperHawk extends ShoulderRidingEntity implements FlyingAnim
 	}
 
 	@Override
-	public Packet<?> getAddEntityPacket(){
+	public Packet<ClientGamePacketListener> getAddEntityPacket(){
 		return NetworkHooks.getEntitySpawningPacket(this);//Required for modded entities
 	}
 

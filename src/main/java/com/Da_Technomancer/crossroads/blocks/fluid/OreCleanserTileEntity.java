@@ -21,11 +21,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
@@ -83,7 +82,7 @@ public class OreCleanserTileEntity extends InventoryTE{
 			fluids[0].shrink(WATER_USE);
 
 			if(fluids[1].isEmpty()){
-				fluids[1] = new FluidStack(CRFluids.dirtyWater.still, WATER_USE);
+				fluids[1] = new FluidStack(CRFluids.dirtyWater.getStill(), WATER_USE);
 			}else{
 				fluids[1].grow(WATER_USE);
 			}
@@ -126,11 +125,11 @@ public class OreCleanserTileEntity extends InventoryTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
+		if(capability == ForgeCapabilities.FLUID_HANDLER){
 			return (LazyOptional<T>) (facing == null ? globalFluidOpt : facing == Direction.UP ? outOpt : inOpt);
 		}
 
-		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
+		if(capability == ForgeCapabilities.ITEM_HANDLER){
 			return (LazyOptional<T>) itemOpt;
 		}
 

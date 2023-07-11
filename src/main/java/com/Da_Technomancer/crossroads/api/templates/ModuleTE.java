@@ -20,10 +20,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import javax.annotation.Nonnull;
@@ -203,7 +203,7 @@ public abstract class ModuleTE extends BlockEntity implements ITickableTileEntit
 	@SuppressWarnings("unchecked")
 	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side){
 		//Return the global optional for internal-side (null) checks
-		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && side == null && globalFluidOpt != null){
+		if(cap == ForgeCapabilities.FLUID_HANDLER && side == null && globalFluidOpt != null){
 			return (LazyOptional<T>) globalFluidOpt;
 		}
 		if(cap == Capabilities.HEAT_CAPABILITY && side == null && useHeat()){

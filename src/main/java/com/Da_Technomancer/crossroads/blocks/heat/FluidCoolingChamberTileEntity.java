@@ -19,10 +19,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -132,11 +131,6 @@ public class FluidCoolingChamberTileEntity extends InventoryTE{
 	@Override
 	public void load(CompoundTag nbt){
 		super.load(nbt);
-		if(nbt.contains("heat_stored")){
-			//Backwards compatibility to CR1.19-2.9.4 and older
-			//TODO remove
-			temp += nbt.getDouble("heat_stored");
-		}
 		releasedHeat = nbt.getDouble("released_heat");
 		totalHeat = nbt.getDouble("total_heat");
 		maxRecipeTemp = nbt.getDouble("max_recipe_temp");
@@ -165,10 +159,10 @@ public class FluidCoolingChamberTileEntity extends InventoryTE{
 		if(cap == Capabilities.HEAT_CAPABILITY && dir == Direction.UP){
 			return (LazyOptional<T>) heatOpt;
 		}
-		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
+		if(cap == ForgeCapabilities.ITEM_HANDLER){
 			return (LazyOptional<T>) itemOpt;
 		}
-		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
+		if(cap == ForgeCapabilities.FLUID_HANDLER){
 			return (LazyOptional<T>) globalFluidOpt;
 		}
 

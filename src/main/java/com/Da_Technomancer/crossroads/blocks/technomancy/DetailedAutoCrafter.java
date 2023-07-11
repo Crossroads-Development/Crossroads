@@ -19,8 +19,7 @@ public class DetailedAutoCrafter extends AutoCrafter{
 	public DetailedAutoCrafter(){
 		super("detailed_auto_crafter");
 		String name = "detailed_auto_crafter";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Nullable

@@ -34,8 +34,7 @@ public class TeslaCoilTop extends BaseEntityBlock{
 		super(CRBlocks.getMetalProperty());
 		this.variant = variant;
 		String name = "tesla_coil_top_" + variant.toString();
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Override

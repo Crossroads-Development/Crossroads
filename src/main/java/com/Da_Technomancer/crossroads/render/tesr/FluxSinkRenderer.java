@@ -5,9 +5,11 @@ import com.Da_Technomancer.crossroads.blocks.technomancy.FluxSinkTileEntity;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 public class FluxSinkRenderer extends EntropyRenderer<FluxSinkTileEntity>{
 
@@ -36,8 +38,8 @@ public class FluxSinkRenderer extends EntropyRenderer<FluxSinkTileEntity>{
 				}
 				matrix.pushPose();
 				float[] portalPos = getPortalCenterPos(portalIndex, runtime);
-				matrix.mulPose(Vector3f.YP.rotation((float) Math.atan2(portalPos[0], portalPos[2])));
-				matrix.mulPose(Vector3f.XP.rotation((float) (Math.atan2(-portalPos[1], Math.sqrt(portalPos[0] * portalPos[0] + portalPos[2] * portalPos[2])) + Math.PI / 2F)));
+				matrix.mulPose(Axis.YP.rotation((float) Math.atan2(portalPos[0], portalPos[2])));
+				matrix.mulPose(Axis.XP.rotation((float) (Math.atan2(-portalPos[1], Math.sqrt(portalPos[0] * portalPos[0] + portalPos[2] * portalPos[2])) + Math.PI / 2F)));
 				EntropyRenderer.renderArc((float) Math.sqrt(portalPos[0] * portalPos[0] + portalPos[1] * portalPos[1] + portalPos[2] * portalPos[2]), matrix, entropyBuilder, worldTime, partialTicks);
 				matrix.popPose();
 			}
@@ -55,7 +57,7 @@ public class FluxSinkRenderer extends EntropyRenderer<FluxSinkTileEntity>{
 
 		//Ring of plates
 		matrix.pushPose();
-		matrix.mulPose(Vector3f.YP.rotationDegrees(runtime / 10F));
+		matrix.mulPose(Axis.YP.rotationDegrees(runtime / 10F));
 		final float len = 4;
 		final float plateScale = Math.min(runtime / (FluxSinkTileEntity.STARTUP_TIME * 2F / 3F), 1) * 0.5F;
 
@@ -68,14 +70,14 @@ public class FluxSinkRenderer extends EntropyRenderer<FluxSinkTileEntity>{
 			builder.vertex(matrix.last().pose(), len, yOffset + plateScale, plateScale).color(255, 255, 255, 255).uv(1, textVSt + 0.25F).uv2(medLight).endVertex();
 			builder.vertex(matrix.last().pose(), len, yOffset - plateScale, plateScale).color(255, 255, 255, 255).uv(1, textVSt).uv2(medLight).endVertex();
 
-			matrix.mulPose(Vector3f.YP.rotationDegrees(360F / 8F));
+			matrix.mulPose(Axis.YP.rotationDegrees(360F / 8F));
 		}
 
 		matrix.popPose();
 
 		//Wobble effect
-		matrix.mulPose(Vector3f.XP.rotationDegrees(8F * (float) Math.sin(runtime / 40D)));
-		matrix.mulPose(Vector3f.ZP.rotationDegrees(8F * (float) Math.cos(runtime / 40D)));
+		matrix.mulPose(Axis.XP.rotationDegrees(8F * (float) Math.sin(runtime / 40D)));
+		matrix.mulPose(Axis.ZP.rotationDegrees(8F * (float) Math.cos(runtime / 40D)));
 
 		//Inner layer, almost opaque
 		drawIcos(builder, matrix, scale, 0, 0, new int[] {255, 255, 255, 230}, combinedLight);
@@ -102,6 +104,9 @@ public class FluxSinkRenderer extends EntropyRenderer<FluxSinkTileEntity>{
 
 		Vector3f rotationAxis = new Vector3f(symmetryAxisX, symmetryAxisY, 0);
 		Vector3f rotationCounterAxis = new Vector3f(-symmetryAxisY, symmetryAxisX, 0);
+		Quaternionf axis72 = new Quaternionf().rotationAxis((float) Math.toRadians(72), rotationAxis);
+		Quaternionf axis36 = new Quaternionf().rotationAxis((float) Math.toRadians(36), rotationAxis);
+		Quaternionf countAxis180 = new Quaternionf().rotationAxis((float) Math.toRadians(180), rotationCounterAxis);
 
 		for(int i = 0; i < 2; i++){
 			for(int j = 0; j < 5; j++){
@@ -118,10 +123,10 @@ public class FluxSinkRenderer extends EntropyRenderer<FluxSinkTileEntity>{
 				builder.vertex(matrix.last().pose(), -largeLen, smallLen, 0).color(col[0], col[1], col[2], col[3]).uv(uSt, vEn).uv2(light).endVertex();
 				builder.vertex(matrix.last().pose(), -largeLen, smallLen, 0).color(col[0], col[1], col[2], col[3]).uv(uSt, vEn).uv2(light).endVertex();//Repeat for triangle
 
-				matrix.mulPose(rotationAxis.rotationDegrees(72));
+				matrix.mulPose(axis72);
 			}
-			matrix.mulPose(rotationAxis.rotationDegrees(36));
-			matrix.mulPose(rotationCounterAxis.rotationDegrees(180));
+			matrix.mulPose(axis36);
+			matrix.mulPose(countAxis180);
 		}
 	}
 

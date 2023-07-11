@@ -76,7 +76,7 @@ public class SequenceBoxScreen extends AbstractContainerScreen<SequenceBoxContai
 		//Text bars
 		RenderSystem.setShaderTexture(0, SEARCH_BAR_TEXTURE);
 		for(EditBox bar : inputBars){
-			blit(matrix, bar.x - 2, bar.y - 8, 0, 0, bar.getWidth(), 18, 144, 18);
+			blit(matrix, bar.getX() - 2, bar.getY() - 8, 0, 0, bar.getWidth(), 18, 144, 18);
 		}
 	}
 
@@ -118,13 +118,13 @@ public class SequenceBoxScreen extends AbstractContainerScreen<SequenceBoxContai
 		index = Math.min(index, SequenceBoxTileEntity.MAX_VALUES - 1);
 		for(EditBox widget : inputBars){
 			if((index < 0 || widget != inputBars[index]) && widget.isFocused()){
-				widget.changeFocus(false);
+				widget.setFocused(false);
 			}
 		}
 
 		if(index != -1){
 			if(!inputBars[index].isFocused()){
-				inputBars[index].changeFocus(true);
+				inputBars[index].setFocused(true);
 			}
 			setFocused(inputBars[index]);
 		}else{

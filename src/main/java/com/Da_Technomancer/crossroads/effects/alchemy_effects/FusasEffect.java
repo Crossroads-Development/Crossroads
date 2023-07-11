@@ -27,7 +27,7 @@ public class FusasEffect extends AetherEffect{
 
 	@Override
 	protected Block fluidBlock(){
-		return CRFluids.distilledWater.block;
+		return CRFluids.distilledWater.getBlock();
 	}
 
 	@Override

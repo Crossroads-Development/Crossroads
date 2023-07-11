@@ -8,19 +8,19 @@ import com.Da_Technomancer.crossroads.api.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.witchcraft.BloodCentrifugeTileEntity;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.Da_Technomancer.crossroads.items.item_sets.GearFactory;
+import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.util.LazyOptional;
@@ -45,10 +45,10 @@ public class BloodCentrifugeRenderer implements BlockEntityRenderer<BloodCentrif
 
 		matrix.translate(.5F, .5F, .5F);
 		//Rotate
-		matrix.mulPose(Vector3f.YP.rotationDegrees((float) RotaryUtil.getCCWSign(Direction.UP) * axle.orElseThrow(NullPointerException::new).getAngle(partialTicks)));
+		matrix.mulPose(Axis.YP.rotationDegrees((float) RotaryUtil.getCCWSign(Direction.UP) * axle.orElseThrow(NullPointerException::new).getAngle(partialTicks)));
 
-		Color ironCol = GearFactory.findMaterial("iron").getColor();
-		Color tinCol = GearFactory.findMaterial("tin").getColor();
+		Color ironCol = CRMaterialLibrary.findMaterial("iron").getColor();
+		Color tinCol = CRMaterialLibrary.findMaterial("tin").getColor();
 
 		//Rotating axle
 		CRModels.drawAxle(matrix, buffer, combinedLight, ironCol);
@@ -64,12 +64,12 @@ public class BloodCentrifugeRenderer implements BlockEntityRenderer<BloodCentrif
 
 		//Draw sample(s), if present
 		for(int i = 0; i < sampleCount; i++){
-			matrix.mulPose(Vector3f.YP.rotationDegrees(180));
+			matrix.mulPose(Axis.YP.rotationDegrees(180));
 			matrix.pushPose();
 			matrix.translate(0, -0.2F, supportLen - 0.05F);
-			matrix.mulPose(Vector3f.ZP.rotationDegrees(45));
+			matrix.mulPose(Axis.ZP.rotationDegrees(45));
 			matrix.scale(0.5F, 0.5F, 0.5F);
-			Minecraft.getInstance().getItemRenderer().renderStatic(getSampleItemstack(), ItemTransforms.TransformType.FIXED, combinedLight, combinedOverlay, matrix, buffer, (int) te.getBlockPos().asLong());
+			Minecraft.getInstance().getItemRenderer().renderStatic(getSampleItemstack(), ItemDisplayContext.FIXED, combinedLight, combinedOverlay, matrix, buffer, te.getLevel(), (int) te.getBlockPos().asLong());
 			matrix.popPose();
 		}
 	}

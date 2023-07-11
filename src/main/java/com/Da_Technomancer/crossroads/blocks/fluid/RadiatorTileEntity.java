@@ -19,9 +19,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
 import javax.annotation.Nullable;
 
@@ -66,7 +66,7 @@ public class RadiatorTileEntity extends InventoryTE{
 		if(fluids[0].getAmount() >= TIERS[mode] && fluidProps[1].capacity - fluids[1].getAmount() >= TIERS[mode]){
 			temp += TIERS[mode] * (double) CRConfig.steamWorth.get() / 1000;
 			if(fluids[1].isEmpty()){
-				fluids[1] = new FluidStack(CRFluids.distilledWater.still, TIERS[mode]);
+				fluids[1] = new FluidStack(CRFluids.distilledWater.getStill(), TIERS[mode]);
 			}else{
 				fluids[1].grow(TIERS[mode]);
 			}
@@ -80,7 +80,7 @@ public class RadiatorTileEntity extends InventoryTE{
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
 
-		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
+		if(cap == ForgeCapabilities.FLUID_HANDLER){
 			if(side == null || side.getAxis() == Direction.Axis.Y){
 				return (LazyOptional<T>) globalFluidOpt;
 			}

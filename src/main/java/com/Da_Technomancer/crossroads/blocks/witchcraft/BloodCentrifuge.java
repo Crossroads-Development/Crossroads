@@ -39,8 +39,7 @@ public class BloodCentrifuge extends TEBlock implements IReadable{
 	public BloodCentrifuge(){
 		super(CRBlocks.getMetalProperty());
 		String name = "blood_centrifuge";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 		registerDefaultState(defaultBlockState().setValue(CRProperties.CONTENTS, 0));
 	}
 

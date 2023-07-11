@@ -4,12 +4,12 @@ import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.technomancy.TemporalAcceleratorTileEntity;
-import com.Da_Technomancer.crossroads.items.item_sets.GearFactory;
+import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.essentials.api.ConfigUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -85,17 +85,17 @@ public class TemporalAcceleratorRenderer extends EntropyRenderer<TemporalAcceler
 
 		TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(CRRenderTypes.GEAR_8_TEXTURE);
 		VertexConsumer builder = buffer.getBuffer(RenderType.solid());
-		int[] col = CRRenderUtil.convertColor(GearFactory.findMaterial("copshowium").getColor());
+		int[] col = CRRenderUtil.convertColor(CRMaterialLibrary.findMaterial("copshowium").getColor());
 		float angle = CRRenderUtil.getRenderTime(partialTicks, te.getLevel());
 		float lHalf = 7F / 16F;//Half the side length of the octagon
 		int medLight = CRRenderUtil.calcMediumLighting(combinedLight);
 
-		matrix.mulPose(Vector3f.YP.rotationDegrees(angle));
+		matrix.mulPose(Axis.YP.rotationDegrees(angle));
 		matrix.translate(0, 5F / 16F, 0);
 		matrix.scale(2F * lHalf, 1, 2F * lHalf);
 		CRModels.draw8Core(builder, matrix, col, medLight, sprite);
 
-		matrix.mulPose(Vector3f.YP.rotationDegrees(-2F * angle));
+		matrix.mulPose(Axis.YP.rotationDegrees(-2F * angle));
 		matrix.translate(0, -4F / 16F, 0);
 		matrix.scale(0.8F, 1, 0.8F);
 		CRModels.draw8Core(builder, matrix, col, medLight, sprite);

@@ -34,8 +34,7 @@ public class LightCluster extends Block{
 	public LightCluster(){
 		super(Properties.of(Material.DECORATION).strength(0).sound(SoundType.GLASS).noCollission().noLootTable().lightLevel(state -> 15));
 		String name = "light_cluster";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 		registerDefaultState(defaultBlockState().setValue(CRProperties.COLOR, DyeColor.WHITE));
 	}
 

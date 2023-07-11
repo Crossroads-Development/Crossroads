@@ -21,7 +21,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -124,7 +123,7 @@ public abstract class AlchemyCarrierTE extends BlockEntity implements ITickableT
 			CRSounds.playSoundServer(level, worldPosition, sound.getBreakSound(), SoundSource.BLOCKS, sound.getVolume(), sound.getPitch());
 			AlchemyUtil.releaseChemical(level, worldPosition, contents);
 			if(strength > 0F){
-				level.explode(null, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), strength, Explosion.BlockInteraction.BREAK);//We will drop items, because an explosion in your lab is devastating enough without having to re-craft everything
+				level.explode(null, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), strength, net.minecraft.world.level.Level.ExplosionInteraction.TNT);//We will drop items, because an explosion in your lab is devastating enough without having to re-craft everything
 			}
 		}
 	}

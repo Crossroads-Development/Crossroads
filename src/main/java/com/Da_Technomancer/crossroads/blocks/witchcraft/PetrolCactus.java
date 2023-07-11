@@ -1,7 +1,9 @@
 package com.Da_Technomancer.crossroads.blocks.witchcraft;
 
 import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.api.templates.ICustomItemBlock;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -28,20 +30,24 @@ import net.minecraft.world.phys.BlockHitResult;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class PetrolCactus extends CactusBlock{
+public class PetrolCactus extends CactusBlock implements ICustomItemBlock{
 
 	private static final Material FLAMMABLE_CACTUS = new Material(MaterialColor.PLANT, false, true, true, false, true, false, PushReaction.DESTROY);
 
 	public PetrolCactus(){
 		super(Properties.of(FLAMMABLE_CACTUS).randomTicks().strength(0.4F).sound(SoundType.WOOL));
 		String name = "petrol_cactus";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this, new BlockItem(this, CRBlocks.itemBlockProp){
+		CRBlocks.queueForRegister(name, this);
+	}
+
+	@Override
+	public BlockItem createItemBlock(){
+		return new BlockItem(this, CRItems.baseItemProperties()){
 			@Override
 			public int getBurnTime(ItemStack itemStack, @Nullable RecipeType<?> recipeType){
 				return 3200;//Makes this a furnace fuel
 			}
-		});
+		};
 	}
 
 	@Override
@@ -88,7 +94,7 @@ public class PetrolCactus extends CactusBlock{
 	private void detonate(Level world, BlockPos pos){
 		if(!world.isClientSide){
 			world.playSound(null, pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, SoundEvents.TNT_PRIMED, SoundSource.BLOCKS, 1.0F, 1.0F);
-			world.explode(null, pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, 4, Explosion.BlockInteraction.BREAK);
+			world.explode(null, pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, 4, Level.ExplosionInteraction.TNT);
 		}
 	}
 

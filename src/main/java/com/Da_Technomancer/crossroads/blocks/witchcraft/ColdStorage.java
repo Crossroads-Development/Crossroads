@@ -30,8 +30,7 @@ public class ColdStorage extends TEBlock implements IReadable{
 	public ColdStorage(){
 		super(CRBlocks.getMetalProperty());
 		String name = "cold_storage";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Override

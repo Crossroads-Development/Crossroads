@@ -37,8 +37,7 @@ public class AtmosCharger extends BaseEntityBlock implements IReadable{
 	public AtmosCharger(){
 		super(CRBlocks.getMetalProperty());
 		String name = "atmos_charger";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Nullable

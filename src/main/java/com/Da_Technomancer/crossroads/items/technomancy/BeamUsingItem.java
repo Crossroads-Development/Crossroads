@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.items.technomancy;
 
+import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.crossroads.api.packets.SendBeamItemToServer;
 import net.minecraft.client.player.LocalPlayer;
@@ -68,11 +69,11 @@ public abstract class BeamUsingItem extends Item{
 			acted = true;
 		}
 		if(acted){
-			player.level.playSound(player, player.blockPosition(), SoundEvents.UI_BUTTON_CLICK, SoundSource.PLAYERS, 4, (float) Math.random() / 4 + 0.5F);
+			CRSounds.playSoundClientLocal(player.level, player.blockPosition(), SoundEvents.UI_BUTTON_CLICK.value(), SoundSource.PLAYERS, 4, (float) Math.random() / 4 + 0.5F);
 			CRPackets.sendPacketToServer(new SendBeamItemToServer(settings));
 		}else{
 			//Play a sound at a slightly lower pitch
-			player.level.playSound(player, player.blockPosition(), SoundEvents.UI_BUTTON_CLICK, SoundSource.PLAYERS, 4, (float) Math.random() / 4);
+			CRSounds.playSoundClientLocal(player.level, player.blockPosition(), SoundEvents.UI_BUTTON_CLICK.value(), SoundSource.PLAYERS, 4, (float) Math.random() / 4);
 		}
 	}
 

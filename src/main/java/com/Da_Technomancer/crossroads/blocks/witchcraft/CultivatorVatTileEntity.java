@@ -22,9 +22,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
@@ -58,7 +57,7 @@ public class CultivatorVatTileEntity extends AbstractNutrientEnvironmentTileEnti
 		//Index 2: Input 2
 		//Index 3: Output
 
-		fluidProps[0] = new TankProperty(1_000, true, false, f -> f == CRFluids.nutrientSolution.still);
+		fluidProps[0] = new TankProperty(1_000, true, false, f -> f == CRFluids.nutrientSolution.getStill());
 		initFluidManagers();
 	}
 
@@ -228,11 +227,11 @@ public class CultivatorVatTileEntity extends AbstractNutrientEnvironmentTileEnti
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
+		if(capability == ForgeCapabilities.FLUID_HANDLER){
 			return (LazyOptional<T>) globalFluidOpt;
 		}
 
-		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
+		if(capability == ForgeCapabilities.ITEM_HANDLER){
 			return (LazyOptional<T>) itemOpt;
 		}
 

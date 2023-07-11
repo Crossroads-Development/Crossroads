@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.api.render;
 
 import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.packets.AddVisualToClient;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.crossroads.render.LooseArcRenderable;
@@ -57,7 +58,7 @@ public class CRRenderUtil extends RenderUtil{
 		nbt.putFloat("angle_y", angleY);
 		nbt.putByte("width", width);
 		nbt.putInt("color", color);
-		CRPackets.sendEffectPacketAround(world, new BlockPos(x, y, z), new AddVisualToClient(nbt));
+		CRPackets.sendEffectPacketAround(world, MiscUtil.blockPos(x, y, z), new AddVisualToClient(nbt));
 	}
 
 	public static void addArc(Level world, Vec3 start, Vec3 end, int count, float diffusionRate, int color){
@@ -92,7 +93,7 @@ public class CRRenderUtil extends RenderUtil{
 		if(world.isClientSide){
 			AddVisualToClient.effectsToRender.add(visualFactories[1].apply(world, nbt));
 		}else{
-			CRPackets.sendEffectPacketAround(world, new BlockPos((xSt + xEn) / 2F, (ySt + yEn) / 2F, (zSt + zEn) / 2F), new AddVisualToClient(nbt));
+			CRPackets.sendEffectPacketAround(world, MiscUtil.blockPos((xSt + xEn) / 2F, (ySt + yEn) / 2F, (zSt + zEn) / 2F), new AddVisualToClient(nbt));
 		}
 	}
 
@@ -114,7 +115,7 @@ public class CRRenderUtil extends RenderUtil{
 		if(world.isClientSide){
 			AddVisualToClient.effectsToRender.add(visualFactories[2].apply(world, nbt));
 		}else{
-			CRPackets.sendEffectPacketAround(world, new BlockPos((xSt + xEn) / 2F, (ySt + yEn) / 2F, (zSt + zEn) / 2F), new AddVisualToClient(nbt));
+			CRPackets.sendEffectPacketAround(world, MiscUtil.blockPos((xSt + xEn) / 2F, (ySt + yEn) / 2F, (zSt + zEn) / 2F), new AddVisualToClient(nbt));
 		}
 	}
 

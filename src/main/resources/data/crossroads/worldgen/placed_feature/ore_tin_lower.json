@@ -1,0 +1,28 @@
+{
+	"feature": "crossroads:tin_ore",
+	"placement": [
+		{
+			"type": "crossroads:ore_config",
+			"config": "cr_tin"
+		},
+		{
+			"type": "minecraft:count",
+			"count": 3
+		},
+		{
+			"type": "minecraft:in_square"
+		},
+		{
+			"type": "minecraft:height_range",
+			"height": {
+				"type": "uniform",
+				"min_inclusive": {
+					"absolute": -64
+				},
+				"max_inclusive": {
+					"absolute": -48
+				}
+			}
+		}
+	]
+}

@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.beams;
 
 import com.Da_Technomancer.crossroads.api.templates.BeamBlock;
-import com.Da_Technomancer.crossroads.blocks.CRBlocks;
+import com.Da_Technomancer.crossroads.api.templates.ICustomItemBlock;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
@@ -10,7 +10,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
@@ -25,11 +25,15 @@ import net.minecraftforge.network.NetworkHooks;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class BeamExtractorCreative extends BeamBlock{
+public class BeamExtractorCreative extends BeamBlock implements ICustomItemBlock{
 
 	public BeamExtractorCreative(){
-		super("beam_extractor_creative", CRBlocks.getRockProperty());
-		CRBlocks.blockAddQue("beam_extractor_creative", this, new Item.Properties().tab(CRItems.TAB_CROSSROADS).rarity(CRItems.CREATIVE_RARITY));
+		super("beam_extractor_creative");
+	}
+
+	@Override
+	public BlockItem createItemBlock(){
+		return new BlockItem(this, CRItems.baseItemProperties().rarity(CRItems.CREATIVE_RARITY));
 	}
 
 	@Override

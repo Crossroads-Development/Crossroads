@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.items.witchcraft;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.witchcraft.IPerishable;
+import com.Da_Technomancer.crossroads.entity.CRMobDamage;
 import com.Da_Technomancer.crossroads.entity.mob_effects.CRPotions;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.alchemy.PoisonVodka;
@@ -10,8 +11,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -91,7 +90,7 @@ public class Syringe extends Item{
 						}
 					}
 				}
-				target.hurt(syringeAttackSource(user), 1);
+				target.hurt(CRMobDamage.damageSource(CRMobDamage.CR_SYRINGE, world, user), 1);
 				return InteractionResultHolder.success(item);
 			}
 			return InteractionResultHolder.fail(item);
@@ -102,9 +101,9 @@ public class Syringe extends Item{
 	}
 
 	public Syringe(){
-		super(new Item.Properties().stacksTo(1).tab(CRItems.TAB_CROSSROADS));
+		super(new Item.Properties().stacksTo(1));
 		String name = "syringe";
-		CRItems.toRegister.put(name, this);
+		CRItems.queueForRegister(name, this);
 		populateSyringeMap();
 	}
 
@@ -114,13 +113,6 @@ public class Syringe extends Item{
 
 	public static void setTreated(ItemStack stack, boolean treated){
 		stack.getOrCreateTag().putBoolean("extension_treated", treated);
-	}
-
-	private static DamageSource syringeAttackSource(Player player){
-		if(player == null){
-			return new DamageSource("cr_syringe");
-		}
-		return new EntityDamageSource("cr_syringe", player);
 	}
 
 	private InteractionResult interact(ItemStack stack, Player self, LivingEntity target){
@@ -167,7 +159,7 @@ public class Syringe extends Item{
 	 */
 	public static ItemStack drawBlood(ItemStack samplePouch, LivingEntity target, @Nullable Player attacker){
 		ItemStack result = CRItems.bloodSample.withEntityData(IPerishable.setSpoilTime(new ItemStack(CRItems.bloodSample, 1), CRItems.bloodSample.getLifetime(), target.level.getGameTime()), target);
-		target.hurt(syringeAttackSource(attacker), 1);
+		target.hurt(CRMobDamage.damageSource(CRMobDamage.CR_SYRINGE, target.level, attacker), 1);
 		return result;
 	}
 

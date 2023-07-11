@@ -29,8 +29,7 @@ public class SteamBoiler extends BaseEntityBlock{
 	public SteamBoiler(){
 		super(CRBlocks.getMetalProperty());
 		String name = "steam_boiler";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Override

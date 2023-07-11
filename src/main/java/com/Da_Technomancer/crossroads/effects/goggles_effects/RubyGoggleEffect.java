@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.effects.goggles_effects;
 
+import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.beams.BeamUtil;
 import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.api.technomancy.IGoggleEffect;
@@ -12,7 +13,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
 import java.awt.*;
@@ -38,7 +38,7 @@ public class RubyGoggleEffect implements IGoggleEffect{
 					end = tar;
 					break;
 				}
-				BlockPos tarPos = new BlockPos(tar);
+				BlockPos tarPos = MiscUtil.blockPos(tar);
 				BlockState state = world.getBlockState(tarPos);
 				if(BeamUtil.solidToBeams(state, world, tarPos, collisionDir, 1)){
 					break;
@@ -46,7 +46,7 @@ public class RubyGoggleEffect implements IGoggleEffect{
 				end = tar;
 			}
 
-			BlockPos endPos = new BlockPos(end);
+			BlockPos endPos = MiscUtil.blockPos(end);
 			if(entHit != null){
 				entHit.setSecondsOnFire(3);
 			}else if(world.getBlockState(endPos).isAir()){

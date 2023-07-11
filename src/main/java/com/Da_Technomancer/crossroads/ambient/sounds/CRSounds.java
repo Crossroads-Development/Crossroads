@@ -27,7 +27,7 @@ public class CRSounds{
 
 	private static SoundEvent createEvent(String name){
 		ResourceLocation id = new ResourceLocation(Crossroads.MODID, name);
-		SoundEvent created = new SoundEvent(id);
+		SoundEvent created = SoundEvent.createVariableRangeEvent(id);
 		soundsToRegister.put(name, created);
 		return created;
 	}

@@ -7,24 +7,25 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import net.minecraft.core.NonNullList;
+import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.ShapedRecipe;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 
 public class DetailedCrafterRec extends ShapedRecipe implements IOptionalRecipe<CraftingContainer>{
 
 	private final EnumPath path;
 	private final boolean active;
+	private final ItemStack result;
 
-	public DetailedCrafterRec(ResourceLocation idIn, String groupIn, EnumPath path, boolean active, int recipeWidthIn, int recipeHeightIn, NonNullList<Ingredient> recipeItemsIn, ItemStack recipeOutputIn){
-		super(idIn, groupIn, recipeWidthIn, recipeHeightIn, recipeItemsIn, recipeOutputIn);
+	public DetailedCrafterRec(ResourceLocation idIn, String groupIn, CraftingBookCategory category, EnumPath path, boolean active, int recipeWidthIn, int recipeHeightIn, NonNullList<Ingredient> recipeItemsIn, ItemStack recipeOutputIn){
+		super(idIn, groupIn, category, recipeWidthIn, recipeHeightIn, recipeItemsIn, recipeOutputIn);
+		result = recipeOutputIn;
 		this.path = path;
 		this.active = active;
 	}
@@ -36,6 +37,11 @@ public class DetailedCrafterRec extends ShapedRecipe implements IOptionalRecipe<
 	@Override
 	public ItemStack getToastSymbol(){
 		return new ItemStack(CRBlocks.detailedCrafter);
+	}
+
+	@Override
+	public ItemStack getResultItem(){
+		return result;
 	}
 
 	@Override
@@ -63,7 +69,7 @@ public class DetailedCrafterRec extends ShapedRecipe implements IOptionalRecipe<
 		@Override
 		public DetailedCrafterRec fromJson(ResourceLocation recipeId, JsonObject json){
 			if(!CraftingUtil.isActiveJSON(json)){
-				return new DetailedCrafterRec(recipeId, "", EnumPath.ALCHEMY, false, 0, 0, NonNullList.create(), ItemStack.EMPTY);
+				return new DetailedCrafterRec(recipeId, "", CraftingBookCategory.MISC, EnumPath.ALCHEMY, false, 0, 0, NonNullList.create(), ItemStack.EMPTY);
 			}
 
 			EnumPath path = EnumPath.fromName(GsonHelper.getAsString(json, "path"));
@@ -77,17 +83,17 @@ public class DetailedCrafterRec extends ShapedRecipe implements IOptionalRecipe<
 			//And only shaped recipes are supported. No shapeless recipes currently <- this could change
 
 			ShapedRecipe templateRec = RecipeSerializer.SHAPED_RECIPE.fromJson(recipeId, json);
-			return new DetailedCrafterRec(recipeId, templateRec.getGroup(), path, true, templateRec.getRecipeWidth(), templateRec.getRecipeHeight(), templateRec.getIngredients(), templateRec.getResultItem());
+			return new DetailedCrafterRec(recipeId, templateRec.getGroup(), templateRec.category(), path, true, templateRec.getRecipeWidth(), templateRec.getRecipeHeight(), templateRec.getIngredients(), templateRec.getResultItem(null));
 		}
 
 		@Override
 		public DetailedCrafterRec fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer){
 			if(!buffer.readBoolean()){
-				return new DetailedCrafterRec(recipeId, "", EnumPath.ALCHEMY, false, 0, 0, NonNullList.create(), ItemStack.EMPTY);
+				return new DetailedCrafterRec(recipeId, "", CraftingBookCategory.MISC, EnumPath.ALCHEMY, false, 0, 0, NonNullList.create(), ItemStack.EMPTY);
 			}
 			EnumPath path = EnumPath.fromIndex(buffer.readByte());
 			ShapedRecipe templateRec = RecipeSerializer.SHAPED_RECIPE.fromNetwork(recipeId, buffer);
-			return new DetailedCrafterRec(recipeId, templateRec.getGroup(), path, true, templateRec.getRecipeWidth(), templateRec.getRecipeHeight(), templateRec.getIngredients(), templateRec.getResultItem());
+			return new DetailedCrafterRec(recipeId, templateRec.getGroup(), templateRec.category(), path, true, templateRec.getRecipeWidth(), templateRec.getRecipeHeight(), templateRec.getIngredients(), templateRec.getResultItem(null));
 		}
 
 		@Override

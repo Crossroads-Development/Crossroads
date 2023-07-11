@@ -92,7 +92,7 @@ public class CRConfig{
 	public static ForgeConfigSpec.IntValue beaconHarnessPower;
 	public static ForgeConfigSpec.BooleanValue technoArmorReinforce;
 	public static ForgeConfigSpec.IntValue technoArmorCost;
-	public static ForgeConfigSpec.BooleanValue beamDamageAbsolute;
+//	public static ForgeConfigSpec.BooleanValue beamDamageAbsolute;
 	public static ForgeConfigSpec.BooleanValue beaconHarnessLoadSafety;
 	public static ForgeConfigSpec.IntValue fluxNodeGain;
 	public static ForgeConfigSpec.BooleanValue riftSpawnDrops;
@@ -141,7 +141,6 @@ public class CRConfig{
 	protected static void init(){
 		//Client config
 		ForgeConfigSpec.Builder clientBuilder = new ForgeConfigSpec.Builder();
-
 		rotateBeam = clientBuilder.comment("Should beams visually rotate?").define("rotate_beam", true);
 		beamTransparent = clientBuilder.comment("Whether beams should be transparent and glowing", "Default opaque beams are easier to see, but transparent beams are prettier", "With transparent on, void makes beams more transparent instead of darker, and pure void beams are totally invisible").define("transparent_beams", false);
 //		colorChartResolution = clientBuilder.comment("Pixel size on the color chart", "Higher values will reduce FPS lag in the color chart UI, but will make it less precise and 'smooth' looking").defineInRange("color_res", 1, 1, 4);
@@ -208,7 +207,7 @@ public class CRConfig{
 		enchantDestruction = serverBuilder.comment("Whether Enchantment beams have a chance to destroy items").define("enchant_destroy", true);
 		fatPerValue = serverBuilder.comment("Amount of liquid fat equivalent to 1 hunger or saturation (in millibuckets)").defineInRange("fat_cost", 100, 1, 10_000);
 		hellTemperature = serverBuilder.comment("Minimum temperature of nether biomes (in degrees C)").defineInRange("nether_temp", 60, 0, 1_000D);
-		beamDamageAbsolute = serverBuilder.comment("Whether void and void-potential (death) beams do absolute damage", "Absolute damage ignores potion effects and enchantments").define("beam_damage_absolute", false);
+//		beamDamageAbsolute = serverBuilder.comment("Whether void and void-potential (death) beams do absolute damage", "Absolute damage ignores potion effects and enchantments").define("beam_damage_absolute", false);
 		undergroundLightning = serverBuilder.comment("Whether Charge beams can summon lightning underground or under a roof").define("underground_lightning", false);
 		serverBuilder.pop();
 

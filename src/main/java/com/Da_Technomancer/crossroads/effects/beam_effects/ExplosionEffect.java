@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.api.beams.BeamHit;
 import com.Da_Technomancer.crossroads.api.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.entity.EntityGhostMarker;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 public class ExplosionEffect extends BeamEffect{
@@ -14,7 +14,7 @@ public class ExplosionEffect extends BeamEffect{
 		if(!performTransmute(align, voi, power, beamHit)){
 			if(voi){
 				Vec3 hitPos = beamHit.getHitPos();
-				beamHit.getWorld().explode(null, hitPos.x, hitPos.y, hitPos.z, (int) Math.min(Math.ceil(power / 4D), 16), Explosion.BlockInteraction.BREAK);
+				beamHit.getWorld().explode(null, hitPos.x, hitPos.y, hitPos.z, (int) Math.min(Math.ceil(power / 4D), 16), Level.ExplosionInteraction.MOB);
 			}else{
 				//Suppress explosions
 				Vec3 hitPos = beamHit.getHitPos();

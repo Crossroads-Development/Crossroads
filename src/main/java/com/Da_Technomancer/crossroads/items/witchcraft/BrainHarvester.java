@@ -22,9 +22,9 @@ public class BrainHarvester extends Item{
 	private final Multimap<Attribute, AttributeModifier> attributeModifiers;
 
 	public BrainHarvester(){
-		super(new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1).rarity(CRItems.BOBO_RARITY));
+		super(new Properties().stacksTo(1).rarity(CRItems.BOBO_RARITY));
 		String name = "brain_harvester";
-		CRItems.toRegister.put(name, this);
+		CRItems.queueForRegister(name, this);
 
 		//Attributes
 		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();

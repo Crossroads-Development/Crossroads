@@ -6,7 +6,7 @@ import com.Da_Technomancer.crossroads.api.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.BeamLensRec;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -71,7 +71,7 @@ public class BeamLensCategory implements IRecipeCategory<BeamLensRec>{
 			// Rotate arrow to point downwards
 			matrix.pushPose();
 			matrix.translate(36, 35, 0);
-			matrix.mulPose(Vector3f.ZN.rotationDegrees(-90));
+			matrix.mulPose(Axis.ZN.rotationDegrees(-90));
 			arrowStatic.draw(matrix, 0, 0);
 			matrix.popPose();
 		} else {

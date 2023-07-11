@@ -35,8 +35,7 @@ public class HeatingCrucible extends BaseEntityBlock{
 	public HeatingCrucible(){
 		super(CRBlocks.getRockProperty());
 		String name = "heating_crucible";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 		registerDefaultState(defaultBlockState().setValue(CRProperties.FULLNESS, 0));
 	}
 

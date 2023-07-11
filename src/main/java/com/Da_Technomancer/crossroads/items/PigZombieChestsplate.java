@@ -6,7 +6,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
@@ -21,9 +20,9 @@ import java.util.List;
 public class PigZombieChestsplate extends ArmorItem{
 
 	protected PigZombieChestsplate(){
-		super(ChickenBoots.BOBO_MATERIAL, EquipmentSlot.CHEST, new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
+		super(ChickenBoots.BOBO_MATERIAL, Type.CHESTPLATE, new Properties().stacksTo(1));
 		String name = "pig_zombie_chestplate";
-		CRItems.toRegister.put(name, this);
+		CRItems.queueForRegister(name, this);
 	}
 
 	@Override

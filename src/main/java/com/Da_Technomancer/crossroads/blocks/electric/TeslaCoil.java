@@ -45,8 +45,7 @@ public class TeslaCoil extends BaseEntityBlock implements IReadable{
 	public TeslaCoil(){
 		super(CRBlocks.getMetalProperty());
 		String name = "tesla_coil";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 		registerDefaultState(defaultBlockState().setValue(CRProperties.ACTIVE, false));
 	}
 

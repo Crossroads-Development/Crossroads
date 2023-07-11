@@ -34,8 +34,7 @@ public class CopshowiumCreationChamber extends BaseEntityBlock implements IReada
 	public CopshowiumCreationChamber(){
 		super(CRBlocks.getMetalProperty());
 		String name = "copshowium_creation_chamber";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Override

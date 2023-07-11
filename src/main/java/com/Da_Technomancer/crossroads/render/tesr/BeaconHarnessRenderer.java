@@ -7,8 +7,8 @@ import com.Da_Technomancer.crossroads.blocks.technomancy.BeaconHarnessTileEntity
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
+import org.joml.Quaternionf;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -41,16 +41,16 @@ public class BeaconHarnessRenderer extends EntropyRenderer<BeaconHarnessTileEnti
 			angle = calcAngle(te, partialTicks);
 
 			matrix.pushPose();
-			matrix.mulPose(Vector3f.XP.rotationDegrees(180));
+			matrix.mulPose(Axis.XP.rotationDegrees(180));
 
 			final float width = trip.getRight().floatValue() / 8F / (float) Math.sqrt(2);//Convert diagonal radius to side length
 			final int length = trip.getMiddle();
 			boolean doRotation = CRConfig.rotateBeam.get();
-			Quaternion verticalRot;
+			Quaternionf verticalRot;
 			if(doRotation){
-				verticalRot = Vector3f.YP.rotationDegrees(CRRenderUtil.getRenderTime(partialTicks, te.getLevel()) * 2F);
+				verticalRot = Axis.YP.rotationDegrees(CRRenderUtil.getRenderTime(partialTicks, te.getLevel()) * 2F);
 			}else{
-				verticalRot = Vector3f.YP.rotationDegrees(45);//Constant 45 degree angle
+				verticalRot = Axis.YP.rotationDegrees(45);//Constant 45 degree angle
 			}
 			matrix.translate(0, -0.5D, 0);
 			matrix.mulPose(verticalRot);
@@ -68,13 +68,13 @@ public class BeaconHarnessRenderer extends EntropyRenderer<BeaconHarnessTileEnti
 		TextureAtlasSprite quartzSprite = CRRenderUtil.getTextureSprite(CRRenderTypes.QUARTZ_TEXTURE);
 		VertexConsumer builder = buffer.getBuffer(RenderType.solid());
 
-		matrix.mulPose(Vector3f.YP.rotationDegrees(angle));
+		matrix.mulPose(Axis.YP.rotationDegrees(angle));
 		addRod(matrix, builder, smallOffset, smallOffset, copSprite, mediumLight);
 		addRod(matrix, builder, smallOffset, -smallOffset, copSprite, mediumLight);
 		addRod(matrix, builder, -smallOffset, -smallOffset, copSprite, mediumLight);
 		addRod(matrix, builder, -smallOffset, smallOffset, copSprite, mediumLight);
 
-		matrix.mulPose(Vector3f.YP.rotationDegrees(-2F * angle));
+		matrix.mulPose(Axis.YP.rotationDegrees(-2F * angle));
 
 		addRod(matrix, builder, medOffset, largeOffset, quartzSprite, mediumLight);
 		addRod(matrix, builder, medOffset, -largeOffset, quartzSprite, mediumLight);

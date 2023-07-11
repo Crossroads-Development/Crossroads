@@ -28,8 +28,7 @@ public class FluidTube extends ConduitBlock<EnumTransferMode>{
 
 	protected FluidTube(String name){
 		super(CRBlocks.getMetalProperty());
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Override

@@ -45,7 +45,7 @@ public class DampingPowder extends Item{
 			if(source.getBlockState().hasProperty(DispenserBlock.FACING)){
 				partPos = partPos.add(Vec3.atLowerCornerOf(source.getBlockState().getValue(DispenserBlock.FACING).getNormal()));
 			}
-			performDamping(source.getLevel(), new BlockPos(partPos), true);
+			performDamping(source.getLevel(), MiscUtil.blockPos(partPos), true);
 			return stack;
 		}
 
@@ -59,9 +59,9 @@ public class DampingPowder extends Item{
 	};
 
 	public DampingPowder(){
-		super(new Properties().tab(CRItems.TAB_CROSSROADS));
+		super(new Properties());
 		String name = "damping_powder";
-		CRItems.toRegister.put(name, this);
+		CRItems.queueForRegister(name, this);
 		DispenserBlock.registerBehavior(this, DAMPING_DISPENSER_BEHAVIOR);
 	}
 
@@ -72,7 +72,7 @@ public class DampingPowder extends Item{
 			held.shrink(1);
 		}
 		if(worldIn instanceof ServerLevel level){
-			performDamping(level, new BlockPos(playerIn.getEyePosition()).relative(playerIn.getDirection()), false);
+			performDamping(level, MiscUtil.blockPos(playerIn.getEyePosition()).relative(playerIn.getDirection()), false);
 		}
 		return new InteractionResultHolder<>(InteractionResult.SUCCESS, held);
 	}

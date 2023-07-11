@@ -57,11 +57,6 @@ public class BeamLensRec implements IOptionalRecipe<Container>{
 	}
 
 	@Override
-	public ItemStack assemble(Container inv){
-		return getResultItem().copy();
-	}
-
-	@Override
 	public boolean isEnabled(){
 		return active;
 	}

@@ -32,11 +32,11 @@ public class CRParticles{
 	public static final HashMap<String, ParticleType<?>> toRegister = new HashMap<>(5);
 
 	public static void clientInit(RegisterParticleProvidersEvent e){
-		e.register(COLOR_FLAME, ParticleFlameColor.Factory::new);
-		e.register(COLOR_GAS, ParticleBubbleColor.Factory::new);
-		e.register(COLOR_LIQUID, ParticleDripColor.Factory::new);
-		e.register(COLOR_SOLID, ParticlePowderColor.Factory::new);
-		e.register(COLOR_SPLASH, ParticleSplashColor.Factory::new);
+		e.registerSpriteSet(COLOR_FLAME, ParticleFlameColor.Factory::new);
+		e.registerSpriteSet(COLOR_GAS, ParticleBubbleColor.Factory::new);
+		e.registerSpriteSet(COLOR_LIQUID, ParticleDripColor.Factory::new);
+		e.registerSpriteSet(COLOR_SOLID, ParticlePowderColor.Factory::new);
+		e.registerSpriteSet(COLOR_SPLASH, ParticleSplashColor.Factory::new);
 	}
 
 	/**
@@ -63,7 +63,7 @@ public class CRParticles{
 	public static void summonParticlesFromServer(ServerLevel world, ParticleOptions data, int count, double x, double y, double z, double xDeviation, double yDeviation, double zDeviation, double xVelocity, double yVelocity, double zVelocity, double xVelocityDeviation, double yVelocityDeviation, double zVelocityDeviation, boolean gaussianDistribution){
 		CreateParticlesOnClient packet = new CreateParticlesOnClient(data, x, y, z, (float) xDeviation, (float) yDeviation, (float) zDeviation, (float) xVelocity, (float) yVelocity, (float) zVelocity, (float) xVelocityDeviation, (float) yVelocityDeviation, (float) zVelocityDeviation, count, gaussianDistribution);
 		for(ServerPlayer target : world.players()){
-			if(target.getLevel() == world && target.blockPosition().closerThan(new Vec3i(x, y, z), 32.0D)){
+			if(target.getLevel() == world && target.blockPosition().closerThan(new Vec3i((int) Math.round(x), (int) Math.round(y), (int) Math.round(z)), 32.0D)){
 				CRPackets.sendPacketToPlayer(target, packet);
 			}
 		}

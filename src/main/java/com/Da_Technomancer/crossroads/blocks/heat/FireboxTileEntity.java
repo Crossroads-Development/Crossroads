@@ -20,8 +20,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nullable;
 
@@ -106,7 +106,7 @@ public class FireboxTileEntity extends InventoryTE{
 		if(capability == Capabilities.HEAT_CAPABILITY && (facing == Direction.UP || facing == null)){
 			return (LazyOptional<T>) heatOpt;
 		}
-		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
+		if(capability == ForgeCapabilities.ITEM_HANDLER){
 			return (LazyOptional<T>) itemOpt;
 		}
 		return super.getCapability(capability, facing);

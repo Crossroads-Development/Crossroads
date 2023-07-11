@@ -33,8 +33,7 @@ public class HeatSink extends BaseEntityBlock{
 	public HeatSink(){
 		super(CRBlocks.getMetalProperty());
 		String name = "heat_sink";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 		registerDefaultState(defaultBlockState().setValue(CRProperties.POWER_LEVEL_4, 0));
 	}
 

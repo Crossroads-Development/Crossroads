@@ -52,8 +52,7 @@ public class TemporalAccelerator extends BaseEntityBlock{
 	public TemporalAccelerator(){
 		super(CRBlocks.getMetalProperty());
 		String name = "temporal_accelerator";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 		registerDefaultState(defaultBlockState().setValue(CRProperties.ACCELERATOR_TARGET, Mode.BOTH));
 	}
 

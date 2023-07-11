@@ -13,7 +13,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.HumanoidArm;
@@ -44,9 +43,9 @@ public class TeslaRay extends Item{
 	private final Multimap<Attribute, AttributeModifier> attributeModifiers;
 
 	public TeslaRay(){
-		super(new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
+		super(new Properties().stacksTo(1));
 		String name = "tesla_ray";
-		CRItems.toRegister.put(name, this);
+		CRItems.queueForRegister(name, this);
 
 		//Attributes
 		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
@@ -148,7 +147,7 @@ public class TeslaRay extends Item{
 			//We want to apply lightning effects (ex. pig->pig zombie, creeper->charged creeper, etc) if this is fully charged
 			MiscUtil.attackWithLightning(entity, DAMAGE, null);
 		}else{
-			entity.hurt(DamageSource.LIGHTNING_BOLT, DAMAGE * scale);
+			entity.hurt(entity.level.damageSources().lightningBolt(), DAMAGE * scale);
 		}
 	}
 }

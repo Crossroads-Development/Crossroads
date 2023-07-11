@@ -69,7 +69,7 @@ public class CopshowiumCategory implements IRecipeCategory<CopshowiumRec>{
 	public void setRecipe(IRecipeLayoutBuilder builder, CopshowiumRec recipe, IFocusGroup focuses){
 		int displaySize = 1000;
 		builder.addSlot(RecipeIngredientRole.INPUT, 51, 31).addIngredients(ForgeTypes.FLUID_STACK, recipe.getInput().getMatchedFluidStacks(displaySize)).setFluidRenderer(4000, true, 16, 64).setOverlay(fluidOverlay, 0, 0);
-		builder.addSlot(RecipeIngredientRole.OUTPUT, 111, 31).addIngredient(ForgeTypes.FLUID_STACK, new FluidStack(CRFluids.moltenCopshowium.still, (int) (displaySize * recipe.getMult()))).setFluidRenderer(4000, true, 16, 64).setOverlay(fluidOverlay, 0, 0);
+		builder.addSlot(RecipeIngredientRole.OUTPUT, 111, 31).addIngredient(ForgeTypes.FLUID_STACK, new FluidStack(CRFluids.moltenCopshowium.getStill(), (int) (displaySize * recipe.getMult()))).setFluidRenderer(4000, true, 16, 64).setOverlay(fluidOverlay, 0, 0);
 	}
 
 	@Override

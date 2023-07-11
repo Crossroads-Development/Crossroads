@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.entity;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EntityType;
@@ -10,7 +11,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.ItemSupplier;
 import net.minecraft.world.entity.projectile.ThrowableProjectile;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -42,7 +42,7 @@ public class EntityNitro extends ThrowableProjectile implements ItemSupplier{
 	protected void onHit(HitResult result){
 		if(!level.isClientSide){
 			Vec3 vec = result.getLocation();
-			level.explode(null, vec.x, vec.y, vec.z, 5F, Explosion.BlockInteraction.BREAK);
+			level.explode(null, vec.x, vec.y, vec.z, 5F, Level.ExplosionInteraction.TNT);
 			level.playSound(null, getX(), getY(), getZ(), SoundEvents.GLASS_BREAK, SoundSource.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
 			level.playSound(null, getX(), getY(), getZ(), SoundEvents.GENERIC_EXPLODE, SoundSource.NEUTRAL, 1F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
 			level.broadcastEntityEvent(this, (byte) 3);
@@ -56,7 +56,7 @@ public class EntityNitro extends ThrowableProjectile implements ItemSupplier{
 	}
 
 	@Override
-	public Packet<?> getAddEntityPacket(){
+	public Packet<ClientGamePacketListener> getAddEntityPacket(){
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 

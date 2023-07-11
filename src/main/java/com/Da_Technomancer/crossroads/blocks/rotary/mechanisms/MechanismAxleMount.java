@@ -6,13 +6,12 @@ import com.Da_Technomancer.crossroads.api.rotary.IMechanism;
 import com.Da_Technomancer.crossroads.api.rotary.IMechanismAxleHandler;
 import com.Da_Technomancer.crossroads.api.rotary.IMechanismProperty;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.Da_Technomancer.crossroads.items.item_sets.GearFactory;
-import com.Da_Technomancer.crossroads.items.item_sets.OreSetup;
+import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.crossroads.render.tesr.CRModels;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -29,7 +28,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
 
-public class MechanismAxleMount implements IMechanism<GearFactory.GearMaterial>{
+public class MechanismAxleMount implements IMechanism<CRMaterialLibrary.GearMaterial>{
 
 	private static final VoxelShape[] SHAPES_SIDE = new VoxelShape[6];
 	private static final VoxelShape[] SHAPES_END = new VoxelShape[6];
@@ -69,8 +68,8 @@ public class MechanismAxleMount implements IMechanism<GearFactory.GearMaterial>{
 	@Nonnull
 	@Override
 	public ItemStack getDrop(IMechanismProperty mat){
-		if(mat instanceof GearFactory.GearMaterial){
-			return CRItems.axleMount.withMaterial((OreSetup.OreProfile) mat, 1);
+		if(mat instanceof CRMaterialLibrary.GearMaterial){
+			return CRItems.axleMount.withMaterial((CRMaterialLibrary.OreProfile) mat, 1);
 		}else{
 			return ItemStack.EMPTY;
 		}
@@ -92,7 +91,7 @@ public class MechanismAxleMount implements IMechanism<GearFactory.GearMaterial>{
 
 		Direction.Axis selfAxis = side.getAxis();
 		VertexConsumer builder = buffer.getBuffer(RenderType.solid());
-		int[] matCol = CRRenderUtil.convertColor(mat instanceof GearFactory.GearMaterial ? ((GearFactory.GearMaterial) mat).getColor() : Color.WHITE);
+		int[] matCol = CRRenderUtil.convertColor(mat instanceof CRMaterialLibrary.GearMaterial ? ((CRMaterialLibrary.GearMaterial) mat).getColor() : Color.WHITE);
 		TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(CRRenderTypes.AXLE_MOUNT_TEXTURE);
 		TextureAtlasSprite octSprite = CRRenderUtil.getTextureSprite(CRRenderTypes.AXLE_MOUNT_OCT_TEXTURE);
 
@@ -113,7 +112,7 @@ public class MechanismAxleMount implements IMechanism<GearFactory.GearMaterial>{
 
 			//Rotate to face along the axle
 			if(selfAxis == Direction.Axis.X ? axis == Direction.Axis.Y : axis != Direction.Axis.X){
-				matrix.mulPose(Vector3f.YP.rotationDegrees(90));
+				matrix.mulPose(Axis.YP.rotationDegrees(90));
 			}
 
 			//Render pointing along the X axis, on the bottom side
@@ -122,7 +121,7 @@ public class MechanismAxleMount implements IMechanism<GearFactory.GearMaterial>{
 			float antiZFightModifier = side.get3DDataValue() * 0.001F;//Small scale applied based on side to prevent z-fighting
 
 			matrix.pushPose();
-			matrix.mulPose(Vector3f.ZP.rotationDegrees(90));
+			matrix.mulPose(Axis.ZP.rotationDegrees(90));
 			matrix.scale(OCT_SCALE + antiZFightModifier, 1 + antiZFightModifier, OCT_SCALE + antiZFightModifier);
 			CRModels.draw8Core(builder, matrix, matCol, matCol, combinedLight, octSprite);
 			matrix.popPose();
@@ -138,12 +137,12 @@ public class MechanismAxleMount implements IMechanism<GearFactory.GearMaterial>{
 	}
 
 	@Override
-	public GearFactory.GearMaterial deserializeProperty(int serial){
-		return GearFactory.GearMaterial.deserialize(serial);
+	public CRMaterialLibrary.GearMaterial deserializeProperty(int serial){
+		return CRMaterialLibrary.GearMaterial.deserialize(serial);
 	}
 
 	@Override
-	public GearFactory.GearMaterial loadProperty(String name){
-		return GearFactory.findMaterial(name);
+	public CRMaterialLibrary.GearMaterial loadProperty(String name){
+		return CRMaterialLibrary.findMaterial(name);
 	}
 }

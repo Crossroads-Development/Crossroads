@@ -30,8 +30,7 @@ public class Incubator extends TEBlock implements IReadable{
 	public Incubator(){
 		super(CRBlocks.getMetalProperty());
 		String name = "incubator";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Override

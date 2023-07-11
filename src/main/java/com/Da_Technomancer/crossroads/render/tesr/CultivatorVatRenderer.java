@@ -7,7 +7,7 @@ import com.Da_Technomancer.crossroads.blocks.witchcraft.CultivatorVatTileEntity;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -73,7 +73,7 @@ public class CultivatorVatRenderer implements BlockEntityRenderer<CultivatorVatT
 			//Brains rotate to follow the player
 			LocalPlayer player = Minecraft.getInstance().player;
 
-			matrix.mulPose(Vector3f.YN.rotation((float) Math.atan2(player.getZ() - (0.5D + te.getBlockPos().getZ()), player.getX() - (0.5D + te.getBlockPos().getX()))));
+			matrix.mulPose(Axis.YN.rotation((float) Math.atan2(player.getZ() - (0.5D + te.getBlockPos().getZ()), player.getX() - (0.5D + te.getBlockPos().getX()))));
 			matrix.scale(0.4F, 0.4F, 0.4F);
 
 			TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(CRRenderTypes.VILLAGER_BRAIN_TEXTURE);

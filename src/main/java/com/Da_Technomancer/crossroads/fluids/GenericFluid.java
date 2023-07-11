@@ -6,7 +6,6 @@ import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.BucketItem;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.LiquidBlock;
@@ -25,7 +24,7 @@ import java.util.function.Supplier;
 
 public class GenericFluid extends LiquidBlock{
 
-	private static final Item.Properties BUCKET_PROP = new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1).tab(CreativeModeTab.TAB_MISC);
+	private static final Item.Properties BUCKET_PROP = new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1);
 
 	public static FluidData create(String name, boolean lavaLike, boolean gaseous){
 		return create(name, lavaLike, gaseous, lavaLike ? 15 : 0, false);
@@ -93,8 +92,8 @@ public class GenericFluid extends LiquidBlock{
 		CRFluids.toRegisterType.put(name, data.type);
 		CRFluids.toRegisterFluid.put(name, data.still);
 		CRFluids.toRegisterFluid.put("flowing_" + name, data.flowing);
-		CRBlocks.toRegister.put(name, data.block);
-		CRItems.toRegister.put(name + "_bucket", data.bucket);
+		CRBlocks.queueForRegister(name, data.block, false, null);
+		CRItems.queueForRegister(name + "_bucket", data.bucket);
 
 		return data;
 	}
@@ -105,11 +104,11 @@ public class GenericFluid extends LiquidBlock{
 
 	public static class FluidData{
 
-		public FluidType type;
-		public FlowingFluid still;
-		public FlowingFluid flowing;
-		public LiquidBlock block;
-		public Item bucket;
+		private FluidType type;
+		private FlowingFluid still;
+		private FlowingFluid flowing;
+		private LiquidBlock block;
+		private Item bucket;
 
 		private FluidData(){
 

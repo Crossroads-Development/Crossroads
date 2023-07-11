@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.api.alchemy.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -69,7 +70,7 @@ public class EntityFlameCore extends Entity{
 	}
 
 	@Override
-	public Packet<?> getAddEntityPacket(){
+	public Packet<ClientGamePacketListener> getAddEntityPacket(){
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 
@@ -164,7 +165,7 @@ public class EntityFlameCore extends Entity{
 		final int distributedTime = 8;//Action is distributed to do 1/8 the block changes every tick instead of all of them every 8 ticks
 		int tickMod = ticksExisted % distributedTime;
 		int radius = getRadius(ticksExisted - tickMod);
-		BlockPos pos = new BlockPos(getX(), getY(), getZ());
+		BlockPos pos = new BlockPos((int) Math.round(getX()), (int) Math.round(getY()), (int) Math.round(getZ()));
 		boolean lastAction = maxRadius <= radius && tickMod == (distributedTime - 1);
 
 		double temp = reags.getTempC();

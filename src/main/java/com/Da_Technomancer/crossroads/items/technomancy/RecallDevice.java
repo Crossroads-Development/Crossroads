@@ -4,7 +4,6 @@ import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.blocks.rotary.WindingTableTileEntity;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -18,7 +17,6 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -33,9 +31,9 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 	private static final double WIND_USE = 0.4;
 
 	public RecallDevice(){
-		super(new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
+		super(new Properties().stacksTo(1));
 		String name = "recall_device";
-		CRItems.toRegister.put(name, this);
+		CRItems.queueForRegister(name, this);
 	}
 
 	@Override
@@ -210,15 +208,5 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 	@Override
 	public double getMaxWind(){
 		return 10;
-	}
-
-	@Override
-	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items){
-		if(allowedIn(group)){
-			items.add(new ItemStack(this, 1));
-			ItemStack stack = new ItemStack(this, 1);
-			setWindLevel(stack, getMaxWind());
-			items.add(stack);
-		}
 	}
 }

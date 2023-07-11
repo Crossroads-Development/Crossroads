@@ -28,9 +28,9 @@ public class LiechWrench extends Item{
 	private final Multimap<Attribute, AttributeModifier> attributeModifiers;
 
 	public LiechWrench(){
-		super(new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
+		super(new Properties().stacksTo(1));
 		String name = "liech_wrench";
-		CRItems.toRegister.put(name, this);
+		CRItems.queueForRegister(name, this);
 		//This item is registered as a wrench in the wrench tag
 
 		//Attributes

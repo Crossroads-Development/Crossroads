@@ -21,6 +21,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -46,8 +47,7 @@ public class HydroponicsTrough extends TEBlock implements IReadable, Bonemealabl
 	public HydroponicsTrough(){
 		super(CRBlocks.getMetalProperty().randomTicks().noOcclusion());
 		String name = "hydroponics_trough";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 		registerDefaultState(defaultBlockState().setValue(CRProperties.FULLNESS, 0).setValue(CRProperties.SOLID_FULLNESS, 0));
 	}
 
@@ -100,7 +100,7 @@ public class HydroponicsTrough extends TEBlock implements IReadable, Bonemealabl
 	}
 
 	@Override
-	public boolean isValidBonemealTarget(BlockGetter world, BlockPos pos, BlockState state, boolean p_176473_4_){
+	public boolean isValidBonemealTarget(LevelReader world, BlockPos pos, BlockState state, boolean p_176473_4_){
 		BlockEntity te = world.getBlockEntity(pos);
 		if(te instanceof HydroponicsTroughTileEntity){
 			return ((HydroponicsTroughTileEntity) te).canBonemeal();

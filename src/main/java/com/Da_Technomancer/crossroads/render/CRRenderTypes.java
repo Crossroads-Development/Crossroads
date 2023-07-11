@@ -6,9 +6,7 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.client.event.TextureStitchEvent;
 
 //Stores all the stitched textures and render types
 public class CRRenderTypes extends RenderType{
@@ -66,29 +64,6 @@ public class CRRenderTypes extends RenderType{
 	public static final RenderType FLUX_TRANSFER_TYPE = RenderType.create("cr_flux_extrusion", DefaultVertexFormat.POSITION_COLOR_TEX, VertexFormat.Mode.QUADS, 256, false, true, RenderType.CompositeState.builder().setShaderState(RenderStateShard.POSITION_COLOR_TEX_SHADER).setCullState(RenderStateShard.NO_CULL).setTextureState(new RenderStateShard.TextureStateShard(FLUX_EXTRUSION_TEXTURE, false, false)).setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY).createCompositeState(false));
 	public static final RenderType BEAM_INFO_TYPE = RenderType.create("cr_beam_info", DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS, 256, false, true, RenderType.CompositeState.builder().setShaderState(RenderStateShard.POSITION_TEX_SHADER).setCullState(RenderStateShard.NO_CULL).setTextureState(new RenderStateShard.TextureStateShard(BEAM_INFO_TEXTURE, false, false)).createCompositeState(false));
 	public static final RenderType FLAME_CORE_TYPE = RenderType.create("cr_flame_core", DefaultVertexFormat.POSITION_COLOR_TEX, VertexFormat.Mode.QUADS, 256, false, true, RenderType.CompositeState.builder().setShaderState(RenderStateShard.POSITION_COLOR_TEX_SHADER).setCullState(RenderStateShard.NO_CULL).setTextureState(new RenderStateShard.TextureStateShard(FLAME_CORE_TEXTURE, false, false)).setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY).createCompositeState(false));
-
-	public static void stitchTextures(TextureStitchEvent.Pre event){
-		//We only need to register textures which are not already part of a block model
-		if(event.getAtlas().location().equals(TextureAtlas.LOCATION_BLOCKS)) {
-			event.addSprite(WINDMILL_TEXTURE);
-			event.addSprite(NODE_GIMBAL_TEXTURE);
-			event.addSprite(AXLE_ENDS_TEXTURE);
-			event.addSprite(AXLE_SIDE_TEXTURE);
-			event.addSprite(HAMSTER_TEXTURE);
-			event.addSprite(GEAR_8_TEXTURE);
-			event.addSprite(GEAR_24_TEXTURE);
-			event.addSprite(GEAR_24_RIM_TEXTURE);
-			event.addSprite(CLUTCH_SIDE_TEXTURE);
-			event.addSprite(CLUTCH_SIDE_INVERTED_TEXTURE);
-			event.addSprite(GATEWAY_TEXTURE);
-			event.addSprite(AXLE_MOUNT_TEXTURE);
-			event.addSprite(AXLE_MOUNT_OCT_TEXTURE);
-			event.addSprite(BEAM_CANNON_BARREL_TEXTURE);
-			event.addSprite(ITEM_CANNON_BARREL_TEXTURE);
-			event.addSprite(EMBRYO_TEXTURE);
-			event.addSprite(VILLAGER_BRAIN_TEXTURE);
-		}
-	}
 
 	//This is a dummy constructor- we need to be in a subclass to access the protected fields
 	//This constructor should never be called- everything is done statically

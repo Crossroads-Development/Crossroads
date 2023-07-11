@@ -8,7 +8,7 @@ import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.gui.container.DetailedCrafterContainer;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.item_sets.OreProfileItem;
-import com.Da_Technomancer.crossroads.items.item_sets.OreSetup;
+import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
 import com.Da_Technomancer.crossroads.items.technomancy.TechnomancyArmor;
 import com.google.common.collect.ImmutableList;
 import mezz.jei.api.IModPlugin;
@@ -153,7 +153,7 @@ public class JEICrossroadsPlugin implements IModPlugin{
 		//Register item types with a finite number of variants based on NBT
 
 		final IIngredientSubtypeInterpreter<ItemStack> oreProfileInterpreter = (ItemStack stack, UidContext context) -> {
-			OreSetup.OreProfile mat = OreProfileItem.getProfile(stack);
+			CRMaterialLibrary.OreProfile mat = OreProfileItem.getProfile(stack);
 			return mat == null ? IIngredientSubtypeInterpreter.NONE : mat.getName();
 		};
 

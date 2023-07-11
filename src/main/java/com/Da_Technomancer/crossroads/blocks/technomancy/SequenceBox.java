@@ -35,8 +35,7 @@ public class SequenceBox extends BaseEntityBlock implements IWireConnect{
 	public SequenceBox(){
 		super(CRBlocks.getMetalProperty());
 		String name = "sequence_box";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Override

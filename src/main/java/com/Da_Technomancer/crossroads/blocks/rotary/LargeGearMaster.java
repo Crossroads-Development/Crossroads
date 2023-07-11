@@ -46,7 +46,7 @@ public class LargeGearMaster extends BaseEntityBlock{
 	public LargeGearMaster(){
 		super(CRBlocks.getMetalProperty());
 		String name = "large_gear_master";
-		CRBlocks.toRegister.put(name, this);
+		CRBlocks.queueForRegister(name, this, false, null);
 	}
 
 	@Override

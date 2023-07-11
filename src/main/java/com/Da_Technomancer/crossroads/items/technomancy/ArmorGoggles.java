@@ -4,13 +4,11 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -21,9 +19,9 @@ import java.util.List;
 public class ArmorGoggles extends TechnomancyArmor{
 
 	public ArmorGoggles(){
-		super(EquipmentSlot.HEAD);
+		super(Type.HELMET);
 		String name = "module_goggles";
-		CRItems.toRegister.put(name, this);
+		CRItems.queueForRegister(name, this);
 	}
 
 	@Override
@@ -83,19 +81,19 @@ public class ArmorGoggles extends TechnomancyArmor{
 	}
 
 	@Override
-	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items){
-		if(allowedIn(group)){
-			items.add(new ItemStack(this, 1));
-			items.add(setReinforced(new ItemStack(this, 1), true));
-			ItemStack unarmoredLenses = new ItemStack(this, 1);
-			ItemStack armoredLenses = new ItemStack(this, 1);
-			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
-				unarmoredLenses.getOrCreateTag().putBoolean(lens.toString(), false);
-				armoredLenses.getOrCreateTag().putBoolean(lens.toString(), false);
-			}
-
-			items.add(unarmoredLenses);
-			items.add(setReinforced(armoredLenses, true));
+	public ItemStack[] populateCreativeTab(){
+		ItemStack[] result = new ItemStack[4];
+		result[0] = new ItemStack(this, 1);
+		result[1] = setReinforced(new ItemStack(this, 1), true);
+		ItemStack unarmoredLenses = new ItemStack(this, 1);
+		ItemStack armoredLenses = new ItemStack(this, 1);
+		for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
+			unarmoredLenses.getOrCreateTag().putBoolean(lens.toString(), false);
+			armoredLenses.getOrCreateTag().putBoolean(lens.toString(), false);
 		}
+
+		result[2] = unarmoredLenses;
+		result[3] = setReinforced(armoredLenses, true);
+		return result;
 	}
 }

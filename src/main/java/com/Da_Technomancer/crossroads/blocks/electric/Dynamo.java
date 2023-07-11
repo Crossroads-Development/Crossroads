@@ -43,8 +43,7 @@ public class Dynamo extends BaseEntityBlock{
 	public Dynamo(){
 		super(CRBlocks.getMetalProperty());
 		String name = "dynamo";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Override

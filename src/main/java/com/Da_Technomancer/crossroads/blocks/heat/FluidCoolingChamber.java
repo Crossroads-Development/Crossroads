@@ -28,8 +28,7 @@ public class FluidCoolingChamber extends BaseEntityBlock{
 	public FluidCoolingChamber(){
 		super(CRBlocks.getMetalProperty());
 		String name = "fluid_cooling_chamber";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Override

@@ -1,11 +1,13 @@
 package com.Da_Technomancer.crossroads.entity;
 
+import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.alchemy.AlchemyUtil;
 import com.Da_Technomancer.crossroads.api.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -57,7 +59,7 @@ public class EntityShell extends ThrowableProjectile implements ItemSupplier{
 		if(!level.isClientSide){
 			if(contents != null){
 				Vec3 hit = result.getLocation();
-				AlchemyUtil.releaseChemical(level, new BlockPos(hit.x, hit.y, hit.z), contents);
+				AlchemyUtil.releaseChemical(level, MiscUtil.blockPos(hit.x, hit.y, hit.z), contents);
 			}
 			level.playSound(null, getX(), getY(), getZ(), SoundEvents.GLASS_BREAK, SoundSource.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
 			level.broadcastEntityEvent(this, (byte) 3);
@@ -86,7 +88,7 @@ public class EntityShell extends ThrowableProjectile implements ItemSupplier{
 			float f1 = 0.98F;
 
 			if(onGround){
-				f1 = level.getBlockState(new BlockPos(getX(), getY() - 1.0D, getZ())).getFriction(level, new BlockPos(getX(), getY() - 1.0D, getZ()), this) * 0.98F;
+				f1 = level.getBlockState(MiscUtil.blockPos(getX(), getY() - 1.0D, getZ())).getFriction(level, MiscUtil.blockPos(getX(), getY() - 1.0D, getZ()), this) * 0.98F;
 			}
 
 			setDeltaMovement(getDeltaMovement().multiply(f1, 0.98D, f1));
@@ -151,7 +153,7 @@ public class EntityShell extends ThrowableProjectile implements ItemSupplier{
 	}
 
 	@Override
-	public Packet<?> getAddEntityPacket(){
+	public Packet<ClientGamePacketListener> getAddEntityPacket(){
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 

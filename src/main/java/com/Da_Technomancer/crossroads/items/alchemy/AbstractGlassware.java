@@ -26,7 +26,7 @@ public abstract class AbstractGlassware extends Item{
 	protected final boolean isCrystal;
 
 	protected AbstractGlassware(GlasswareTypes type, boolean isCrystal){
-		super(new Properties().stacksTo(1).tab(CRItems.TAB_CROSSROADS));
+		super(new Properties().stacksTo(1));
 		this.type = type;
 		this.isCrystal = isCrystal;
 	}

@@ -25,7 +25,7 @@ public class BloodSample extends Item implements IPerishable{
 
 	public BloodSample(String name){
 		super(new Item.Properties().stacksTo(1));//Not added to any creative tab
-		CRItems.toRegister.put(name, this);
+		CRItems.queueForRegister(name, this, null);
 	}
 
 	public ItemStack withEntityData(ItemStack stack, LivingEntity source){

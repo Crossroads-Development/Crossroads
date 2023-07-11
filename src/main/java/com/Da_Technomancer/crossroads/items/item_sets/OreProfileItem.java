@@ -1,15 +1,17 @@
 package com.Da_Technomancer.crossroads.items.item_sets;
 
-import net.minecraft.core.NonNullList;
+import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
+import com.Da_Technomancer.crossroads.api.templates.ICreativeTabPopulatingItem;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class OreProfileItem extends Item{
+import java.util.Collection;
+
+public class OreProfileItem extends Item implements ICreativeTabPopulatingItem{
 
 	protected static final String KEY = "material";
 
@@ -17,9 +19,9 @@ public class OreProfileItem extends Item{
 		super(prop);
 	}
 
-	public ItemStack withMaterial(OreSetup.OreProfile mat, int count){
+	public ItemStack withMaterial(CRMaterialLibrary.OreProfile mat, int count){
 		if(mat == null){
-			mat = OreSetup.getDefaultMaterial();
+			mat = CRMaterialLibrary.getDefaultProfile();
 		}
 		ItemStack out = new ItemStack(this, count);
 		out.setTag(new CompoundTag());
@@ -27,22 +29,22 @@ public class OreProfileItem extends Item{
 		return out;
 	}
 
-	public static OreSetup.OreProfile getProfile(ItemStack stack){
+	public static CRMaterialLibrary.OreProfile getProfile(ItemStack stack){
 		Item item = stack.getItem();
 		if(item instanceof OreProfileItem){
 			return ((OreProfileItem) item).getSelfProfile(stack);
 		}
-		return OreSetup.getDefaultMaterial();
+		return CRMaterialLibrary.getDefaultProfile();
 	}
 
-	protected OreSetup.OreProfile getSelfProfile(ItemStack stack){
+	protected CRMaterialLibrary.OreProfile getSelfProfile(ItemStack stack){
 		String matKey;
 		if(!stack.hasTag()){
-			return OreSetup.getDefaultMaterial();
+			return CRMaterialLibrary.getDefaultProfile();
 		}else{
 			matKey = stack.getTag().getString(KEY);
 		}
-		return OreSetup.findMaterial(matKey);
+		return CRMaterialLibrary.findProfile(matKey);
 	}
 
 	@Override
@@ -63,18 +65,20 @@ public class OreProfileItem extends Item{
 
 	@Override
 	public Component getName(ItemStack stack){
-		OreSetup.OreProfile mat = getProfile(stack);
+		CRMaterialLibrary.OreProfile mat = getProfile(stack);
 		//Note that we use the super of getTranslationKey to prevent an infinite loop
 		return Component.translatable(super.getDescriptionId(stack), mat == null ? "INVALID" : mat.getName());
 	}
 
 	@Override
-	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items){
-		if(allowedIn(group)){
-			//Add every material variant of this item
-			for(OreSetup.OreProfile mat : OreSetup.getMaterials()){
-				items.add(withMaterial(mat, 1));
-			}
+	public ItemStack[] populateCreativeTab(){
+		//Add every material variant of this item
+		Collection<CRMaterialLibrary.OreProfile> profiles = CRMaterialLibrary.getProfiles();
+		ItemStack[] stacks = new ItemStack[profiles.size()];
+		int i = 0;
+		for(CRMaterialLibrary.OreProfile mat : CRMaterialLibrary.getProfiles()){
+			stacks[i++] = withMaterial(mat, 1);
 		}
+		return stacks;
 	}
 }

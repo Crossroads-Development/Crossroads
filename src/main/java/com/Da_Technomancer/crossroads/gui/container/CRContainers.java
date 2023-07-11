@@ -1,9 +1,9 @@
 package com.Da_Technomancer.crossroads.gui.container;
 
-import com.Da_Technomancer.crossroads.blocks.witchcraft.BloodBeamLinkerTileEntity;
 import com.Da_Technomancer.crossroads.gui.screen.*;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.api.distmarker.Dist;
@@ -110,7 +110,7 @@ public final class CRContainers{
 	}
 
 	public static <T extends AbstractContainerMenu> MenuType<T> createConType(IContainerFactory<T> cons){
-		return new MenuType<>(cons);
+		return new MenuType<>(cons, FeatureFlags.VANILLA_SET);
 	}
 
 	/**

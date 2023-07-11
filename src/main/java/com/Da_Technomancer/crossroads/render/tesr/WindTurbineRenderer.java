@@ -10,7 +10,7 @@ import com.Da_Technomancer.crossroads.blocks.rotary.WindTurbineTileEntity;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -44,8 +44,8 @@ public class WindTurbineRenderer implements BlockEntityRenderer<WindTurbineTileE
 
 		matrix.pushPose();
 		matrix.translate(.5F, .5F, .5F);
-		matrix.mulPose(Vector3f.YP.rotationDegrees(-facing.toYRot()));
-		matrix.mulPose(Vector3f.ZP.rotationDegrees((float) RotaryUtil.getCCWSign(facing) * axle.orElseThrow(NullPointerException::new).getAngle(partialTicks)));
+		matrix.mulPose(Axis.YP.rotationDegrees(-facing.toYRot()));
+		matrix.mulPose(Axis.ZP.rotationDegrees((float) RotaryUtil.getCCWSign(facing) * axle.orElseThrow(NullPointerException::new).getAngle(partialTicks)));
 
 		final float scaleConst = 6F / 5F;
 
@@ -154,7 +154,7 @@ public class WindTurbineRenderer implements BlockEntityRenderer<WindTurbineTileE
 			CRRenderUtil.addVertexBlock(builder, matrix, bladeWid, bladeLenSt, zEnWool, sprite.getU(spokeUEdge), sprite.getV(bladeVEn), 0, 1, 0, light, col);
 			CRRenderUtil.addVertexBlock(builder, matrix, spokeRad, bladeLenSt, zEnWool, sprite.getU(spokeUEdge), sprite.getV(bladeVSt), 0, 1, 0, light, col);
 
-			matrix.mulPose(Vector3f.ZP.rotationDegrees(90));
+			matrix.mulPose(Axis.ZP.rotationDegrees(90));
 		}
 
 		matrix.popPose();

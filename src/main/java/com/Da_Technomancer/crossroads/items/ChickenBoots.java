@@ -3,7 +3,6 @@ package com.Da_Technomancer.crossroads.items;
 import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
@@ -15,9 +14,9 @@ public class ChickenBoots extends ArmorItem{
 	protected static final ArmorMaterial BOBO_MATERIAL = new BoboMat();
 
 	protected ChickenBoots(){
-		super(BOBO_MATERIAL, EquipmentSlot.FEET, new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
+		super(BOBO_MATERIAL, Type.BOOTS, new Properties().stacksTo(1));
 		String name = "chicken_boots";
-		CRItems.toRegister.put(name, this);
+		CRItems.queueForRegister(name, this);
 	}
 
 	@Override
@@ -28,12 +27,12 @@ public class ChickenBoots extends ArmorItem{
 	private static class BoboMat implements ArmorMaterial{
 
 		@Override
-		public int getDurabilityForSlot(EquipmentSlot slotIn){
+		public int getDurabilityForType(Type type){
 			return 0;
 		}
 
 		@Override
-		public int getDefenseForSlot(EquipmentSlot slotIn){
+		public int getDefenseForType(Type type){
 			return 0;
 		}
 

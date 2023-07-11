@@ -3,8 +3,8 @@ package com.Da_Technomancer.crossroads.blocks.heat;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
-import com.Da_Technomancer.crossroads.items.item_sets.HeatCableFactory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 
 public class RedstoneHeatCableTileEntity extends HeatCableTileEntity{
 
-	public static final BlockEntityType<RedstoneHeatCableTileEntity> TYPE = CRTileEntity.createType(RedstoneHeatCableTileEntity::new, HeatCableFactory.REDSTONE_HEAT_CABLES.values().toArray(new HeatCable[0]));
+	public static final BlockEntityType<RedstoneHeatCableTileEntity> TYPE = CRTileEntity.createType(RedstoneHeatCableTileEntity::new, CRBlocks.REDSTONE_HEAT_CABLES.values().toArray(new HeatCable[0]));
 
 	private boolean isInverted;
 

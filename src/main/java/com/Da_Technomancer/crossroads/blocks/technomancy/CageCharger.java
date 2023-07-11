@@ -37,8 +37,7 @@ public class CageCharger extends BaseEntityBlock implements IReadable{
 	public CageCharger(){
 		super(CRBlocks.getMetalProperty());
 		String name = "cage_charger";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 		registerDefaultState(defaultBlockState().setValue(CRProperties.ACTIVE, false));
 	}
 

@@ -35,8 +35,7 @@ public class FatCongealer extends BaseEntityBlock{
 	public FatCongealer(){
 		super(CRBlocks.getMetalProperty());
 		String name = "fat_congealer";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 		registerDefaultState(defaultBlockState().setValue(CRProperties.HORIZ_FACING, Direction.NORTH));
 	}
 

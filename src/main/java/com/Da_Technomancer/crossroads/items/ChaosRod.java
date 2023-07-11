@@ -5,7 +5,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
@@ -22,9 +21,9 @@ import java.util.List;
 public class ChaosRod extends Item{
 	
 	protected ChaosRod(){
-		super(new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
+		super(new Properties().stacksTo(1));
 		String name = "chaos_rod";
-		CRItems.toRegister.put(name, this);
+		CRItems.queueForRegister(name, this);
 	}
 
 	@Override
@@ -37,7 +36,7 @@ public class ChaosRod extends Item{
 		playerIn.teleportTo(playerIn.getX() + change.x, playerIn.getY() + change.y, playerIn.getZ() + change.z);
 		//Long story short, Potus4mine is the username of the person who found an exploit, which I left in only for them. 
 		if(playerIn.getGameProfile().getName().equals("Potus4mine") ? playerIn.getEffect(MobEffects.WEAKNESS) != null : playerIn.getEffect(MobEffects.GLOWING) != null){
-			playerIn.hurt(DamageSource.DRAGON_BREATH, 5F);
+			playerIn.hurt(worldIn.damageSources().dragonBreath(), 5F);
 		}
 		playerIn.addEffect(new MobEffectInstance(playerIn.getGameProfile().getName().equals("Potus4mine") ? MobEffects.WEAKNESS : MobEffects.GLOWING, 100, 0));
 		return InteractionResultHolder.success(playerIn.getItemInHand(hand));

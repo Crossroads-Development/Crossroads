@@ -5,7 +5,7 @@ import com.Da_Technomancer.crossroads.blocks.technomancy.FluxNodeTileEntity;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -32,7 +32,7 @@ public class FluxNodeRenderer extends EntropyRenderer<FluxNodeTileEntity>{
 //		Tessellator tess = Tessellator.getInstance();
 //		BufferBuilder buf = tess.getBuffer();
 
-		matrix.mulPose(Vector3f.YP.rotationDegrees(angle));
+		matrix.mulPose(Axis.YP.rotationDegrees(angle));
 //		GlStateManager.rotated(angle, 0, 1, 0);
 
 		VertexConsumer builder = buffer.getBuffer(RenderType.solid());
@@ -45,15 +45,15 @@ public class FluxNodeRenderer extends EntropyRenderer<FluxNodeTileEntity>{
 		drawGimbal(builder, matrix, spriteGimbal, combinedLight);
 //		GlStateManager.rotated(90, 0, 0, 1);
 //		GlStateManager.rotated(angle + 90, 0, 1, 0);
-		matrix.mulPose(Vector3f.ZP.rotationDegrees(90));
-		matrix.mulPose(Vector3f.YP.rotationDegrees(angle + 90));
+		matrix.mulPose(Axis.ZP.rotationDegrees(90));
+		matrix.mulPose(Axis.YP.rotationDegrees(angle + 90));
 		matrix.scale(5F / 7F, 5F / 7F, 5F / 7F);
 //		GlStateManager.scalef(5F / 7F, 5F / 7F, 5F / 7F);
 		drawGimbal(builder, matrix, spriteGimbal, combinedLight);
 //		GlStateManager.rotated(90, 0, 0, 1);
 //		GlStateManager.rotated(angle + 90, 0, 1, 0);
-		matrix.mulPose(Vector3f.ZP.rotationDegrees(90));
-		matrix.mulPose(Vector3f.YP.rotationDegrees(angle + 90));
+		matrix.mulPose(Axis.ZP.rotationDegrees(90));
+		matrix.mulPose(Axis.YP.rotationDegrees(angle + 90));
 		matrix.scale(5F / 7F, 5F / 7F, 5F / 7F);
 //		GlStateManager.scalef(5F / 7F, 5F / 7F, 5F / 7F);
 		drawGimbal(builder, matrix, spriteGimbal, combinedLight);

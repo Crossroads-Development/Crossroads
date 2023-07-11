@@ -84,11 +84,6 @@ public class BeamTransmuteRec implements IOptionalRecipe<Container>{
 	}
 
 	@Override
-	public ItemStack assemble(Container inv){
-		return getResultItem();
-	}
-
-	@Override
 	public ItemStack getResultItem(){
 		return new ItemStack(getOutput());
 	}

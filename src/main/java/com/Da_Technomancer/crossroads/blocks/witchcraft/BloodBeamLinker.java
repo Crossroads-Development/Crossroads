@@ -38,8 +38,7 @@ public class BloodBeamLinker extends TEBlock implements IReadable{
 	public BloodBeamLinker(){
 		super(CRBlocks.getMetalProperty());
 		String name = "blood_beam_linker";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 		registerDefaultState(defaultBlockState().setValue(CRProperties.CONTENTS, 0));
 	}
 

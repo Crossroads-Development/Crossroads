@@ -25,8 +25,7 @@ public class FireDetector extends BaseEntityBlock implements IReadable{
 	public FireDetector(){
 		super(CRBlocks.getMetalProperty());
 		String name = "fire_detector";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Override

@@ -35,8 +35,7 @@ public class RedstoneAxis extends BaseEntityBlock implements IWireConnect{
 	public RedstoneAxis(){
 		super(CRBlocks.getMetalProperty());
 		String name = "redstone_axis";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 		registerDefaultState(defaultBlockState().setValue(CRProperties.POWER_LEVEL_3, 0));
 	}
 

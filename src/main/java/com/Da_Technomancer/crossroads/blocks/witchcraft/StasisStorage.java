@@ -30,8 +30,7 @@ public class StasisStorage extends TEBlock implements IReadable{
 	public StasisStorage(){
 		super(CRBlocks.getMetalProperty());
 		String name = "stasis_storage";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Override

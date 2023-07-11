@@ -1,15 +1,11 @@
 package com.Da_Technomancer.crossroads.items.technomancy;
 
-import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.blocks.rotary.WindingTableTileEntity;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -23,9 +19,9 @@ public class ArmorPropellerPack extends TechnomancyArmor implements WindingTable
 	public static final double WIND_PER_BOOST = 0.005;
 
 	public ArmorPropellerPack(){
-		super(EquipmentSlot.CHEST);
+		super(Type.CHESTPLATE);
 		String name = "propeller_pack";
-		CRItems.toRegister.put(name, this);
+		CRItems.queueForRegister(name, this);
 	}
 
 	@Override
@@ -44,17 +40,17 @@ public class ArmorPropellerPack extends TechnomancyArmor implements WindingTable
 	}
 
 	@Override
-	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items){
-		if(allowedIn(group)){
-			items.add(new ItemStack(this, 1));
-			ItemStack unarmoredWound = new ItemStack(this, 1);
-			setWindLevel(unarmoredWound, getMaxWind());
-			items.add(unarmoredWound);
-			items.add(setReinforced(new ItemStack(this, 1), true));
-			ItemStack armoredWound = new ItemStack(this, 1);
-			setWindLevel(armoredWound, getMaxWind());
-			items.add(setReinforced(armoredWound, true));
-		}
+	public ItemStack[] populateCreativeTab(){
+		ItemStack[] result = new ItemStack[4];
+		result[0] = new ItemStack(this, 1);
+		ItemStack unarmoredWound = new ItemStack(this, 1);
+		setWindLevel(unarmoredWound, getMaxWind());
+		result[1] = unarmoredWound;
+		result[2] = setReinforced(new ItemStack(this, 1), true);
+		ItemStack armoredWound = new ItemStack(this, 1);
+		setWindLevel(armoredWound, getMaxWind());
+		result[3] = setReinforced(armoredWound, true);
+		return result;
 	}
 
 	@Override

@@ -4,8 +4,9 @@ import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
+import org.joml.Quaternionf;
+import org.joml.Quaternionf;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -205,13 +206,13 @@ public class CRModels{
 		matrix.translate(0, top, 0);
 		draw24Polygon(matrix, builder, light, col, sprite);//Top
 		matrix.translate(0, bottom - top, 0);
-		matrix.mulPose(Vector3f.XP.rotationDegrees(180));//Flip orientation
+		matrix.mulPose(Axis.XP.rotationDegrees(180));//Flip orientation
 		draw24Polygon(matrix, builder, light, col, sprite);//Bottom
 		matrix.popPose();
 
 		//Sides (spriteSide)
 		TextureAtlasSprite spriteSide = CRRenderUtil.getTextureSprite(CRRenderTypes.GEAR_24_RIM_TEXTURE);
-		Quaternion rotation = Vector3f.YP.rotationDegrees(15);
+		Quaternionf rotation = Axis.YP.rotationDegrees(15);
 
 		float vSt = spriteSide.getV0();
 		float vEn = spriteSide.getV(1);
@@ -353,7 +354,7 @@ public class CRModels{
 		//Bottom
 		matrix.pushPose();
 		matrix.translate(0, -top, 0);
-		matrix.mulPose(Vector3f.XP.rotationDegrees(180));//Flip upside down
+		matrix.mulPose(Axis.XP.rotationDegrees(180));//Flip upside down
 		matrix.scale(2F * lHalf, 1, 2F * lHalf);
 		drawOctagon(builder, matrix, color, light, sprite);
 		matrix.popPose();
@@ -456,7 +457,7 @@ public class CRModels{
 		//Prongs
 		//Given the option of hand coding 8 orientations for each 5 sided prong or using matrix transformations and a loop, I took the path of sanity retention
 		float tHeight = 1F / 16F;
-		Quaternion rotation = Vector3f.YP.rotationDegrees(360F / 8F);
+		Quaternionf rotation = Axis.YP.rotationDegrees(360F / 8F);
 		float extend = .5625F;
 		float topP = 0.0575F;
 		float bottomP = -0.0575F;
@@ -565,7 +566,7 @@ public class CRModels{
 
 		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 
-		Quaternion rotation = Vector3f.YP.rotationDegrees(-90);
+		Quaternionf rotation = Axis.YP.rotationDegrees(-90);
 		for(int i = 0; i < 8; i++){
 			drawTurbineBlade(vb, matrix, i / 16F, light, sprite);
 			matrix.mulPose(rotation);

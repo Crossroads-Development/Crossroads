@@ -8,7 +8,7 @@ import com.Da_Technomancer.crossroads.blocks.technomancy.BeamCannonTileEntity;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -71,7 +71,7 @@ public class BeamCannonRenderer implements BlockEntityRenderer<BeamCannonTileEnt
 
 		VertexConsumer builder = buffer.getBuffer(RenderType.solid());
 
-		matrix.mulPose(Vector3f.YP.rotation(-te.getRenderYaw()));
+		matrix.mulPose(Axis.YP.rotation(-te.getRenderYaw()));
 		matrix.translate(0, 1F / 16F, 0);
 
 		//Outer base length side (-)
@@ -154,7 +154,7 @@ public class BeamCannonRenderer implements BlockEntityRenderer<BeamCannonTileEnt
 
 		//Draw barrel
 		matrix.translate(0, 2.5F / 16F, 0);
-		matrix.mulPose(Vector3f.XP.rotation(te.getRenderPitch()));
+		matrix.mulPose(Axis.XP.rotation(te.getRenderPitch()));
 
 		float barrelWidth = widthInner - 0.001F;
 		float barrelBottom = -1.5F / 16F;

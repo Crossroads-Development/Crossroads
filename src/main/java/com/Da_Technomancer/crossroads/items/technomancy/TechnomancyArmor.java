@@ -1,11 +1,10 @@
 package com.Da_Technomancer.crossroads.items.technomancy;
 
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.items.CRItems;
+import com.Da_Technomancer.crossroads.api.templates.ICreativeTabPopulatingItem;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.sounds.SoundEvent;
@@ -23,7 +22,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
 
-public abstract class TechnomancyArmor extends ArmorItem{
+public abstract class TechnomancyArmor extends ArmorItem implements ICreativeTabPopulatingItem{
 
 	private static final ArmorMaterial TECHNOMANCY_MAT = new TechnoMat();
 	private static final ArmorMaterial TECHNOMANCY_REINFORCED_MAT = new TechnoMatReinforced();
@@ -32,13 +31,13 @@ public abstract class TechnomancyArmor extends ArmorItem{
 
 	protected final Multimap<Attribute, AttributeModifier> reinforcedProperties;
 
-	public TechnomancyArmor(EquipmentSlot slot){
-		super(TECHNOMANCY_MAT, slot, new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1).fireResistant());
+	public TechnomancyArmor(ArmorItem.Type type){
+		super(TECHNOMANCY_MAT, type, new Properties().stacksTo(1).fireResistant());
 
 		//Prepare reinforced properties map
 		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-		UUID uuid = ARMOR_MODIFIERS[slot.getIndex()];
-		builder.put(Attributes.ARMOR, new AttributeModifier(uuid, "Armor modifier", TECHNOMANCY_REINFORCED_MAT.getDefenseForSlot(slot), AttributeModifier.Operation.ADDITION));
+		UUID uuid = ARMOR_MODIFIERS[type.getSlot().getIndex()];
+		builder.put(Attributes.ARMOR, new AttributeModifier(uuid, "Armor modifier", TECHNOMANCY_REINFORCED_MAT.getDefenseForType(type), AttributeModifier.Operation.ADDITION));
 		builder.put(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(uuid, "Armor toughness", TECHNOMANCY_REINFORCED_MAT.getToughness(), AttributeModifier.Operation.ADDITION));
 		if(TECHNOMANCY_REINFORCED_MAT.getKnockbackResistance() > 0){
 			builder.put(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(uuid, "Armor knockback resistance", TECHNOMANCY_REINFORCED_MAT.getKnockbackResistance(), AttributeModifier.Operation.ADDITION));
@@ -82,7 +81,7 @@ public abstract class TechnomancyArmor extends ArmorItem{
 	@Override
 	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack){
 		Multimap<Attribute, AttributeModifier> baseMap = super.getAttributeModifiers(slot, stack);//The un-reinforced version with no protection
-		if(this.slot == slot && isReinforced(stack) && hasDurability(stack)){
+		if(type.getSlot() == slot && isReinforced(stack) && hasDurability(stack)){
 			return reinforcedProperties;
 		}
 		return baseMap;
@@ -96,11 +95,8 @@ public abstract class TechnomancyArmor extends ArmorItem{
 	}
 
 	@Override
-	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items){
-		if(allowedIn(group)){
-			items.add(new ItemStack(this, 1));
-			items.add(setReinforced(new ItemStack(this, 1), true));
-		}
+	public ItemStack[] populateCreativeTab(){
+		return new ItemStack[] {new ItemStack(this), setReinforced(new ItemStack(this), true)};
 	}
 
 	@Override
@@ -115,12 +111,12 @@ public abstract class TechnomancyArmor extends ArmorItem{
 	private static class TechnoMat implements ArmorMaterial{
 
 		@Override
-		public int getDurabilityForSlot(EquipmentSlot slotIn){
-			return ArmorMaterials.NETHERITE.getDurabilityForSlot(slotIn);
+		public int getDurabilityForType(Type type){
+			return ArmorMaterials.NETHERITE.getDurabilityForType(type);
 		}
 
 		@Override
-		public int getDefenseForSlot(EquipmentSlot slotIn){
+		public int getDefenseForType(Type type){
 			return 0;
 		}
 
@@ -158,13 +154,13 @@ public abstract class TechnomancyArmor extends ArmorItem{
 	private static class TechnoMatReinforced implements ArmorMaterial{
 
 		@Override
-		public int getDurabilityForSlot(EquipmentSlot slotIn){
-			return ArmorMaterials.NETHERITE.getDurabilityForSlot(slotIn);
+		public int getDurabilityForType(Type type){
+			return ArmorMaterials.NETHERITE.getDurabilityForType(type);
 		}
 
 		@Override
-		public int getDefenseForSlot(EquipmentSlot slotIn){
-			return ArmorMaterials.NETHERITE.getDefenseForSlot(slotIn);
+		public int getDefenseForType(Type type){
+			return ArmorMaterials.NETHERITE.getDefenseForType(type);
 		}
 
 		@Override

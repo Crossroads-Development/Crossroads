@@ -27,10 +27,9 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
@@ -200,7 +199,7 @@ public class FormulationVatTileEntity extends InventoryTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing != Direction.UP){
+		if(capability == ForgeCapabilities.FLUID_HANDLER && facing != Direction.UP){
 			return (LazyOptional<T>) globalFluidOpt;
 		}
 
@@ -208,7 +207,7 @@ public class FormulationVatTileEntity extends InventoryTE{
 			return (LazyOptional<T>) heatOpt;
 		}
 
-		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && facing != Direction.UP){
+		if(capability == ForgeCapabilities.ITEM_HANDLER && facing != Direction.UP){
 			return (LazyOptional<T>) itemOpt;
 		}
 

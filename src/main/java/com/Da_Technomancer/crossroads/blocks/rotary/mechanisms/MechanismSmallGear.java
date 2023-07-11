@@ -5,11 +5,10 @@ import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.api.rotary.*;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.Da_Technomancer.crossroads.items.item_sets.GearFactory;
-import com.Da_Technomancer.crossroads.items.item_sets.OreSetup;
+import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
 import com.Da_Technomancer.crossroads.render.tesr.CRModels;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction;
@@ -27,7 +26,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
 
-public class MechanismSmallGear implements IMechanism<GearFactory.GearMaterial>{
+public class MechanismSmallGear implements IMechanism<CRMaterialLibrary.GearMaterial>{
 
 	protected static final VoxelShape[] SHAPES = new VoxelShape[6];
 	static{
@@ -43,8 +42,8 @@ public class MechanismSmallGear implements IMechanism<GearFactory.GearMaterial>{
 	public double getInertia(IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis){
 		// assume each gear is 1/8 of a cubic meter and has a radius of 1/2 meter.
 		// mass is rounded to make things nicer for everyone
-		if(mat instanceof GearFactory.GearMaterial){
-			return MiscUtil.preciseRound(0.125D * ((GearFactory.GearMaterial) mat).getDensity() / 8, 3);// .125 because r*r/2 so .5*.5/2
+		if(mat instanceof CRMaterialLibrary.GearMaterial){
+			return MiscUtil.preciseRound(0.125D * ((CRMaterialLibrary.GearMaterial) mat).getDensity() / 8, 3);// .125 because r*r/2 so .5*.5/2
 		}else{
 			return 0;
 		}
@@ -140,8 +139,8 @@ public class MechanismSmallGear implements IMechanism<GearFactory.GearMaterial>{
 	@Nonnull
 	@Override
 	public ItemStack getDrop(IMechanismProperty mat){
-		if(mat instanceof GearFactory.GearMaterial){
-			return CRItems.smallGear.withMaterial((OreSetup.OreProfile) mat, 1);
+		if(mat instanceof CRMaterialLibrary.GearMaterial){
+			return CRItems.smallGear.withMaterial((CRMaterialLibrary.OreProfile) mat, 1);
 		}else{
 			return ItemStack.EMPTY;
 		}
@@ -164,17 +163,17 @@ public class MechanismSmallGear implements IMechanism<GearFactory.GearMaterial>{
 		matrix.mulPose(side.getOpposite().getRotation());//Apply orientation
 		float angle = handler.getAngle(partialTicks);
 		matrix.translate(0, -0.4375D, 0);
-		matrix.mulPose(Vector3f.YP.rotationDegrees(-(float) RotaryUtil.getCCWSign(side) * angle));
-		CRModels.draw8Gear(matrix, buffer.getBuffer(RenderType.solid()), CRRenderUtil.convertColor(mat instanceof GearFactory.GearMaterial ? ((GearFactory.GearMaterial) mat).getColor() : Color.WHITE), combinedLight);
+		matrix.mulPose(Axis.YP.rotationDegrees(-(float) RotaryUtil.getCCWSign(side) * angle));
+		CRModels.draw8Gear(matrix, buffer.getBuffer(RenderType.solid()), CRRenderUtil.convertColor(mat instanceof CRMaterialLibrary.GearMaterial ? ((CRMaterialLibrary.GearMaterial) mat).getColor() : Color.WHITE), combinedLight);
 	}
 
 	@Override
-	public GearFactory.GearMaterial deserializeProperty(int serial){
-		return GearFactory.GearMaterial.deserialize(serial);
+	public CRMaterialLibrary.GearMaterial deserializeProperty(int serial){
+		return CRMaterialLibrary.GearMaterial.deserialize(serial);
 	}
 
 	@Override
-	public GearFactory.GearMaterial loadProperty(String name){
-		return GearFactory.findMaterial(name);
+	public CRMaterialLibrary.GearMaterial loadProperty(String name){
+		return CRMaterialLibrary.findMaterial(name);
 	}
 }

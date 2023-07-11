@@ -31,8 +31,7 @@ public class Smelter extends BaseEntityBlock implements IReadable{
 	public Smelter(){
 		super(CRBlocks.getMetalProperty());
 		String name = "heating_chamber";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Override

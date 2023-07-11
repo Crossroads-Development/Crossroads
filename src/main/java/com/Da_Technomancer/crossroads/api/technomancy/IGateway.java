@@ -80,7 +80,7 @@ public interface IGateway extends IInfoTE{
 			//Based on TeleportCommand
 
 			//Load endpoint chunk
-			target.getChunkSource().addRegionTicket(TicketType.POST_TELEPORT, new ChunkPos(new BlockPos(posX, posY, posZ)), 1, e.getId());
+			target.getChunkSource().addRegionTicket(TicketType.POST_TELEPORT, new ChunkPos(new BlockPos((int) posX, (int) posY, (int) posZ)), 1, e.getId());
 
 			e.stopRiding();
 			if(play.isSleeping()){

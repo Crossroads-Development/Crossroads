@@ -21,10 +21,10 @@ public class PathSigil extends Item{
 	private final EnumPath path;
 
 	protected PathSigil(EnumPath path){
-		super(new Properties().tab(CRItems.TAB_CROSSROADS));
+		super(new Properties());
 		this.path = path;
 		String name = "sigil_" + path.toString();
-		CRItems.toRegister.put(name, this);
+		CRItems.queueForRegister(name, this);
 	}
 
 	public EnumPath getPath(){

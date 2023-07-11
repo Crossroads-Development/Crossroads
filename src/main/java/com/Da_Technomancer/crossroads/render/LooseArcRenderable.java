@@ -1,12 +1,12 @@
 package com.Da_Technomancer.crossroads.render;
 
 import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.api.render.IVisualEffect;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -60,7 +60,7 @@ public class LooseArcRenderable implements IVisualEffect{
 				volume = 0.2F;
 				pitch = 1F;
 			}
-			CRSounds.playSoundClientLocal(world, new BlockPos((xSt + xEn) / 2F, (ySt + yEn) / 2F, (zSt + zEn) / 2F), soundEvent, SoundSource.BLOCKS, volume, pitch);
+			CRSounds.playSoundClientLocal(world, MiscUtil.blockPos((xSt + xEn) / 2F, (ySt + yEn) / 2F, (zSt + zEn) / 2F), soundEvent, SoundSource.BLOCKS, volume, pitch);
 		}
 	}
 

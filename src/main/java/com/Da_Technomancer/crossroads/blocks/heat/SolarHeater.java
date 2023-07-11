@@ -40,8 +40,7 @@ public class SolarHeater extends BaseEntityBlock{
 	public SolarHeater(){
 		super(CRBlocks.getMetalProperty());
 		String name = "solar_heater";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Override

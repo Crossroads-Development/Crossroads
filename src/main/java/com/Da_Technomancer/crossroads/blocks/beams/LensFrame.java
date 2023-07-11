@@ -44,8 +44,7 @@ public class LensFrame extends TEBlock implements IReadable{
 	public LensFrame(){
 		super(CRBlocks.getRockProperty());
 		String name = "lens_frame";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Override
@@ -105,7 +104,7 @@ public class LensFrame extends TEBlock implements IReadable{
 						ItemEntity dropped = playerIn.drop(inLens, false);
 						if(dropped != null){
 							dropped.setNoPickUpDelay();
-							dropped.setOwner(playerIn.getUUID());
+							dropped.setThrower(playerIn.getUUID());
 						}
 					}
 					lens.setLensItem(ItemStack.EMPTY);

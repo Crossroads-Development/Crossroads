@@ -39,7 +39,6 @@ public class HeatCable extends ConduitBlock<EnumTransferMode>{
 
 	private static final double SIZE = 0.25D;
 	protected static final VoxelShape[] SHAPES = generateShapes(SIZE);
-	private static final Item.Properties itemProp = new Item.Properties().tab(CRItems.TAB_HEAT_CABLE);
 
 	public final HeatInsulators insulator;
 
@@ -50,8 +49,7 @@ public class HeatCable extends ConduitBlock<EnumTransferMode>{
 	protected HeatCable(HeatInsulators insulator, String name){
 		super(CRBlocks.getMetalProperty());
 		this.insulator = insulator;
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this, itemProp);
+		CRBlocks.queueForRegister(name, this, true, CRItems.HEAT_CABLE_CREATIVE_TAB_ID);
 		registerDefaultState(defaultBlockState().setValue(CRProperties.CONDUCTOR, Conductors.COPPER));
 	}
 

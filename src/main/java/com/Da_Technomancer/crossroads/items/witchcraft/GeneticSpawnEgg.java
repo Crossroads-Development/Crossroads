@@ -37,9 +37,9 @@ public class GeneticSpawnEgg extends Item{
 
 
 	public GeneticSpawnEgg(){
-		super(new Item.Properties());//Not added to any creative tab
+		super(new Item.Properties());
 		String name = "spawn_egg";
-		CRItems.toRegister.put(name, this);
+		CRItems.queueForRegister(name, this, null);//Not added to any creative tab
 
 		DefaultDispenseItemBehavior dispenseBehavior = new DefaultDispenseItemBehavior(){
 			public ItemStack execute(BlockSource source, ItemStack stack){

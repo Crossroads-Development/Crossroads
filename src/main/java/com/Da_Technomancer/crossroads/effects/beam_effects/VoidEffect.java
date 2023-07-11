@@ -3,8 +3,8 @@ package com.Da_Technomancer.crossroads.effects.beam_effects;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.beams.BeamHit;
 import com.Da_Technomancer.crossroads.api.beams.EnumBeamAlignments;
+import com.Da_Technomancer.crossroads.entity.CRMobDamage;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
@@ -14,9 +14,6 @@ import java.util.List;
 
 public class VoidEffect extends BeamEffect{
 
-	protected static final DamageSource VOID = new DamageSource("void").setMagic().bypassArmor();
-	protected static final DamageSource VOID_ABSOLUTE = new DamageSource("void").setMagic().bypassArmor().bypassMagic();
-
 	@Override
 	public void doBeamEffect(EnumBeamAlignments align, boolean voi, int power, BeamHit beamHit){
 		if(!performTransmute(align, voi, power, beamHit)){
@@ -24,9 +21,8 @@ public class VoidEffect extends BeamEffect{
 			if(prev.isAir()){
 				//Attack entities
 				List<Entity> entities = beamHit.getNearbyEntities(Entity.class, BeamHit.WITHIN_BLOCK_RANGE, null);
-				boolean absoluteDamage = CRConfig.beamDamageAbsolute.get();
 				for(Entity ent : entities){
-					ent.hurt(absoluteDamage ? VOID_ABSOLUTE : VOID, power);
+					ent.hurt(CRMobDamage.damageSource(CRMobDamage.VOID, beamHit.getWorld()), power);
 				}
 				return;
 			}

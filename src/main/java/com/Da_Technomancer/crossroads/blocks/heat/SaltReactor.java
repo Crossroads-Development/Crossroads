@@ -33,8 +33,7 @@ public class SaltReactor extends BaseEntityBlock{
 	public SaltReactor(){
 		super(CRBlocks.getMetalProperty());
 		String name = "salt_reactor";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Override

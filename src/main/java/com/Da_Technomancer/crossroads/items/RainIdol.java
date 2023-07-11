@@ -23,9 +23,9 @@ public class RainIdol extends Item{
 	private static final String NBT_KEY_TIME = "rain_idol_time";
 	
 	protected RainIdol(){
-		super(new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
+		super(new Properties().stacksTo(1));
 		String name = "rain_idol";
-		CRItems.toRegister.put(name, this);
+		CRItems.queueForRegister(name, this);
 	}
 
 	@Override

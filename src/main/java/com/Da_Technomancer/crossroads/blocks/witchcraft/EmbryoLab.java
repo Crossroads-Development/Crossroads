@@ -59,8 +59,7 @@ public class EmbryoLab extends TEBlock implements IReadable{
 	public EmbryoLab(){
 		super(CRBlocks.getMetalProperty());
 		String name = "embryo_lab";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 		registerDefaultState(defaultBlockState().setValue(CRProperties.ACTIVE, false));
 	}
 

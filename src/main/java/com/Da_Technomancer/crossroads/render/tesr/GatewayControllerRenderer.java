@@ -6,8 +6,8 @@ import com.Da_Technomancer.crossroads.blocks.technomancy.GatewayControllerTileEn
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
+import org.joml.Quaternionf;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -42,7 +42,7 @@ public class GatewayControllerRenderer extends EntropyRenderer<GatewayController
 
 		//Rotate to align with the frame if applicable
 		if(plane == Direction.Axis.Z){
-			matrix.mulPose(Vector3f.YP.rotationDegrees(90));
+			matrix.mulPose(Axis.YP.rotationDegrees(90));
 		}
 
 		//From this point, the frame is in the X-Y rendering plane
@@ -121,7 +121,7 @@ public class GatewayControllerRenderer extends EntropyRenderer<GatewayController
 		
 		//Fixed square ring
 		matrix.pushPose();
-		Quaternion ringRotation = Vector3f.ZP.rotationDegrees(90);
+		Quaternionf ringRotation = Axis.ZP.rotationDegrees(90);
 		for(int i = 0; i < 4; i++){
 			//Front
 			CRRenderUtil.addVertexBlock(builder, matrix, squareOut, squareOut, sqDepth, polyUEn, sqFrVSt, 0, 0, 1, combinedLight);
@@ -211,10 +211,10 @@ public class GatewayControllerRenderer extends EntropyRenderer<GatewayController
 		if(frame.chevrons[0] != null){
 			//Front
 			matrix.pushPose();
-			matrix.mulPose(Vector3f.ZP.rotationDegrees(45));
+			matrix.mulPose(Axis.ZP.rotationDegrees(45));
 
 			//Draw each symbol individually
-			Quaternion chevronRotation = Vector3f.ZP.rotationDegrees(-90);
+			Quaternionf chevronRotation = Axis.ZP.rotationDegrees(-90);
 			for(int i = 0; i < frame.chevrons.length; i++){
 				if(frame.chevrons[i] == null){
 					break;
@@ -232,7 +232,7 @@ public class GatewayControllerRenderer extends EntropyRenderer<GatewayController
 
 			//Other front
 			matrix.pushPose();
-			matrix.mulPose(Vector3f.ZP.rotationDegrees(-45));
+			matrix.mulPose(Axis.ZP.rotationDegrees(-45));
 
 			//Draw each symbol individually
 			for(int i = 0; i < frame.chevrons.length; i++){
@@ -253,9 +253,9 @@ public class GatewayControllerRenderer extends EntropyRenderer<GatewayController
 		}
 		
 		//Rotating octagonal ring
-		matrix.mulPose(Vector3f.ZP.rotation(dialingWheelAngle));
+		matrix.mulPose(Axis.ZP.rotation(dialingWheelAngle));
 
-		Quaternion segmentRotation = Vector3f.ZP.rotationDegrees(-45);
+		Quaternionf segmentRotation = Axis.ZP.rotationDegrees(-45);
 
 		for(int i = 0; i < 8; i++){
 

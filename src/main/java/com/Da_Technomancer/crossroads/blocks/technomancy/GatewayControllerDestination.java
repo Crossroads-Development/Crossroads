@@ -33,8 +33,7 @@ public class GatewayControllerDestination extends BaseEntityBlock{
 	public GatewayControllerDestination(){
 		super(CRBlocks.getMetalProperty());
 		String name = "gateway_controller_destination";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 		registerDefaultState(defaultBlockState().setValue(CRProperties.ACTIVE, false));
 	}
 

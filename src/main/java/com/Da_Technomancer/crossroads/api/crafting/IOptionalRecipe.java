@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.api.crafting;
 
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
@@ -7,9 +8,35 @@ import net.minecraft.world.item.crafting.Recipe;
 public interface IOptionalRecipe<T extends Container> extends Recipe<T>{
 
 	@Override
-	default ItemStack assemble(T inv){
-		return getResultItem().copy();
+	default ItemStack assemble(T container, RegistryAccess access){
+		return assemble(container);
 	}
+
+	/**
+	 * Gets the created itemstack
+	 * Safe to modify.
+	 * Some recipes may return different items for assemble vs getResultItem- trust assemble
+	 */
+	default ItemStack assemble(T inv){
+		ItemStack result = getResultItem();
+		if(result.isEmpty()){
+			return result;
+		}else{
+			return result.copy();
+		}
+	}
+
+	@Override
+	default ItemStack getResultItem(RegistryAccess access){
+		return getResultItem();
+	}
+
+	/**
+	 * Gets the created itemstack
+	 * DO NOT MODIFY THE RETURNED ITEMSTACK
+	 * Some recipes may return different items for assemble vs getResultItem- trust assemble
+	 */
+	ItemStack getResultItem();
 
 	/**
 	 * Whether this recipe should be considered "real". If not, ignore it.

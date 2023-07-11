@@ -42,8 +42,7 @@ public class ColorChart extends Block{
 	public ColorChart(){
 		super(Properties.of(Material.WOOD).strength(3));
 		String name = "color_chart";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Override

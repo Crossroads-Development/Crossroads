@@ -10,7 +10,6 @@ import net.minecraft.world.entity.animal.Squid;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
@@ -48,7 +47,7 @@ public class DirtEffect implements HeatInsulators.IOverheatEffect{
 				break;
 			case 3:
 				worldIn.destroyBlock(pos, false);
-				worldIn.explode(null, pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, 3, Explosion.BlockInteraction.BREAK);
+				worldIn.explode(null, pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, 3, Level.ExplosionInteraction.MOB);
 				break;
 			case 4:
 				worldIn.destroyBlock(pos, false);

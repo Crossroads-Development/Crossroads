@@ -16,10 +16,10 @@ public class SoulCluster extends Item{
 	private final boolean large;
 
 	public SoulCluster(boolean large){
-		super(new Item.Properties().tab(CRItems.TAB_CROSSROADS));
+		super(new Item.Properties());
 		this.large = large;
 		String name = large ? "soul_cluster" : "soul_shard";
-		CRItems.toRegister.put(name, this);
+		CRItems.queueForRegister(name, this);
 	}
 
 	@Override

@@ -7,7 +7,7 @@ import com.Da_Technomancer.crossroads.blocks.technomancy.BeaconHarnessTileEntity
 import com.Da_Technomancer.crossroads.gui.container.BeaconHarnessContainer;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -45,7 +45,7 @@ public class BeaconHarnessScreen extends AbstractContainerScreen<BeaconHarnessCo
 			//Selector arrow
 			matrix.pushPose();
 			matrix.translate(leftPos + 150, topPos + 150, 0);
-			matrix.mulPose(Vector3f.ZP.rotationDegrees(360F * cycle / BeaconHarnessTileEntity.LOOP_TIME));
+			matrix.mulPose(Axis.ZP.rotationDegrees(360F * cycle / BeaconHarnessTileEntity.LOOP_TIME));
 			matrix.translate(81, -8, 150);
 			blit(matrix, 0, 0, 300, 0, 64, 16, 512, 512);
 			matrix.popPose();

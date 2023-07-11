@@ -49,8 +49,7 @@ public class RotaryDrill extends BaseEntityBlock{
 		super(CRBlocks.getMetalProperty());
 		this.golden = golden;
 		String name = "rotary_drill" + (golden ? "_gold" : "");
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Override

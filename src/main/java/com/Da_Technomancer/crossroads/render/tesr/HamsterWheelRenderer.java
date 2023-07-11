@@ -4,11 +4,11 @@ import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.api.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.blocks.technomancy.HamsterWheelTileEntity;
-import com.Da_Technomancer.crossroads.items.item_sets.GearFactory;
+import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -32,8 +32,8 @@ public class HamsterWheelRenderer implements BlockEntityRenderer<HamsterWheelTil
 		Direction facing = te.getBlockState().getValue(CRProperties.HORIZ_FACING);
 
 		matrix.translate(0.5D, 0.5D, 0.5D);
-		matrix.mulPose(Vector3f.YP.rotationDegrees(-facing.toYRot() + 180));
-		matrix.mulPose(Vector3f.XP.rotationDegrees(90));
+		matrix.mulPose(Axis.YP.rotationDegrees(-facing.toYRot() + 180));
+		matrix.mulPose(Axis.XP.rotationDegrees(90));
 
 		float angle = te.nextAngle - te.angle;
 		angle *= partialTicks;
@@ -59,7 +59,7 @@ public class HamsterWheelRenderer implements BlockEntityRenderer<HamsterWheelTil
 			for(int j = 0; j < 2; j++){
 				matrix.pushPose();
 				matrix.translate(j == 0 ? 0 : .4D, i == 0 ? -.065D : .065D, 0);
-				matrix.mulPose(Vector3f.YP.rotationDegrees(i + j % 2 == 0 ? feetAngle : -feetAngle));
+				matrix.mulPose(Axis.YP.rotationDegrees(i + j % 2 == 0 ? feetAngle : -feetAngle));
 				
 				//Ends
 				CRRenderUtil.addVertexBlock(builder, matrix, -xRad, -yRad, -zRad, sprite.getU0(), sprite.getV0(), 0, -1, 0, combinedLight, col);
@@ -99,21 +99,21 @@ public class HamsterWheelRenderer implements BlockEntityRenderer<HamsterWheelTil
 		matrix.popPose();
 
 		//Wheel
-		matrix.mulPose(Vector3f.YP.rotationDegrees(angle));
+		matrix.mulPose(Axis.YP.rotationDegrees(angle));
 
 		//Axle Support
 		matrix.pushPose();
 		matrix.translate(0, -.4375D, 0);
 		matrix.scale(1, .8F, 1);
-		matrix.mulPose(Vector3f.XP.rotationDegrees(90));
-		CRModels.drawAxle(matrix, buffer, combinedLight, GearFactory.findMaterial("iron").getColor());
+		matrix.mulPose(Axis.XP.rotationDegrees(90));
+		CRModels.drawAxle(matrix, buffer, combinedLight, CRMaterialLibrary.findMaterial("iron").getColor());
 		matrix.popPose();
 
 		float lHalf = .375F;
 
 		for(int i = 0; i < 8; i++){
 			matrix.pushPose();
-			matrix.mulPose(Vector3f.YP.rotationDegrees(45F * (float) i));
+			matrix.mulPose(Axis.YP.rotationDegrees(45F * (float) i));
 			matrix.translate(lHalf, -.25F, 0);
 			matrix.scale(.41F, i % 2 == 0 ? .5F : .45F, 7.5F * lHalf);
 

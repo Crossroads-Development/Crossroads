@@ -38,8 +38,7 @@ public class ChronoHarness extends BaseEntityBlock{
 	public ChronoHarness(){
 		super(CRBlocks.getMetalProperty());
 		String name = "chrono_harness";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 		registerDefaultState(defaultBlockState().setValue(CRProperties.REDSTONE_BOOL, false));
 	}
 

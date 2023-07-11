@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads;
 
 import com.Da_Technomancer.crossroads.ambient.particles.CRParticles;
 import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
+import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
 import com.Da_Technomancer.crossroads.api.CRReflection;
 import com.Da_Technomancer.crossroads.api.Capabilities;
 import com.Da_Technomancer.crossroads.api.alchemy.AtmosChargeSavedData;
@@ -12,36 +13,37 @@ import com.Da_Technomancer.crossroads.api.witchcraft.EntityTemplate;
 import com.Da_Technomancer.crossroads.api.witchcraft.IPerishable;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
+import com.Da_Technomancer.crossroads.blocks.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.blocks.rotary.WindingTableTileEntity;
 import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.crafting.CRLootModifiers;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.entity.CREntities;
+import com.Da_Technomancer.crossroads.entity.CRMobDamage;
 import com.Da_Technomancer.crossroads.entity.EntityGhostMarker;
 import com.Da_Technomancer.crossroads.entity.EntityHopperHawk;
 import com.Da_Technomancer.crossroads.entity.mob_effects.CRPotions;
-import com.Da_Technomancer.crossroads.entity.mob_effects.HealthPenalty;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.Da_Technomancer.crossroads.items.item_sets.GearFactory;
-import com.Da_Technomancer.crossroads.items.item_sets.ItemSets;
-import com.Da_Technomancer.crossroads.items.item_sets.OreSetup;
 import com.Da_Technomancer.crossroads.items.technomancy.TechnomancyArmor;
 import com.Da_Technomancer.crossroads.world.CRWorldGen;
 import com.Da_Technomancer.essentials.api.ReflectionUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.Containers;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.EntityDamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.horse.SkeletonHorse;
 import net.minecraft.world.entity.decoration.ArmorStand;
@@ -49,23 +51,23 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.trading.Merchant;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AnvilUpdateEvent;
+import net.minecraftforge.event.CreativeModeTabEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.level.ExplosionEvent;
-import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -75,10 +77,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegisterEvent;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.function.Supplier;
 
 public class EventHandlerCommon{
 
@@ -96,21 +96,24 @@ public class EventHandlerCommon{
 		public static void register(RegisterEvent e){
 			e.register(ForgeRegistries.Keys.BLOCKS, helper -> {
 				CRBlocks.init();
-				ItemSets.init();
+				CRMaterialLibrary.loadConfig();
 				CRFluids.init();
-				registerAll(helper, CRBlocks.toRegister);
+				CRBlocks.registerBlocks(helper);
 			});
 
 			e.register(ForgeRegistries.Keys.ITEMS, helper -> {
 				CRItems.init();
-				registerAll(helper, CRItems.toRegister);
+				CRFluids.init();
+				CRItems.registerItems(helper);
 			});
 
 			e.register(ForgeRegistries.Keys.FLUID_TYPES, helper -> {
+				CRFluids.init();
 				registerAll(helper, CRFluids.toRegisterType);
 			});
 
 			e.register(ForgeRegistries.Keys.FLUIDS, helper -> {
+				CRFluids.init();
 				registerAll(helper, CRFluids.toRegisterFluid);
 			});
 
@@ -131,7 +134,7 @@ public class EventHandlerCommon{
 
 			e.register(ForgeRegistries.Keys.FEATURES, helper -> {
 				CRWorldGen.init();
-				registerAll(helper, CRWorldGen.toRegister);
+				registerAll(helper, CRWorldGen.toRegisterFeature);
 			});
 
 			e.register(ForgeRegistries.Keys.SOUND_EVENTS, helper -> {
@@ -162,6 +165,10 @@ public class EventHandlerCommon{
 				CRRecipes.init();
 				registerAll(helper, CRRecipes.toRegisterType);
 			});
+			e.register(Registries.PLACEMENT_MODIFIER_TYPE, helper -> {
+				CRWorldGen.init();
+				registerAll(helper, CRWorldGen.toRegisterModifier);
+			});
 		}
 
 		public static <T> void registerAll(RegisterEvent.RegisterHelper<T> helper, Map<String, T> toRegister){
@@ -180,15 +187,53 @@ public class EventHandlerCommon{
 			e.put(EntityHopperHawk.type, EntityHopperHawk.createAttributes());
 		}
 
-
+		@SuppressWarnings("unused")
+		@SubscribeEvent
+		public static void registerCreativeTabs(CreativeModeTabEvent.Register e){
+			CRItems.MAIN_CREATIVE_TAB = e.registerCreativeModeTab(new ResourceLocation(Crossroads.MODID, CRItems.MAIN_CREATIVE_TAB_ID), List.of(), List.of(CreativeModeTabs.SPAWN_EGGS), builder -> builder
+					.title(Component.translatable("item_group." + CRItems.MAIN_CREATIVE_TAB_ID))
+					.icon(() -> new ItemStack(CRItems.omnimeter))
+					.displayItems((params, output) -> {
+								for(Supplier<ItemStack[]> itemsToAdd : CRItems.creativeTabItems.get(CRItems.MAIN_CREATIVE_TAB_ID)){
+									for(ItemStack itemToAdd : itemsToAdd.get()){
+										output.accept(itemToAdd);
+									}
+								}
+							}
+					));
+			CRItems.HEAT_CABLE_CREATIVE_TAB = e.registerCreativeModeTab(new ResourceLocation(Crossroads.MODID, CRItems.HEAT_CABLE_CREATIVE_TAB_ID), List.of(), List.of(CreativeModeTabs.SPAWN_EGGS, CRItems.MAIN_CREATIVE_TAB), builder -> builder
+					.title(Component.translatable("item_group." + CRItems.HEAT_CABLE_CREATIVE_TAB_ID))
+					.icon(() -> new ItemStack(CRBlocks.HEAT_CABLES.get(HeatInsulators.WOOL)))
+					.displayItems((params, output) -> {
+								for(Supplier<ItemStack[]> itemsToAdd : CRItems.creativeTabItems.get(CRItems.HEAT_CABLE_CREATIVE_TAB_ID)){
+									for(ItemStack itemToAdd : itemsToAdd.get()){
+										output.accept(itemToAdd);
+									}
+								}
+							}
+					));
+			CRItems.GEAR_CREATIVE_TAB = e.registerCreativeModeTab(new ResourceLocation(Crossroads.MODID, CRItems.GEAR_CREATIVE_TAB_ID), List.of(), List.of(CreativeModeTabs.SPAWN_EGGS, CRItems.MAIN_CREATIVE_TAB, CRItems.HEAT_CABLE_CREATIVE_TAB), builder -> builder
+					.title(Component.translatable("item_group." + CRItems.GEAR_CREATIVE_TAB_ID))
+					.icon(() -> CRItems.smallGear.withMaterial(CRMaterialLibrary.findMaterial("copper"), 1))
+					.displayItems((params, output) -> {
+								for(Supplier<ItemStack[]> itemsToAdd : CRItems.creativeTabItems.get(CRItems.GEAR_CREATIVE_TAB_ID)){
+									for(ItemStack itemToAdd : itemsToAdd.get()){
+										output.accept(itemToAdd);
+									}
+								}
+							}
+					));
+		}
 	}
 
 //	private static final Field entityList = ReflectionUtil.reflectField(CRReflection.ENTITY_LIST);
 
 	@SubscribeEvent
 	@SuppressWarnings({"unused", "unchecked"})
-	public void onEntitySpawn(LivingSpawnEvent.CheckSpawn e){
+	public void onEntitySpawn(MobSpawnEvent.FinalizeSpawn e){
 		if(e.getLevel() instanceof ServerLevel world){
+
+			//Block spawning with closure beams
 			world.getProfiler().push(Crossroads.MODNAME + ": Ghost marker spawn prevention");
 //			Map<UUID, Entity> entities;
 //			try{
@@ -201,24 +246,21 @@ public class EventHandlerCommon{
 			for(Entity ent : world.getAllEntities()){
 				if(ent instanceof EntityGhostMarker mark){
 					if(mark.getMarkerType() == EntityGhostMarker.EnumMarkerType.BLOCK_SPAWNING && mark.data != null && mark.position().subtract(e.getEntity().position()).length() <= mark.data.getInt("range")){
-						e.setResult(Event.Result.DENY);
+						e.setSpawnCancelled(true);
 						world.getProfiler().pop();
 						return;
 					}
 				}
 			}
 			world.getProfiler().pop();
-		}
-	}
 
-	@SubscribeEvent
-	@SuppressWarnings("unused")
-	public void chargeCreepers(LivingSpawnEvent.SpecialSpawn e){
-		if(e.getLevel() instanceof ServerLevel && e.getEntity() instanceof Creeper && (CRConfig.atmosEffect.get() & 2) == 2 && (float) AtmosChargeSavedData.getCharge((ServerLevel) e.getLevel()) / (float) AtmosChargeSavedData.getCapacity() >= 0.9F){
-			CompoundTag nbt = new CompoundTag();
-			e.getEntity().addAdditionalSaveData(nbt);
-			nbt.putBoolean("powered", true);
-			e.getEntity().readAdditionalSaveData(nbt);
+			//Charge creepers when atmosphere is charged
+			if(e.getEntity() instanceof Creeper && (CRConfig.atmosEffect.get() & 2) == 2 && (float) AtmosChargeSavedData.getCharge((ServerLevel) e.getLevel()) / (float) AtmosChargeSavedData.getCapacity() >= 0.9F){
+				CompoundTag nbt = new CompoundTag();
+				e.getEntity().addAdditionalSaveData(nbt);
+				nbt.putBoolean("powered", true);
+				e.getEntity().readAdditionalSaveData(nbt);
+			}
 		}
 	}
 
@@ -388,7 +430,7 @@ public class EventHandlerCommon{
 	@SubscribeEvent
 	@SuppressWarnings("unused")
 	public void damageTaken(LivingHurtEvent e){
-		if(e.getSource() == DamageSource.FALL){
+		if(e.getSource().is(DamageTypeTags.IS_FALL)){
 			LivingEntity ent = e.getEntity();
 
 			ItemStack boots = ent.getItemBySlot(EquipmentSlot.FEET);
@@ -413,7 +455,7 @@ public class EventHandlerCommon{
 					}
 				}
 				if(foundExplosion){
-					player.level.explode(null, player.getX(), player.getY(), player.getZ(), 5F, Explosion.BlockInteraction.BREAK);
+					player.level.explode(null, player.getX(), player.getY(), player.getZ(), 5F, Level.ExplosionInteraction.TNT);
 				}
 			}
 		}
@@ -423,7 +465,7 @@ public class EventHandlerCommon{
 	@SuppressWarnings("unused")
 	public void enviroBootsProtect(LivingAttackEvent e){
 		//Provides immunity from magma block damage and fall damage when wearing enviro_boots
-		if(e.getSource() == DamageSource.HOT_FLOOR || e.getSource() == DamageSource.FALL && e.getEntity().getItemBySlot(EquipmentSlot.FEET).getItem() == CRItems.armorEnviroBoots){
+		if((e.getSource().is(DamageTypes.HOT_FLOOR) || e.getSource().is(DamageTypeTags.IS_FALL)) && e.getEntity().getItemBySlot(EquipmentSlot.FEET).getItem() == CRItems.armorEnviroBoots){
 			e.setCanceled(true);
 		}
 	}
@@ -460,8 +502,7 @@ public class EventHandlerCommon{
 	@SuppressWarnings("unused")
 	public void rebuildConfigData(ModConfigEvent.Reloading e){
 		if(e.getConfig().getModId().equals(Crossroads.MODID) && e.getConfig().getType() == ModConfig.Type.SERVER){
-			GearFactory.init();
-			OreSetup.loadConfig();
+			CRMaterialLibrary.loadConfig();
 		}
 	}
 
@@ -555,7 +596,7 @@ public class EventHandlerCommon{
 			delay *= 20;//Convert from seconds to ticks
 			//Ensure it doesn't have the marker effect and this is enabled in config
 			//Or, if non-viable (max health less than or equal to 0), don't let it respawn
-			if(!entity.hasEffect(EntityTemplate.getRespawnMarkerEffect()) && delay > 0 && e.getSource() != HealthPenalty.NON_VIABLE){
+			if(!entity.hasEffect(EntityTemplate.getRespawnMarkerEffect()) && delay > 0 && !e.getSource().is(CRMobDamage.NON_VIABLE)){
 				EntityGhostMarker marker = new EntityGhostMarker(entity.level, EntityGhostMarker.EnumMarkerType.RESPAWNING, delay);
 				marker.setPos(entity.getX(), entity.getY(), entity.getZ());
 				marker.data = template.serializeNBT();
@@ -597,8 +638,8 @@ public class EventHandlerCommon{
 			//Drop brain
 			if(ent instanceof Merchant){
 				DamageSource damageSource = e.getSource();
-				//Known issue: This can have a false positive if other mods allow dealing direct damage by a method other than melee attacking with the weapon in the mainhand
-				if(damageSource.getClass() == EntityDamageSource.class && damageSource.getDirectEntity() instanceof LivingEntity && ((LivingEntity) damageSource.getDirectEntity()).getMainHandItem().getItem() == CRItems.brainHarvester){
+				//Only requires holding the weapon, rather than dealing the finishing blow with the weapon
+				if(damageSource.getDirectEntity() instanceof LivingEntity && ((LivingEntity) damageSource.getDirectEntity()).getMainHandItem().getItem() == CRItems.brainHarvester){
 					ItemStack brain = new ItemStack(CRItems.villagerBrain, 1);
 					CRItems.villagerBrain.setOffers(brain, ((Merchant) ent).getOffers());
 					IPerishable.getAndInitSpoilTime(brain, ent.level);

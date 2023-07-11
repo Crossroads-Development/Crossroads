@@ -19,10 +19,10 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 public class ReactionChamberTileEntity extends AlchemyReactorTE{
@@ -155,10 +155,10 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 		if(cap == Capabilities.HEAT_CAPABILITY){
 			return (LazyOptional<T>) heatOpt;
 		}
-		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
+		if(cap == ForgeCapabilities.ITEM_HANDLER){
 			return (LazyOptional<T>) itemOpt;
 		}
-		if(cap == CapabilityEnergy.ENERGY && (side == null || side.getAxis() != Direction.Axis.Y)){
+		if(cap == ForgeCapabilities.ENERGY && (side == null || side.getAxis() != Direction.Axis.Y)){
 			return (LazyOptional<T>) energyOpt;
 		}
 		return super.getCapability(cap, side);

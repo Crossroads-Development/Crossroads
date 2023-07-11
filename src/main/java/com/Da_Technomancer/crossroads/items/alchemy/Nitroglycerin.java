@@ -45,9 +45,9 @@ public class Nitroglycerin extends Item{
 	};
 
 	public Nitroglycerin(){
-		super(new Properties().tab(CRItems.TAB_CROSSROADS));
+		super(new Properties());
 		String name = "nitroglycerin";
-		CRItems.toRegister.put(name, this);
+		CRItems.queueForRegister(name, this);
 		DispenserBlock.registerBehavior(this, NITRO_DISPENSER_BEHAVIOR);
 	}
 

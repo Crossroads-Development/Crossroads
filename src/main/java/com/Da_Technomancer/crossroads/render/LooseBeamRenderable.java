@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.render;
 import com.Da_Technomancer.crossroads.api.render.IVisualEffect;
 import com.Da_Technomancer.crossroads.render.tesr.BeamRenderer;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
@@ -42,8 +42,8 @@ public class LooseBeamRenderable implements IVisualEffect{
 	@Override
 	public boolean render(PoseStack matrix, MultiBufferSource buffer, long worldTime, float partialTicks, Random rand){
 		matrix.translate(x, y, z);
-		matrix.mulPose(Vector3f.YP.rotationDegrees(-angleY));
-		matrix.mulPose(Vector3f.XP.rotationDegrees(angleX + 90F));
+		matrix.mulPose(Axis.YP.rotationDegrees(-angleY));
+		matrix.mulPose(Axis.XP.rotationDegrees(angleX + 90F));
 		BeamRenderer.drawBeam(matrix, buffer.getBuffer(CRRenderTypes.BEAM_TYPE), (float) length, width / 8F, new Color(color));
 
 		if(lastTick != worldTime){

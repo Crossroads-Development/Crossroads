@@ -29,8 +29,7 @@ public class WaterCentrifuge extends BaseEntityBlock{
 	public WaterCentrifuge(){
 		super(CRBlocks.getMetalProperty());
 		String name = "water_centrifuge";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.items.item_sets;
 
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
 import com.Da_Technomancer.crossroads.api.rotary.IMechanism;
 import com.Da_Technomancer.crossroads.api.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -37,7 +38,7 @@ public class BasicGear extends GearMatItem{
 
 	@Override
 	public InteractionResult useOn(UseOnContext context){
-		GearFactory.GearMaterial type = getMaterial(context.getItemInHand());
+		CRMaterialLibrary.GearMaterial type = getMaterial(context.getItemInHand());
 		if(type == null){
 			return InteractionResult.SUCCESS;
 		}

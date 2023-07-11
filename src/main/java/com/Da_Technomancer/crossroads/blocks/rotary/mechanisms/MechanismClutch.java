@@ -4,14 +4,13 @@ import com.Da_Technomancer.crossroads.api.Capabilities;
 import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.api.rotary.*;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.Da_Technomancer.crossroads.items.item_sets.GearFactory;
-import com.Da_Technomancer.crossroads.items.item_sets.OreSetup;
+import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.crossroads.render.tesr.CRModels;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
+import org.joml.Quaternionf;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -129,8 +128,8 @@ public class MechanismClutch extends MechanismAxle{
 	@Nonnull
 	@Override
 	public ItemStack getDrop(IMechanismProperty mat){
-		if(mat instanceof GearFactory.GearMaterial){
-			return inverted ? CRItems.invClutch.withMaterial((OreSetup.OreProfile) mat, 1) : CRItems.clutch.withMaterial((OreSetup.OreProfile) mat, 1);
+		if(mat instanceof CRMaterialLibrary.GearMaterial){
+			return inverted ? CRItems.invClutch.withMaterial((CRMaterialLibrary.OreProfile) mat, 1) : CRItems.clutch.withMaterial((CRMaterialLibrary.OreProfile) mat, 1);
 		}else{
 			return ItemStack.EMPTY;
 		}
@@ -152,7 +151,7 @@ public class MechanismClutch extends MechanismAxle{
 
 		//Orientation
 		if(axis != Direction.Axis.Y){
-			Quaternion rotation = (axis == Direction.Axis.X ? Vector3f.ZN : Vector3f.XP).rotationDegrees(90);
+			Quaternionf rotation = (axis == Direction.Axis.X ? Axis.ZN : Axis.XP).rotationDegrees(90);
 			matrix.mulPose(rotation);
 		}
 		
@@ -197,7 +196,7 @@ public class MechanismClutch extends MechanismAxle{
 
 		//Axle
 		float angle = handler.getAngle(partialTicks);
-		matrix.mulPose(Vector3f.YP.rotationDegrees(angle));
-		CRModels.drawAxle(matrix, buffer, combinedLight, mat instanceof GearFactory.GearMaterial ? ((GearFactory.GearMaterial) mat).getColor() : Color.WHITE);
+		matrix.mulPose(Axis.YP.rotationDegrees(angle));
+		CRModels.drawAxle(matrix, buffer, combinedLight, mat instanceof CRMaterialLibrary.GearMaterial ? ((CRMaterialLibrary.GearMaterial) mat).getColor() : Color.WHITE);
 	}
 }

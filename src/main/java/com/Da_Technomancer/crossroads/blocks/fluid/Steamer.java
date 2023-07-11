@@ -31,8 +31,7 @@ public class Steamer extends BaseEntityBlock implements IReadable{
 	public Steamer(){
 		super(CRBlocks.getMetalProperty());
 		String name = "steamer";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Override

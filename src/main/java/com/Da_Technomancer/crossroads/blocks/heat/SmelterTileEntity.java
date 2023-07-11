@@ -21,8 +21,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
@@ -88,7 +88,7 @@ public class SmelterTileEntity extends InventoryTE{
 
 	private ItemStack getOutput(){
 		Optional<SmeltingRecipe> recOpt = level.getRecipeManager().getRecipeFor(RecipeType.SMELTING, this, level);
-		ItemStack stack = recOpt.isPresent() ? recOpt.get().getResultItem() : ItemStack.EMPTY;
+		ItemStack stack = recOpt.isPresent() ? recOpt.get().getResultItem(level.registryAccess()) : ItemStack.EMPTY;
 
 		if(stack.isEmpty()){
 			return ItemStack.EMPTY;
@@ -130,7 +130,7 @@ public class SmelterTileEntity extends InventoryTE{
 		if(cap == Capabilities.HEAT_CAPABILITY && (side == Direction.UP || side == null)){
 			return (LazyOptional<T>) heatOpt;
 		}
-		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && side != Direction.UP){
+		if(cap == ForgeCapabilities.ITEM_HANDLER && side != Direction.UP){
 			return (LazyOptional<T>) itemOpt;
 		}
 

@@ -32,8 +32,7 @@ public class OreCleanser extends BaseEntityBlock implements IReadable{
 	public OreCleanser(){
 		super(CRBlocks.getMetalProperty());
 		String name = "ore_cleanser";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Override

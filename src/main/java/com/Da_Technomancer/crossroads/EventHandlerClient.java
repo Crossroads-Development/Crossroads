@@ -14,12 +14,11 @@ import com.Da_Technomancer.crossroads.gui.container.CRContainers;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 import com.Da_Technomancer.crossroads.items.item_sets.OreProfileItem;
-import com.Da_Technomancer.crossroads.items.item_sets.OreSetup;
+import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
 import com.Da_Technomancer.crossroads.items.technomancy.ArmorPropellerPack;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamUsingItem;
 import com.Da_Technomancer.crossroads.items.witchcraft.GeneticSpawnEgg;
 import com.Da_Technomancer.crossroads.render.BeamToolOverlay;
-import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.crossroads.render.MultiLineMessageOverlay;
 import com.Da_Technomancer.crossroads.render.tesr.CRRendererRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -27,7 +26,6 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -89,14 +87,6 @@ public class EventHandlerClient{
 			CREntities.registerLayers(e);
 		}
 
-
-		@SubscribeEvent
-		@SuppressWarnings("unused")
-		public static void onTextureStitch(TextureStitchEvent.Pre event){
-			//Add textures used in TESRs
-			CRRenderTypes.stitchTextures(event);
-		}
-
 		@SuppressWarnings("unused")
 		@SubscribeEvent
 		public static void registerParticleFactories(RegisterParticleProvidersEvent e){
@@ -129,7 +119,7 @@ public class EventHandlerClient{
 				if(tintIndex == 0){
 					return -1;
 				}
-				OreSetup.OreProfile mat = OreProfileItem.getProfile(stack);
+				CRMaterialLibrary.OreProfile mat = OreProfileItem.getProfile(stack);
 				return mat == null ? -1 : mat.getColor().getRGB();
 			};
 			e.register(oreItemColoring, CRItems.oreGravel, CRItems.oreClump, CRItems.axle, CRItems.smallGear, CRItems.largeGear, CRItems.clutch, CRItems.invClutch, CRItems.toggleGear, CRItems.invToggleGear, CRItems.axleMount);
@@ -436,7 +426,7 @@ public class EventHandlerClient{
 				KeyMapping key = Keys.asKeyMapping(lens.getKey());
 				if(key != null && key.consumeClick() && key.isDown() && nbt.contains(lens.toString())){
 					boolean wasEnabled = nbt.getBoolean(lens.toString());
-					CRSounds.playSoundClientLocal(play.level, new BlockPos(play.getEyePosition()), SoundEvents.SPYGLASS_USE, SoundSource.PLAYERS, 1.0F, 1.0F);
+					CRSounds.playSoundClientLocal(play.level, MiscUtil.blockPos(play.getX(), play.getEyeY(), play.getZ()), SoundEvents.SPYGLASS_USE, SoundSource.PLAYERS, 1.0F, 1.0F);
 					CRPackets.channel.sendToServer(new SendGoggleConfigureToServer(lens, !wasEnabled));
 					if(!wasEnabled || !lens.useKey()){
 						MiscUtil.displayMessage(play, Component.translatable("tt.crossroads.goggles.enabled"));

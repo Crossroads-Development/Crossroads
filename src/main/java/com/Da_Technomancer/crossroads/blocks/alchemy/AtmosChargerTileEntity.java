@@ -25,6 +25,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
@@ -113,7 +114,7 @@ public class AtmosChargerTileEntity extends BlockEntity implements ITickableTile
 					Direction side = Direction.from2DDataValue(i);
 					BlockEntity te = level.getBlockEntity(worldPosition.relative(side));
 					LazyOptional<IEnergyStorage> otherCap;
-					if(te != null && (otherCap = te.getCapability(CapabilityEnergy.ENERGY, side.getOpposite())).isPresent()){
+					if(te != null && (otherCap = te.getCapability(ForgeCapabilities.ENERGY, side.getOpposite())).isPresent()){
 						int moved = otherCap.orElseThrow(NullPointerException::new).receiveEnergy(fe, false);
 						if(moved > 0){
 							fe -= moved;
@@ -183,7 +184,7 @@ public class AtmosChargerTileEntity extends BlockEntity implements ITickableTile
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
-		if(cap == CapabilityEnergy.ENERGY && side != Direction.UP){
+		if(cap == ForgeCapabilities.ENERGY && side != Direction.UP){
 			return (LazyOptional<T>) feOpt;
 		}
 		return super.getCapability(cap, side);

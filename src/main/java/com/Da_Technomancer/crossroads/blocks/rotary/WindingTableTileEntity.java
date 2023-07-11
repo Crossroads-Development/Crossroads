@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.blocks.rotary;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.templates.ICreativeTabPopulatingItem;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
@@ -15,14 +16,15 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
@@ -165,7 +167,7 @@ public class WindingTableTileEntity extends InventoryTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
-		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
+		if(cap == ForgeCapabilities.ITEM_HANDLER){
 			return (LazyOptional<T>) itemOpt;
 		}
 		if(cap == Capabilities.AXLE_CAPABILITY && (side == Direction.UP || side == null)){
@@ -181,7 +183,7 @@ public class WindingTableTileEntity extends InventoryTE{
 		return new WindingTableContainer(id, playerInv, createContainerBuf());
 	}
 
-	public interface IWindableItem{
+	public interface IWindableItem extends ICreativeTabPopulatingItem{
 
 		/**
 		 * In rad/s
@@ -213,6 +215,13 @@ public class WindingTableTileEntity extends InventoryTE{
 				double maxWind = getMaxWind();
 				tooltip.add(Component.translatable("tt.crossroads.boilerplate.spring_speed", CRConfig.formatVal(wind), CRConfig.formatVal(maxWind)));
 			}
+		}
+
+		@Override
+		default ItemStack[] populateCreativeTab(){
+			ItemStack woundStack = new ItemStack((Item) this);
+			setWindLevel(woundStack, getMaxWind());
+			return new ItemStack[] {new ItemStack((Item) this), woundStack};
 		}
 	}
 }

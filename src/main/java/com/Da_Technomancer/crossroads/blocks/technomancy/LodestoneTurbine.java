@@ -25,8 +25,7 @@ public class LodestoneTurbine extends BaseEntityBlock{
 	public LodestoneTurbine(){
 		super(CRBlocks.getMetalProperty());
 		String name = "lodestone_turbine";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Nullable

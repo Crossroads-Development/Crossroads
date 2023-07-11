@@ -34,8 +34,7 @@ public class BlastFurnace extends BaseEntityBlock implements IReadable{
 	public BlastFurnace(){
 		super(CRBlocks.getRockProperty());
 		String name = "blast_furnace";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 		registerDefaultState(defaultBlockState().setValue(CRProperties.ACTIVE, false));
 	}
 

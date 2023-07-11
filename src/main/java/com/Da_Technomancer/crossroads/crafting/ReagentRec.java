@@ -8,6 +8,7 @@ import com.Da_Technomancer.crossroads.effects.alchemy_effects.*;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -75,8 +76,8 @@ public class ReagentRec implements Recipe<Container>, IReagent{
 	}
 
 	@Override
-	public ItemStack assemble(Container inv){
-		return getResultItem();
+	public ItemStack assemble(Container inv, RegistryAccess access){
+		return getResultItem(access);
 	}
 
 	@Override
@@ -85,7 +86,7 @@ public class ReagentRec implements Recipe<Container>, IReagent{
 	}
 
 	@Override
-	public ItemStack getResultItem(){
+	public ItemStack getResultItem(RegistryAccess access){
 		return ItemStack.EMPTY;
 	}
 

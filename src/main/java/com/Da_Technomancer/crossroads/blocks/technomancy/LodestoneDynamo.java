@@ -43,8 +43,7 @@ public class LodestoneDynamo extends BaseEntityBlock{
 	public LodestoneDynamo(){
 		super(CRBlocks.getMetalProperty());
 		String name = "lodestone_dynamo";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Override

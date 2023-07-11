@@ -33,8 +33,7 @@ public class WindingTable extends BaseEntityBlock implements IReadable{
 	public WindingTable(){
 		super(CRBlocks.getMetalProperty());
 		String name = "winding_table";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Override

@@ -3,11 +3,11 @@ package com.Da_Technomancer.crossroads.render.tesr;
 import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.blocks.rotary.StampMillTileEntity;
-import com.Da_Technomancer.crossroads.items.item_sets.GearFactory;
+import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -27,26 +27,26 @@ public class StampMillRenderer implements BlockEntityRenderer<StampMillTileEntit
 	@Override
 	public void render(StampMillTileEntity te, float partialTicks, PoseStack matrix, MultiBufferSource buffer, int combinedLight, int combinedOverlay){
 		BlockState state = te.getBlockState();
-		Color ironColor = GearFactory.findMaterial("iron").getColor();
+		Color ironColor = CRMaterialLibrary.findMaterial("iron").getColor();
 
 		float prog = te.renderAngle(partialTicks);
 		matrix.translate(0.5D, 1.5D, 0.5D);
 		if(state.getValue(CRProperties.HORIZ_AXIS) == Direction.Axis.Z){
-			matrix.mulPose(Vector3f.YP.rotationDegrees(90));
+			matrix.mulPose(Axis.YP.rotationDegrees(90));
 		}
 
 		//Axle
 		matrix.pushPose();
-		matrix.mulPose(Vector3f.ZP.rotationDegrees(90));
-		matrix.mulPose(Vector3f.YP.rotationDegrees(-prog));
+		matrix.mulPose(Axis.ZP.rotationDegrees(90));
+		matrix.mulPose(Axis.YP.rotationDegrees(-prog));
 		CRModels.drawAxle(matrix, buffer, combinedLight, ironColor);
 
 		//Teeth
 		for(int i = 0; i < 3; i++){
 			matrix.pushPose();
 			matrix.translate(0, -13F / 32F + 5F * i / 16F, 0);
-			matrix.mulPose(Vector3f.YP.rotationDegrees(i * 90 + 90));
-			matrix.mulPose(Vector3f.ZP.rotationDegrees(90));
+			matrix.mulPose(Axis.YP.rotationDegrees(i * 90 + 90));
+			matrix.mulPose(Axis.ZP.rotationDegrees(90));
 			matrix.scale(0.4F, 0.5F, 0.4F);
 			CRModels.drawAxle(matrix, buffer, combinedLight, ironColor);
 			matrix.popPose();

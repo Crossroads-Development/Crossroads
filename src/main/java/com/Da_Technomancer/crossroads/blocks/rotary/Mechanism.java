@@ -50,7 +50,7 @@ public class Mechanism extends BaseEntityBlock implements IReadable{
 		//This trait name is poorly mapped by MCP- it controls whether BlockState instances are allowed to cache the results of several common methods
 		//Most importantly, the getShape() method (and its variants). As this block varies shape with TE data instead of state, we cannot use the cache
 		String name = "mechanism";
-		CRBlocks.toRegister.put(name, this);
+		CRBlocks.queueForRegister(name, this, false, null);
 	}
 
 	@Override
@@ -213,7 +213,7 @@ public class Mechanism extends BaseEntityBlock implements IReadable{
 		if(ConfigUtil.isWrench(player.getItemInHand(hand))){
 			BlockEntity te = worldIn.getBlockEntity(pos);
 			if(te instanceof MechanismTileEntity gear){
-				double reDist = player.getAttribute(ForgeMod.REACH_DISTANCE.get()).getValue();//Player reach distance
+				double reDist = player.getAttribute(ForgeMod.BLOCK_REACH.get()).getValue();//Player reach distance
 				Vec3 start = new Vec3(player.xo, player.yo + (double) player.getEyeHeight(), player.zo).subtract(pos.getX(), pos.getY(), pos.getZ());
 				Vec3 end = start.add(player.getViewVector(0F).x * reDist, player.getViewVector(0F).y * reDist, player.getViewVector(0F).z * reDist);
 

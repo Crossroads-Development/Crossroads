@@ -18,6 +18,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.DoublePlantBlock;
@@ -47,8 +48,7 @@ public class Wheezewort extends DoublePlantBlock implements BonemealableBlock{
 	public Wheezewort(){
 		super(BlockBehaviour.Properties.of(Material.PLANT).randomTicks().instabreak().sound(SoundType.GRASS));
 		String name = "wheezewort";
-		CRBlocks.toRegister.put(name, this);
-//		CRBlocks.blockAddQue(name, this); No item form. Seeds are a separate item
+		CRBlocks.queueForRegister(name, this, false, null);
 
 		registerDefaultState(defaultBlockState().setValue(CRProperties.AGE_3, 1));
 	}
@@ -60,7 +60,7 @@ public class Wheezewort extends DoublePlantBlock implements BonemealableBlock{
 	}
 
 	@Override
-	public boolean isValidBonemealTarget(BlockGetter world, BlockPos pos, BlockState state, boolean p_176473_4_){
+	public boolean isValidBonemealTarget(LevelReader world, BlockPos pos, BlockState state, boolean p_176473_4_){
 		return state.getValue(CRProperties.AGE_3) != 3;
 	}
 

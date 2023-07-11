@@ -31,8 +31,7 @@ public class Millstone extends BaseEntityBlock implements IReadable{
 	public Millstone(){
 		super(CRBlocks.getRockProperty());
 		String name = "millstone";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Override

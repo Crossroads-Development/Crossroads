@@ -22,9 +22,9 @@ public class MagentaBread extends Item{
 	private static final Supplier<MobEffectInstance> nauseaSupplier = () -> new MobEffectInstance(MobEffects.CONFUSION, 3600, 10);
 
 	protected MagentaBread(){
-		super(new Properties().tab(CRItems.TAB_CROSSROADS).food(new FoodProperties.Builder().alwaysEat().nutrition(20).saturationMod(0.5F).effect(speedSupplier, 1).effect(jumpBoostSupplier, 1).effect(nauseaSupplier, 1).build()));
+		super(new Properties().food(new FoodProperties.Builder().alwaysEat().nutrition(20).saturationMod(0.5F).effect(speedSupplier, 1).effect(jumpBoostSupplier, 1).effect(nauseaSupplier, 1).build()));
 		String name = "magenta_bread";
-		CRItems.toRegister.put(name, this);
+		CRItems.queueForRegister(name, this);
 	}
 
 	@Override

@@ -35,8 +35,7 @@ public class FluxSink extends BaseEntityBlock{
 	public FluxSink(){
 		super(CRBlocks.getMetalProperty());
 		String name = "flux_sink";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Override

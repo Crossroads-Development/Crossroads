@@ -58,11 +58,6 @@ public class IceboxRec implements IOptionalRecipe<Container>{
 	}
 
 	@Override
-	public ItemStack assemble(Container inv){
-		return getResultItem();
-	}
-
-	@Override
 	public boolean canCraftInDimensions(int width, int height){
 		return true;
 	}

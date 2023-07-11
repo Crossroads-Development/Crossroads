@@ -45,8 +45,7 @@ public class DensusPlate extends BaseEntityBlock{
 	public DensusPlate(boolean anti){
 		super(CRBlocks.getRockProperty());
 		String name = anti ? "anti_densus_plate" : "densus_plate";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 		registerDefaultState(defaultBlockState().setValue(CRProperties.LAYERS, 1));
 	}
 

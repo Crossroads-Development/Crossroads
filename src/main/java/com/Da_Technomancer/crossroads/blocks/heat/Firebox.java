@@ -35,8 +35,7 @@ public class Firebox extends BaseEntityBlock implements IReadable{
 	public Firebox(){
 		super(CRBlocks.getRockProperty());
 		String name = "firebox";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 		registerDefaultState(defaultBlockState().setValue(CRProperties.ACTIVE, false));
 	}
 

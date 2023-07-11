@@ -36,9 +36,9 @@ public class ArmorEnviroBoots extends TechnomancyArmor{
 	private Multimap<Attribute, AttributeModifier> attributesReinf = null;
 
 	public ArmorEnviroBoots(){
-		super(EquipmentSlot.FEET);
+		super(Type.BOOTS);
 		String name = "enviro_boots";
-		CRItems.toRegister.put(name, this);
+		CRItems.queueForRegister(name, this);
 	}
 
 	//Feather falling: Done via damage protection in EventHandlerCommon

@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.blocks;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
+import com.Da_Technomancer.crossroads.entity.CRMobDamage;
 import com.Da_Technomancer.essentials.blocks.FertileSoil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -11,7 +12,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
@@ -30,7 +30,6 @@ import java.util.List;
 
 public class BlockSalt extends FallingBlock{
 
-	private static final DamageSource SALT_DAMAGE = new DamageSource("salt");
 	private static final HashMap<Block, Block> coralMap = new HashMap<>(20);//The field to get the dead version of a coral from the live block is private, and having a big map is better than reflection
 	private static final TagKey<EntityType<?>> SALT_VULNERABLE = CraftingUtil.getTagKey(ForgeRegistries.Keys.ENTITY_TYPES, new ResourceLocation(Crossroads.MODID, "salt_vulnerable"));
 
@@ -60,14 +59,13 @@ public class BlockSalt extends FallingBlock{
 	protected BlockSalt(){
 		super(Properties.of(Material.SAND).strength(.5F).sound(SoundType.SAND).randomTicks());//Mine with shovel
 		String name = "block_salt";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Override
 	public void stepOn(Level worldIn, BlockPos pos, BlockState state, Entity entityIn){
 		if(!worldIn.isClientSide && CraftingUtil.tagContains(SALT_VULNERABLE, entityIn.getType())){
-			entityIn.hurt(SALT_DAMAGE, 20);
+			entityIn.hurt(CRMobDamage.damageSource(CRMobDamage.SALT, worldIn), 20);
 		}
 
 		super.stepOn(worldIn, pos, state, entityIn);

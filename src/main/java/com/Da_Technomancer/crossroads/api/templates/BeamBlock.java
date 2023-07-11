@@ -11,7 +11,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.phys.BlockHitResult;
@@ -20,19 +19,9 @@ import javax.annotation.Nullable;
 
 public abstract class BeamBlock extends TEBlock{
 
-	/**
-	 * Note: This constructor does NOT register the itemblock
-	 * @param name Registry name (without domain)
-	 * @param prop Block properties, passed to super constructor
-	 */
-	public BeamBlock(String name, BlockBehaviour.Properties prop){
-		super(prop);
-		CRBlocks.toRegister.put(name, this);
-	}
-
 	public BeamBlock(String name){
-		this(name, CRBlocks.getRockProperty());
-		CRBlocks.blockAddQue(name, this);
+		super(CRBlocks.getRockProperty());
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Override

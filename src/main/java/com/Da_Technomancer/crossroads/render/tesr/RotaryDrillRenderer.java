@@ -10,7 +10,7 @@ import com.Da_Technomancer.crossroads.blocks.rotary.RotaryDrillTileEntity;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -42,7 +42,7 @@ public class RotaryDrillRenderer implements BlockEntityRenderer<RotaryDrillTileE
 		matrix.mulPose(dir.getRotation());
 
 		//Rotate w/ gear angle
-		matrix.mulPose(Vector3f.YP.rotationDegrees(axle.orElseThrow(NullPointerException::new).getAngle(partialTicks) * (float) RotaryUtil.getCCWSign(dir)));
+		matrix.mulPose(Axis.YP.rotationDegrees(axle.orElseThrow(NullPointerException::new).getAngle(partialTicks) * (float) RotaryUtil.getCCWSign(dir)));
 
 		TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(CRRenderTypes.DRILL_TEXTURE);
 
@@ -58,7 +58,7 @@ public class RotaryDrillRenderer implements BlockEntityRenderer<RotaryDrillTileE
 		renderLayer(builder, matrix, 4, 2, sprite, col, combinedLight);
 
 		//45* aligned layers
-		matrix.mulPose(Vector3f.YP.rotationDegrees(45));
+		matrix.mulPose(Axis.YP.rotationDegrees(45));
 		renderLayer(builder, matrix, -5, 8, sprite, col, combinedLight);
 		renderLayer(builder, matrix, 1, 4, sprite, col, combinedLight);
 	}

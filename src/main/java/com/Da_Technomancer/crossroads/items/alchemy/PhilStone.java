@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.items.alchemy;
 
+import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -14,19 +15,19 @@ import net.minecraft.world.phys.AABB;
 public class PhilStone extends Item{
 
 	public PhilStone(boolean pracStone){
-		super(new Properties().tab(CRItems.TAB_CROSSROADS));
+		super(new Properties());
 		String name = pracStone ? "prac_stone" : "phil_stone";
-		CRItems.toRegister.put(name, this);
+		CRItems.queueForRegister(name, this);
 	}
 
 	@Override
 	public boolean onEntityItemUpdate(ItemStack stack, ItemEntity entity){
 		if(entity.isOnGround()){
 			AABB entityBox = entity.getBoundingBox();
-			clearBlock(entity.level, new BlockPos(entityBox.maxX, entityBox.minY - 0.05D, entityBox.maxZ));
-			clearBlock(entity.level, new BlockPos(entityBox.maxX, entityBox.minY - 0.05D, entityBox.minZ));
-			clearBlock(entity.level, new BlockPos(entityBox.minX, entityBox.minY - 0.05D, entityBox.maxZ));
-			clearBlock(entity.level, new BlockPos(entityBox.minX, entityBox.minY - 0.05D, entityBox.minZ));
+			clearBlock(entity.level, MiscUtil.blockPos(entityBox.maxX, entityBox.minY - 0.05D, entityBox.maxZ));
+			clearBlock(entity.level, MiscUtil.blockPos(entityBox.maxX, entityBox.minY - 0.05D, entityBox.minZ));
+			clearBlock(entity.level, MiscUtil.blockPos(entityBox.minX, entityBox.minY - 0.05D, entityBox.maxZ));
+			clearBlock(entity.level, MiscUtil.blockPos(entityBox.minX, entityBox.minY - 0.05D, entityBox.minZ));
 		}
 		return false;
 	}

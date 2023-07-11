@@ -27,8 +27,7 @@ public class GatewayFrameEdge extends BaseEntityBlock implements IReadable{
 	public GatewayFrameEdge(){
 		super(CRBlocks.getMetalProperty());
 		String name = "gateway_edge";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 		registerDefaultState(defaultBlockState().setValue(CRProperties.ACTIVE, false));
 	}
 

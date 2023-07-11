@@ -11,7 +11,7 @@ public class Phial extends AbstractGlassware{
 	public Phial(boolean crystal){
 		super(GlasswareTypes.PHIAL, crystal);
 		String name = "phial_" + (crystal ? "cryst" : "glass");
-		CRItems.toRegister.put(name, this);
+		CRItems.queueForRegister(name, this);
 	}
 
 	@Override

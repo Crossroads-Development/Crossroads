@@ -34,7 +34,14 @@ public final class CRFluids{
 	public static final HashMap<String, FluidType> toRegisterType = new HashMap<>();
 	public static final HashMap<String, Fluid> toRegisterFluid = new HashMap<>();
 
+	private static boolean hasInit = false;
+
 	public static void init(){
+		if(hasInit){
+			return;
+		}
+		hasInit = true;
+
 		distilledWater = GenericFluid.create("distilled_water", false, false, 0, true);
 		dirtyWater = GenericFluid.create("dirty_water", false, false, 0, true);
 		steam = GenericFluid.create("steam", false, true);

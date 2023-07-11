@@ -13,8 +13,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
 public class DynamoTileEntity extends ModuleTE{
@@ -57,7 +57,7 @@ public class DynamoTileEntity extends ModuleTE{
 		Direction facing = getBlockState().getValue(CRProperties.HORIZ_FACING);
 		BlockEntity neighbor = level.getBlockEntity(worldPosition.relative(facing.getOpposite()));
 		LazyOptional<IEnergyStorage> energyOpt;
-		if(neighbor != null && (energyOpt = neighbor.getCapability(CapabilityEnergy.ENERGY, facing)).isPresent()){
+		if(neighbor != null && (energyOpt = neighbor.getCapability(ForgeCapabilities.ENERGY, facing)).isPresent()){
 			IEnergyStorage handler = energyOpt.orElseThrow(NullPointerException::new);
 			if(handler.canReceive()){
 				fe -= handler.receiveEnergy(fe, false);
@@ -103,7 +103,7 @@ public class DynamoTileEntity extends ModuleTE{
 		if(cap == Capabilities.AXLE_CAPABILITY && (side == null || side == getBlockState().getValue(CRProperties.HORIZ_FACING))){
 			return (LazyOptional<T>) axleOpt;
 		}
-		if(cap == CapabilityEnergy.ENERGY && (side == null || side == getBlockState().getValue(CRProperties.HORIZ_FACING).getOpposite())){
+		if(cap == ForgeCapabilities.ENERGY && (side == null || side == getBlockState().getValue(CRProperties.HORIZ_FACING).getOpposite())){
 			return (LazyOptional<T>) feOpt;
 		}
 		return super.getCapability(cap, side);

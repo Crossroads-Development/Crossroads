@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.integration.create;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.heat.HeatSinkTileEntity;
-import com.simibubi.create.content.fluids.tank.BoilerHeaters;
+import com.simibubi.create.content.contraptions.fluids.tank.BoilerHeaters;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;

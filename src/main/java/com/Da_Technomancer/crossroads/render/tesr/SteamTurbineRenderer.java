@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.api.Capabilities;
 import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.blocks.rotary.SteamTurbineTileEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -21,7 +21,7 @@ public class SteamTurbineRenderer implements BlockEntityRenderer<SteamTurbineTil
 		matrix.translate(0.5D, 0, 0.5D);
 		LazyOptional<IAxleHandler> opt = te.getCapability(Capabilities.AXLE_CAPABILITY, null);
 		if(opt.isPresent()){
-			matrix.mulPose(Vector3f.YP.rotationDegrees(opt.orElseThrow(NullPointerException::new).getAngle(partialTicks)));
+			matrix.mulPose(Axis.YP.rotationDegrees(opt.orElseThrow(NullPointerException::new).getAngle(partialTicks)));
 		}
 		CRModels.renderScrew(matrix, buffer, combinedLight);
 	}

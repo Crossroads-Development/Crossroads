@@ -18,9 +18,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
 import javax.annotation.Nullable;
 
@@ -65,7 +65,7 @@ public class SteamTurbineTileEntity extends InventoryTE{
 			if(limit != 0){
 				fluids[1].shrink(limit * 100);
 				if(fluids[0].isEmpty()){
-					fluids[0] = new FluidStack(CRFluids.distilledWater.still, 100 * limit);
+					fluids[0] = new FluidStack(CRFluids.distilledWater.getStill(), 100 * limit);
 				}else{
 					fluids[0].grow(100 * limit);
 				}
@@ -79,7 +79,7 @@ public class SteamTurbineTileEntity extends InventoryTE{
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
+		if(capability == ForgeCapabilities.FLUID_HANDLER){
 			return (LazyOptional<T>) globalFluidOpt;
 		}
 		if(capability == Capabilities.AXLE_CAPABILITY && facing == Direction.UP){

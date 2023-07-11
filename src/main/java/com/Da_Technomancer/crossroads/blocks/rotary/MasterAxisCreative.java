@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.rotary;
 
 import com.Da_Technomancer.crossroads.api.CRProperties;
+import com.Da_Technomancer.crossroads.api.templates.ICustomItemBlock;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.essentials.api.ConfigUtil;
@@ -11,7 +12,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -31,15 +32,19 @@ import net.minecraftforge.network.NetworkHooks;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class MasterAxisCreative extends BaseEntityBlock{
+public class MasterAxisCreative extends BaseEntityBlock implements ICustomItemBlock{
 
 	public MasterAxisCreative(){
 		super(CRBlocks.getMetalProperty());
 		String name = "master_axis_creative";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this, new Item.Properties().tab(CRItems.TAB_CROSSROADS).rarity(CRItems.CREATIVE_RARITY));
+		CRBlocks.queueForRegister(name, this);
 	}
-	
+
+	@Override
+	public BlockItem createItemBlock(){
+		return new BlockItem(this, CRItems.baseItemProperties().rarity(CRItems.CREATIVE_RARITY));
+	}
+
 	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		if(!worldIn.isClientSide){

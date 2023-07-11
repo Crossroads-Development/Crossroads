@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.items.technomancy;
 
+import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.entity.EntityFlyingMachine;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
@@ -33,9 +33,9 @@ public class FlyingMachine extends Item{
 	};
 
 	public FlyingMachine(){
-		super(new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
+		super(new Properties().stacksTo(1));
 		String name = "flying_machine";
-		CRItems.toRegister.put(name, this);
+		CRItems.queueForRegister(name, this);
 		DispenserBlock.registerBehavior(this, SPAWN_DISPENSER_BEHAVIOR);
 	}
 
@@ -49,7 +49,7 @@ public class FlyingMachine extends Item{
 			return new InteractionResultHolder<>(InteractionResult.PASS, itemstack);
 		}else{
 			if(!worldIn.isClientSide){
-				EntityFlyingMachine.type.spawn((ServerLevel) worldIn, itemstack, playerIn, new BlockPos(ray.getLocation()), MobSpawnType.SPAWN_EGG, true, false);
+				EntityFlyingMachine.type.spawn((ServerLevel) worldIn, itemstack, playerIn, MiscUtil.blockPos(ray.getLocation()), MobSpawnType.SPAWN_EGG, true, false);
 			}
 			if(!playerIn.isCreative()){
 				itemstack.shrink(1);

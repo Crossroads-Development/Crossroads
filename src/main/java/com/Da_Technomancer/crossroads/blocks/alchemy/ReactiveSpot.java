@@ -21,7 +21,7 @@ public class ReactiveSpot extends BaseEntityBlock{
 	public ReactiveSpot(){
 		super(Properties.of(Material.SPONGE).strength(0).noCollission().noLootTable());
 		String name = "reactive_spot";
-		CRBlocks.toRegister.put(name, this);
+		CRBlocks.queueForRegister(name, this, false, null);
 		//No item form
 	}
 

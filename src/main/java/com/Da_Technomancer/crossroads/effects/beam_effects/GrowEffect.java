@@ -6,10 +6,10 @@ import com.Da_Technomancer.crossroads.api.beams.BeamHit;
 import com.Da_Technomancer.crossroads.api.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.blocks.BlockSalt;
+import com.Da_Technomancer.crossroads.entity.CRMobDamage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BonemealableBlock;
@@ -22,8 +22,6 @@ public class GrowEffect extends BeamEffect{
 
 	//Crop types can be blacklisted from growth through the beam using the grow_blacklist tag. Intended for things like magical crops
 	private static final TagKey<Block> growBlacklist = CraftingUtil.getTagKey(ForgeRegistries.Keys.BLOCKS, new ResourceLocation(Crossroads.MODID, "grow_blacklist"));
-	protected static final DamageSource POTENTIAL_VOID = new DamageSource("potentialvoid").setMagic().bypassArmor();
-	protected static final DamageSource POTENTIAL_VOID_ABSOLUTE = new DamageSource("potentialvoid").setMagic().bypassArmor().bypassMagic();
 
 	@Override
 	public void doBeamEffect(EnumBeamAlignments align, boolean voi, int power, BeamHit beamHit){
@@ -79,12 +77,11 @@ public class GrowEffect extends BeamEffect{
 		double range = Math.sqrt(power) / 2D;
 		float impact = (float) Math.ceil(power / 2F);
 		List<LivingEntity> ents = beamHit.getNearbyEntities(LivingEntity.class, range, null);
-		boolean absoluteDamage = CRConfig.beamDamageAbsolute.get();
 		for(LivingEntity ent : ents){
 			if(!kill ^ ent.isInvertedHealAndHarm()){
 				ent.heal(impact);
 			}else{
-				ent.hurt(absoluteDamage ? POTENTIAL_VOID_ABSOLUTE : POTENTIAL_VOID, impact);
+				ent.hurt(CRMobDamage.damageSource(CRMobDamage.POTENTIALVOID, beamHit.getWorld()), impact);
 			}
 		}
 	}

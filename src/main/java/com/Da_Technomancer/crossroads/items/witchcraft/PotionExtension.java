@@ -18,9 +18,9 @@ public class PotionExtension extends Item implements IPerishable{
 	private static final long LIFETIME = 20 * 60 * 30;//30 minutes
 
 	public PotionExtension(){
-		super(new Item.Properties().stacksTo(1).tab(CRItems.TAB_CROSSROADS));
+		super(new Item.Properties().stacksTo(1));
 		String name = "potion_extension";
-		CRItems.toRegister.put(name, this);
+		CRItems.queueForRegister(name, this);
 	}
 
 	@Override

@@ -1,11 +1,12 @@
 package com.Da_Technomancer.crossroads.items;
 
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.EventHandlerCommon;
 import com.Da_Technomancer.crossroads.api.CRReflection;
 import com.Da_Technomancer.crossroads.api.EnumPath;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.api.templates.ICreativeTabPopulatingItem;
 import com.Da_Technomancer.crossroads.api.witchcraft.IPerishable;
-import com.Da_Technomancer.crossroads.blocks.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.blocks.witchcraft.EmbryoLab;
 import com.Da_Technomancer.crossroads.entity.EntityHopperHawk;
 import com.Da_Technomancer.crossroads.items.alchemy.*;
@@ -28,41 +29,95 @@ import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ForgeSpawnEggItem;
+import net.minecraftforge.registries.RegisterEvent;
 import org.apache.logging.log4j.Level;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 public final class CRItems{
 
-	public static final CreativeModeTab TAB_CROSSROADS = new CreativeModeTab(Crossroads.MODID){
-		@Override
-		public ItemStack makeIcon(){
-			return new ItemStack(omnimeter, 1);
-		}
-	};
+	public static CreativeModeTab MAIN_CREATIVE_TAB;
 
-	public static final CreativeModeTab TAB_HEAT_CABLE = new CreativeModeTab("heat_cable"){
-		@Override
-		public ItemStack makeIcon(){
-			return new ItemStack(HeatCableFactory.HEAT_CABLES.get(HeatInsulators.WOOL), 1);
-		}
-	};
+	public static CreativeModeTab HEAT_CABLE_CREATIVE_TAB;
 
-	public static final CreativeModeTab TAB_GEAR = new CreativeModeTab("gear"){
-		@Override
-		public ItemStack makeIcon(){
-			return smallGear.withMaterial(GearFactory.findMaterial("copper"), 1);
+	public static CreativeModeTab GEAR_CREATIVE_TAB;
+
+	public static final String MAIN_CREATIVE_TAB_ID = Crossroads.MODID;
+	public static final String HEAT_CABLE_CREATIVE_TAB_ID = "heat_cable";
+	public static final String GEAR_CREATIVE_TAB_ID = "gear";
+
+	private static final HashMap<String, Item> toRegister = new HashMap<>();
+	public static final HashMap<String, ArrayList<Supplier<ItemStack[]>>> creativeTabItems = new HashMap<>(3);
+
+	/**
+	 * Queues up an item to be registered and added to the creative tab
+	 *
+	 * @param regName Item registry name (without essentials: prefix)
+	 * @param item Item. If instance of ICreativeTabPopulatingItem, can control itemstacks added to the creative tab
+	 * @param tabId Creative tab id to be registered in. Null for no creative tab. Crossroads tabs only.
+	 * @return The item
+	 * @param <T> Item class
+	 */
+	public static <T extends Item> T queueForRegister(String regName, T item, @Nullable String tabId){
+		toRegister.put(regName, item);
+		if(tabId != null){
+			if(item instanceof ICreativeTabPopulatingItem populatingItem){
+				addToCreativeTab(populatingItem, tabId);
+			}else{
+				addToCreativeTab(() -> new ItemStack[] {new ItemStack(item)}, tabId);
+			}
 		}
-	};
+		return item;
+	}
+
+	/**
+	 * Adds an item to a Crossroads creative tab without registering the item.
+	 * Most Crossroads items should be using queueForRegister() instead
+	 * @param stacks The itemstacks to add, in order.
+	 * @param tabId Creative tab id to be registered in. Crossroads tabs only.
+	 */
+	public static void addToCreativeTab(Supplier<ItemStack[]> stacks, String tabId){
+		if(!creativeTabItems.containsKey(tabId)){
+			creativeTabItems.put(tabId, new ArrayList<>());
+		}
+		creativeTabItems.get(tabId).add(stacks);
+	}
+
+	/**
+	 * Queues up an item to be registered and added to the creative tab
+	 * @param regName Item registry name (without essentials: prefix)
+	 * @param item Item
+	 * @return The item
+	 * @param <T> Item class
+	 */
+	public static <T extends Item> T queueForRegister(String regName, T item){
+		return queueForRegister(regName, item, MAIN_CREATIVE_TAB_ID);
+	}
+
+	public static Item.Properties baseItemProperties(){
+		return new Item.Properties();
+	}
 
 	public static final Rarity BOBO_RARITY = Rarity.EPIC;
 	public static final Rarity CREATIVE_RARITY = Rarity.RARE;
 
+	public static Item ingotTin;
+	public static Item nuggetTin;
+	public static Item rawTin;
+	public static Item nuggetCopper;
+	public static Item ingotBronze;
+	public static Item nuggetBronze;
+	public static Item gemRuby;
+	public static Item ingotCopshowium;
+	public static Item nuggetCopshowium;
+	public static Item voidCrystal;
 	public static CheatWandRotary debugGearWriter;
 	public static CheatWandHeat debugHeatWriter;
 	public static Item dustSalt;
@@ -85,8 +140,6 @@ public final class CRItems{
 	public static ArmorPropellerPack propellerPack;
 	public static StaffTechnomancy staffTechnomancy;
 	public static BeamCage beamCage;
-	//	public static PrototypePistol pistol;
-//	public static PrototypeWatch watch;
 	public static Item adamant;
 	public static Item sulfur;
 	public static Item vanadiumOxide;
@@ -174,75 +227,30 @@ public final class CRItems{
 	public static GearFacade gearFacadeIron;
 	public static GearFacade gearFacadeGlass;
 
-	public static final HashMap<String, Item> toRegister = new HashMap<>();
-
 	public static void init(){
-		debugGearWriter = new CheatWandRotary();
-		handCrank = new HandCrank();
-		debugHeatWriter = new CheatWandHeat();
-		dustSalt = MiscUtil.putReturn(toRegister, "dust_salt", new Item(new Item.Properties().tab(TAB_CROSSROADS)));
-//		mashedPotato = new MashedPotato();
-		omnimeter = new OmniMeter();
-		vacuum = new Vacuum();
-		magentaBread = new MagentaBread();
-		edibleBlob = new EdibleBlob();
-		rainIdol = new RainIdol();
-		pureQuartz = MiscUtil.putReturn(toRegister, "pure_quartz", new Item(new Item.Properties().tab(TAB_CROSSROADS)));
-		brightQuartz = MiscUtil.putReturn(toRegister, "bright_quartz", new Item(new Item.Properties().tab(TAB_CROSSROADS)));
-		lensArray = MiscUtil.putReturn(toRegister, "lens_array", new Item(new Item.Properties().tab(TAB_CROSSROADS)));
-		squidHelmet = new SquidHelmet();
-		pigZombieChestplate = new PigZombieChestsplate();
-		cowLeggings = new CowLeggings();
-		chickenBoots = new ChickenBoots();
-		chaosRod = new ChaosRod();
-		armorGoggles = new ArmorGoggles();
-		staffTechnomancy = new StaffTechnomancy();
-		beamCage = new BeamCage();
-//		pistol = new PrototypePistol();
-//		watch = new PrototypeWatch();
-		adamant = MiscUtil.putReturn(toRegister, "adamant", new Item(new Item.Properties().tab(TAB_CROSSROADS)));
-		sulfur = MiscUtil.putReturn(toRegister, "sulfur", new Item(new Item.Properties().tab(TAB_CROSSROADS)));
-		vanadiumOxide = MiscUtil.putReturn(toRegister, "vanadium_oxide", new Item(new Item.Properties().tab(TAB_CROSSROADS)));
-		philosopherStone = new PhilStone(false);
-		practitionerStone = new PhilStone(true);
-		alchCrystal = MiscUtil.putReturn(toRegister, "alch_crystal", new Item(new Item.Properties().tab(TAB_CROSSROADS)));
-		alchemySalt = MiscUtil.putReturn(toRegister, "waste_salt", new Item(new Item.Properties().tab(TAB_CROSSROADS)));
-		phialGlass = new Phial(false);
-		florenceFlaskGlass = new FlorenceFlask(false);
-		shellGlass = new Shell(false);
-		phialCrystal = new Phial(true);
-		florenceFlaskCrystal = new FlorenceFlask(true);
-		shellCrystal = new Shell(true);
-		liechWrench = new LiechWrench();
-		leydenJar = new LeydenJar();
-		nitroglycerin = new Nitroglycerin();
-		poisonVodka = new PoisonVodka();
-		solidQuicksilver = MiscUtil.putReturn(toRegister, "solid_quicksilver", new Item(new Item.Properties().tab(TAB_CROSSROADS)));
-		solidFusas = MiscUtil.putReturn(toRegister, "solid_fusas", new Item(new Item.Properties().tab(TAB_CROSSROADS)));
-		solidEldrine = MiscUtil.putReturn(toRegister, "solid_eldrine", new Item(new Item.Properties().tab(TAB_CROSSROADS)));
-		solidStasisol = MiscUtil.putReturn(toRegister, "solid_stasisol", new Item(new Item.Properties().tab(TAB_CROSSROADS)));
-		solidVoltus = MiscUtil.putReturn(toRegister, "solid_voltus", new Item(new Item.Properties().tab(TAB_CROSSROADS)));
-		solidElemEnchant = MiscUtil.putReturn(toRegister, "solid_elem_enchantment", new Item(new Item.Properties().tab(TAB_CROSSROADS)));
-		solidElemExpansion = MiscUtil.putReturn(toRegister, "solid_elem_expansion", new Item(new Item.Properties().tab(TAB_CROSSROADS)));
-		solidDensus = MiscUtil.putReturn(toRegister, "solid_densus", new Item(new Item.Properties().tab(TAB_CROSSROADS)));
-		solidAntiDensus = MiscUtil.putReturn(toRegister, "solid_anti_densus", new Item(new Item.Properties().tab(TAB_CROSSROADS)));
-		solidFortis = MiscUtil.putReturn(toRegister, "solid_fortis", new Item(new Item.Properties().tab(TAB_CROSSROADS)));
-		solidVitriol = MiscUtil.putReturn(toRegister, "solid_vitriol", new Item(new Item.Properties().tab(TAB_CROSSROADS)));
-		solidMuriatic = MiscUtil.putReturn(toRegister, "solid_muriatic", new Item(new Item.Properties().tab(TAB_CROSSROADS)));
-		solidRegia = MiscUtil.putReturn(toRegister, "solid_regia", new Item(new Item.Properties().tab(TAB_CROSSROADS)));
-		solidCavorite = MiscUtil.putReturn(toRegister, "solid_cavorite", new Item(new Item.Properties().tab(TAB_CROSSROADS)));
-		solidSO2 = MiscUtil.putReturn(toRegister, "solid_sulfur_dioxide", new Item(new Item.Properties().tab(TAB_CROSSROADS)));
-		solidChlorine = MiscUtil.putReturn(toRegister, "solid_chlorine", new Item(new Item.Properties().tab(TAB_CROSSROADS)));
-		bedrockDust = MiscUtil.putReturn(toRegister, "dust_bedrock", new Item(new Item.Properties().tab(TAB_CROSSROADS)));
-		flyingMachine = new FlyingMachine();
-		teslaRay = new TeslaRay();
-		slag = new Slag();
-//		linkingTool = new LinkingTool();
-		dampingPowder = new DampingPowder();
-		boboRod = new BoboRod();
-		recallDevice = new RecallDevice();
-		springGun = new SpringGun();
-		whirligig = new Whirligig();
+		//Ores
+		ingotTin = queueForRegister("ingot_tin", new Item(baseItemProperties()));
+		nuggetTin = queueForRegister("nugget_tin", new Item(baseItemProperties()));
+		rawTin = queueForRegister("raw_tin", new Item(baseItemProperties()));
+		nuggetCopper = queueForRegister("nugget_copper", new Item(baseItemProperties()));
+		ingotBronze = queueForRegister("ingot_bronze", new Item(baseItemProperties()));
+		nuggetBronze = queueForRegister("nugget_bronze", new Item(baseItemProperties()));
+		gemRuby = queueForRegister("gem_ruby", new Item(baseItemProperties()));
+		ingotCopshowium = queueForRegister("ingot_copshowium", new Item(baseItemProperties()){
+			@Override
+			public void appendHoverText(ItemStack stack, @Nullable net.minecraft.world.level.Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
+				tooltip.add(Component.translatable("tt.crossroads.copshowium.quip").setStyle(MiscUtil.TT_QUIP));
+			}
+		});
+		nuggetCopshowium = queueForRegister("nugget_copshowium", new Item(baseItemProperties()));
+		voidCrystal = queueForRegister("void_crystal", new Item(baseItemProperties()));
+		oreGravel = queueForRegister("ore_gravel", new OreProfileItem(baseItemProperties()));
+		oreClump = queueForRegister("ore_clump", new OreProfileItem(baseItemProperties()));
+		ironDust = queueForRegister("dust_iron", new Item(baseItemProperties()));
+		goldDust = queueForRegister("dust_gold", new Item(baseItemProperties()));
+		copperDust = queueForRegister("dust_copper", new Item(baseItemProperties()));
+		tinDust = queueForRegister("dust_tin", new Item(baseItemProperties()));
+
 		axle = new Axle();
 		clutch = new Clutch(false);
 		invClutch = new Clutch(true);
@@ -255,42 +263,115 @@ public final class CRItems{
 		gearFacadeCobble = new GearFacade(GearFacade.FacadeBlock.COBBLE);
 		gearFacadeIron = new GearFacade(GearFacade.FacadeBlock.IRON);
 		gearFacadeGlass = new GearFacade(GearFacade.FacadeBlock.GLASS);
-		oreGravel = (OreProfileItem) MiscUtil.putReturn(toRegister, "ore_gravel", new OreProfileItem(new Item.Properties().tab(TAB_CROSSROADS)));
-		oreClump = (OreProfileItem) MiscUtil.putReturn(toRegister, "ore_clump", new OreProfileItem(new Item.Properties().tab(TAB_CROSSROADS)));
-		ironDust = MiscUtil.putReturn(toRegister, "dust_iron", new Item(new Item.Properties().tab(TAB_CROSSROADS)));
-		goldDust = MiscUtil.putReturn(toRegister, "dust_gold", new Item(new Item.Properties().tab(TAB_CROSSROADS)));
-		copperDust = MiscUtil.putReturn(toRegister, "dust_copper", new Item(new Item.Properties().tab(TAB_CROSSROADS)));
-		tinDust = MiscUtil.putReturn(toRegister, "dust_tin", new Item(new Item.Properties().tab(TAB_CROSSROADS)));
-		sigilAlch = new PathSigil(EnumPath.ALCHEMY);
-		sigilTech = new PathSigil(EnumPath.TECHNOMANCY);
-		sigilWitch = new PathSigil(EnumPath.WITCHCRAFT);
-		propellerPack = new ArmorPropellerPack();
-		armorEnviroBoots = new ArmorEnviroBoots();
-		armorToolbelt = new ArmorToolbelt();
-		bloodSampleEmpty = new BloodSampleEmpty();
-		bloodSample = new BloodSample();
-		separatedBloodSample = new BloodSample("separated_blood_sample");
-		potionExtension = new PotionExtension();
-		syringe = new Syringe();
-		mushroomDust = MiscUtil.putReturn(toRegister, "mushroom_dust", new Item(new Item.Properties().tab(TAB_CROSSROADS)));
-		wheezewortSeeds = new WheezewortSeeds();
-		soulCluster = new SoulCluster(true);
-		soulShard = new SoulCluster(false);
-		embryo = new Embryo();
-		geneticSpawnEgg = new GeneticSpawnEgg();
-		mutagen = MiscUtil.putReturn(toRegister, "mutagen", new Item(new Item.Properties().tab(TAB_CROSSROADS)));
-		villagerBrain = new VillagerBrain();
-		brainHarvester = new BrainHarvester();
-		hopperHawkSpawnEgg = MiscUtil.putReturn(toRegister, "hopper_hawk_spawn_egg", new ForgeSpawnEggItem(() -> EntityHopperHawk.type, 0x555555, 0x999999, (new Item.Properties()).tab(CreativeModeTab.TAB_MISC)));
-		bloodCompass = new BloodCompass();
-		mainspring = MiscUtil.putReturn(toRegister, "mainspring", new Item(new Item.Properties().tab(TAB_CROSSROADS)){
+		handCrank = new HandCrank();
+		debugGearWriter = new CheatWandRotary();
+		debugHeatWriter = new CheatWandHeat();
+		dustSalt = queueForRegister("dust_salt", new Item(baseItemProperties()));
+		omnimeter = new OmniMeter();
+		mainspring = queueForRegister("mainspring", new Item(baseItemProperties()){
 			@Override
 			public void appendHoverText(ItemStack stack, @Nullable net.minecraft.world.level.Level world, List<Component> tooltip, TooltipFlag flag){
 				tooltip.add(Component.translatable("tt.crossroads.mainspring"));
 			}
 		});
+		springGun = new SpringGun();
+		whirligig = new Whirligig();
+		edibleBlob = new EdibleBlob();
+		slag = new Slag();
+		sigilTech = new PathSigil(EnumPath.TECHNOMANCY);
+		sigilAlch = new PathSigil(EnumPath.ALCHEMY);
+		sigilWitch = new PathSigil(EnumPath.WITCHCRAFT);
+
+		//Beam items
+		pureQuartz = queueForRegister("pure_quartz", new Item(baseItemProperties()));
+		brightQuartz = queueForRegister("bright_quartz", new Item(baseItemProperties()));
+		lensArray = queueForRegister("lens_array", new Item(baseItemProperties()));
+
+		//Technomancy items
+		armorGoggles = new ArmorGoggles();
+		propellerPack = new ArmorPropellerPack();
+		armorToolbelt = new ArmorToolbelt();
+		armorEnviroBoots = new ArmorEnviroBoots();
+		staffTechnomancy = new StaffTechnomancy();
+		beamCage = new BeamCage();
+		recallDevice = new RecallDevice();
+//		pistol = new PrototypePistol();
+//		watch = new PrototypeWatch();
+
+		//Alchemy items
+		adamant = queueForRegister("adamant", new Item(baseItemProperties()));
+		sulfur = queueForRegister("sulfur", new Item(baseItemProperties()));
+		vanadiumOxide = queueForRegister("vanadium_oxide", new Item(baseItemProperties()));
+		philosopherStone = new PhilStone(false);
+		practitionerStone = new PhilStone(true);
+		alchCrystal = queueForRegister("alch_crystal", new Item(baseItemProperties()));
+		alchemySalt = queueForRegister("waste_salt", new Item(baseItemProperties()));
+		phialGlass = new Phial(false);
+		florenceFlaskGlass = new FlorenceFlask(false);
+		shellGlass = new Shell(false);
+		phialCrystal = new Phial(true);
+		florenceFlaskCrystal = new FlorenceFlask(true);
+		shellCrystal = new Shell(true);
+		leydenJar = new LeydenJar();
+		solidQuicksilver = queueForRegister("solid_quicksilver", new Item(baseItemProperties()));
+		solidFusas = queueForRegister("solid_fusas", new Item(baseItemProperties()));
+		solidEldrine = queueForRegister("solid_eldrine", new Item(baseItemProperties()));
+		solidStasisol = queueForRegister("solid_stasisol", new Item(baseItemProperties()));
+		solidVoltus = queueForRegister("solid_voltus", new Item(baseItemProperties()));
+		solidElemEnchant = queueForRegister("solid_elem_enchantment", new Item(baseItemProperties()));
+		solidElemExpansion = queueForRegister("solid_elem_expansion", new Item(baseItemProperties()));
+		solidDensus = queueForRegister("solid_densus", new Item(baseItemProperties()));
+		solidAntiDensus = queueForRegister("solid_anti_densus", new Item(baseItemProperties()));
+		solidFortis = queueForRegister("solid_fortis", new Item(baseItemProperties()));
+		solidVitriol = queueForRegister("solid_vitriol", new Item(baseItemProperties()));
+		solidMuriatic = queueForRegister("solid_muriatic", new Item(baseItemProperties()));
+		solidRegia = queueForRegister("solid_regia", new Item(baseItemProperties()));
+		solidCavorite = queueForRegister("solid_cavorite", new Item(baseItemProperties()));
+		solidSO2 = queueForRegister("solid_sulfur_dioxide", new Item(baseItemProperties()));
+		solidChlorine = queueForRegister("solid_chlorine", new Item(baseItemProperties()));
+		bedrockDust = queueForRegister("dust_bedrock", new Item(baseItemProperties()));
+		flyingMachine = new FlyingMachine();
+		teslaRay = new TeslaRay();
+//		linkingTool = new LinkingTool();
+		dampingPowder = new DampingPowder();
+
+		//Witchcraft items
+		bloodSampleEmpty = new BloodSampleEmpty();
+		bloodSample = new BloodSample();
+		separatedBloodSample = new BloodSample("separated_blood_sample");
+		potionExtension = new PotionExtension();
+		syringe = new Syringe();
+		mushroomDust = queueForRegister("mushroom_dust", new Item(baseItemProperties()));
+		wheezewortSeeds = new WheezewortSeeds();
+		soulCluster = new SoulCluster(true);
+		soulShard = new SoulCluster(false);
+		mutagen = queueForRegister("mutagen", new Item(baseItemProperties()));
+		embryo = new Embryo();
+		geneticSpawnEgg = new GeneticSpawnEgg();
+		bloodCompass = new BloodCompass();
+
+		//Bobo items
+		boboRod = new BoboRod();
+		vacuum = new Vacuum();
+		magentaBread = new MagentaBread();
+		rainIdol = new RainIdol();
+		squidHelmet = new SquidHelmet();
+		pigZombieChestplate = new PigZombieChestsplate();
+		cowLeggings = new CowLeggings();
+		chickenBoots = new ChickenBoots();
+		liechWrench = new LiechWrench();
+		chaosRod = new ChaosRod();
+		nitroglycerin = new Nitroglycerin();
+		poisonVodka = new PoisonVodka();
+		villagerBrain = new VillagerBrain();
+		brainHarvester = new BrainHarvester();
+		hopperHawkSpawnEgg = queueForRegister("hopper_hawk_spawn_egg", new ForgeSpawnEggItem(() -> EntityHopperHawk.type, 0x555555, 0x999999, (baseItemProperties())));
 
 		registerDispenserOverrides();
+	}
+
+	public static void registerItems(RegisterEvent.RegisterHelper<Item> helper){
+		EventHandlerCommon.CRModEventsCommon.registerAll(helper, toRegister);
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -350,7 +431,7 @@ public final class CRItems{
 		ItemProperties.register(potionExtension, new ResourceLocation("spoiled"), rottingPropertyGetter);
 		ItemProperties.register(embryo, new ResourceLocation("spoiled"), rottingPropertyGetter);
 		//Syringe treatment
-		ItemPropertyFunction syringePropertyGetter = (ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity, int unmapped) -> CRItems.syringe.isTreated(stack) ? 1 : 0;
+		ItemPropertyFunction syringePropertyGetter = (ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity, int unmapped) -> syringe.isTreated(stack) ? 1 : 0;
 		ItemProperties.register(syringe, new ResourceLocation("treated"), syringePropertyGetter);
 		//Blood compass
 		ItemProperties.register(bloodCompass, new ResourceLocation("angle"), new CompassItemPropertyFunction((world, stack, player) -> bloodCompass.getTarget(stack, player, world)));
@@ -360,7 +441,7 @@ public final class CRItems{
 	 * Registers dispenser behaviours for any item where the behaviour isn't being registered by the item itself for whatever reason
 	 */
 	public static void registerDispenserOverrides(){
-		registerDispenserOverride(EmbryoLab.DISPENSE_ONTO_EMBRYO_LAB, CRItems.separatedBloodSample, CRItems.bloodSample, Items.NAME_TAG, CRItems.soulCluster, Items.POTION, Items.SPLASH_POTION, Items.LINGERING_POTION);
+		registerDispenserOverride(EmbryoLab.DISPENSE_ONTO_EMBRYO_LAB, separatedBloodSample, bloodSample, Items.NAME_TAG, soulCluster, Items.POTION, Items.SPLASH_POTION, Items.LINGERING_POTION);
 	}
 
 	/**

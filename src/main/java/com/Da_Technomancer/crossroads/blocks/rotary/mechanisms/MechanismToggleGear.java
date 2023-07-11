@@ -5,13 +5,12 @@ import com.Da_Technomancer.crossroads.api.Capabilities;
 import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.api.rotary.*;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.Da_Technomancer.crossroads.items.item_sets.GearFactory;
-import com.Da_Technomancer.crossroads.items.item_sets.OreSetup;
+import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.crossroads.render.tesr.CRModels;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -138,8 +137,8 @@ public class MechanismToggleGear extends MechanismSmallGear{
 	@Nonnull
 	@Override
 	public ItemStack getDrop(IMechanismProperty mat){
-		if(mat instanceof GearFactory.GearMaterial){
-			return inverted ? CRItems.invToggleGear.withMaterial((OreSetup.OreProfile) mat, 1) : CRItems.toggleGear.withMaterial((OreSetup.OreProfile) mat, 1);
+		if(mat instanceof CRMaterialLibrary.GearMaterial){
+			return inverted ? CRItems.invToggleGear.withMaterial((CRMaterialLibrary.OreProfile) mat, 1) : CRItems.toggleGear.withMaterial((CRMaterialLibrary.OreProfile) mat, 1);
 		}else{
 			return ItemStack.EMPTY;
 		}
@@ -158,7 +157,7 @@ public class MechanismToggleGear extends MechanismSmallGear{
 		matrix.mulPose(side.getOpposite().getRotation());//Apply orientation
 		float angle = handler.getAngle(partialTicks);
 		matrix.translate(0, -0.4375D, 0);
-		matrix.mulPose(Vector3f.YP.rotationDegrees(- (float) RotaryUtil.getCCWSign(side) * angle));
+		matrix.mulPose(Axis.YP.rotationDegrees(- (float) RotaryUtil.getCCWSign(side) * angle));
 
 		TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(CRRenderTypes.GEAR_8_TEXTURE);
 		float top = 0.0625F;
@@ -182,7 +181,7 @@ public class MechanismToggleGear extends MechanismSmallGear{
 			CRRenderUtil.addVertexBlock(builder, matrix, -radius, top + zFightOffset, -radius, uSt, vSt, 0, 1, 0, combinedLight, invertCol);
 		}
 
-		int[] color = CRRenderUtil.convertColor(mat instanceof GearFactory.GearMaterial ? ((GearFactory.GearMaterial) mat).getColor() : Color.WHITE);
+		int[] color = CRRenderUtil.convertColor(mat instanceof CRMaterialLibrary.GearMaterial ? ((CRMaterialLibrary.GearMaterial) mat).getColor() : Color.WHITE);
 
 		if(te.redstoneIn != 0 ^ inverted){
 			//Render normally when active

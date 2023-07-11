@@ -26,8 +26,7 @@ public class VoltusGenerator extends BaseEntityBlock implements IReadable{
 	public VoltusGenerator(){
 		super(CRBlocks.getMetalProperty());
 		String name = "voltus_generator";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Nullable

@@ -35,8 +35,7 @@ public class HeatLimiterBasic extends BaseEntityBlock{
 	public HeatLimiterBasic(){
 		super(CRBlocks.getRockProperty());
 		String name = "heat_limiter_basic";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 		registerDefaultState(defaultBlockState().setValue(CRProperties.ACTIVE, false));
 	}
 

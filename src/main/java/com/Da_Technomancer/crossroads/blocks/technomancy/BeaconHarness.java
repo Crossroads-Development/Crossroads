@@ -38,8 +38,7 @@ public class BeaconHarness extends BaseEntityBlock{
 	public BeaconHarness(){
 		super(CRBlocks.getGlassProperty().lightLevel(state -> 15));
 		String name = "beacon_harness";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Override

@@ -38,8 +38,7 @@ public class WindTurbine extends BaseEntityBlock implements IReadable{
 	public WindTurbine(){
 		super(Properties.of(Material.WOOD).strength(2));
 		String name = "wind_turbine";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Override

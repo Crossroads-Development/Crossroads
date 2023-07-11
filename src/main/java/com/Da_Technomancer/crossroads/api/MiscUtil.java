@@ -4,13 +4,13 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.essentials.api.ConfigUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LightningBolt;
@@ -242,7 +242,7 @@ public final class MiscUtil{
 			return cache;
 		}
 
-		return ResourceKey.create(Registry.DIMENSION_REGISTRY, registryID);
+		return ResourceKey.create(Registries.DIMENSION, registryID);
 	}
 
 	/**
@@ -272,7 +272,7 @@ public final class MiscUtil{
 		}
 		ent.thunderHit((ServerLevel) ent.level, lightning);//Deals 5 lightning damage
 		if(damage > 5){
-			ent.hurt(DamageSource.LIGHTNING_BOLT, damage - 5F);//Deal any additional damage
+			ent.hurt(ent.damageSources().lightningBolt(), damage - 5F);//Deal any additional damage
 		}
 	}
 
@@ -303,5 +303,13 @@ public final class MiscUtil{
 	public static <T, U> U putReturn(Map<T, U> map, T key, U val){
 		map.put(key, val);
 		return val;
+	}
+
+	public static BlockPos blockPos(double x, double y, double z){
+		return new BlockPos((int) Math.round(x), (int) Math.round(y), (int) Math.round(z));
+	}
+
+	public static BlockPos blockPos(Vec3 pos){
+		return blockPos(pos.x, pos.y, pos.z);
 	}
 }

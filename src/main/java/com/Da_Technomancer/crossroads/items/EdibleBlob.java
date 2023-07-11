@@ -18,7 +18,7 @@ public class EdibleBlob extends Item{
 	public EdibleBlob(){
 		super(new Item.Properties());//Not in a creative tab due to creative giving a version that has no NBT
 		String name = "edible_blob";
-		CRItems.toRegister.put(name, this);
+		CRItems.queueForRegister(name, this, null);
 	}
 
 	public static CompoundTag createNBT(@Nullable CompoundTag base, int hunger, int sat){

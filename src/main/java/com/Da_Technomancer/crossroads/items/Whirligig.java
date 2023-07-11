@@ -5,7 +5,6 @@ import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.blocks.rotary.WindingTableTileEntity;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -16,7 +15,10 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
@@ -28,9 +30,9 @@ public class Whirligig extends Item implements WindingTableTileEntity.IWindableI
 	private final Multimap<Attribute, AttributeModifier> attributeModifiers;
 
 	protected Whirligig(){
-		super(new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
+		super(new Properties().stacksTo(1));
 		String name = "whirligig";
-		CRItems.toRegister.put(name, this);
+		CRItems.queueForRegister(name, this);
 
 		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
 		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", 5, AttributeModifier.Operation.ADDITION));
@@ -71,9 +73,9 @@ public class Whirligig extends Item implements WindingTableTileEntity.IWindableI
 	private static final String murderEasterEgg = "dinidini";
 
 	@Override
-	public void onUsingTick(ItemStack stack, LivingEntity player, int count){
+	public void onUseTick(Level world, LivingEntity player, ItemStack stack, int count){
 		//Called on both sides every tick while the item is being actively used
-		if(!player.level.isClientSide()){
+		if(!world.isClientSide()){
 			double wind = getWindLevel(stack);
 
 			if(player instanceof Player && murderEasterEgg.equals(((Player) player).getGameProfile().getName()))
@@ -98,7 +100,7 @@ public class Whirligig extends Item implements WindingTableTileEntity.IWindableI
 				}
 
 				//Upward thrust
-				if(player.getY() < player.level.getMaxBuildHeight() + 10){//Safety limit to prevent ridiculous heights being attained
+				if(player.getY() < world.getMaxBuildHeight() + 10){//Safety limit to prevent ridiculous heights being attained
 					//Vanilla gravity is applied as constant change in y-velocity every tick
 					final double gravity = 0.08;
 					double thrust = gravity * (wind / HOVER_WIND);
@@ -119,16 +121,6 @@ public class Whirligig extends Item implements WindingTableTileEntity.IWindableI
 	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack){
 		//Acts as a melee weapon
 		return slot == EquipmentSlot.MAINHAND ? attributeModifiers : super.getAttributeModifiers(slot, stack);
-	}
-
-	@Override
-	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items){
-		if(allowedIn(group)){
-			items.add(new ItemStack(this, 1));
-			ItemStack stack = new ItemStack(this, 1);
-			setWindLevel(stack, getMaxWind());
-			items.add(stack);
-		}
 	}
 
 	@Override

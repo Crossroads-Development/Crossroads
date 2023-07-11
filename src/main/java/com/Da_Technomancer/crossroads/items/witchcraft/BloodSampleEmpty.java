@@ -23,9 +23,9 @@ import java.util.List;
 public class BloodSampleEmpty extends Item{
 
 	public BloodSampleEmpty(){
-		super(new Item.Properties().stacksTo(1).tab(CRItems.TAB_CROSSROADS));
+		super(new Item.Properties().stacksTo(1));
 		String name = "blood_sample_empty";
-		CRItems.toRegister.put(name, this);
+		CRItems.queueForRegister(name, this);
 
 		DefaultDispenseItemBehavior dispenseBehavior = new OptionalDispenseItemBehavior(){
 			@Override

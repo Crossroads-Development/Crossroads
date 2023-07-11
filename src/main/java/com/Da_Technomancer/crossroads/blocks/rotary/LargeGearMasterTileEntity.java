@@ -12,7 +12,7 @@ import com.Da_Technomancer.crossroads.api.templates.IInfoTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.Da_Technomancer.crossroads.items.item_sets.GearFactory;
+import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import com.Da_Technomancer.essentials.api.packets.ILongReceiver;
 import com.Da_Technomancer.essentials.api.packets.SendLongToClient;
@@ -40,7 +40,7 @@ public class LargeGearMasterTileEntity extends BlockEntity implements ILongRecei
 
 	public static final BlockEntityType<LargeGearMasterTileEntity> TYPE = CRTileEntity.createType(LargeGearMasterTileEntity::new, CRBlocks.largeGearMaster);
 
-	private GearFactory.GearMaterial type;
+	private CRMaterialLibrary.GearMaterial type;
 	private boolean newTE = false;//Used when placing the gear, to signify that the type data needs to be sent to clients. Sending immediately after placement can cause a packet race condition if the packet arrives before the TE exists
 	private double energy = 0;
 	private double inertia = 0;
@@ -76,7 +76,7 @@ public class LargeGearMasterTileEntity extends BlockEntity implements ILongRecei
 		RotaryUtil.addRotaryInfo(chat, axleHandler, false);
 	}
 
-	public void initSetup(GearFactory.GearMaterial typ){
+	public void initSetup(CRMaterialLibrary.GearMaterial typ){
 		type = typ;
 		if(!level.isClientSide){
 			newTE = true;
@@ -85,9 +85,9 @@ public class LargeGearMasterTileEntity extends BlockEntity implements ILongRecei
 		inertia = type == null ? 0 : MiscUtil.preciseRound(type.getDensity() * 1.125D * 9D / 8D, 2);//1.125 because r*r/2 so 1.5*1.5/2
 	}
 
-	public GearFactory.GearMaterial getMember(){
+	public CRMaterialLibrary.GearMaterial getMember(){
 		//The first material is returned instead of null to prevent edge case crashes.
-		return type == null ? GearFactory.getDefaultMaterial() : type;
+		return type == null ? CRMaterialLibrary.getDefaultMaterial() : type;
 	}
 
 	private static final AABB RENDER_BOX = new AABB(-1.5, -1.5, -1.5, 2.5, 2.5, 2.5);
@@ -135,7 +135,7 @@ public class LargeGearMasterTileEntity extends BlockEntity implements ILongRecei
 
 		energy = nbt.getDouble("[1]mot");
 		// member
-		type = GearFactory.findMaterial(nbt.getString("type"));
+		type = CRMaterialLibrary.findMaterial(nbt.getString("type"));
 		inertia = type == null ? 0 : MiscUtil.preciseRound(type.getDensity() * 1.125D * 9D / 8D, 3);
 		//1.125 because r*r/2 so 1.5*1.5/2
 
@@ -179,7 +179,7 @@ public class LargeGearMasterTileEntity extends BlockEntity implements ILongRecei
 			angleW[0] = Math.abs(angle - angleW[0]) > 5F ? angle : angleW[0];
 			angleW[1] = Float.intBitsToFloat((int) (message >>> 32L));
 		}else if(identifier == 1){
-			type = GearFactory.GearMaterial.deserialize((int) message);
+			type = CRMaterialLibrary.GearMaterial.deserialize((int) message);
 		}else if(identifier == 2){
 			renderOffset = message == 1;
 		}

@@ -25,8 +25,8 @@ public class HandCrank extends Item{
 	}
 
 	protected HandCrank(String name, Rarity rarity){
-		super(new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1).rarity(rarity));
-		CRItems.toRegister.put(name, this);
+		super(new Properties().stacksTo(1).rarity(rarity));
+		CRItems.queueForRegister(name, this);
 	}
 
 	protected int getRate(){

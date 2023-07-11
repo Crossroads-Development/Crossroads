@@ -213,11 +213,6 @@ public class AlchemyRec implements IOptionalRecipe<Container>{
 	}
 
 	@Override
-	public ItemStack assemble(Container inv){
-		return getResultItem();//Irrelevant
-	}
-
-	@Override
 	public boolean canCraftInDimensions(int width, int height){
 		return true;//Irrelevant
 	}

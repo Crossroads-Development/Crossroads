@@ -6,7 +6,7 @@ import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.blocks.fluid.RotaryPumpTileEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -34,7 +34,7 @@ public class RotaryPumpRenderer implements BlockEntityRenderer<RotaryPumpTileEnt
 		matrix.translate(0.5D, 0, 0.5D);
 		LazyOptional<IAxleHandler> opt = te.getCapability(Capabilities.AXLE_CAPABILITY, null);
 		if(opt.isPresent()){
-			matrix.mulPose(Vector3f.YP.rotationDegrees(opt.orElseThrow(NullPointerException::new).getAngle(partialTicks)));
+			matrix.mulPose(Axis.YP.rotationDegrees(opt.orElseThrow(NullPointerException::new).getAngle(partialTicks)));
 		}
 		CRModels.renderScrew(matrix, buffer, combinedLight);
 		matrix.popPose();

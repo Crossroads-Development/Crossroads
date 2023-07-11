@@ -14,11 +14,11 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.NonNullSupplier;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import javax.annotation.Nonnull;
@@ -134,7 +134,7 @@ public class FluidTubeTileEntity extends BlockEntity implements ITickableTileEnt
 				Direction dir = Direction.from3DDataValue(i);
 				BlockEntity otherTe = level.getBlockEntity(worldPosition.relative(dir));
 				//Update cache
-				if(otherTe != null && (otherOpts[i] = otherTe.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir.getOpposite())).isPresent()){
+				if(otherTe != null && (otherOpts[i] = otherTe.getCapability(ForgeCapabilities.FLUID_HANDLER, dir.getOpposite())).isPresent()){
 					otherHandler = otherOpts[i].orElseThrow(NullPointerException::new);
 				}
 			}
@@ -356,7 +356,7 @@ public class FluidTubeTileEntity extends BlockEntity implements ITickableTileEnt
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction side){
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
+		if(capability == ForgeCapabilities.FLUID_HANDLER){
 			if(side == null){
 				return (LazyOptional<T>) internalOpts[3];//Inner handler
 			}else if(canConnect(side)){
@@ -395,7 +395,7 @@ public class FluidTubeTileEntity extends BlockEntity implements ITickableTileEnt
 		Direction face = Direction.from3DDataValue(side);
 		BlockEntity neighTE = level.getBlockEntity(worldPosition.relative(face));
 		if(neighTE != null){
-			LazyOptional<IFluidHandler> opt = neighTE.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, face.getOpposite());
+			LazyOptional<IFluidHandler> opt = neighTE.getCapability(ForgeCapabilities.FLUID_HANDLER, face.getOpposite());
 			return opt.isPresent();
 		}
 		return false;

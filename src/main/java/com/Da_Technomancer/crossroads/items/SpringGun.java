@@ -3,7 +3,6 @@ package com.Da_Technomancer.crossroads.items;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.blocks.rotary.WindingTableTileEntity;
-import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -23,9 +22,9 @@ public class SpringGun extends ProjectileWeaponItem implements WindingTableTileE
 	private static final double MIN_SPEED = 1;
 
 	protected SpringGun(){
-		super(new Properties().tab(CRItems.TAB_CROSSROADS).stacksTo(1));
+		super(new Properties().stacksTo(1));
 		String name = "spring_gun";
-		CRItems.toRegister.put(name, this);
+		CRItems.queueForRegister(name, this);
 	}
 
 	private float calcDamage(double wind){
@@ -106,15 +105,5 @@ public class SpringGun extends ProjectileWeaponItem implements WindingTableTileE
 	@Override
 	public UseAnim getUseAnimation(ItemStack stack){
 		return UseAnim.CROSSBOW;//Doesn't really have any effect as arm posing is hard coded for crossbows
-	}
-
-	@Override
-	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items){
-		if(allowedIn(group)){
-			items.add(new ItemStack(this, 1));
-			ItemStack stack = new ItemStack(this, 1);
-			setWindLevel(stack, getMaxWind());
-			items.add(stack);
-		}
 	}
 }

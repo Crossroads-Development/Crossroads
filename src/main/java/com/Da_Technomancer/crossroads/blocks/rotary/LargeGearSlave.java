@@ -52,7 +52,7 @@ public class LargeGearSlave extends BaseEntityBlock{
 	public LargeGearSlave(){
 		super(CRBlocks.getMetalProperty());
 		String name = "large_gear_slave";
-		CRBlocks.toRegister.put(name, this);
+		CRBlocks.queueForRegister(name, this, false, null);
 	}
 
 	@Override

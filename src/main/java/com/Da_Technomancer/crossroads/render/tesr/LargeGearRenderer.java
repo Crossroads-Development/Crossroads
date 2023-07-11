@@ -5,7 +5,7 @@ import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.rotary.LargeGearMasterTileEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -32,14 +32,14 @@ public class LargeGearRenderer implements BlockEntityRenderer<LargeGearMasterTil
 		matrix.mulPose(facing.getOpposite().getRotation());
 
 		if(handler.isPresent()){
-			matrix.mulPose(Vector3f.YP.rotationDegrees(handler.orElseThrow(NullPointerException::new).getAngle(partialTicks) * dirMult));
+			matrix.mulPose(Axis.YP.rotationDegrees(handler.orElseThrow(NullPointerException::new).getAngle(partialTicks) * dirMult));
 			matrix.pushPose();
 			matrix.scale(3, 1, 3);
 			CRModels.draw24Gear(matrix, buffer, combinedLight, gear.getMember().getColor());
 			matrix.popPose();
 
 			if(gear.isRenderedOffset()){
-				matrix.mulPose(Vector3f.YP.rotationDegrees(-7.5F));
+				matrix.mulPose(Axis.YP.rotationDegrees(-7.5F));
 			}
 			CRModels.drawAxle(matrix, buffer, combinedLight, gear.getMember().getColor());
 		}

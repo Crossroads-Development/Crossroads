@@ -28,8 +28,7 @@ public class CRProperties extends ESProperties{
 	public static final IntegerProperty SOLID_FULLNESS = IntegerProperty.create("solid_fullness", 0, 3);
 	public static final IntegerProperty POWER_LEVEL_3 = IntegerProperty.create("power_level", 0, 2);//Used for changing visual model on the beam splitter and redstone axis; Beam Splitter: 0 is no signal, 2 for signal >= 15, 1 for signal in (0, 15); Redstone Axis: 0: No signal, 1: Signal > 0, 2: Signal < 0
 	public static final IntegerProperty POWER_LEVEL_4 = IntegerProperty.create("power_level", 0, 3);//Used for changing visual model
-	//TODO rename property to 'power_level' on next MC version jump
-	public static final IntegerProperty POWER_LEVEL_5 = IntegerProperty.create("rate", 0, 4);//Used for changing animation speed on stirling engine; 2: no animation; 3: slow forward; 4: fast forward; 1: slow reverse; 0: fast reverse
+	public static final IntegerProperty POWER_LEVEL_5 = IntegerProperty.create("power_level", 0, 4);//Used for changing animation speed on stirling engine; 2: no animation; 3: slow forward; 4: fast forward; 1: slow reverse; 0: fast reverse
 	public static final IntegerProperty POWER_LEVEL_7 = IntegerProperty.create("power_level", 0, 6);//Used for changing visual model
 
 	//Individual properties for each direction- for blocks with a conduit-like shape

@@ -51,11 +51,6 @@ public class BeamExtractRec implements IOptionalRecipe<Container>{
 	}
 
 	@Override
-	public ItemStack assemble(Container inv){
-		return getResultItem();
-	}
-
-	@Override
 	public boolean isEnabled(){
 		return active;
 	}

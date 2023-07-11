@@ -16,7 +16,7 @@ import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -111,7 +111,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 		AlchemyUtil.releaseChemical(level, worldPosition, contents);
 		contents = new ReagentMap();
 		if(strength > 0){
-			level.explode(null, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), strength, Explosion.BlockInteraction.BREAK);
+			level.explode(null, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), strength, Level.ExplosionInteraction.MOB);
 		}
 	}
 

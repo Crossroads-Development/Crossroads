@@ -7,15 +7,15 @@ import com.Da_Technomancer.crossroads.api.templates.IBeamRenderTE;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.apache.commons.lang3.tuple.Triple;
+import org.joml.Matrix4f;
+import org.joml.Quaternionf;
 
 import java.awt.*;
 
@@ -90,11 +90,11 @@ public class BeamRenderer<T extends BlockEntity & IBeamRenderTE> implements Bloc
 		matrix.translate(0.5, 0.5, 0.5);
 
 		boolean doRotation = CRConfig.rotateBeam.get();
-		Quaternion verticalRot;
+		Quaternionf verticalRot;
 		if(doRotation){
-			verticalRot = Vector3f.YP.rotationDegrees(CRRenderUtil.getRenderTime(partialTicks, beam.getLevel()) * 2F);
+			verticalRot = Axis.YP.rotationDegrees(CRRenderUtil.getRenderTime(partialTicks, beam.getLevel()) * 2F);
 		}else{
-			verticalRot = Vector3f.YP.rotationDegrees(45);//Constant 45 degree angle
+			verticalRot = Axis.YP.rotationDegrees(45);//Constant 45 degree angle
 		}
 		VertexConsumer builder = buffer.getBuffer(CRRenderTypes.BEAM_TYPE);
 

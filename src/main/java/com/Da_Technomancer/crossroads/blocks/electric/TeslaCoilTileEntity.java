@@ -18,8 +18,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
 import javax.annotation.Nonnull;
@@ -109,7 +109,7 @@ public class TeslaCoilTileEntity extends BlockEntity implements ITickableTileEnt
 			Direction facing = getBlockState().getValue(CRProperties.HORIZ_FACING);
 			BlockEntity te = level.getBlockEntity(worldPosition.relative(facing));
 			LazyOptional<IEnergyStorage> energyOpt;
-			if(te != null && (energyOpt = te.getCapability(CapabilityEnergy.ENERGY, facing.getOpposite())).isPresent()){
+			if(te != null && (energyOpt = te.getCapability(ForgeCapabilities.ENERGY, facing.getOpposite())).isPresent()){
 				IEnergyStorage storage = energyOpt.orElseThrow(NullPointerException::new);
 				int moved = storage.receiveEnergy(stored, false);
 				if(moved > 0){
@@ -177,7 +177,7 @@ public class TeslaCoilTileEntity extends BlockEntity implements ITickableTileEnt
 
 	@SuppressWarnings("unchecked")
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
-		if(cap == CapabilityEnergy.ENERGY){
+		if(cap == ForgeCapabilities.ENERGY){
 			return (LazyOptional<T>) (side == level.getBlockState(worldPosition).getValue(CRProperties.HORIZ_FACING) ? optOut : optIn);
 		}
 		return super.getCapability(cap, side);

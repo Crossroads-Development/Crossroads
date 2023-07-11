@@ -15,8 +15,7 @@ public class PermeableQuartz extends Block{
 	public PermeableQuartz(){
 		super(CRBlocks.getRockProperty());
 		String name = "permeable_quartz";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Override

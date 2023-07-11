@@ -41,8 +41,7 @@ public class BrewingVat extends TEBlock implements IReadable{
 	public BrewingVat(){
 		super(CRBlocks.getMetalProperty());
 		String name = "brewing_vat";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 		registerDefaultState(defaultBlockState().setValue(CRProperties.POWER_LEVEL_4, 0).setValue(CRProperties.SLOT_FILLED[0], false).setValue(CRProperties.SLOT_FILLED[1], false).setValue(CRProperties.SLOT_FILLED[2], false));
 	}
 

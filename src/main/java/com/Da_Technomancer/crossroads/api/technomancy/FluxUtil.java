@@ -12,7 +12,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.apache.commons.lang3.tuple.Pair;
@@ -177,7 +176,7 @@ public class FluxUtil{
 			if(selector < 50){
 				//Explode
 				//Equivalent to charged creeper explosion
-				worldIn.explode(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, 5, CRConfig.entropyDropBlock.get() ? Explosion.BlockInteraction.BREAK : Explosion.BlockInteraction.DESTROY);
+				worldIn.explode(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, 5, CRConfig.entropyDropBlock.get() ? Level.ExplosionInteraction.TNT : Level.ExplosionInteraction.MOB);
 			}else if(selector < 65){
 				//Alchemy phelostogen/voltus/salt cloud
 				ReagentMap map = new ReagentMap();
@@ -201,7 +200,7 @@ public class FluxUtil{
 		}else{
 			//small explode (everything else disabled in config)
 			//equivalent to TNT explosion
-			worldIn.explode(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, 4, Explosion.BlockInteraction.BREAK);
+			worldIn.explode(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, 4, Level.ExplosionInteraction.TNT);
 		}
 	}
 }

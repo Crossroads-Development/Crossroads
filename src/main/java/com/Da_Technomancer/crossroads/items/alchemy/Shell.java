@@ -51,7 +51,7 @@ public class Shell extends AbstractGlassware{
 	public Shell(boolean crystal){
 		super(GlasswareTypes.SHELL, crystal);
 		String name = "shell_" + (crystal ? "cryst" : "glass");
-		CRItems.toRegister.put(name, this);
+		CRItems.queueForRegister(name, this);
 		DispenserBlock.registerBehavior(this, SHELL_DISPENSER_BEHAVIOR);
 	}
 

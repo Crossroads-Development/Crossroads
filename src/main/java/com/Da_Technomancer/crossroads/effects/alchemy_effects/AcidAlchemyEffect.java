@@ -4,14 +4,13 @@ import com.Da_Technomancer.crossroads.api.alchemy.EnumMatterPhase;
 import com.Da_Technomancer.crossroads.api.alchemy.IAlchEffect;
 import com.Da_Technomancer.crossroads.api.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
+import com.Da_Technomancer.crossroads.entity.CRMobDamage;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.Da_Technomancer.crossroads.items.item_sets.OreSetup;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.Containers;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -25,8 +24,6 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class AcidAlchemyEffect implements IAlchEffect{
-
-	public static final DamageSource ACID_DAMAGE = new DamageSource("chemical");
 
 	private static final TagKey<Block> copperBlock = CraftingUtil.getTagKey(ForgeRegistries.Keys.BLOCKS, new ResourceLocation("forge", "storage_blocks/copper"));
 	private static final TagKey<Block> tinBlock = CraftingUtil.getTagKey(ForgeRegistries.Keys.BLOCKS, new ResourceLocation("forge", "storage_blocks/tin"));
@@ -43,7 +40,7 @@ public class AcidAlchemyEffect implements IAlchEffect{
 	@Override
 	public void doEffect(Level world, BlockPos pos, int amount, EnumMatterPhase phase, ReagentMap reags){
 		for(LivingEntity e : world.getEntitiesOfClass(LivingEntity.class, new AABB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1F, pos.getY() + 1F, pos.getZ() + 1F), EntitySelector.ENTITY_STILL_ALIVE)){
-			e.hurt(ACID_DAMAGE, getDamage());
+			e.hurt(CRMobDamage.damageSource(CRMobDamage.CHEMICAL, world), getDamage());
 		}
 
 		BlockState state = world.getBlockState(pos);
@@ -77,12 +74,12 @@ public class AcidAlchemyEffect implements IAlchEffect{
 			return;
 		}
 		if(CraftingUtil.tagContains(tinBlock, block)){
-			Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(OreSetup.ingotTin, world.random.nextInt(9) + 1));
+			Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(CRItems.ingotTin, world.random.nextInt(9) + 1));
 			world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
 			return;
 		}
 		if(CraftingUtil.tagContains(bronzeBlock, block)){
-			Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(OreSetup.ingotBronze, world.random.nextInt(9) + 1));
+			Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(CRItems.ingotBronze, world.random.nextInt(9) + 1));
 			world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
 		}
 	}

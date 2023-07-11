@@ -34,8 +34,7 @@ public class DetailedCrafter extends Block{
 	public DetailedCrafter(){
 		super(CRBlocks.getMetalProperty());
 		String name = "detailed_crafter";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Override

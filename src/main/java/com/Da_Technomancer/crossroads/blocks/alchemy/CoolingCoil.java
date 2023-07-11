@@ -37,8 +37,7 @@ public class CoolingCoil extends BaseEntityBlock{
 		super(CRBlocks.getGlassProperty().noOcclusion());
 		this.crystal = crystal;
 		String name = (crystal ? "crystal_" : "") + "cooling_coil";
-		CRBlocks.toRegister.put(name, this);
-		CRBlocks.blockAddQue(name, this);
+		CRBlocks.queueForRegister(name, this);
 	}
 
 	@Override
