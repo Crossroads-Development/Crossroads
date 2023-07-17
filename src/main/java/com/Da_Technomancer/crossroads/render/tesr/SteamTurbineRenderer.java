@@ -7,7 +7,6 @@ import com.Da_Technomancer.crossroads.blocks.rotary.SteamTurbineTileEntity;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Quaternion;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -42,7 +41,7 @@ public class SteamTurbineRenderer implements BlockEntityRenderer<SteamTurbineTil
 		int bladeCount = 8;
 		for(int i = 0; i < bladeCount; i++){
 			matrix.pushPose();
-			matrix.mulPose(Vector3f.YP.rotationDegrees(i * 360F / bladeCount));
+			matrix.mulPose(Axis.YP.rotationDegrees(i * 360F / bladeCount));
 			matrix.scale(0.6F, 1, 1.4F);
 			CRModels.drawTurbineBlade(vb, matrix, -0.32F, combinedLight, sprite);
 			matrix.popPose();

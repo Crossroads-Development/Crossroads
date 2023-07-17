@@ -1,21 +1,21 @@
 package com.Da_Technomancer.crossroads.render.tesr;
 
+import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
 import com.Da_Technomancer.crossroads.api.Capabilities;
 import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.blocks.fluid.RotaryPumpTileEntity;
-import com.Da_Technomancer.crossroads.items.item_sets.GearFactory;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import com.mojang.math.Quaternion;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraftforge.common.util.LazyOptional;
+import org.joml.Quaternionf;
 
 import java.awt.*;
 
@@ -41,7 +41,7 @@ public class RotaryPumpRenderer implements BlockEntityRenderer<RotaryPumpTileEnt
 				matrix.mulPose(Axis.YP.rotationDegrees((1F - 2F * i) * opt.orElseThrow(NullPointerException::new).getAngle(partialTicks)));
 			}
 			//Draw central axle
-			CRModels.drawAxle(matrix, buffer, combinedLight, GearFactory.findMaterial("iron").getColor());
+			CRModels.drawAxle(matrix, buffer, combinedLight, CRMaterialLibrary.findMaterial("iron").getColor());
 
 			//Draw screw threads
 			matrix.scale(screwScale, screwScale, screwScale);
@@ -49,8 +49,8 @@ public class RotaryPumpRenderer implements BlockEntityRenderer<RotaryPumpTileEnt
 
 			VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 
-			Quaternion rotation = Axis.YP.rotationDegrees(90 * (2F*i - 1F));
-			Quaternion rotationToReverseStupidHardCodedBladeAngle = null;
+			Quaternionf rotation = Axis.YP.rotationDegrees(90 * (2F*i - 1F));
+			Quaternionf rotationToReverseStupidHardCodedBladeAngle = null;
 			if(i == 1){
 				rotationToReverseStupidHardCodedBladeAngle = Axis.ZP.rotation((float) Math.atan(1F / 3F));
 			}
