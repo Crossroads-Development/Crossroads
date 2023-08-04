@@ -1,0 +1,7 @@
+{
+	"replace": false,
+	"values": [
+		"minecraft:lightning_rod",
+		"crossroads:lightning_rod_extension"
+	]
+}
