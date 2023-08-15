@@ -61,7 +61,7 @@ public class MechanismToggleGear extends MechanismSmallGear{
 		}
 
 		//If true, this has already been checked.
-		if(key == handler.getRotationRatio()){
+		if(key == handler.getUpdateKey()){
 			//If true, there is rotation conflict.
 			if(handler.getRotationRatio() != rotRatioIn){
 				masterIn.lock();
