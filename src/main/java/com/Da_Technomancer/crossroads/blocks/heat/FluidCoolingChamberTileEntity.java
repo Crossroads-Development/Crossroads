@@ -113,7 +113,7 @@ public class FluidCoolingChamberTileEntity extends InventoryTE{
 		}else{
 			rec = getRecipe();
 		}
-		if(rec != null){
+		if(rec != null && inventory[0].getCount() + rec.getResultItem().getCount() <= rec.getResultItem().getMaxStackSize()){
 			totalHeat = rec.getAddedHeat();
 			maxRecipeTemp = rec.getMaxTemp();
 			setChanged();
