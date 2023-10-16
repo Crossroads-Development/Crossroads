@@ -92,10 +92,11 @@ dependencies {
 	minecraft("net.minecraftforge:forge:$mc_version-$fg_version")
 
 	//Compile against APIs
-	compileOnly(fg.deobf("mezz.jei:jei-$jei_mc_version:$jei_version:api"))//JEI
+	compileOnly(fg.deobf("mezz.jei:jei-$jei_mc_version-common-api:$jei_version"))//JEI
+	compileOnly(fg.deobf("mezz.jei:jei-$jei_mc_version-forge-api:$jei_version"))//JEI
 	compileOnly(fg.deobf("top.theillusivec4.curios:curios-forge:$curios_version:api"))//Curios
 	//Run with the full versions
-	runtimeOnly(fg.deobf("mezz.jei:jei-$jei_mc_version:$jei_version"))//JEI
+	runtimeOnly(fg.deobf("mezz.jei:jei-$jei_mc_version-forge:$jei_version"))//JEI
 	runtimeOnly(fg.deobf("top.theillusivec4.curios:curios-forge:$curios_version"))//Curios
 
 	compileOnly(fg.deobf("vazkii.patchouli:Patchouli:$patchouli_version"))

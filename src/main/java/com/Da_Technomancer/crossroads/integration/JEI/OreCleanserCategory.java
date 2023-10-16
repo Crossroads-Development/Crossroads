@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.tileentities.fluid.OreCleanserTileEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
+import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
@@ -83,8 +84,8 @@ public class OreCleanserCategory implements IRecipeCategory<OreCleanserRec>{
 	@Override
 	public void setRecipe(IRecipeLayoutBuilder builder, OreCleanserRec recipe, IFocusGroup focuses){
 		builder.addSlot(RecipeIngredientRole.INPUT, 55, 51).addIngredients(recipe.getIngredient());
-		builder.addSlot(RecipeIngredientRole.INPUT, 35, 31).addIngredient(VanillaTypes.FLUID, new FluidStack(CRFluids.steam.still, OreCleanserTileEntity.WATER_USE)).setFluidRenderer(1000, true, 16, 64).setOverlay(fluidOverlay, 0, 0);
+		builder.addSlot(RecipeIngredientRole.INPUT, 35, 31).addIngredient(ForgeTypes.FLUID_STACK, new FluidStack(CRFluids.steam.still, OreCleanserTileEntity.WATER_USE)).setFluidRenderer(1000L, true, 16, 64).setOverlay(fluidOverlay, 0, 0);
 		builder.addSlot(RecipeIngredientRole.OUTPUT, 111, 51).addItemStack(recipe.getResultItem());
-		builder.addSlot(RecipeIngredientRole.OUTPUT, 131, 31).addIngredient(VanillaTypes.FLUID, new FluidStack(CRFluids.dirtyWater.still, OreCleanserTileEntity.WATER_USE)).setFluidRenderer(1000, true, 16, 64).setOverlay(fluidOverlay, 0, 0);
+		builder.addSlot(RecipeIngredientRole.OUTPUT, 131, 31).addIngredient(ForgeTypes.FLUID_STACK, new FluidStack(CRFluids.dirtyWater.still, OreCleanserTileEntity.WATER_USE)).setFluidRenderer(1000L, true, 16, 64).setOverlay(fluidOverlay, 0, 0);
 	}
 }
