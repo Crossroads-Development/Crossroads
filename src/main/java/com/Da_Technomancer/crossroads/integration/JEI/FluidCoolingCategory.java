@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.recipes.FluidCoolingRec;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
+import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
@@ -76,7 +77,7 @@ public class FluidCoolingCategory implements IRecipeCategory<FluidCoolingRec>{
 
 	@Override
 	public void setRecipe(IRecipeLayoutBuilder builder, FluidCoolingRec recipe, IFocusGroup focuses){
-		builder.addSlot(RecipeIngredientRole.INPUT, 51, 31).addIngredients(VanillaTypes.FLUID, recipe.getInput().getMatchedFluidStacks(recipe.getInputQty())).setFluidRenderer(1000, true, 16, 64).setOverlay(fluidOverlay, 0, 0);
+		builder.addSlot(RecipeIngredientRole.INPUT, 51, 31).addIngredients(ForgeTypes.FLUID_STACK, recipe.getInput().getMatchedFluidStacks(recipe.getInputQty())).setFluidRenderer(1000L, true, 16, 64).setOverlay(fluidOverlay, 0, 0);
 		builder.addSlot(RecipeIngredientRole.OUTPUT, 111, 56).addItemStack(recipe.getResultItem());
 	}
 

@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.crafting.recipes.CrucibleRec;
 import com.Da_Technomancer.crossroads.tileentities.heat.HeatingCrucibleTileEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
+import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
@@ -78,7 +79,7 @@ public class HeatingCrucibleCategory implements IRecipeCategory<CrucibleRec>{
 	@Override
 	public void setRecipe(IRecipeLayoutBuilder builder, CrucibleRec recipe, IFocusGroup focuses){
 		builder.addSlot(RecipeIngredientRole.INPUT, 41, 51).addIngredients(recipe.getIngredient());
-		builder.addSlot(RecipeIngredientRole.OUTPUT, 91, 31).addIngredient(VanillaTypes.FLUID, recipe.getOutput()).setFluidRenderer(2000, true, 16, 64).setOverlay(fluidOverlay, 0, 0);
+		builder.addSlot(RecipeIngredientRole.OUTPUT, 91, 31).addIngredient(ForgeTypes.FLUID_STACK, recipe.getOutput()).setFluidRenderer(2000L, true, 16, 64).setOverlay(fluidOverlay, 0, 0);
 	}
 
 	@Override

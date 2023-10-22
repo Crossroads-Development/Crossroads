@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.crafting.recipes.BlastFurnaceRec;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
+import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
@@ -79,7 +80,7 @@ public class BlastFurnaceCategory implements IRecipeCategory<BlastFurnaceRec>{
 	public void setRecipe(IRecipeLayoutBuilder builder, BlastFurnaceRec recipe, IFocusGroup focuses){
 		builder.addSlot(RecipeIngredientRole.INPUT, 55, 56).addIngredients(recipe.getIngredient());
 		builder.addSlot(RecipeIngredientRole.OUTPUT, 131, 56).addItemStack(new ItemStack(CRItems.slag, recipe.getSlag()));
-		builder.addSlot(RecipeIngredientRole.OUTPUT, 111, 23).addIngredient(VanillaTypes.FLUID, recipe.getOutput()).setFluidRenderer(1000, true, 16, 64).setOverlay(fluidOverlay, 0, 0);
+		builder.addSlot(RecipeIngredientRole.OUTPUT, 111, 23).addIngredient(ForgeTypes.FLUID_STACK, recipe.getOutput()).setFluidRenderer(1000L, true, 16, 64).setOverlay(fluidOverlay, 0, 0);
 	}
 
 	@Override
