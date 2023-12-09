@@ -1,6 +1,8 @@
 package com.Da_Technomancer.crossroads.blocks.witchcraft;
 
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.api.witchcraft.IPerishable;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -51,7 +53,7 @@ public class IncubatorTileEntity extends InventoryTE{
 	@Override
 	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
 		double target = getTargetTemp();
-		chat.add(Component.translatable("tt.crossroads.boilerplate.progress", progress, REQUIRED));
+		chat.add(Component.translatable("tt.crossroads.boilerplate.progress", CRConfig.formatVal(progress), REQUIRED));
 		chat.add(Component.translatable("tt.crossroads.incubator.target", target, target - MARGIN, target + MARGIN));
 		super.addInfo(chat, player, hit);
 	}
@@ -114,7 +116,7 @@ public class IncubatorTileEntity extends InventoryTE{
 						progress = 0;
 						targetTemp = 0;//Reset the target temp, to be re-randomized
 						if(inventory[2].isEmpty()){
-							inventory[2] = toCreate.copy();
+							inventory[2] = toCreate;
 						}else{
 							inventory[2].grow(toCreate.getCount());
 						}

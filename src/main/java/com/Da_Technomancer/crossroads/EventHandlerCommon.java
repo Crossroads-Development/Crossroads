@@ -489,6 +489,11 @@ public class EventHandlerCommon{
 			return;
 		}
 
+		if(e.getExplosion().getExploder() instanceof Creeper creeper){
+			//Creeper explosions don't trigger a death event; we catch them this way
+			EntityTemplate.handleEntityDeath(creeper);
+		}
+
 		world.getProfiler().push(Crossroads.MODNAME + ": Explosion modification");
 //		Map<UUID, Entity> entities;
 //		try{
@@ -600,20 +605,8 @@ public class EventHandlerCommon{
 	@SubscribeEvent()
 	@SuppressWarnings("unused")
 	public void trackDeaths(LivingDeathEvent e){
-		//For genetically modified mobs with respawning, if they died without the respawn marker effect, create a ghost marker to respawn them
-		LivingEntity entity = e.getEntity();
-		EntityTemplate template;
-		if(!entity.level().isClientSide && (template = EntityTemplate.getTemplateFromEntity(entity)).isRespawning()){
-			int delay = CRConfig.respawnDelay.get();
-			delay *= 20;//Convert from seconds to ticks
-			//Ensure it doesn't have the marker effect and this is enabled in config
-			//Or, if non-viable (max health less than or equal to 0), don't let it respawn
-			if(!entity.hasEffect(EntityTemplate.getRespawnMarkerEffect()) && delay > 0 && !e.getSource().is(CRMobDamage.NON_VIABLE)){
-				EntityGhostMarker marker = new EntityGhostMarker(entity.level(), EntityGhostMarker.EnumMarkerType.RESPAWNING, delay);
-				marker.setPos(entity.getX(), entity.getY(), entity.getZ());
-				marker.data = template.serializeNBT();
-				entity.level().addFreshEntity(marker);
-			}
+		if(!e.getSource().is(CRMobDamage.NON_VIABLE)){//if non-viable (max health less than or equal to 0), don't let it respawn
+			EntityTemplate.handleEntityDeath(e.getEntity());
 		}
 	}
 

@@ -55,13 +55,13 @@ public class IncubatorRec implements IOptionalRecipe<Container>{
 
 	/**
 	 * Use this instead of getResultItem
-	 * DO NOT MODIFY THE RETURNED ITEMSTACK
+	 * It is safe to modify the returned itemstack
 	 * @param inv Container with the ingredient item in slot 0
 	 * @param worldIn World
 	 * @return The created itemstack
 	 */
 	public ItemStack getCreatedItem(Container inv, Level worldIn){
-		ItemStack created = getResultItem();
+		ItemStack created = getResultItem().copy();
 		if(datacopy){
 			try{
 				CRItems.geneticSpawnEgg.withEntityTypeData(created, CRItems.embryo.getEntityTypeData(inv.getItem(0)));

@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.api.CRReflection;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.entity.EntityGhostMarker;
 import com.Da_Technomancer.crossroads.entity.mob_effects.CRPotions;
 import com.Da_Technomancer.essentials.api.ReflectionUtil;
 import com.mojang.authlib.GameProfile;
@@ -431,5 +432,20 @@ public class EntityTemplate implements INBTSerializable<CompoundTag>{
 		}
 		List<? extends String> blacklist = CRConfig.cloningBlacklist.get();
 		return blacklist.stream().noneMatch(entry -> new ResourceLocation(entry).equals(entityName));
+	}
+
+	public static void handleEntityDeath(LivingEntity entity){
+		//For genetically modified mobs with respawning, if they died without the respawn marker effect, create a ghost marker to respawn them
+		EntityTemplate template;
+		if(!entity.level().isClientSide && (template = EntityTemplate.getTemplateFromEntity(entity)).isRespawning()){
+			int delay = CRConfig.respawnDelay.get() * 20;//Convert from seconds to ticks
+			//Ensure it doesn't have the marker effect and this is enabled in config
+			if(!entity.hasEffect(EntityTemplate.getRespawnMarkerEffect()) && delay > 0){
+				EntityGhostMarker marker = new EntityGhostMarker(entity.level(), EntityGhostMarker.EnumMarkerType.RESPAWNING, delay);
+				marker.setPos(entity.getX(), entity.getY(), entity.getZ());
+				marker.data = template.serializeNBT();
+				entity.level().addFreshEntity(marker);
+			}
+		}
 	}
 }

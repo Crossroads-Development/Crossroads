@@ -208,13 +208,13 @@ public abstract class BeamRenderTE extends BlockEntity implements IBeamRenderTE,
 	public void setRemoved(){
 		super.setRemoved();
 		lazyOptional.invalidate();
-		if(beamer != null && level != null){
-			for(BeamHelper manager : beamer){
-				if(manager != null){
-					manager.emit(BeamUnit.EMPTY, level);
-				}
-			}
-		}
+//		if(beamer != null && level != null){
+//			for(BeamHelper manager : beamer){
+//				if(manager != null){
+//					manager.emit(BeamUnit.EMPTY, level);
+//				}
+//			}
+//		}
 	}
 
 //	protected final BeamHandler handler = new BeamHandler();
