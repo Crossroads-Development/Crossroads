@@ -245,7 +245,7 @@
 	"block.crossroads.redstone_crystal": "Crystallized Redstone",
 	"item.crossroads.sigil_alchemy": "Alchemy Sigil",
 	"item.crossroads.sigil_technomancy": "Technomancy Sigil",
-	"item.crossroads.sigil_witchcraft": "Witchcraft Sigil",
+	"item.crossroads.sigil_Bioengineering": "Bioengineering Sigil",
 	"block.crossroads.detailed_auto_crafter": "Detailed Auto-Crafter",
 	"block.crossroads.lodestone_turbine": "Lodestone Turbine",
 	"block.crossroads.lodestone_dynamo": "Lodestone Dynamo",
@@ -617,7 +617,7 @@
 	"tt.crossroads.clutch.redstone": "Circuits read speed",
 	"tt.crossroads.element_discover": "New Element Discovered: %1$s",
 	"tt.crossroads.element_discover.undo": "Element Forgotten: %1$s",
-	"tt.crossroads.detailed_crafter.desc": "Allows unlocking and crafting Alchemy, Technomancy, and Witchcraft recipes",
+	"tt.crossroads.detailed_crafter.desc": "Allows unlocking and crafting Alchemy, Technomancy, and Bioengineering recipes",
 	"tt.crossroads.bobo_rod.desc": "Creates bizarre and powerful Bobo Items",
 	"tt.crossroads.bobo_rod.use": "Use on 3 dropped ingredients and an offering to craft",
 	"tt.crossroads.bobo_rod.quip": "A gift of the Derpy One",
@@ -1044,7 +1044,7 @@
 
 	"path.technomancy": "Technomancy",
 	"path.alchemy": "Alchemy",
-	"path.witchcraft": "Witchcraft",
+	"path.Bioengineering": "Bioengineering",
 
 
 	"death.attack.drill": "%1$s had a terrible dentist",
@@ -1124,8 +1124,8 @@
 	"crossroads.advancement.path.technomancy.desc": "The path about time manipulation",
 	"crossroads.advancement.path.alchemy": "Alchemy",
 	"crossroads.advancement.path.alchemy.desc": "The path about transmutation",
-	"crossroads.advancement.path.witchcraft": "Witchcraft",
-	"crossroads.advancement.path.witchcraft.desc": "The path about life and death",
+	"crossroads.advancement.path.Bioengineering": "Bioengineering",
+	"crossroads.advancement.path.Bioengineering.desc": "The path about life and death",
 	"crossroads.advancement.align.charge.desc": "Discover the beam alignment: Charge",
 	"crossroads.advancement.align.enchantment.desc": "Discover the beam alignment: Enchantment",
 	"crossroads.advancement.align.energy.desc": "Discover the primary beam alignment: Energy",

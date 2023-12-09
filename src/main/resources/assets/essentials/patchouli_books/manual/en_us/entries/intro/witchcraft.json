@@ -1,6 +1,6 @@
 {
 	"category": "essentials:intro",
-	"name": "Intro to Witchcraft",
+	"name": "Intro to Bioengineering",
 	"icon": "crossroads:syringe{extension_treated:true}",
 	"sortnum": 6,
 	"priority": true,
@@ -9,13 +9,13 @@
 	"pages": [
 		{
 			"type": "patchouli:spotlight",
-			"title": "Intro to Witchcraft",
+			"title": "Intro to Bioengineering",
 			"item": "crossroads:syringe{extension_treated:true}",
-			"text": "Witchcraft is the simplest path. It doesn't introduce any new energy systems, overarching mechanics, or have any particularly dangerous or risky features. Most features revolve around mobs, potions, or plants in some way.$(br2)The largest system in Witchcraft is "
+			"text": "Bioengineering is the simplest path. It doesn't introduce any new energy systems, overarching mechanics, or have any particularly dangerous or risky features. Most features revolve around mobs, potions, or plants in some way.$(br2)The largest system in Bioengineering "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<thing>$(l:essentials:witchcraft/cloning)cloning/$, which has many applications.$(br2)Other highlights include the <item>$(l:essentials:witchcraft/hydroponics_trough)hydroponics trough/$, for mass-producing plants, and new <thing>$(l:essentials:witchcraft/medicinal_mushroom)potions effects and recipes/$.$(br2)There's no set or recommended order for using Witchcraft. Pick whatever looks interesting and try it out!$(br2)"
+			"text": "is <thing>$(l:essentials:witchcraft/cloning)cloning/$, which has many applications.$(br2)Other highlights include the <item>$(l:essentials:witchcraft/hydroponics_trough)hydroponics trough/$, for mass-producing plants, and new <thing>$(l:essentials:witchcraft/medicinal_mushroom)potions effects and recipes/$.$(br2)There's no set or recommended order for using Bioengineering. Pick whatever looks interesting and try it out!$(br2)"
 		}
 	],
 	"extra_recipe_mappings": {
