@@ -10,6 +10,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.List;
 
 public abstract class GearMatItem extends OreProfileItem{
@@ -47,5 +48,17 @@ public abstract class GearMatItem extends OreProfileItem{
 		if(mat != null){
 			tooltip.add(Component.translatable("tt.crossroads.boilerplate.inertia", MathUtil.preciseRound(mat.getDensity() * shapeFactor(), 3)));
 		}
+	}
+
+	@Override
+	public ItemStack[] populateCreativeTab(){
+		//Add every material variant of this item
+		Collection<CRMaterialLibrary.GearMaterial> profiles = CRMaterialLibrary.getMaterials();
+		ItemStack[] stacks = new ItemStack[profiles.size()];
+		int i = 0;
+		for(CRMaterialLibrary.GearMaterial mat : profiles){
+			stacks[i++] = withMaterial(mat, 1);
+		}
+		return stacks;
 	}
 }

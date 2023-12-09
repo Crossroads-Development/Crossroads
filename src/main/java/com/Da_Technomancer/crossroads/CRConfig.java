@@ -123,6 +123,7 @@ public class CRConfig{
 	public static ForgeConfigSpec.DoubleValue medicinalMushroomSpread;
 	public static ForgeConfigSpec.BooleanValue beamTransparent;
 	public static ForgeConfigSpec.BooleanValue readoutChat;
+	public static ForgeConfigSpec.BooleanValue permanentPotionParticles;
 
 	private static final TagKey<Block> destroyBlacklist = CraftingUtil.getTagKey(ForgeRegistries.Keys.BLOCKS, new ResourceLocation(Crossroads.MODID, "destroy_blacklist"));
 
@@ -254,6 +255,7 @@ public class CRConfig{
 		cloningBlacklist = serverBuilder.comment("Specify entities which can not be cloned. Players can never be cloned", "Format of 'domain:entity_id', ex. minecraft:pig").defineList("cloning_blacklist", Lists.newArrayList("minecraft:player", "minecraft:wither", "minecraft:ender_dragon"), (Object entry) -> entry instanceof String);
 		permanentEffectBlacklist = serverBuilder.comment("Specify potion effects that can not be applied permanently to an entity or player", "Format of 'domain:potion_effect_id', ex. minecraft:health_boost").defineList("permanent_effect_blacklist", Lists.newArrayList("minecraft:health_boost", "minecraft:glowing"), (Object entry) -> entry instanceof String);
 		limitPermanentPotionStrength = serverBuilder.comment("Limit the strength of permanent potion effects to level 1", "Applies to both injected potions and clones. Does not affect genetic strain").define("permanent_effect_limit", true);
+		permanentPotionParticles = serverBuilder.comment("Whether to show particles for permanent potion effects").define("permanent_potion_particles", false);
 		maximumBloodLinkerPower = serverBuilder.comment("Maximum beam power transmitted with the hemic entanglement chamber", "Set to 0 to effectively disable").defineInRange("blood_linker_Limit", 1, 0, 64);
 		injectionEfficiency = serverBuilder.comment("The duration of injected potions vs drinking them", "Setting to 1 or below makes injection equivalent to normal potions").defineInRange("injection_efficiency", 2F, 1F, 100F);
 		injectionPermaPenalty = serverBuilder.comment("The permanent maximum health reduction for each injected permanent potion effect", "Set to 0 or lower to disable the penalty", "Set to 20 or higher to effectively disable permanent injection for players").defineInRange("injection_perma_penalty", 2, 0, 100);

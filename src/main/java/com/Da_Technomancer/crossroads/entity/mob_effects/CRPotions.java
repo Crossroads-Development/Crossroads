@@ -140,7 +140,7 @@ public class CRPotions{
 			boolean limitPower = toApply.getEffect() != CRPotions.HEALTH_PENALTY_EFFECT && CRConfig.limitPermanentPotionStrength.get();
 
 			//'Permanent' is actually maximum duration, which is ~3.4 years ingame
-			target.addEffect(new MobEffectInstance(toApply.getEffect(), Integer.MAX_VALUE, limitPower ? Math.min(toApply.getAmplifier(), 0) : toApply.getAmplifier(), toApply.isAmbient(), toApply.isVisible(), toApply.showIcon()));
+			target.addEffect(new MobEffectInstance(toApply.getEffect(), Integer.MAX_VALUE, limitPower ? Math.min(toApply.getAmplifier(), 0) : toApply.getAmplifier(), toApply.isAmbient(), CRConfig.permanentPotionParticles.get() && toApply.isVisible(), toApply.showIcon()));
 			return true;
 		}
 		return false;

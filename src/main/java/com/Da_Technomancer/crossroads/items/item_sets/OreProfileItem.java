@@ -76,7 +76,7 @@ public class OreProfileItem extends Item implements ICreativeTabPopulatingItem{
 		Collection<CRMaterialLibrary.OreProfile> profiles = CRMaterialLibrary.getProfiles();
 		ItemStack[] stacks = new ItemStack[profiles.size()];
 		int i = 0;
-		for(CRMaterialLibrary.OreProfile mat : CRMaterialLibrary.getProfiles()){
+		for(CRMaterialLibrary.OreProfile mat : profiles){
 			stacks[i++] = withMaterial(mat, 1);
 		}
 		return stacks;
