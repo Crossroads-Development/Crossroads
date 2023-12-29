@@ -70,7 +70,7 @@ public class Whirligig extends Item implements WindingTableTileEntity.IWindableI
 		return InteractionResultHolder.fail(held);
 	}
 
-	private static final String murderEasterEgg = "dinidini";
+	private static final String murderEasterEgg = "Talcosa";
 
 	@Override
 	public void onUseTick(Level world, LivingEntity player, ItemStack stack, int count){
