@@ -42,7 +42,7 @@ public class WindTurbineTileEntity extends ModuleTE{
 
 	//Undocumented 'easter egg'. This person takes way more damage from windmills
 	//Don't ask.
-	private static final String murderEasterEgg = "dinidini";
+	private static final String murderEasterEgg = "Talcosa";
 
 	private boolean newlyPlaced = true;
 	private boolean running = false;
