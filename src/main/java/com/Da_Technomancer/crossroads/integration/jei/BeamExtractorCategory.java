@@ -4,7 +4,6 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.BeamExtractRec;
-import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -15,6 +14,7 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -58,7 +58,7 @@ public class BeamExtractorCategory implements IRecipeCategory<BeamExtractRec>{
 	}
 
 	@Override
-	public void draw(BeamExtractRec rec, IRecipeSlotsView view, PoseStack matrix, double mouseX, double mouseY){
+	public void draw(BeamExtractRec rec, IRecipeSlotsView view, GuiGraphics matrix, double mouseX, double mouseY){
 		slot.draw(matrix, 20, 50);
 		arrowStatic.draw(matrix, 46, 50);
 
@@ -92,7 +92,7 @@ public class BeamExtractorCategory implements IRecipeCategory<BeamExtractRec>{
 			tt.add(MiscUtil.localize("crossroads.jei.extract.duration.plural", rec.getDuration()));//Duration
 		}
 		for(int i = 0; i < tt.size(); i++){
-			minecraft.font.draw(matrix, tt.get(i), 74, 5 + 20 * i, 0x404040);
+			matrix.drawString(minecraft.font, tt.get(i), 74, 5 + 20 * i, 0x404040, false);
 		}
 	}
 

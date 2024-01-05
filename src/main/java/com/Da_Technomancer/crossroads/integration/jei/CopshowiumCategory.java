@@ -5,7 +5,6 @@ import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.CopshowiumRec;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
-import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -19,6 +18,7 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -57,9 +57,9 @@ public class CopshowiumCategory implements IRecipeCategory<CopshowiumRec>{
 	}
 
 	@Override
-	public void draw(CopshowiumRec rec, IRecipeSlotsView view, PoseStack matrix, double mouseX, double mouseY){
+	public void draw(CopshowiumRec rec, IRecipeSlotsView view, GuiGraphics matrix, double mouseX, double mouseY){
 		if(rec.isFlux()){
-			Minecraft.getInstance().font.draw(matrix, MiscUtil.localize("crossroads.jei.copshowium.flux"), 10, 10, 4210752);
+			matrix.drawString(Minecraft.getInstance().font, MiscUtil.localize("crossroads.jei.copshowium.flux"), 10, 10, 4210752, false);
 		}
 		arrowStatic.draw(matrix, 75, 56);
 		arrow.draw(matrix, 75, 56);

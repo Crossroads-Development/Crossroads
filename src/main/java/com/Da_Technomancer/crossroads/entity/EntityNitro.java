@@ -40,12 +40,12 @@ public class EntityNitro extends ThrowableProjectile implements ItemSupplier{
 
 	@Override
 	protected void onHit(HitResult result){
-		if(!level.isClientSide){
+		if(!level().isClientSide){
 			Vec3 vec = result.getLocation();
-			level.explode(null, vec.x, vec.y, vec.z, 5F, Level.ExplosionInteraction.TNT);
-			level.playSound(null, getX(), getY(), getZ(), SoundEvents.GLASS_BREAK, SoundSource.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
-			level.playSound(null, getX(), getY(), getZ(), SoundEvents.GENERIC_EXPLODE, SoundSource.NEUTRAL, 1F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
-			level.broadcastEntityEvent(this, (byte) 3);
+			level().explode(null, vec.x, vec.y, vec.z, 5F, Level.ExplosionInteraction.TNT);
+			level().playSound(null, getX(), getY(), getZ(), SoundEvents.GLASS_BREAK, SoundSource.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
+			level().playSound(null, getX(), getY(), getZ(), SoundEvents.GENERIC_EXPLODE, SoundSource.NEUTRAL, 1F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
+			level().broadcastEntityEvent(this, (byte) 3);
 			remove(RemovalReason.KILLED);
 		}
 	}

@@ -5,7 +5,6 @@ import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.BlastFurnaceRec;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -19,6 +18,7 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -58,12 +58,12 @@ public class BlastFurnaceCategory implements IRecipeCategory<BlastFurnaceRec>{
 	}
 
 	@Override
-	public void draw(BlastFurnaceRec recipe, IRecipeSlotsView view, PoseStack matrix, double mouseX, double mouseY){
+	public void draw(BlastFurnaceRec recipe, IRecipeSlotsView view, GuiGraphics matrix, double mouseX, double mouseY){
 		slot.draw(matrix, 54, 55);//Input
 		slot.draw(matrix, 130, 55);//Slag
 		arrowStatic.draw(matrix, 78, 55);
 		arrow.draw(matrix, 78, 55);
-		Minecraft.getInstance().font.draw(matrix, MiscUtil.localize("crossroads.jei.blast_furnace.carbon", recipe.getSlag()), 10, 10, 0x404040);
+		matrix.drawString(Minecraft.getInstance().font, MiscUtil.localize("crossroads.jei.blast_furnace.carbon", recipe.getSlag()), 10, 10, 0x404040, false);
 	}
 
 	@Override

@@ -13,7 +13,7 @@ import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.biome.MobSpawnSettings;
-import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
@@ -65,9 +65,9 @@ public class RiftEffect extends BeamEffect{
 
 									//LivingEntity::dropLoot
 									ResourceLocation resourcelocation = lEnt.getLootTable();
-									LootTable loottable = worldServ.getServer().getLootTables().get(resourcelocation);
-									LootContext.Builder lootcontext$builder = new LootContext.Builder(worldServ).withRandom(worldServ.random).withParameter(LootContextParams.THIS_ENTITY, lEnt).withParameter(LootContextParams.ORIGIN, lEnt.position()).withParameter(LootContextParams.DAMAGE_SOURCE, CRMobDamage.damageSource(CRMobDamage.VOID, worldServ)).withOptionalParameter(LootContextParams.KILLER_ENTITY, null).withOptionalParameter(LootContextParams.DIRECT_KILLER_ENTITY, null);
-									LootContext ctx = lootcontext$builder.create(LootContextParamSets.ENTITY);
+									LootTable loottable = worldServ.getServer().getLootData().getLootTable(resourcelocation);
+									LootParams.Builder lootcontext$builder = new LootParams.Builder(worldServ).withParameter(LootContextParams.THIS_ENTITY, lEnt).withParameter(LootContextParams.ORIGIN, lEnt.position()).withParameter(LootContextParams.DAMAGE_SOURCE, CRMobDamage.damageSource(CRMobDamage.VOID, worldServ)).withOptionalParameter(LootContextParams.KILLER_ENTITY, null).withOptionalParameter(LootContextParams.DIRECT_KILLER_ENTITY, null);
+									LootParams ctx = lootcontext$builder.create(LootContextParamSets.ENTITY);
 									loottable.getRandomItems(ctx).forEach(lEnt::spawnAtLocation);
 
 									//We don't implement/access LivingEntity::dropSpecialItems, because that is entity specific and usually irrelevant for newly spawned mobs

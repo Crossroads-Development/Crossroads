@@ -4,8 +4,7 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.api.templates.MachineScreen;
 import com.Da_Technomancer.crossroads.blocks.heat.HeatingCrucibleTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.CrucibleContainer;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -25,11 +24,9 @@ public class CrucibleScreen extends MachineScreen<CrucibleContainer, HeatingCruc
 	}
 
 	@Override
-	protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY){
-		RenderSystem.setShaderTexture(0, TEXTURE);
-
-		blit(matrix, leftPos, topPos, 0, 0, imageWidth, imageHeight);
-		blit(matrix, leftPos + 42, topPos + 35, 176, 0, menu.meltProgress.get() * 28 / HeatingCrucibleTileEntity.REQUIRED, 18);
+	protected void renderBg(GuiGraphics matrix, float partialTicks, int mouseX, int mouseY){
+		matrix.blit(TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+		matrix.blit(TEXTURE, leftPos + 42, topPos + 35, 176, 0, menu.meltProgress.get() * 28 / HeatingCrucibleTileEntity.REQUIRED, 18);
 
 		super.renderBg(matrix, partialTicks, mouseX, mouseY);
 	}

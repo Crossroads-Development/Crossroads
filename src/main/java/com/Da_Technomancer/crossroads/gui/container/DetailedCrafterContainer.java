@@ -49,7 +49,7 @@ public class DetailedCrafterContainer extends RecipeBookMenu<CraftingContainer>{
 		unlockKeys[2] = CraftingUtil.getTagKey(ForgeRegistries.Keys.ITEMS, new ResourceLocation(Crossroads.MODID, "witchcraft_unlock_key"));
 	}
 
-	private final CraftingContainer inInv = new CraftingContainer(this, 3, 3);
+	private final CraftingContainer inInv = new TransientCraftingContainer(this, 3, 3);
 	private final ResultContainer outInv = new ResultContainer();
 	private final Level world;
 	private final Player player;
@@ -61,7 +61,7 @@ public class DetailedCrafterContainer extends RecipeBookMenu<CraftingContainer>{
 	public DetailedCrafterContainer(int id, Inventory playerInv, FriendlyByteBuf buf){
 		super(TYPE, id);
 		player = playerInv.player;
-		world = player.level;
+		world = player.level();
 
 		fake = buf.readBoolean();
 		if(fake){
@@ -108,9 +108,9 @@ public class DetailedCrafterContainer extends RecipeBookMenu<CraftingContainer>{
 	@Override
 	public boolean recipeMatches(Recipe<? super CraftingContainer> recipeIn){
 		if(recipeIn instanceof DetailedCrafterRec){
-			return ((DetailedCrafterRec) recipeIn).getPath().isUnlocked(player) && recipeIn.matches(inInv, player.level);
+			return ((DetailedCrafterRec) recipeIn).getPath().isUnlocked(player) && recipeIn.matches(inInv, player.level());
 		}else{
-			return recipeIn.matches(inInv, player.level);
+			return recipeIn.matches(inInv, player.level());
 		}
 	}
 
@@ -125,7 +125,7 @@ public class DetailedCrafterContainer extends RecipeBookMenu<CraftingContainer>{
 
 	@Override
 	public boolean stillValid(Player playerIn){
-		return fake || pos == null || playerIn.level.getBlockState(pos).getBlock() == CRBlocks.detailedCrafter && playerIn.distanceToSqr((pos.getX()) + .5D, (pos.getY()) + .5D, (pos.getZ()) + .5D) <= 64;
+		return fake || pos == null || playerIn.level().getBlockState(pos).getBlock() == CRBlocks.detailedCrafter && playerIn.distanceToSqr((pos.getX()) + .5D, (pos.getY()) + .5D, (pos.getZ()) + .5D) <= 64;
 	}
 
 	/**
@@ -295,10 +295,10 @@ public class DetailedCrafterContainer extends RecipeBookMenu<CraftingContainer>{
 		public void onTake(Player thePlayer, ItemStack stack){
 			checkTakeAchievements(stack);
 			setCraftingPlayer(thePlayer);
-			List<DetailedCrafterRec> recipes = thePlayer.level.getRecipeManager().getRecipesFor(CRRecipes.DETAILED_TYPE, craftMatrix, thePlayer.level);
+			List<DetailedCrafterRec> recipes = thePlayer.level().getRecipeManager().getRecipesFor(CRRecipes.DETAILED_TYPE, craftMatrix, thePlayer.level());
 			Optional<? extends CraftingRecipe> recipeOpt = recipes.stream().filter(rec -> rec.getPath().isUnlocked(thePlayer)).findFirst();
 			if(!recipeOpt.isPresent()){
-				recipeOpt = thePlayer.level.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftMatrix, thePlayer.level);
+				recipeOpt = thePlayer.level().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftMatrix, thePlayer.level());
 			}
 			if(recipeOpt.isPresent()){
 				//Remove items if there is a matching recipe

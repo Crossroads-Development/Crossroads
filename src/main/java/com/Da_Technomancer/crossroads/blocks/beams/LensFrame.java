@@ -3,7 +3,6 @@ package com.Da_Technomancer.crossroads.blocks.beams;
 import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
-import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.essentials.api.ConfigUtil;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import com.Da_Technomancer.essentials.api.TEBlock;
@@ -88,9 +87,9 @@ public class LensFrame extends TEBlock implements IReadable{
 			// Wrenches rotate the block instead
 			if(!worldIn.isClientSide) worldIn.setBlockAndUpdate(pos, state.cycle(CRProperties.AXIS));
 			return InteractionResult.SUCCESS;
-		}else if(stack.sameItem(CRItems.omnimeter.getDefaultInstance())){
-			// Omnimeter performs its function instead
-			return InteractionResult.PASS;
+//		}else if(stack.getItem() == CRItems.omnimeter)){
+//			// Omnimeter performs its function instead
+//			return InteractionResult.PASS;
 		}else{
 			BlockEntity te = worldIn.getBlockEntity(pos);
 			if(!(te instanceof LensFrameTileEntity)){

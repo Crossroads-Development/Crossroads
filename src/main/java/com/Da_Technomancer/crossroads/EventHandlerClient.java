@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads;
 
 import com.Da_Technomancer.crossroads.ambient.particles.CRParticles;
 import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
+import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.alchemy.ReagentManager;
 import com.Da_Technomancer.crossroads.api.packets.*;
@@ -14,7 +15,6 @@ import com.Da_Technomancer.crossroads.gui.container.CRContainers;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 import com.Da_Technomancer.crossroads.items.item_sets.OreProfileItem;
-import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
 import com.Da_Technomancer.crossroads.items.technomancy.ArmorPropellerPack;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamUsingItem;
 import com.Da_Technomancer.crossroads.items.witchcraft.GeneticSpawnEgg;
@@ -426,7 +426,7 @@ public class EventHandlerClient{
 				KeyMapping key = Keys.asKeyMapping(lens.getKey());
 				if(key != null && key.consumeClick() && key.isDown() && nbt.contains(lens.toString())){
 					boolean wasEnabled = nbt.getBoolean(lens.toString());
-					CRSounds.playSoundClientLocal(play.level, MiscUtil.blockPos(play.getX(), play.getEyeY(), play.getZ()), SoundEvents.SPYGLASS_USE, SoundSource.PLAYERS, 1.0F, 1.0F);
+					CRSounds.playSoundClientLocal(play.level(), MiscUtil.blockPos(play.getX(), play.getEyeY(), play.getZ()), SoundEvents.SPYGLASS_USE, SoundSource.PLAYERS, 1.0F, 1.0F);
 					CRPackets.channel.sendToServer(new SendGoggleConfigureToServer(lens, !wasEnabled));
 					if(!wasEnabled || !lens.useKey()){
 						MiscUtil.displayMessage(play, Component.translatable("tt.crossroads.goggles.enabled"));

@@ -5,7 +5,6 @@ import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.heat.IceboxTileEntity;
 import com.Da_Technomancer.crossroads.crafting.IceboxRec;
-import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -16,6 +15,7 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
@@ -54,13 +54,13 @@ public class IceboxFuelCategory implements IRecipeCategory<IceboxRec>{
 	}
 
 	@Override
-	public void draw(IceboxRec rec, IRecipeSlotsView view, PoseStack matrix, double mouseX, double mouseY){
+	public void draw(IceboxRec rec, IRecipeSlotsView view, GuiGraphics matrix, double mouseX, double mouseY){
 		slot.draw(matrix, 20, 50);
 
 		int coolTime = Math.round(rec.getCooling());
 		Minecraft minecraft = Minecraft.getInstance();
-		minecraft.font.draw(matrix, MiscUtil.localize("crossroads.jei.icebox.total", -coolTime * IceboxTileEntity.RATE), 50, 25, 0x404040);
-		minecraft.font.draw(matrix, MiscUtil.localize("crossroads.jei.icebox.duration", coolTime), 50, 45, 0x404040);
+		matrix.drawString(minecraft.font, MiscUtil.localize("crossroads.jei.icebox.total", -coolTime * IceboxTileEntity.RATE), 50, 25, 0x404040, false);
+		matrix.drawString(minecraft.font, MiscUtil.localize("crossroads.jei.icebox.duration", coolTime), 50, 45, 0x404040, false);
 	}
 
 	@Override

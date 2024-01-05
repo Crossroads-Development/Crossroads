@@ -15,11 +15,9 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -38,7 +36,7 @@ public class StampMillTop extends Block{
 	}
 
 	public StampMillTop(){
-		super(Properties.of(Material.WOOD).strength(1).sound(SoundType.METAL));
+		super(CRBlocks.getWoodProperty().noOcclusion());
 		String name = "stamp_mill_top";
 		CRBlocks.queueForRegister(name, this, false, null);
 	}

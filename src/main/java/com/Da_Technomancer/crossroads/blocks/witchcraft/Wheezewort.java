@@ -28,7 +28,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.util.LazyOptional;
@@ -46,7 +46,7 @@ public class Wheezewort extends DoublePlantBlock implements BonemealableBlock{
 	private static final int COOLING = 100_000;
 
 	public Wheezewort(){
-		super(BlockBehaviour.Properties.of(Material.PLANT).randomTicks().instabreak().sound(SoundType.GRASS));
+		super(BlockBehaviour.Properties.of().strength(0.4F).pushReaction(PushReaction.DESTROY).randomTicks().instabreak().sound(SoundType.GRASS));
 		String name = "wheezewort";
 		CRBlocks.queueForRegister(name, this, false, null);
 

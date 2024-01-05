@@ -20,7 +20,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
@@ -57,7 +57,7 @@ public class BlockSalt extends FallingBlock{
 	}
 	
 	protected BlockSalt(){
-		super(Properties.of(Material.SAND).strength(.5F).sound(SoundType.SAND).randomTicks());//Mine with shovel
+		super(Properties.of().mapColor(MapColor.SAND).strength(.5F).sound(SoundType.SAND).randomTicks());//Mine with shovel
 		String name = "block_salt";
 		CRBlocks.queueForRegister(name, this);
 	}

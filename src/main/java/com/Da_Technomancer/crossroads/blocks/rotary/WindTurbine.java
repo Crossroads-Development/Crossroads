@@ -26,7 +26,6 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.Tags;
 
@@ -36,7 +35,7 @@ import java.util.List;
 public class WindTurbine extends BaseEntityBlock implements IReadable{
 
 	public WindTurbine(){
-		super(Properties.of(Material.WOOD).strength(2));
+		super(CRBlocks.getWoodProperty());
 		String name = "wind_turbine";
 		CRBlocks.queueForRegister(name, this);
 	}

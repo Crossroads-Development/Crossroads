@@ -73,10 +73,10 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 		//Hunger
 		//Velocity
 
-		data.putLong("timestamp", player.level.getGameTime());
+		data.putLong("timestamp", player.level().getGameTime());
 		String playerName = player.getGameProfile().getName();
 		data.putString("username", playerName == null ? "NULL" : playerName);
-		data.putString("dimension", player.level.dimension().location().toString());//World registry key is used
+		data.putString("dimension", player.level().dimension().location().toString());//World registry key is used
 		data.putDouble("pos_x", player.getX());
 		data.putDouble("pos_y", player.getY());
 		data.putDouble("pos_z", player.getZ());
@@ -91,7 +91,7 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 		data.putDouble("vel_y", player.getDeltaMovement().y());
 		data.putDouble("vel_z", player.getDeltaMovement().z());
 
-		if(player.level.isClientSide()){
+		if(player.level().isClientSide()){
 			//Player only sound for setting a position
 			player.playSound(SoundEvents.BELL_BLOCK, 2F, 1F);
 		}
@@ -99,16 +99,16 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 
 	private void recall(CompoundTag data, Player player, ItemStack held){
 		if(!data.contains("timestamp")){
-			if(player.level.isClientSide){
+			if(player.level().isClientSide){
 				MiscUtil.displayMessage(player, Component.translatable("tt.crossroads.recall_device.none"));
 			}
 			return;//No data stored
 		}
 		//Check time delay and that it's the same player
-		long delay = player.level.getGameTime() - data.getLong("timestamp");
+		long delay = player.level().getGameTime() - data.getLong("timestamp");
 		int limit = CRConfig.recallTimeLimit.get() * 20;//In ticks
 		if(limit >= 0 && delay > limit){
-			if(player.level.isClientSide){
+			if(player.level().isClientSide){
 				MiscUtil.displayMessage(player, Component.translatable("tt.crossroads.recall_device.expired"));
 			}
 			return;//Too old- do nothing
@@ -117,7 +117,7 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 		double wind = getWindLevel(held);
 
 		if(wind < WIND_USE){
-			if(player.level.isClientSide){
+			if(player.level().isClientSide){
 				MiscUtil.displayMessage(player, Component.translatable("tt.crossroads.recall_device.not_wound"));
 			}
 			return;//Insufficiently wound
@@ -127,7 +127,7 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 
 		String playerName = player.getGameProfile().getName();
 		if(playerName == null || !playerName.equals(data.getString("username"))){
-			if(player.level.isClientSide){
+			if(player.level().isClientSide){
 				MiscUtil.displayMessage(player, Component.translatable("tt.crossroads.recall_device.wrong_player"));
 			}
 			return;//Wrong player or null profile
@@ -139,12 +139,12 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 			MiscUtil.setPlayerFood(player, data.getInt("hunger"), data.getFloat("saturation"));
 		}
 
-		if(!player.level.isClientSide){
+		if(!player.level().isClientSide){
 			ServerPlayer playerServ = (ServerPlayer) player;
 			ResourceLocation targetDimension = new ResourceLocation(data.getString("dimension"));
 			ServerLevel targetWorld;//World we are recalling to. Almost always the same as current dimension. Null if something went wrong
-			if(targetDimension.equals(player.level.dimension().location())){
-				targetWorld = (ServerLevel) player.level;
+			if(targetDimension.equals(player.level().dimension().location())){
+				targetWorld = (ServerLevel) player.level();
 			}else{
 				try{
 					targetWorld = MiscUtil.getWorld(MiscUtil.getWorldKey(targetDimension, null), playerServ.server);
@@ -152,7 +152,7 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 					targetWorld = null;
 				}
 			}
-			if(targetWorld == player.level){
+			if(targetWorld == player.level()){
 				playerServ.connection.teleport(data.getDouble("pos_x"), data.getDouble("pos_y"), data.getDouble("pos_z"), data.getFloat("yaw"), data.getFloat("pitch"));
 			}else if(targetWorld != null){
 				playerServ.teleportTo(targetWorld, data.getDouble("pos_x"), data.getDouble("pos_y"), data.getDouble("pos_z"), data.getFloat("yaw"), data.getFloat("pitch"));
@@ -177,7 +177,7 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 		}
 
 		//Also plays sound
-		player.level.playSound(null, player.blockPosition(), SoundEvents.BELL_RESONATE, SoundSource.PLAYERS, 1F, 1F);
+		player.level().playSound(null, player.blockPosition(), SoundEvents.BELL_RESONATE, SoundSource.PLAYERS, 1F, 1F);
 	}
 
 	@Override

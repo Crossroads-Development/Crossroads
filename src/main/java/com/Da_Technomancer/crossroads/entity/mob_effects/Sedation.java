@@ -81,7 +81,7 @@ public class Sedation extends MobEffect{
 		if(canSedationApplyFully(entity)){
 			//Force basic physics to apply despite AI being disabled
 			//Done by enabling AI, calling the method responsible for physics, then re-disabling AI
-			if(!entity.level.isClientSide()){
+			if(!entity.level().isClientSide()){
 				Mob mob = (Mob) entity;
 				mob.setNoAi(false);
 				mob.travel(new Vec3(mob.xxa, mob.yya, mob.zza));

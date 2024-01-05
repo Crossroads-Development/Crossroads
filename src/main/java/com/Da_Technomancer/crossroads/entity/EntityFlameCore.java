@@ -59,7 +59,7 @@ public class EntityFlameCore extends Entity{
 	public void setInitialValues(ReagentMap reags, int radius){
 		this.reags = reags == null ? new ReagentMap() : reags;
 		maxRadius = radius;
-		CRSounds.playSoundServer(level, blockPosition(), CRSounds.FIRE_SWELL, SoundSource.BLOCKS, 2F, 1F);
+		CRSounds.playSoundServer(level(), blockPosition(), CRSounds.FIRE_SWELL, SoundSource.BLOCKS, 2F, 1F);
 	}
 
 	private ReagentMap reags = null;
@@ -123,7 +123,7 @@ public class EntityFlameCore extends Entity{
 	public void tick(){
 		super.tick();
 
-		if(level.isClientSide || reags == null){
+		if(level().isClientSide || reags == null){
 			return;
 		}
 
@@ -173,32 +173,32 @@ public class EntityFlameCore extends Entity{
 		for(int i = tickMod; i <= radius; i += distributedTime){
 			for(int j = 0; j <= radius; j++){
 				//x-z plane
-				act(reagList, reags, temp, level, pos.offset(i, -radius, j), lastAction);
-				act(reagList, reags, temp, level, pos.offset(i - radius, -radius, j), lastAction);
-				act(reagList, reags, temp, level, pos.offset(i, -radius, j - radius), lastAction);
-				act(reagList, reags, temp, level, pos.offset(i - radius, -radius, j - radius), lastAction);
-				act(reagList, reags, temp, level, pos.offset(i, radius, j), lastAction);
-				act(reagList, reags, temp, level, pos.offset(i - radius, radius, j), lastAction);
-				act(reagList, reags, temp, level, pos.offset(i, radius, j - radius), lastAction);
-				act(reagList, reags, temp, level, pos.offset(i - radius, radius, j - radius), lastAction);
+				act(reagList, reags, temp, level(), pos.offset(i, -radius, j), lastAction);
+				act(reagList, reags, temp, level(), pos.offset(i - radius, -radius, j), lastAction);
+				act(reagList, reags, temp, level(), pos.offset(i, -radius, j - radius), lastAction);
+				act(reagList, reags, temp, level(), pos.offset(i - radius, -radius, j - radius), lastAction);
+				act(reagList, reags, temp, level(), pos.offset(i, radius, j), lastAction);
+				act(reagList, reags, temp, level(), pos.offset(i - radius, radius, j), lastAction);
+				act(reagList, reags, temp, level(), pos.offset(i, radius, j - radius), lastAction);
+				act(reagList, reags, temp, level(), pos.offset(i - radius, radius, j - radius), lastAction);
 				//x-y plane
-				act(reagList, reags, temp, level, pos.offset(i, j, -radius), lastAction);
-				act(reagList, reags, temp, level, pos.offset(i - radius, j, -radius), lastAction);
-				act(reagList, reags, temp, level, pos.offset(i, j - radius, -radius), lastAction);
-				act(reagList, reags, temp, level, pos.offset(i - radius, j - radius, -radius), lastAction);
-				act(reagList, reags, temp, level, pos.offset(i, j, radius), lastAction);
-				act(reagList, reags, temp, level, pos.offset(i - radius, j, radius), lastAction);
-				act(reagList, reags, temp, level, pos.offset(i, j - radius, radius), lastAction);
-				act(reagList, reags, temp, level, pos.offset(i - radius, j - radius, radius), lastAction);
+				act(reagList, reags, temp, level(), pos.offset(i, j, -radius), lastAction);
+				act(reagList, reags, temp, level(), pos.offset(i - radius, j, -radius), lastAction);
+				act(reagList, reags, temp, level(), pos.offset(i, j - radius, -radius), lastAction);
+				act(reagList, reags, temp, level(), pos.offset(i - radius, j - radius, -radius), lastAction);
+				act(reagList, reags, temp, level(), pos.offset(i, j, radius), lastAction);
+				act(reagList, reags, temp, level(), pos.offset(i - radius, j, radius), lastAction);
+				act(reagList, reags, temp, level(), pos.offset(i, j - radius, radius), lastAction);
+				act(reagList, reags, temp, level(), pos.offset(i - radius, j - radius, radius), lastAction);
 				//y-z plane
-				act(reagList, reags, temp, level, pos.offset(-radius, i, j), lastAction);
-				act(reagList, reags, temp, level, pos.offset(-radius, i - radius, j), lastAction);
-				act(reagList, reags, temp, level, pos.offset(-radius, i, j - radius), lastAction);
-				act(reagList, reags, temp, level, pos.offset(-radius, i - radius, j - radius), lastAction);
-				act(reagList, reags, temp, level, pos.offset(radius, i, j), lastAction);
-				act(reagList, reags, temp, level, pos.offset(radius, i - radius, j), lastAction);
-				act(reagList, reags, temp, level, pos.offset(radius, i, j - radius), lastAction);
-				act(reagList, reags, temp, level, pos.offset(radius, i - radius, j - radius), lastAction);
+				act(reagList, reags, temp, level(), pos.offset(-radius, i, j), lastAction);
+				act(reagList, reags, temp, level(), pos.offset(-radius, i - radius, j), lastAction);
+				act(reagList, reags, temp, level(), pos.offset(-radius, i, j - radius), lastAction);
+				act(reagList, reags, temp, level(), pos.offset(-radius, i - radius, j - radius), lastAction);
+				act(reagList, reags, temp, level(), pos.offset(radius, i, j), lastAction);
+				act(reagList, reags, temp, level(), pos.offset(radius, i - radius, j), lastAction);
+				act(reagList, reags, temp, level(), pos.offset(radius, i, j - radius), lastAction);
+				act(reagList, reags, temp, level(), pos.offset(radius, i - radius, j - radius), lastAction);
 			}
 		}
 

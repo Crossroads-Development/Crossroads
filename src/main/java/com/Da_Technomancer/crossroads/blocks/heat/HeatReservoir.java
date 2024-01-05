@@ -22,7 +22,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraftforge.common.util.LazyOptional;
 
@@ -64,7 +64,7 @@ public class HeatReservoir extends BaseEntityBlock implements IReadable{
 	}
 
 	@Override
-	public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder){
+	public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder){
 		BlockEntity te = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
 		if(te instanceof HeatReservoirTileEntity){
 			ItemStack drop = new ItemStack(this.asItem(), 1);

@@ -23,13 +23,11 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -50,7 +48,7 @@ public class StampMill extends BaseEntityBlock implements IReadable{
 	}
 
 	public StampMill(){
-		super(Properties.of(Material.WOOD).strength(1).sound(SoundType.METAL).noOcclusion());
+		super(CRBlocks.getWoodProperty().noOcclusion());
 		String name = "stamp_mill";
 		CRBlocks.queueForRegister(name, this);
 	}

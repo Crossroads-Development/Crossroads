@@ -56,13 +56,13 @@ public class EntityShell extends ThrowableProjectile implements ItemSupplier{
 
 	@Override
 	protected void onHit(HitResult result){
-		if(!level.isClientSide){
+		if(!level().isClientSide){
 			if(contents != null){
 				Vec3 hit = result.getLocation();
-				AlchemyUtil.releaseChemical(level, MiscUtil.blockPos(hit.x, hit.y, hit.z), contents);
+				AlchemyUtil.releaseChemical(level(), MiscUtil.blockPos(hit.x, hit.y, hit.z), contents);
 			}
-			level.playSound(null, getX(), getY(), getZ(), SoundEvents.GLASS_BREAK, SoundSource.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
-			level.broadcastEntityEvent(this, (byte) 3);
+			level().playSound(null, getX(), getY(), getZ(), SoundEvents.GLASS_BREAK, SoundSource.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
+			level().broadcastEntityEvent(this, (byte) 3);
 			remove(RemovalReason.KILLED);
 		}
 	}
@@ -83,16 +83,16 @@ public class EntityShell extends ThrowableProjectile implements ItemSupplier{
 			setDeltaMovement(getDeltaMovement().add(0.0D, -0.04D, 0.0D));
 		}
 
-		if(!onGround || getDeltaMovement().horizontalDistanceSqr() > 1.0E-5D || (tickCount + getId()) % 4 == 0){
+		if(!onGround() || getDeltaMovement().horizontalDistanceSqr() > 1.0E-5D || (tickCount + getId()) % 4 == 0){
 			move(MoverType.SELF, this.getDeltaMovement());
 			float f1 = 0.98F;
 
-			if(onGround){
-				f1 = level.getBlockState(MiscUtil.blockPos(getX(), getY() - 1.0D, getZ())).getFriction(level, MiscUtil.blockPos(getX(), getY() - 1.0D, getZ()), this) * 0.98F;
+			if(onGround()){
+				f1 = level().getBlockState(MiscUtil.blockPos(getX(), getY() - 1.0D, getZ())).getFriction(level(), MiscUtil.blockPos(getX(), getY() - 1.0D, getZ()), this) * 0.98F;
 			}
 
 			setDeltaMovement(getDeltaMovement().multiply(f1, 0.98D, f1));
-			if(onGround){
+			if(onGround()){
 				Vec3 vec31 = getDeltaMovement();
 				if(vec31.y < 0.0D){
 					setDeltaMovement(vec31.multiply(1.0D, -0.5D, 1.0D));
@@ -101,7 +101,7 @@ public class EntityShell extends ThrowableProjectile implements ItemSupplier{
 		}
 
 		hasImpulse |= updateInWaterStateAndDoFluidPushing();
-		if(!level.isClientSide){
+		if(!level().isClientSide){
 			double d0 = getDeltaMovement().subtract(vec3).lengthSqr();
 			if(d0 > 0.01D){
 				hasImpulse = true;
@@ -110,18 +110,18 @@ public class EntityShell extends ThrowableProjectile implements ItemSupplier{
 
 		//Impact handling
 		//Copied from ThrowableProjectile
-		HitResult hitresult = ProjectileUtil.getHitResult(this, this::canHitEntity);
+		HitResult hitresult = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
 		boolean flag = false;
 		if(hitresult.getType() == HitResult.Type.BLOCK){
 			BlockPos blockpos = ((BlockHitResult) hitresult).getBlockPos();
-			BlockState blockstate = level.getBlockState(blockpos);
+			BlockState blockstate = level().getBlockState(blockpos);
 			if(blockstate.is(Blocks.NETHER_PORTAL)){
 				this.handleInsidePortal(blockpos);
 				flag = true;
 			}else if(blockstate.is(Blocks.END_GATEWAY)){
-				BlockEntity blockentity = level.getBlockEntity(blockpos);
+				BlockEntity blockentity = level().getBlockEntity(blockpos);
 				if(blockentity instanceof TheEndGatewayBlockEntity && TheEndGatewayBlockEntity.canEntityTeleport(this)){
-					TheEndGatewayBlockEntity.teleportEntity(level, blockpos, blockstate, this, (TheEndGatewayBlockEntity) blockentity);
+					TheEndGatewayBlockEntity.teleportEntity(level(), blockpos, blockstate, this, (TheEndGatewayBlockEntity) blockentity);
 				}
 
 				flag = true;

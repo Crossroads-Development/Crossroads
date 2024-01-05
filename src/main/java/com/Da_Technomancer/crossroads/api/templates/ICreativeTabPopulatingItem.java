@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.api.templates;
 
 import net.minecraft.world.item.ItemStack;
 
-import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
 /**

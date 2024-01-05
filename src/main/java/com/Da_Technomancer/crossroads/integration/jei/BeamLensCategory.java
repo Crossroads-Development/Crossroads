@@ -17,6 +17,7 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -58,24 +59,25 @@ public class BeamLensCategory implements IRecipeCategory<BeamLensRec>{
 	}
 
 	@Override
-	public void draw(BeamLensRec recipe, IRecipeSlotsView view, PoseStack matrix, double mouseX, double mouseY){
-		slot.draw(matrix, 20, 15);//Input
+	public void draw(BeamLensRec recipe, IRecipeSlotsView view, GuiGraphics graphics, double mouseX, double mouseY){
+		slot.draw(graphics, 20, 15);//Input
 		//Render without shadow
 
 		// Draw relevant transmutation data
 		if(recipe.getTransmuteAlignment() != EnumBeamAlignments.NO_MATCH) {
 			String align = recipe.getTransmuteAlignment().getLocalName(recipe.isVoid());
-			Minecraft.getInstance().font.draw(matrix, Component.translatable("crossroads.jei.beam_trans.align", align), 2, 2, 0x404040);
-			slot.draw(matrix, 20, 60);//Output
+			graphics.drawString(Minecraft.getInstance().font, Component.translatable("crossroads.jei.beam_trans.align", align), 2, 2, 0x404040, false);
+			slot.draw(graphics, 20, 60);//Output
 
+			PoseStack matrix = graphics.pose();
 			// Rotate arrow to point downwards
 			matrix.pushPose();
 			matrix.translate(36, 35, 0);
 			matrix.mulPose(Axis.ZN.rotationDegrees(-90));
-			arrowStatic.draw(matrix, 0, 0);
+			arrowStatic.draw(graphics, 0, 0);
 			matrix.popPose();
 		} else {
-			Minecraft.getInstance().font.draw(matrix, Component.translatable("crossroads.jei.beam_lens.no_trans"), 2, 2, 0x404040);
+			graphics.drawString(Minecraft.getInstance().font, Component.translatable("crossroads.jei.beam_lens.no_trans"), 2, 2, 0x404040, false);
 		}
 
 		BeamMod output = recipe.getOutput();
@@ -90,25 +92,25 @@ public class BeamLensCategory implements IRecipeCategory<BeamLensRec>{
 		int ySpacing = 15;
 
 		if(output.isEmpty()) {
-			Minecraft.getInstance().font.draw(matrix, Component.translatable("crossroads.jei.beam_lens.no_change"), x, 37, 0x404040);
+			graphics.drawString(Minecraft.getInstance().font, Component.translatable("crossroads.jei.beam_lens.no_change"), x, 37, 0x404040, false);
 		} else {
 			// Display all primary colors if any of them is changed
 			if(energy != 100 || potential != 100 || stability != 100) {
-				Minecraft.getInstance().font.draw(matrix, Component.translatable("crossroads.jei.beam_lens.energy", energy), x, y, 0x404040);
+				graphics.drawString(Minecraft.getInstance().font, Component.translatable("crossroads.jei.beam_lens.energy", energy), x, y, 0x404040, false);
 				y += ySpacing;
-				Minecraft.getInstance().font.draw(matrix, Component.translatable("crossroads.jei.beam_lens.potential", potential), x, y, 0x404040);
+				graphics.drawString(Minecraft.getInstance().font, Component.translatable("crossroads.jei.beam_lens.potential", potential), x, y, 0x404040, false);
 				y += ySpacing;
-				Minecraft.getInstance().font.draw(matrix, Component.translatable("crossroads.jei.beam_lens.stability", stability), x, y, 0x404040);
+				graphics.drawString(Minecraft.getInstance().font, Component.translatable("crossroads.jei.beam_lens.stability", stability), x, y, 0x404040, false);
 				y += ySpacing;
 			}
 			// Display void if void is changed
 			if(voi != 100) {
-				Minecraft.getInstance().font.draw(matrix, Component.translatable("crossroads.jei.beam_lens.void", voi), x, y, 0x404040);
+				graphics.drawString(Minecraft.getInstance().font, Component.translatable("crossroads.jei.beam_lens.void", voi), x, y, 0x404040, false);
 				y += ySpacing;
 			}
 			// Display void conversion if conversion is taking place
 			if(voidConv != 0) {
-				Minecraft.getInstance().font.draw(matrix, Component.translatable("crossroads.jei.beam_lens.void_convert", voidConv), x, y, 0x404040);
+				graphics.drawString(Minecraft.getInstance().font, Component.translatable("crossroads.jei.beam_lens.void_convert", voidConv), x, y, 0x404040, false);
 			}
 		}
 	}

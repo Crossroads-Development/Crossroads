@@ -5,7 +5,7 @@ import com.Da_Technomancer.crossroads.api.templates.MachineScreen;
 import com.Da_Technomancer.crossroads.blocks.rotary.StampMillTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.StampMillContainer;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -19,16 +19,14 @@ public class StampMillScreen extends MachineScreen<StampMillContainer, StampMill
 	}
 
 	@Override
-	protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY){
-		RenderSystem.setShaderTexture(0, TEXTURE);
-
-		blit(matrix, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+	protected void renderBg(GuiGraphics matrix, float partialTicks, int mouseX, int mouseY){
+		matrix.blit(TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
 
 
 		//Time meter
-		blit(matrix, leftPos + 55, topPos + 34, 176, 0, Math.min(66, menu.timeRef.get() * 66 / StampMillTileEntity.TIME_LIMIT), 9);
+		matrix.blit(TEXTURE, leftPos + 55, topPos + 34, 176, 0, Math.min(66, menu.timeRef.get() * 66 / StampMillTileEntity.TIME_LIMIT), 9);
 		//Progress meter
-		blit(matrix, leftPos + 55, topPos + 45, 176, 0, (int) Math.min(66, menu.progRef.get() * 66 / StampMillTileEntity.REQUIRED), 9);
+		matrix.blit(TEXTURE, leftPos + 55, topPos + 45, 176, 0, (int) Math.min(66, menu.progRef.get() * 66 / StampMillTileEntity.REQUIRED), 9);
 
 		super.renderBg(matrix, partialTicks, mouseX, mouseY);
 	}

@@ -10,6 +10,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -22,7 +23,7 @@ import java.awt.*;
 public class BeamToolOverlay implements IGuiOverlay{
 
 	@Override
-	public void render(ForgeGui gui, PoseStack matrix, float partialTicks, int width, int height){
+	public void render(ForgeGui gui, GuiGraphics graphics, float partialTicks, int width, int height){
 		Player player = Minecraft.getInstance().player;
 
 		if(player == null){
@@ -37,6 +38,7 @@ public class BeamToolOverlay implements IGuiOverlay{
 		boolean renderCageOverlay = !cageStack.isEmpty() && (CRConfig.cageMeterOverlay.get() || renderToolOverlay);
 
 		if(renderCageOverlay || renderToolOverlay){
+			PoseStack matrix = graphics.pose();
 			//Use the batched renderer instead of the Tesselator
 			MultiBufferSource.BufferSource buffer = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
 //			PoseStack matrix = e.getMatrixStack();
@@ -71,7 +73,7 @@ public class BeamToolOverlay implements IGuiOverlay{
 				//As this is an unbatched environment, we need to manually force the buffer to render before drawing fonts
 				buffer.endBatch();
 
-				Minecraft.getInstance().font.draw(matrix, cageStack.getHoverName().getString(), 16, 65, Color.DARK_GRAY.getRGB());
+				graphics.drawString(Minecraft.getInstance().font, cageStack.getHoverName().getString(), 16, 65, Color.DARK_GRAY.getRGB(), false);
 			}
 
 			//Beam using item overlay
@@ -96,7 +98,7 @@ public class BeamToolOverlay implements IGuiOverlay{
 				//As this is an unbatched environment, we need to manually force the buffer to render before drawing fonts
 				buffer.endBatch();
 
-				Minecraft.getInstance().font.draw(matrix, mainStack.getHoverName().getString(), 16, 5, Color.DARK_GRAY.getRGB());
+				graphics.drawString(Minecraft.getInstance().font, mainStack.getHoverName().getString(), 16, 5, Color.DARK_GRAY.getRGB(), false);
 			}
 
 			matrix.popPose();

@@ -9,8 +9,8 @@ import com.Da_Technomancer.essentials.api.packets.EssentialsPackets;
 import com.Da_Technomancer.essentials.api.packets.SendNBTToServer;
 import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.nbt.CompoundTag;
@@ -68,7 +68,7 @@ public class BeamExtractorCreativeScreen extends AbstractContainerScreen<BeamExt
 	}
 
 	@Override
-	public void render(PoseStack matrix, int mouseX, int mouseY, float partialTicks){
+	public void render(GuiGraphics matrix, int mouseX, int mouseY, float partialTicks){
 		renderBackground(matrix);
 		super.render(matrix, mouseX, mouseY, partialTicks);
 //		RenderSystem.disableLighting();
@@ -79,9 +79,8 @@ public class BeamExtractorCreativeScreen extends AbstractContainerScreen<BeamExt
 	}
 
 	@Override
-	protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY){
-		RenderSystem.setShaderTexture(0, SEARCH_BAR_TEXTURE);
-		blit(matrix, leftPos, topPos, 0, 0, imageWidth, imageWidth);
+	protected void renderBg(GuiGraphics matrix, float partialTicks, int mouseX, int mouseY){
+		matrix.blit(SEARCH_BAR_TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageWidth);
 	}
 
 	private void entryChanged(String newFilter){
@@ -101,11 +100,11 @@ public class BeamExtractorCreativeScreen extends AbstractContainerScreen<BeamExt
 
 	//MCP note: draw tooltip/foreground
 	@Override
-	protected void renderLabels(PoseStack matrix, int p_230451_2_, int p_230451_3_){
+	protected void renderLabels(GuiGraphics matrix, int p_230451_2_, int p_230451_3_){
 		//Don't render default text overlays
-		font.draw(matrix, MiscUtil.localize("container.crossroads.beam_extractor_creative.energy"), 8, 6, 0x404040);
-		font.draw(matrix, MiscUtil.localize("container.crossroads.beam_extractor_creative.potential"), 8, 24, 0x404040);
-		font.draw(matrix, MiscUtil.localize("container.crossroads.beam_extractor_creative.stability"), 8, 42, 0x404040);
-		font.draw(matrix, MiscUtil.localize("container.crossroads.beam_extractor_creative.void"), 8, 60, 0x404040);
+		matrix.drawString(font, MiscUtil.localize("container.crossroads.beam_extractor_creative.energy"), 8, 6, 0x404040, false);
+		matrix.drawString(font, MiscUtil.localize("container.crossroads.beam_extractor_creative.potential"), 8, 24, 0x404040, false);
+		matrix.drawString(font, MiscUtil.localize("container.crossroads.beam_extractor_creative.stability"), 8, 42, 0x404040, false);
+		matrix.drawString(font, MiscUtil.localize("container.crossroads.beam_extractor_creative.void"), 8, 60, 0x404040, false);
 	}
 }

@@ -9,10 +9,12 @@ import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.common.SoundActions;
@@ -87,7 +89,7 @@ public class GenericFluid extends LiquidBlock{
 		data.flowing = new Flowing(data::getType, data::getStill, data::getFlowing, data::getBlock, data::getBucket);
 		data.bucket = new BucketItem(data::getStill, BUCKET_PROP);
 
-		data.block = new GenericFluid(data::getStill, BlockBehaviour.Properties.of(lavaLike ? Material.LAVA : Material.WATER).noCollission().strength(100.0F).noLootTable().lightLevel(state -> light));
+		data.block = new GenericFluid(data::getStill, (lavaLike ? BlockBehaviour.Properties.of().mapColor(MapColor.FIRE) : BlockBehaviour.Properties.of().mapColor(MapColor.WATER)).liquid().sound(SoundType.EMPTY).pushReaction(PushReaction.DESTROY).noCollission().strength(100.0F).noLootTable().lightLevel(state -> light));
 
 		CRFluids.toRegisterType.put(name, data.type);
 		CRFluids.toRegisterFluid.put(name, data.still);

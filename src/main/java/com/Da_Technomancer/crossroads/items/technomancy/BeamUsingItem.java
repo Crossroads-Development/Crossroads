@@ -69,11 +69,11 @@ public abstract class BeamUsingItem extends Item{
 			acted = true;
 		}
 		if(acted){
-			CRSounds.playSoundClientLocal(player.level, player.blockPosition(), SoundEvents.UI_BUTTON_CLICK.value(), SoundSource.PLAYERS, 4, (float) Math.random() / 4 + 0.5F);
+			CRSounds.playSoundClientLocal(player.level(), player.blockPosition(), SoundEvents.UI_BUTTON_CLICK.value(), SoundSource.PLAYERS, 4, (float) Math.random() / 4 + 0.5F);
 			CRPackets.sendPacketToServer(new SendBeamItemToServer(settings));
 		}else{
 			//Play a sound at a slightly lower pitch
-			CRSounds.playSoundClientLocal(player.level, player.blockPosition(), SoundEvents.UI_BUTTON_CLICK.value(), SoundSource.PLAYERS, 4, (float) Math.random() / 4);
+			CRSounds.playSoundClientLocal(player.level(), player.blockPosition(), SoundEvents.UI_BUTTON_CLICK.value(), SoundSource.PLAYERS, 4, (float) Math.random() / 4);
 		}
 	}
 

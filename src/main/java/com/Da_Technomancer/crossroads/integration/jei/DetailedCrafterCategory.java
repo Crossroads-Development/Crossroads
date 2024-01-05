@@ -4,7 +4,6 @@ package com.Da_Technomancer.crossroads.integration.jei;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.DetailedCrafterRec;
-import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -14,6 +13,7 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -56,7 +56,7 @@ public class DetailedCrafterCategory implements IRecipeCategory<DetailedCrafterR
 	}
 
 	@Override
-	public void draw(DetailedCrafterRec recipe, IRecipeSlotsView view, PoseStack matrix, double mouseX, double mouseY){
+	public void draw(DetailedCrafterRec recipe, IRecipeSlotsView view, GuiGraphics matrix, double mouseX, double mouseY){
 		//Minecraft.getInstance().fontRenderer.drawString("Shapeless", 60, 5, 0x404040);
 		switch(recipe.getPath()){
 			case TECHNOMANCY:

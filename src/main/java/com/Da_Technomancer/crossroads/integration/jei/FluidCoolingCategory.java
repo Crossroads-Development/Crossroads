@@ -4,7 +4,6 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.FluidCoolingRec;
-import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -18,6 +17,7 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -57,9 +57,9 @@ public class FluidCoolingCategory implements IRecipeCategory<FluidCoolingRec>{
 	}
 
 	@Override
-	public void draw(FluidCoolingRec rec, IRecipeSlotsView view, PoseStack matrix, double mouseX, double mouseY){
-		Minecraft.getInstance().font.draw(matrix, MiscUtil.localize("crossroads.jei.fluid_cooling.max", rec.getMaxTemp()), 10, 10, 4210752);
-		Minecraft.getInstance().font.draw(matrix, MiscUtil.localize("crossroads.jei.fluid_cooling.add", rec.getAddedHeat()), 10, 20, 4210752);
+	public void draw(FluidCoolingRec rec, IRecipeSlotsView view, GuiGraphics matrix, double mouseX, double mouseY){
+		matrix.drawString(Minecraft.getInstance().font, MiscUtil.localize("crossroads.jei.fluid_cooling.max", rec.getMaxTemp()), 10, 10, 4210752, false);
+		matrix.drawString(Minecraft.getInstance().font, MiscUtil.localize("crossroads.jei.fluid_cooling.add", rec.getAddedHeat()), 10, 20, 4210752, false);
 		slot.draw(matrix, 110, 55);
 		arrowStatic.draw(matrix, 75, 56);
 		arrow.draw(matrix, 75, 56);

@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MapColor;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -24,7 +24,7 @@ import java.util.List;
 public class FluidVoid extends BaseEntityBlock implements ICustomItemBlock{
 
 	public FluidVoid(){
-		super(BlockBehaviour.Properties.of(Material.SPONGE).strength(0.6F).sound(SoundType.GRASS));
+		super(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_YELLOW).sound(SoundType.GRASS).strength(0.6F).sound(SoundType.GRASS));
 		String name = "fluid_void";
 		CRBlocks.queueForRegister(name, this);
 	}

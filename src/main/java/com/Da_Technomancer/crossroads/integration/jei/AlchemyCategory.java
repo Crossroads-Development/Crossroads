@@ -6,7 +6,6 @@ import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.crafting.AlchemyRec;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -20,6 +19,7 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -61,7 +61,7 @@ public class AlchemyCategory implements IRecipeCategory<AlchemyRec>{
 	}
 
 	@Override
-	public void draw(AlchemyRec recipe, IRecipeSlotsView view, PoseStack matrix, double mouseX, double mouseY){
+	public void draw(AlchemyRec recipe, IRecipeSlotsView view, GuiGraphics matrix, double mouseX, double mouseY){
 		arrowStatic.draw(matrix, 78, 22);
 		arrow.draw(matrix, 78, 22);
 
@@ -73,9 +73,9 @@ public class AlchemyCategory implements IRecipeCategory<AlchemyRec>{
 		}else{
 			line = MiscUtil.localize("crossroads.jei.alchemy.temp", CRConfig.formatVal(Math.max(recipe.minTemp(), HeatUtil.ABSOLUTE_ZERO)));
 		}
-		fontRenderer.draw(matrix, line, 90 - fontRenderer.width(line) / 2F, 42, 0x404040);
+		matrix.drawString(fontRenderer, line, (int) (90 - fontRenderer.width(line) / 2F), 42, 0x404040, false);
 		line = recipe.deltaHeatPer() > 0 ? MiscUtil.localize("crossroads.jei.alchemy.cooling") : recipe.deltaHeatPer() < 0 ? MiscUtil.localize("crossroads.jei.alchemy.heating") : MiscUtil.localize("crossroads.jei.alchemy.no_temp_change");
-		fontRenderer.draw(matrix, line, 90 - fontRenderer.width(line) / 2F, 62, 0x404040);
+		matrix.drawString(fontRenderer, line, (int) (90 - fontRenderer.width(line) / 2F), 62, 0x404040, false);
 
 		if(recipe.charged()){
 			bolt.draw(matrix, 66, 2);

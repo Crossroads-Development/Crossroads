@@ -3,7 +3,6 @@ package com.Da_Technomancer.crossroads.integration.jei;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.FormulationVatRec;
-import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -16,6 +15,7 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -55,7 +55,7 @@ public class FormulationVatCategory implements IRecipeCategory<FormulationVatRec
 	}
 
 	@Override
-	public void draw(FormulationVatRec rec, IRecipeSlotsView view, PoseStack matrix, double mouseX, double mouseY){
+	public void draw(FormulationVatRec rec, IRecipeSlotsView view, GuiGraphics matrix, double mouseX, double mouseY){
 		slot.draw(matrix, 50, 55);
 		arrowStatic.draw(matrix, 75, 56);
 		arrow.draw(matrix, 75, 56);

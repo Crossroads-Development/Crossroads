@@ -27,7 +27,7 @@ public class HealthPenalty extends MobEffect{
 			entity.setHealth(entity.getMaxHealth());
 		}
 		if(shouldKill){
-			entity.hurt(CRMobDamage.damageSource(CRMobDamage.NON_VIABLE, entity.level), 1);
+			entity.hurt(CRMobDamage.damageSource(CRMobDamage.NON_VIABLE, entity.level()), 1);
 		}
 	}
 }

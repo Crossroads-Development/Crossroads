@@ -6,9 +6,9 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.monster.ZombieVillager;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.BiomeManager;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraftforge.common.BiomeManager;
 
 public enum CRReflection implements ReflectionUtil.IReflectionKey{
 

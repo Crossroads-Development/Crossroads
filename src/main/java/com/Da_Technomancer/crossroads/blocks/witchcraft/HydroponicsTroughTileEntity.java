@@ -30,6 +30,7 @@ import net.minecraft.world.level.block.TallFlowerBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
@@ -129,7 +130,7 @@ public class HydroponicsTroughTileEntity extends InventoryTE{
 				if(level.isClientSide()){
 					return Triple.of(true, crop.getMaxAge(), new ItemStack[0]);//We can't get the drops on the client, but we don't need to
 				}
-				List<ItemStack> drops = crop.getStateForAge(crop.getMaxAge()).getDrops(new LootContext.Builder((ServerLevel) level).withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(worldPosition)).withParameter(LootContextParams.TOOL, new ItemStack(Items.IRON_HOE)));
+				List<ItemStack> drops = crop.getStateForAge(crop.getMaxAge()).getDrops(new LootParams.Builder((ServerLevel) level).withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(worldPosition)).withParameter(LootContextParams.TOOL, new ItemStack(Items.IRON_HOE)));
 				return Triple.of(true, crop.getMaxAge(), drops.toArray(new ItemStack[0]));
 			}
 			if(block instanceof FlowerBlock){

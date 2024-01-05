@@ -51,7 +51,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.trading.Merchant;
@@ -62,7 +62,6 @@ import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AnvilUpdateEvent;
-import net.minecraftforge.event.CreativeModeTabEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.living.*;
@@ -77,7 +76,10 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegisterEvent;
 
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Supplier;
 
 public class EventHandlerCommon{
@@ -169,6 +171,47 @@ public class EventHandlerCommon{
 				CRWorldGen.init();
 				registerAll(helper, CRWorldGen.toRegisterModifier);
 			});
+
+			e.register(Registries.CREATIVE_MODE_TAB, helper -> {
+				CRItems.MAIN_CREATIVE_TAB = CreativeModeTab.builder()
+						.title(Component.translatable("item_group." + CRItems.MAIN_CREATIVE_TAB_ID))
+						.icon(() -> new ItemStack(CRItems.omnimeter))
+						.displayItems((params, output) -> {
+									for(Supplier<ItemStack[]> itemsToAdd : CRItems.creativeTabItems.get(CRItems.MAIN_CREATIVE_TAB_ID)){
+										for(ItemStack itemToAdd : itemsToAdd.get()){
+											output.accept(itemToAdd);
+										}
+									}
+								}
+						).build();
+				helper.register(new ResourceLocation(Crossroads.MODID, CRItems.MAIN_CREATIVE_TAB_ID), CRItems.MAIN_CREATIVE_TAB);
+
+				CRItems.HEAT_CABLE_CREATIVE_TAB = CreativeModeTab.builder()
+						.title(Component.translatable("item_group." + CRItems.HEAT_CABLE_CREATIVE_TAB_ID))
+						.icon(() -> new ItemStack(CRBlocks.HEAT_CABLES.get(HeatInsulators.WOOL)))
+						.displayItems((params, output) -> {
+									for(Supplier<ItemStack[]> itemsToAdd : CRItems.creativeTabItems.get(CRItems.HEAT_CABLE_CREATIVE_TAB_ID)){
+										for(ItemStack itemToAdd : itemsToAdd.get()){
+											output.accept(itemToAdd);
+										}
+									}
+								}
+						).build();
+				helper.register(new ResourceLocation(Crossroads.MODID, CRItems.HEAT_CABLE_CREATIVE_TAB_ID), CRItems.HEAT_CABLE_CREATIVE_TAB);
+
+				CRItems.GEAR_CREATIVE_TAB = CreativeModeTab.builder()
+						.title(Component.translatable("item_group." + CRItems.GEAR_CREATIVE_TAB_ID))
+						.icon(() -> CRItems.smallGear.withMaterial(CRMaterialLibrary.findMaterial("copper"), 1))
+						.displayItems((params, output) -> {
+									for(Supplier<ItemStack[]> itemsToAdd : CRItems.creativeTabItems.get(CRItems.GEAR_CREATIVE_TAB_ID)){
+										for(ItemStack itemToAdd : itemsToAdd.get()){
+											output.accept(itemToAdd);
+										}
+									}
+								}
+						).build();
+				helper.register(new ResourceLocation(Crossroads.MODID, CRItems.GEAR_CREATIVE_TAB_ID), CRItems.GEAR_CREATIVE_TAB);
+			});
 		}
 
 		public static <T> void registerAll(RegisterEvent.RegisterHelper<T> helper, Map<String, T> toRegister){
@@ -185,44 +228,6 @@ public class EventHandlerCommon{
 		@SubscribeEvent
 		public static void registerEntityAttributes(EntityAttributeCreationEvent e){
 			e.put(EntityHopperHawk.type, EntityHopperHawk.createAttributes());
-		}
-
-		@SuppressWarnings("unused")
-		@SubscribeEvent
-		public static void registerCreativeTabs(CreativeModeTabEvent.Register e){
-			CRItems.MAIN_CREATIVE_TAB = e.registerCreativeModeTab(new ResourceLocation(Crossroads.MODID, CRItems.MAIN_CREATIVE_TAB_ID), List.of(), List.of(CreativeModeTabs.SPAWN_EGGS), builder -> builder
-					.title(Component.translatable("item_group." + CRItems.MAIN_CREATIVE_TAB_ID))
-					.icon(() -> new ItemStack(CRItems.omnimeter))
-					.displayItems((params, output) -> {
-								for(Supplier<ItemStack[]> itemsToAdd : CRItems.creativeTabItems.get(CRItems.MAIN_CREATIVE_TAB_ID)){
-									for(ItemStack itemToAdd : itemsToAdd.get()){
-										output.accept(itemToAdd);
-									}
-								}
-							}
-					));
-			CRItems.HEAT_CABLE_CREATIVE_TAB = e.registerCreativeModeTab(new ResourceLocation(Crossroads.MODID, CRItems.HEAT_CABLE_CREATIVE_TAB_ID), List.of(), List.of(CreativeModeTabs.SPAWN_EGGS, CRItems.MAIN_CREATIVE_TAB), builder -> builder
-					.title(Component.translatable("item_group." + CRItems.HEAT_CABLE_CREATIVE_TAB_ID))
-					.icon(() -> new ItemStack(CRBlocks.HEAT_CABLES.get(HeatInsulators.WOOL)))
-					.displayItems((params, output) -> {
-								for(Supplier<ItemStack[]> itemsToAdd : CRItems.creativeTabItems.get(CRItems.HEAT_CABLE_CREATIVE_TAB_ID)){
-									for(ItemStack itemToAdd : itemsToAdd.get()){
-										output.accept(itemToAdd);
-									}
-								}
-							}
-					));
-			CRItems.GEAR_CREATIVE_TAB = e.registerCreativeModeTab(new ResourceLocation(Crossroads.MODID, CRItems.GEAR_CREATIVE_TAB_ID), List.of(), List.of(CreativeModeTabs.SPAWN_EGGS, CRItems.MAIN_CREATIVE_TAB, CRItems.HEAT_CABLE_CREATIVE_TAB), builder -> builder
-					.title(Component.translatable("item_group." + CRItems.GEAR_CREATIVE_TAB_ID))
-					.icon(() -> CRItems.smallGear.withMaterial(CRMaterialLibrary.findMaterial("copper"), 1))
-					.displayItems((params, output) -> {
-								for(Supplier<ItemStack[]> itemsToAdd : CRItems.creativeTabItems.get(CRItems.GEAR_CREATIVE_TAB_ID)){
-									for(ItemStack itemToAdd : itemsToAdd.get()){
-										output.accept(itemToAdd);
-									}
-								}
-							}
-					));
 		}
 	}
 
@@ -455,7 +460,7 @@ public class EventHandlerCommon{
 					}
 				}
 				if(foundExplosion){
-					player.level.explode(null, player.getX(), player.getY(), player.getZ(), 5F, Level.ExplosionInteraction.TNT);
+					player.level().explode(null, player.getX(), player.getY(), player.getZ(), 5F, Level.ExplosionInteraction.TNT);
 				}
 			}
 		}
@@ -591,16 +596,16 @@ public class EventHandlerCommon{
 		//For genetically modified mobs with respawning, if they died without the respawn marker effect, create a ghost marker to respawn them
 		LivingEntity entity = e.getEntity();
 		EntityTemplate template;
-		if(!entity.level.isClientSide && (template = EntityTemplate.getTemplateFromEntity(entity)).isRespawning()){
+		if(!entity.level().isClientSide && (template = EntityTemplate.getTemplateFromEntity(entity)).isRespawning()){
 			int delay = CRConfig.respawnDelay.get();
 			delay *= 20;//Convert from seconds to ticks
 			//Ensure it doesn't have the marker effect and this is enabled in config
 			//Or, if non-viable (max health less than or equal to 0), don't let it respawn
 			if(!entity.hasEffect(EntityTemplate.getRespawnMarkerEffect()) && delay > 0 && !e.getSource().is(CRMobDamage.NON_VIABLE)){
-				EntityGhostMarker marker = new EntityGhostMarker(entity.level, EntityGhostMarker.EnumMarkerType.RESPAWNING, delay);
+				EntityGhostMarker marker = new EntityGhostMarker(entity.level(), EntityGhostMarker.EnumMarkerType.RESPAWNING, delay);
 				marker.setPos(entity.getX(), entity.getY(), entity.getZ());
 				marker.data = template.serializeNBT();
-				entity.level.addFreshEntity(marker);
+				entity.level().addFreshEntity(marker);
 			}
 		}
 	}
@@ -611,7 +616,7 @@ public class EventHandlerCommon{
 	@SuppressWarnings("unused")
 	public void appendDrops(LivingDropsEvent e){
 		LivingEntity ent = e.getEntity();
-		if(!ent.level.isClientSide){
+		if(!ent.level().isClientSide){
 
 			//Drop souls
 			if(ent.hasEffect(CRPotions.TRANSIENT_EFFECT)){
@@ -631,7 +636,7 @@ public class EventHandlerCommon{
 					soulCount = 2;//Most things give 2
 				}
 				if(soulCount > 0){
-					e.getDrops().add(new ItemEntity(ent.level, ent.getX(), ent.getY(), ent.getZ(), new ItemStack(CRItems.soulShard, soulCount)));
+					e.getDrops().add(new ItemEntity(ent.level(), ent.getX(), ent.getY(), ent.getZ(), new ItemStack(CRItems.soulShard, soulCount)));
 				}
 			}
 
@@ -642,8 +647,8 @@ public class EventHandlerCommon{
 				if(damageSource.getDirectEntity() instanceof LivingEntity && ((LivingEntity) damageSource.getDirectEntity()).getMainHandItem().getItem() == CRItems.brainHarvester){
 					ItemStack brain = new ItemStack(CRItems.villagerBrain, 1);
 					CRItems.villagerBrain.setOffers(brain, ((Merchant) ent).getOffers());
-					IPerishable.getAndInitSpoilTime(brain, ent.level);
-					e.getDrops().add(new ItemEntity(ent.level, ent.getX(), ent.getY(), ent.getZ(), brain));
+					IPerishable.getAndInitSpoilTime(brain, ent.level());
+					e.getDrops().add(new ItemEntity(ent.level(), ent.getX(), ent.getY(), ent.getZ(), brain));
 				}
 			}
 		}

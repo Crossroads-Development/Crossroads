@@ -30,7 +30,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.RegisterEvent;
@@ -194,15 +194,19 @@ public class CRBlocks{
 	public static BasicBlock oreVoid;
 
 	public static BlockBehaviour.Properties getRockProperty(){
-		return BlockBehaviour.Properties.of(Material.STONE).strength(3).requiresCorrectToolForDrops().sound(SoundType.STONE);
+		return BlockBehaviour.Properties.of().mapColor(MapColor.STONE).sound(SoundType.STONE).strength(3).requiresCorrectToolForDrops();
 	}
 
 	public static BlockBehaviour.Properties getMetalProperty(){
-		return BlockBehaviour.Properties.of(Material.METAL).strength(3).requiresCorrectToolForDrops().sound(SoundType.METAL);
+		return BlockBehaviour.Properties.of().mapColor(MapColor.METAL).sound(SoundType.METAL).strength(3).requiresCorrectToolForDrops();
 	}
 
 	public static BlockBehaviour.Properties getGlassProperty(){
-		return BlockBehaviour.Properties.of(Material.GLASS).strength(0.5F).sound(SoundType.GLASS);
+		return BlockBehaviour.Properties.of().sound(SoundType.GLASS).strength(0.5F).isValidSpawn((state, getter, pos, type) -> false).isRedstoneConductor((state, getter, pos) -> false).isSuffocating((state, getter, pos) -> false).isViewBlocking((state, getter, pos) -> false);
+	}
+
+	public static BlockBehaviour.Properties getWoodProperty(){
+		return BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).sound(SoundType.WOOD).strength(2, 3).ignitedByLava();
 	}
 
 	/**

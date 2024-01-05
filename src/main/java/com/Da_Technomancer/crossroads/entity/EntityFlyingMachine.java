@@ -77,7 +77,7 @@ public class EntityFlyingMachine extends Entity{
 		if(controller instanceof Player){
 
 			//Do movement on the client ONLY. The wheel angle isn't correct on the server
-			if(level.isClientSide && controller == Minecraft.getInstance().player){
+			if(level().isClientSide && controller == Minecraft.getInstance().player){
 				//Rotate the wheel based on player control
 				Options settings = Minecraft.getInstance().options;
 				if(settings.keyUp.isDown()){
@@ -111,7 +111,7 @@ public class EntityFlyingMachine extends Entity{
 				}
 				setDeltaMovement(vel[0], vel[1], vel[2]);
 			}
-		}else if(!level.isClientSide){
+		}else if(!level().isClientSide){
 			//When we have no rider, just go down
 			setAngle(0);
 			vel[1] -= ACCEL;
@@ -139,13 +139,13 @@ public class EntityFlyingMachine extends Entity{
 
 		if(isInvulnerableTo(source)){
 			return false;
-		}else if(!level.isClientSide && isAlive()){
+		}else if(!level().isClientSide && isAlive()){
 			damage += amount * 10F;
 			markHurt();
 			boolean flag = source.getEntity() instanceof Player && ((Player) source.getEntity()).isCreative();
 
 			if(flag || damage > 40){
-				if(!flag && level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)){
+				if(!flag && level().getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)){
 					spawnAtLocation(CRItems.flyingMachine);
 				}
 
@@ -162,7 +162,7 @@ public class EntityFlyingMachine extends Entity{
 
 	public InteractionResult interact(Player player, InteractionHand hand){
 		if(!player.isShiftKeyDown()){
-			if(!level.isClientSide){
+			if(!level().isClientSide){
 				player.startRiding(this);
 			}
 			return InteractionResult.SUCCESS;

@@ -18,7 +18,7 @@ public class Curative extends MobEffect{
 
 	@Override
 	public void applyInstantenousEffect(@Nullable Entity p_180793_1_, @Nullable Entity p_180793_2_, LivingEntity self, int p_180793_4_, double p_180793_5_){
-		if(!self.level.isClientSide){
+		if(!self.level().isClientSide){
 			self.curePotionEffects(new ItemStack(Items.MILK_BUCKET));
 		}
 	}

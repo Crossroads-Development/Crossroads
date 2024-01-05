@@ -5,7 +5,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -26,8 +25,8 @@ public class CurioHelper{
 	public static void initIntegration(){
 		if(ModList.get().isLoaded(CURIOS_ID)){
 			inventoryProxy = CuriosInventoryProxy.create();
-			//Register the proxy so it can request slots
-			FMLJavaModLoadingContext.get().getModEventBus().register(inventoryProxy);
+//			//Register the proxy so it can request slots
+//			FMLJavaModLoadingContext.get().getModEventBus().register(inventoryProxy);
 		}else{
 			inventoryProxy = new VanillaInventoryProxy();
 		}

@@ -11,6 +11,7 @@ import com.Da_Technomancer.crossroads.api.crafting.FluidIngredient;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.api.templates.IInfoTE;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
+import com.Da_Technomancer.essentials.api.BlockUtil;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -367,7 +368,7 @@ public abstract class AlchemyCarrierTE extends BlockEntity implements ITickableT
 			}
 		}
 
-		if(!ItemStack.isSame(out, stack) || !ItemStack.tagMatches(out, stack) || out.getCount() != stack.getCount()){
+		if(!BlockUtil.sameItem(out, stack) || out.getCount() != stack.getCount()){
 			setChanged();
 			dirtyReag = true;
 		}

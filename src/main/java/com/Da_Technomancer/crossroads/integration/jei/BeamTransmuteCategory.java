@@ -3,7 +3,6 @@ package com.Da_Technomancer.crossroads.integration.jei;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.BeamTransmuteRec;
-import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -14,6 +13,7 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -55,13 +55,13 @@ public class BeamTransmuteCategory implements IRecipeCategory<BeamTransmuteRec>{
 	}
 
 	@Override
-	public void draw(BeamTransmuteRec recipe, IRecipeSlotsView view, PoseStack matrix, double mouseX, double mouseY){
+	public void draw(BeamTransmuteRec recipe, IRecipeSlotsView view, GuiGraphics matrix, double mouseX, double mouseY){
 		slot.draw(matrix, 40, 40);//Input
 		slot.draw(matrix, 120, 40);//Output
 		arrowStatic.draw(matrix, 78, 40);
 		//Render without shadow
-		Minecraft.getInstance().font.draw(matrix, Component.translatable("crossroads.jei.beam_trans.align", recipe.getAlign().getLocalName(recipe.isVoid())), 40, 10, 0x404040);
-		Minecraft.getInstance().font.draw(matrix, Component.translatable("crossroads.jei.beam_trans.power", recipe.getPower()), 40, 25, 0x404040);
+		matrix.drawString(Minecraft.getInstance().font, Component.translatable("crossroads.jei.beam_trans.align", recipe.getAlign().getLocalName(recipe.isVoid())), 40, 10, 0x404040, false);
+		matrix.drawString(Minecraft.getInstance().font, Component.translatable("crossroads.jei.beam_trans.power", recipe.getPower()), 40, 25, 0x404040, false);
 	}
 
 	@Override

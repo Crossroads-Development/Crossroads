@@ -133,7 +133,7 @@ public class TeslaRay extends Item{
 				}
 				Vec3 end = targets.get(i + 1).getEyePosition(0);
 
-				CRRenderUtil.addArc(playerIn.level, start, end, 1, 0, TeslaCoilTopTileEntity.COLOR_CODES[(int) (Math.random() * 3D)]);
+				CRRenderUtil.addArc(playerIn.level(), start, end, 1, 0, TeslaCoilTopTileEntity.COLOR_CODES[(int) (Math.random() * 3D)]);
 			}
 
 			return new InteractionResultHolder<>(InteractionResult.SUCCESS, playerIn.getItemInHand(hand));
@@ -147,7 +147,7 @@ public class TeslaRay extends Item{
 			//We want to apply lightning effects (ex. pig->pig zombie, creeper->charged creeper, etc) if this is fully charged
 			MiscUtil.attackWithLightning(entity, DAMAGE, null);
 		}else{
-			entity.hurt(entity.level.damageSources().lightningBolt(), DAMAGE * scale);
+			entity.hurt(entity.level().damageSources().lightningBolt(), DAMAGE * scale);
 		}
 	}
 }

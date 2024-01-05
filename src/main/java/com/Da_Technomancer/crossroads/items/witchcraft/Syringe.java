@@ -125,7 +125,7 @@ public class Syringe extends Item{
 		}
 
 		ItemStack syringe = stack.copy();
-		InteractionResultHolder<ItemStack> result = extension.applySyringe(offhandCopy, syringe, self.level, target, self);
+		InteractionResultHolder<ItemStack> result = extension.applySyringe(offhandCopy, syringe, self.level(), target, self);
 		offhandCopy = result.getObject();
 		switch(result.getResult()){
 			case SUCCESS:
@@ -158,8 +158,8 @@ public class Syringe extends Item{
 	 * @return The filled blood sample pouch
 	 */
 	public static ItemStack drawBlood(ItemStack samplePouch, LivingEntity target, @Nullable Player attacker){
-		ItemStack result = CRItems.bloodSample.withEntityData(IPerishable.setSpoilTime(new ItemStack(CRItems.bloodSample, 1), CRItems.bloodSample.getLifetime(), target.level.getGameTime()), target);
-		target.hurt(CRMobDamage.damageSource(CRMobDamage.CR_SYRINGE, target.level, attacker), 1);
+		ItemStack result = CRItems.bloodSample.withEntityData(IPerishable.setSpoilTime(new ItemStack(CRItems.bloodSample, 1), CRItems.bloodSample.getLifetime(), target.level().getGameTime()), target);
+		target.hurt(CRMobDamage.damageSource(CRMobDamage.CR_SYRINGE, target.level(), attacker), 1);
 		return result;
 	}
 

@@ -10,7 +10,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -19,7 +18,7 @@ import javax.annotation.Nullable;
 public class ReactiveSpot extends BaseEntityBlock{
 
 	public ReactiveSpot(){
-		super(Properties.of(Material.SPONGE).strength(0).noCollission().noLootTable());
+		super(Properties.of().instabreak().noCollission().noLootTable());
 		String name = "reactive_spot";
 		CRBlocks.queueForRegister(name, this, false, null);
 		//No item form

@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.SmelterContainer;
+import com.Da_Technomancer.essentials.api.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -94,7 +95,7 @@ public class SmelterTileEntity extends InventoryTE{
 			return ItemStack.EMPTY;
 		}
 
-		if(!inventory[1].isEmpty() && !ItemStack.isSame(stack, inventory[1])){
+		if(!inventory[1].isEmpty() && !BlockUtil.sameItem(stack, inventory[1])){
 			return ItemStack.EMPTY;
 		}
 

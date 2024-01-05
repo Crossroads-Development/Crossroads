@@ -4,7 +4,6 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.heat.HeatingCrucibleTileEntity;
 import com.Da_Technomancer.crossroads.crafting.CrucibleRec;
-import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -17,6 +16,7 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -57,9 +57,9 @@ public class HeatingCrucibleCategory implements IRecipeCategory<CrucibleRec>{
 	}
 
 	@Override
-	public void draw(CrucibleRec recipe, IRecipeSlotsView view, PoseStack matrix, double mouseX, double mouseY){
-		Minecraft.getInstance().font.draw(matrix, Component.translatable("crossroads.jei.crucible.min_temp", HeatingCrucibleTileEntity.TEMP_TIERS[0]), 10, 10, 0x404040);
-		Minecraft.getInstance().font.draw(matrix, Component.translatable("crossroads.jei.crucible.required", HeatingCrucibleTileEntity.REQUIRED), 10, 20, 0x404040);
+	public void draw(CrucibleRec recipe, IRecipeSlotsView view, GuiGraphics matrix, double mouseX, double mouseY){
+		matrix.drawString(Minecraft.getInstance().font, Component.translatable("crossroads.jei.crucible.min_temp", HeatingCrucibleTileEntity.TEMP_TIERS[0]), 10, 10, 0x404040, false);
+		matrix.drawString(Minecraft.getInstance().font, Component.translatable("crossroads.jei.crucible.required", HeatingCrucibleTileEntity.REQUIRED), 10, 20, 0x404040, false);
 		slot.draw(matrix, 40, 50);
 		arrowStatic.draw(matrix, 62, 50);
 		arrow.draw(matrix, 62, 50);

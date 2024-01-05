@@ -22,12 +22,12 @@ public class PhilStone extends Item{
 
 	@Override
 	public boolean onEntityItemUpdate(ItemStack stack, ItemEntity entity){
-		if(entity.isOnGround()){
+		if(entity.onGround()){
 			AABB entityBox = entity.getBoundingBox();
-			clearBlock(entity.level, MiscUtil.blockPos(entityBox.maxX, entityBox.minY - 0.05D, entityBox.maxZ));
-			clearBlock(entity.level, MiscUtil.blockPos(entityBox.maxX, entityBox.minY - 0.05D, entityBox.minZ));
-			clearBlock(entity.level, MiscUtil.blockPos(entityBox.minX, entityBox.minY - 0.05D, entityBox.maxZ));
-			clearBlock(entity.level, MiscUtil.blockPos(entityBox.minX, entityBox.minY - 0.05D, entityBox.minZ));
+			clearBlock(entity.level(), MiscUtil.blockPos(entityBox.maxX, entityBox.minY - 0.05D, entityBox.maxZ));
+			clearBlock(entity.level(), MiscUtil.blockPos(entityBox.maxX, entityBox.minY - 0.05D, entityBox.minZ));
+			clearBlock(entity.level(), MiscUtil.blockPos(entityBox.minX, entityBox.minY - 0.05D, entityBox.maxZ));
+			clearBlock(entity.level(), MiscUtil.blockPos(entityBox.minX, entityBox.minY - 0.05D, entityBox.minZ));
 		}
 		return false;
 	}

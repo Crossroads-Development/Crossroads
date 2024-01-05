@@ -6,8 +6,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.material.MapColor;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -15,7 +14,7 @@ import java.util.List;
 public class PermeableObsidian extends Block{
 
 	public PermeableObsidian(){
-		super(Properties.of(Material.STONE, MaterialColor.COLOR_BLACK).strength(50, 1200));
+		super(CRBlocks.getRockProperty().mapColor(MapColor.COLOR_BLACK).strength(50, 1200));
 		String name = "permeable_obsidian";
 		CRBlocks.queueForRegister(name, this);
 	}

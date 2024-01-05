@@ -7,8 +7,8 @@ import com.Da_Technomancer.essentials.api.packets.EssentialsPackets;
 import com.Da_Technomancer.essentials.api.packets.SendNBTToServer;
 import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.nbt.CompoundTag;
@@ -52,7 +52,7 @@ public class MasterAxisCreativeScreen extends AbstractContainerScreen<MasterAxis
 	}
 
 	@Override
-	public void render(PoseStack matrix, int mouseX, int mouseY, float partialTicks){
+	public void render(GuiGraphics matrix, int mouseX, int mouseY, float partialTicks){
 		renderBackground(matrix);
 		super.render(matrix, mouseX, mouseY, partialTicks);
 //		RenderSystem.disableLighting();
@@ -61,9 +61,8 @@ public class MasterAxisCreativeScreen extends AbstractContainerScreen<MasterAxis
 	}
 
 	@Override
-	protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY){
-		RenderSystem.setShaderTexture(0, SEARCH_BAR_TEXTURE);
-		blit(matrix, leftPos, topPos, 0, 0, imageWidth, 18, imageWidth, 18);
+	protected void renderBg(GuiGraphics matrix, float partialTicks, int mouseX, int mouseY){
+		matrix.blit(SEARCH_BAR_TEXTURE, leftPos, topPos, 0, 0, imageWidth, 18, imageWidth, 18);
 	}
 
 	private void entryChanged(String newFilter){
@@ -79,7 +78,7 @@ public class MasterAxisCreativeScreen extends AbstractContainerScreen<MasterAxis
 
 	//MCP note: draw tooltip/foreground
 	@Override
-	protected void renderLabels(PoseStack matrix, int p_230451_2_, int p_230451_3_){
+	protected void renderLabels(GuiGraphics matrix, int p_230451_2_, int p_230451_3_){
 		//Don't render text overlays
 	}
 }

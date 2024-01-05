@@ -6,7 +6,6 @@ import com.Da_Technomancer.crossroads.api.alchemy.IReagent;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -18,6 +17,7 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -57,23 +57,23 @@ public class ReagInfoCategory implements IRecipeCategory<IReagent>{
 	}
 
 	@Override
-	public void draw(IReagent recipe, IRecipeSlotsView view, PoseStack matrix, double mouseX, double mouseY){
+	public void draw(IReagent recipe, IRecipeSlotsView view, GuiGraphics graphics, double mouseX, double mouseY){
 		Font fontRenderer = Minecraft.getInstance().font;
 		double melt = recipe.getMeltingPoint();
 		double boil = recipe.getBoilingPoint();
 		String line = melt >= Short.MAX_VALUE - 10 ? MiscUtil.localize("crossroads.jei.reagent.melting.no") : melt <= HeatUtil.ABSOLUTE_ZERO ? MiscUtil.localize("crossroads.jei.reagent.melting.yes") : MiscUtil.localize("crossroads.jei.reagent.melting", Math.round(melt));
-		fontRenderer.draw(matrix, line, 2, 22, 0x404040);
+		graphics.drawString(fontRenderer, line, 2, 22, 0x404040, false);
 		line = boil >= Short.MAX_VALUE - 10 ? MiscUtil.localize("crossroads.jei.reagent.boiling.no") : boil <= HeatUtil.ABSOLUTE_ZERO ? MiscUtil.localize("crossroads.jei.reagent.boiling.yes") : MiscUtil.localize("crossroads.jei.reagent.boiling", Math.round(boil));
-		fontRenderer.draw(matrix, line, 2, 42, 0x404040);
+		graphics.drawString(fontRenderer, line, 2, 42, 0x404040, false);
 		line = MiscUtil.localize("crossroads.jei.reagent.effect", recipe.getEffect().getName().getString());
-		fontRenderer.draw(matrix, line, 2, 62, 0x404040);
+		graphics.drawString(fontRenderer, line, 2, 62, 0x404040, false);
 		if(recipe.requiresCrystal()){
-			fontRenderer.draw(matrix, MiscUtil.localize("crossroads.jei.reagent.crystal"), 2, 82, 0x404040);
+			graphics.drawString(fontRenderer, MiscUtil.localize("crossroads.jei.reagent.crystal"), 2, 82, 0x404040, false);
 		}
 
 		//GlStateManager.color(1, 1, 1);
-		matrix.translate(2, 2, 0);
-		ReagentIngredientRenderer.RENDERER.render(matrix, new ReagIngr(recipe, 1));
+		graphics.pose().translate(2, 2, 0);
+		ReagentIngredientRenderer.RENDERER.render(graphics, new ReagIngr(recipe, 1));
 	}
 
 	@Override

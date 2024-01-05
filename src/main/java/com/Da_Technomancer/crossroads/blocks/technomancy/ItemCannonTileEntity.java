@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.entity.EntityShell;
 import com.Da_Technomancer.crossroads.items.alchemy.Shell;
+import com.Da_Technomancer.essentials.api.BlockUtil;
 import com.Da_Technomancer.essentials.api.redstone.IRedstoneHandler;
 import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import net.minecraft.core.BlockPos;
@@ -151,7 +152,7 @@ public class ItemCannonTileEntity extends AbstractCannonTileEntity{
 
 		@Override
 		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate){
-			if(slot != 0 || stack.isEmpty() || !inventory.isEmpty() && (!inventory.sameItem(stack) || !ItemStack.tagMatches(inventory, stack))){
+			if(slot != 0 || stack.isEmpty() || !inventory.isEmpty() && !BlockUtil.sameItem(stack, inventory)){
 				return stack;
 			}
 

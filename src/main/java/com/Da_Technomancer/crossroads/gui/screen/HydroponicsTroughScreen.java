@@ -4,8 +4,7 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.api.templates.MachineScreen;
 import com.Da_Technomancer.crossroads.blocks.witchcraft.HydroponicsTroughTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.HydroponicsTroughContainer;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -26,11 +25,9 @@ public class HydroponicsTroughScreen extends MachineScreen<HydroponicsTroughCont
 	}
 
 	@Override
-	protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY){
-		RenderSystem.setShaderTexture(0, TEXTURE);
-
-		blit(matrix, leftPos, topPos, 0, 0, imageWidth, imageHeight);
-		blit(matrix, leftPos + 61, topPos + 33, 176, 0, 72, menu.progRef.get() * 18 / 100);
+	protected void renderBg(GuiGraphics matrix, float partialTicks, int mouseX, int mouseY){
+		matrix.blit(TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+		matrix.blit(TEXTURE, leftPos + 61, topPos + 33, 176, 0, 72, menu.progRef.get() * 18 / 100);
 
 		super.renderBg(matrix, partialTicks, mouseX, mouseY);
 	}

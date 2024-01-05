@@ -10,8 +10,7 @@ import com.Da_Technomancer.crossroads.api.templates.MachineScreen;
 import com.Da_Technomancer.crossroads.api.templates.WidgetUtil;
 import com.Da_Technomancer.crossroads.blocks.rotary.SteamTurbineTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.SteamTurbineContainer;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -54,24 +53,22 @@ public class SteamTurbineScreen extends MachineScreen<SteamTurbineContainer, Ste
 	}
 
 	@Override
-	protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY){
-		RenderSystem.setShaderTexture(0, TEXTURE);
-
-		blit(matrix, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+	protected void renderBg(GuiGraphics matrix, float partialTicks, int mouseX, int mouseY){
+		matrix.blit(TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
 
 		super.renderBg(matrix, partialTicks, mouseX, mouseY);
 	}
 
 	@Override
-	protected void renderLabels(PoseStack matrix, int mouseX, int mouseY){
+	protected void renderLabels(GuiGraphics matrix, int mouseX, int mouseY){
 		super.renderLabels(matrix, mouseX, mouseY);
 
 		//Render a label for power production rate
 		if(menu.mode != null){
 			String s = MiscUtil.localize("tt.crossroads.steam_turbine.yield", SteamTurbineTileEntity.TIERS[menu.mode.get()] * CRConfig.steamWorth.get() / 1000 * CRConfig.jouleWorth.get());
-			font.draw(matrix, s, imageWidth - 32 - font.width(s) / 2, 36, 0x404040);
+			matrix.drawString(font, s, imageWidth - 32 - font.width(s) / 2, 36, 0x404040, false);
 			s = MiscUtil.localize("tt.crossroads.boilerplate.fluid_rate", SteamTurbineTileEntity.TIERS[menu.mode.get()]);
-			font.draw(matrix, s, imageWidth - 32 - font.width(s) / 2, 44, 0x404040);
+			matrix.drawString(font, s, imageWidth - 32 - font.width(s) / 2, 44, 0x404040, false);
 		}
 	}
 }

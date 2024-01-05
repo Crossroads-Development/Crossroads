@@ -27,7 +27,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -69,8 +68,8 @@ public class AtmosChargerTileEntity extends BlockEntity implements ITickableTile
 
 	@Override
 	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
-		if(player.level instanceof ServerLevel){
-			int charge = AtmosChargeSavedData.getCharge((ServerLevel) player.level);
+		if(player.level() instanceof ServerLevel slevel){
+			int charge = AtmosChargeSavedData.getCharge(slevel);
 			chat.add(Component.translatable("tt.crossroads.atmos_charger.reading", charge, AtmosChargeSavedData.getCapacity(), MathUtil.preciseRound(100D * charge / AtmosChargeSavedData.getCapacity(), 1)));
 		}
 	}

@@ -55,7 +55,7 @@ public final class MiscUtil{
 	public static BlockHitResult rayTrace(Entity ent, double blockReachDistance){
 		Vec3 vec3d = ent.position().add(0, ent.getEyeHeight(), 0);
 		Vec3 vec3d2 = vec3d.add(ent.getViewVector(1F).scale(blockReachDistance));
-		return ent.level.clip(new ClipContext(vec3d, vec3d2, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, ent));
+		return ent.level().clip(new ClipContext(vec3d, vec3d2, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, ent));
 	}
 
 	/**
@@ -235,10 +235,10 @@ public final class MiscUtil{
 	public static void attackWithLightning(LivingEntity ent, float damage, @Nullable LightningBolt lightning){
 		if(lightning == null){
 			//Create a generic lightning entity at the entity position, but don't add it to the world
-			lightning = EntityType.LIGHTNING_BOLT.create(ent.level);
+			lightning = EntityType.LIGHTNING_BOLT.create(ent.level());
 			lightning.moveTo(ent.position());
 		}
-		ent.thunderHit((ServerLevel) ent.level, lightning);//Deals 5 lightning damage
+		ent.thunderHit((ServerLevel) ent.level(), lightning);//Deals 5 lightning damage
 		if(damage > 5){
 			ent.hurt(ent.damageSources().lightningBolt(), damage - 5F);//Deal any additional damage
 		}

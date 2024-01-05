@@ -6,6 +6,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.BlockHitResult;
@@ -38,7 +39,7 @@ public class MultiLineMessageOverlay implements IGuiOverlay{
 	}
 
 	@Override
-	public void render(ForgeGui gui, PoseStack poseStack, float partialTick, int screenWidth, int screenHeight){
+	public void render(ForgeGui gui, GuiGraphics graphics, float partialTick, int screenWidth, int screenHeight){
 		if(!gui.getMinecraft().options.hideGui && !message.isEmpty() && gui.getGuiTicks() < messageEndTime && (messageWorldPosition == null || gui.getMinecraft().hitResult instanceof BlockHitResult blockResult && messageWorldPosition.equals(blockResult.getBlockPos()))){
 			if(!didInit){
 				didInit = true;
@@ -54,6 +55,7 @@ public class MultiLineMessageOverlay implements IGuiOverlay{
 			}
 
 			if(opacity > 8){
+				PoseStack poseStack = graphics.pose();
 				poseStack.pushPose();
 				poseStack.translate(screenWidth / 2D, screenHeight - 68, 0.0D);
 				RenderSystem.enableBlend();
@@ -65,12 +67,13 @@ public class MultiLineMessageOverlay implements IGuiOverlay{
 					int offset = (i - message.size() + 1) * 10 - 19;
 					if(guiDrawBackdrop != null){
 						try{
-							guiDrawBackdrop.invoke(gui, poseStack, font, offset, font.width(activeComponent), WHITE | (opacity << 24));
+							guiDrawBackdrop.invoke(gui, graphics, font, offset, font.width(activeComponent), WHITE | (opacity << 24));
 						}catch(IllegalAccessException | InvocationTargetException e){
 							throw new RuntimeException(e);
 						}
 					}
-					font.drawShadow(poseStack, activeComponent.getVisualOrderText(), -font.width(activeComponent) / 2, offset, WHITE | (opacity << 24));
+					graphics.drawString(font, activeComponent.getVisualOrderText(), -font.width(activeComponent) / 2, offset, WHITE | (opacity << 24), true);
+//					font.drawShadow(poseStack, activeComponent.getVisualOrderText(), -font.width(activeComponent) / 2, offset, WHITE | (opacity << 24));
 				}
 
 				RenderSystem.disableBlend();

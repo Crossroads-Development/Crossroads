@@ -16,8 +16,7 @@ import net.minecraft.world.level.block.MushroomBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.material.MapColor;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -25,7 +24,7 @@ import java.util.List;
 public class MedicinalMushroom extends MushroomBlock{
 
 	public MedicinalMushroom(){
-		super(BlockBehaviour.Properties.of(Material.PLANT, MaterialColor.COLOR_CYAN).noCollission().randomTicks().instabreak().lightLevel(state -> 1).sound(SoundType.GRASS), CRWorldGen.EMPTY_KEY);
+		super(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GREEN).noCollission().randomTicks().instabreak().lightLevel(state -> 1).sound(SoundType.GRASS), CRWorldGen.EMPTY_KEY);
 		String name = "medicinal_mushroom";
 		CRBlocks.queueForRegister(name, this);
 	}

@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import mezz.jei.api.ingredients.IIngredientRenderer;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -21,13 +22,14 @@ public class ReagentIngredientRenderer implements IIngredientRenderer<ReagIngr>{
 	protected static final ReagentIngredientRenderer RENDERER = new ReagentIngredientRenderer();
 
 	@Override
-	public void render(PoseStack matrix, ReagIngr ingredient){
+	public void render(GuiGraphics graphics, ReagIngr ingredient){
 		if(ingredient == null || ingredient.getReag() == null){
 			return;
 		}
 
 		int[] col = CRRenderUtil.convertColor(ingredient.getReag().getColor(EnumMatterPhase.SOLID));
 
+		PoseStack matrix = graphics.pose();
 		RenderSystem.enableBlend();
 //		RenderSystem.enableAlphaTest();
 		matrix.pushPose();

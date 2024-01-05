@@ -130,15 +130,15 @@ public class EntityHopperHawk extends ShoulderRidingEntity implements FlyingAnim
 	private void calculateFlapping(){
 		oFlap = flap;
 		oFlapSpeed = flapSpeed;
-		flapSpeed = (float) ((double) flapSpeed + (double) (!onGround && !isPassenger() ? 4 : -1) * 0.3D);
+		flapSpeed = (float) ((double) flapSpeed + (double) (!onGround() && !isPassenger() ? 4 : -1) * 0.3D);
 		flapSpeed = Mth.clamp(flapSpeed, 0.0F, 1.0F);
-		if(!onGround && flapping < 1.0F){
+		if(!onGround() && flapping < 1.0F){
 			flapping = 1.0F;
 		}
 
 		flapping = (float) ((double) flapping * 0.9D);
 		Vec3 vector3d = getDeltaMovement();
-		if(!onGround && vector3d.y < 0.0D){
+		if(!onGround() && vector3d.y < 0.0D){
 			setDeltaMovement(vector3d.multiply(1.0D, 0.6D, 1.0D));
 		}
 
@@ -157,26 +157,26 @@ public class EntityHopperHawk extends ShoulderRidingEntity implements FlyingAnim
 			}
 
 			if(!isSilent()){
-				level.playSound(null, getX(), getY(), getZ(), SoundEvents.PARROT_EAT, getSoundSource(), 1.0F, 1.0F + (random.nextFloat() - random.nextFloat()) * 0.2F);
+				level().playSound(null, getX(), getY(), getZ(), SoundEvents.PARROT_EAT, getSoundSource(), 1.0F, 1.0F + (random.nextFloat() - random.nextFloat()) * 0.2F);
 			}
 
-			if(!level.isClientSide){
+			if(!level().isClientSide){
 				//Taming chance of 1/3
 				if(random.nextInt(3) == 0 && !ForgeEventFactory.onAnimalTame(this, player)){
 					tame(player);
-					level.broadcastEntityEvent(this, (byte) 7);
+					level().broadcastEntityEvent(this, (byte) 7);
 				}else{
-					level.broadcastEntityEvent(this, (byte) 6);
+					level().broadcastEntityEvent(this, (byte) 6);
 				}
 			}
 
-			return InteractionResult.sidedSuccess(level.isClientSide);
+			return InteractionResult.sidedSuccess(level().isClientSide);
 		}else if(!isFlying() && isTame() && isOwnedBy(player)){
-			if(!level.isClientSide){
+			if(!level().isClientSide){
 				setOrderedToSit(!isOrderedToSit());
 			}
 
-			return InteractionResult.sidedSuccess(level.isClientSide);
+			return InteractionResult.sidedSuccess(level().isClientSide);
 		}else{
 			return super.mobInteract(player, hand);
 		}
@@ -204,7 +204,7 @@ public class EntityHopperHawk extends ShoulderRidingEntity implements FlyingAnim
 	}
 
 	public boolean isFlying(){
-		return !onGround;
+		return !onGround();
 	}
 
 	@Override
@@ -250,7 +250,7 @@ public class EntityHopperHawk extends ShoulderRidingEntity implements FlyingAnim
 			if(!useCache){
 				return canOwnerFitItem(ent, owner);
 			}
-			long gametime = mob.level.getGameTime();
+			long gametime = mob.level().getGameTime();
 			if(gametime >= cacheExpireTime || ent != targetEntity){
 				cacheExpireTime = gametime + 10;
 				canFitTargetCache = canOwnerFitItem(ent, owner);
@@ -269,16 +269,16 @@ public class EntityHopperHawk extends ShoulderRidingEntity implements FlyingAnim
 			//To prevent multiple hopper hawks always targeting the same items, items are selected in two rounds
 			//Pick the closest 'nearby' item
 			float range = COLLECTION_RANGE_SMALL;
-			List<ItemEntity> list = mob.level.getEntities(EntityType.ITEM, new AABB(mob.getX() - range, mob.getY() - range, mob.getZ() - range, mob.getX() + range, mob.getY() + range, mob.getZ() + range), (ItemEntity e) -> isValidTarget(e, false));
+			List<ItemEntity> list = mob.level().getEntities(EntityType.ITEM, new AABB(mob.getX() - range, mob.getY() - range, mob.getZ() - range, mob.getX() + range, mob.getY() + range, mob.getZ() + range), (ItemEntity e) -> isValidTarget(e, false));
 			if(!list.isEmpty()){
 				//Get the closest item in the list
 				return list.stream().min((e1, e2) -> (int) (e1.distanceToSqr(mob) - e2.distanceToSqr(mob))).orElse(null);
 			}
 			//If no items are 'nearby', use the larger range and select a target at random
 			range = COLLECTION_RANGE;
-			list = mob.level.getEntities(EntityType.ITEM, new AABB(mob.getX() - range, mob.getY() - range, mob.getZ() - range, mob.getX() + range, mob.getY() + range, mob.getZ() + range), (ItemEntity e) -> isValidTarget(e, false));
+			list = mob.level().getEntities(EntityType.ITEM, new AABB(mob.getX() - range, mob.getY() - range, mob.getZ() - range, mob.getX() + range, mob.getY() + range, mob.getZ() + range), (ItemEntity e) -> isValidTarget(e, false));
 			if(!list.isEmpty()){
-				return list.get(mob.level.random.nextInt(list.size()));
+				return list.get(mob.level().random.nextInt(list.size()));
 			}
 			return null;
 		}
@@ -302,7 +302,7 @@ public class EntityHopperHawk extends ShoulderRidingEntity implements FlyingAnim
 
 			targetEntity = findNewTarget();
 			canFitTargetCache = true;
-			cacheExpireTime = mob.level.getGameTime() + 10;
+			cacheExpireTime = mob.level().getGameTime() + 10;
 			timeToRecalcPath = 0;
 
 		}

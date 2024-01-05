@@ -18,7 +18,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -40,7 +39,7 @@ public class ColorChart extends Block{
 	}
 
 	public ColorChart(){
-		super(Properties.of(Material.WOOD).strength(3));
+		super(CRBlocks.getWoodProperty());
 		String name = "color_chart";
 		CRBlocks.queueForRegister(name, this);
 	}

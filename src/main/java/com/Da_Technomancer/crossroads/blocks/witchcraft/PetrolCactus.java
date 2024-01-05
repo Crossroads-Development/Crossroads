@@ -22,8 +22,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CactusBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 
@@ -32,10 +31,8 @@ import java.util.List;
 
 public class PetrolCactus extends CactusBlock implements ICustomItemBlock{
 
-	private static final Material FLAMMABLE_CACTUS = new Material(MaterialColor.PLANT, false, true, true, false, true, false, PushReaction.DESTROY);
-
 	public PetrolCactus(){
-		super(Properties.of(FLAMMABLE_CACTUS).randomTicks().strength(0.4F).sound(SoundType.WOOL));
+		super(Properties.of().mapColor(MapColor.PLANT).randomTicks().strength(0.4F).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
 		String name = "petrol_cactus";
 		CRBlocks.queueForRegister(name, this);
 	}

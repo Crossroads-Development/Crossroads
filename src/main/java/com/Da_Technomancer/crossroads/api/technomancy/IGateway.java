@@ -89,7 +89,7 @@ public interface IGateway extends IInfoTE{
 
 			float prevHeadYaw = play.getYHeadRot();
 			Vec3 prevVelocity = play.getDeltaMovement();
-			if(target == e.level){
+			if(target == e.level()){
 				play.connection.teleport(posX, posY, posZ, play.getViewYRot(1) + yawRotation, play.getViewXRot(1));
 			}else{
 				play.teleportTo(target, posX, posY, posZ, play.getViewYRot(1) + yawRotation, play.getViewXRot(1));
@@ -98,7 +98,7 @@ public interface IGateway extends IInfoTE{
 			play.setDeltaMovement(prevVelocity.yRot(yawRotation));
 		}else{
 			Vec3 prevVelocity = e.getDeltaMovement();
-			if(target == e.level){
+			if(target == e.level()){
 				float prevHeadYaw = e.getYHeadRot();
 				e.moveTo(posX, posY, posZ, e.getViewYRot(1) + yawRotation, e.getViewXRot(1));
 				e.setYHeadRot(prevHeadYaw + yawRotation);

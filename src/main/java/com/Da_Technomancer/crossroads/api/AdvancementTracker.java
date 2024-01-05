@@ -39,7 +39,7 @@ public class AdvancementTracker{
 	 */
 	public static boolean hasAdvancement(Player ent, String advancement){
 		if(ent instanceof ServerPlayer){
-			return ((ServerPlayer) ent).getAdvancements().getOrStartProgress(ent.level.getServer().getAdvancements().getAdvancement(new ResourceLocation(Crossroads.MODID, advancement))).isDone();
+			return ((ServerPlayer) ent).getAdvancements().getOrStartProgress(ent.level().getServer().getAdvancements().getAdvancement(new ResourceLocation(Crossroads.MODID, advancement))).isDone();
 		}else if(ent instanceof LocalPlayer){
 			return progressMap.getOrDefault(advancement, false);
 		}else{
@@ -56,7 +56,7 @@ public class AdvancementTracker{
 	 */
 	public static void unlockAdvancement(ServerPlayer ent, String advancement, boolean enabled){
 		PlayerAdvancements playAdv = ent.getAdvancements();
-		Advancement adv = ent.level.getServer().getAdvancements().getAdvancement(new ResourceLocation(Crossroads.MODID, advancement));
+		Advancement adv = ent.level().getServer().getAdvancements().getAdvancement(new ResourceLocation(Crossroads.MODID, advancement));
 		if(adv == null){
 			return;//No advancement with this name exists
 		}

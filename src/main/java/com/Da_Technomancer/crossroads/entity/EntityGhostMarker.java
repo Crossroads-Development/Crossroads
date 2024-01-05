@@ -100,11 +100,11 @@ public class EntityGhostMarker extends Entity{
 		super.tick();
 
 
-		if(time != level.getGameTime()){
-			time = level.getGameTime();//World time check to avoid tick-acceleration
+		if(time != level().getGameTime()){
+			time = level().getGameTime();//World time check to avoid tick-acceleration
 			EnumMarkerType markType = getMarkerType();
 
-			if(!level.isClientSide){
+			if(!level().isClientSide){
 				//Decrease lifespan
 				int lifespan = entityData.get(LIFESPAN);
 				lifespan -= 1;
@@ -118,7 +118,7 @@ public class EntityGhostMarker extends Entity{
 				}
 			}else if(markType.particleSupplier != null && time % 2 == 0){
 				//Client side, particles
-				level.addParticle(markType.particleSupplier.get(), getX() + level.random.nextGaussian(), getY() + level.random.nextGaussian(), getZ() + level.random.nextGaussian(), 0, 0, 0);
+				level().addParticle(markType.particleSupplier.get(), getX() + level().random.nextGaussian(), getY() + level().random.nextGaussian(), getZ() + level().random.nextGaussian(), 0, 0, 0);
 			}
 		}
 	}
@@ -133,9 +133,9 @@ public class EntityGhostMarker extends Entity{
 
 			int penaltyTime = CRConfig.respawnPenaltyDuration.get() * 20;//Converted to ticks from seconds
 			EntityTemplate template = new EntityTemplate();
-			if(marker.data != null && !marker.level.isClientSide){
+			if(marker.data != null && !marker.level().isClientSide){
 				template.deserializeNBT(marker.data);
-				Entity created = EntityTemplate.spawnEntityFromTemplate(template, (ServerLevel) marker.level, marker.blockPosition(), MobSpawnType.COMMAND, false, false, null, null);
+				Entity created = EntityTemplate.spawnEntityFromTemplate(template, (ServerLevel) marker.level(), marker.blockPosition(), MobSpawnType.COMMAND, false, false, null, null);
 				if(created instanceof LivingEntity entity){
 					entity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, penaltyTime));
 					entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, penaltyTime));

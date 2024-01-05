@@ -23,7 +23,7 @@ public class BeaconHarnessContainer extends AbstractContainerMenu{
 		super(TYPE, id);
 
 		BlockPos pos = data.readBlockPos();
-		BlockEntity rawTE = playerInv.player.level.getBlockEntity(pos);
+		BlockEntity rawTE = playerInv.player.level().getBlockEntity(pos);
 		if(rawTE instanceof BeaconHarnessTileEntity){
 			te = (BeaconHarnessTileEntity) rawTE;
 		}else{

@@ -6,10 +6,10 @@ import com.Da_Technomancer.essentials.render.LinkLineRenderer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import org.joml.Quaternionf;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import org.joml.Quaternionf;
 
 public class EntropyRenderer<T extends BlockEntity & IFluxLink> extends LinkLineRenderer<T>{
 

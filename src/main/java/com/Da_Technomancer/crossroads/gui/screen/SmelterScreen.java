@@ -5,7 +5,7 @@ import com.Da_Technomancer.crossroads.api.templates.MachineScreen;
 import com.Da_Technomancer.crossroads.blocks.heat.SmelterTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.SmelterContainer;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -19,12 +19,11 @@ public class SmelterScreen extends MachineScreen<SmelterContainer, SmelterTileEn
 	}
 
 	@Override
-	protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY){
+	protected void renderBg(GuiGraphics matrix, float partialTicks, int mouseX, int mouseY){
 		RenderSystem.setShaderColor(1, 1, 1, 1);
-		RenderSystem.setShaderTexture(0, GUI_TEXTURES);
 
-		blit(matrix, (this.width - this.imageWidth) / 2, (this.height - this.imageHeight) / 2, 0, 0, imageWidth, imageHeight);
+		matrix.blit(GUI_TEXTURES, (this.width - this.imageWidth) / 2, (this.height - this.imageHeight) / 2, 0, 0, imageWidth, imageHeight);
 
-		blit(matrix, (this.width - this.imageWidth) / 2 + 79, (this.height - this.imageHeight) / 2 + 34, 176, 0, menu.cookProg.get() * 24 / SmelterTileEntity.REQUIRED, 17);
+		matrix.blit(GUI_TEXTURES, (this.width - this.imageWidth) / 2 + 79, (this.height - this.imageHeight) / 2 + 34, 176, 0, menu.cookProg.get() * 24 / SmelterTileEntity.REQUIRED, 17);
 	}
 }

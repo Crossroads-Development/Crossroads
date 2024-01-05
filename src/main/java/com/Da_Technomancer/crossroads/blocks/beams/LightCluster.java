@@ -17,7 +17,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -32,7 +31,7 @@ public class LightCluster extends Block{
 	private static final VoxelShape SHAPE = box(6.4, 6.4, 6.4, 9.6, 9.6, 9.6);
 
 	public LightCluster(){
-		super(Properties.of(Material.DECORATION).strength(0).sound(SoundType.GLASS).noCollission().noLootTable().lightLevel(state -> 15));
+		super(Properties.of().instabreak().sound(SoundType.GLASS).noCollission().noLootTable().lightLevel(state -> 15));
 		String name = "light_cluster";
 		CRBlocks.queueForRegister(name, this);
 		registerDefaultState(defaultBlockState().setValue(CRProperties.COLOR, DyeColor.WHITE));

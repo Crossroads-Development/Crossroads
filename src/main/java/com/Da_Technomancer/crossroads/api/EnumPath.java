@@ -64,7 +64,7 @@ public enum EnumPath{
 	 * @param unlocked Whether this player should have this path unlocked. If false, relocks this path
 	 */
 	public void setUnlocked(Player player, boolean unlocked){
-		if(player.level.isClientSide){
+		if(player.level().isClientSide){
 			return;//We can't do this on the client side
 		}
 		AdvancementTracker.unlockAdvancement((ServerPlayer) player, "progress/path/" + toString(), unlocked);
@@ -77,10 +77,10 @@ public enum EnumPath{
 	 */
 	public static boolean canUnlockNewPath(Player player){
 		boolean multiplayer;//We use a different config option depending on if this is multiplayer or singleplayer
-		if(player.level.isClientSide){
+		if(player.level().isClientSide){
 			multiplayer = !Minecraft.getInstance().hasSingleplayerServer();
 		}else{
-			multiplayer = player.level.getServer().isDedicatedServer();
+			multiplayer = player.level().getServer().isDedicatedServer();
 		}
 		boolean multiAllow = CRConfig.allowAllServer.get();
 		boolean singleAllow = CRConfig.allowAllSingle.get();

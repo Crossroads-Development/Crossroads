@@ -22,7 +22,7 @@ public class QuartzGoggleEffect implements IGoggleEffect{
 			return;
 		}
 		ArrayList<Component> chat = new ArrayList<>();
-		OmniMeter.measure(chat, player, player.level, ray.getBlockPos(), ray.getDirection(), ray);
+		OmniMeter.measure(chat, player, player.level(), ray.getBlockPos(), ray.getDirection(), ray);
 		if(!chat.isEmpty()){
 			CRPackets.sendPacketToPlayer((ServerPlayer) player, new SendChatToClient(chat, OmniMeter.CHAT_ID, ray.getBlockPos()));
 		}

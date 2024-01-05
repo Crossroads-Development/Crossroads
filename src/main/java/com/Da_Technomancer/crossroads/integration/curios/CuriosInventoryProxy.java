@@ -5,13 +5,10 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.InterModComms;
-import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.SlotResult;
-import top.theillusivec4.curios.api.SlotTypeMessage;
+import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 
 import java.util.Optional;
 import java.util.function.Function;
@@ -23,13 +20,13 @@ public class CuriosInventoryProxy implements IInventoryProxy{
 		return new CuriosInventoryProxy();
 	}
 
-	@SubscribeEvent
-	@SuppressWarnings("unused")
-	public void requestSlots(InterModEnqueueEvent evt){
-		//This class is put on the FML bus in CurioHelper.java
-		//We request a charm slot
-		InterModComms.sendTo(CurioHelper.CURIOS_ID, SlotTypeMessage.REGISTER_TYPE, () -> new SlotTypeMessage.Builder("charm").build());
-	}
+//	@SubscribeEvent
+//	@SuppressWarnings("unused")
+//	public void requestSlots(InterModEnqueueEvent evt){
+//		//This class is put on the FML bus in CurioHelper.java
+//		//We request a charm slot
+//		InterModComms.sendTo(CurioHelper.CURIOS_ID, SlotTypeMessage.REGISTER_TYPE, () -> new SlotTypeMessage.Builder("charm").build());
+//	}
 
 	/**
 	 * Finds an item on a player. Checks the mainhand and offhand first, then curios slots
@@ -52,9 +49,12 @@ public class CuriosInventoryProxy implements IInventoryProxy{
 		}
 
 		//Check curios, if applicable
-		Optional<SlotResult> result = CuriosApi.getCuriosHelper().findFirstCurio(player, itemFilter);
-		if(result.isPresent()){
-			return result.get().stack();
+		LazyOptional<ICuriosItemHandler> curioOpt = CuriosApi.getCuriosInventory(player);
+		if(curioOpt.isPresent()){
+			Optional<SlotResult> resultOpt = curioOpt.orElseThrow(NullPointerException::new).findFirstCurio(itemFilter);
+			if(resultOpt.isPresent()){
+				return resultOpt.get().stack();
+			}
 		}
 
 		return ItemStack.EMPTY;
@@ -68,9 +68,10 @@ public class CuriosInventoryProxy implements IInventoryProxy{
 	 */
 	@Override
 	public void forAllInventoryItems(Player player, Function<ItemStack, ItemStack> stackModifier){
-		LazyOptional<IItemHandlerModifiable> curioOpt = CuriosApi.getCuriosHelper().getEquippedCurios(player);
+
+		LazyOptional<ICuriosItemHandler> curioOpt = CuriosApi.getCuriosInventory(player);
 		if(curioOpt.isPresent()){
-			IItemHandlerModifiable curioCont = curioOpt.orElseThrow(NullPointerException::new);
+			IItemHandlerModifiable curioCont = curioOpt.orElseThrow(NullPointerException::new).getEquippedCurios();
 			for(int i = 0; i < curioCont.getSlots(); i++){
 				ItemStack srcStack = curioCont.getStackInSlot(i);
 				ItemStack resStack = stackModifier.apply(srcStack);

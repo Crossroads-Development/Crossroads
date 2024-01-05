@@ -10,8 +10,8 @@ import com.Da_Technomancer.essentials.Essentials;
 import com.Da_Technomancer.essentials.api.packets.SendNBTToServer;
 import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.nbt.CompoundTag;
@@ -61,32 +61,31 @@ public class SequenceBoxScreen extends AbstractContainerScreen<SequenceBoxContai
 
 
 	@Override
-	protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY){
+	protected void renderBg(GuiGraphics matrix, float partialTicks, int mouseX, int mouseY){
 		RenderSystem.setShaderColor(1, 1, 1, 1);
-		RenderSystem.setShaderTexture(0, BACKGROUND_TEXTURE);
 
-		blit(matrix, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+		matrix.blit(BACKGROUND_TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
 
 		//Text bars
 		RenderSystem.setShaderTexture(0, SEARCH_BAR_TEXTURE);
 		for(EditBox bar : inputBars){
-			blit(matrix, bar.getX() - 2, bar.getY() - 8, 0, 0, bar.getWidth(), 18, 144, 18);
+			matrix.blit(BACKGROUND_TEXTURE, bar.getX() - 2, bar.getY() - 8, 0, 0, bar.getWidth(), 18, 144, 18);
 		}
 	}
 
 	@Override
-	protected void renderLabels(PoseStack matrix, int mouseX, int mouseY){
-		font.draw(matrix, title, titleLabelX, titleLabelY, 0x404040);
+	protected void renderLabels(GuiGraphics matrix, int mouseX, int mouseY){
+		matrix.drawString(font, title, titleLabelX, titleLabelY, 0x404040, false);
 
 		for(int i = 0; i < inputBars.length; i++){
 			int lineNumber = i + topIndex;
 			String lineStr = "" + (lineNumber + 1);
-			font.draw(matrix, lineStr, 8, 24 + i * 18, lineNumber == menu.outputIndex ? 0xFF0000 : lineNumber < menu.inputs.size() ? 0xFFFF00 : 0x404040);
+			matrix.drawString(font, lineStr, 8, 24 + i * 18, lineNumber == menu.outputIndex ? 0xFF0000 : lineNumber < menu.inputs.size() ? 0xFFFF00 : 0x404040, false);
 		}
 	}
 
 	@Override
-	public void render(PoseStack matrix, int mouseX, int mouseY, float partialTicks){
+	public void render(GuiGraphics matrix, int mouseX, int mouseY, float partialTicks){
 		renderBackground(matrix);
 		super.render(matrix, mouseX, mouseY, partialTicks);
 //		RenderSystem.disableLighting();

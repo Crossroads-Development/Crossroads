@@ -5,7 +5,6 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.fluid.OreCleanserTileEntity;
 import com.Da_Technomancer.crossroads.crafting.OreCleanserRec;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
-import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -18,6 +17,7 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -64,7 +64,7 @@ public class OreCleanserCategory implements IRecipeCategory<OreCleanserRec>{
 	}
 
 	@Override
-	public void draw(OreCleanserRec recipe, IRecipeSlotsView view, PoseStack matrix, double mouseX, double mouseY){
+	public void draw(OreCleanserRec recipe, IRecipeSlotsView view, GuiGraphics matrix, double mouseX, double mouseY){
 		slot.draw(matrix, 54, 50);
 		slot.draw(matrix, 110, 50);
 		arrowStatic.draw(matrix, 78, 50);

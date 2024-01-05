@@ -81,24 +81,27 @@ public class ArmorEnviroBoots extends TechnomancyArmor{
 	}
 
 	@Override
-	public void onArmorTick(ItemStack stack, Level world, Player player){
-		//Activate frost walker when sneaking
-		int frostWalkLevel = CRConfig.enviroBootFrostWalk.get();
-		if(player.isShiftKeyDown() && !world.isClientSide && frostWalkLevel > 0){
-			FrostWalkerEnchantment.onEntityMoved(player, world, player.blockPosition(), frostWalkLevel);
-		}
+	public void onInventoryTick(ItemStack stack, Level level, Player player, int slotIndex, int selectedIndex){
+		if(slotIndex - 36 < 4){//Is equipped
+			//Activate frost walker when sneaking
+			int frostWalkLevel = CRConfig.enviroBootFrostWalk.get();
+			if(player.isShiftKeyDown() && !level.isClientSide && frostWalkLevel > 0){
+				FrostWalkerEnchantment.onEntityMoved(player, level, player.blockPosition(), frostWalkLevel);
+			}
 
-		//Soul speed
-		BlockState belowState = getStateBelow(player);
-		if(!belowState.isAir()){
-			int level = CRConfig.enviroBootSoulSpeed.get();
-			if(level > 0 && !player.getAbilities().flying && CraftingUtil.tagContains(BlockTags.SOUL_SPEED_BLOCKS, belowState.getBlock())){//Re-implementation of player.onSoulSpeedBlock()
-				AttributeInstance speedAttribute = player.getAttribute(Attributes.MOVEMENT_SPEED);
-				if(speedAttribute != null && speedAttribute.getModifier(SOUL_SPEED_BOOT_ID) == null){
-					speedAttribute.addTransientModifier(new AttributeModifier(SOUL_SPEED_BOOT_ID, "Soul speed boost", (double) (0.03F * (1.0F + (float) level * 0.35F)), AttributeModifier.Operation.ADDITION));
+			//Soul speed
+			BlockState belowState = getStateBelow(player);
+			if(!belowState.isAir()){
+				int speedLevel = CRConfig.enviroBootSoulSpeed.get();
+				if(speedLevel > 0 && !player.getAbilities().flying && CraftingUtil.tagContains(BlockTags.SOUL_SPEED_BLOCKS, belowState.getBlock())){//Re-implementation of player.onSoulSpeedBlock()
+					AttributeInstance speedAttribute = player.getAttribute(Attributes.MOVEMENT_SPEED);
+					if(speedAttribute != null && speedAttribute.getModifier(SOUL_SPEED_BOOT_ID) == null){
+						speedAttribute.addTransientModifier(new AttributeModifier(SOUL_SPEED_BOOT_ID, "Soul speed boost", (double) (0.03F * (1.0F + (float) speedLevel * 0.35F)), AttributeModifier.Operation.ADDITION));
+					}
 				}
 			}
 		}
+		super.onInventoryTick(stack, level, player, slotIndex, selectedIndex);
 	}
 
 	private static BlockState getStateBelow(LivingEntity entity){
@@ -109,10 +112,10 @@ public class ArmorEnviroBoots extends TechnomancyArmor{
 		int j = Mth.floor(entityPositionVec.y - (double) 0.2F);
 		int k = Mth.floor(entityPositionVec.z);
 		BlockPos blockpos = new BlockPos(i, j, k);
-		if(entity.level.isEmptyBlock(blockpos)){
+		if(entity.level().isEmptyBlock(blockpos)){
 			BlockPos blockpos1 = blockpos.below();
-			BlockState blockstate = entity.level.getBlockState(blockpos1);
-			if(blockstate.collisionExtendsVertically(entity.level, blockpos1, entity)){
+			BlockState blockstate = entity.level().getBlockState(blockpos1);
+			if(blockstate.collisionExtendsVertically(entity.level(), blockpos1, entity)){
 				downPos = blockpos1;
 			}else{
 				downPos = blockpos;
@@ -121,6 +124,6 @@ public class ArmorEnviroBoots extends TechnomancyArmor{
 			downPos = blockpos;
 		}
 
-		return entity.level.getBlockState(downPos);
+		return entity.level().getBlockState(downPos);
 	}
 }
