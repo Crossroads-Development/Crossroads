@@ -89,7 +89,7 @@ public class GenericFluid extends LiquidBlock{
 		data.flowing = new Flowing(data::getType, data::getStill, data::getFlowing, data::getBlock, data::getBucket);
 		data.bucket = new BucketItem(data::getStill, BUCKET_PROP);
 
-		data.block = new GenericFluid(data::getStill, (lavaLike ? BlockBehaviour.Properties.of().mapColor(MapColor.FIRE) : BlockBehaviour.Properties.of().mapColor(MapColor.WATER)).liquid().sound(SoundType.EMPTY).pushReaction(PushReaction.DESTROY).noCollission().strength(100.0F).noLootTable().lightLevel(state -> light));
+		data.block = new GenericFluid(data::getStill, (lavaLike ? BlockBehaviour.Properties.of().mapColor(MapColor.FIRE) : BlockBehaviour.Properties.of().mapColor(MapColor.WATER)).liquid().sound(SoundType.EMPTY).pushReaction(PushReaction.DESTROY).noCollission().strength(100.0F).noLootTable().lightLevel(state -> light).replaceable());
 
 		CRFluids.toRegisterType.put(name, data.type);
 		CRFluids.toRegisterFluid.put(name, data.still);

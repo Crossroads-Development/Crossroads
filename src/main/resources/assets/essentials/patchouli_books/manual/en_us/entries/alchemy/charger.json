@@ -15,11 +15,7 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<thing>$(l:essentials:intro/alchemy)/$ that need a charged environment (these <thing>$(l:essentials:intro/alchemy)reactions/$ are shown by a lightning bolt symbol in the JEI recipe page).$(br2)It drains 10FE/t at all times, and has a capacity of 100FE. Like the <item>$(l:essentials:alchemy/glassware)glassware stand/$, <item>$(l:essentials:heat/cable)heat cables/$ can connect to the bottom if it contains a <item>$(l:essentials:alchemy/glassware)florence flask/$, but unlike the <item>$(l:essentials:alchemy/glassware)glassware stand/$, it will <em>never connect on the top to "
-		},
-		{
-			"type": "patchouli:text",
-			"text": "<em>a <item>$(l:essentials:alchemy/conduit)alchemy conduit/$.$(br2)"
+			"text": "<thing>$(l:essentials:intro/alchemy)/$ that need a charged environment (these <thing>$(l:essentials:intro/alchemy)reactions/$ are shown by a lightning bolt symbol in the JEI recipe page).$(br2)It drains 10FE/t at all times, and has a capacity of 100FE. Dispensers can place and remove <item>$(l:essentials:alchemy/glassware)glassware/$ from the <item>electrolyzer/$ the same way as with a <item>$(l:essentials:alchemy/glassware#stand)glassware stand/$.$(br2)"
 		},
 		{
 			"type": "patchouli:text",

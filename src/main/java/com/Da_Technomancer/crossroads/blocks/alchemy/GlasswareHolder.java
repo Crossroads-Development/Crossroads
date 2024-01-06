@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
+import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -33,8 +34,14 @@ public class GlasswareHolder extends BaseEntityBlock{
 	private static final VoxelShape FLORENCE_SHAPE = Shapes.or(box(5, 8, 5, 11, 16, 11), box(3, 0, 3, 13, 8, 13));
 	private static final VoxelShape SHELL_SHAPE = box(4, 0, 4, 12, 12, 12);
 
+	private static final VoxelShape EMPTY_SHAPE_INV = box(5, 8, 5, 11, 16, 11);
+	private static final VoxelShape PHIAL_SHAPE_INV = box(5, 0, 5, 11, 16, 11);
+	private static final VoxelShape FLORENCE_SHAPE_INV = Shapes.or(box(5, 5, 5, 8, 16, 11), box(3, 0, 3, 13, 8, 13));
+	private static final VoxelShape SHELL_SHAPE_INV = box(4, 4, 4, 12, 16, 12);
+
 	public GlasswareHolder(){
 		this("glassware_holder");
+		registerDefaultState(defaultBlockState().setValue(CRProperties.INVERTED, false).setValue(CRProperties.CONTAINER_TYPE, AbstractGlassware.GlasswareTypes.NONE).setValue(CRProperties.CRYSTAL, false));
 	}
 
 	protected GlasswareHolder(String name){
@@ -55,17 +62,21 @@ public class GlasswareHolder extends BaseEntityBlock{
 
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context){
-		switch(state.getValue(CRProperties.CONTAINER_TYPE)){
-			case NONE:
-				return EMPTY_SHAPE;
-			case PHIAL:
-				return PHIAL_SHAPE;
-			case FLORENCE:
-				return FLORENCE_SHAPE;
-			case SHELL:
-				return SHELL_SHAPE;
+		if(state.getValue(CRProperties.INVERTED)){
+			return switch(state.getValue(CRProperties.CONTAINER_TYPE)){
+				case NONE -> EMPTY_SHAPE_INV;
+				case PHIAL -> PHIAL_SHAPE_INV;
+				case FLORENCE -> FLORENCE_SHAPE_INV;
+				case SHELL -> SHELL_SHAPE_INV;
+			};
+		}else{
+			return switch(state.getValue(CRProperties.CONTAINER_TYPE)){
+				case NONE -> EMPTY_SHAPE;
+				case PHIAL -> PHIAL_SHAPE;
+				case FLORENCE -> FLORENCE_SHAPE;
+				case SHELL -> SHELL_SHAPE;
+			};
 		}
-		return Shapes.block();
 	}
 
 	@Override
@@ -83,8 +94,8 @@ public class GlasswareHolder extends BaseEntityBlock{
 	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving){
 		if(newState.getBlock() != this){
 			BlockEntity te = world.getBlockEntity(pos);
-			if(te instanceof GlasswareHolderTileEntity){
-				((GlasswareHolderTileEntity) te).onBlockDestroyed(state);
+			if(te instanceof GlasswareHolderTileEntity glasswareTE){
+				glasswareTE.onBlockDestroyed(state);
 			}
 		}
 		super.onRemove(state, world, pos, newState, isMoving);
@@ -96,21 +107,8 @@ public class GlasswareHolder extends BaseEntityBlock{
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving){
-		if(worldIn.hasNeighborSignal(pos)){
-			if(!state.getValue(CRProperties.REDSTONE_BOOL)){
-				worldIn.setBlockAndUpdate(pos, state.setValue(CRProperties.REDSTONE_BOOL, true));
-				worldIn.updateNeighbourForOutputSignal(pos, this);
-			}
-		}else if(state.getValue(CRProperties.REDSTONE_BOOL)){
-			worldIn.setBlockAndUpdate(pos, state.setValue(CRProperties.REDSTONE_BOOL, false));
-			worldIn.updateNeighbourForOutputSignal(pos, this);
-		}
-	}
-
-	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder){
-		builder.add(CRProperties.CRYSTAL, CRProperties.CONTAINER_TYPE, CRProperties.REDSTONE_BOOL);
+		builder.add(CRProperties.CRYSTAL, CRProperties.CONTAINER_TYPE, CRProperties.INVERTED);
 	}
 
 	@Override

@@ -9,6 +9,7 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
+import com.Da_Technomancer.essentials.api.ConfigUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundSource;
@@ -72,7 +73,6 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 		return heldType().capacity;
 	}
 
-
 	private ItemStack getStoredItem(BlockState state){
 		AbstractGlassware.GlasswareTypes heldType = state.getValue(CRProperties.CONTAINER_TYPE);
 		if(heldType == AbstractGlassware.GlasswareTypes.NONE){
@@ -118,17 +118,47 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 
 	public void onBlockDestroyed(BlockState state){
 		if(state.getValue(CRProperties.CONTAINER_TYPE) != AbstractGlassware.GlasswareTypes.NONE){
-			ItemStack out = getStoredItem(state);
-			this.contents = new ReagentMap();
-			dirtyReag = true;
-			glassType = AbstractGlassware.GlasswareTypes.NONE;
-			setChanged();
-			Containers.dropItemStack(level, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), out);
+			Containers.dropItemStack(level, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), removeGlassware(false));
 		}
 	}
 
+	public ItemStack removeGlassware(boolean setState){
+		ItemStack out = getStoredItem(getBlockState());
+		glassType = null;
+		this.contents.clear();
+		dirtyReag = true;
+		setChanged();
+		if(setState){
+			level.setBlockAndUpdate(worldPosition, getBlockState().setValue(CRProperties.CRYSTAL, false).setValue(CRProperties.CONTAINER_TYPE, AbstractGlassware.GlasswareTypes.NONE));
+		}
+		//Invalidate the heat capability, as if we went from florence -> non florence, we stopped allowing cable connections
+		heatOpt.invalidate();
+		heatOpt = LazyOptional.of(HeatHandler::new);
+		return out;
+	}
+
+	public ItemStack placeGlassware(ItemStack stack){
+		if(heldType() == AbstractGlassware.GlasswareTypes.NONE && stack.getItem() instanceof AbstractGlassware glassware){
+			//No stored glassware- place onto stand
+			//Add item into TE
+			this.contents = glassware.getReagants(stack);
+			glass = !glassware.isCrystal();
+			dirtyReag = true;
+			setChanged();
+			glassType = null;
+			level.setBlockAndUpdate(worldPosition, getBlockState().setValue(CRProperties.CRYSTAL, !glass).setValue(CRProperties.CONTAINER_TYPE, glassware.containerType()));
+			if(contents.getTotalQty() > 0){
+				//Force cable temperature to bottle temperature, prevents averaging with previous temperature
+				cableTemp = contents.getTempC();
+			}
+			return ItemStack.EMPTY;
+		}
+		return stack;
+	}
+
 	/**
-	 * Normal behavior: 
+	 * Normal behavior:
+	 * Click with wrench: Flip the stand
 	 * Shift click with empty hand: Remove phial
 	 * Normal click with empty hand: Try to remove solid reagent
 	 * Normal click with phial: Add phial to stand, or merge phial contents
@@ -137,38 +167,22 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 	@Nonnull
 	@Override
 	public ItemStack rightClickWithItem(ItemStack stack, boolean sneaking, Player player, InteractionHand hand){
-		BlockState state = getBlockState();
-
-		if(heldType() != AbstractGlassware.GlasswareTypes.NONE){
-			if(stack.isEmpty() && sneaking){
-				ItemStack out = getStoredItem(getBlockState());
-				glassType = null;
-				this.contents.clear();
-				dirtyReag = true;
-				setChanged();
-				level.setBlockAndUpdate(worldPosition, state.setValue(CRProperties.CRYSTAL, false).setValue(CRProperties.CONTAINER_TYPE, AbstractGlassware.GlasswareTypes.NONE));
-				//Invalidate the heat capability, as if we went from florence -> non florence, we stopped allowing cable connections
-				heatOpt.invalidate();
-				heatOpt = LazyOptional.of(HeatHandler::new);
-				return out;
-			}
-			return super.rightClickWithItem(stack, sneaking, player, hand);
-		}else if(stack.getItem() instanceof AbstractGlassware){
-			//Add item into TE
-			this.contents = ((AbstractGlassware) stack.getItem()).getReagants(stack);
-			glass = !((AbstractGlassware) stack.getItem()).isCrystal();
-			dirtyReag = true;
-			setChanged();
-			glassType = null;
-			level.setBlockAndUpdate(worldPosition, state.setValue(CRProperties.CRYSTAL, !glass).setValue(CRProperties.CONTAINER_TYPE, ((AbstractGlassware) stack.getItem()).containerType()));
-			if(contents.getTotalQty() > 0){
-				//Force cable temperature to bottle temperature, prevents averaging with previous temperature
-				cableTemp = contents.getTempC();
-			}
-			return ItemStack.EMPTY;
+		if(ConfigUtil.isWrench(stack)){
+			//Flip the holder
+			level.setBlockAndUpdate(worldPosition, getBlockState().setValue(CRProperties.INVERTED, !getBlockState().getValue(CRProperties.INVERTED)));
+			heatOpt.invalidate();
+			heatOpt = LazyOptional.of(HeatHandler::new);
+			return stack;
 		}
 
-		return stack;
+		if(heldType() == AbstractGlassware.GlasswareTypes.NONE){
+			return placeGlassware(stack);
+		}else{
+			if(stack.isEmpty() && sneaking){
+				return removeGlassware(true);
+			}
+			return super.rightClickWithItem(stack, sneaking, player, hand);
+		}
 	}
 
 	@Override
@@ -193,7 +207,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 	protected void performTransfer(){
 		BlockState state = getBlockState();
 		if(state.getBlock() instanceof GlasswareHolder && heldType() != AbstractGlassware.GlasswareTypes.NONE){
-			Direction side = Direction.UP;
+			Direction side = getTopSide();
 			BlockEntity te = level.getBlockEntity(worldPosition.relative(side));
 			LazyOptional<IChemicalHandler> otherOpt;
 			if(contents.getTotalQty() == 0 || te == null || !(otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())).isPresent()){
@@ -206,7 +220,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 				return;
 			}
 
-			if(otherHandler.insertReagents(contents, side.getOpposite(), handler, state.hasProperty(CRProperties.REDSTONE_BOOL) && state.getValue(CRProperties.REDSTONE_BOOL))){
+			if(otherHandler.insertReagents(contents, side.getOpposite(), handler, false)){
 				correctReag();
 				setChanged();
 			}
@@ -226,7 +240,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 	protected EnumTransferMode[] getModes(){
 		EnumTransferMode[] modes = {EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE};
 		if(heldType() != AbstractGlassware.GlasswareTypes.NONE){
-			modes[1] = EnumTransferMode.BOTH;
+			modes[getTopSide().get3DDataValue()] = EnumTransferMode.BOTH;
 		}
 		return modes;
 	}
@@ -237,16 +251,23 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 		heatOpt.invalidate();
 	}
 
+	private Direction getTopSide(){
+		return getBlockState().getOptionalValue(CRProperties.INVERTED).orElseGet(() -> false) ? Direction.DOWN : Direction.UP;
+	}
+
 	private LazyOptional<IHeatHandler> heatOpt = LazyOptional.of(HeatHandler::new);
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
-		if((side == null || side == Direction.UP) && cap == Capabilities.CHEMICAL_CAPABILITY && heldType() != AbstractGlassware.GlasswareTypes.NONE){
-			return (LazyOptional<T>) chemOpt;
-		}
-		if((side == null || side == Direction.DOWN) && cap == Capabilities.HEAT_CAPABILITY && heldType().connectToCable){
-			return (LazyOptional<T>) heatOpt;
+		if(!(this instanceof ChargingStandTileEntity)){
+			//Glassware stand can connect to cables/conduits, subclass charging stand can not
+			if((side == null || side == getTopSide()) && cap == Capabilities.CHEMICAL_CAPABILITY && heldType() != AbstractGlassware.GlasswareTypes.NONE){
+				return (LazyOptional<T>) chemOpt;
+			}
+			if((side == null || side == getTopSide().getOpposite()) && cap == Capabilities.HEAT_CAPABILITY && heldType().connectToCable){
+				return (LazyOptional<T>) heatOpt;
+			}
 		}
 		return super.getCapability(cap, side);
 	}

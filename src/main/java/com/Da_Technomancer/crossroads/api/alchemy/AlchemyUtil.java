@@ -25,7 +25,7 @@ public class AlchemyUtil{
 	/**
 	 * Conversion factor between degrees kelvin * amount alchemy system, and degrees kelvin normal heat. Based on game balance.
 	 */
-	public static final double ALCHEMY_TEMP_CONVERSION = 100D;
+	public static final double ALCHEMY_TEMP_CONVERSION = 20D;
 	//Alchemy calculations are performed once every ALCHEMY_TIME ticks instead of every tick to reduce lag
 	public static final int ALCHEMY_TIME = 2;
 

@@ -23,7 +23,7 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 
 	public static final BlockEntityType<ReagentTankTileEntity> TYPE = CRTileEntity.createType(ReagentTankTileEntity::new, CRBlocks.reagentTankGlass, CRBlocks.reagentTankCrystal);
 
-	public static final int CAPACITY = 1_000;
+	public static final int CAPACITY = 1024;
 
 	public ReagentTankTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state);

@@ -7,7 +7,7 @@
 	"fluid": {
 		"fluid": "crossroads:distilled_water"
 	},
-	"fluid_amount": 100,
+	"fluid_amount": 125,
 	"color": {
 		"base": "C80000FF",
 		"gas": "C8FFFFFF"

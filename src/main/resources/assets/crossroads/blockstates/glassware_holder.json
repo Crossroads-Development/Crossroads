@@ -1,42 +1,77 @@
 {
 	"multipart": [
 		{
-			"when": { "container_type": "none|phial" },
+			"when": { "container_type": "none|phial", "inverted": "false" },
 			"apply": { "model": "crossroads:block/glassware_stand_base_phial" }
 		},
 		{
-			"when": { "container_type": "phial", "crystal": "false" },
+			"when": { "container_type": "phial", "crystal": "false", "inverted": "false" },
 			"apply": { "model": "crossroads:block/glassware_stand_bottle_phial_glass" }
 		},
 		{
-			"when": { "container_type": "phial", "crystal": "true" },
+			"when": { "container_type": "phial", "crystal": "true", "inverted": "false" },
 			"apply": { "model": "crossroads:block/glassware_stand_bottle_phial_cryst" }
 		},
-
 		{
-			"when": { "container_type": "florence" },
+			"when": { "container_type": "florence", "inverted": "false" },
 			"apply": { "model": "crossroads:block/glassware_stand_base_florence" }
 		},
 		{
-			"when": { "container_type": "florence", "crystal": "false" },
+			"when": { "container_type": "florence", "crystal": "false", "inverted": "false" },
 			"apply": { "model": "crossroads:block/glassware_stand_bottle_florence_glass" }
 		},
 		{
-			"when": { "container_type": "florence", "crystal": "true" },
+			"when": { "container_type": "florence", "crystal": "true", "inverted": "false" },
 			"apply": { "model": "crossroads:block/glassware_stand_bottle_florence_cryst" }
 		},
-
 		{
-			"when": { "container_type": "shell" },
+			"when": { "container_type": "shell", "inverted": "false" },
 			"apply": { "model": "crossroads:block/glassware_stand_base_shell" }
 		},
 		{
-			"when": { "container_type": "shell", "crystal": "false" },
+			"when": { "container_type": "shell", "crystal": "false", "inverted": "false" },
 			"apply": { "model": "crossroads:block/glassware_stand_bottle_shell_glass" }
 		},
 		{
-			"when": { "container_type": "shell", "crystal": "true" },
+			"when": { "container_type": "shell", "crystal": "true", "inverted": "false" },
 			"apply": { "model": "crossroads:block/glassware_stand_bottle_shell_cryst" }
+		},
+
+		{
+			"when": { "container_type": "none|phial", "inverted": "true" },
+			"apply": { "model": "crossroads:block/glassware_stand_base_phial", "x": 180 }
+		},
+		{
+			"when": { "container_type": "phial", "crystal": "false", "inverted": "true" },
+			"apply": { "model": "crossroads:block/glassware_stand_bottle_phial_glass", "x": 180 }
+		},
+		{
+			"when": { "container_type": "phial", "crystal": "true", "inverted": "true" },
+			"apply": { "model": "crossroads:block/glassware_stand_bottle_phial_cryst", "x": 180 }
+		},
+		{
+			"when": { "container_type": "florence", "inverted": "true" },
+			"apply": { "model": "crossroads:block/glassware_stand_base_florence", "x": 180 }
+		},
+		{
+			"when": { "container_type": "florence", "crystal": "false", "inverted": "true" },
+			"apply": { "model": "crossroads:block/glassware_stand_bottle_florence_glass", "x": 180 }
+		},
+		{
+			"when": { "container_type": "florence", "crystal": "true", "inverted": "true" },
+			"apply": { "model": "crossroads:block/glassware_stand_bottle_florence_cryst", "x": 180 }
+		},
+		{
+			"when": { "container_type": "shell", "inverted": "true" },
+			"apply": { "model": "crossroads:block/glassware_stand_base_shell", "x": 180 }
+		},
+		{
+			"when": { "container_type": "shell", "crystal": "false", "inverted": "true" },
+			"apply": { "model": "crossroads:block/glassware_stand_bottle_shell_glass", "x": 180 }
+		},
+		{
+			"when": { "container_type": "shell", "crystal": "true", "inverted": "true" },
+			"apply": { "model": "crossroads:block/glassware_stand_bottle_shell_cryst", "x": 180 }
 		}
 	]
 }

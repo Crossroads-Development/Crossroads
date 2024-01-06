@@ -3,6 +3,10 @@ package com.Da_Technomancer.crossroads.items.alchemy;
 import com.Da_Technomancer.crossroads.api.alchemy.IReagent;
 import com.Da_Technomancer.crossroads.api.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
+import com.Da_Technomancer.crossroads.blocks.alchemy.GlasswareHolderTileEntity;
+import net.minecraft.core.BlockSource;
+import net.minecraft.core.Direction;
+import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringRepresentable;
@@ -10,6 +14,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.DispenserBlock;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -18,6 +23,24 @@ import java.util.List;
 import java.util.Locale;
 
 public abstract class AbstractGlassware extends Item{
+
+	private static final GlasswareDispenserBehavior GLASSWARE_DISPENSER_BEHAVIOR = new GlasswareDispenserBehavior();
+
+	protected static class GlasswareDispenserBehavior extends OptionalDispenseItemBehavior{
+
+		@Override
+		protected ItemStack execute(BlockSource source, ItemStack stack){
+			Direction dir = source.getBlockState().getValue(DispenserBlock.FACING);
+			Level world = source.getLevel();
+			if(world.getBlockEntity(source.getPos().relative(dir)) instanceof GlasswareHolderTileEntity glasswareTE){
+				ItemStack result = glasswareTE.placeGlassware(stack);
+				setSuccess(true);//Success if there is a valid target, even if we didn't place the glassware
+				return result;
+			}
+			setSuccess(false);
+			return stack;
+		}
+	}
 
 	private static final String TAG_NAME = "reagents";
 
@@ -28,6 +51,7 @@ public abstract class AbstractGlassware extends Item{
 		super(new Properties().stacksTo(1));
 		this.type = type;
 		this.isCrystal = isCrystal;
+		DispenserBlock.registerBehavior(this, GLASSWARE_DISPENSER_BEHAVIOR);
 	}
 
 	public int getCapacity(){
@@ -135,9 +159,9 @@ public abstract class AbstractGlassware extends Item{
 	public enum GlasswareTypes implements StringRepresentable{
 
 		NONE(0, false),
-		PHIAL(20, false),
-		FLORENCE(100, true),
-		SHELL(20, false);
+		PHIAL(16, false),
+		FLORENCE(128, true),
+		SHELL(32, false);
 
 		public final int capacity;
 		public final boolean connectToCable;

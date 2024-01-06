@@ -388,7 +388,7 @@ public abstract class AlchemyCarrierTE extends BlockEntity implements ITickableT
 	 * @return Maximum capacity
 	 */
 	protected int transferCapacity(){
-		return 10;
+		return 1;
 	}
 
 	protected void performTransfer(){

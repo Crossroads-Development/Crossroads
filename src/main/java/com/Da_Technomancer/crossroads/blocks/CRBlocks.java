@@ -194,19 +194,20 @@ public class CRBlocks{
 	public static BasicBlock oreVoid;
 
 	public static BlockBehaviour.Properties getRockProperty(){
-		return BlockBehaviour.Properties.of().mapColor(MapColor.STONE).sound(SoundType.STONE).strength(3).requiresCorrectToolForDrops();
+		//.forceSolidOn() prevents flowing fluid from destroying this block. Default behavior is anything with a bounding box smaller than some limit is destroyed
+		return BlockBehaviour.Properties.of().mapColor(MapColor.STONE).forceSolidOn().sound(SoundType.STONE).strength(3).requiresCorrectToolForDrops();
 	}
 
 	public static BlockBehaviour.Properties getMetalProperty(){
-		return BlockBehaviour.Properties.of().mapColor(MapColor.METAL).sound(SoundType.METAL).strength(3).requiresCorrectToolForDrops();
+		return BlockBehaviour.Properties.of().mapColor(MapColor.METAL).forceSolidOn().sound(SoundType.METAL).strength(3).requiresCorrectToolForDrops();
 	}
 
 	public static BlockBehaviour.Properties getGlassProperty(){
-		return BlockBehaviour.Properties.of().sound(SoundType.GLASS).strength(0.5F).isValidSpawn((state, getter, pos, type) -> false).isRedstoneConductor((state, getter, pos) -> false).isSuffocating((state, getter, pos) -> false).isViewBlocking((state, getter, pos) -> false);
+		return BlockBehaviour.Properties.of().sound(SoundType.GLASS).forceSolidOn().strength(0.5F).isValidSpawn((state, getter, pos, type) -> false).isRedstoneConductor((state, getter, pos) -> false).isSuffocating((state, getter, pos) -> false).isViewBlocking((state, getter, pos) -> false);
 	}
 
 	public static BlockBehaviour.Properties getWoodProperty(){
-		return BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).sound(SoundType.WOOD).strength(2, 3).ignitedByLava();
+		return BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).forceSolidOn().sound(SoundType.WOOD).strength(2, 3).ignitedByLava();
 	}
 
 	/**

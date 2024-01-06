@@ -31,6 +31,8 @@ public class CRProperties extends ESProperties{
 	public static final IntegerProperty POWER_LEVEL_5 = IntegerProperty.create("power_level", 0, 4);//Used for changing animation speed on stirling engine; 2: no animation; 3: slow forward; 4: fast forward; 1: slow reverse; 0: fast reverse
 	public static final IntegerProperty POWER_LEVEL_7 = IntegerProperty.create("power_level", 0, 6);//Used for changing visual model
 
+	public static final BooleanProperty INVERTED = BooleanProperty.create("inverted");
+
 	//Individual properties for each direction- for blocks with a conduit-like shape
 	public static final BooleanProperty[] HAS_MATCH_SIDES = new BooleanProperty[] {BooleanProperty.create("down_b"), BooleanProperty.create("up_b"), BooleanProperty.create("north_b"), BooleanProperty.create("south_b"), BooleanProperty.create("west_b"), BooleanProperty.create("east_b")};
 

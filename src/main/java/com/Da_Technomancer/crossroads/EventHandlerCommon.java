@@ -13,6 +13,7 @@ import com.Da_Technomancer.crossroads.api.witchcraft.EntityTemplate;
 import com.Da_Technomancer.crossroads.api.witchcraft.IPerishable;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
+import com.Da_Technomancer.crossroads.blocks.alchemy.GlasswareHolderTileEntity;
 import com.Da_Technomancer.crossroads.blocks.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.blocks.rotary.WindingTableTileEntity;
 import com.Da_Technomancer.crossroads.crafting.CRItemTags;
@@ -29,6 +30,7 @@ import com.Da_Technomancer.crossroads.items.technomancy.TechnomancyArmor;
 import com.Da_Technomancer.crossroads.world.CRWorldGen;
 import com.Da_Technomancer.essentials.api.ReflectionUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -58,11 +60,16 @@ import net.minecraft.world.item.trading.Merchant;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.level.block.entity.DispenserBlockEntity;
 import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.VanillaGameEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -650,6 +657,22 @@ public class EventHandlerCommon{
 					IPerishable.getAndInitSpoilTime(brain, ent.level());
 					e.getDrops().add(new ItemEntity(ent.level(), ent.getX(), ent.getY(), ent.getZ(), brain));
 				}
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public void emptyDispenserActivate(VanillaGameEvent e){
+		if(!e.getLevel().isClientSide() && e.getVanillaEvent() == GameEvent.BLOCK_ACTIVATE && e.getContext().affectedState() != null && e.getContext().affectedState().getBlock() == Blocks.DISPENSER){
+			//Empty dispenser activated
+			BlockPos dispenserPos = BlockPos.containing(e.getEventPosition());
+			Direction dispenserDir = e.getContext().affectedState().getValue(DispenserBlock.FACING);
+			BlockPos targetPos = dispenserPos.relative(dispenserDir);
+
+			//Remove glassware from glassware stand
+			if(e.getLevel().getBlockEntity(targetPos) instanceof GlasswareHolderTileEntity glasswareTE && e.getLevel().getBlockEntity(dispenserPos) instanceof DispenserBlockEntity dispenserTE){
+				ItemStack result = glasswareTE.removeGlassware(true);
+				dispenserTE.addItem(result);
 			}
 		}
 	}

@@ -47,7 +47,7 @@ public class ChargingStand extends GlasswareHolder{
 
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder){
-		builder.add(CRProperties.CRYSTAL, CRProperties.CONTAINER_TYPE);//No redstone_bool property, unlike superclass
+		builder.add(CRProperties.CRYSTAL, CRProperties.CONTAINER_TYPE);//No inverted property, unlike superclass
 	}
 
 	@Override

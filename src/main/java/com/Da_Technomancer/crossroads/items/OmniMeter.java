@@ -96,7 +96,7 @@ public class OmniMeter extends Item{
 
 	@Override
 	public void inventoryTick(ItemStack stack, Level worldIn, Entity entityIn, int itemSlot, boolean isSelected){
-		if(!worldIn.isClientSide && isSelected && entityIn instanceof Player player){
+		if(!worldIn.isClientSide && entityIn instanceof Player player && (isSelected || player.getOffhandItem().getItem() == this)){
 			BlockHitResult ray = MiscUtil.rayTrace(player, 8);
 			if(ray == null){
 				return;

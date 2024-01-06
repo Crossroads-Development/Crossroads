@@ -19,32 +19,29 @@ import net.minecraft.world.level.block.DispenserBlock;
 
 public class Shell extends AbstractGlassware{
 
-	private static final DispenseItemBehavior SHELL_DISPENSER_BEHAVIOR = new DefaultDispenseItemBehavior(){
+	private static final DispenseItemBehavior SHELL_DISPENSER_BEHAVIOR = new AbstractGlassware.GlasswareDispenserBehavior(){
 
 		/**
 		 * Dispense the specified stack, play the dispense sound and spawn particles.
 		 */
 		@Override
 		public ItemStack execute(BlockSource source, ItemStack stack){
+			stack = super.execute(source, stack);
+			if(isSuccess()){
+				return stack;
+			}
 			ReagentMap contents = CRItems.shellGlass.getReagants(stack);
 			if(contents.getTotalQty() != 0){
 				Direction dir = source.getBlockState().getValue(DispenserBlock.FACING);
 				Level world = source.getLevel();
-				EntityShell shellEnt = new EntityShell(world, contents, stack);
+				EntityShell shellEnt = new EntityShell(world, contents, stack.copy());
 				shellEnt.setPos(source.x() + dir.getStepX() + 0.5D, source.y() + dir.getStepY() + 0.5D, source.z() + dir.getStepZ() + 0.5D);
 				shellEnt.shoot(dir.getStepX(), dir.getStepY(), dir.getStepZ(), 0.8F, 1.0F);
 				world.addFreshEntity(shellEnt);
 				stack.shrink(1);
+				setSuccess(true);
 			}
 			return stack;
-		}
-
-		/**
-		 * Play the dispense sound from the specified block.
-		 */
-		@Override
-		protected void playSound(BlockSource source){
-			source.getLevel().levelEvent(1000, source.getPos(), 0);
 		}
 	};
 
@@ -52,7 +49,7 @@ public class Shell extends AbstractGlassware{
 		super(GlasswareTypes.SHELL, crystal);
 		String name = "shell_" + (crystal ? "cryst" : "glass");
 		CRItems.queueForRegister(name, this);
-		DispenserBlock.registerBehavior(this, SHELL_DISPENSER_BEHAVIOR);
+		DispenserBlock.registerBehavior(this, SHELL_DISPENSER_BEHAVIOR);//Overrides normal glassware behavior
 	}
 
 	@Override

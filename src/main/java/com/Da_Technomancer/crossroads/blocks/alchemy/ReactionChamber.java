@@ -103,7 +103,7 @@ public class ReactionChamber extends BaseEntityBlock implements IReadable{
 	 * @return The contained reagents. Modifying the returned array does NOT write through to the ItemStack, use the setReagents method.
 	 */
 	@Nonnull
-	public static ReagentMap getReagants(ItemStack stack){
+	public static ReagentMap getReagents(ItemStack stack){
 		return stack.hasTag() ? ReagentMap.readFromNBT(stack.getTag().getCompound(TAG_NAME)) : new ReagentMap();
 	}
 
@@ -125,7 +125,7 @@ public class ReactionChamber extends BaseEntityBlock implements IReadable{
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag flagIn){
-		ReagentMap stored = getReagants(stack);
+		ReagentMap stored = getReagents(stack);
 
 		double temp = stored.getTempC();
 
