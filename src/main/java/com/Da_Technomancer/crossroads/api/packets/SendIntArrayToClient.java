@@ -36,8 +36,8 @@ public class SendIntArrayToClient extends ClientPacket{
 	protected void run(){
 		BlockEntity te = SafeCallable.getClientWorld().getBlockEntity(pos);
 
-		if(te instanceof IIntArrayReceiver){
-			((IIntArrayReceiver) te).receiveInts(id, message, null);
+		if(te instanceof IIntArrayReceiver receiver){
+			receiver.receiveInts(id, message, null);
 		}
 	}
 }

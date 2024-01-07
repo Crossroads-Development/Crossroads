@@ -4,6 +4,6 @@
 	"melting": 900,
 	"boiling": 1400,
 	"item": "crossroads:dusts/alchemy_salt",
-	"color": "C8FFFFFF",
+	"color": "FFDDDDFF",
 	"effect": "salt_alc"
 }

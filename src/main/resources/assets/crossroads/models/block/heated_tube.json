@@ -3,43 +3,66 @@
 	"ambientocclusion": false,
 	"textures": {
 		"particle": "crossroads:block/block_copper",
-		"glass": "#glass",
+		"glass_out": "#glass_out",
+		"glass_in": "#glass_in",
 		"cap": "#cap",
-		"mid": "crossroads:block/block_copper"
+		"mid": "block/copper_block"
     },
     "elements": [
-        {
-            "from": [ 5.0, 0.0, 5.0 ],
-            "to": [ 11.0, 3.0, 11.0 ],
-            "faces": {
-                "west": { "texture": "#glass", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
-                "south": { "texture": "#glass", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
-                "east": { "texture": "#glass", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
-                "north": { "texture": "#glass", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
-                "down": { "texture": "#cap", "uv": [ 0.0, 0.0, 16.0, 16.0 ], "cullface": "down" }
-            }
-        },
-        {
-            "from": [ 5.0, 13.0, 5.0 ],
-            "to": [ 11.0, 16.0, 11.0 ],
-            "faces": {
-                "south": { "texture": "#glass", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
-                "east": { "texture": "#glass", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
-                "north": { "texture": "#glass", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
-                "up": { "texture": "#cap", "uv": [ 0.0, 0.0, 16.0, 16.0 ], "cullface": "east" },
-				"west": { "texture": "#glass", "uv": [ 0.0, 0.0, 16.0, 16.0 ] }
-            }
-        },
+		{
+			"from": [ 6.1, 9.9, 6.1 ],
+			"to": [ 9.9, 16.0, 9.9 ],
+			"faces": {
+				"north": { "uv": [ 0, 0, 10, 16 ], "texture": "#glass_out"},
+				"south": { "uv": [ 0, 0, 10, 16 ], "texture": "#glass_out"},
+				"west":  { "uv": [ 0, 0, 10, 16 ], "texture": "#glass_out"},
+				"east":  { "uv": [ 0, 0, 10, 16 ], "texture": "#glass_out"},
+				"up": { "uv": [ 0, 0, 10, 10 ], "texture": "#cap", "cullface": "up" }
+			}
+		},
+		{
+			"from": [ 6.1, 0, 6.1 ],
+			"to": [ 9.9, 6.1, 9.9 ],
+			"faces": {
+				"north": { "uv": [ 0, 16, 10, 0 ], "texture": "#glass_in"},
+				"south": { "uv": [ 0, 16, 10, 0 ], "texture": "#glass_in"},
+				"west":  { "uv": [ 0, 16, 10, 0 ], "texture": "#glass_in"},
+				"east":  { "uv": [ 0, 16, 10, 0 ], "texture": "#glass_in"},
+				"down": { "uv": [ 0, 0, 10, 10 ], "texture": "#cap", "cullface": "down" }
+			}
+		},
 		{
 			"from": [ 3.0, 3.0, 0.0 ],
+			"to": [ 13.0, 13.0, 2.0 ],
+			"faces": {
+				"north": { "texture": "#mid", "uv": [ 3.0, 3.0, 13.0, 13.0 ], "cullface": "north" },
+				"south": { "texture": "#mid", "uv": [ 3.0, 3.0, 13.0, 13.0 ] },
+				"east": { "texture": "#mid", "uv": [ 3.0, 3.0, 5.0, 13.0 ] },
+				"west": { "texture": "#mid", "uv": [ 3.0, 3.0, 5.0, 13.0 ] },
+				"up": { "texture": "#mid", "uv": [ 3.0, 3.0, 13.0, 5.0 ] },
+				"down": { "texture": "#mid", "uv": [ 3.0, 3.0, 13.0, 5.0 ] }
+			}
+		},
+		{
+			"from": [ 3.0, 3.0, 14.0 ],
 			"to": [ 13.0, 13.0, 16.0 ],
 			"faces": {
-				"north": { "texture": "#mid", "uv": [ 0.0, 0.0, 16.0, 16.0 ], "cullface": "north" },
-				"east": { "texture": "#mid", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
-				"up": { "texture": "#mid", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
-				"west": { "texture": "#mid", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
-				"south": { "texture": "#mid", "uv": [ 0.0, 0.0, 16.0, 16.0 ], "cullface": "south" },
-				"down": { "texture": "#mid", "uv": [ 0.0, 0.0, 16.0, 16.0 ] }
+				"north": { "texture": "#mid", "uv": [ 3.0, 3.0, 13.0, 13.0 ] },
+				"south": { "texture": "#mid", "uv": [ 3.0, 3.0, 13.0, 13.0 ], "cullface": "south" },
+				"east": { "texture": "#mid", "uv": [ 3.0, 3.0, 5.0, 13.0 ] },
+				"west": { "texture": "#mid", "uv": [ 3.0, 3.0, 5.0, 13.0 ] },
+				"up": { "texture": "#mid", "uv": [ 3.0, 3.0, 13.0, 5.0 ] },
+				"down": { "texture": "#mid", "uv": [ 3.0, 3.0, 13.0, 5.0 ] }
+			}
+		},
+		{
+			"from": [ 5.0, 3.0, 2.0 ],
+			"to": [ 11.0, 13.0, 14.0 ],
+			"faces": {
+				"east": { "texture": "#mid", "uv": [ 2.0, 3.0, 14.0, 13.0 ] },
+				"west": { "texture": "#mid", "uv": [ 2.0, 3.0, 14.0, 13.0 ] },
+				"up": { "texture": "#mid", "uv": [ 5.0, 2.0, 11.0, 14.0 ] },
+				"down": { "texture": "#mid", "uv": [ 5.0, 2.0, 11.0, 14.0 ] }
 			}
 		}
     ]

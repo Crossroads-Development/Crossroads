@@ -30,14 +30,14 @@ import javax.annotation.Nullable;
 public class GlasswareHolder extends BaseEntityBlock{
 
 	private static final VoxelShape EMPTY_SHAPE = box(5, 0, 5, 11, 8, 11);
-	private static final VoxelShape PHIAL_SHAPE = box(5, 0, 5, 11, 16, 11);
+	private static final VoxelShape PHIAL_SHAPE = box(6, 0, 6, 10, 16, 10);
 	private static final VoxelShape FLORENCE_SHAPE = Shapes.or(box(5, 8, 5, 11, 16, 11), box(3, 0, 3, 13, 8, 13));
-	private static final VoxelShape SHELL_SHAPE = box(4, 0, 4, 12, 12, 12);
+	private static final VoxelShape SHELL_SHAPE = box(4, 4, 4, 12, 16, 12);
 
-	private static final VoxelShape EMPTY_SHAPE_INV = box(5, 8, 5, 11, 16, 11);
+	private static final VoxelShape EMPTY_SHAPE_INV = box(6, 8, 6, 10, 16, 10);
 	private static final VoxelShape PHIAL_SHAPE_INV = box(5, 0, 5, 11, 16, 11);
 	private static final VoxelShape FLORENCE_SHAPE_INV = Shapes.or(box(5, 5, 5, 8, 16, 11), box(3, 0, 3, 13, 8, 13));
-	private static final VoxelShape SHELL_SHAPE_INV = box(4, 4, 4, 12, 16, 12);
+	private static final VoxelShape SHELL_SHAPE_INV = box(4, 0, 4, 12, 12, 12);
 
 	public GlasswareHolder(){
 		this("glassware_holder");

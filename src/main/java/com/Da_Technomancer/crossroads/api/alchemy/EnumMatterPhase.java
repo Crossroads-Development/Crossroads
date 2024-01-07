@@ -1,12 +1,14 @@
 package com.Da_Technomancer.crossroads.api.alchemy;
 
 public enum EnumMatterPhase{
-	
+
+	//Order affects rendering in ReagentRenderer
+
+	FLAME(true, true, false),
 	GAS(true, true, false),
 	LIQUID(true, false, true),
-	SOLID(true, false, true),
-	FLAME(true, true, false);
-	
+	SOLID(true, false, true);
+
 	private final boolean flows;
 	private final boolean flowsUp;
 	private final boolean flowsDown;

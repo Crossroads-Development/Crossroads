@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
  */
 public class ReagentMap extends HashMap<String, Integer>{
 
-	private double heat;
+	private double heat = 0;
 	private int totalQty;
 	private Set<IReagent> keySetCache;
 
@@ -57,7 +57,7 @@ public class ReagentMap extends HashMap<String, Integer>{
 		}
 
 		int current = getQty(id);
-		if(amount > current){
+		if(amount >= current){
 			amount = current;
 		}
 		heat -= getTempK() * amount;
@@ -70,7 +70,6 @@ public class ReagentMap extends HashMap<String, Integer>{
 			heat = 0;
 			totalQty = 0;
 		}
-		keySetCache = null;
 		return current;
 	}
 
@@ -103,9 +102,16 @@ public class ReagentMap extends HashMap<String, Integer>{
 		if(key == null || value == null || value < 0){
 			return 0;
 		}
-		totalQty -= getQty(key);
+		int prevQty = getQty(key);
+		totalQty -= prevQty;
 		totalQty += value;
-		keySetCache = null;
+		if(keySetCache != null){
+			if(prevQty != 0 && value == 0){
+				keySetCache.remove(ReagentManager.getReagent(key));
+			}else if(prevQty == 0 && value != 0){
+				keySetCache.add(ReagentManager.getReagent(key));
+			}
+		}
 		return super.put(key, value);
 	}
 
@@ -115,15 +121,21 @@ public class ReagentMap extends HashMap<String, Integer>{
 
 	@Override
 	public Integer remove(Object key){
+		IReagent reag = null;
+		String strKey = null;
 		if(key instanceof IReagent){
-			key = ((IReagent) key).getID();
+			reag = (IReagent) key;
+		}else if(key instanceof String){
+			strKey = (String) key;
 		}
 		Integer qty = super.remove(key);
 		if(qty != null){
 			heat -= getTempK() * qty;
 			totalQty -= qty;
+			if(keySetCache != null){
+				keySetCache.remove(reag == null ? ReagentManager.getReagent(strKey) : reag);
+			}
 		}
-		keySetCache = null;
 		return qty;
 	}
 
@@ -165,6 +177,10 @@ public class ReagentMap extends HashMap<String, Integer>{
 		return totalQty == 0 ? 0 : heat / totalQty;
 	}
 
+	/**
+	 * Wipes the caches and recalcutes
+	 * Should only be necessary if modified using a non-overriden method
+	 */
 	public void refresh(){
 		totalQty = 0;
 		keySetCache = null;
@@ -206,12 +222,14 @@ public class ReagentMap extends HashMap<String, Integer>{
 		return super.containsKey(key);
 	}
 
-	@Deprecated
+	/**
+	 *
+	 * @return Set of all reagents present in non-zero quantity. Do not modify the returned value
+	 */
 	public Set<IReagent> keySetReag(){
-		if(keySetCache != null){
-			return keySetCache;
+		if(keySetCache == null){
+			keySetCache = entrySet().stream().filter((entry) -> entry.getValue() > 0).map(Entry::getKey).map(ReagentManager::getReagent).filter(Objects::nonNull).collect(Collectors.toSet());
 		}
-		keySetCache = keySet().stream().map(ReagentManager::getReagent).filter(Objects::nonNull).collect(Collectors.toSet());
 		return keySetCache;
 	}
 }

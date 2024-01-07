@@ -34,7 +34,7 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 	@Override
 	public <T extends ParticleOptions> void addVisualEffect(T particleType, double speedX, double speedY, double speedZ){
 		if(!level.isClientSide){
-			Vec3 particlePos = getParticlePos();
+			Vec3 particlePos = Vec3.atCenterOf(worldPosition);
 			((ServerLevel) level).sendParticles(particleType, particlePos.x, particlePos.y, particlePos.z, 0, speedX, speedY, speedZ, 1F);
 		}
 	}
@@ -58,7 +58,6 @@ public abstract class AlchemyReactorTE extends AlchemyCarrierTE implements IReac
 		}
 
 		if(level.getGameTime() % AlchemyUtil.ALCHEMY_TIME == 0){
-			spawnParticles();
 			performReaction();
 			performTransfer();
 		}

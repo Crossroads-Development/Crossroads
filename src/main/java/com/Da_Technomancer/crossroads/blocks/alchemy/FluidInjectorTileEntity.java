@@ -13,10 +13,14 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import org.apache.commons.lang3.tuple.Pair;
+import org.joml.Vector3f;
 
 public class FluidInjectorTileEntity extends AlchemyCarrierTE{
 
 	public static final BlockEntityType<FluidInjectorTileEntity> TYPE = CRTileEntity.createType(FluidInjectorTileEntity::new, CRBlocks.fluidInjectorCrystal, CRBlocks.fluidInjectorGlass);
+
+	private static final Pair<Vector3f, Vector3f>[] RENDER_SHAPE = new Pair[] {Pair.of(new Vector3f(5F/16F, 1F/16F, 5F/16F), new Vector3f(11F/16F, 15F/16F, 11F/16F))};
 
 	public FluidInjectorTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state);
@@ -51,5 +55,10 @@ public class FluidInjectorTileEntity extends AlchemyCarrierTE{
 			}
 		}
 		return super.getCapability(cap, side);
+	}
+
+	@Override
+	public Pair<Vector3f, Vector3f>[] getRenderVolumes(){
+		return RENDER_SHAPE;
 	}
 }

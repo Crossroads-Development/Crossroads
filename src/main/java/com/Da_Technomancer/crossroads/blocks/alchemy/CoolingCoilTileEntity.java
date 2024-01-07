@@ -10,9 +10,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import org.apache.commons.lang3.tuple.Pair;
+import org.joml.Vector3f;
 
 public class CoolingCoilTileEntity extends AlchemyCarrierTE{
 
@@ -56,10 +57,9 @@ public class CoolingCoilTileEntity extends AlchemyCarrierTE{
 		output[outSide.getOpposite().get3DDataValue()] = EnumTransferMode.INPUT;
 		return output;
 	}
-	
+
 	@Override
-	protected Vec3 getParticlePos(){
-		return Vec3.atLowerCornerOf(worldPosition).add(0.5D, 0.3D, 0.5D);//We add the offset ourselves for finer precision
-		
+	public Pair<Vector3f, Vector3f>[] getRenderVolumes(){
+		return new Pair[0];//No-op
 	}
 }

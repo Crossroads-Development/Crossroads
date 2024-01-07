@@ -29,7 +29,7 @@ import java.util.List;
 
 public class QuartzStabilizer extends BeamBlock implements IReadable{
 
-	private static final VoxelShape[] SHAPE = new VoxelShape[6];
+	public static final VoxelShape[] SHAPE = new VoxelShape[6];
 
 	static{
 		SHAPE[0] = Shapes.or(

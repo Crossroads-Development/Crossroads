@@ -1,15 +1,17 @@
 package com.Da_Technomancer.crossroads.api.alchemy;
 
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.ambient.particles.CRParticles;
-import com.Da_Technomancer.crossroads.ambient.particles.ColorParticleData;
 import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
 import com.Da_Technomancer.crossroads.api.Capabilities;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.api.crafting.FluidIngredient;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
+import com.Da_Technomancer.crossroads.api.packets.CRPackets;
+import com.Da_Technomancer.crossroads.api.packets.IIntArrayReceiver;
+import com.Da_Technomancer.crossroads.api.packets.SendIntArrayToClient;
 import com.Da_Technomancer.crossroads.api.templates.IInfoTE;
+import com.Da_Technomancer.crossroads.api.templates.IReagRenderTE;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 import com.Da_Technomancer.essentials.api.BlockUtil;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
@@ -17,7 +19,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -28,7 +30,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
@@ -38,7 +39,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.Level;
 
 import javax.annotation.Nonnull;
-import java.awt.*;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
@@ -46,7 +47,7 @@ import java.util.Map;
 /**
  * Implementations must implement getCapability directly.
  */
-public abstract class AlchemyCarrierTE extends BlockEntity implements ITickableTileEntity, IInfoTE{
+public abstract class AlchemyCarrierTE extends BlockEntity implements ITickableTileEntity, IInfoTE, IReagRenderTE, IIntArrayReceiver{
 
 	protected boolean init = false;
 	protected double cableTemp = 0;
@@ -55,13 +56,9 @@ public abstract class AlchemyCarrierTE extends BlockEntity implements ITickableT
 	protected boolean dirtyReag = false;
 	protected boolean broken = false;
 
-	/**
-	 * Position to spawn particles for contents
-	 * @return Position
-	 */
-	protected Vec3 getParticlePos(){
-		return Vec3.atCenterOf(worldPosition);
-	}
+	//Used for syncing reag contents to client for rendering
+	protected int[] colorSentToClient = new int[EnumMatterPhase.values().length];
+	protected int[][] colorDataOnClient = new int[EnumMatterPhase.values().length][];
 
 	protected boolean useCableHeat(){
 		return false;
@@ -149,7 +146,7 @@ public abstract class AlchemyCarrierTE extends BlockEntity implements ITickableT
 	 */
 	protected void correctReag(){
 		dirtyReag = false;
-		contents.refresh();
+//		contents.refresh();
 		contents.setTemp(correctTemp());
 
 		//Check for uncontainable reagents
@@ -158,7 +155,7 @@ public abstract class AlchemyCarrierTE extends BlockEntity implements ITickableT
 			ArrayList<IReagent> toRemove = new ArrayList<>(1);//Rare that there is more than 1
 
 			for(IReagent type : contents.keySetReag()){
-				if(contents.getQty(type) > 0 && type.requiresCrystal()){
+				if(type.requiresCrystal()){
 					toRemove.add(type);
 					if(type.destroysBadContainer()){
 						destroy = true;
@@ -169,11 +166,19 @@ public abstract class AlchemyCarrierTE extends BlockEntity implements ITickableT
 
 			if(destroy){
 				destroyCarrier(0);
+				return;
 			}else{
 				for(IReagent type : toRemove){
 					contents.remove(type);
 				}
 			}
+		}
+
+		//Update colors on client
+		int[] updatedColorData = IReagRenderTE.encodeReagMapToColors(contents);
+		if(!Arrays.equals(updatedColorData, colorSentToClient)){
+			colorSentToClient = updatedColorData;
+			CRPackets.sendPacketAround(level, worldPosition, new SendIntArrayToClient((byte) 0, colorSentToClient, worldPosition));
 		}
 	}
 
@@ -191,77 +196,19 @@ public abstract class AlchemyCarrierTE extends BlockEntity implements ITickableT
 		}
 
 		if(level.getGameTime() % AlchemyUtil.ALCHEMY_TIME == 0){
-			spawnParticles();
 			performTransfer();
 		}
 	}
 
-	/**
-	 * Spawns cosmetic particles representing contents
-	 */
-	protected void spawnParticles(){
-		double temp = handler.getTemp();
-		ServerLevel server = (ServerLevel) level;
-		float liqAmount = 0;
-		float[] liqCol = new float[4];
-		float gasAmount = 0;
-		float[] gasCol = new float[4];
-		float flameAmount = 0;
-		float[] flameCol = new float[4];
-		float solAmount = 0;
-		float[] solCol = new float[4];
-		for(IReagent type : contents.keySetReag()){
-			ReagentStack r = contents.getStack(type);
-			if(!r.isEmpty()){
-				Color col = r.getType().getColor(type.getPhase(temp));
-				switch(type.getPhase(temp)){
-					case LIQUID:
-						liqAmount += r.getAmount();
-						liqCol[0] += r.getAmount() * (double) col.getRed();
-						liqCol[1] += r.getAmount() * (double) col.getGreen();
-						liqCol[2] += r.getAmount() * (double) col.getBlue();
-						liqCol[3] += r.getAmount() * (double) col.getAlpha();
-						break;
-					case GAS:
-						gasAmount += r.getAmount();
-						gasCol[0] += r.getAmount() * (double) col.getRed();
-						gasCol[1] += r.getAmount() * (double) col.getGreen();
-						gasCol[2] += r.getAmount() * (double) col.getBlue();
-						gasCol[3] += r.getAmount() * (double) col.getAlpha();
-						break;
-					case FLAME:
-						flameAmount += r.getAmount();
-						flameCol[0] += r.getAmount() * (double) col.getRed();
-						flameCol[1] += r.getAmount() * (double) col.getGreen();
-						flameCol[2] += r.getAmount() * (double) col.getBlue();
-						flameCol[3] += r.getAmount() * (double) col.getAlpha();
-						break;
-					case SOLID:
-						solAmount += r.getAmount();
-						solCol[0] += r.getAmount() * (double) col.getRed();
-						solCol[1] += r.getAmount() * (double) col.getGreen();
-						solCol[2] += r.getAmount() * (double) col.getBlue();
-						solCol[3] += r.getAmount() * (double) col.getAlpha();
-						break;
-					default:
-						break;
-				}
-			}
-		}
+	@Override
+	public int[][] getReagentColorClient(){
+		return colorDataOnClient;
+	}
 
-		Vec3 particlePos = getParticlePos();
-
-		if(liqAmount > 0){
-			server.sendParticles(new ColorParticleData(CRParticles.COLOR_LIQUID, new Color((int) (liqCol[0] / liqAmount), (int) (liqCol[1] / liqAmount), (int) (liqCol[2] / liqAmount), (int) (liqCol[3] / liqAmount))), particlePos.x, particlePos.y, particlePos.z, 0, (Math.random() * 2D - 1D) * 0.02D, (Math.random() - 1D) * 0.02D, (Math.random() * 2D - 1D) * 0.02D, 1F);
-		}
-		if(gasAmount > 0){
-			server.sendParticles(new ColorParticleData(CRParticles.COLOR_GAS, new Color((int) (gasCol[0] / gasAmount), (int) (gasCol[1] / gasAmount), (int) (gasCol[2] / gasAmount), (int) (gasCol[3] / gasAmount))), particlePos.x, particlePos.y, particlePos.z, 0, (Math.random() * 2D - 1D) * 0.015D, Math.random() * 0.015D, (Math.random() * 2D - 1D) * 0.015D, 1F);
-		}
-		if(flameAmount > 0){
-			server.sendParticles(new ColorParticleData(CRParticles.COLOR_FLAME, new Color((int) (flameCol[0] / flameAmount), (int) (flameCol[1] / flameAmount), (int) (flameCol[2] / flameAmount), (int) (flameCol[3] / flameAmount))), particlePos.x, particlePos.y, particlePos.z, 0, (Math.random() * 2D - 1D) * 0.015D, Math.random() * 0.015D, (Math.random() * 2D - 1D) * 0.015D, 1F);
-		}
-		if(solAmount > 0){
-			server.sendParticles(new ColorParticleData(CRParticles.COLOR_SOLID, new Color((int) (solCol[0] / solAmount), (int) (solCol[1] / solAmount), (int) (solCol[2] / solAmount), (int) (solCol[3] / solAmount))), particlePos.x - 0.25D + level.random.nextFloat() / 2F, particlePos.y - 0.1F, particlePos.z - 0.25D + level.random.nextFloat() / 2F, 0, 0, 0, 0, 1F);
+	@Override
+	public void receiveInts(byte context, int[] message, @Nullable ServerPlayer sendingPlayer){
+		if(context == 0){
+			colorDataOnClient = IReagRenderTE.splitColorComponents(message);
 		}
 	}
 
@@ -368,7 +315,7 @@ public abstract class AlchemyCarrierTE extends BlockEntity implements ITickableT
 			}
 		}
 
-		if(!BlockUtil.sameItem(out, stack) || out.getCount() != stack.getCount()){
+		if(!BlockUtil.sameItem(out, stack) || out.getCount() != stack.getCount() || player.isCreative()){
 			setChanged();
 			dirtyReag = true;
 		}
@@ -455,6 +402,8 @@ public abstract class AlchemyCarrierTE extends BlockEntity implements ITickableT
 		init = nbt.getBoolean("initHeat");
 
 		dirtyReag = true;
+		colorSentToClient = nbt.getIntArray("color_to_client");
+		colorDataOnClient = IReagRenderTE.splitColorComponents(colorSentToClient);
 	}
 
 	@Override
@@ -464,6 +413,14 @@ public abstract class AlchemyCarrierTE extends BlockEntity implements ITickableT
 		contents.write(nbt);
 		nbt.putDouble("temp", cableTemp);
 		nbt.putBoolean("initHeat", init);
+		nbt.putIntArray("color_to_client", colorSentToClient);
+	}
+
+	@Override
+	public CompoundTag getUpdateTag(){
+		CompoundTag nbt = super.getUpdateTag();
+		nbt.putIntArray("color_to_client", colorSentToClient);
+		return nbt;
 	}
 
 	protected EnumContainerType getChannel(){

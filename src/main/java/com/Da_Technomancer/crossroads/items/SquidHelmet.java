@@ -22,11 +22,12 @@ public class SquidHelmet extends ArmorItem{
 	}
 
 	@Override
-	public void onArmorTick(ItemStack stack, Level world, Player player){
-		if(player.getAirSupply() <= 150){
-			player.setAirSupply(300);
-			world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.SQUID_DEATH, SoundSource.PLAYERS, 2.5F, 1F);
+	public void onInventoryTick(ItemStack stack, Level world, Player player, int slotIndex, int selectedIndex){
+		if(slotIndex - 36 < 4){//Is equipped
+			if(player.getAirSupply() <= 150){
+				player.setAirSupply(300);
+				world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.SQUID_DEATH, SoundSource.PLAYERS, 2.5F, 1F);
+			}
 		}
 	}
-
 }

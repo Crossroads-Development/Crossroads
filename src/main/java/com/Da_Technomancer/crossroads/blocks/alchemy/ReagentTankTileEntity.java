@@ -16,6 +16,8 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
+import org.apache.commons.lang3.tuple.Pair;
+import org.joml.Vector3f;
 
 import java.util.ArrayList;
 
@@ -24,6 +26,8 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 	public static final BlockEntityType<ReagentTankTileEntity> TYPE = CRTileEntity.createType(ReagentTankTileEntity::new, CRBlocks.reagentTankGlass, CRBlocks.reagentTankCrystal);
 
 	public static final int CAPACITY = 1024;
+
+	private static final Pair<Vector3f, Vector3f>[] RENDER_SHAPE = new Pair[] {Pair.of(new Vector3f(0.02F, 0.02F, 0.02F), new Vector3f(0.98F, 0.98F, 0.98F))};
 
 	public ReagentTankTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state);
@@ -44,6 +48,11 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 
 	public ReagentMap getMap(){
 		return contents;
+	}
+
+	@Override
+	public Pair<Vector3f, Vector3f>[] getRenderVolumes(){
+		return RENDER_SHAPE;
 	}
 
 	public void writeContentNBT(CompoundTag nbt){

@@ -23,6 +23,8 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.items.IItemHandler;
+import org.apache.commons.lang3.tuple.Pair;
+import org.joml.Vector3f;
 
 public class ReactionChamberTileEntity extends AlchemyReactorTE{
 
@@ -32,6 +34,8 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 	private static final int ENERGY_CAPACITY = 20;
 	public static final int DRAIN = 10;
 	public static final int CAPACITY = 256;
+
+	private static final Pair<Vector3f, Vector3f>[] RENDER_SHAPE = new Pair[] {Pair.of(new Vector3f(0.02F, 0.02F, 0.02F), new Vector3f(0.98F, 0.98F, 0.98F))};
 
 	public ReactionChamberTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state);
@@ -47,6 +51,11 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 			init = true;
 			cableTemp = getBiomeTemp();
 		}
+	}
+
+	@Override
+	public Pair<Vector3f, Vector3f>[] getRenderVolumes(){
+		return RENDER_SHAPE;
 	}
 
 	public ReagentMap getMap(){

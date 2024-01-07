@@ -41,6 +41,7 @@ public class CRRenderTypes extends RenderType{
 	public static final ResourceLocation ITEM_CANNON_BARREL_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/item_cannon");
 	public static final ResourceLocation EMBRYO_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/embryo");
 	public static final ResourceLocation VILLAGER_BRAIN_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/villager_brain");
+	public static final ResourceLocation REAGENT_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/reagent_fill");
 
 	//Stitched to beam atlas
 	public static final ResourceLocation BEAM_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/models/beam.png");

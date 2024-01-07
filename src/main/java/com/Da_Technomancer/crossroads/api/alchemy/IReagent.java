@@ -89,7 +89,7 @@ public interface IReagent{
 	TagKey<Item> getJEISolids();
 
 	/**
-	 * @param temp Current temperature in C. Optional, only used if phase hasn't been set yet to update the phase. If phase should already have been set, this can be left as 0.
+	 * @param temp Current temperature in C
 	 * @return The phase
 	 */
 	@Nonnull

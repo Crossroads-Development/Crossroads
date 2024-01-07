@@ -25,13 +25,15 @@ public class ArmorGoggles extends TechnomancyArmor{
 	}
 
 	@Override
-	public void onArmorTick(ItemStack stack, Level world, Player player){
-		CompoundTag nbt;
-		if(!world.isClientSide && (nbt = stack.getTag()) != null){
-			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
-				if(nbt.contains(lens.toString())){
-					if(!lens.useKey() || nbt.getBoolean(lens.toString())){
-						lens.doEffect(world, player);
+	public void onInventoryTick(ItemStack stack, Level world, Player player, int slotIndex, int selectedIndex){
+		if(slotIndex - 36 < 4){//Is equipped
+			CompoundTag nbt;
+			if(!world.isClientSide && (nbt = stack.getTag()) != null){
+				for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
+					if(nbt.contains(lens.toString())){
+						if(!lens.useKey() || nbt.getBoolean(lens.toString())){
+							lens.doEffect(world, player);
+						}
 					}
 				}
 			}

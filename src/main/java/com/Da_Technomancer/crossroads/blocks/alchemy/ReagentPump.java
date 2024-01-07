@@ -35,14 +35,14 @@ import javax.annotation.Nullable;
 
 public class ReagentPump extends BaseEntityBlock{
 
-	private static final double SIZE = 5D;
+	private static final double SIZE = 6.1D;
 	private static final double CORE_SIZE = 4D;
 	
 	protected static final VoxelShape[] SHAPES = new VoxelShape[16];
 	static{
 		final double sizeN = 16D - SIZE;
 		//There are 16 (2^4) possible shapes for this block
-		VoxelShape core = box(CORE_SIZE, 0, CORE_SIZE, 16 - CORE_SIZE, 16, 16 - CORE_SIZE);
+		VoxelShape core = Shapes.or(box(CORE_SIZE, 0, CORE_SIZE, 16 - CORE_SIZE, 11, 16 - CORE_SIZE), box(SIZE, 11, SIZE, sizeN, 16, sizeN));
 		VoxelShape[] pieces = new VoxelShape[4];
 		pieces[0] = box(SIZE, SIZE, 0, sizeN, sizeN, SIZE);
 		pieces[1] = box(SIZE, SIZE, sizeN, sizeN, sizeN, 16);

@@ -1,10 +1,8 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
+import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.Capabilities;
-import com.Da_Technomancer.crossroads.api.alchemy.AlchemyCarrierTE;
-import com.Da_Technomancer.crossroads.api.alchemy.EnumContainerType;
-import com.Da_Technomancer.crossroads.api.alchemy.EnumTransferMode;
-import com.Da_Technomancer.crossroads.api.alchemy.IChemicalHandler;
+import com.Da_Technomancer.crossroads.api.alchemy.*;
 import com.Da_Technomancer.crossroads.api.templates.ConduitBlock;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
@@ -16,8 +14,11 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import org.apache.commons.lang3.tuple.Pair;
+import org.joml.Vector3f;
 
 import javax.annotation.Nonnull;
+import java.util.Arrays;
 
 public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements ConduitBlock.IConduitTE<EnumTransferMode>{
 
@@ -25,6 +26,18 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements Condui
 
 	protected boolean[] matches = new boolean[6];
 	protected EnumTransferMode[] modes = ConduitBlock.IConduitTE.genModeArray(EnumTransferMode.INPUT);
+
+	private static final Pair<Vector3f, Vector3f> RENDER_SHAPE_CORE = Pair.of(new Vector3f(7F/16F, 7F/16F, 7F/16F), new Vector3f((16F-7F)/16F,(16F-7F)/16F,(16F-7F)/16F));
+	private static final Pair<Vector3f, Vector3f>[] RENDER_SHAPE_EDGE = new Pair[6];
+
+	static{
+		RENDER_SHAPE_EDGE[0] = Pair.of(new Vector3f(7F/16F, 0, 7F/16F), new Vector3f((16F-7F)/16F, 7F/16F, (16F-7F)/16F));
+		RENDER_SHAPE_EDGE[1] = Pair.of(new Vector3f(7F/16F, (16F-7F)/16F, 7F/16F), new Vector3f((16F-7F)/16F, 1, (16F-7F)/16F));
+		RENDER_SHAPE_EDGE[2] = Pair.of(new Vector3f(7F/16F, 7F/16F, 0), new Vector3f((16F-7F)/16F, (16F-7F)/16F, 7F/16F));
+		RENDER_SHAPE_EDGE[3] = Pair.of(new Vector3f(7F/16F, 7F/16F, (16F-7F)/16), new Vector3f((16F-7F)/16F, (16F-7F)/16F, 1));
+		RENDER_SHAPE_EDGE[4] = Pair.of(new Vector3f(0, 7F/16F, 7F/16F), new Vector3f(7F/16F, (16F-7F)/16F, (16F-7F)/16F));
+		RENDER_SHAPE_EDGE[5] = Pair.of(new Vector3f((16F-7F)/16, 7F/16F, 7F/16F), new Vector3f(1, (16F-7F)/16F, (16F-7F)/16F));
+	}
 
 	public AlchemicalTubeTileEntity(BlockPos pos, BlockState state){
 		this(TYPE, pos, state);
@@ -126,5 +139,28 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements Condui
 			return (LazyOptional<T>) chemOpt;
 		}
 		return super.getCapability(cap, side);
+	}
+
+	@Override
+	public Pair<Vector3f, Vector3f>[] getRenderVolumes(){
+		for(EnumMatterPhase phase : EnumMatterPhase.values()){
+			if(colorDataOnClient[phase.ordinal()] != null && getBlockState().getBlock() instanceof AlchemicalTube tubeBlock){
+				Pair<Vector3f, Vector3f>[] result = Arrays.copyOf(RENDER_SHAPE_EDGE, RENDER_SHAPE_EDGE.length);
+				BlockState state = getBlockState();
+				for(Direction dir : Direction.values()){
+					int dirIndex = dir.get3DDataValue();
+					if(!tubeBlock.evaluate(state.getValue(CRProperties.CONDUIT_SIDES_SINGLE[dirIndex]), state, this)){
+						result[dirIndex] = null;
+					}
+				}
+				if(!phase.flowsDown()){
+					result[Direction.DOWN.get3DDataValue()] = RENDER_SHAPE_CORE;
+				}else if(!phase.flowsUp()){
+					result[Direction.UP.get3DDataValue()] = RENDER_SHAPE_CORE;
+				}
+				return result;
+			}
+		}
+		return new Pair[0];
 	}
 }

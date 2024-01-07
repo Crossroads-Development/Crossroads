@@ -23,19 +23,21 @@ public class CowLeggings extends ArmorItem{
 	}
 
 	@Override
-	public void onArmorTick(ItemStack stack, Level world, Player player){
-		if(player.getEffect(MobEffects.POISON) != null || player.getEffect(MobEffects.WITHER) != null || player.getEffect(MobEffects.CONFUSION) != null || player.getEffect(MobEffects.BLINDNESS) != null || player.getEffect(MobEffects.MOVEMENT_SLOWDOWN) != null || player.getEffect(MobEffects.WEAKNESS) != null || player.getEffect(MobEffects.HUNGER) != null){
-			player.removeEffect(MobEffects.POISON);
-			player.removeEffect(MobEffects.WITHER);
-			player.removeEffect(MobEffects.CONFUSION);
-			player.removeEffect(MobEffects.BLINDNESS);
-			player.removeEffect(MobEffects.MOVEMENT_SLOWDOWN);
-			player.removeEffect(MobEffects.WEAKNESS);
-			player.removeEffect(MobEffects.HUNGER);
-			player.removeEffect(MobEffects.DIG_SLOWDOWN);
-			player.removeEffect(MobEffects.UNLUCK);
-			player.removeEffect(MobEffects.BAD_OMEN);
-			world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.COW_HURT, SoundSource.PLAYERS, 2.5F, 1F);
+	public void onInventoryTick(ItemStack stack, Level world, Player player, int slotIndex, int selectedIndex){
+		if(slotIndex - 36 < 4){//Is equipped
+			if(player.getEffect(MobEffects.POISON) != null || player.getEffect(MobEffects.WITHER) != null || player.getEffect(MobEffects.CONFUSION) != null || player.getEffect(MobEffects.BLINDNESS) != null || player.getEffect(MobEffects.MOVEMENT_SLOWDOWN) != null || player.getEffect(MobEffects.WEAKNESS) != null || player.getEffect(MobEffects.HUNGER) != null){
+				player.removeEffect(MobEffects.POISON);
+				player.removeEffect(MobEffects.WITHER);
+				player.removeEffect(MobEffects.CONFUSION);
+				player.removeEffect(MobEffects.BLINDNESS);
+				player.removeEffect(MobEffects.MOVEMENT_SLOWDOWN);
+				player.removeEffect(MobEffects.WEAKNESS);
+				player.removeEffect(MobEffects.HUNGER);
+				player.removeEffect(MobEffects.DIG_SLOWDOWN);
+				player.removeEffect(MobEffects.UNLUCK);
+				player.removeEffect(MobEffects.BAD_OMEN);
+				world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.COW_HURT, SoundSource.PLAYERS, 2.5F, 1F);
+			}
 		}
 	}
 }

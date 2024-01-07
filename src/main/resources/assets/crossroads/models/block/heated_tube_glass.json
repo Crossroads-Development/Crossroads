@@ -2,7 +2,8 @@
 	"render_type": "cutout",
 	"parent": "crossroads:block/heated_tube",
 	"textures": {
-		"glass": "crossroads:block/alch_tube/glass_tube_out",
+		"glass_out": "crossroads:block/alch_tube/glass_tube_out",
+		"glass_in": "crossroads:block/alch_tube/glass_tube_in",
 		"cap": "crossroads:block/alch_tube/glass_tube_cap"
 	}
 }

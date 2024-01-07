@@ -35,8 +35,8 @@ public class HeatedTube extends BaseEntityBlock{
 
 	static{
 		VoxelShape vertical = box(3, 0, 3, 13, 16, 13);
-		SHAPE_X = Shapes.or(vertical, box(0, 4, 4, 16, 12, 12));
-		SHAPE_Z = Shapes.or(vertical, box(4, 4, 0, 12, 12, 16));
+		SHAPE_X = Shapes.or(vertical, box(0, 6.1, 6.1, 16, 16-6.1, 16-6.1));
+		SHAPE_Z = Shapes.or(vertical, box(6.1, 6.1, 0, 16-6.1, 16-6.1, 16));
 	}
 
 	public HeatedTube(boolean crystal){

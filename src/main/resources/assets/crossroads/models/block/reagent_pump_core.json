@@ -3,8 +3,7 @@
 	"ambientocclusion": false,
 	"textures": {
 		"particle": "crossroads:block/reagent_pump_side",
-		"mid": "crossroads:block/reagent_pump_side",
-		"end": "crossroads:block/block_bronze"
+		"mid": "crossroads:block/reagent_pump_side"
 	},
 	"elements": [
 		{
@@ -15,8 +14,8 @@
 				"east": { "texture": "#mid", "uv": [ 0.0, 0.0, 8.0, 11.0 ] },
 				"north": { "texture": "#mid", "uv": [ 0.0, 0.0, 8.0, 11.0 ] },
 				"west": { "texture": "#mid", "uv": [ 0.0, 0.0, 8.0, 11.0 ] },
-				"up": { "texture": "#end", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
-				"down": { "texture": "#end", "uv": [ 0.0, 0.0, 16.0, 16.0 ] }
+				"up": { "texture": "#mid", "uv": [ 8.0, 0.0, 16.0, 8.0 ] },
+				"down": { "texture": "#mid", "uv": [ 8.0, 0.0, 16.0, 8.0 ] }
 			}
 		}
 	]

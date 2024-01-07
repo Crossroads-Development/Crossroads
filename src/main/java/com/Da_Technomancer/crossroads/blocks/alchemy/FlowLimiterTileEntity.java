@@ -16,12 +16,18 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import org.apache.commons.lang3.tuple.Pair;
+import org.joml.Vector3f;
 
 public class FlowLimiterTileEntity extends AlchemyCarrierTE{
 
 	public static final BlockEntityType<FlowLimiterTileEntity> TYPE = CRTileEntity.createType(FlowLimiterTileEntity::new, CRBlocks.flowLimiterGlass, CRBlocks.flowLimiterCrystal);
 
 	private static final int[] LIMITS = new int[] {1, 2, 4, 8, 16, 32, 64};
+
+	private static final Pair<Vector3f, Vector3f>[] RENDER_SHAPE_X = new Pair[] {Pair.of(new Vector3f(0, 7/16F, 7/16F), new Vector3f(1, 1F-7/16F, 1F-7/16F))};
+	private static final Pair<Vector3f, Vector3f>[] RENDER_SHAPE_Y = new Pair[] {Pair.of(new Vector3f(7/16F, 0, 7/16F), new Vector3f(1F-7/16F, 1, 1F-7/16F))};
+	private static final Pair<Vector3f, Vector3f>[] RENDER_SHAPE_Z = new Pair[] {Pair.of(new Vector3f(7/16F, 7/16F, 0), new Vector3f(1F-7/16F, 1F-7/16F, 1))};
 
 	private int limitIndex = 0;
 	private Direction facing = null;
@@ -121,5 +127,14 @@ public class FlowLimiterTileEntity extends AlchemyCarrierTE{
 			return (LazyOptional<T>) chemOpt;
 		}
 		return super.getCapability(cap, side);
+	}
+
+	@Override
+	public Pair<Vector3f, Vector3f>[] getRenderVolumes(){
+		return switch(getFacing().getAxis()) {
+			case X -> RENDER_SHAPE_X;
+			case Y -> RENDER_SHAPE_Y;
+			case Z -> RENDER_SHAPE_Z;
+		};
 	}
 }

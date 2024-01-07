@@ -9,7 +9,8 @@
 	},
 	"fluid_amount": 125,
 	"color": {
-		"base": "C80000FF",
-		"gas": "C8FFFFFF"
+		"base": "C80060FF",
+		"gas": "80FFFFFF",
+		"solid": "A0AAE1FF"
 	}
 }

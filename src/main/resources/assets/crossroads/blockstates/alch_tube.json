@@ -1,48 +1,75 @@
 {
 	"multipart": [
 		{
+			"when": { "up": "none" },
 			"apply": { "model": "crossroads:block/conduit/alch_tube_glass_core" }
 		},
-
-		{   "when": { "up": "input" },
+		{
+			"when": { "up": "input" },
 			"apply": { "model": "crossroads:block/conduit/alch_tube_glass_in" }
 		},
-		{   "when": { "up": "output" },
+		{
+			"when": { "up": "output" },
 			"apply": { "model": "crossroads:block/conduit/alch_tube_glass_out" }
 		},
-
-		{   "when": { "down": "input" },
+		{
+			"when": { "down": "none" },
+			"apply": { "model": "crossroads:block/conduit/alch_tube_glass_core", "x": 180, "y": 0  }
+		},
+		{
+			"when": { "down": "input" },
 			"apply": { "model": "crossroads:block/conduit/alch_tube_glass_in", "x": 180, "y": 0 }
 		},
-		{   "when": { "down": "output" },
+		{
+			"when": { "down": "output" },
 			"apply": { "model": "crossroads:block/conduit/alch_tube_glass_out", "x": 180, "y": 0 }
 		},
-
-		{   "when": { "east": "input" },
+		{
+			"when": { "east": "none" },
+			"apply": { "model": "crossroads:block/conduit/alch_tube_glass_core", "x": 90, "y": 90  }
+		},
+		{
+			"when": { "east": "input" },
 			"apply": { "model": "crossroads:block/conduit/alch_tube_glass_in", "x": 90, "y": 90 }
 		},
-		{   "when": { "east": "output" },
+		{
+			"when": { "east": "output" },
 			"apply": { "model": "crossroads:block/conduit/alch_tube_glass_out", "x": 90, "y": 90 }
 		},
-
-		{   "when": { "west": "input" },
+		{
+			"when": { "west": "none" },
+			"apply": { "model": "crossroads:block/conduit/alch_tube_glass_core", "x": 90, "y": 270  }
+		},
+		{
+			"when": { "west": "input" },
 			"apply": { "model": "crossroads:block/conduit/alch_tube_glass_in", "x": 90, "y": 270 }
 		},
-		{   "when": { "west": "output" },
+		{
+			"when": { "west": "output" },
 			"apply": { "model": "crossroads:block/conduit/alch_tube_glass_out", "x": 90, "y": 270 }
 		},
-
-		{   "when": { "north": "input" },
+		{
+			"when": { "north": "none" },
+			"apply": { "model": "crossroads:block/conduit/alch_tube_glass_core", "x": 90, "y": 0  }
+		},
+		{
+			"when": { "north": "input" },
 			"apply": { "model": "crossroads:block/conduit/alch_tube_glass_in", "x": 90, "y": 0 }
 		},
-		{   "when": { "north": "output" },
+		{
+			"when": { "north": "output" },
 			"apply": { "model": "crossroads:block/conduit/alch_tube_glass_out", "x": 90, "y": 0 }
 		},
-
-		{   "when": { "south": "input" },
+		{
+			"when": { "south": "none" },
+			"apply": { "model": "crossroads:block/conduit/alch_tube_glass_core", "x": 90, "y": 180  }
+		},
+		{
+			"when": { "south": "input" },
 			"apply": { "model": "crossroads:block/conduit/alch_tube_glass_in", "x": 90, "y": 180 }
 		},
-		{   "when": { "south": "output" },
+		{
+			"when": { "south": "output" },
 			"apply": { "model": "crossroads:block/conduit/alch_tube_glass_out", "x": 90, "y": 180 }
 		}
 	]

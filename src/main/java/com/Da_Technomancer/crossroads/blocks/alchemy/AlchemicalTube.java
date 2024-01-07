@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
 
 public class AlchemicalTube extends ConduitBlock<EnumTransferMode>{
 
-	private static final double SIZE = 5D / 16D;
+	protected static final double SIZE = 6.1D / 16D;
 	protected static final VoxelShape[] SHAPES = generateShapes(SIZE);
 
 	protected final boolean crystal;

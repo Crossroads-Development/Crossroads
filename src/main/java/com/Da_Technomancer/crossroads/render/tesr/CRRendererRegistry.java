@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.render.tesr;
 
+import com.Da_Technomancer.crossroads.blocks.alchemy.*;
 import com.Da_Technomancer.crossroads.blocks.beams.*;
 import com.Da_Technomancer.crossroads.blocks.electric.DynamoTileEntity;
 import com.Da_Technomancer.crossroads.blocks.electric.TeslaCoilTopTileEntity;
@@ -58,6 +59,17 @@ public class CRRendererRegistry{
 		registerTESR(e, BloodCentrifugeTileEntity.TYPE, BloodCentrifugeRenderer::new);
 		registerTESR(e, BeamExtractorCreativeTileEntity.TYPE, BeamRenderer::new);
 		registerTESR(e, ItemCannonTileEntity.TYPE, ItemCannonRenderer::new);
+		registerTESR(e, ReactionChamberTileEntity.TYPE, ReagentRenderer::new);
+		registerTESR(e, ReagentTankTileEntity.TYPE, ReagentRenderer::new);
+		registerTESR(e, AlchemicalTubeTileEntity.TYPE, ReagentRenderer::new);
+		registerTESR(e, RedsAlchemicalTubeTileEntity.TYPE, ReagentRenderer::new);
+		registerTESR(e, HeatedTubeTileEntity.TYPE, ReagentRenderer::new);
+		registerTESR(e, FlowLimiterTileEntity.TYPE, ReagentRenderer::new);
+		registerTESR(e, GlasswareHolderTileEntity.TYPE, ReagentRenderer::new);
+		registerTESR(e, ReagentPumpTileEntity.TYPE, ReagentRenderer::new);
+		registerTESR(e, ChargingStandTileEntity.TYPE, ReagentRenderer::new);
+		registerTESR(e, FluidInjectorTileEntity.TYPE, ReagentRenderer::new);
+		registerTESR(e, ReagentFilterTileEntity.TYPE, ReagentRenderer::new);
 	}
 
 	private static <T extends BlockEntity> void registerTESR(EntityRenderersEvent.RegisterRenderers e, BlockEntityType<?> teType, BlockEntityRendererProvider<T> tesrConstructor){

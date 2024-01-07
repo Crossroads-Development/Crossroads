@@ -24,6 +24,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import org.apache.commons.lang3.tuple.Pair;
+import org.joml.Vector3f;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,6 +33,8 @@ import javax.annotation.Nullable;
 public class ReagentFilterTileEntity extends AlchemyCarrierTE implements MenuProvider, Container{
 
 	public static final BlockEntityType<ReagentFilterTileEntity> TYPE = CRTileEntity.createType(ReagentFilterTileEntity::new, CRBlocks.reagentFilterGlass, CRBlocks.reagentFilterCrystal);
+
+	private static final Pair<Vector3f, Vector3f>[] RENDER_SHAPE = new Pair[] {Pair.of(new Vector3f(3F/16F, 4F/16F, 3F/16F), new Vector3f(13F/16F, 12F/16F, 13F/16F))};
 
 	private Direction facing = null;
 	private ItemStack inventory = ItemStack.EMPTY;
@@ -216,5 +220,10 @@ public class ReagentFilterTileEntity extends AlchemyCarrierTE implements MenuPro
 	@Override
 	public AbstractContainerMenu createMenu(int id, Inventory playerInv, Player player){
 		return new ReagentFilterContainer(id, playerInv, new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(worldPosition));
+	}
+
+	@Override
+	public Pair<Vector3f, Vector3f>[] getRenderVolumes(){
+		return RENDER_SHAPE;
 	}
 }

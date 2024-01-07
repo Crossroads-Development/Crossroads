@@ -41,11 +41,13 @@ public class PigZombieChestsplate extends ArmorItem{
 	}
 
 	@Override
-	public void onArmorTick(ItemStack stack, Level world, Player player){
-		//Believe it or not, it is possible to die of fire while in lava without burning (if it is raining on the player). There is an isInLava check for this reason.
-		if(player.getEffect(MobEffects.FIRE_RESISTANCE) == null && (player.isOnFire() || player.isInLava())){
-			player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 10, 0, false, false));
-			world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.PIGLIN_HURT, SoundSource.PLAYERS, 2.5F, 1F);
+	public void onInventoryTick(ItemStack stack, Level world, Player player, int slotIndex, int selectedIndex){
+		if(slotIndex - 36 < 4){//Is equipped
+			//Believe it or not, it is possible to die of fire while in lava without burning (if it is raining on the player). There is an isInLava check for this reason.
+			if(player.getEffect(MobEffects.FIRE_RESISTANCE) == null && (player.isOnFire() || player.isInLava())){
+				player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 10, 0, false, false));
+				world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.PIGLIN_HURT, SoundSource.PLAYERS, 2.5F, 1F);
+			}
 		}
 	}
 }

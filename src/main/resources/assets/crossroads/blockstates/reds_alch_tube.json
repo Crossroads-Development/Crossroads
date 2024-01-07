@@ -1,48 +1,75 @@
 {
 	"multipart": [
 		{
+			"when": { "OR": [{"up": "none"}, {"redstone_bool": "false"}] },
 			"apply": { "model": "crossroads:block/conduit/alch_tube_glass_core" }
 		},
-
-		{   "when": { "up": "input", "redstone_bool": "true" },
+		{
+			"when": { "up": "input", "redstone_bool": "true" },
 			"apply": { "model": "crossroads:block/conduit/alch_tube_glass_in" }
 		},
-		{   "when": { "up": "output", "redstone_bool": "true" },
+		{
+			"when": { "up": "output", "redstone_bool": "true" },
 			"apply": { "model": "crossroads:block/conduit/alch_tube_glass_out" }
 		},
-
-		{   "when": { "down": "input", "redstone_bool": "true" },
+		{
+			"when": { "OR": [{"down": "none"}, {"redstone_bool": "false"}] },
+			"apply": { "model": "crossroads:block/conduit/alch_tube_glass_core", "x": 180, "y": 0  }
+		},
+		{
+			"when": { "down": "input", "redstone_bool": "true" },
 			"apply": { "model": "crossroads:block/conduit/alch_tube_glass_in", "x": 180, "y": 0 }
 		},
-		{   "when": { "down": "output", "redstone_bool": "true" },
+		{
+			"when": { "down": "output", "redstone_bool": "true" },
 			"apply": { "model": "crossroads:block/conduit/alch_tube_glass_out", "x": 180, "y": 0 }
 		},
-
-		{   "when": { "east": "input", "redstone_bool": "true" },
+		{
+			"when": { "OR": [{"east": "none"}, {"redstone_bool": "false"}] },
+			"apply": { "model": "crossroads:block/conduit/alch_tube_glass_core", "x": 90, "y": 90  }
+		},
+		{
+			"when": { "east": "input", "redstone_bool": "true" },
 			"apply": { "model": "crossroads:block/conduit/alch_tube_glass_in", "x": 90, "y": 90 }
 		},
-		{   "when": { "east": "output", "redstone_bool": "true" },
+		{
+			"when": { "east": "output", "redstone_bool": "true" },
 			"apply": { "model": "crossroads:block/conduit/alch_tube_glass_out", "x": 90, "y": 90 }
 		},
-
-		{   "when": { "west": "input", "redstone_bool": "true" },
+		{
+			"when": { "OR": [{"west": "none"}, {"redstone_bool": "false"}] },
+			"apply": { "model": "crossroads:block/conduit/alch_tube_glass_core", "x": 90, "y": 270  }
+		},
+		{
+			"when": { "west": "input", "redstone_bool": "true" },
 			"apply": { "model": "crossroads:block/conduit/alch_tube_glass_in", "x": 90, "y": 270 }
 		},
-		{   "when": { "west": "output", "redstone_bool": "true" },
+		{
+			"when": { "west": "output", "redstone_bool": "true" },
 			"apply": { "model": "crossroads:block/conduit/alch_tube_glass_out", "x": 90, "y": 270 }
 		},
-
-		{   "when": { "north": "input", "redstone_bool": "true" },
+		{
+			"when": { "OR": [{"north": "none"}, {"redstone_bool": "false"}] },
+			"apply": { "model": "crossroads:block/conduit/alch_tube_glass_core", "x": 90, "y": 0  }
+		},
+		{
+			"when": { "north": "input", "redstone_bool": "true" },
 			"apply": { "model": "crossroads:block/conduit/alch_tube_glass_in", "x": 90, "y": 0 }
 		},
-		{   "when": { "north": "output", "redstone_bool": "true" },
+		{
+			"when": { "north": "output", "redstone_bool": "true" },
 			"apply": { "model": "crossroads:block/conduit/alch_tube_glass_out", "x": 90, "y": 0 }
 		},
-
-		{   "when": { "south": "input", "redstone_bool": "true" },
+		{
+			"when": { "OR": [{"south": "none"}, {"redstone_bool": "false"}] },
+			"apply": { "model": "crossroads:block/conduit/alch_tube_glass_core", "x": 90, "y": 180  }
+		},
+		{
+			"when": { "south": "input", "redstone_bool": "true" },
 			"apply": { "model": "crossroads:block/conduit/alch_tube_glass_in", "x": 90, "y": 180 }
 		},
-		{   "when": { "south": "output", "redstone_bool": "true" },
+		{
+			"when": { "south": "output", "redstone_bool": "true" },
 			"apply": { "model": "crossroads:block/conduit/alch_tube_glass_out", "x": 90, "y": 180 }
 		}
 	]

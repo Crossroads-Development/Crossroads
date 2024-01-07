@@ -22,9 +22,10 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import org.apache.commons.lang3.tuple.Pair;
+import org.joml.Vector3f;
 
 import javax.annotation.Nonnull;
 
@@ -33,6 +34,15 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 	public static final BlockEntityType<GlasswareHolderTileEntity> TYPE = CRTileEntity.createType(GlasswareHolderTileEntity::new, CRBlocks.glasswareHolder);
 
 	protected AbstractGlassware.GlasswareTypes glassType = null;
+
+	@SuppressWarnings("unchecked")
+	private static final Pair<Vector3f, Vector3f>[] RENDER_SHAPE_EMPTY = new Pair[0];
+	@SuppressWarnings("unchecked")
+	private static final Pair<Vector3f, Vector3f>[] RENDER_SHAPE_PHIAL = new Pair[] {Pair.of(new Vector3f(6/16F+0.01F, 1/16F, 6/16F+0.01F), new Vector3f(10/16F-0.01F, 15/16F, 10/16F-0.01F))};
+	@SuppressWarnings("unchecked")
+	private static final Pair<Vector3f, Vector3f>[] RENDER_SHAPE_FLORENCE = new Pair[] {Pair.of(new Vector3f(5/16F, 1/16F, 5/16F), new Vector3f(11/16F, 7F/16F, 11/16F))};
+	@SuppressWarnings("unchecked")
+	private static final Pair<Vector3f, Vector3f>[] RENDER_SHAPE_SHELL = new Pair[] {Pair.of(new Vector3f(5/16F+0.01F, 6F/16F, 5/16F+0.01F), new Vector3f(11/16F-0.01F, 13/16F, 11/16F-0.01F))};
 
 	public GlasswareHolderTileEntity(BlockPos pos, BlockState state){
 		this(TYPE, pos, state);
@@ -186,16 +196,6 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 	}
 
 	@Override
-	protected Vec3 getParticlePos(){
-		BlockState state = getBlockState();
-		if(state.getBlock() == CRBlocks.glasswareHolder && state.getValue(CRProperties.CONTAINER_TYPE) == AbstractGlassware.GlasswareTypes.SHELL){
-			return Vec3.atLowerCornerOf(worldPosition).add(0.5D, 0.7D, 0.5D);
-		}else{
-			return Vec3.atLowerCornerOf(worldPosition).add(0.5D, 0.25D, 0.5D);
-		}
-	}
-
-	@Override
 	protected double correctTemp(){
 		if(heldType().connectToCable){
 			return super.correctTemp();
@@ -297,5 +297,15 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 			dirtyReag = true;
 			setChanged();
 		}
+	}
+
+	@Override
+	public Pair<Vector3f, Vector3f>[] getRenderVolumes(){
+		return switch(heldType()){
+			case NONE -> RENDER_SHAPE_EMPTY;
+			case PHIAL -> RENDER_SHAPE_PHIAL;
+			case FLORENCE -> RENDER_SHAPE_FLORENCE;
+			case SHELL -> RENDER_SHAPE_SHELL;
+		};
 	}
 }

@@ -3,23 +3,35 @@
 	"ambientocclusion": false,
 	"textures": {
 		"particle": "crossroads:block/flow_limiter_middle",
-		"glass": "#glass",
+		"glass_out": "#glass_out",
+		"glass_in": "#glass_in",
 		"cap": "#cap",
 		"mid": "crossroads:block/flow_limiter_middle",
 		"gold": "block/gold_block"
     },
     "elements": [
-        {
-            "from": [ 5.0, 0.0, 5.0 ], 
-            "to": [ 11.0, 6.0, 11.0 ], 
-            "faces": {
-                "north": { "texture": "#glass", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
-                "east": { "texture": "#glass", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
-                "south": { "texture": "#glass", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
-                "west": { "texture": "#glass", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
-                "down": { "texture": "#cap", "uv": [ 0.0, 0.0, 16.0, 16.0 ], "cullface": "down" }
-            }
-        },
+		{
+			"from": [ 6.1, 9.9, 6.1 ],
+			"to": [ 9.9, 16.0, 9.9 ],
+			"faces": {
+				"north": { "uv": [ 0, 0, 10, 16 ], "texture": "#glass_out"},
+				"south": { "uv": [ 0, 0, 10, 16 ], "texture": "#glass_out"},
+				"west":  { "uv": [ 0, 0, 10, 16 ], "texture": "#glass_out"},
+				"east":  { "uv": [ 0, 0, 10, 16 ], "texture": "#glass_out"},
+				"up": { "uv": [ 0, 0, 10, 10 ], "texture": "#cap", "cullface": "up" }
+			}
+		},
+		{
+			"from": [ 6.1, 0, 6.1 ],
+			"to": [ 9.9, 6.1, 9.9 ],
+			"faces": {
+				"north": { "uv": [ 0, 16, 10, 0 ], "texture": "#glass_in"},
+				"south": { "uv": [ 0, 16, 10, 0 ], "texture": "#glass_in"},
+				"west":  { "uv": [ 0, 16, 10, 0 ], "texture": "#glass_in"},
+				"east":  { "uv": [ 0, 16, 10, 0 ], "texture": "#glass_in"},
+				"down": { "uv": [ 0, 0, 10, 10 ], "texture": "#cap", "cullface": "down" }
+			}
+		},
         {
             "from": [ 4.0, 6.0, 4.0 ], 
             "to": [ 12.0, 10.0, 12.0 ], 
@@ -30,17 +42,6 @@
                 "west": { "texture": "#mid", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
                 "up": { "texture": "#gold", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
                 "down": { "texture": "#gold", "uv": [ 0.0, 0.0, 16.0, 16.0 ] }
-            }
-        },
-        {
-            "from": [ 5.0, 10.0, 5.0 ], 
-            "to": [ 11.0, 16.0, 11.0 ], 
-            "faces": {
-                "north": { "texture": "#glass", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
-                "east": { "texture": "#glass", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
-                "south": { "texture": "#glass", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
-                "west": { "texture": "#glass", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
-                "up": { "texture": "#cap", "uv": [ 0.0, 0.0, 16.0, 16.0 ], "cullface": "up" }
             }
         }
     ]
