@@ -6,7 +6,6 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
@@ -21,7 +20,7 @@ import org.joml.Vector3f;
 
 import java.util.ArrayList;
 
-public class ReagentTankTileEntity extends AlchemyCarrierTE{
+public class ReagentTankTileEntity extends ReagentHolderTE{
 
 	public static final BlockEntityType<ReagentTankTileEntity> TYPE = CRTileEntity.createType(ReagentTankTileEntity::new, CRBlocks.reagentTankGlass, CRBlocks.reagentTankCrystal);
 
@@ -46,17 +45,17 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 		return CAPACITY;
 	}
 
-	public ReagentMap getMap(){
-		return contents;
-	}
-
 	@Override
 	public Pair<Vector3f, Vector3f>[] getRenderVolumes(){
 		return RENDER_SHAPE;
 	}
 
-	public void writeContentNBT(CompoundTag nbt){
-		contents = ReagentMap.readFromNBT(nbt);
+	public ReagentMap getMap(){
+		return contents;
+	}
+
+	public void setMap(ReagentMap map){
+		contents = map;
 		dirtyReag = true;
 	}
 
@@ -68,11 +67,6 @@ public class ReagentTankTileEntity extends AlchemyCarrierTE{
 	@Override
 	protected EnumTransferMode[] getModes(){
 		return new EnumTransferMode[] {EnumTransferMode.BOTH, EnumTransferMode.BOTH, EnumTransferMode.BOTH, EnumTransferMode.BOTH, EnumTransferMode.BOTH, EnumTransferMode.BOTH};
-	}
-
-	@Override
-	protected void performTransfer(){
-		vesselTransfer(this);
 	}
 
 	@Override

@@ -19,7 +19,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import org.apache.commons.lang3.tuple.Pair;
 import org.joml.Vector3f;
 
-public class FlowLimiterTileEntity extends AlchemyCarrierTE{
+public class FlowLimiterTileEntity extends ReagentHolderTE{
 
 	public static final BlockEntityType<FlowLimiterTileEntity> TYPE = CRTileEntity.createType(FlowLimiterTileEntity::new, CRBlocks.flowLimiterGlass, CRBlocks.flowLimiterCrystal);
 
@@ -64,38 +64,52 @@ public class FlowLimiterTileEntity extends AlchemyCarrierTE{
 	}
 
 	@Override
-	protected void performTransfer(){
-		Direction side = getBlockState().getValue(CRProperties.FACING);
-		BlockEntity te = level.getBlockEntity(worldPosition.relative(side));
-		LazyOptional<IChemicalHandler> otherOpt;
-		if(contents.getTotalQty() == 0 || te == null || !(otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())).isPresent()){
+	protected void performTransfer(boolean ignorePhase){
+		long worldTick = level.getGameTime();
+		if(lastActTick == worldTick){
+			//Already acted upon this tick
 			return;
 		}
 
-		IChemicalHandler otherHandler = otherOpt.orElseThrow(NullPointerException::new);
-		EnumContainerType cont = otherHandler.getChannel(side.getOpposite());
-		if(cont != EnumContainerType.NONE && ((cont == EnumContainerType.GLASS) != glass)){
-			return;
-		}
+		EnumTransferMode[] modes = getModes();
+		EnumContainerType channel = getChannel();
+		for(int i = 0; i < 6; i++){
+			if(modes[i].isOutput()){
+				Direction side = Direction.from3DDataValue(i);
+				BlockEntity te = level.getBlockEntity(worldPosition.relative(side));
+				LazyOptional<IChemicalHandler> otherOpt;
+				if(contents.getTotalQty() <= 0 || te == null || !(otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())).isPresent()){
+					continue;
+				}
+				IChemicalHandler otherHandler = otherOpt.orElseThrow(NullPointerException::new);
 
-		int limit = LIMITS[limitIndex];
-		ReagentMap transferReag = new ReagentMap();
-		for(IReagent type : contents.keySetReag()){
-			int qty = contents.getQty(type);
-			int specificLimit = Math.min(qty, limit - otherHandler.getContent(type));
-			if(specificLimit > 0){
-				transferReag.transferReagent(type, specificLimit, contents);
+				EnumContainerType otherChannel = otherHandler.getChannel(side.getOpposite());
+				EnumTransferMode otherMode = otherHandler.getMode(side.getOpposite());
+				if(!channel.connectsWith(otherChannel) || !modes[i].connectsWith(otherMode)){
+					continue;
+				}
+
+				int limit = LIMITS[limitIndex];
+				ReagentMap transferReag = new ReagentMap();
+				for(IReagent type : contents.keySetReag()){
+					int qty = contents.getQty(type);
+					int specificLimit = Math.min(qty, limit - otherHandler.getContent(type));
+					if(specificLimit > 0){
+						transferReag.transferReagent(type, specificLimit, contents);
+					}
+				}
+
+				boolean changed = otherHandler.insertReagents(transferReag, side.getOpposite(), handler);
+				for(IReagent type : transferReag.keySetReag()){
+					contents.transferReagent(type, transferReag.getQty(type), transferReag);
+				}
+
+				if(changed){
+					lastActTick = worldTick;
+					correctReag();
+					setChanged();
+				}
 			}
-		}
-
-		boolean changed = otherHandler.insertReagents(transferReag, side.getOpposite(), handler);
-		for(IReagent type : transferReag.keySetReag()){
-			contents.transferReagent(type, transferReag.getQty(type), transferReag);
-		}
-
-		if(changed){
-			correctReag();
-			setChanged();
 		}
 	}
 

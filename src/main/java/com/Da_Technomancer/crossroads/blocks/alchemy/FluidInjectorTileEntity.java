@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 import com.Da_Technomancer.crossroads.api.Capabilities;
-import com.Da_Technomancer.crossroads.api.alchemy.AlchemyCarrierTE;
 import com.Da_Technomancer.crossroads.api.alchemy.EnumTransferMode;
+import com.Da_Technomancer.crossroads.api.alchemy.ReagentHolderTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import net.minecraft.core.BlockPos;
@@ -16,7 +16,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.apache.commons.lang3.tuple.Pair;
 import org.joml.Vector3f;
 
-public class FluidInjectorTileEntity extends AlchemyCarrierTE{
+public class FluidInjectorTileEntity extends ReagentHolderTE{
 
 	public static final BlockEntityType<FluidInjectorTileEntity> TYPE = CRTileEntity.createType(FluidInjectorTileEntity::new, CRBlocks.fluidInjectorCrystal, CRBlocks.fluidInjectorGlass);
 
@@ -41,7 +41,7 @@ public class FluidInjectorTileEntity extends AlchemyCarrierTE{
 		fluidOpt.invalidate();
 	}
 
-	private final LazyOptional<IFluidHandler> fluidOpt = LazyOptional.of(() -> falseFluidHandler);
+	private final LazyOptional<IFluidHandler> fluidOpt = LazyOptional.of(this::getInternalFluidHandler);
 
 	@SuppressWarnings("unchecked")
 	@Override

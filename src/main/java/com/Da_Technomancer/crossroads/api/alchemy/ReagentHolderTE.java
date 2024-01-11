@@ -17,8 +17,10 @@ import com.Da_Technomancer.essentials.api.BlockUtil;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -30,6 +32,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
@@ -43,18 +46,25 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.function.Supplier;
 
 /**
- * Implementations must implement getCapability directly.
+ * Helper implementation for a tile entity that stores reagents, optional support for connecting to conduits and/or heat cables
+ * Implementations must override getCapability to connect to anything
  */
-public abstract class AlchemyCarrierTE extends BlockEntity implements ITickableTileEntity, IInfoTE, IReagRenderTE, IIntArrayReceiver{
+public abstract class ReagentHolderTE extends BlockEntity implements ITickableTileEntity, IInfoTE, IReagRenderTE, IIntArrayReceiver{
 
 	protected boolean init = false;
 	protected double cableTemp = 0;
 	protected boolean glass;
 	protected ReagentMap contents = new ReagentMap();
 	protected boolean dirtyReag = false;
-	protected boolean broken = false;
+	/**
+	 * This is used for transfer logic
+	 * At minimum, it prevents transfer occurring twice in one tick through tick-acceleration
+	 * In conduit-style blocks (transfer capacity = 1), puts additional restrictions for more consistent transfer behavior
+	 */
+	protected long lastActTick = -1;
 
 	//Used for syncing reag contents to client for rendering
 	protected int[] colorSentToClient = new int[EnumMatterPhase.values().length];
@@ -65,7 +75,10 @@ public abstract class AlchemyCarrierTE extends BlockEntity implements ITickableT
 	}
 
 	protected void initHeat(){
-
+		if(!init){
+			cableTemp = getBiomeTemp();
+		}
+		init = true;
 	}
 
 	private Double biomeTempCache = null;
@@ -103,19 +116,18 @@ public abstract class AlchemyCarrierTE extends BlockEntity implements ITickableT
 		}
 	}
 
-	protected AlchemyCarrierTE(BlockEntityType<?> type, BlockPos pos, BlockState state){
+	protected ReagentHolderTE(BlockEntityType<?> type, BlockPos pos, BlockState state){
 		super(type, pos, state);
 	}
 
-	protected AlchemyCarrierTE(BlockEntityType<?> type, BlockPos pos, BlockState state, boolean glass){
+	protected ReagentHolderTE(BlockEntityType<?> type, BlockPos pos, BlockState state, boolean glass){
 		this(type, pos, state);
 		this.glass = glass;
 	}
 
 	protected void destroyCarrier(float strength){
-		if(!broken){
-			broken = true;
-			BlockState state = getBlockState();
+		BlockState state = level.getBlockState(worldPosition);
+		if(!state.isAir()){//Checking world rather than cached blockstate to prevent repeated destroy actions
 			level.setBlockAndUpdate(worldPosition, Blocks.AIR.defaultBlockState());
 			SoundType sound = state.getBlock().getSoundType(state, level, worldPosition, null);
 			CRSounds.playSoundServer(level, worldPosition, sound.getBreakSound(), SoundSource.BLOCKS, sound.getVolume(), sound.getPitch());
@@ -142,7 +154,7 @@ public abstract class AlchemyCarrierTE extends BlockEntity implements ITickableT
 	}
 
 	/**
-	 * Cleans up temperatures vs heat, refreshes amount based on contents, etc. Should be called after all changes to contents. Setting dirtyReag to true will queue up a correctReag call.
+	 * Should be called after all changes to contents. Setting dirtyReag to true will queue up a correctReag call.
 	 */
 	protected void correctReag(){
 		dirtyReag = false;
@@ -151,26 +163,20 @@ public abstract class AlchemyCarrierTE extends BlockEntity implements ITickableT
 
 		//Check for uncontainable reagents
 		if(glass){
-			boolean destroy = false;
 			ArrayList<IReagent> toRemove = new ArrayList<>(1);//Rare that there is more than 1
 
 			for(IReagent type : contents.keySetReag()){
 				if(type.requiresCrystal()){
 					toRemove.add(type);
 					if(type.destroysBadContainer()){
-						destroy = true;
-						break;
+						destroyCarrier(0);
+						return;
 					}
 				}
 			}
 
-			if(destroy){
-				destroyCarrier(0);
-				return;
-			}else{
-				for(IReagent type : toRemove){
-					contents.remove(type);
-				}
+			for(IReagent type : toRemove){
+				contents.remove(type);
 			}
 		}
 
@@ -197,6 +203,44 @@ public abstract class AlchemyCarrierTE extends BlockEntity implements ITickableT
 
 		if(level.getGameTime() % AlchemyUtil.ALCHEMY_TIME == 0){
 			performTransfer();
+		}
+	}
+
+	protected void performTransfer(){
+		performTransfer(false);
+	}
+
+	protected void performTransfer(boolean ignorePhase){
+		long worldTick = level.getGameTime();
+		if(lastActTick == worldTick){
+			//Already acted upon this tick
+			return;
+		}
+
+		EnumTransferMode[] modes = getModes();
+		EnumContainerType channel = getChannel();
+		for(int i = 0; i < 6; i++){
+			if(modes[i].isOutput()){
+				Direction side = Direction.from3DDataValue(i);
+				BlockEntity te = level.getBlockEntity(worldPosition.relative(side));
+				LazyOptional<IChemicalHandler> otherOpt;
+				if(contents.getTotalQty() <= 0 || te == null || !(otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())).isPresent()){
+					continue;
+				}
+				IChemicalHandler otherHandler = otherOpt.orElseThrow(NullPointerException::new);
+
+				EnumContainerType otherChannel = otherHandler.getChannel(side.getOpposite());
+				EnumTransferMode otherMode = otherHandler.getMode(side.getOpposite());
+				if(!channel.connectsWith(otherChannel) || !modes[i].connectsWith(otherMode)){
+					continue;
+				}
+
+				if(otherHandler.insertReagents(contents, side.getOpposite(), handler, ignorePhase)){
+					lastActTick = worldTick;
+					correctReag();
+					setChanged();
+				}
+			}
 		}
 	}
 
@@ -303,7 +347,7 @@ public abstract class AlchemyCarrierTE extends BlockEntity implements ITickableT
 //				}
 				((AbstractGlassware) out.getItem()).setReagents(out, phial);
 			}
-		}else if(FluidUtil.interactWithFluidHandler(player, hand, falseFluidHandler)){
+		}else if(FluidUtil.interactWithFluidHandler(player, hand, getInternalFluidHandler())){
 			//Attempt to interact with fluid carriers
 			out = player.getItemInHand(hand);
 		}else{
@@ -321,76 +365,6 @@ public abstract class AlchemyCarrierTE extends BlockEntity implements ITickableT
 		}
 
 		return out;
-	}
-
-	/**
-	 * Returned array must be size six.
-	 * @return An array where each EnumTransferMode specifies the mode of the side with the same index. 
-	 */
-	@Nonnull
-	protected abstract EnumTransferMode[] getModes();
-
-	/**
-	 * Controls maximum amount of reagent this block can hold before it stops accepting more
-	 * @return Maximum capacity
-	 */
-	protected int transferCapacity(){
-		return 1;
-	}
-
-	protected void performTransfer(){
-		EnumTransferMode[] modes = getModes();
-		for(int i = 0; i < 6; i++){
-			if(modes[i].isOutput()){
-				Direction side = Direction.from3DDataValue(i);
-				BlockEntity te = level.getBlockEntity(worldPosition.relative(side));
-				LazyOptional<IChemicalHandler> otherOpt;
-				if(contents.getTotalQty() <= 0 || te == null || !(otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())).isPresent()){
-					continue;
-				}
-				IChemicalHandler otherHandler = otherOpt.orElseThrow(NullPointerException::new);
-
-				EnumContainerType cont = otherHandler.getChannel(side.getOpposite());
-				if(cont != EnumContainerType.NONE && ((cont == EnumContainerType.GLASS) != glass) || otherHandler.getMode(side.getOpposite()) == EnumTransferMode.BOTH && modes[i] == EnumTransferMode.BOTH){
-					continue;
-				}
-
-				if(otherHandler.insertReagents(contents, side.getOpposite(), handler)){
-					correctReag();
-					setChanged();
-				}
-			}
-		}
-	}
-
-	/**
-	 * Common implementation for performTransfer() used by multiple subclasses (vessel-type blocks)
-	 * @param self The instance calling this method
-	 */
-	protected static void vesselTransfer(AlchemyCarrierTE self){
-		EnumTransferMode[] modes = self.getModes();
-		for(int i = 0; i < 6; i++){
-			if(modes[i].isOutput()){
-				Direction side = Direction.from3DDataValue(i);
-				BlockEntity te = self.level.getBlockEntity(self.worldPosition.relative(side));
-				LazyOptional<IChemicalHandler> otherOpt;
-				if(self.contents.getTotalQty() <= 0 || te == null || !(otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())).isPresent()){
-					continue;
-				}
-
-				IChemicalHandler otherHandler = otherOpt.orElseThrow(NullPointerException::new);
-				if(otherHandler.getMode(side.getOpposite()) == EnumTransferMode.BOTH && modes[i] == EnumTransferMode.BOTH){
-					continue;
-				}
-
-				if(self.contents.getTotalQty() != 0){
-					if(otherHandler.insertReagents(self.contents, side.getOpposite(), self.handler)){
-						self.correctReag();
-						self.setChanged();
-					}
-				}
-			}
-		}
 	}
 
 	@Override
@@ -427,6 +401,21 @@ public abstract class AlchemyCarrierTE extends BlockEntity implements ITickableT
 		return glass ? EnumContainerType.GLASS : EnumContainerType.CRYSTAL;
 	}
 
+	/**
+	 * Returned array must be size six.
+	 * @return An array where each EnumTransferMode specifies the mode of the side with the same index.
+	 */
+	@Nonnull
+	protected abstract EnumTransferMode[] getModes();
+
+	/**
+	 * Controls maximum amount of reagent this block can hold before it stops accepting more
+	 * @return Maximum capacity
+	 */
+	protected int transferCapacity(){
+		return 1;
+	}
+
 	@Override
 	public void setRemoved(){
 		super.setRemoved();
@@ -454,7 +443,7 @@ public abstract class AlchemyCarrierTE extends BlockEntity implements ITickableT
 
 		@Override
 		public EnumContainerType getChannel(Direction side){
-			return AlchemyCarrierTE.this.getChannel();
+			return ReagentHolderTE.this.getChannel();
 		}
 
 		@Override
@@ -464,7 +453,7 @@ public abstract class AlchemyCarrierTE extends BlockEntity implements ITickableT
 
 		@Override
 		public boolean insertReagents(ReagentMap reag, Direction side, IChemicalHandler caller, boolean ignorePhase){
-			if(getMode(side).isInput()){
+			if(getMode(side).isInput() && (transferCapacity() != 1 || lastActTick != level.getGameTime())){
 				int space = getTransferCapacity() - contents.getTotalQty();
 				if(space <= 0){
 					return false;
@@ -500,6 +489,9 @@ public abstract class AlchemyCarrierTE extends BlockEntity implements ITickableT
 
 				if(changed){
 					dirtyReag = true;
+					if(transferCapacity() == 1){
+						lastActTick = level.getGameTime();
+					}
 					setChanged();
 				}
 				return changed;
@@ -514,7 +506,14 @@ public abstract class AlchemyCarrierTE extends BlockEntity implements ITickableT
 		}
 	}
 
-	protected final FalseFluidHandler falseFluidHandler = new FalseFluidHandler();
+	private FalseFluidHandler falseFluidHandler;
+
+	protected IFluidHandler getInternalFluidHandler(){
+		if(falseFluidHandler == null){
+			falseFluidHandler = new FalseFluidHandler();
+		}
+		return falseFluidHandler;
+	}
 
 	/**
 	 * This class doesn't allow actual storage of fluids
@@ -724,6 +723,44 @@ public abstract class AlchemyCarrierTE extends BlockEntity implements ITickableT
 		@Override
 		public boolean isItemValid(int slot, @Nonnull ItemStack stack){
 			return ReagentManager.findReagentForItem(stack.getItem()) != null;
+		}
+	}
+
+	protected class ReactionChamberImpl implements IReactionChamber{
+
+		private final Supplier<Boolean> isCharged;
+
+		public ReactionChamberImpl(Supplier<Boolean> isCharged){
+			this.isCharged = isCharged;
+		}
+
+		@Nonnull
+		@Override
+		public ReagentMap getReagents(){
+			return contents;
+		}
+
+		@Override
+		public boolean isCharged(){
+			return isCharged.get();
+		}
+
+		@Override
+		public int getReactionCapacity(){
+			return transferCapacity() * 2;
+		}
+
+		@Override
+		public void destroyChamber(float strength){
+			destroyCarrier(strength);
+		}
+
+		@Override
+		public <T extends ParticleOptions> void addVisualEffect(T particleType, double speedX, double speedY, double speedZ){
+			if(!level.isClientSide){
+				Vec3 particlePos = Vec3.atCenterOf(worldPosition);
+				((ServerLevel) level).sendParticles(particleType, particlePos.x, particlePos.y, particlePos.z, 0, speedX, speedY, speedZ, 1F);
+			}
 		}
 	}
 }

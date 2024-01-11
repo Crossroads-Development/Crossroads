@@ -20,7 +20,7 @@ import org.joml.Vector3f;
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 
-public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements ConduitBlock.IConduitTE<EnumTransferMode>{
+public class AlchemicalTubeTileEntity extends ReagentHolderTE implements ConduitBlock.IConduitTE<EnumTransferMode>{
 
 	public static final BlockEntityType<AlchemicalTubeTileEntity> TYPE = CRTileEntity.createType(AlchemicalTubeTileEntity::new, CRBlocks.alchemicalTubeGlass, CRBlocks.alchemicalTubeCrystal);
 
@@ -77,10 +77,12 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements Condui
 	@Override
 	public boolean hasMatch(int side, EnumTransferMode mode){
 		Direction face = Direction.from3DDataValue(side);
+		Direction opposite = face.getOpposite();
 		BlockEntity neighTE = level.getBlockEntity(worldPosition.relative(face));
 		//Check for a neighbor w/ an alchemy reagent handler of a compatible channel
 		LazyOptional<IChemicalHandler> otherOpt;
-		return neighTE != null && (otherOpt = neighTE.getCapability(Capabilities.CHEMICAL_CAPABILITY, face.getOpposite())).isPresent() && otherOpt.orElseThrow(NoSuchFieldError::new).getChannel(face.getOpposite()).connectsWith(glass ? EnumContainerType.GLASS : EnumContainerType.CRYSTAL);
+		IChemicalHandler otherHandler;
+		return neighTE != null && (otherOpt = neighTE.getCapability(Capabilities.CHEMICAL_CAPABILITY, face.getOpposite())).isPresent() && (otherHandler = otherOpt.orElseThrow(NoSuchFieldError::new)).getChannel(opposite).connectsWith(getChannel()) && otherHandler.getMode(opposite).connectsWith(mode);
 	}
 
 	@Nonnull
@@ -90,26 +92,41 @@ public class AlchemicalTubeTileEntity extends AlchemyCarrierTE implements Condui
 	}
 
 	@Override
-	protected void performTransfer(){
-		EnumTransferMode[] modes = getModes();
-		for(int i = 0; i < 6; i++){
-			Direction side = Direction.from3DDataValue(i);
-			BlockEntity te;
-			if(modes[i].isConnection()){
-				te = level.getBlockEntity(worldPosition.relative(side));
-				LazyOptional<IChemicalHandler> otherOpt;
-				IChemicalHandler otherHandler;
-				if(te != null && (otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())).isPresent() && (otherHandler = otherOpt.orElseThrow(NullPointerException::new)).getChannel(side.getOpposite()).connectsWith(glass ? EnumContainerType.GLASS : EnumContainerType.CRYSTAL)){
-					setData(i, true, modes[i]);
+	protected void performTransfer(boolean ignorePhase){
+		long worldTick = level.getGameTime();
+		if(lastActTick == worldTick){
+			//Already acted upon this tick
+			return;
+		}
 
-					if(contents.getTotalQty() != 0 && modes[i] == EnumTransferMode.OUTPUT){
-						if(otherHandler.insertReagents(contents, side.getOpposite(), handler)){
-							correctReag();
-							setChanged();
-						}
-					}
-				}else{
+		EnumTransferMode[] modes = getModes();
+		EnumContainerType channel = getChannel();
+		for(int i = 0; i < 6; i++){
+			if(modes[i].isConnection()){
+				Direction side = Direction.from3DDataValue(i);
+				BlockEntity te = level.getBlockEntity(worldPosition.relative(side));
+				LazyOptional<IChemicalHandler> otherOpt;
+				if(te == null || !(otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())).isPresent()){
 					setData(i, false, modes[i]);
+					continue;
+				}
+
+				IChemicalHandler otherHandler = otherOpt.orElseThrow(NullPointerException::new);
+
+				EnumContainerType otherChannel = otherHandler.getChannel(side.getOpposite());
+				EnumTransferMode otherMode = otherHandler.getMode(side.getOpposite());
+				if(!channel.connectsWith(otherChannel) || !modes[i].connectsWith(otherMode)){
+					setData(i, false, modes[i]);
+					continue;
+				}
+				setData(i, true, modes[i]);
+				if(contents.getTotalQty() == 0 || !modes[i].isOutput()){
+					continue;
+				}
+				if(otherHandler.insertReagents(contents, side.getOpposite(), handler, ignorePhase)){
+					lastActTick = worldTick;
+					correctReag();
+					setChanged();
 				}
 			}
 		}

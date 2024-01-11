@@ -32,6 +32,18 @@ public enum EnumTransferMode implements StringRepresentable{
 		return this != NONE;
 	}
 
+	public boolean connectsWith(EnumTransferMode otherMode){
+		if(this == otherMode){
+			return false;
+		}
+		return switch(otherMode){
+			case NONE -> false;
+			case INPUT -> isOutput();
+			case OUTPUT -> isInput();
+			case BOTH -> isConnection();
+		};
+	}
+
 	@Override
 	public String toString(){
 		return name().toLowerCase(Locale.US);

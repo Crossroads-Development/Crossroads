@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
+import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.alchemy.IReagent;
 import com.Da_Technomancer.crossroads.api.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
@@ -35,7 +36,6 @@ import java.util.List;
 
 public class ReagentTank extends BaseEntityBlock implements IReadable{
 
-	private static final String TAG_NAME = "reagents";
 	private final boolean crystal;
 
 	public ReagentTank(boolean crystal){
@@ -73,8 +73,12 @@ public class ReagentTank extends BaseEntityBlock implements IReadable{
 	 * @return The contained reagents. Modifying the returned array does NOT write through to the ItemStack, use the setReagents method.
 	 */
 	@Nonnull
-	public static ReagentMap getReagants(ItemStack stack){
-		return stack.hasTag() ? ReagentMap.readFromNBT(stack.getTag().getCompound(TAG_NAME)) : new ReagentMap();
+	public static ReagentMap getReagents(ItemStack stack){
+		CompoundTag nbt = null;
+		if((nbt = stack.getTag()) != null && nbt.contains(MiscUtil.BLOCK_NBT_TO_STACK_TAG)){
+			nbt = nbt.getCompound(MiscUtil.BLOCK_NBT_TO_STACK_TAG);
+		}
+		return ReagentMap.readFromNBT(nbt);
 	}
 
 	/**
@@ -82,20 +86,14 @@ public class ReagentTank extends BaseEntityBlock implements IReadable{
 	 * @param stack The stack to store the reagents to
 	 * @param reagents The reagents to store
 	 */
-	public void setReagents(ItemStack stack, ReagentMap reagents){
-		if(!stack.hasTag()){
-			stack.setTag(new CompoundTag());
-		}
-
-		CompoundTag nbt = new CompoundTag();
-		stack.getTag().put(TAG_NAME, nbt);
-
+	public static void setReagents(ItemStack stack, ReagentMap reagents){
+		CompoundTag nbt = stack.getOrCreateTag();
 		reagents.write(nbt);
 	}
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag flagIn){
-		ReagentMap stored = getReagants(stack);
+		ReagentMap stored = getReagents(stack);
 
 		double temp = stored.getTempC();
 
@@ -138,8 +136,8 @@ public class ReagentTank extends BaseEntityBlock implements IReadable{
 	public void setPlacedBy(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
 		if(stack.hasTag()){
 			BlockEntity te = world.getBlockEntity(pos);
-			if(te instanceof ReagentTankTileEntity){
-				((ReagentTankTileEntity) te).writeContentNBT(stack.getTag().getCompound(TAG_NAME));
+			if(te instanceof ReagentTankTileEntity rte){
+				rte.setMap(getReagents(stack));
 			}
 		}
 	}

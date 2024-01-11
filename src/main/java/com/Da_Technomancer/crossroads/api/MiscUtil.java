@@ -50,6 +50,11 @@ public final class MiscUtil{
 	public static final int BLOCK_FLAGS_VISUAL = BLOCK_FLAG_SYNC_TO_CLIENT | BLOCK_FLAG_SUPPRESS_OBSERVERS;
 
 	/**
+	 * NBT key vanilla uses when saving tile entity data to an itemstack
+	 */
+	public static final String BLOCK_NBT_TO_STACK_TAG = "BlockEntityTag";
+
+	/**
 	 * A server-side friendly version of Entity.class' raytrace (currently called Entity#pick(double, float, boolean))
 	 */
 	public static BlockHitResult rayTrace(Entity ent, double blockReachDistance){

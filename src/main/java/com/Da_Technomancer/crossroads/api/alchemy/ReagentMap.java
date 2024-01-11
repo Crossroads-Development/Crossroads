@@ -187,6 +187,9 @@ public class ReagentMap extends HashMap<String, Integer>{
 		for(Integer qty : values()){
 			totalQty += qty;
 		}
+		if(totalQty <= 0){
+			heat = 0;
+		}
 	}
 
 	public CompoundTag write(CompoundTag nbt){
@@ -203,6 +206,9 @@ public class ReagentMap extends HashMap<String, Integer>{
 
 	public static ReagentMap readFromNBT(CompoundTag nbt){
 		ReagentMap map = new ReagentMap();
+		if(nbt == null){
+			return map;
+		}
 		map.heat = nbt.getDouble("he");
 		for(String key : nbt.getAllKeys()){
 			if(!key.startsWith("qty_")){
@@ -210,6 +216,7 @@ public class ReagentMap extends HashMap<String, Integer>{
 			}
 			map.put(key.substring(4), nbt.getInt(key));
 		}
+		map.refresh();
 
 		return map;
 	}

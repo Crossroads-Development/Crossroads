@@ -19,7 +19,7 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "is a high throughput.$(br2)"
+			"text": "is a high throughput.$(br2)<thing>$(l:essentials/circuits#reader)Circuits/$ measure the temperature in degrees C.$(br2)"
 		}
 	],
 	"extra_recipe_mappings": {

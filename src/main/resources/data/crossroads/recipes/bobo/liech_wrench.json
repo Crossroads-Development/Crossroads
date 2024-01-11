@@ -6,7 +6,7 @@
 	},
 	"input_a": [
 		{
-			"tag": "forge:wrench"
+			"tag": "forge:tools/wrench"
 		}
 	],
 	"input_b": [

@@ -126,16 +126,16 @@ public class AlchemyRec implements IOptionalRecipe<Container>{
 			return false;
 		}
 
-		ReagentMap reags = chamb.getReagants();
+		ReagentMap reags = chamb.getReagents();
 		if(cat != null && reags.getQty(cat) <= 0){
 			return false;
 		}
-		double chambTemp = chamb.getTemp();
+		double chambTemp = reags.getTempC();
 		if(chambTemp > maxTemp() || chambTemp < minTemp()){
 			return false;
 		}
 
-		int content = chamb.getContent();
+		int content = reags.getTotalQty();
 
 		//Elemental reactions have special handling
 		if(type == Type.ELEMENTAL){
@@ -179,9 +179,9 @@ public class AlchemyRec implements IOptionalRecipe<Container>{
 		}
 
 		double deltaHeat = deltaHeatPer();
-		if(deltaHeat != 0){
+		double allowedTempChange = deltaHeat < 0 ? maxTemp() - chambTemp : minTemp() - chambTemp;
+		if(deltaHeat != 0 && deltaHeat + amountChange * allowedTempChange != 0){
 			//temperature change based limit
-			double allowedTempChange = deltaHeat < 0 ? maxTemp() - chambTemp : minTemp() - chambTemp;
 			maxReactions = Math.min(maxReactions, (int) Math.max(1, -content * allowedTempChange / (deltaHeat + amountChange * allowedTempChange)));
 		}
 

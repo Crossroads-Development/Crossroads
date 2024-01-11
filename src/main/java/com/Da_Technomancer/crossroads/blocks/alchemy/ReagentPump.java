@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.blocks.alchemy;
 import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.Capabilities;
 import com.Da_Technomancer.crossroads.api.alchemy.EnumContainerType;
+import com.Da_Technomancer.crossroads.api.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.api.alchemy.IChemicalHandler;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.api.ConfigUtil;
@@ -123,7 +124,9 @@ public class ReagentPump extends BaseEntityBlock{
 		for(int i = 2; i < 6; i++){
 			BlockEntity te = context.getLevel().getBlockEntity(context.getClickedPos().relative(Direction.from3DDataValue(i)));
 			LazyOptional<IChemicalHandler> otherOpt;
-			if(te != null && (otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, Direction.from3DDataValue(i).getOpposite())).isPresent() && otherOpt.orElseThrow(NullPointerException::new).getChannel(Direction.from3DDataValue(i)).connectsWith(contType)){
+			IChemicalHandler otherHandler;
+			Direction dir = Direction.from3DDataValue(i).getOpposite();
+			if(te != null && (otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, Direction.from3DDataValue(i).getOpposite())).isPresent() && (otherHandler = otherOpt.orElseThrow(NullPointerException::new)).getChannel(dir).connectsWith(contType) && otherHandler.getMode(dir).connectsWith(EnumTransferMode.INPUT)){
 				connect[i] = true;
 			}
 		}
@@ -135,7 +138,9 @@ public class ReagentPump extends BaseEntityBlock{
 		BlockEntity te = worldIn.getBlockEntity(facingPos);
 		BlockEntity thisTE = worldIn.getBlockEntity(pos);
 		LazyOptional<IChemicalHandler> otherOpt;
-		boolean connect = thisTE instanceof ReagentPumpTileEntity && te != null && (otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, facing.getOpposite())).isPresent() && otherOpt.orElseThrow(NullPointerException::new).getChannel(facing).connectsWith(crystal ? EnumContainerType.CRYSTAL : EnumContainerType.GLASS);
+		IChemicalHandler otherHandler;
+		Direction dir = facing.getOpposite();
+		boolean connect = thisTE instanceof ReagentPumpTileEntity && te != null && (otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, facing.getOpposite())).isPresent() && (otherHandler = otherOpt.orElseThrow(NullPointerException::new)).getChannel(dir).connectsWith(crystal ? EnumContainerType.CRYSTAL : EnumContainerType.GLASS) && otherHandler.getMode(dir).connectsWith(EnumTransferMode.INPUT);
 		if(facing.getAxis() != Direction.Axis.Y){
 			BooleanProperty prop = CRProperties.HAS_MATCH_SIDES[facing.get3DDataValue()];
 			return stateIn.setValue(prop, connect);

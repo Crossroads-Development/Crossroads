@@ -28,6 +28,7 @@ public class ChargingStandTileEntity extends GlasswareHolderTileEntity{
 
 	public ChargingStandTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state);
+		reactionChamber = new ReactionChamberImpl(() -> fe > 0);
 	}
 
 	@Override
@@ -45,11 +46,6 @@ public class ChargingStandTileEntity extends GlasswareHolderTileEntity{
 			}
 		}
 		super.serverTick();
-	}
-
-	@Override
-	public boolean isCharged(){
-		return fe > 0 || super.isCharged();
 	}
 
 	@Override

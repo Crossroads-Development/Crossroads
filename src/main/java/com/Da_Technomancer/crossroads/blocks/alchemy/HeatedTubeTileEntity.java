@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.Capabilities;
-import com.Da_Technomancer.crossroads.api.alchemy.AlchemyCarrierTE;
+import com.Da_Technomancer.crossroads.api.alchemy.ReagentHolderTE;
 import com.Da_Technomancer.crossroads.api.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
@@ -17,7 +17,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import org.apache.commons.lang3.tuple.Pair;
 import org.joml.Vector3f;
 
-public class HeatedTubeTileEntity extends AlchemyCarrierTE{
+public class HeatedTubeTileEntity extends ReagentHolderTE{
 
 	public static final BlockEntityType<HeatedTubeTileEntity> TYPE = CRTileEntity.createType(HeatedTubeTileEntity::new, CRBlocks.heatedTubeGlass, CRBlocks.heatedTubeCrystal);
 
@@ -43,6 +43,10 @@ public class HeatedTubeTileEntity extends AlchemyCarrierTE{
 			init = true;
 			cableTemp = getBiomeTemp();
 		}
+	}
+
+	public float getTempC(){
+		return (float) cableTemp;
 	}
 
 	@Override

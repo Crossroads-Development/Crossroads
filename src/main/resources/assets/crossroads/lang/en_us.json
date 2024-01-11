@@ -854,6 +854,8 @@
 	"tt.crossroads.blood_beam_linker.desc": "Applies incoming beams to the owner of a blood sample from anywhere in the world",
 	"tt.crossroads.blood_beam_linker.power": "Beam effect power is limited to %1$d",
 	"tt.crossroads.blood_beam_linker.backfire": "Using a spoiled blood sample has a risk of backfiring",
+	"tt.crossroads.heated_tube.desc": "Connects to heat cables",
+	"tt.crossroads.heated_tube.circuit": "Circuits read temperature",
 
 	"container.crossroads.boilerplate.temp": "%1$d°C",
 	"container.crossroads.boilerplate.speed": "%1$f rad/s",

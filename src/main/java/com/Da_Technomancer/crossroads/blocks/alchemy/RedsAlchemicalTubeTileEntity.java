@@ -25,9 +25,9 @@ public class RedsAlchemicalTubeTileEntity extends AlchemicalTubeTileEntity{
 	}
 
 	@Override
-	protected void performTransfer(){
+	protected void performTransfer(boolean ignorePhase){
 		if(isUnlocked()){
-			super.performTransfer();
+			super.performTransfer(ignorePhase);
 		}
 	}
 

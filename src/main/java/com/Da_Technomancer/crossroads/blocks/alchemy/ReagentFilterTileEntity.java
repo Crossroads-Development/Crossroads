@@ -30,7 +30,7 @@ import org.joml.Vector3f;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class ReagentFilterTileEntity extends AlchemyCarrierTE implements MenuProvider, Container{
+public class ReagentFilterTileEntity extends ReagentHolderTE implements MenuProvider, Container{
 
 	public static final BlockEntityType<ReagentFilterTileEntity> TYPE = CRTileEntity.createType(ReagentFilterTileEntity::new, CRBlocks.reagentFilterGlass, CRBlocks.reagentFilterCrystal);
 
@@ -85,6 +85,11 @@ public class ReagentFilterTileEntity extends AlchemyCarrierTE implements MenuPro
 
 	@Override
 	protected void performTransfer(){
+		long worldTick = level.getGameTime();
+		if(lastActTick == worldTick){
+			//Already acted upon this tick
+			return;
+		}
 
 		ReagentMap filterMap = new ReagentMap();
 
@@ -112,7 +117,10 @@ public class ReagentFilterTileEntity extends AlchemyCarrierTE implements MenuPro
 			}
 		}
 
-		dirtyReag |= transfered;
+		if(transfered){
+			dirtyReag = true;
+			lastActTick = worldTick;
+		}
 	}
 
 	private boolean transfer(ReagentMap toTrans, Direction side){
@@ -122,8 +130,8 @@ public class ReagentFilterTileEntity extends AlchemyCarrierTE implements MenuPro
 			return false;
 		}
 		IChemicalHandler otherHandler = chemOpt.orElseThrow(NullPointerException::new);
-		EnumContainerType cont = otherHandler.getChannel(side.getOpposite());
-		if((cont == EnumContainerType.GLASS) != glass){
+		EnumContainerType otherChannel = otherHandler.getChannel(side.getOpposite());
+		if(!getChannel().connectsWith(otherChannel)){
 			return false;
 		}
 		return otherHandler.insertReagents(toTrans, side.getOpposite(), handler, true);

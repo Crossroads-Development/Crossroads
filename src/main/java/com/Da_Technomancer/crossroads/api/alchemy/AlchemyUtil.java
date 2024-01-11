@@ -23,11 +23,11 @@ import java.util.function.Predicate;
 public class AlchemyUtil{
 
 	/**
-	 * Conversion factor between degrees kelvin * amount alchemy system, and degrees kelvin normal heat. Based on game balance.
+	 * Conversion factor of (degrees kelvin normal heat) / (degrees kelvin * amount alchemy system). Based on game balance.
 	 */
-	public static final double ALCHEMY_TEMP_CONVERSION = 20D;
-	//Alchemy calculations are performed once every ALCHEMY_TIME ticks instead of every tick to reduce lag
-	public static final int ALCHEMY_TIME = 2;
+	public static final double ALCHEMY_TEMP_CONVERSION = 6D;
+	//Alchemy calculations are performed once every ALCHEMY_TIME ticks instead of every tick to reduce lag, slow things down
+	public static final int ALCHEMY_TIME = 4;
 
 	private static int getGasRange(int gasQty){
 		return Math.min(8, Math.max(2, gasQty / 3));

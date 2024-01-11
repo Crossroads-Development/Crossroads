@@ -9,7 +9,6 @@ import com.Da_Technomancer.essentials.api.redstone.IReadable;
 import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import com.google.common.collect.Lists;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -29,13 +28,11 @@ import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
 public class ReactionChamber extends BaseEntityBlock implements IReadable{
 
-	private static final String TAG_NAME = "reagents";
 	private final boolean crystal;
 
 	public ReactionChamber(boolean crystal){
@@ -59,9 +56,9 @@ public class ReactionChamber extends BaseEntityBlock implements IReadable{
 	@Override
 	public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder){
 		BlockEntity te = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
-		if(te instanceof ReactionChamberTileEntity){
+		if(te instanceof ReactionChamberTileEntity rte){
 			ItemStack drop = new ItemStack(this.asItem(), 1);
-			setReagents(drop, ((ReactionChamberTileEntity) te).getMap());
+			ReagentTank.setReagents(drop, rte.getMap());
 			return Lists.newArrayList(drop);
 		}
 		return super.getDrops(state, builder);
@@ -71,7 +68,7 @@ public class ReactionChamber extends BaseEntityBlock implements IReadable{
 	public void setPlacedBy(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
 		if(stack.hasTag()){
 			ReactionChamberTileEntity te = (ReactionChamberTileEntity) world.getBlockEntity(pos);
-			te.writeContentNBT(stack);
+			te.setMap(ReagentTank.getReagents(stack));
 		}
 	}
 
@@ -97,35 +94,9 @@ public class ReactionChamber extends BaseEntityBlock implements IReadable{
 		return InteractionResult.SUCCESS;
 	}
 
-	/**
-	 * Cache the result to minimize calls to this method.
-	 * @param stack The glassware itemstack
-	 * @return The contained reagents. Modifying the returned array does NOT write through to the ItemStack, use the setReagents method.
-	 */
-	@Nonnull
-	public static ReagentMap getReagents(ItemStack stack){
-		return stack.hasTag() ? ReagentMap.readFromNBT(stack.getTag().getCompound(TAG_NAME)) : new ReagentMap();
-	}
-
-	/**
-	 * Call this as little as possible.
-	 * @param stack The stack to store the reagents to
-	 * @param reagents The reagents to store
-	 */
-	public void setReagents(ItemStack stack, ReagentMap reagents){
-		if(!stack.hasTag()){
-			stack.setTag(new CompoundTag());
-		}
-
-		CompoundTag nbt = new CompoundTag();
-		stack.getTag().put(TAG_NAME, nbt);
-
-		reagents.write(nbt);
-	}
-
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag flagIn){
-		ReagentMap stored = getReagents(stack);
+		ReagentMap stored = ReagentTank.getReagents(stack);
 
 		double temp = stored.getTempC();
 

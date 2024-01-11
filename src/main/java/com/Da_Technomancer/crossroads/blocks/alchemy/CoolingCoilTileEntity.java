@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.Capabilities;
-import com.Da_Technomancer.crossroads.api.alchemy.AlchemyCarrierTE;
+import com.Da_Technomancer.crossroads.api.alchemy.ReagentHolderTE;
 import com.Da_Technomancer.crossroads.api.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
@@ -15,7 +15,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import org.apache.commons.lang3.tuple.Pair;
 import org.joml.Vector3f;
 
-public class CoolingCoilTileEntity extends AlchemyCarrierTE{
+public class CoolingCoilTileEntity extends ReagentHolderTE{
 
 	public static final BlockEntityType<CoolingCoilTileEntity> TYPE = CRTileEntity.createType(CoolingCoilTileEntity::new, CRBlocks.coolingCoilGlass, CRBlocks.coolingCoilCrystal);
 

@@ -5,27 +5,14 @@ import net.minecraft.core.particles.ParticleOptions;
 import javax.annotation.Nonnull;
 
 /**
- * To be placed on things that store alchemy reagents and allow reactions.  *
+ * To be placed on things that store alchemy reagents and allow reactions.
  */
 public interface IReactionChamber{
 
 	@Nonnull
-	ReagentMap getReagants();
+	ReagentMap getReagents();
 	
-	/**
-	 * @return This chamber's temperature in Degrees C
-	 */
-	default double getTemp(){
-		return getReagants().getTempC();
-	}
-	
-	default int getContent(){
-		return getReagants().getTotalQty();
-	}
-	
-	default boolean isCharged(){
-		return false;
-	}
+	boolean isCharged();
 	
 	int getReactionCapacity();
 	
@@ -33,7 +20,6 @@ public interface IReactionChamber{
 	 * Destroys the chamber, and creates an explosion
 	 */
 	void destroyChamber(float strength);
-	
 	
 	/**
 	 * Adds temporary particles for visual effect after a reaction. 

@@ -2,12 +2,14 @@ package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.Capabilities;
-import com.Da_Technomancer.crossroads.api.alchemy.*;
+import com.Da_Technomancer.crossroads.api.alchemy.EnumMatterPhase;
+import com.Da_Technomancer.crossroads.api.alchemy.EnumTransferMode;
+import com.Da_Technomancer.crossroads.api.alchemy.IChemicalHandler;
+import com.Da_Technomancer.crossroads.api.alchemy.ReagentHolderTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
@@ -17,7 +19,7 @@ import org.joml.Vector3f;
 
 import java.util.Arrays;
 
-public class ReagentPumpTileEntity extends AlchemyCarrierTE{
+public class ReagentPumpTileEntity extends ReagentHolderTE{
 
 	public static final BlockEntityType<ReagentPumpTileEntity> TYPE = CRTileEntity.createType(ReagentPumpTileEntity::new, CRBlocks.reagentPumpCrystal, CRBlocks.reagentPumpGlass);
 
@@ -43,35 +45,7 @@ public class ReagentPumpTileEntity extends AlchemyCarrierTE{
 
 	@Override
 	protected void performTransfer(){
-		EnumTransferMode[] modes = getModes();
-		for(int i = 0; i < 6; i++){
-			Direction side = Direction.from3DDataValue(i);
-
-			LazyOptional<IChemicalHandler> otherOpt = neighCache[side.get3DDataValue()];
-			if(!neighCache[side.get3DDataValue()].isPresent()){
-				BlockEntity te = level.getBlockEntity(worldPosition.relative(side));
-				if(te != null){
-					otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite());
-					neighCache[side.get3DDataValue()] = otherOpt;
-				}
-			}
-			if(otherOpt.isPresent()){
-				IChemicalHandler otherHandler = otherOpt.orElseThrow(NullPointerException::new);
-
-				//Check container type
-				EnumContainerType cont = otherHandler.getChannel(side.getOpposite());
-				if(cont != EnumContainerType.NONE && ((cont == EnumContainerType.GLASS) != glass)){
-					continue;
-				}
-
-				if(modes[i].isOutput() && contents.getTotalQty() != 0){
-					if(otherHandler.insertReagents(contents, side.getOpposite(), handler, true)){
-						correctReag();
-						setChanged();
-					}
-				}
-			}
-		}
+		performTransfer(true);
 	}
 
 	@SuppressWarnings("unchecked")

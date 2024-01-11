@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.Capabilities;
 import com.Da_Technomancer.crossroads.api.alchemy.*;
@@ -7,6 +8,7 @@ import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
+import com.Da_Technomancer.crossroads.crafting.AlchemyRec;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 import com.Da_Technomancer.essentials.api.ConfigUtil;
@@ -19,7 +21,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
@@ -29,11 +30,12 @@ import org.joml.Vector3f;
 
 import javax.annotation.Nonnull;
 
-public class GlasswareHolderTileEntity extends AlchemyReactorTE{
+public class GlasswareHolderTileEntity extends ReagentHolderTE{
 
 	public static final BlockEntityType<GlasswareHolderTileEntity> TYPE = CRTileEntity.createType(GlasswareHolderTileEntity::new, CRBlocks.glasswareHolder);
 
 	protected AbstractGlassware.GlasswareTypes glassType = null;
+	protected IReactionChamber reactionChamber;
 
 	@SuppressWarnings("unchecked")
 	private static final Pair<Vector3f, Vector3f>[] RENDER_SHAPE_EMPTY = new Pair[0];
@@ -46,6 +48,7 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 
 	public GlasswareHolderTileEntity(BlockPos pos, BlockState state){
 		this(TYPE, pos, state);
+		reactionChamber = new ReactionChamberImpl(() -> false);
 	}
 
 	protected GlasswareHolderTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state){
@@ -204,35 +207,22 @@ public class GlasswareHolderTileEntity extends AlchemyReactorTE{
 	}
 
 	@Override
-	protected void performTransfer(){
-		BlockState state = getBlockState();
-		if(state.getBlock() instanceof GlasswareHolder && heldType() != AbstractGlassware.GlasswareTypes.NONE){
-			Direction side = getTopSide();
-			BlockEntity te = level.getBlockEntity(worldPosition.relative(side));
-			LazyOptional<IChemicalHandler> otherOpt;
-			if(contents.getTotalQty() == 0 || te == null || !(otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())).isPresent()){
-				return;
+	public void serverTick(){
+		super.serverTick();
+		if(level.getGameTime() % AlchemyUtil.ALCHEMY_TIME == 0 && heldType() == AbstractGlassware.GlasswareTypes.FLORENCE){
+			//Only florence flasks have reactions occur
+			//Phials and shells are meant to be single-purpose
+			if(reactionChamber != null){
+				for(AlchemyRec react : ReagentManager.getReactions(level)){
+					if(react.performReaction(reactionChamber)){
+						correctReag();
+						break;
+					}
+				}
+			}else{
+				Crossroads.logger.error("Null reactionChamber in glassware stand. Report to mod author!");
+				Crossroads.logger.error("TE: " + this);
 			}
-
-			IChemicalHandler otherHandler = otherOpt.orElseThrow(NullPointerException::new);
-			EnumContainerType cont = otherHandler.getChannel(side.getOpposite());
-			if(cont != EnumContainerType.NONE && ((cont == EnumContainerType.GLASS) != glass)){
-				return;
-			}
-
-			if(otherHandler.insertReagents(contents, side.getOpposite(), handler, false)){
-				correctReag();
-				setChanged();
-			}
-		}
-	}
-
-	@Override
-	protected void performReaction(){
-		//Only florence flasks have reactions occur
-		//Phials and shells are meant to be single-purpose
-		if(heldType() == AbstractGlassware.GlasswareTypes.FLORENCE){
-			super.performReaction();
 		}
 	}
 

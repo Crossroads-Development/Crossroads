@@ -2,8 +2,8 @@ package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 
 import com.Da_Technomancer.crossroads.api.Capabilities;
-import com.Da_Technomancer.crossroads.api.alchemy.AlchemyReactorTE;
 import com.Da_Technomancer.crossroads.api.alchemy.EnumTransferMode;
+import com.Da_Technomancer.crossroads.api.alchemy.ReagentHolderTE;
 import com.Da_Technomancer.crossroads.api.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
@@ -14,7 +14,6 @@ import com.Da_Technomancer.crossroads.blocks.electric.TeslaCoilTopTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -26,11 +25,12 @@ import net.minecraftforge.items.IItemHandler;
 import org.apache.commons.lang3.tuple.Pair;
 import org.joml.Vector3f;
 
-public class ReactionChamberTileEntity extends AlchemyReactorTE{
+public class ReactionChamberTileEntity extends ReagentHolderTE{
 
 	public static final BlockEntityType<ReactionChamberTileEntity> TYPE = CRTileEntity.createType(ReactionChamberTileEntity::new, CRBlocks.reactionChamberGlass, CRBlocks.reactionChamberCrystal);
 
 	private int energy = 0;
+	private final ReactionChamberImpl reactionChamber = new ReactionChamberImpl(() -> energy >= DRAIN);
 	private static final int ENERGY_CAPACITY = 20;
 	public static final int DRAIN = 10;
 	public static final int CAPACITY = 256;
@@ -62,8 +62,8 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 		return contents;
 	}
 
-	public void writeContentNBT(ItemStack stack){
-		contents = ReactionChamber.getReagents(stack);
+	public void setMap(ReagentMap map){
+		contents = map;
 		dirtyReag = true;
 	}
 
@@ -110,11 +110,6 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 	}
 
 	@Override
-	public boolean isCharged(){
-		return energy >= 10 || super.isCharged();
-	}
-
-	@Override
 	public int transferCapacity(){
 		return CAPACITY;
 	}
@@ -127,11 +122,6 @@ public class ReactionChamberTileEntity extends AlchemyReactorTE{
 	@Override
 	protected EnumTransferMode[] getModes(){
 		return new EnumTransferMode[] {EnumTransferMode.BOTH, EnumTransferMode.BOTH, EnumTransferMode.BOTH, EnumTransferMode.BOTH, EnumTransferMode.BOTH, EnumTransferMode.BOTH};
-	}
-
-	@Override
-	protected void performTransfer(){
-		vesselTransfer(this);
 	}
 
 	@Override
