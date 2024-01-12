@@ -10,7 +10,7 @@
 			"type": "patchouli:spotlight",
 			"title": "Tesla Coil",
 			"item": "crossroads:tesla_coil",
-			"text": "The <item>Tesla Coil/$ is a way of transmitting <thing>Forge Energy (FE)/$. There are two parts: The base, and the top. The <item>Tesla Coil/$ (AKA the base) connects to machines and transfers FE. It accepts FE on the <em>blue/$ sides and bottom, and outputs FE on the <em>orange/$ side.$(br2)"
+			"text": "The <item>Tesla Coil/$ is a way of transmitting <thing>Forge Energy (FE)/$. There are two parts: The base and the top. The <item>Tesla Coil/$ (AKA the base) connects to machines and transfers FE. It accepts FE on the <em>blue/$ sides and bottom, and outputs FE on the <em>orange/$ side.$(br2)"
 		},
 		{
 			"type": "patchouli:text",
@@ -22,7 +22,7 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "A <item>leyden jar/$ is a 'battery' that can be placed into a <item>tesla coil base/$ to increase FE capacity. The <item>leyden jar/$ is removed by shift-right-clicking with an empty hand on the base, and maintains its FE charge when removed.$(br2)"
+			"text": "A <item>leyden jar/$ is a 'battery' that can be added into a <item>tesla coil base/$ to increase FE capacity. The <item>tesla coil base/$ can also charge batteries/electric items from other mods.$(br2)"
 		}
 	],
 	"extra_recipe_mappings": {

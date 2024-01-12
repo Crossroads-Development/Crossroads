@@ -3,15 +3,13 @@ package com.Da_Technomancer.crossroads.blocks.electric;
 import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.LeydenJar;
 import com.Da_Technomancer.essentials.api.ConfigUtil;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.TEBlock;
 import com.Da_Technomancer.essentials.api.redstone.IReadable;
-import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -21,9 +19,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -37,7 +33,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class TeslaCoil extends BaseEntityBlock implements IReadable{
+public class TeslaCoil extends TEBlock implements IReadable{
 
 	private static final VoxelShape SHAPE_EMPT = Shapes.or(box(0, 0, 0, 16, 2, 16), box(0, 14, 0, 16, 16, 16), box(5, 2, 0, 11, 14, 1), box(5, 2, 15, 11, 14,16), box(0, 2, 5, 1, 4, 11), box(15, 2, 5, 16, 14, 11));
 	private static final VoxelShape SHAPE_LEYD = Shapes.or(SHAPE_EMPT, box(5, 2, 5, 11, 14, 11));
@@ -63,11 +59,6 @@ public class TeslaCoil extends BaseEntityBlock implements IReadable{
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context){
 		return state.getValue(CRProperties.ACTIVE) ? SHAPE_LEYD : SHAPE_EMPT;
-	}
-
-	@Override
-	public RenderShape getRenderShape(BlockState state){
-		return RenderShape.MODEL;
 	}
 
 	@Nullable
@@ -110,50 +101,21 @@ public class TeslaCoil extends BaseEntityBlock implements IReadable{
 		if(ConfigUtil.isWrench(heldItem)){
 			if(!worldIn.isClientSide){
 				worldIn.setBlockAndUpdate(pos, state.cycle(CRProperties.HORIZ_FACING));
-				BlockEntity te = worldIn.getBlockEntity(pos);
-				if(te instanceof TeslaCoilTileEntity){
-					((TeslaCoilTileEntity) te).rotate();
+				if(worldIn.getBlockEntity(pos) instanceof TeslaCoilTileEntity tte){
+					tte.rotate();
 				}
 			}
 			return InteractionResult.SUCCESS;
 		}
 
-		if(heldItem.getItem() == CRItems.leydenJar){
-			if(!state.getValue(CRProperties.ACTIVE)){
-				BlockEntity te = worldIn.getBlockEntity(pos);
-				if(te instanceof TeslaCoilTileEntity){
-					if(!worldIn.isClientSide){
-						((TeslaCoilTileEntity) te).addJar(heldItem);
-						playerIn.setItemInHand(hand, ItemStack.EMPTY);
-						worldIn.setBlockAndUpdate(pos, state.setValue(CRProperties.ACTIVE, true));
-					}
-					return InteractionResult.SUCCESS;
-				}
-			}
-		}else if(heldItem.isEmpty()){
-			if(state.getValue(CRProperties.ACTIVE)){
-				BlockEntity te = worldIn.getBlockEntity(pos);
-				if(te instanceof TeslaCoilTileEntity){
-					if(!worldIn.isClientSide){
-						playerIn.setItemInHand(hand, ((TeslaCoilTileEntity) te).removeJar());
-						worldIn.setBlockAndUpdate(pos, state.setValue(CRProperties.ACTIVE, false));
-					}
-					return InteractionResult.SUCCESS;
-				}
+		if(!worldIn.isClientSide && worldIn.getBlockEntity(pos) instanceof TeslaCoilTileEntity te){
+			if(heldItem.isEmpty()){
+				playerIn.setItemInHand(hand, te.removeBattery());
+			}else{
+				playerIn.setItemInHand(hand, te.addBattery(heldItem));
 			}
 		}
-		return InteractionResult.PASS;
-	}
-
-	@Override
-	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving){
-		if(state.getValue(CRProperties.ACTIVE) && newState.getBlock() != this){
-			BlockEntity te = world.getBlockEntity(pos);
-			if(te instanceof TeslaCoilTileEntity){
-				Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), ((TeslaCoilTileEntity) te).removeJar());
-			}
-		}
-		super.onRemove(state, world, pos, newState, isMoving);
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
@@ -170,20 +132,9 @@ public class TeslaCoil extends BaseEntityBlock implements IReadable{
 	}
 
 	@Override
-	public boolean hasAnalogOutputSignal(BlockState state){
-		return true;
-	}
-
-	@Override
-	public int getAnalogOutputSignal(BlockState state, Level worldIn, BlockPos pos){
-		return RedstoneUtil.clampToVanilla(read(worldIn, pos, state));
-	}
-
-	@Override
 	public float read(Level world, BlockPos pos, BlockState state){
-		BlockEntity te = world.getBlockEntity(pos);
-		if(te instanceof TeslaCoilTileEntity){
-			return ((TeslaCoilTileEntity) te).getRedstone();
+		if(world.getBlockEntity(pos) instanceof TeslaCoilTileEntity te){
+			return te.getRedstone();
 		}else{
 			return 0;
 		}

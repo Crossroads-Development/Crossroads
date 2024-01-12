@@ -67,6 +67,7 @@ public class TeslaCoilTopTileEntity extends BlockEntity implements IInfoTE, ILin
 		int range = variant.range;
 		int joltQty = variant.joltAmt;
 
+		int totalFE = coilTE.getTotalFE();
 		if(variant == TeslaCoilTop.TeslaCoilVariants.ATTACK){
 			if(level.isClientSide){
 				return;
@@ -75,16 +76,15 @@ public class TeslaCoilTopTileEntity extends BlockEntity implements IInfoTE, ILin
 			//ATTACK
 			List<LivingEntity> ents = level.getEntitiesOfClass(LivingEntity.class, new AABB(worldPosition.getX() - range, worldPosition.getY() - range, worldPosition.getZ() - range, worldPosition.getX() + range, worldPosition.getY() + range, worldPosition.getZ() + range), EntitySelector.ENTITY_STILL_ALIVE);
 
-			if(!ents.isEmpty() && coilTE.getStored() >= joltQty){
+			if(!ents.isEmpty() && totalFE >= joltQty){
 				LivingEntity ent = ents.get(level.random.nextInt(ents.size()));
-				coilTE.setStored(coilTE.getStored() - joltQty);
-				setChanged();
+				coilTE.setTotalFE(totalFE - joltQty);
 
 				CRRenderUtil.addArc(level, worldPosition.getX() + 0.5F, worldPosition.getY() + 0.75F, worldPosition.getZ() + 0.5F, (float) ent.getX(), (float) ent.getY(), (float) ent.getZ(), 5, 0.2F, ATTACK_COLOR_CODES[(int) (level.getGameTime() % 3)]);
 				MiscUtil.attackWithLightning(ent, 0, null);
 			}
 		}else if(variant == TeslaCoilTop.TeslaCoilVariants.DECORATIVE){
-			if(coilTE.getStored() >= TeslaCoilTop.TeslaCoilVariants.DECORATIVE.joltAmt){
+			if(totalFE >= joltQty){
 				if(level.isClientSide){
 					//Spawn the purely decorative bolts on the client side directly to reduce packet load
 					int count = level.random.nextInt(5) + 1;
@@ -96,22 +96,20 @@ public class TeslaCoilTopTileEntity extends BlockEntity implements IInfoTE, ILin
 						CRRenderUtil.addArc(level, start, end, 6, 0.6F, COLOR_CODES[level.random.nextInt(COLOR_CODES.length)]);
 					}
 				}else{
-					coilTE.setStored(coilTE.getStored() - TeslaCoilTop.TeslaCoilVariants.DECORATIVE.joltAmt);
+					coilTE.setTotalFE(totalFE - joltQty);
 				}
 			}
 		}else if(!level.isClientSide){
 			//TRANSFER
 			for(BlockPos linkPos : linkHelper.getLinksRelative()){
-				if(linkPos != null && coilTE.getStored() >= joltQty && linkPos.distSqr(Vec3i.ZERO) <= range * range){
+				if(linkPos != null && totalFE >= joltQty && linkPos.distSqr(Vec3i.ZERO) <= range * range){
 					BlockPos actualPos = linkPos.offset(worldPosition.getX(), worldPosition.getY() - 1, worldPosition.getZ());
-					BlockEntity te = level.getBlockEntity(actualPos);
-					if(te instanceof TeslaCoilTileEntity && level.getBlockEntity(actualPos.above()) instanceof TeslaCoilTopTileEntity){
-						TeslaCoilTileEntity tcTe = (TeslaCoilTileEntity) te;
-						if(tcTe.getCapacity() - tcTe.getStored() > joltQty * (double) variant.efficiency / 100D){
-							tcTe.setStored(tcTe.getStored() + (int) (joltQty * (double) variant.efficiency / 100D));
-							tcTe.setChanged();
-							coilTE.setStored(coilTE.getStored() - joltQty);
-							setChanged();
+					if(level.getBlockEntity(actualPos) instanceof TeslaCoilTileEntity tcTe && level.getBlockEntity(actualPos.above()) instanceof TeslaCoilTopTileEntity){
+						int targetTotalFE = tcTe.getTotalFE();
+						int transferFE = (int) (joltQty * (double) variant.efficiency / 100D);
+						if(tcTe.getCapacity() - targetTotalFE >= transferFE){
+							tcTe.setTotalFE(targetTotalFE + transferFE);
+							coilTE.setTotalFE(totalFE - joltQty);
 
 							CRRenderUtil.addArc(level, worldPosition.getX() + 0.5F, worldPosition.getY() + 0.75F, worldPosition.getZ() + 0.5F, actualPos.getX() + 0.5F, actualPos.getY() + 1.75F, actualPos.getZ() + 0.5F, 5, (100F - variant.efficiency) / 100F, COLOR_CODES[(int) (level.getGameTime() % 3)]);
 							break;
