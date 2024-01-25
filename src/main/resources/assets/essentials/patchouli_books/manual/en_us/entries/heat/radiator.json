@@ -10,11 +10,11 @@
 			"type": "patchouli:spotlight",
 			"title": "Radiator",
 			"item": "crossroads:radiator",
-			"text": "The <item>Radiator/$ is a way of producing heat using <thing>$(l:essentials:fluid/steam)steam/$. <thing>$(l:essentials:fluid/steam)Steam/$ can be input and <thing>distilled water/$ can be output on the top and bottom, and <item>$(l:essentials:heat/cable)cables/$ connect to the sides.$(br2)<thing>Distilled water/$ is produced in equal quantity of <thing>$(l:essentials:fluid/steam)steam/$ consumed. The <thing>radiator/$ has no maximum temperature. "
+			"text": "The <item>Radiator/$ is a way of producing heat using <thing>$(l:essentials:fluid/steam)steam/$. <thing>$(l:essentials:fluid/steam)Steam/$ can be input and <thing>distilled water/$ can be output on the top and bottom, and <item>$(l:essentials:heat/cable)cables/$ connect to the sides.$(br2)<thing>Distilled water/$ is produced in equal quantity of <thing>$(l:essentials:fluid/steam)steam/$ consumed. The <thing>radiator/$ has no maximum temperature. The rate of heat production "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "The rate of heat production and steam consumption can be adjusted by right clicking with a $(l:essentials/wrench)wrench/$.$(br2)"
+			"text": "and steam consumption can be adjusted by right clicking with a $(l:essentials/wrench)wrench/$.$(br2)"
 		},
 		{
 			"type": "patchouli:text",
@@ -22,6 +22,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:radiator" : 0
+		"crossroads:radiator": 0
 	}
 }

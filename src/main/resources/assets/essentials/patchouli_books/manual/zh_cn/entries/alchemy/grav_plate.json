@@ -23,12 +23,12 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<bobo>$(l:crossroads:intro/welcome#bobo)渥肆bOqr！！/$<bobo>渥友！！！！重药咚西~~~！超热！钞冷！订义热/冷栋力学！免费费费费！！！$(br2)<bobo>红金属定！$(br2)<bobo>重利布能过！$(br2)<bobo>燃后是坠难的！好次粒叠在1物品！1雾品堆叠数！/$$(br2)"
+			"text": "<bobo>$(l:essentials:intro/welcome#bobo)渥肆bOqr！！/$<bobo>渥友！！！！重药咚西~~~！超热！钞冷！订义热/冷栋力学！免费费费费！！！$(br2)<bobo>红金属定！$(br2)<bobo>重利布能过！$(br2)<bobo>燃后是坠难的！好次粒叠在1物品！1雾品堆叠数！/$$(br2)"
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:densus_plate" : 0,
-		"crossroads:anti_densus_plate" : 0,
-		"crossroads:block_cavorite" : 2
+		"crossroads:densus_plate": 0,
+		"crossroads:anti_densus_plate": 0,
+		"crossroads:block_cavorite": 2
 	}
 }

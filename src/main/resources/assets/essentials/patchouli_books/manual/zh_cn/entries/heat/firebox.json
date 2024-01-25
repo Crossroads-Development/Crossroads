@@ -14,10 +14,10 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "$顶部有一个<item>$(l:crossroads:heat/cable)热导管/$连接口。<thing>$(l:essentials/circuits#reader)读取器电路/$可测量燃料槽的充满程度。$(br2)"
+			"text": "$顶部有一个<item>$(l:essentials:heat/cable)热导管/$连接口。<thing>$(l:essentials/circuits#reader)读取器电路/$可测量燃料槽的充满程度。$(br2)"
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:firebox" : 0
+		"crossroads:firebox": 0
 	}
 }

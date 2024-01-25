@@ -11,14 +11,12 @@
 			"type": "patchouli:spotlight",
 			"title": "Intro to Bioengineering",
 			"item": "crossroads:syringe{extension_treated:true}",
-			"text": "Bioengineering is the simplest path. It doesn't introduce any new energy systems, overarching mechanics, or have any particularly dangerous or risky features. Most features revolve around mobs, potions, or plants in some way.$(br2)The largest system in Bioengineering "
+			"text": "Bioengineering is the simplest path. It doesn't introduce any new energy systems, overarching mechanics, or have any particularly dangerous or risky features. Most features revolve around mobs, potions, or plants in some way.$(br2)The largest system in Bioengineering is <thing>$(l:essentials:witchcraft/cloning)cloning/$, which has many applications.$(br2)Other "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "is <thing>$(l:essentials:witchcraft/cloning)cloning/$, which has many applications.$(br2)Other highlights include the <item>$(l:essentials:witchcraft/hydroponics_trough)hydroponics trough/$, for mass-producing plants, and new <thing>$(l:essentials:witchcraft/medicinal_mushroom)potions effects and recipes/$.$(br2)There's no set or recommended order for using Bioengineering. Pick whatever looks interesting and try it out!$(br2)"
+			"text": "highlights include the <item>$(l:essentials:witchcraft/hydroponics_trough)hydroponics trough/$, for mass-producing plants, and new <thing>$(l:essentials:witchcraft/medicinal_mushroom)potions effects and recipes/$.$(br2)There's no set or recommended order for using Bioengineering. Pick whatever looks interesting and try it out!$(br2)"
 		}
 	],
-	"extra_recipe_mappings": {
-		
-	}
+	"extra_recipe_mappings": {}
 }

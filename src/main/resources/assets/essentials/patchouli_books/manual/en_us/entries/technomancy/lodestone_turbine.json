@@ -11,11 +11,11 @@
 			"type": "patchouli:spotlight",
 			"title": "Lodestone Turbine",
 			"item": "crossroads:lodestone_turbine",
-			"text": "The <item>Lodestone Turbine/$ produces <thing>$(l:essentials:intro/rotary)rotary power/$ for free constantly. It only works in dimensions where clocks and compasses spin uselessly (like the nether and end), by harnessing the large fluctuating magnetic fields that disrupt these devices.$(br2)It connect axially "
+			"text": "The <item>Lodestone Turbine/$ produces <thing>$(l:essentials:intro/rotary)rotary power/$ for free constantly. It only works in dimensions where clocks and compasses spin uselessly (like the nether and end), by harnessing the large fluctuating magnetic fields that disrupt these devices.$(br2)It connect axially on the top, and can not raise the speed "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "on the top, and can not raise the speed above 10 rad/s.$(br2)"
+			"text": "above 10 rad/s.$(br2)"
 		},
 		{
 			"type": "patchouli:text",
@@ -23,6 +23,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:lodestone_turbine" : 0
+		"crossroads:lodestone_turbine": 0
 	}
 }

@@ -21,21 +21,21 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "for every item stored, moving towards the air temperature.$(br2)Certain items (like <item>embryos/$) are damaged by being frozen- freezing still prevents them from <thing>spoiling/$, but will make them worse in other ways. Those items can be preserved using the <item>$(l:essentials:witchcraft/spoilage#cultivator_vat)nutrition vat/$ without issue.$(br2)<thing>$(l:essentials/circuits)Circuits/$ read the average "
+			"text": "for every item stored, moving towards the air temperature.$(br2)Certain items (like <item>embryos/$) are damaged by being frozen- freezing still prevents them from <thing>spoiling/$, but will make them worse in other ways. Those items can be preserved using the <item>$(l:essentials:witchcraft/spoilage#cultivator_vat)nutrition vat/$ without issue.$(br2)<thing>$(l:essentials/circuits)Circuits/$ read the average remaining lifetime of all stored items, in seconds before they spoil. Already "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "remaining lifetime of all stored items, in seconds before they spoil. Already spoiled items are measured as 0.$(br2)"
+			"text": "spoiled items are measured as 0.$(br2)"
 		},
 		{
 			"type": "patchouli:spotlight",
 			"anchor": "stasis_storage",
 			"item": "crossroads:stasis_storage",
-			"text": "The <item>Stasis Box/$ stops items from <thing>spoiling/$ at no cost and without causing freezing damage. It only has 1 slot, and requires <thing>$(l:essentials:intro/path#technomancy)technomancy/$ to craft.$(br2)The <item>stasis box/$ is the only way to un-spoil items. A <thing>$(l:essentials:beam/time)time beam/$ will cause the stored item to re-wind the <thing>spoilage/$ "
+			"text": "The <item>Stasis Box/$ stops items from <thing>spoiling/$ at no cost and without causing freezing damage. It only has 1 slot, and requires <thing>$(l:essentials:intro/path#technomancy)technomancy/$ to craft.$(br2)The <item>stasis box/$ is the only way to un-spoil items. A <thing>$(l:essentials:beam/time)time beam/$ will cause the stored item to re-wind the <thing>spoilage/$ timer, by (<thing>beam power/$ * 4) ticks per cycle.$(br2)"
 		},
 		{
 			"type": "patchouli:text",
-			"text": "timer, by (<thing>beam power/$ * 4) ticks per cycle.$(br2)<thing>$(l:essentials/circuits)Circuits/$ read the remaining lifetime of the stored item, in seconds before they spoil. Already spoiled items are measured as 0.$(br2)"
+			"text": "<thing>$(l:essentials/circuits)Circuits/$ read the remaining lifetime of the stored item, in seconds before they spoil. Already spoiled items are measured as 0.$(br2)"
 		},
 		{
 			"type": "patchouli:spotlight",
@@ -45,7 +45,7 @@
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:cold_storage" : 0,
-		"crossroads:stasis_storage" : 4
+		"crossroads:cold_storage": 0,
+		"crossroads:stasis_storage": 4
 	}
 }

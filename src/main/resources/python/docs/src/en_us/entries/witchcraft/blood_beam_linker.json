@@ -1,0 +1,21 @@
+{
+	"category": "essentials:witchcraft",
+	"format": 2,
+	"name": "Blood Effigy",
+	"icon": "crossroads:blood_beam_linker",
+	"sortnum": 0,
+	"priority": false,
+	"advancement": "crossroads:progress/path/witchcraft",
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "patchouli:spotlight",
+			"title": "Blood Effigy",
+			"item": "crossroads:blood_beam_linker",
+			"text": "The <item>Blood Effigy/$ lets you affect a mob or player with <thing>$(l:essentials:intro/beam)beams/$ from anywhere in the world- all it needs is a <item>$(l:essentials:witchcraft/syringe#blood)blood sample/$ of the target.$(br2)Any <thing>$(l:essentials:intro/beam)beams/$ going into the <item>blood effigy/$ will affect the owner of the <item>$(l:essentials:witchcraft/syringe#blood)blood sample/$ instead, but the power is limited- no matter the <thing>power/$ of the incoming beam, the beam effect is limited to <thing>power/$ 1.$(br2)The <item>$(l:essentials:witchcraft/syringe#blood)blood sample/$ doesn't need to be fresh, but using $(l:essentials:witchcraft/spoilage)spoiled/$ blood has a <em>risk of backfiring/$, leading to the target experiencing a more powerful version of the $(l:essentials:beam/void)opposite effect/$ at random.$(br2)<thing>$(l:essentials/circuits)Circuits/$ read the remaining lifetime of the blood sample, in seconds, or 0 if already spoiled.$(br2)"
+		}
+	],
+	"extra_recipe_mappings": {
+		"crossroads:blood_beam_linker" : 0
+	}
+}

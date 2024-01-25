@@ -11,7 +11,7 @@
 			"type": "patchouli:spotlight",
 			"title": "天然磁石发电机",
 			"item": "crossroads:lodestone_turbine",
-			"text": "<item>天然磁石发电机/$能持续地免费产出<thing>$(l:crossroads:intro/rotary)旋转能/$。它只能在时钟和指南针胡乱旋转的维度（比如下界和末地）工作，通过利用扰乱这些设备的巨大磁场波动旋转。$(br2)它需要在顶部"
+			"text": "<item>天然磁石发电机/$能持续地免费产出<thing>$(l:essentials:intro/rotary)旋转能/$。它只能在时钟和指南针胡乱旋转的维度（比如下界和末地）工作，通过利用扰乱这些设备的巨大磁场波动旋转。$(br2)它需要在顶部"
 		},
 		{
 			"type": "patchouli:text",
@@ -19,10 +19,10 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<bobo>有县功绿！无限棱源！我是船说中得$(l:crossroads:intro/welcome#bobo)BOBO！/$<bobo>窝有个更嚎的板本！$(br2)<bobo>树页惠掉什么？$(br2)<bobo>橙涩石间定！$(br2)<bobo>绳命！徐多于宙！已及衣切的意义！但载肉团上！/$$(br2)"
+			"text": "<bobo>有县功绿！无限棱源！我是船说中得$(l:essentials:intro/welcome#bobo)BOBO！/$<bobo>窝有个更嚎的板本！$(br2)<bobo>树页惠掉什么？$(br2)<bobo>橙涩石间定！$(br2)<bobo>绳命！徐多于宙！已及衣切的意义！但载肉团上！/$$(br2)"
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:lodestone_turbine" : 0
+		"crossroads:lodestone_turbine": 0
 	}
 }

@@ -10,7 +10,7 @@
 			"type": "patchouli:spotlight",
 			"title": "脂肪收集器",
 			"item": "crossroads:fat_collector",
-			"text": "<item>脂肪收集器/$能使用食物制造<thing>液态脂肪/$。它只在特定<thing>$(l:crossroads:intro/heat)温度范围/$内工作。它的<thing>$(l:crossroads:intro/heat)热/$连接口在底部，流体连接口在侧面。$(br2)任何食物（除了<item>$(l:crossroads:fluid/fat_congealer)食物团/$）都可以转换成<thing>液态脂肪/$，并在该过程中"
+			"text": "<item>脂肪收集器/$能使用食物制造<thing>液态脂肪/$。它只在特定<thing>$(l:essentials:intro/heat)温度范围/$内工作。它的<thing>$(l:essentials:intro/heat)热/$连接口在底部，流体连接口在侧面。$(br2)任何食物（除了<item>$(l:essentials:fluid/fat_congealer)食物团/$）都可以转换成<thing>液态脂肪/$，并在该过程中"
 		},
 		{
 			"type": "patchouli:text",
@@ -22,10 +22,10 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<thing>液态脂肪/$可使用<item>$(l:crossroads:fluid/fat_congealer)脂肪冷却器/$制成自定义食物，或在<item>$(l:crossroads:fluid/fat_feeder)脂肪喂食器/$直接用于喂食附近的玩家和动物。$(br2)"
+			"text": "<thing>液态脂肪/$可使用<item>$(l:essentials:fluid/fat_congealer)脂肪冷却器/$制成自定义食物，或在<item>$(l:essentials:fluid/fat_feeder)脂肪喂食器/$直接用于喂食附近的玩家和动物。$(br2)"
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:fat_collector" : 0
+		"crossroads:fat_collector": 0
 	}
 }

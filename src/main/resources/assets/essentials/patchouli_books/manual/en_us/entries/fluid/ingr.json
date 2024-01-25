@@ -30,8 +30,8 @@
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:slag" : 2,
-		"crossroads:dust_salt" : 1,
-		"crossroads:block_salt" : 1
+		"crossroads:slag": 2,
+		"crossroads:dust_salt": 1,
+		"crossroads:block_salt": 1
 	}
 }

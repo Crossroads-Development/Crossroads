@@ -1,0 +1,22 @@
+{
+	"category": "essentials:alchemy",
+	"format": 2,
+	"name": "Reagent Conduits",
+	"icon": "crossroads:reagent_filter",
+	"sortnum": 0,
+	"priority": false,
+	"advancement": "crossroads:progress/path/alchemy",
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "patchouli:spotlight",
+			"title": "Reagent Conduits",
+			"item": "crossroads:reagent_filter",
+			"text": "<item>Resonating Filters/$ are an expensive but 'easy' way to filter out mixtures of <thing>$(l:essentials:intro/alchemy)reagents/$. They are rarely required- mixed <thing>$(l:essentials:intro/alchemy)reagents/$ can usually be separated as items or by taking advantage of different boiling points ($(l:essentials:alchemy/conduit)gasses won't naturally flow down, and liquids and solids won't go up/$).$(br2)The <item>resonating filter/$ has a UI with a single slot for $(l:essentials:alchemy/glassware)<item>glassware/$; any types of <thing>$(l:essentials:intro/alchemy)reagents/$ in the $(l:essentials:alchemy/glassware)<item>glassware/$ are 'matched' by the filter. <thing>$(l:essentials:intro/alchemy)Reagents/$ are accepted in the top, and <thing>$(l:essentials:intro/alchemy)reagents/$ that match the filter will be transferred out the side, while <thing>$(l:essentials:intro/alchemy)reagents/$ that don't match are transferred out the bottom into a connected <item>$(l:essentials:alchemy/conduit)conduit/$ or other alchemy container.$(br2)"
+		}
+	],
+	"extra_recipe_mappings": {
+		"crossroads:reagent_filter" : 0,
+		"crossroads:crystal_reagent_filter" : 0
+	}
+}

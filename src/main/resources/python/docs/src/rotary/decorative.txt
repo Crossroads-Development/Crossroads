@@ -1,9 +1,0 @@
-Aesthetic Mechanisms
-crossroads:gear_facade_stone_brick
-crossroads:gear_facade_stone_brick,crossroads:gear_facade_iron,crossroads:gear_facade_cobble,crossroads:gear_facade_glass
-There are a few purely decorative <thing><link:essentials:rotary/gear_base>mechanisms/$ that can be placed in the same blockspace as <item><link:essentials:rotary/gear_base>gears, axles, etc/$.
-<page|image||Axle Mounts|crossroads:textures/book/axle_mount.png>
-<item>Axle Mounts/$ are purely decorative 'clamps' that hold <item><link:essentials:rotary/gear_base>axles/$ and attach to a solid wall, ceiling or floor to make <item><link:essentials:rotary/gear_base>axles/$ look supported instead of being free floating.
-Several can be in the same blockspace, and they do not obstruct <item><link:essentials:rotary/gear_base>gear/$ connections. <item><link:essentials:rotary/gear_base>Axles/$ <em>can not/$ connect through them if they are placed <em>between/$ <item><link:essentials:rotary/gear_base>axles/$, instead of alongside them. They come in every material that can be used to make gears.
-<page|image||Facades|crossroads:textures/book/gear_facades.png>
-<item>Facades/$ are purely decorative panels that look like normal blocks and can cover up <item><link:essentials:rotary/gear_base>gears & axles/$. Several can be in the same blockspace, they are solid to walk on, and they do not obstruct <item><link:essentials:rotary/gear_base>gear & axle/$ connections at all. They do not need a solid supporting block, and come in four varieties: Stone Bricks, Cobblestone, Iron Blocks, and Glass.

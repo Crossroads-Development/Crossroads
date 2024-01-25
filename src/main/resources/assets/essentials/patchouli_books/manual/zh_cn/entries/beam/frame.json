@@ -10,15 +10,15 @@
 			"type": "patchouli:spotlight",
 			"title": "透镜框架",
 			"item": "crossroads:lens_frame",
-			"text": "<item>透镜框架/$是一种用于操作<thing>$(l:crossroads:intro/beam)光束/$的是要设备，有着许多用途。光束可从框架的大洞中穿过，并且<item>透镜框架/$<em>不会给光束加上延迟/$，哪怕光束正在产生效果。$(br2)"
+			"text": "<item>透镜框架/$是一种用于操作<thing>$(l:essentials:intro/beam)光束/$的是要设备，有着许多用途。光束可从框架的大洞中穿过，并且<item>透镜框架/$<em>不会给光束加上延迟/$，哪怕光束正在产生效果。$(br2)"
 		},
 		{
 			"type": "patchouli:text",
-			"text": "数种物品可以通过右击安放到<item>框架/$内作为“透镜”。每个<item>框架/$每次只能放一个透镜（但多个<item>框架/$可以排成一列）。$(br2)使用$(l:crossroads:intro/ores)红宝石/$会删除光束内任何不是<thing>能量/$的成分。$(br2)使用绿宝石会删除光束内任何不是"
+			"text": "数种物品可以通过右击安放到<item>框架/$内作为“透镜”。每个<item>框架/$每次只能放一个透镜（但多个<item>框架/$可以排成一列）。$(br2)使用$(l:essentials:intro/ores)红宝石/$会删除光束内任何不是<thing>能量/$的成分。$(br2)使用绿宝石会删除光束内任何不是"
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<thing>潜能/$的成分。$(br2)使用钻石会删除光束内任何不是<thing>稳定/$的成分。$(br2)使用$(l:crossroads:intro/ores)虚空水晶/$会将整个光束转换为<thing>$(l:crossroads:beam/void)虚空/$。$(br2)在$(l:crossroads:fluid/ingr)纯石英/$上使用<thing>光色域/$光束会将其转换为明亮石英。"
+			"text": "<thing>潜能/$的成分。$(br2)使用钻石会删除光束内任何不是<thing>稳定/$的成分。$(br2)使用$(l:essentials:intro/ores)虚空水晶/$会将整个光束转换为<thing>$(l:essentials:beam/void)虚空/$。$(br2)在$(l:essentials:fluid/ingr)纯石英/$上使用<thing>光色域/$光束会将其转换为明亮石英。"
 		},
 		{
 			"type": "patchouli:text",
@@ -26,6 +26,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:lens_frame" : 0
+		"crossroads:lens_frame": 0
 	}
 }

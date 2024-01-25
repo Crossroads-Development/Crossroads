@@ -22,7 +22,5 @@
 			"text": "<thing>虚空-潜能/$，也就是<thing>死亡/$，会杀死植物，对 sqrt(<thing>功率/$) 范围内的生物造成 <thing>功率/$/2 点伤害。这种伤害无视护甲，而且不死生物会被治疗而不是伤害。$(br2)"
 		}
 	],
-	"extra_recipe_mappings": {
-		
-	}
+	"extra_recipe_mappings": {}
 }

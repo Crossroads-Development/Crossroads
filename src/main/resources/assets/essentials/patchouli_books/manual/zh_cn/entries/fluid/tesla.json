@@ -26,6 +26,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:tesla_coil" : 0
+		"crossroads:tesla_coil": 0
 	}
 }

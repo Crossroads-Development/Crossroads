@@ -10,7 +10,7 @@
 			"type": "patchouli:spotlight",
 			"title": "旋转钻头",
 			"item": "crossroads:rotary_drill",
-			"text": "<item>旋转钻头/$是<thing>$(l:crossroads:intro/rotary)旋转能/$供能的方块破坏器和伤害提供器。它们连接到背面的轴或齿轮，会破坏/伤害正面的东西。$(br2)不管是否有在实际工作，<item>旋转钻头/$都会持续吸取旋转能$(br2)"
+			"text": "<item>旋转钻头/$是<thing>$(l:essentials:intro/rotary)旋转能/$供能的方块破坏器和伤害提供器。它们连接到背面的轴或齿轮，会破坏/伤害正面的东西。$(br2)不管是否有在实际工作，<item>旋转钻头/$都会持续吸取旋转能$(br2)"
 		},
 		{
 			"type": "patchouli:text",
@@ -22,7 +22,7 @@
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:rotary_drill" : 0,
-		"crossroads:rotary_drill_gold" : 2
+		"crossroads:rotary_drill": 0,
+		"crossroads:rotary_drill_gold": 2
 	}
 }

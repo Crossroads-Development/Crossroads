@@ -10,11 +10,11 @@
 			"type": "patchouli:spotlight",
 			"title": "上发条架",
 			"item": "crossroads:winding_table",
-			"text": "<item>上发条架/$能够给$(l:crossroads:rotary/crossbow)特定物品/$上发条。$(br2)要给<item>架/$内物品上发条，<item>上发条架/$需要在顶部连接到<thing>$(l:crossroads:intro/rotary)轴或齿轮/$，还需要一个红石脉冲。"
+			"text": "<item>上发条架/$能够给$(l:essentials:rotary/crossbow)特定物品/$上发条。$(br2)要给<item>架/$内物品上发条，<item>上发条架/$需要在顶部连接到<thing>$(l:essentials:intro/rotary)轴或齿轮/$，还需要一个红石脉冲。"
 		},
 		{
 			"type": "patchouli:text",
-			"text": "每接受到一个脉冲，物品的<thing>发条转速/$会增加 0.2 rad/s。如果物品的发条转速超过上发条架的轴转速，<em>物品会被破坏/$。物品只能用正速度上发条。$(br2)当物品在<item>上发条架/$上发条，<item>架/$会产生反向的<thing>$(l:crossroads:intro/rotary)旋转能/$，"
+			"text": "每接受到一个脉冲，物品的<thing>发条转速/$会增加 0.2 rad/s。如果物品的发条转速超过上发条架的轴转速，<em>物品会被破坏/$。物品只能用正速度上发条。$(br2)当物品在<item>上发条架/$上发条，<item>架/$会产生反向的<thing>$(l:essentials:intro/rotary)旋转能/$，"
 		},
 		{
 			"type": "patchouli:text",
@@ -22,6 +22,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:winding_table" : 0
+		"crossroads:winding_table": 0
 	}
 }

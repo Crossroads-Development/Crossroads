@@ -21,11 +21,11 @@
 			"type": "patchouli:spotlight",
 			"anchor": "sedation",
 			"item": "minecraft:potion{Potion:\"crossroads:sedation\"}",
-			"text": "<thing>Sedation/$ potions disable the AI of any mob it is applied to. Sedated mobs will not move on their own, fight back, attack, or otherwise react to their environment. It can be used for transporting mobs or keeping them for display.$(br2)It does not work on players "
+			"text": "<thing>Sedation/$ potions disable the AI of any mob it is applied to. Sedated mobs will not move on their own, fight back, attack, or otherwise react to their environment. It can be used for transporting mobs or keeping them for display.$(br2)It does not work on players or boss monsters, but will instead apply "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "or boss monsters, but will instead apply flat debuffs.$(br2)"
+			"text": "flat debuffs.$(br2)"
 		},
 		{
 			"type": "patchouli:spotlight",
@@ -35,6 +35,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:medicinal_mushroom" : 0
+		"crossroads:medicinal_mushroom": 0
 	}
 }

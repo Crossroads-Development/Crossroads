@@ -35,10 +35,10 @@
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:tesla_coil_top_efficiency" : 4,
-		"crossroads:tesla_coil_top_distance" : 3,
-		"crossroads:tesla_coil_top_intensity" : 5,
-		"crossroads:tesla_coil_top_attack" : 1,
-		"crossroads:tesla_coil_top_decorative" : 2
+		"crossroads:tesla_coil_top_efficiency": 4,
+		"crossroads:tesla_coil_top_distance": 3,
+		"crossroads:tesla_coil_top_intensity": 5,
+		"crossroads:tesla_coil_top_attack": 1,
+		"crossroads:tesla_coil_top_decorative": 2
 	}
 }

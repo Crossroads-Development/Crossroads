@@ -23,6 +23,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:brewing_vat" : 0
+		"crossroads:brewing_vat": 0
 	}
 }

@@ -10,7 +10,7 @@
 			"type": "patchouli:spotlight",
 			"title": "矿物",
 			"item": "crossroads:gem_ruby",
-			"text": "交错道途会在世界中生成几种矿物。模组也添加了几种<thing>$(l:crossroads:rotary/millstone)两倍矿物产出/$的方法和一种<thing>$(l:crossroads:rotary/stamp)三倍矿物产出/$的方法。$(br2)"
+			"text": "交错道途会在世界中生成几种矿物。模组也添加了几种<thing>$(l:essentials:rotary/millstone)两倍矿物产出/$的方法和一种<thing>$(l:essentials:rotary/stamp)三倍矿物产出/$的方法。$(br2)"
 		},
 		{
 			"type": "patchouli:text",
@@ -18,14 +18,12 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<item>红宝石矿石/$只在下界以单个方块生成，而且只生成在黑石而不是下界岩中。这种矿总体来说比较稀有。红宝石矿石会掉落<item>红宝石/$，常被用于<thing>$(l:crossroads:intro/beam)光束/$。<item>红宝石/$也可以从猪灵手里买到。$(br2)"
+			"text": "<item>红宝石矿石/$只在下界以单个方块生成，而且只生成在黑石而不是下界岩中。这种矿总体来说比较稀有。红宝石矿石会掉落<item>红宝石/$，常被用于<thing>$(l:essentials:intro/beam)光束/$。<item>红宝石/$也可以从猪灵手里买到。$(br2)"
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<item>虚空矿石/$只在末地和末地外岛的末地石中生成。这种矿石比较容易发现。挖掘后掉落<item>虚空水晶/$，用于游戏末期的<thing>$(l:crossroads:intro/beam)光束/$（特别是创造<thing>$(l:crossroads:beam/void)虚空/$）。$(br2)"
+			"text": "<item>虚空矿石/$只在末地和末地外岛的末地石中生成。这种矿石比较容易发现。挖掘后掉落<item>虚空水晶/$，用于游戏末期的<thing>$(l:essentials:intro/beam)光束/$（特别是创造<thing>$(l:essentials:beam/void)虚空/$）。$(br2)"
 		}
 	],
-	"extra_recipe_mappings": {
-		
-	}
+	"extra_recipe_mappings": {}
 }

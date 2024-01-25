@@ -1,7 +1,0 @@
-Blood Effigy
-crossroads:blood_beam_linker|crossroads:progress/path/witchcraft
-crossroads:blood_beam_linker
-The <item>Blood Effigy/$ lets you affect a mob or player with <thing><link:essentials:intro/beam>beams/$ from anywhere in the world- all it needs is a <item><link:essentials:witchcraft/syringe#blood>blood sample/$ of the target.
-Any <thing><link:essentials:intro/beam>beams/$ going into the <item>blood effigy/$ will affect the owner of the <item><link:essentials:witchcraft/syringe#blood>blood sample/$ instead, but the power is limited- no matter the <thing>power/$ of the incoming beam, the beam effect is limited to <thing>power/$ 1.
-The <item><link:essentials:witchcraft/syringe#blood>blood sample/$ doesn't need to be fresh, but using <link:essentials:witchcraft/spoilage>spoiled/$ blood has a <em>risk of backfiring/$, leading to the target experiencing a more powerful version of the <link:essentials:beam/void>opposite effect/$ at random.
-<thing><link:essentials/circuits>Circuits/$ read the remaining lifetime of the blood sample, in seconds, or 0 if already spoiled.

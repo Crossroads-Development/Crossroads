@@ -10,15 +10,15 @@
 			"type": "patchouli:spotlight",
 			"title": "Heat Cables",
 			"item": "crossroads:heat_cable_wool",
-			"text": "<item>Heat Cables/$ transport heat by balancing their temperature with their neighbors. However, if a <item>heat cable/$ gets above its <thing>melting temperature/$, it will break. Make sure your heat networks are using at least as much heat as they make, or your cables will melt!$(br2)"
+			"text": "<item>Heat Cables/$ transport heat by balancing their temperature with their neighbors. However, if a <item>heat cable/$ gets above its <thing>melting temperature/$, it will break. Make sure your heat networks are using at least as much heat as they make, or your cables will melt!$(br2)<item>Heat Cables/$ also have a <thing>loss/$, which is "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<item>Heat Cables/$ also have a <thing>loss/$, which is how much their temperature will move towards the <thing>biome temperature/$ each tick. There are many types of <item>heat cables/$ with different stats- different <thing>melting points/$ and <thing>loss rates/$. Ceramic and obsidian are usually best- but wool will do in a pinch! There are also ice cables that have extremely low <thing>heat loss/$, but melt at 0°C.$(br2)"
+			"text": "how much their temperature will move towards the <thing>biome temperature/$ each tick. There are many types of <item>heat cables/$ with different stats- different <thing>melting points/$ and <thing>loss rates/$. Ceramic and obsidian are usually best- but wool will do in a pinch! There are also ice cables that have extremely low <thing>heat loss/$, but melt at 0°C.$(br2)Cables can be disconnected from each other via wrench. "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "Cables can be disconnected from each other via wrench. Cables can also be reskined by right clicking with iron, diamond, or nether quartz.$(br2)"
+			"text": "Cables can also be reskined by right clicking with iron, diamond, or nether quartz.$(br2)"
 		},
 		{
 			"type": "patchouli:text",
@@ -30,17 +30,17 @@
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:heat_cable_wool" : 0,
-		"crossroads:heat_cable_slime" : 0,
-		"crossroads:heat_cable_ice" : 0,
-		"crossroads:heat_cable_obsidian" : 0,
-		"crossroads:heat_cable_ceramic" : 0,
-		"crossroads:heat_cable_densus" : 0,
-		"crossroads:redstone_heat_cable_wool" : 0,
-		"crossroads:redstone_heat_cable_slime" : 0,
-		"crossroads:redstone_heat_cable_ice" : 0,
-		"crossroads:redstone_heat_cable_obsidian" : 0,
-		"crossroads:redstone_heat_cable_ceramic" : 0,
-		"crossroads:redstone_heat_cable_densus" : 0
+		"crossroads:heat_cable_wool": 0,
+		"crossroads:heat_cable_slime": 0,
+		"crossroads:heat_cable_ice": 0,
+		"crossroads:heat_cable_obsidian": 0,
+		"crossroads:heat_cable_ceramic": 0,
+		"crossroads:heat_cable_densus": 0,
+		"crossroads:redstone_heat_cable_wool": 0,
+		"crossroads:redstone_heat_cable_slime": 0,
+		"crossroads:redstone_heat_cable_ice": 0,
+		"crossroads:redstone_heat_cable_obsidian": 0,
+		"crossroads:redstone_heat_cable_ceramic": 0,
+		"crossroads:redstone_heat_cable_densus": 0
 	}
 }

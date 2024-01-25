@@ -10,11 +10,11 @@
 			"type": "patchouli:spotlight",
 			"title": "Dynamo",
 			"item": "crossroads:dynamo",
-			"text": "The <item>Dynamo/$ produce <thing>Forge Energy (FE)/$ using <thing>$(l:essentials:intro/rotary)rotary power/$.$(br2)Higher <thing>$(l:essentials:intro/rotary)speeds/$ will produce more power, using more rotary power in the process (the conversion efficiency is constant). FE is output on the side opposite the axle.$(br2)"
+			"text": "The <item>Dynamo/$ produce <thing>Forge Energy (FE)/$ using <thing>$(l:essentials:intro/rotary)rotary power/$.$(br2)Higher <thing>$(l:essentials:intro/rotary)speeds/$ will produce more power, using more rotary power in the process (the conversion efficiency is constant). FE is output on the side opposite the axle.$(br2)Crossroads itself has very few uses for FE. Crossroads adds a way of transmitting "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "Crossroads itself has very few uses for FE. Crossroads adds a way of transmitting FE using <item>$(l:essentials:fluid/tesla)tesla coils/$.$(br2)"
+			"text": "FE using <item>$(l:essentials:fluid/tesla)tesla coils/$.$(br2)"
 		},
 		{
 			"type": "patchouli:spotlight",
@@ -24,15 +24,19 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<bobo>top O' da mourning 2 ya! $(l:essentials:intro/welcome#bobo)iTT\"S ME, bOBO!/$<bobo>$(br2)<bobo>mEE no liik wether. iT neVER be da waY I WANT! dIS WHY EYE INTRODUUS dA rAIN ID0L! sIMPLY h0ld &nd d0 a RAIN DANCE*, an BAM! rAIN! wANT rAIN gONE? dO oPPOSITE 0f RAIN DANCE*! BAM!$(br2)<bobo>maKE wid grae dull rock, "
+			"text": ""
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<bobo>BLUE shiny rok, smidge o' gOLD!$(br2)<bobo>*Note: Performing a Rain Dance may trigger 'sticky keys'. Terms and conditions apply. By performing a rain dance, you waive your right to your soul.$(br2)"
+			"text": "<bobo>top O' da mourning 2 ya! $(l:essentials:intro/welcome#bobo)iTT\"S ME, bOBO!/$<bobo>$(br2)<bobo>mEE no liik wether. iT neVER be da waY I WANT! dIS WHY EYE INTRODUUS dA rAIN ID0L! sIMPLY h0ld &nd d0 a RAIN DANCE*, an BAM! rAIN! wANT rAIN gONE? dO oPPOSITE 0f RAIN DANCE*! BAM!$(br2)<bobo>maKE wid grae dull rock, BLUE shiny rok, smidge o' gOLD!$(br2)<bobo>*Note: Performing a Rain "
+		},
+		{
+			"type": "patchouli:text",
+			"text": "<bobo><bobo><bobo><bobo>Dance may trigger 'sticky keys'. Terms and conditions apply. By performing a rain dance, you waive your right to your soul.$(br2)"
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:dynamo" : 0,
-		"crossroads:lightning_rod_extension" : 1
+		"crossroads:dynamo": 0,
+		"crossroads:lightning_rod_extension": 0
 	}
 }

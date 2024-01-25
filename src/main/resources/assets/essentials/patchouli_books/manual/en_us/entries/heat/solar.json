@@ -10,11 +10,11 @@
 			"type": "patchouli:spotlight",
 			"title": "Solar Heater",
 			"item": "crossroads:solar_heater",
-			"text": "The <item>Solar Heater/$ is a solar panel that produces heat. When in direct sunlight during the day in clear weather, the <item>solar heat/$ will produce heat at a slow steady rate, up to a maximum temperature of 325°C.$(br2)This isn't hot enough to run advanced machines- but "
+			"text": "The <item>Solar Heater/$ is a solar panel that produces heat. When in direct sunlight during the day in clear weather, the <item>solar heat/$ will produce heat at a slow steady rate, up to a maximum temperature of 325°C.$(br2)This isn't hot enough to run advanced machines- but it could be used for $(l:essentials:heat/smelter)smelting/$ or <thing>$(l:essentials:fluid/steam)steam "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "it could be used for $(l:essentials:heat/smelter)smelting/$ or <thing>$(l:essentials:fluid/steam)steam generation/$. By using it to make <thing>$(l:essentials:fluid/steam)steam/$ then converting it back to heat with a <item>$(l:essentials:heat/radiator)radiator/$, you can get around the temperature limit.$(br2)A line of <item>solar heaters/$ connected on their copper ends will share heat. The copper ends are also where <item>$(l:essentials:heat/cable)cables/$ can be connected.$(br2)"
+			"text": "<thing>$(l:essentials:fluid/steam)generation/$. By using it to make <thing>$(l:essentials:fluid/steam)steam/$ then converting it back to heat with a <item>$(l:essentials:heat/radiator)radiator/$, you can get around the temperature limit.$(br2)A line of <item>solar heaters/$ connected on their copper ends will share heat. The copper ends are also where <item>$(l:essentials:heat/cable)cables/$ can be connected.$(br2)"
 		},
 		{
 			"type": "patchouli:text",
@@ -22,6 +22,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:solar_heater" : 0
+		"crossroads:solar_heater": 0
 	}
 }

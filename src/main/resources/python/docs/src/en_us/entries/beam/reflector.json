@@ -1,0 +1,25 @@
+{
+	"category": "essentials:beam",
+	"format": 2,
+	"name": "Beam Reflector",
+	"icon": "crossroads:beam_reflector",
+	"sortnum": 0,
+	"priority": false,
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "patchouli:spotlight",
+			"title": "Beam Reflector",
+			"item": "crossroads:beam_reflector",
+			"text": "The <item>Beam Reflector/$ is the normal way to move <thing>$(l:essentials:intro/beam)beams/$ around. They accept <thing>$(l:essentials:intro/beam)beams/$ in any side, and shoot them out the front.$(br2)It should be noted that <thing>$(l:essentials:intro/beam)beams/$ move one way only- they go from->to; unlike <thing>$(l:essentials:intro/heat)heat/$ or <thing>$(l:essentials:intro/rotary)rotary/$ power which are shared over a network.$(br2)If multiple <thing>$(l:essentials:intro/beam)beams/$ are going into the same <item>reflector/$ at once, they will be combined for the output. All <thing>$(l:essentials:intro/beam)beams/$ are emitted with a 4 tick (fifth second) delay, as usual.$(br2)Loops of <item>beam reflectors/$ are totally legal, and are pretty good way to store beams losslessly.$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"anchor": "sensitive",
+			"text": "The <item>Sensitive Beam Reflector/$ is the same as a normal <item>Beam Reflector/$, but the emitted beam can collide with entities in its path and it will collide with any block that isn't air (normal beams can pass through non-solid blocks like crops).$(br2)This is useful when trying to hit mobs with beams, but can be annoying when used for normal beam transmission (because walking into the path of the beam means it hits you).$(br2)"
+		}
+	],
+	"extra_recipe_mappings": {
+		"crossroads:beam_reflector" : 0
+	}
+}

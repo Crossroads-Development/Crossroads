@@ -11,15 +11,15 @@
 			"type": "patchouli:spotlight",
 			"title": "试剂效果",
 			"item": "crossroads:shell_glass",
-			"text": "大多数（但不是全部）<thing>试剂/$在世界中释放时会产生<thing>效果/$。与<thing>$(l:crossroads:intro/beams)光束效果/$不同，<thing>试剂效果/$不会随着功率/数量上升而提升，而是在任何数量下有着相同强度。作为替代，数量的增加会使<thing>效果/$的散布距离增加。$(br2)"
+			"text": "大多数（但不是全部）<thing>试剂/$在世界中释放时会产生<thing>效果/$。与<thing>$(l:essentials:intro/beams)光束效果/$不同，<thing>试剂效果/$不会随着功率/数量上升而提升，而是在任何数量下有着相同强度。作为替代，数量的增加会使<thing>效果/$的散布距离增加。$(br2)"
 		},
 		{
 			"type": "patchouli:text",
-			"text": "释放<thing>试剂/$的简单方法是$(l:crossroads:alchemy/glassware)从试管倒出，装在壳里扔出/$或者$(l:crossroads:alchemy/vent)从化学气体排放口排出/$。$(br2)"
+			"text": "释放<thing>试剂/$的简单方法是$(l:essentials:alchemy/glassware)从试管倒出，装在壳里扔出/$或者$(l:essentials:alchemy/vent)从化学气体排放口排出/$。$(br2)"
 		},
 		{
 			"type": "patchouli:text",
-			"text": "物质的不同<thing>$(l:crossroads:intro/alchemy)物态/$会使<thing>效果/$的散布有所不同。$(br2)<thing>固态/$时只会对物质释放的位置产生效果。如果同时有<em>任何/$<thing>液体/$释放，所有<thing>固态试剂/$的效果会随着<thing>液体/$散播——使得哪怕1单位<thing>固态/$试剂与液体（比如<thing>液态/$水）混合后也能让其效果在大范围内发生。"
+			"text": "物质的不同<thing>$(l:essentials:intro/alchemy)物态/$会使<thing>效果/$的散布有所不同。$(br2)<thing>固态/$时只会对物质释放的位置产生效果。如果同时有<em>任何/$<thing>液体/$释放，所有<thing>固态试剂/$的效果会随着<thing>液体/$散播——使得哪怕1单位<thing>固态/$试剂与液体（比如<thing>液态/$水）混合后也能让其效果在大范围内发生。"
 		},
 		{
 			"type": "patchouli:text",
@@ -35,11 +35,11 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<em>除非混合物里有任何<item>炼金术盐/$/$。这意味着只需要 16 单位<thing>火焰态试剂/$，1 单位防止破坏方块的<item>炼金术盐/$和你想要使用的<thing>试剂/$，<thing>效果/$可以在极大范围内发生。由于火焰云极度具有毁灭性，推荐在手头拿一些<item>$(l:crossroads:alchemy/damping)抑制粉/$以防万一。$(br2)"
+			"text": "<em>除非混合物里有任何<item>炼金术盐/$/$。这意味着只需要 16 单位<thing>火焰态试剂/$，1 单位防止破坏方块的<item>炼金术盐/$和你想要使用的<thing>试剂/$，<thing>效果/$可以在极大范围内发生。由于火焰云极度具有毁灭性，推荐在手头拿一些<item>$(l:essentials:alchemy/damping)抑制粉/$以防万一。$(br2)"
 		},
 		{
 			"type": "patchouli:text",
-			"text": "以下是试剂的实用效果：$(br2)<item>王水、酸：/$参见$(l:crossroads:alchemy/acid)酸/$条目。能够获得<item>基岩粉/$。$(br2)<item>盐和炼金术盐：/$杀死植物、苦力怕和史莱姆，就像<item>$(l:crossroads:fluid/ingr)盐块/$。$(br2)<item>氯：/$给予实体大量的削弱debuff。"
+			"text": "以下是试剂的实用效果：$(br2)<item>王水、酸：/$参见$(l:essentials:alchemy/acid)酸/$条目。能够获得<item>基岩粉/$。$(br2)<item>盐和炼金术盐：/$杀死植物、苦力怕和史莱姆，就像<item>$(l:essentials:fluid/ingr)盐块/$。$(br2)<item>氯：/$给予实体大量的削弱debuff。"
 		},
 		{
 			"type": "patchouli:text",
@@ -47,14 +47,12 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "固定为<thing>火焰态/$，大范围散布<thing>效果/$。$(br2)<item>以太、流明、奥秘素、融合素和静滞素：/$参见$(l:crossroads:alchemy/terraforming)环境改造/$。$(br2)<item>电压素：/$用电弧电击邻近实体（每次 10 点伤害，可击中多次）。可对苦力怕和猪之类的充能。"
+			"text": "固定为<thing>火焰态/$，大范围散布<thing>效果/$。$(br2)<item>以太、流明、奥秘素、融合素和静滞素：/$参见$(l:essentials:alchemy/terraforming)环境改造/$。$(br2)<item>电压素：/$用电弧电击邻近实体（每次 10 点伤害，可击中多次）。可对苦力怕和猪之类的充能。"
 		},
 		{
 			"type": "patchouli:text",
 			"text": "与<thing>火焰态/$试剂混合可得到膨胀的死亡雷电云。$(br2)"
 		}
 	],
-	"extra_recipe_mappings": {
-		
-	}
+	"extra_recipe_mappings": {}
 }

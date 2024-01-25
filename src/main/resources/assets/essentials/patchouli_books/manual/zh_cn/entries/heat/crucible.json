@@ -14,18 +14,18 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "$(br2)<item>$(l:crossroads:heat/cable)热导管/$和管道可连接到坩埚除了顶面外的任何一面。物品可从所有面插入。$(br2)"
+			"text": "$(br2)<item>$(l:essentials:heat/cable)热导管/$和管道可连接到坩埚除了顶面外的任何一面。物品可从所有面插入。$(br2)"
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<em>这个机器可用于一种方便强大的产热方式！/$当用于将黑曜石熔化成熔岩时，消耗的热量比在<item>$(l:crossroads:heat/fcc)流体冷却室/$中将熔岩冷却产生的热量少。$(br2)"
+			"text": "<em>这个机器可用于一种方便强大的产热方式！/$当用于将黑曜石熔化成熔岩时，消耗的热量比在<item>$(l:essentials:heat/fcc)流体冷却室/$中将熔岩冷却产生的热量少。$(br2)"
 		},
 		{
 			"type": "patchouli:text",
-			"text": "这台机器常见的其他用途有生产熔岩和将金属物品熔化成液体。工业坩埚也可以将矿石熔化成含两个锭的熔融金属，从而使矿物产出变成双倍。熔融金属可在<item>$(l:crossroads:heat/fcc)流体冷却室/$冷却成锭。$(br2)"
+			"text": "这台机器常见的其他用途有生产熔岩和将金属物品熔化成液体。工业坩埚也可以将矿石熔化成含两个锭的熔融金属，从而使矿物产出变成双倍。熔融金属可在<item>$(l:essentials:heat/fcc)流体冷却室/$冷却成锭。$(br2)"
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:heating_crucible" : 0
+		"crossroads:heating_crucible": 0
 	}
 }

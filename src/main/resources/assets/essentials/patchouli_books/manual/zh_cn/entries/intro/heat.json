@@ -14,7 +14,7 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "以上才能正常工作——不过少数机器需要保持寒冷。一般来说，温度越高，机器工作速度越快，但也会更快地消耗温度。热能可以用<item>$(l:crossroads:heat/cable)热导管/$传输，而且温度会在机器间平均分配。$(br2)事物的温度<em>永远不会/$低于<thing>绝对零度/$。<thing>绝对零度/$是 -273 ℃。"
+			"text": "以上才能正常工作——不过少数机器需要保持寒冷。一般来说，温度越高，机器工作速度越快，但也会更快地消耗温度。热能可以用<item>$(l:essentials:heat/cable)热导管/$传输，而且温度会在机器间平均分配。$(br2)事物的温度<em>永远不会/$低于<thing>绝对零度/$。<thing>绝对零度/$是 -273 ℃。"
 		},
 		{
 			"type": "patchouli:text",
@@ -22,14 +22,12 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<bobo>1tz-A-MEEE，，，B0BO！$(br2)<bobo>$(l:crossroads:intro/welcome#bobo)r继锝吗/$<bobo>？！$(br2)<bobo>仨样冬西合祭品！这写东须：；：$(br2)<bobo>发咣粉！$(br2)<bobo>星鲜烘倍面煲！$(br2)<bobo>求葱汁！$(br2)"
+			"text": "<bobo>1tz-A-MEEE，，，B0BO！$(br2)<bobo>$(l:essentials:intro/welcome#bobo)r继锝吗/$<bobo>？！$(br2)<bobo>仨样冬西合祭品！这写东须：；：$(br2)<bobo>发咣粉！$(br2)<bobo>星鲜烘倍面煲！$(br2)<bobo>求葱汁！$(br2)"
 		},
 		{
 			"type": "patchouli:text",
 			"text": "<bobo>g0TTa g0 FAST！！！/$$(br2)"
 		}
 	],
-	"extra_recipe_mappings": {
-		
-	}
+	"extra_recipe_mappings": {}
 }

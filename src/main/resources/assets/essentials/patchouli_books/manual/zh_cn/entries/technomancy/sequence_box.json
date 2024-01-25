@@ -27,6 +27,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:sequence_box" : 0
+		"crossroads:sequence_box": 0
 	}
 }

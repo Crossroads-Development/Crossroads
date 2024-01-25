@@ -11,11 +11,11 @@
 			"type": "patchouli:spotlight",
 			"title": "Reagent Vessels",
 			"item": "crossroads:reagent_tank",
-			"text": "<item>Reagent Vessels/$ are the core machines for automating <thing>$(l:essentials:intro/alchemy)reactions/$. There are two versions: The <item>Storage Vessel/$, for storing <thing>$(l:essentials:intro/alchemy)reagents/$, and the <item>Reaction Vessel/$, for performing <thing>$(l:essentials:intro/alchemy)reactions/$.$(br2)Both will retain their contents when broken, have glass and crystal versions, "
+			"text": "<item>Reagent Vessels/$ are the core machines for automating <thing>$(l:essentials:intro/alchemy)reactions/$. There are two versions: The <item>Storage Vessel/$, for storing <thing>$(l:essentials:intro/alchemy)reagents/$, and the <item>Reaction Vessel/$, for performing <thing>$(l:essentials:intro/alchemy)reactions/$.$(br2)Both will retain their contents when broken, have glass and crystal versions, and can connect to <item>$(l:essentials:alchemy/conduit)reagent conduits/$ on "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "and can connect to <item>$(l:essentials:alchemy/conduit)reagent conduits/$ on any side. Hoppers can insert or extract the solid form of <thing>$(l:essentials:intro/alchemy)reagents/$ as items, which can also be added/removed by right clicking (with the item to add, empty hand to remove). Buckets of the liquid form can also be used.$(br2)<thing>$(l:essentials/circuits)Reader circuits/$ will read the total <thing>$(l:essentials:intro/alchemy)reagent/$ contents.$(br2)"
+			"text": "any side. Hoppers can insert or extract the solid form of <thing>$(l:essentials:intro/alchemy)reagents/$ as items, which can also be added/removed by right clicking (with the item to add, empty hand to remove). Buckets of the liquid form can also be used.$(br2)<thing>$(l:essentials/circuits)Reader circuits/$ will read the total <thing>$(l:essentials:intro/alchemy)reagent/$ contents.$(br2)"
 		},
 		{
 			"type": "patchouli:text",
@@ -27,7 +27,7 @@
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:reagent_tank" : 0,
-		"crossroads:crystal_reagent_tank" : 0
+		"crossroads:reagent_tank": 0,
+		"crossroads:crystal_reagent_tank": 0
 	}
 }

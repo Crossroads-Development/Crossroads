@@ -10,7 +10,7 @@
 			"type": "patchouli:spotlight",
 			"title": "道途简介",
 			"item": "crossroads:detailed_crafter",
-			"text": "等等！这是一个中后期特性。现在，你应该已经至少用上了<thing>$(l:crossroads:intro/beam)光束/$。$(br2)<thing>炼金术/$和<thing>科技魔法/$是两条你可以选择专精的<thing>道途/$。默认情况下（由配置文件控制，可能在你游玩的整合中已被改变），你在单人游戏中可以选择所有<thing>道途/$，但是"
+			"text": "等等！这是一个中后期特性。现在，你应该已经至少用上了<thing>$(l:essentials:intro/beam)光束/$。$(br2)<thing>炼金术/$和<thing>科技魔法/$是两条你可以选择专精的<thing>道途/$。默认情况下（由配置文件控制，可能在你游玩的整合中已被改变），你在单人游戏中可以选择所有<thing>道途/$，但是"
 		},
 		{
 			"type": "patchouli:text",
@@ -18,7 +18,7 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "为了解锁任何<thing>道途/$，你<em>必须/$先发现所有<thing>$(l:crossroads:intro/beam)色域/$（除了<thing>$(l:crossroads:beam/void)虚空/$）——否则<thing>道途/$将不会解锁。$(br2)"
+			"text": "为了解锁任何<thing>道途/$，你<em>必须/$先发现所有<thing>$(l:essentials:intro/beam)色域/$（除了<thing>$(l:essentials:beam/void)虚空/$）——否则<thing>道途/$将不会解锁。$(br2)"
 		},
 		{
 			"type": "patchouli:text",
@@ -30,7 +30,7 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "被锁在<item>实践者之石/$后面。$(br2)要解锁<thing>炼金术/$，需要先发现所有非<thing>$(l:crossroads:beam/void)虚空/$<thing>$(l:crossroads:intro/beam)色域/$，然后在一个<item>精细合成器/$里，用纸围着一个玻璃瓶。这些物品会被消耗。$(br2)"
+			"text": "被锁在<item>实践者之石/$后面。$(br2)要解锁<thing>炼金术/$，需要先发现所有非<thing>$(l:essentials:beam/void)虚空/$<thing>$(l:essentials:intro/beam)色域/$，然后在一个<item>精细合成器/$里，用纸围着一个玻璃瓶。这些物品会被消耗。$(br2)"
 		},
 		{
 			"type": "patchouli:text",
@@ -38,16 +38,16 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<thing>/$也能对<thing>$(l:crossroads:intro/rotary)旋转/$系统进行更精确的控制，使其急剧简化并改进现有的<thing>$(l:crossroads:intro/rotary)旋转/$设施。<thing>科技魔法/$的大多数机器都需要你至少有一个下界之星（但不会消耗它）。$(br2)要解锁<thing>科技魔法/$，需要先发现所有非<thing>$(l:crossroads:beam/void)虚空/$<thing>$(l:crossroads:intro/beam)色域/$，然后在一个<item>精细合成器/$里，"
+			"text": "<thing>/$也能对<thing>$(l:essentials:intro/rotary)旋转/$系统进行更精确的控制，使其急剧简化并改进现有的<thing>$(l:essentials:intro/rotary)旋转/$设施。<thing>科技魔法/$的大多数机器都需要你至少有一个下界之星（但不会消耗它）。$(br2)要解锁<thing>科技魔法/$，需要先发现所有非<thing>$(l:essentials:beam/void)虚空/$<thing>$(l:essentials:intro/beam)色域/$，然后在一个<item>精细合成器/$里，"
 		},
 		{
 			"type": "patchouli:text",
-			"text": "用纸围着一个<item>$(l:crossroads:rotary/gear_base)小型齿轮/$。这些物品会被消耗。$(br2)"
+			"text": "用纸围着一个<item>$(l:essentials:rotary/gear_base)小型齿轮/$。这些物品会被消耗。$(br2)"
 		},
 		{
 			"type": "patchouli:text",
 			"anchor": "witchcraft",
-			"text": "<thing>巫术/$是关于生命和死亡的<thing>道途/$。它是最简单和最安全的道途，但也是最弱的道途。$(br2)<thing>巫术/$专注于动植物的大规模生产和操纵。$(br2)要解锁<thing>巫术/$，需要先发现所有非<thing>$(l:crossroads:beam/void)虚空/$<thing>$(l:crossroads:intro/beam)色域/$，然后在一个<item>精细合成器/$里，"
+			"text": "<thing>巫术/$是关于生命和死亡的<thing>道途/$。它是最简单和最安全的道途，但也是最弱的道途。$(br2)<thing>巫术/$专注于动植物的大规模生产和操纵。$(br2)要解锁<thing>巫术/$，需要先发现所有非<thing>$(l:essentials:beam/void)虚空/$<thing>$(l:essentials:intro/beam)色域/$，然后在一个<item>精细合成器/$里，"
 		},
 		{
 			"type": "patchouli:text",
@@ -56,10 +56,8 @@
 		{
 			"type": "patchouli:text",
 			"anchor": "sigils",
-			"text": "<item>道途印记/$（即<item>炼金术印记/$、<item>科技魔法印记/$和<item>巫术印记/$)是用于分享<thing>道途/$的物品。任何玩家都可以使用一个来立刻解锁一条<thing>道途/$，或者shift右击<item>印记/$来忘记一条道途。用这种方式解锁<thing>道途/$不需要先发现<thing>$(l:crossroads:intro/beam)色域/$。$(br2)印记是一次性物品，而且只能让已解锁<thing>道途/$的玩家合成。$(br2)"
+			"text": "<item>道途印记/$（即<item>炼金术印记/$、<item>科技魔法印记/$和<item>巫术印记/$)是用于分享<thing>道途/$的物品。任何玩家都可以使用一个来立刻解锁一条<thing>道途/$，或者shift右击<item>印记/$来忘记一条道途。用这种方式解锁<thing>道途/$不需要先发现<thing>$(l:essentials:intro/beam)色域/$。$(br2)印记是一次性物品，而且只能让已解锁<thing>道途/$的玩家合成。$(br2)"
 		}
 	],
-	"extra_recipe_mappings": {
-		
-	}
+	"extra_recipe_mappings": {}
 }

@@ -26,7 +26,5 @@
 			"text": "<thing>虚空-附魔/$，也就是<thing>祛魔/$，会去除范围内所有掉落物品的附魔。光束作用范围半径为 sqrt(<thing>功率/$) / 2 格。这能用于去除物品的诅咒。$(br2)"
 		}
 	],
-	"extra_recipe_mappings": {
-		
-	}
+	"extra_recipe_mappings": {}
 }

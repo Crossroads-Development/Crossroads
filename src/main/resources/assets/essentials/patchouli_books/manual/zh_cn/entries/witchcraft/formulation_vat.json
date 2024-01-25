@@ -19,6 +19,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:formulation_vat" : 0
+		"crossroads:formulation_vat": 0
 	}
 }

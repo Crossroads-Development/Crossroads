@@ -1,8 +1,0 @@
-Rotary Pump
-crossroads:rotary_pump
-crossroads:rotary_pump
-The <item>Rotary Pump/$ is a <thing><link:essentials:intro/rotary>rotary/$ powered fluid pump. It collects fluid source blocks from the world and allows it to be moved around in pipes, or places fluid from pipes into the world.
-It <em>only collects/places fluid sources directly underneath it/$. This means is it usually only useful for collecting water, and not for draining lakes or ponds.
-If spinning in a positive direction, it sucks up fluids from the world into a pipe. If spinning in a negative direction, it places fluids into the world from a pipe.
-It can also pump fluid from filled cauldrons. If it is a filled water cauldron, it <em>won't use the water/$ in the cauldron- allowing a compact infinite water source. This also works in the nether.
-It connects to a gear or axle on the top. It runs faster at higher <thing>speeds/$, draining (2 * (speed in rad/s)) J/t, and requiring 100 J total per bucket pumped.

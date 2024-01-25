@@ -30,8 +30,8 @@
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:permeable_quartz" : 0,
-		"crossroads:permeable_obsidian" : 0,
-		"crossroads:permeable_glass" : 0
+		"crossroads:permeable_quartz": 0,
+		"crossroads:permeable_obsidian": 0,
+		"crossroads:permeable_glass": 0
 	}
 }

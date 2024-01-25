@@ -27,6 +27,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:auto_injector" : 0
+		"crossroads:auto_injector": 0
 	}
 }

@@ -1,0 +1,20 @@
+{
+	"category": "essentials:beam",
+	"format": 2,
+	"name": "结晶棱镜",
+	"icon": "crossroads:crystalline_prism",
+	"sortnum": 0,
+	"priority": false,
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "patchouli:spotlight",
+			"title": "结晶棱镜",
+			"item": "crossroads:crystalline_prism",
+			"text": "<item>结晶棱镜/$能将<thing>$(l:essentials:intro/beam)光束/$分离成四种主要组成颜色（红绿蓝黑）。$(br2)该设备的输入口在顶部和底部，剩下的四个侧面则是四种颜色（<thing>$(l:essentials:beam/energy)能量/$（红）、<thing>$(l:essentials:beam/potential)潜能/$（绿）、<thing>$(l:essentials:beam/stability)稳定/$（蓝）和<thing>$(l:essentials:beam/void)虚空/$（黑））的输出口。$(br2)"
+		}
+	],
+	"extra_recipe_mappings": {
+		"crossroads:crystalline_prism" : 0
+	}
+}

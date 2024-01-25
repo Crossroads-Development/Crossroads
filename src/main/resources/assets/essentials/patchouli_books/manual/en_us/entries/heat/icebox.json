@@ -18,14 +18,10 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<bobo>hEY! YOU! lUKE! lISTEN! iTS mE,, $(l:essentials:intro/welcome#bobo)BOBO/$<bobo>!$(br2)<bobo>sTEAL h(IS/ER/??/¿¿) LOOK! gET sPECIAL pROTECT! LETHER + too more things!$(br2)<bobo>4 wATER! sqUIb jUiCE + water meat!$(br2)<bobo>4 FYRE! BAKON~ fIRE DUST!$(br2)"
-		},
-		{
-			"type": "patchouli:text",
-			"text": "<bobo>4 pOISON! STAKE an' malk!$(br2)<bobo>4 gravIty! fEATHER aND bIG SWAMP LEAF!/$$(br2)"
+			"text": "<bobo>hEY! YOU! lUKE! lISTEN! iTS mE,, $(l:essentials:intro/welcome#bobo)BOBO/$<bobo>!$(br2)<bobo>sTEAL h(IS/ER/??/¿¿) LOOK! gET sPECIAL pROTECT! LETHER + too more things!$(br2)<bobo>4 wATER! sqUIb jUiCE + water meat!$(br2)<bobo>4 FYRE! BAKON~ fIRE DUST!$(br2)<bobo>4 pOISON! STAKE an' malk!$(br2)<bobo>4 gravIty! fEATHER aND bIG SWAMP LEAF!/$$(br2)"
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:icebox" : 0
+		"crossroads:icebox": 0
 	}
 }

@@ -14,26 +14,22 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "Several different items can be used as a 'lens' by right-clicking it into the <item>frame/$. Only one lens per <item>frame/$ at a time (but multiple <item>frames/$ can be used in a row).$(br2)Lenses filter out different parts of the beam, wasting some of the beam power but being a cheap and easy way to adjust the color of the output. Some lenses don't act as a filter "
+			"text": "Several different items can be used as a 'lens' by right-clicking it into the <item>frame/$. Only one lens per <item>frame/$ at a time (but multiple <item>frames/$ can be used in a row).$(br2)Lenses filter out different parts of the beam, wasting some of the beam power but being a cheap and easy way to adjust the color of the output. Some lenses don't act as a filter for the beam, but instead transmute "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "for the beam, but instead transmute the item used as the lens when a specific beam <thing>alignment/$ passes through.$(br2)<thing>$(l:essentials/circuits#reader)Circuits/$ will read the <thing>power/$ of the beam currently going through the <item>lens frame/$.$(br2)"
+			"text": "the item used as the lens when a specific beam <thing>alignment/$ passes through.$(br2)<thing>$(l:essentials/circuits#reader)Circuits/$ will read the <thing>power/$ of the beam currently going through the <item>lens frame/$.$(br2)"
 		},
 		{
 			"type": "patchouli:text",
-			"text": "The most important lenses are:$(br2)$(l:essentials:intro/ores)Ruby/$ will delete anything from the beam that isn't <thing>energy/$.$(br2)Emerald will delete anything from the beam that isn't <thing>potential/$.$(br2)Diamond will delete anything from the beam that isn't <thing>stability/$.$(br2)"
+			"text": "The most important lenses are:$(br2)$(l:essentials:intro/ores)Ruby/$ will delete anything from the beam that isn't <thing>energy/$.$(br2)Emerald will delete anything from the beam that isn't <thing>potential/$.$(br2)Diamond will delete anything from the beam that isn't <thing>stability/$.$(br2)$(l:essentials:intro/ores)Void crystal/$ will convert the entire beam to <thing>$(l:essentials:beam/void)void/$ instead of filtering it.$(br2)$(l:essentials:fluid/ingr)Pure quartz/$ with a <thing>light alignment/$ beam will convert the $(l:essentials:fluid/ingr)pure "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "$(l:essentials:intro/ores)Void crystal/$ will convert the entire beam to <thing>$(l:essentials:beam/void)void/$ instead of filtering it.$(br2)$(l:essentials:fluid/ingr)Pure quartz/$ with a <thing>light alignment/$ beam will convert the $(l:essentials:fluid/ingr)pure quartz/$ to bright quartz. This is a cheap way to make bright quartz, as it doesn't consume the beam.$(br2)All lenses (including some not listed here) are in JEI, "
-		},
-		{
-			"type": "patchouli:text",
-			"text": "under uses for the <item>lens frame/$.$(br2)"
+			"text": "$(l:essentials:fluid/ingr)quartz/$ to bright quartz. This is a cheap way to make bright quartz, as it doesn't consume the beam.$(br2)All lenses (including some not listed here) are in JEI, under uses for the <item>lens frame/$.$(br2)"
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:lens_frame" : 0
+		"crossroads:lens_frame": 0
 	}
 }

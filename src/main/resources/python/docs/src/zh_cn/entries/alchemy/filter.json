@@ -1,0 +1,26 @@
+{
+	"category": "essentials:alchemy",
+	"format": 2,
+	"name": "共振过滤器",
+	"icon": "crossroads:reagent_filter",
+	"sortnum": 0,
+	"priority": false,
+	"advancement": "crossroads:progress/path/alchemy",
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "patchouli:spotlight",
+			"title": "共振过滤器",
+			"item": "crossroads:reagent_filter",
+			"text": "使用<item>共振过滤器/$是一种昂贵而“简单”的<thing>$(l:essentials:intro/alchemy)试剂/$混合物过滤手段。它们的需求不大，因为混合的<thing>$(l:essentials:intro/alchemy)试剂/$通常可以以物品形式分开，或者利用不同试剂的不同沸点分离（$(l:essentials:alchemy/conduit)气体不会向下流，液体和固体不会向上流/$）。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "<item>共振过滤器/$的 UI 只有一个$(l:essentials:alchemy/glassware)<item>玻璃器皿/$槽，$(l:essentials:alchemy/glassware)<item>器皿/$中盛放的任何种类的<thing>$(l:essentials:intro/alchemy)试剂/$都会作为过滤器的黑名单。要过滤的<thing>$(l:essentials:intro/alchemy)试剂/$需要从顶部输入。匹配黑名单的<thing>$(l:essentials:intro/alchemy)试剂/$会从侧面输出，不匹配的则从底部输出到相连的<item>$(l:essentials:alchemy/conduit)导管/$或炼金术容器。$(br2)"
+		}
+	],
+	"extra_recipe_mappings": {
+		"crossroads:reagent_filter" : 0,
+		"crossroads:crystal_reagent_filter" : 0
+	}
+}

@@ -29,25 +29,25 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "$(l:crossroads:intro/ores)红宝石/$、绿宝石、钻石和$(l:crossroads:fluid/ingr)纯石英/$。$(br2)其中三个镜片需要使用按键激活，这些按键默认是未绑定的。要使用这些功能，请确保去按键控制菜单的“交错道途”一节设置按键绑定。$(br2)$(l:crossroads:intro/ores)红宝石/$镜片会让目镜能够发射可开关的点火激光，"
+			"text": "$(l:essentials:intro/ores)红宝石/$、绿宝石、钻石和$(l:essentials:fluid/ingr)纯石英/$。$(br2)其中三个镜片需要使用按键激活，这些按键默认是未绑定的。要使用这些功能，请确保去按键控制菜单的“交错道途”一节设置按键绑定。$(br2)$(l:essentials:intro/ores)红宝石/$镜片会让目镜能够发射可开关的点火激光，"
 		},
 		{
 			"type": "patchouli:text",
-			"text": "会让击中的任何实体和方块着火。该功能通过在空手时按下“能量控制键”进行开关。$(br2)绿宝石镜片会给穿戴者带来可开关的夜视。该功能通过在空手时按下“潜能控制键”进行开关。$(br2)钻石镜片允许穿戴者随时打开<item>$(l:crossroads:intro/path)精细 "
+			"text": "会让击中的任何实体和方块着火。该功能通过在空手时按下“能量控制键”进行开关。$(br2)绿宝石镜片会给穿戴者带来可开关的夜视。该功能通过在空手时按下“潜能控制键”进行开关。$(br2)钻石镜片允许穿戴者随时打开<item>$(l:essentials:intro/path)精细 "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<item>$(l:crossroads:intro/path)合成器/$的合成UI，只需要在空手时按下“稳定控制键”。$(br2)$(l:crossroads:fluid/ingr)纯石英/$镜片可作为一个永久的<item>$(l:crossroads:intro/omnimeter)万用表/$，并在看向机械时提供其完整信息（查看的范围很大）。这个镜片非常方便。$(br2)紫水晶镜片则给目镜带来了望远镜的功能。空手时按下对应的触发按键即可激活。"
+			"text": "<item>$(l:essentials:intro/path)合成器/$的合成UI，只需要在空手时按下“稳定控制键”。$(br2)$(l:essentials:fluid/ingr)纯石英/$镜片可作为一个永久的<item>$(l:essentials:intro/omnimeter)万用表/$，并在看向机械时提供其完整信息（查看的范围很大）。这个镜片非常方便。$(br2)紫水晶镜片则给目镜带来了望远镜的功能。空手时按下对应的触发按键即可激活。"
 		},
 		{
 			"type": "patchouli:spotlight",
 			"anchor": "propeller_plate",
 			"item": "crossroads:propeller_pack",
-			"text": "<item>推进式翼包/$就像一个自带推进火箭的鞘翅。要使用推进功能，该物品需要在<item>$(l:crossroads:rotary/winding_table)上发条架/$里上发条。$(br2)当<em>长按/$推进键（默认是control），穿戴者会在看向的方向上得到速度推进，"
+			"text": "<item>推进式翼包/$就像一个自带推进火箭的鞘翅。要使用推进功能，该物品需要在<item>$(l:essentials:rotary/winding_table)上发条架/$里上发条。$(br2)当<em>长按/$推进键（默认是control），穿戴者会在看向的方向上得到速度推进，"
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<thing>$(l:crossroads:rotary/winding_table)发条转速/$也会缓慢降低。$(br2)<item>推进式翼包/$可以当成一个无限耐久，提供下界合金级盔甲保护而且不需要烟花推进的鞘翅。$(br2)"
+			"text": "<thing>$(l:essentials:rotary/winding_table)发条转速/$也会缓慢降低。$(br2)<item>推进式翼包/$可以当成一个无限耐久，提供下界合金级盔甲保护而且不需要烟花推进的鞘翅。$(br2)"
 		},
 		{
 			"type": "patchouli:spotlight",
@@ -67,10 +67,10 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<bobo>素窝！$(l:crossroads:intro/welcome#bobo)bOBO/$<bobo>！！$(br2)<bobo>孩有另一个木境镜片！瞰川嘿暗！/$$(br2)"
+			"text": "<bobo>素窝！$(l:essentials:intro/welcome#bobo)bOBO/$<bobo>！！$(br2)<bobo>孩有另一个木境镜片！瞰川嘿暗！/$$(br2)"
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:module_goggles" : 0
+		"crossroads:module_goggles": 0
 	}
 }

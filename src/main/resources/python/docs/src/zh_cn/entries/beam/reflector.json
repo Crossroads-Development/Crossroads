@@ -1,0 +1,33 @@
+{
+	"category": "essentials:beam",
+	"format": 2,
+	"name": "光束反射器",
+	"icon": "crossroads:beam_reflector",
+	"sortnum": 0,
+	"priority": false,
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "patchouli:spotlight",
+			"title": "光束反射器",
+			"item": "crossroads:beam_reflector",
+			"text": "<item>光束反射器/$是移动<thing>$(l:essentials:intro/beam)光束/$的方式中较普通的一种。反射器会从任何一面接受<thing>$(l:essentials:intro/beam)光束/$，并将其从正面射出。$(br2)需要注意，<thing>$(l:essentials:intro/beam)光束/$的移动是单向的，这和<thing>$(l:essentials:intro/heat)热能/$或<thing>$(l:essentials:intro/rotary)旋转能/$这种在整个网络内共享的能量系统不同。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "如果多个<thing>$(l:essentials:intro/beam)光束/$同时进入了相同的<item>反射器/$，它们会混合在一起输出。和平时一样，所有<thing>$(l:essentials:intro/beam)光束/$的发射都有一个 4 tick（0.2 秒）的延迟。$(br2)<item>光束反射器/$组成的光束循环不但是可行的，而且是一种无损储存光束的好方法。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"anchor": "sensitive",
+			"text": "<item>敏感型光束反射器/$和普通的<item>光束反射器/$有着类似的功能，但经过其反射的光束会与传播路径上的实体和任何非空气的方块碰撞（正常情况下会穿透作物之类的非固体方块）。$(br2)这一功能在尝试击中实体时非常实用，但在进行常规光束传输时可能会很恼人，"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "毕竟单纯路过也会被光束击中。$(br2)"
+		}
+	],
+	"extra_recipe_mappings": {
+		"crossroads:beam_reflector" : 0
+	}
+}

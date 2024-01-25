@@ -1,6 +1,0 @@
-Hemophiliac Compass
-crossroads:blood_compass|crossroads:progress/path/witchcraft
-crossroads:blood_compass
-The <item>Hemophiliac Compass/$ allows tracking other players or mobs given a <item><link:essentials:witchcraft/syringe#blood>blood sample/$. Hold the <item><link:essentials:witchcraft/syringe#blood>blood sample/$ in the offhand, and the compass needle will point towards the target if they're in the same dimension. If they're in another dimensions, the needle will wobble randomly.
-The <item><link:essentials:witchcraft/syringe#blood>blood sample/$ won't work once it's <link:essentials:witchcraft/spoilage>spoiled/$.
-The compass also won't track players who are logged out or mobs in unloaded chunks.

@@ -1,8 +1,0 @@
-Millstone
-crossroads:millstone
-crossroads:millstone
-The <item>Millstone/$ is a simple <thing><link:essentials:intro/rotary>rotary powered/$ grinder. It can double ores, produce gravel, and improve bonemeal yields, among other things.
-The <item>millstone/$ connects to an axle/gear on the top, and works faster at higher <thing><link:essentials:intro/rotary>speeds/$- it consumes power at (2 * (speed in rad/s)) J/t, requiring 400J total per crafting operation performed.
-<thing><link:essentials/circuits#reader>Reader circuits/$ measure the fullness of the input.
-
-For ore tripling, a heavier duty version called a <item><link:essentials:rotary/stamp>stamp mill/$ is needed.

@@ -15,14 +15,12 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": " <thing>功率/$/64 机率添加额外随机刻。$(br2)该光束最多允许将时间加速到原来的两倍。这并不是很快，不过后面的<thing>$(l:crossroads:intro/technomancy)科技魔法/$里有一个更强的版本……$(br2)"
+			"text": " <thing>功率/$/64 机率添加额外随机刻。$(br2)该光束最多允许将时间加速到原来的两倍。这并不是很快，不过后面的<thing>$(l:essentials:intro/technomancy)科技魔法/$里有一个更强的版本……$(br2)"
 		},
 		{
 			"type": "patchouli:text",
 			"text": "<thing>虚空-时间/$，也就是<thing>时间熵/$，$(l)极端$()危险。$(l)不要使用这个光束！当你不可避免地要这样做的时候，不要说我们没有警告你……$(br2)"
 		}
 	],
-	"extra_recipe_mappings": {
-		
-	}
+	"extra_recipe_mappings": {}
 }

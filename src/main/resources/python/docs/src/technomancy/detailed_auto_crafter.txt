@@ -1,6 +1,0 @@
-Detailed Auto-Crafter
-crossroads:detailed_auto_crafter|crossroads:progress/path/technomancy
-crossroads:detailed_auto_crafter
-The <item>Detailed Auto-Crafter/$ is an upgraded <item><link:essentials/autocrafter>Auto-Crafter/$ that can craft <item><link:essentials:intro/path>Detailed Crafter/$ specific recipes from any <thing><link:essentials:intro/path>path/$.
-It <em>can not/$ craft normal crafting table recipes- only <thing><link:essentials:intro/path>path/$ specific recipes. There is a <em>sigil slot/$ in the UI (below the arrow) that takes a <thing><link:essentials:intro/path>path sigil/$. The <thing><link:essentials:intro/path#sigils>path sigil/$ is required to craft recipes from that <thing><link:essentials:intro/path>path/$, but the <thing><link:essentials:intro/path#sigils>path sigil/$ will not be consumed.
-It works the same as a normal <item><link:essentials/autocrafter>Auto-Crafter/$ other than these differences.

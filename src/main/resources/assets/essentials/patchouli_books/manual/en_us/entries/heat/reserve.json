@@ -10,11 +10,7 @@
 			"type": "patchouli:spotlight",
 			"title": "Heat Reservoir",
 			"item": "crossroads:heat_reservoir",
-			"text": "The <item>Heat Reservoir/$ is effectively a heat \"battery\". The temperature of the <item>reservoir/$ changes <em>extremely/$ slowly, making a <item>reservoir/$ smooth out temperature fluctuations over minutes or hours.$(br2)<item>$(l:essentials:heat/cable)Cables/$ can connect to any side, and the <item>heat reservoir/$ keeps its temperature "
-		},
-		{
-			"type": "patchouli:text",
-			"text": "when broken.$(br2)"
+			"text": "The <item>Heat Reservoir/$ is effectively a heat \"battery\". The temperature of the <item>reservoir/$ changes <em>extremely/$ slowly, making a <item>reservoir/$ smooth out temperature fluctuations over minutes or hours.$(br2)<item>$(l:essentials:heat/cable)Cables/$ can connect to any side, and the <item>heat reservoir/$ keeps its temperature when broken.$(br2)"
 		},
 		{
 			"type": "patchouli:text",
@@ -22,6 +18,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:heat_reservoir" : 0
+		"crossroads:heat_reservoir": 0
 	}
 }

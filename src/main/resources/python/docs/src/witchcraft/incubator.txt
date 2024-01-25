@@ -1,9 +1,0 @@
-Incubator
-crossroads:incubator|crossroads:progress/path/witchcraft
-crossroads:incubator
-The <item>incubator/$ has two purposes. It can create <item>genetic plasmids/$, which are used with the <item><link:essentials:witchcraft/syringe#potions>syringe/$, and it can create <item>spawn eggs/$ from <item><link:essentials:witchcraft/cloning#process>embryos/$, making it the final stage of the <thing><link:essentials:witchcraft/cloning>cloning process/$.
-To create <item>genetic plasmids/$, it uses 1 <item>mutagen/$ and 1 (vanilla chicken) egg. <item>Genetic plasmids/$ will spoil after 30 minutes.
-To create <item>spawn eggs/$, it uses 1 (<thing><link:essentials:witchcraft/spoilage>non-spoiled/$) <item><link:essentials:witchcraft/cloning#process>embryo/$ and 1 (vanilla chicken) egg.
-The process can take anywhere from 1 minutes to 20 minutes- and 20 minutes might be enough time to <thing><link:essentials:witchcraft/spoilage>spoil/$ the <item><link:essentials:witchcraft/cloning#process>embryo/$. The rate it works at is based on the <thing><link:essentials:intro/heat>temperature/$. It connects to <thing><link:essentials:intro/heat>heat cables/$ on any side.
-The <item>incubator/$ doesn't use heat, but should be kept within 10°C of the target <thing><link:essentials:intro/heat>temperature/$. While within 10°C of the target <thing><link:essentials:intro/heat>temperature/$, it takes 1 minute. While outside that range, it works at a twentieth the speed. The target <thing><link:essentials:intro/heat>temperature/$ is randomized every time the <item>incubator/$ finishes a crafting operation, but will always be within 35-140°C.
-<thing><link:essentials/circuits>Circuits/$ read the current target <thing><link:essentials:intro/heat>temperature/$, in degrees C.

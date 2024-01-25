@@ -1,8 +1,0 @@
-Alignment: Charge-1
-crossroads:pure_quartz|crossroads:progress/alignment/charge
-
-<thing>Charge/$ (yellow) will add FE to any machine it hits. By default, it adds 50FE per <thing>power/$. It will also charge items that store FE in the inventory of any player it hits.
-<thing>Charge/$ beams with <thing>power/$ >= 16 will summon a lightning bolt if the sky is visible.
-<thing>Charge/$ beams can transmute (cobble)stone into redstone blocks.
-
-<thing>Void-Charge/$ AKA <thing>Discharge/$ drain FE from any machine it hits. By default, it drains 50FE per <thing>power/$.

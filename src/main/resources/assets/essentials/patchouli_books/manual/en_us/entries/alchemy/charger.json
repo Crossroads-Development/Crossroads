@@ -19,14 +19,10 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<bobo>Hi, $(l:essentials:intro/welcome#bobo)Bobo/$<bobo> here with the alltim8 FEUL!!!!!$(br2)<bobo>bURN bURM 4 pWR bRUN!$(br2)<bobo>sUl4iC aCYD!$(br2)<bobo>bOTTEL!$(br2)<bobo>da OFFERING aGAIN! bUT FRESH!$(br2)<bobo>du N0t DRINK! mUCH dISSOLVE "
-		},
-		{
-			"type": "patchouli:text",
-			"text": "<bobo>lIVER! b0B0 AWAY/$$(br2)"
+			"text": "<bobo>Hi, $(l:essentials:intro/welcome#bobo)Bobo/$<bobo> here with the alltim8 FEUL!!!!!$(br2)<bobo>bURN bURM 4 pWR bRUN!$(br2)<bobo>sUl4iC aCYD!$(br2)<bobo>bOTTEL!$(br2)<bobo>da OFFERING aGAIN! bUT FRESH!$(br2)<bobo>du N0t DRINK! mUCH dISSOLVE lIVER! b0B0 AWAY/$$(br2)"
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:charging_stand" : 0
+		"crossroads:charging_stand": 0
 	}
 }

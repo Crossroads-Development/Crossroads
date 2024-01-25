@@ -1,5 +1,0 @@
-Color Chart
-crossroads:color_chart
-crossroads:color_chart
-The <item>Color Chart/$ keeps track of all <thing><link:essentials:intro/beam>alignments/$ the player has discovered with an <item><link:essentials:intro/omnimeter>omnimeter/$.
-It has a UI with a color wheel, where any color associated with an undiscovered <thing><link:essentials:intro/beam>alignment/$ will be grayed out. It also has a search bar where you can search an <thing><link:essentials:intro/beam>alignment/$ to show all the colors that create that <thing><link:essentials:intro/beam>alignment/$.

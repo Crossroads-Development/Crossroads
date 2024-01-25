@@ -10,7 +10,7 @@
 			"type": "patchouli:spotlight",
 			"title": "可被光束穿透的方块",
 			"item": "crossroads:permeable_quartz",
-			"text": "有几种装饰性方块是固体方块，但允许<thing>$(l:crossroads:intro/beam)光束/$将其视作空气自由穿透。$(br2)"
+			"text": "有几种装饰性方块是固体方块，但允许<thing>$(l:essentials:intro/beam)光束/$将其视作空气自由穿透。$(br2)"
 		},
 		{
 			"type": "patchouli:text",
@@ -30,8 +30,8 @@
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:permeable_quartz" : 0,
-		"crossroads:permeable_obsidian" : 0,
-		"crossroads:permeable_glass" : 0
+		"crossroads:permeable_quartz": 0,
+		"crossroads:permeable_obsidian": 0,
+		"crossroads:permeable_glass": 0
 	}
 }

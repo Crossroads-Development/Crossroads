@@ -1,7 +1,0 @@
-Limiter Conduit
-crossroads:flow_limiter|crossroads:progress/path/alchemy
-crossroads:flow_limiter,crossroads:crystal_flow_limiter
-The <item>Limiter Conduit/$ is used to limit the amount of <thing><link:essentials:intro/alchemy>reagents/$ flowing into a <item><link:essentials:alchemy/vessel>reaction vessel/$ from <item><link:essentials:alchemy/conduit>conduits/$- though they can be used with any <thing><link:essentials:intro/alchemy>alchemy/$ container.
-They accept input from the back, and output through the front. A limit can be set by shift-right-clicking with a <item><link:essentials/wrench>wrench/$. They will not insert any <thing><link:essentials:intro/alchemy>reagent/$ into the container they are outputting to beyond the configured limit.
-This is useful for both preventing completely filling a <item><link:essentials:alchemy/vessel>reaction vessel/$ with a <thing><link:essentials:intro/alchemy>reagent/$, and for controlling the ratio of reagents for certain <link:essentials:intro/alchemy>dangerous reactions/$ or making <item><link:essentials:alchemy/stones>advanced elemental reagents/$.
-There is both a crystal and glass variant.

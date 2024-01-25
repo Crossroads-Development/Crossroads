@@ -1,4 +1,0 @@
-Lodestone Dynamo
-crossroads:lodestone_dynamo|crossroads:progress/path/technomancy
-crossroads:lodestone_dynamo
-The <item>Lodestone Dynamo/$ is the inverse of the normal <item><link:essentials:fluid/dynamo>Dynamo/$. Instead of consuming <thing><link:essentials:intro/rotary>rotary power/$ (J) and producing Forge Energy (FE), it consumes FE and produces J, at the same exchange rate as the <item><link:essentials:fluid/dynamo>Dynamo/$.

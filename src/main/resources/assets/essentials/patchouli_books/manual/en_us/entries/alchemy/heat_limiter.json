@@ -11,19 +11,19 @@
 			"type": "patchouli:spotlight",
 			"title": "Temperature Regulator",
 			"item": "crossroads:heat_limiter_basic",
-			"text": "The <item>Temperature Regulator/$ is a powerful tool for controlling <thing>$(l:essentials:intro/heat)temperature/$. It allows precisely controlling the <thing>$(l:essentials:intro/heat)temperature/$ of a <item>$(l:essentials:heat/cable)heat cable/$ and connected machines.$(br2)The <item>temperature regulator/$ connects to two <item>$(l:essentials:heat/cable)heat cables/$- on the front and back- with the front being "
+			"text": "The <item>Temperature Regulator/$ is a powerful tool for controlling <thing>$(l:essentials:intro/heat)temperature/$. It allows precisely controlling the <thing>$(l:essentials:intro/heat)temperature/$ of a <item>$(l:essentials:heat/cable)heat cable/$ and connected machines.$(br2)The <item>temperature regulator/$ connects to two <item>$(l:essentials:heat/cable)heat cables/$- on the front and back- with the front being the side with the red 'ring'.$(br2)"
 		},
 		{
 			"type": "patchouli:text",
-			"text": "the side with the red 'ring'.$(br2)"
+			"text": ""
 		},
 		{
 			"type": "patchouli:text",
-			"text": "The <item>temperature regulator/$ has two modes: Red mode and blue mode, which can be toggled by shift-right-clicking with a <item>$(l:essentials/wrench)wrench/$.$(br2)In red mode, heat will be moved from the input to the output up to the target <thing>$(l:essentials:intro/heat)temperature/$, but no hotter. It can not heat the front higher than the back. In effect, it heats the output up to a set <thing>$(l:essentials:intro/heat)temperature/$.$(br2)"
+			"text": "The <item>temperature regulator/$ has two modes: Red mode and blue mode, which can be toggled by shift-right-clicking with a <item>$(l:essentials/wrench)wrench/$.$(br2)In red mode, heat will be moved from the input to the output up to the target <thing>$(l:essentials:intro/heat)temperature/$, but no hotter. It can not heat the front higher than the back. In effect, it heats the output up to a set <thing>$(l:essentials:intro/heat)temperature/$.$(br2)In blue mode, heat will be moved from "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "In blue mode, heat will be moved from the output to the input down to the target <thing>$(l:essentials:intro/heat)temperature/$, but no colder. It can not cool the front lower than the back. In effect, it cools the output down to a set <thing>$(l:essentials:intro/heat)temperature/$.$(br2)"
+			"text": "the output to the input down to the target <thing>$(l:essentials:intro/heat)temperature/$, but no colder. It can not cool the front lower than the back. In effect, it cools the output down to a set <thing>$(l:essentials:intro/heat)temperature/$.$(br2)"
 		},
 		{
 			"type": "patchouli:text",
@@ -31,7 +31,7 @@
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:heat_limiter_basic" : 0,
-		"crossroads:heat_limiter" : 4
+		"crossroads:heat_limiter_basic": 0,
+		"crossroads:heat_limiter": 4
 	}
 }

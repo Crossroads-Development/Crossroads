@@ -10,7 +10,7 @@
 			"type": "patchouli:spotlight",
 			"title": "旋转能简介",
 			"item": "crossroads:gear_base",
-			"text": "<thing>旋转能/$交错道途中的基础能源系统之一，也通常是第一或第二个你会使用的能源系统（和<thing>$(l:crossroads:intro/heat)热能/$一起）。 旋转能是在<item>齿轮/$和<item>轴/$中传递的机械能量。$(br2)第一次读到时旋转能可能看着很复杂，"
+			"text": "<thing>旋转能/$交错道途中的基础能源系统之一，也通常是第一或第二个你会使用的能源系统（和<thing>$(l:essentials:intro/heat)热能/$一起）。 旋转能是在<item>齿轮/$和<item>轴/$中传递的机械能量。$(br2)第一次读到时旋转能可能看着很复杂，"
 		},
 		{
 			"type": "patchouli:text",
@@ -34,7 +34,7 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "通常，一个机器的每个操作都会消耗特定单位的<thing>能量/$，但有一个最小的工作<thing>转速/$。大部分机器在<thing>转速/$更高时会工作得更快。$(br2)<item>$(l:crossroads:rotary/gear_base)齿轮和轴/$能够连接在一起以传递能量。在<item>$(l:crossroads:rotary/gear_large)大型齿轮/$旁放置一个<item>$(l:crossroads:rotary/gear_base)小型齿轮/$会导致大齿轮转得比小齿轮慢——就像你想的那样。"
+			"text": "通常，一个机器的每个操作都会消耗特定单位的<thing>能量/$，但有一个最小的工作<thing>转速/$。大部分机器在<thing>转速/$更高时会工作得更快。$(br2)<item>$(l:essentials:rotary/gear_base)齿轮和轴/$能够连接在一起以传递能量。在<item>$(l:essentials:rotary/gear_large)大型齿轮/$旁放置一个<item>$(l:essentials:rotary/gear_base)小型齿轮/$会导致大齿轮转得比小齿轮慢——就像你想的那样。"
 		},
 		{
 			"type": "patchouli:text",
@@ -42,10 +42,8 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "所有齿轮/轴/随便什么的网络里<em>必须有/$连上一个<item>$(l:crossroads:rotary/axis)主轴/$——不然什么都不会转！$(br2)"
+			"text": "所有齿轮/轴/随便什么的网络里<em>必须有/$连上一个<item>$(l:essentials:rotary/axis)主轴/$——不然什么都不会转！$(br2)"
 		}
 	],
-	"extra_recipe_mappings": {
-		
-	}
+	"extra_recipe_mappings": {}
 }

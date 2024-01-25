@@ -1,8 +1,0 @@
-Solar Heater
-crossroads:solar_heater
-crossroads:solar_heater
-The <item>Solar Heater/$ is a solar panel that produces heat. When in direct sunlight during the day in clear weather, the <item>solar heat/$ will produce heat at a slow steady rate, up to a maximum temperature of 325°C.
-This isn't hot enough to run advanced machines- but it could be used for <link:essentials:heat/smelter>smelting/$ or <thing><link:essentials:fluid/steam>steam generation/$. By using it to make <thing><link:essentials:fluid/steam>steam/$ then converting it back to heat with a <item><link:essentials:heat/radiator>radiator/$, you can get around the temperature limit.
-A line of <item>solar heaters/$ connected on their copper ends will share heat. The copper ends are also where <item><link:essentials:heat/cable>cables/$ can be connected.
-
-This block pairs well with the <item><link:essentials:heat/reserve>Heat Reservoir/$ to store heat generated during the day for use at night.

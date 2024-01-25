@@ -10,7 +10,7 @@
 			"type": "patchouli:spotlight",
 			"title": "风力涡轮机",
 			"item": "crossroads:wind_turbine",
-			"text": "<item>风力涡轮机/$能够可再生地产生低<thing>$(l:crossroads:intro/rotary)转速/$<thing>$(l:crossroads:intro/rotary)旋转能/$。$(br2)<item>风力涡轮机/$需要正前方有 5x5 空间，而且从扇叶能看见天空。只要满足这些条件，"
+			"text": "<item>风力涡轮机/$能够可再生地产生低<thing>$(l:essentials:intro/rotary)转速/$<thing>$(l:essentials:intro/rotary)旋转能/$。$(br2)<item>风力涡轮机/$需要正前方有 5x5 空间，而且从扇叶能看见天空。只要满足这些条件，"
 		},
 		{
 			"type": "patchouli:text",
@@ -26,10 +26,10 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "和<item>$(l:crossroads:rotary/gear_base)可切换齿轮和离合器/$结合，将有可能保证涡轮机<em>永远不/$对抗动量。<em>这可能是个好主意！/$$(br2)"
+			"text": "和<item>$(l:essentials:rotary/gear_base)可切换齿轮和离合器/$结合，将有可能保证涡轮机<em>永远不/$对抗动量。<em>这可能是个好主意！/$$(br2)"
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:wind_turbine" : 0
+		"crossroads:wind_turbine": 0
 	}
 }

@@ -10,11 +10,11 @@
 			"type": "patchouli:spotlight",
 			"title": "捣磨机",
 			"item": "crossroads:stamp_mill",
-			"text": "作为<item>$(l:crossroads:rotary/millstone)磨石/$的只处理矿石的大型版本，<item>捣磨机/$是<thing>三倍矿/$的第一阶段。轴和齿轮需要连接到基座的侧面。$(br2)它接受各类粗矿，并使用<thing>$(l:crossroads:intro/rotary)旋转能/$来产出3份<item>粗金属砂/$。<item>粗金属砂/$能"
+			"text": "作为<item>$(l:essentials:rotary/millstone)磨石/$的只处理矿石的大型版本，<item>捣磨机/$是<thing>三倍矿/$的第一阶段。轴和齿轮需要连接到基座的侧面。$(br2)它接受各类粗矿，并使用<thing>$(l:essentials:intro/rotary)旋转能/$来产出3份<item>粗金属砂/$。<item>粗金属砂/$能"
 		},
 		{
 			"type": "patchouli:text",
-			"text": "在<item>$(l:crossroads:rotary/blast)工业高炉/$或<item>$(l:crossroads:fluid/cleanser)洗矿机/$中进行进一步处理。$(br2)不像其他大多数机器，<item>捣磨机/$有时会输出<em>未处理的矿石/$。<item>捣磨机/$有<em>两个/$进度条——一个基于时间，一个基于<thing>转速/$。如果时间条比进度条先到终点，机器会输出未处理矿石。"
+			"text": "在<item>$(l:essentials:rotary/blast)工业高炉/$或<item>$(l:essentials:fluid/cleanser)洗矿机/$中进行进一步处理。$(br2)不像其他大多数机器，<item>捣磨机/$有时会输出<em>未处理的矿石/$。<item>捣磨机/$有<em>两个/$进度条——一个基于时间，一个基于<thing>转速/$。如果时间条比进度条先到终点，机器会输出未处理矿石。"
 		},
 		{
 			"type": "patchouli:text",
@@ -26,6 +26,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:stamp_mill" : 0
+		"crossroads:stamp_mill": 0
 	}
 }

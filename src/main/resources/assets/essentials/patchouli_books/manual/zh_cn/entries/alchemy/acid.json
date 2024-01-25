@@ -15,7 +15,7 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<em>破坏基岩/$并获得<item>基岩粉/$。$(br2)这三种普通酸有着相同的<thing>$(l:crossroads:alchemy/effect)效果/$：对被击中的生物造成 8 点伤害，击中方块则破坏除了金块外的金属方块。$(br2)"
+			"text": "<em>破坏基岩/$并获得<item>基岩粉/$。$(br2)这三种普通酸有着相同的<thing>$(l:essentials:alchemy/effect)效果/$：对被击中的生物造成 8 点伤害，击中方块则破坏除了金块外的金属方块。$(br2)"
 		},
 		{
 			"type": "patchouli:text",
@@ -23,17 +23,17 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "来将<thing>$(l:crossroads:alchemy/effect)效果/$洒到更大的区域。详细信息可查看<thing>$(l:crossroads:alchemy/effect)效果/$页$(br2)"
+			"text": "来将<thing>$(l:essentials:alchemy/effect)效果/$洒到更大的区域。详细信息可查看<thing>$(l:essentials:alchemy/effect)效果/$页$(br2)"
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<bobo>$(l:crossroads:intro/welcome#bobo)寺BOBO！/$<bobo>KABANG！KABOOM！KABLOOEY！（祝福尼）$(br2)<bobo>窝有BANG瓶子！旦要小星！！布然尼->>bUUM！$(br2)<bobo>黄色粉！新新新鲜陪根根！！何用来放的平子！$(br2)<bobo>bOBO离开！/$$(br2)"
+			"text": "<bobo>$(l:essentials:intro/welcome#bobo)寺BOBO！/$<bobo>KABANG！KABOOM！KABLOOEY！（祝福尼）$(br2)<bobo>窝有BANG瓶子！旦要小星！！布然尼->>bUUM！$(br2)<bobo>黄色粉！新新新鲜陪根根！！何用来放的平子！$(br2)<bobo>bOBO离开！/$$(br2)"
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:solid_regia" : 2,
-		"crossroads:solid_vitriol" : 0,
-		"crossroads:solid_muriatic" : 0,
-		"crossroads:solid_fortis" : 0
+		"crossroads:solid_regia": 2,
+		"crossroads:solid_vitriol": 0,
+		"crossroads:solid_muriatic": 0,
+		"crossroads:solid_fortis": 0
 	}
 }

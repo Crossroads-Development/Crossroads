@@ -1,0 +1,36 @@
+{
+	"category": "essentials:alchemy",
+	"format": 2,
+	"name": "火焰云的压制",
+	"icon": "crossroads:damping_powder",
+	"sortnum": 0,
+	"priority": false,
+	"advancement": "crossroads:progress/path/alchemy",
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "patchouli:spotlight",
+			"title": "火焰云的压制",
+			"item": "crossroads:damping_powder",
+			"text": "<item>抑制粉/$能用于紧急停止$(l:essentials:alchemy/effect)火焰云/$扩散。当手持物品右击使用后，会消耗一份<item>粉末/$并停止扩散到 10 格内的任何$(l:essentials:alchemy/effect)火焰云/$。即使范围内没有任何火焰云，抑制粉在使用后仍会被消耗。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "由于$(l:essentials:alchemy/effect)火焰云/$能被实验室事故引发，而且它们有能力破坏你的一大片基地，<em>强烈推荐在得到/$<item>$(l:essentials:alchemy/stones)思索者之石/$前在你的$(l:essentials:intro/alchemy)炼金术/$实验室准备一些<item>抑制粉/$。$(br2)<item>抑制粉/$也能被发射器使用。$(br2)"
+		},
+		{
+			"type": "patchouli:spotlight",
+			"anchor": "detector",
+			"item": "crossroads:fire_detector",
+			"text": "<item>火灾探测器/$能探测 100 格内的火焰云。<thing>$(l:essentials/circuits#reader)电路/$能读取探测器离火焰云的最近距离。如果探测范围（100 格）内没有任何火焰云，电路会读取到最大值（100）。$(br2)若<item>火灾探测器/$位于火焰云内，"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "探测器会根据其位置深度输出一个负值。$(br2)"
+		}
+	],
+	"extra_recipe_mappings": {
+		"crossroads:damping_powder" : 0,
+		"crossroads:fire_detector" : 2
+	}
+}

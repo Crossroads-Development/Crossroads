@@ -10,7 +10,7 @@
 			"type": "patchouli:spotlight",
 			"title": "轴和小型齿轮",
 			"item": "crossroads:gear_base",
-			"text": "传输<thing>$(l:crossroads:intro/rotary)旋转能/$的最基础部件是<item>小型齿轮/$和<item>轴/$。$(br2)一个方块空间内最多可以放 6 个<item>小型齿轮/$——每面一个。<item>小型齿轮/$必须放在固体表面上，并且可用<item>$(l:essentials/wrench)扳手/$单独破坏。$(br2)"
+			"text": "传输<thing>$(l:essentials:intro/rotary)旋转能/$的最基础部件是<item>小型齿轮/$和<item>轴/$。$(br2)一个方块空间内最多可以放 6 个<item>小型齿轮/$——每面一个。<item>小型齿轮/$必须放在固体表面上，并且可用<item>$(l:essentials/wrench)扳手/$单独破坏。$(br2)"
 		},
 		{
 			"type": "patchouli:text",
@@ -22,7 +22,7 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<item>轴/$和<item>齿轮/$可以有多种材料（各种金属），而且会基于密度有不同的$(l:crossroads:intro/rotary)“I”值/$。轴则极其倾向于又轻又廉价。$(br2)"
+			"text": "<item>轴/$和<item>齿轮/$可以有多种材料（各种金属），而且会基于密度有不同的$(l:essentials:intro/rotary)“I”值/$。轴则极其倾向于又轻又廉价。$(br2)"
 		},
 		{
 			"type": "patchouli:text",
@@ -38,10 +38,10 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "记住，所有齿轮网络需要至少一个<item>$(l:crossroads:rotary/axis)主轴/$来运行。$(br2)"
+			"text": "记住，所有齿轮网络需要至少一个<item>$(l:essentials:rotary/axis)主轴/$来运行。$(br2)"
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:gear_base" : 0
+		"crossroads:gear_base": 0
 	}
 }

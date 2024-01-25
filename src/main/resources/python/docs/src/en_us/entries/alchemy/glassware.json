@@ -1,0 +1,43 @@
+{
+	"category": "essentials:alchemy",
+	"format": 2,
+	"name": "Glassware",
+	"icon": "crossroads:florence_flask_glass",
+	"sortnum": 0,
+	"priority": false,
+	"advancement": "crossroads:progress/path/alchemy",
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "patchouli:spotlight",
+			"title": "Glassware",
+			"item": "crossroads:florence_flask_glass",
+			"text": "<item>Glassware/$ is the bread-and-butter for moving <thing>$(l:essentials:intro/alchemy)reagents/$ manually.$(br2)There are three types of <item>glassware/$: <item>Phials/$, <item>Florence Flasks/$, and <item>Shells/$. Each type of <item>glassware/$ has a glass and crystal variant (the crystal variant is for containing higher tier <thing>$(l:essentials:intro/alchemy)reagents/$).$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "<item>Phials/$ are the simplest and smallest <item>glassware/$. They can store <thing>$(l:essentials:intro/alchemy)reagents/$, and you can pour out the stored <thing>$(l:essentials:intro/alchemy)reagents/$ into the world by right-clicking with the item.$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "<item>Shells/$ are like <item>phials/$, except they are thrown (like a snowball) and break open on impact, releasing the stored <thing>$(l:essentials:intro/alchemy)reagents/$ into the world. They can also be thrown by dispensers.$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "<Item>Florence Flasks/$ are for <thing>$(l:essentials:intro/alchemy)reactions/$. The automated version is <item>$(l:essentials:alchemy/vessel)reaction vessels/$. Unlike <item>phials and shells/$, <item>florence flasks/$ allow <thing>$(l:essentials:intro/alchemy)reactions/$. They can also be connected to <item>$(l:essentials:heat/cable)heat cables/$ on the bottom side when placed on a <item>glassware stand/$.$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"anchor": "stand",
+			"text": "<item>Glassware/$ can be placed onto a <item>glassware stand/$ by right clicking with the <item>glassware/$. It can be removed by shift-right-clicking with an empty hand, and the contents stay in the <item>glassware/$ item.$(br2)<item>$(l:essentials:alchemy/conduit)Conduits/$ can connect to the top of the <item>stand/$ if there is <item>glassware/$ in it, allowing <item>$(l:essentials:alchemy/conduit)conduits/$ to interact with <item>glassware/$. Using a <item>$(l:essentials:wrench)wrench/$ on the <item>stand/$ will flip it upside-down, so that <item>$(l:essentials:alchemy/conduit)conduits/$ connect to the bottom and <item>$(l:essentials:heat/cable)heat cables/$ on the top instead.$(br2)<thing>$(l:essentials:intro/alchemy)Reagents/$ can be transferred between <item>glassware/$ on a <item>stand/$ and held <item>glassware/$ by right-clicking with the <item>glassware/$. Items that are the solid form of a <thing>$(l:essentials:intro/alchemy)reagent/$ can be added to <item>glassware/$ on a <item>stand/$ by right-clicking the <item>stand/$ with the item. The item forms of solid <thing>$(l:essentials:intro/alchemy)reagents/$ can be removed by right-clicking with an empty hand. The liquid form of <thing>$(l:essentials:intro/alchemy)reagents/$ can be added by right clicking with a bucket filled with the $(l:essentials:alchemy/fluid_injector)corresponding liquid/$ (ex. distilled water bucket -> <item>water reagent/$). Liquid <thing>$(l:essentials:intro/alchemy)reagent/$ can be removed with a bucket by right clicking with a bucket <em>if that reagent has a bucket form (most don't) and there is enough present).$(br2)<em>Dispensers can place <item>glassware/$ onto a stand, and a (totally empty) dispenser can take glassware off a stand.$(br2)"
+		}
+	],
+	"extra_recipe_mappings": {
+		"crossroads:phial_glass" : 2,
+		"crossroads:phial_cryst" : 2,
+		"crossroads:florence_flask_glass" : 3,
+		"crossroads:florence_flask_cryst" : 3,
+		"crossroads:shell_glass" : 4,
+		"crossroads:shell_cryst" : 4
+	}
+}

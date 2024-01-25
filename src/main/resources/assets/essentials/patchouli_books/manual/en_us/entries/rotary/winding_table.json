@@ -10,22 +10,22 @@
 			"type": "patchouli:spotlight",
 			"title": "Spring Winding Stand",
 			"item": "crossroads:winding_table",
-			"text": "The <item>Spring Winding Stand/$- that's 'wind' as in winding a watch, not as in weather- allows winding up $(l:essentials:rotary/crossbow)certain items/$ to charge them.$(br2)In order to wind an item inside the <item>Stand/$, the <item>Spring Winding Stand/$ needs an <thing>$(l:essentials:intro/rotary)axle connection/$ on the top, and needs a redstone pulse. "
+			"text": "The <item>Spring Winding Stand/$- that's 'wind' as in winding a watch, not as in weather- allows winding up $(l:essentials:rotary/crossbow)certain items/$ to charge them.$(br2)In order to wind an item inside the <item>Stand/$, the <item>Spring Winding Stand/$ needs an <thing>$(l:essentials:intro/rotary)axle connection/$ on the top, and needs a redstone pulse. Every time it receives a pulse, the "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "Every time it receives a pulse, the <thing>spring speed/$ on the item being wound will increase by 0.2rad/s. If the spring speed on the item is ever higher than the axle speed, <em>the item will break/$; An item broken this way can be fixed by combining it with a <item>mainspring/$ in an anvil. Items can only ever be wound with positive speed.$(br2)While an item "
+			"text": "<thing>spring speed/$ on the item being wound will increase by 0.2rad/s. If the spring speed on the item is ever higher than the axle speed, <em>the item will break/$; An item broken this way can be fixed by combining it with a <item>mainspring/$ in an anvil. Items can only ever be wound with positive speed.$(br2)While an item is being wound in the <item>Spring Winding Stand/$, the <item>Stand/$ will produce <thing>$(l:essentials:intro/rotary)rotary power"
 		},
 		{
 			"type": "patchouli:text",
-			"text": "is being wound in the <item>Spring Winding Stand/$, the <item>Stand/$ will produce <thing>$(l:essentials:intro/rotary)rotary power/$ against the current motion- actively slowing things down. It produces (or, if it makes more sense, loses) -20 * <thing>(spring speed of item)/$ J/t. Be careful when winding an item that you don't wind it so hard that the resistive power brings the machine speed down and destroys it!$(br2)"
+			"text": "<thing>$(l:essentials:intro/rotary)/$ against the current motion- actively slowing things down. It produces (or, if it makes more sense, loses) -20 * <thing>(spring speed of item)/$ J/t. Be careful when winding an item that you don't wind it so hard that the resistive power brings the machine speed down and destroys it!$(br2)<thing>$(l:essentials/circuits#reader)Circuits/$ will read the current <thing>spring speed/$ on the <em>item/$ being wound, not on the <item>Table/$ itself.$(br2)"
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<thing>$(l:essentials/circuits#reader)Circuits/$ will read the current <thing>spring speed/$ on the <em>item/$ being wound, not on the <item>Table/$ itself.$(br2)"
+			"text": ""
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:winding_table" : 0
+		"crossroads:winding_table": 0
 	}
 }

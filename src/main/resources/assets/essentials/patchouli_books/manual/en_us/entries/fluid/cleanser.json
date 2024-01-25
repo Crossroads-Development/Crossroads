@@ -10,11 +10,11 @@
 			"type": "patchouli:spotlight",
 			"title": "Ore Cleanser",
 			"item": "crossroads:ore_cleanser",
-			"text": "The <item>Ore Cleanser/$ is an <em>optional/$ processing stage for ore tripling. It uses <thing>$(l:essentials:intro/fluid)steam/$ to convert <item>metal gravel/$ from a <item>$(l:essentials:rotary/stamp)stamp mill/$ to produce <item>metal clumps/$ and <thing>$(l:essentials:intro/fluid)dirty water/$ as a byproduct. By doing this, less coal/charcoal is consumed by the <item>$(l:essentials:rotary/blast)blast furnace/$ to triple ores.$(br2)"
+			"text": "The <item>Ore Cleanser/$ is an <em>optional/$ processing stage for ore tripling. It uses <thing>$(l:essentials:intro/fluid)steam/$ to convert <item>metal gravel/$ from a <item>$(l:essentials:rotary/stamp)stamp mill/$ to produce <item>metal clumps/$ and <thing>$(l:essentials:intro/fluid)dirty water/$ as a byproduct. By doing this, less coal/charcoal is consumed by the <item>$(l:essentials:rotary/blast)blast furnace/$ to triple ores.$(br2)There is a fluid output on the top, "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "There is a fluid output on the top, and fluid inputs on the sides. Each operation consumes 250mB of <thing>$(l:essentials:intro/fluid)steam/$ and produces 250mB of <thing>$(l:essentials:intro/fluid)dirty water/$. This <thing>$(l:essentials:intro/fluid)dirty water/$ can be reprocessed in an <item>$(l:essentials:fluid/centrifuge)water centrifuge/$.$(br2)<thing>$(l:essentials/circuits#reader)Reader circuits/$ measure the fullness of the input.$(br2)"
+			"text": "and fluid inputs on the sides. Each operation consumes 250mB of <thing>$(l:essentials:intro/fluid)steam/$ and produces 250mB of <thing>$(l:essentials:intro/fluid)dirty water/$. This <thing>$(l:essentials:intro/fluid)dirty water/$ can be reprocessed in an <item>$(l:essentials:fluid/centrifuge)water centrifuge/$.$(br2)<thing>$(l:essentials/circuits#reader)Reader circuits/$ measure the fullness of the input.$(br2)"
 		},
 		{
 			"type": "patchouli:text",
@@ -22,6 +22,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:ore_cleanser" : 0
+		"crossroads:ore_cleanser": 0
 	}
 }

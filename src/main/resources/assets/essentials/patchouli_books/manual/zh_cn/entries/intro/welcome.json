@@ -22,7 +22,7 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "随着你在模组中的推进还会解锁更多。如果你刚开始玩这个模组，我建议你从$(l:crossroads:intro/heat)热能/$开始。$(br2)本模组的引言到此结$(br2)"
+			"text": "随着你在模组中的推进还会解锁更多。如果你刚开始玩这个模组，我建议你从$(l:essentials:intro/heat)热能/$开始。$(br2)本模组的引言到此结$(br2)"
 		},
 		{
 			"type": "patchouli:spotlight",
@@ -31,7 +31,5 @@
 			"text": "<bobo>泥嚎！！！窝似bOBO！！窝兹道冬西！很多春东西！早我的杖！和东锡一起用！孩有祭平！造特别的东西！三样东西河祭品在地上，用杖又击！唯衣的昊祭品似毒土豆！！BOBO离开！！/$$(br2)"
 		}
 	],
-	"extra_recipe_mappings": {
-		
-	}
+	"extra_recipe_mappings": {}
 }

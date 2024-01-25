@@ -19,7 +19,7 @@
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:reagent_filter" : 0,
-		"crossroads:crystal_reagent_filter" : 0
+		"crossroads:reagent_filter": 0,
+		"crossroads:crystal_reagent_filter": 0
 	}
 }

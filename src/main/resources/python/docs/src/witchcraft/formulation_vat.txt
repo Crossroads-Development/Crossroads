@@ -1,6 +1,0 @@
-Formulation Vat
-crossroads:formulation_vat|crossroads:progress/path/witchcraft
-crossroads:formulation_vat
-The <item>Formulation Vat/$ is a machine for producing several liquids used in bulk. It requires a liquid input and an item ingredient, which are used to make the liquid output.
-It uses <thing><link:essentials:intro/heat>heat/$, and runs faster the closer it is to 100°C. If the temperature exceeds 100°C at all, it totally stops working but still consumes heat, so ideally it should be kept at just slightly below 100°C.
-<thing><link:essentials/circuits>Circuits/$ measure the fullness of the item input, as a value from 0 to 15.

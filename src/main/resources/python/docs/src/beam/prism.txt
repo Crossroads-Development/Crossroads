@@ -1,5 +1,0 @@
-Crystalline Prism
-crossroads:crystalline_prism
-crossroads:crystalline_prism
-<item>Crystalline Prisms/$ split <thing><link:essentials:intro/beam>beams/$ into their constituent primary colors (red, green, blue, black).
-They have inputs on the top and bottom, and four outputs where the constituent <thing><link:essentials:beam/energy>energy/$ (red), <thing><link:essentials:beam/potential>potential/$ (green), <thing><link:essentials:beam/stability>stability/$ (blue), and <thing><link:essentials:beam/void>void/$ (black) are emitted as applicable.

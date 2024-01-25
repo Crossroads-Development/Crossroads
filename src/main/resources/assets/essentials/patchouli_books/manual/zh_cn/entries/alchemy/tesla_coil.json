@@ -11,7 +11,7 @@
 			"type": "patchouli:spotlight",
 			"title": "升级的特斯拉线圈",
 			"item": "crossroads:tesla_coil_top_efficiency",
-			"text": "<thing>$(l:crossroads:intro/alchemy)炼金术/$解锁了几种升级的<item>$(l:crossroads:fluid/tesla)特斯拉线圈顶部/$，可放在<item>$(l:crossroads:fluid/tesla)特斯拉线圈/$的上面。$(br2)线圈顶部有 5 种变体。一些有着稍微不同的性能，其他两种则有着与传输 FE 完全不相干的功能。$(br2)"
+			"text": "<thing>$(l:essentials:intro/alchemy)炼金术/$解锁了几种升级的<item>$(l:essentials:fluid/tesla)特斯拉线圈顶部/$，可放在<item>$(l:essentials:fluid/tesla)特斯拉线圈/$的上面。$(br2)线圈顶部有 5 种变体。一些有着稍微不同的性能，其他两种则有着与传输 FE 完全不相干的功能。$(br2)"
 		},
 		{
 			"type": "patchouli:text",
@@ -31,14 +31,14 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<item>高强度特斯拉线圈顶部/$一次传输 10,000 FE，FE 传输效率是普通顶部的 10 倍。需要在<item>$(l:crossroads:fluid/tesla)特斯拉线圈/$内放一个<item>$(l:crossroads:fluid/tesla)莱顿瓶/$。$(br2)"
+			"text": "<item>高强度特斯拉线圈顶部/$一次传输 10,000 FE，FE 传输效率是普通顶部的 10 倍。需要在<item>$(l:essentials:fluid/tesla)特斯拉线圈/$内放一个<item>$(l:essentials:fluid/tesla)莱顿瓶/$。$(br2)"
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:tesla_coil_top_efficiency" : 4,
-		"crossroads:tesla_coil_top_distance" : 3,
-		"crossroads:tesla_coil_top_intensity" : 5,
-		"crossroads:tesla_coil_top_attack" : 1,
-		"crossroads:tesla_coil_top_decorative" : 2
+		"crossroads:tesla_coil_top_efficiency": 4,
+		"crossroads:tesla_coil_top_distance": 3,
+		"crossroads:tesla_coil_top_intensity": 5,
+		"crossroads:tesla_coil_top_attack": 1,
+		"crossroads:tesla_coil_top_decorative": 2
 	}
 }

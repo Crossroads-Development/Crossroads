@@ -18,7 +18,5 @@
 			"text": "<thing>Void-Light/$ AKA <thing>Darkness/$ will break light sources within range- where the radius is sqrt(<thing>power/$) / 2 blocks (maximum 4 blocks).$(br2)"
 		}
 	],
-	"extra_recipe_mappings": {
-		
-	}
+	"extra_recipe_mappings": {}
 }

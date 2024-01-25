@@ -10,14 +10,10 @@
 			"type": "patchouli:spotlight",
 			"title": "Crystalline Prism",
 			"item": "crossroads:crystalline_prism",
-			"text": "<item>Crystalline Prisms/$ split <thing>$(l:essentials:intro/beam)beams/$ into their constituent primary colors (red, green, blue, black).$(br2)They have inputs on the top and bottom, and four outputs where the constituent <thing>$(l:essentials:beam/energy)energy/$ (red), <thing>$(l:essentials:beam/potential)potential/$ (green), <thing>$(l:essentials:beam/stability)stability/$ (blue), and <thing>$(l:essentials:beam/void)void/$ (black) are emitted as "
-		},
-		{
-			"type": "patchouli:text",
-			"text": "applicable.$(br2)"
+			"text": "<item>Crystalline Prisms/$ split <thing>$(l:essentials:intro/beam)beams/$ into their constituent primary colors (red, green, blue, black).$(br2)They have inputs on the top and bottom, and four outputs where the constituent <thing>$(l:essentials:beam/energy)energy/$ (red), <thing>$(l:essentials:beam/potential)potential/$ (green), <thing>$(l:essentials:beam/stability)stability/$ (blue), and <thing>$(l:essentials:beam/void)void/$ (black) are emitted as applicable.$(br2)"
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:crystalline_prism" : 0
+		"crossroads:crystalline_prism": 0
 	}
 }

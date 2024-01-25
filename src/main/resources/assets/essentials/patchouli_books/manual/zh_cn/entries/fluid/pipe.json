@@ -14,7 +14,7 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<item>$(l:essentials/wrench)扳手/$每个连接有 4 种模式：输入、输出、锁定和分享。输入或输出模式下管道只会进行输入/输出；锁定模式会断开连接；分享模式则可用于其他管道和<item>$(l:crossroads:fluid/tank)储罐/$（包括其他模组的储罐）。在分享模式下，管道之间会平衡它们内含的流体以使充满程度一致。$(br2)"
+			"text": "<item>$(l:essentials/wrench)扳手/$每个连接有 4 种模式：输入、输出、锁定和分享。输入或输出模式下管道只会进行输入/输出；锁定模式会断开连接；分享模式则可用于其他管道和<item>$(l:essentials:fluid/tank)储罐/$（包括其他模组的储罐）。在分享模式下，管道之间会平衡它们内含的流体以使充满程度一致。$(br2)"
 		},
 		{
 			"type": "patchouli:text",
@@ -22,11 +22,11 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<bobo>$(l:crossroads:intro/welcome#bobo)BOBO/$<bobo>节快乐！$(br2)<bobo>尼可以用管造真空漏斗！另歪还药漏斗何一些毛衣！$(br2)<bobo>bOBO离开！/$$(br2)"
+			"text": "<bobo>$(l:essentials:intro/welcome#bobo)BOBO/$<bobo>节快乐！$(br2)<bobo>尼可以用管造真空漏斗！另歪还药漏斗何一些毛衣！$(br2)<bobo>bOBO离开！/$$(br2)"
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:fluid_tube" : 0,
-		"crossroads:redstone_fluid_tube" : 2
+		"crossroads:fluid_tube": 0,
+		"crossroads:redstone_fluid_tube": 2
 	}
 }

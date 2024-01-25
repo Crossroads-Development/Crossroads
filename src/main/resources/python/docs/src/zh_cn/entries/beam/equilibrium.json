@@ -1,0 +1,29 @@
+{
+	"category": "essentials:beam",
+	"format": 2,
+	"name": "色域：力场",
+	"icon": "crossroads:pure_quartz",
+	"sortnum": 1,
+	"priority": false,
+	"advancement": "crossroads:progress/alignment/equilibrium",
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "patchouli:spotlight",
+			"title": "色域：力场",
+			"item": "crossroads:pure_quartz",
+			"text": "<thing>力场/$（粉红色）能像活塞一样推动方块，还能对实体起到类似牵引光束的作用。在推动“黏性”方块（例如黏液块和蜂蜜块）时，力场只会把它们视作普通方块推动。光束一次能推动的方块数为<thing>功率/$/4（最多 16 个方块）。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "如果光束命中了一个实体（需要$(l:essentials:intro/paths#technomancy)特殊光束设备/$），该实体会被拉进光束中并被缓慢朝光束方向推去，就像“牵引光束”一样。这种牵引能轻松抵抗重力。功率越高，实体移动速度越快。光束对所有实体有效，包括玩家和物品。玩家可以通过潜行离开光束。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "<thing>虚空-力场/$，也就是<thing>破碎/$，作用和<thing>力场/$一样，只不过不是推开实体和方块，而是将其拉近。$(br2)"
+		}
+	],
+	"extra_recipe_mappings": {
+		
+	}
+}

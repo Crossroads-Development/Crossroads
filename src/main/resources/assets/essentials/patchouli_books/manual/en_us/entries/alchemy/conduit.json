@@ -11,15 +11,11 @@
 			"type": "patchouli:spotlight",
 			"title": "Reagent Conduits",
 			"item": "crossroads:alch_tube",
-			"text": "<item>Alchemy Conduits/$ are the automated way of moving <thing>$(l:essentials:intro/alchemy)reagents/$. They will move <thing>$(l:essentials:intro/alchemy)reagents/$ like <item>$(l:essentials:fluid/pipe)pipes/$, and can have connections adjusted with a <item>$(l:essentials/wrench)wrench/$.$(br2)<thing>$(l:essentials:intro/alchemy)Solid and liquid reagents/$ <em>will not flow up/$, while <thing>$(l:essentials:intro/alchemy)gas and flame reagents/$ will not flow down. This is useful for separating "
+			"text": "<item>Alchemy Conduits/$ are the automated way of moving <thing>$(l:essentials:intro/alchemy)reagents/$. They will move <thing>$(l:essentials:intro/alchemy)reagents/$ like <item>$(l:essentials:fluid/pipe)pipes/$, and can have connections adjusted with a <item>$(l:essentials/wrench)wrench/$.$(br2)<thing>$(l:essentials:intro/alchemy)Solid and liquid reagents/$ <em>will not flow up/$, while <thing>$(l:essentials:intro/alchemy)gas and flame reagents/$ will not flow down. This is useful for separating <thing>$(l:essentials:intro/alchemy)reagents/$ by <thing>$(l:essentials:intro/alchemy)phase/$, or by type "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<thing>$(l:essentials:intro/alchemy)reagents/$ by <thing>$(l:essentials:intro/alchemy)phase/$, or by type by taking advantage of different <thing><thing>$(l:essentials:intro/alchemy)boiling/melting temperatures/$. <thing>$(l:essentials:intro/alchemy)Reagents/$ can be forced to flow up/down using a <item>$(l:essentials:alchemy/pump)reagent pump/$.$(br2)There are both crystal and glass versions of <item>alchemy conduits/$, and they will not connect. Some <thing>$(l:essentials:intro/alchemy)reagents/$ can not be safely contained in glass. Up to 10 units of <thing>$(l:essentials:intro/alchemy)reagent$ can be stored "
-		},
-		{
-			"type": "patchouli:text",
-			"text": "<thing>$(l:essentials:intro/alchemy)in a <item>conduit/$.$(br2)"
+			"text": "by taking advantage of different <thing><thing>$(l:essentials:intro/alchemy)boiling/melting temperatures/$. <thing>$(l:essentials:intro/alchemy)Reagents/$ can be forced to flow up/down using a <item>$(l:essentials:alchemy/pump)reagent pump/$.$(br2)There are both crystal and glass versions of <item>alchemy conduits/$, and they will not connect. Some <thing>$(l:essentials:intro/alchemy)reagents/$ can not be safely contained in glass. Up to 10 units of <thing>$(l:essentials:intro/alchemy)reagent$ can be stored in a <item>conduit/$.$(br2)"
 		},
 		{
 			"type": "patchouli:text",
@@ -27,9 +23,9 @@
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:alch_tube" : 0,
-		"crossroads:crystal_alch_tube" : 0,
-		"crossroads:reds_alch_tube" : 3,
-		"crossroads:crystal_reds_alch_tube" : 3
+		"crossroads:alch_tube": 0,
+		"crossroads:crystal_alch_tube": 0,
+		"crossroads:reds_alch_tube": 2,
+		"crossroads:crystal_reds_alch_tube": 2
 	}
 }

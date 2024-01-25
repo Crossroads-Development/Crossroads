@@ -10,7 +10,7 @@
 			"type": "patchouli:spotlight",
 			"title": "斯特林引擎",
 			"item": "crossroads:stirling_engine",
-			"text": "<item>斯特林引擎/$可以使用<thing>$(l:crossroads:intro/heat)热能/$制造<thing>$(l:crossroads:intro/rotary)旋转能/$。更具体地说，使用温差。$(br2)<item>斯特林引擎/$有两个热能连接口——一个在底部，一个在侧面。两个输入间温差越大，"
+			"text": "<item>斯特林引擎/$可以使用<thing>$(l:essentials:intro/heat)热能/$制造<thing>$(l:essentials:intro/rotary)旋转能/$。更具体地说，使用温差。$(br2)<item>斯特林引擎/$有两个热能连接口——一个在底部，一个在侧面。两个输入间温差越大，"
 		},
 		{
 			"type": "patchouli:text",
@@ -26,10 +26,10 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "与<item>$(l:crossroads:rotary/steam_turbine)蒸气轮机/$相比，<item>斯特林引擎/$的效率可以高很多，而且没有最小工作温度。但是，扩大<item>斯特林引擎/$规模比<item>$(l:crossroads:rotary/steam_turbine)蒸气轮机/$更难，而且<item>斯特林引擎/$较低的上限速度意味着不能在没有<thing>$(l:crossroads:rotary/gear_large)大型齿轮/$变速的情况下让大多数机器工作。$(br2)"
+			"text": "与<item>$(l:essentials:rotary/steam_turbine)蒸气轮机/$相比，<item>斯特林引擎/$的效率可以高很多，而且没有最小工作温度。但是，扩大<item>斯特林引擎/$规模比<item>$(l:essentials:rotary/steam_turbine)蒸气轮机/$更难，而且<item>斯特林引擎/$较低的上限速度意味着不能在没有<thing>$(l:essentials:rotary/gear_large)大型齿轮/$变速的情况下让大多数机器工作。$(br2)"
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:stirling_engine" : 0
+		"crossroads:stirling_engine": 0
 	}
 }

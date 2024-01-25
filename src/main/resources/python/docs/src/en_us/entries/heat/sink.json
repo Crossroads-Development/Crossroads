@@ -1,0 +1,24 @@
+{
+	"category": "essentials:heat",
+	"format": 2,
+	"name": "Heat Sink",
+	"icon": "crossroads:heat_sink",
+	"sortnum": 0,
+	"priority": false,
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "patchouli:spotlight",
+			"title": "Heat Sink",
+			"item": "crossroads:heat_sink",
+			"text": "The <item>Heat Sink/$ is a way of venting heat (or cold) rapidly.$(br2)They can be configured with a $(l:essentials/wrench)wrench/$ to adjust the loss rate.$(br2)It will move the temperature towards the biome temperature at the set constant rate.$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "If the <em>Create mod/$ installed, the <item>heat sink/$ can be used as a heat source for the Create boiler, allowing using Crossroads heat to produce Create rotary power.$(br2)The strength of the heat sink as a boiler heat source depends on the heat sink temperature and on the loss rate. For 'warm' heat (like fire), needs to be above 50°C and draining at least 5°C/t. For 'burning' heat (like a blaze burner with fuel), needs to be above 100°C and draining at least 10°C/t. For 'blazing' heat (like a blaze burner with fuel and blaze cake), needs to be above 5000°C and draining at least 25°C/t.$(br2)"
+		}
+	],
+	"extra_recipe_mappings": {
+		"crossroads:heat_sink" : 0
+	}
+}

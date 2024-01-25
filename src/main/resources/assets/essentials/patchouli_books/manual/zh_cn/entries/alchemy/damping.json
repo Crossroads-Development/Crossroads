@@ -11,11 +11,11 @@
 			"type": "patchouli:spotlight",
 			"title": "火焰云的压制",
 			"item": "crossroads:damping_powder",
-			"text": "<item>抑制粉/$能用于紧急停止$(l:crossroads:alchemy/effect)火焰云/$扩散。当手持物品右击使用后，会消耗一份<item>粉末/$并停止扩散到 10 格内的任何$(l:crossroads:alchemy/effect)火焰云/$。即使范围内没有任何火焰云，抑制粉在使用后仍会被消耗。$(br2)"
+			"text": "<item>抑制粉/$能用于紧急停止$(l:essentials:alchemy/effect)火焰云/$扩散。当手持物品右击使用后，会消耗一份<item>粉末/$并停止扩散到 10 格内的任何$(l:essentials:alchemy/effect)火焰云/$。即使范围内没有任何火焰云，抑制粉在使用后仍会被消耗。$(br2)"
 		},
 		{
 			"type": "patchouli:text",
-			"text": "由于$(l:crossroads:alchemy/effect)火焰云/$能被实验室事故引发，而且它们有能力破坏你的一大片基地，<em>强烈推荐在得到/$<item>$(l:crossroads:alchemy/stones)思索者之石/$前在你的$(l:crossroads:intro/alchemy)炼金术/$实验室准备一些<item>抑制粉/$。$(br2)<item>抑制粉/$也能被发射器使用。$(br2)"
+			"text": "由于$(l:essentials:alchemy/effect)火焰云/$能被实验室事故引发，而且它们有能力破坏你的一大片基地，<em>强烈推荐在得到/$<item>$(l:essentials:alchemy/stones)思索者之石/$前在你的$(l:essentials:intro/alchemy)炼金术/$实验室准备一些<item>抑制粉/$。$(br2)<item>抑制粉/$也能被发射器使用。$(br2)"
 		},
 		{
 			"type": "patchouli:spotlight",
@@ -29,7 +29,7 @@
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:damping_powder" : 0,
-		"crossroads:fire_detector" : 2
+		"crossroads:damping_powder": 0,
+		"crossroads:fire_detector": 2
 	}
 }

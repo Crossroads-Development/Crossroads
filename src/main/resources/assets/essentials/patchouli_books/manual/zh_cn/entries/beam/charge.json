@@ -18,7 +18,5 @@
 			"text": "<thing>虚空-充能/$，也就是<thing>释能/$，会从击中的机器中吸取 FE。默认情况下，每<thing>功率/$会吸取 50 FE。$(br2)"
 		}
 	],
-	"extra_recipe_mappings": {
-		
-	}
+	"extra_recipe_mappings": {}
 }

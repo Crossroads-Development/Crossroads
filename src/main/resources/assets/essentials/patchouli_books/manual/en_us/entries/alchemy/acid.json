@@ -19,11 +19,11 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<item>Aqua Regia/$ will do 12 damage to hit entities, and will break metal blocks (including gold). Much more importantly, any bedrock that <item>aqua regia/$ hits will be broken, dropping 1 <item>Bedrock Dust/$, an important reagent.$(br2)As <thing>aqua regia/$ can be expensive and you will need a lot of <item>bedrock dust/$, it suggested to mix it with a cheap liquid (like water) "
+			"text": "<item>Aqua Regia/$ will do 12 damage to hit entities, and will break metal blocks (including gold). Much more importantly, any bedrock that <item>aqua regia/$ hits will be broken, dropping 1 <item>Bedrock Dust/$, an important reagent.$(br2)As <thing>aqua regia/$ can be expensive and you will need a lot of <item>bedrock dust/$, it suggested to mix it with a cheap liquid (like water) to splash the <thing>$(l:essentials:alchemy/effect)effect/$ over a large area. "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "to splash the <thing>$(l:essentials:alchemy/effect)effect/$ over a large area. See the <thing>$(l:essentials:alchemy/effect)effects/$ page for full details.$(br2)"
+			"text": "See the <thing>$(l:essentials:alchemy/effect)effects/$ page for full details.$(br2)"
 		},
 		{
 			"type": "patchouli:text",
@@ -31,9 +31,9 @@
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:solid_regia" : 2,
-		"crossroads:solid_vitriol" : 0,
-		"crossroads:solid_muriatic" : 0,
-		"crossroads:solid_fortis" : 0
+		"crossroads:solid_regia": 2,
+		"crossroads:solid_vitriol": 0,
+		"crossroads:solid_muriatic": 0,
+		"crossroads:solid_fortis": 0
 	}
 }

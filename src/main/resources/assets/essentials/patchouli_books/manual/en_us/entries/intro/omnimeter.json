@@ -10,11 +10,11 @@
 			"type": "patchouli:spotlight",
 			"title": "Omnimeter",
 			"item": "crossroads:omnimeter",
-			"text": "The <item>Omnimeter/$ is an extremely important and useful tool. Right clicking with it on almost any Crossroads machine or block will provide a readout of important information, such as <thing>$(l:essentials:intro/heat)temperature/$, <thing>$(l:essentials:intro/rotary)speed, I value, energy/$, <thing>$(l:essentials:intro/fluid)fluid contents/$, and more.$(br2)It is expected "
+			"text": "The <item>Omnimeter/$ is an extremely important and useful tool. Right clicking with it on almost any Crossroads machine or block will provide a readout of important information, such as <thing>$(l:essentials:intro/heat)temperature/$, <thing>$(l:essentials:intro/rotary)speed, I value, energy/$, <thing>$(l:essentials:intro/fluid)fluid contents/$, and more.$(br2)It is expected that the player has an <item>omnimeter/$ for Crossroads "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "that the player has an <item>omnimeter/$ for Crossroads machines. WAILA is not a good substitute.$(br2)"
+			"text": "machines. WAILA is not a good substitute.$(br2)"
 		},
 		{
 			"type": "patchouli:text",
@@ -22,6 +22,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:omnimeter" : 0
+		"crossroads:omnimeter": 0
 	}
 }

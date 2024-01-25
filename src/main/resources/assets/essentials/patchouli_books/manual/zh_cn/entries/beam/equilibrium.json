@@ -22,7 +22,5 @@
 			"text": "<thing>虚空-力场/$，也就是<thing>破碎/$，作用和<thing>力场/$一样，只不过不是推开实体和方块，而是将其拉近。$(br2)"
 		}
 	],
-	"extra_recipe_mappings": {
-		
-	}
+	"extra_recipe_mappings": {}
 }
