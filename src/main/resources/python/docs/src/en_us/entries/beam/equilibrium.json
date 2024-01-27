@@ -1,7 +1,7 @@
 {
 	"category": "essentials:beam",
 	"format": 2,
-	"name": "Alignment: Equilibrium",
+	"name": "Alignment: Force",
 	"icon": "crossroads:pure_quartz",
 	"sortnum": 1,
 	"priority": false,
