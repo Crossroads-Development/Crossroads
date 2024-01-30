@@ -102,8 +102,8 @@ public class AlchemyRec implements IOptionalRecipe<Container>{
 		return products;
 	}
 
-	public boolean isDestructive(){
-		return type == Type.DESTRUCTIVE || type == Type.PRECISE;
+	public Type getReactionType(){
+		return type;
 	}
 
 	@Override

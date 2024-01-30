@@ -24,6 +24,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.List;
+
 public class AlchemyCategory implements IRecipeCategory<AlchemyRec>{
 
 	public static final RecipeType<AlchemyRec> TYPE = RecipeType.create(Crossroads.MODID, "reaction", AlchemyRec.class);
@@ -35,6 +37,8 @@ public class AlchemyCategory implements IRecipeCategory<AlchemyRec>{
 	private final IDrawable icon;
 	private final IDrawable bolt;
 	private final IDrawable blast;
+	private final IDrawable preciseWarning;
+	private final IDrawable elemental;
 
 	protected AlchemyCategory(IGuiHelper guiHelper){
 		back = guiHelper.createBlankDrawable(180, 100);
@@ -43,6 +47,9 @@ public class AlchemyCategory implements IRecipeCategory<AlchemyRec>{
 		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(CRItems.florenceFlaskCrystal, 1));
 		bolt = guiHelper.createDrawable(AlchemyCategory.ICONS, 16, 0, 16, 16);
 		blast = guiHelper.createDrawable(AlchemyCategory.ICONS, 64, 0, 16, 16);
+		preciseWarning = guiHelper.createDrawable(AlchemyCategory.ICONS, 64, 16, 16, 16);
+		elemental = guiHelper.createDrawable(AlchemyCategory.ICONS, 64, 32, 16, 16);
+
 	}
 
 	@Override
@@ -80,10 +87,39 @@ public class AlchemyCategory implements IRecipeCategory<AlchemyRec>{
 		if(recipe.charged()){
 			bolt.draw(matrix, 66, 2);
 		}
-
-		if(recipe.isDestructive()){
-			blast.draw(matrix, 98, 2);
+		switch(recipe.getReactionType()){
+			case PRECISE -> {
+				preciseWarning.draw(matrix, 98, 2);
+			}
+			case DESTRUCTIVE -> {
+				blast.draw(matrix, 98, 2);
+			}
+			case ELEMENTAL -> {
+				elemental.draw(matrix, 98, 2);
+			}
 		}
+	}
+	@Override
+	public List<Component> getTooltipStrings(AlchemyRec recipe, IRecipeSlotsView slots_view, double mouseX, double mouseY) {
+		if(mouseX >= 98 && mouseX <= (98 + 16) && mouseY >= 2 && mouseY <= (2 + 16)){
+			switch(recipe.getReactionType()){
+				case PRECISE -> {
+					return List.of(Component.translatable("crossroads.jei.reagent.precise"));
+				}
+				case DESTRUCTIVE -> {
+					return List.of(Component.translatable("crossroads.jei.reagent.destructive"));
+				}
+				case ELEMENTAL -> {
+					return List.of(Component.translatable("crossroads.jei.reagent.elemental"));
+				}
+			}
+		}
+		if(recipe.charged()){
+			if (mouseX >= 66 && mouseX <= (66 + 16) && mouseY >= 2 && mouseY <= (2 + 16)) {
+				return List.of(Component.translatable("crossroads.jei.reagent.needs_charge"));
+			}
+		}
+		return List.of();
 	}
 
 	@Override
