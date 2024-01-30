@@ -24,6 +24,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.List;
+
 public class AlchemyCategory implements IRecipeCategory<AlchemyRec>{
 
 	public static final RecipeType<AlchemyRec> TYPE = RecipeType.create(Crossroads.MODID, "reaction", AlchemyRec.class);
@@ -82,8 +84,23 @@ public class AlchemyCategory implements IRecipeCategory<AlchemyRec>{
 		}
 
 		if(recipe.isDestructive()){
+
 			blast.draw(matrix, 98, 2);
 		}
+	}
+	@Override
+	public List<Component> getTooltipStrings(AlchemyRec recipe, IRecipeSlotsView slots_view, double mouseX, double mouseY) {
+		if(recipe.isDestructive()){
+			if (mouseX >= 98 && mouseX <= (98 + 16) && mouseY >= 2 && mouseY <= (2 + 16)) {
+				return List.of(Component.translatable("crossroads.jei.reagent.precise"));
+			}
+		}
+		if(recipe.charged()){
+			if (mouseX >= 66 && mouseX <= (66 + 16) && mouseY >= 2 && mouseY <= (2 + 16)) {
+				return List.of(Component.translatable("crossroads.jei.reagent.needs_charge"));
+			}
+		}
+		return List.of();
 	}
 
 	@Override
