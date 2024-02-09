@@ -53,6 +53,13 @@ public class IncubatorRec implements IOptionalRecipe<Container>{
 		return active && inv instanceof IncubatorTileEntity incubator && mainInput.test(incubator.getItem(0)) && secondaryInput.test(incubator.getItem(1));
 	}
 
+	/**
+	 * Use this instead of getResultItem
+	 * DO NOT MODIFY THE RETURNED ITEMSTACK
+	 * @param inv Container with the ingredient item in slot 0
+	 * @param worldIn World
+	 * @return The created itemstack
+	 */
 	public ItemStack getCreatedItem(Container inv, Level worldIn){
 		ItemStack created = getResultItem();
 		if(datacopy){

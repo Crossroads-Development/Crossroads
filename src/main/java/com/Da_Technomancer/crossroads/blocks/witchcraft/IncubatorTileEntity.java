@@ -114,7 +114,7 @@ public class IncubatorTileEntity extends InventoryTE{
 						progress = 0;
 						targetTemp = 0;//Reset the target temp, to be re-randomized
 						if(inventory[2].isEmpty()){
-							inventory[2] = toCreate;
+							inventory[2] = toCreate.copy();
 						}else{
 							inventory[2].grow(toCreate.getCount());
 						}
