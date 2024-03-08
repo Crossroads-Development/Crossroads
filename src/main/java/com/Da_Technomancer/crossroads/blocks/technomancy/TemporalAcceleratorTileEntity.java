@@ -21,7 +21,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.TickingBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -201,9 +200,7 @@ public class TemporalAcceleratorTileEntity extends IFluxLink.FluxHelper{
 								//Perform block tick effect
 								if(mode.accelerateBlockTicks){
 									BlockState state = level.getBlockState(effectPos);
-									int randomTickRule = level.getGameRules().getInt(GameRules.RULE_RANDOMTICKING);
-									//Blocks have a 16^3/randomTickSpeed chance of a random tick each game tick in vanilla
-									if(state.isRandomlyTicking() && randomTickRule > 0 && level.random.nextInt(16 * 16 * 16 / level.getGameRules().getInt(GameRules.RULE_RANDOMTICKING)) < extraTicks){
+									if(TimeEffect.shouldApplyExtraRandomTick(level, state, extraTicks)){
 										state.randomTick((ServerLevel) level, effectPos, level.random);
 									}
 								}

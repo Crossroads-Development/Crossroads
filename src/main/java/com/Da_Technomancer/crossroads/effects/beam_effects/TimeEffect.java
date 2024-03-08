@@ -3,11 +3,14 @@ package com.Da_Technomancer.crossroads.effects.beam_effects;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.api.CRReflection;
 import com.Da_Technomancer.crossroads.api.beams.BeamHit;
+import com.Da_Technomancer.crossroads.api.beams.BeamUnit;
+import com.Da_Technomancer.crossroads.api.beams.BeamUtil;
 import com.Da_Technomancer.crossroads.api.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.api.technomancy.FluxUtil;
 import com.Da_Technomancer.essentials.api.ReflectionUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.TickingBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -29,19 +32,31 @@ public class TimeEffect extends BeamEffect{
 			if(voi){
 				FluxUtil.fluxEvent(beamHit.getWorld(), beamHit.getPos());
 			}else{
-				if(beamHit.getWorld().random.nextInt(64) < power){
+				//Note that we only apply this effect once every BeamUtil.BEAM_TIME ticks; need to adjust applied affect to compensate
+				//Increase the odds that we apply, and once that caps out, increase number of extra ticks applied at a time
+				int cappedPower = Math.min(64, power);
+				int extraTicks = cappedPower * BeamUtil.BEAM_TIME / Math.min(64, cappedPower * BeamUtil.BEAM_TIME);
+				if(beamHit.getWorld().random.nextInt(64) < cappedPower * BeamUtil.BEAM_TIME){
 					TickingBlockEntity ticker = getTicker(beamHit.getWorld(), beamHit.getPos());
 					if(ticker != null){
-						ticker.tick();
+						for(int i = 0; i < extraTicks; i++){
+							ticker.tick();
+						}
 					}
 
 					BlockState state = beamHit.getEndState();
-					if(state.isRandomlyTicking()){
+					if(shouldApplyExtraRandomTick(beamHit.getWorld(), state, extraTicks)){
 						state.randomTick(beamHit.getWorld(), beamHit.getPos(), beamHit.getWorld().random);
 					}
 				}
 			}
 		}
+	}
+
+	public static boolean shouldApplyExtraRandomTick(Level level, BlockState state, int extraTicks){
+		int randomTickRule = level.getGameRules().getInt(GameRules.RULE_RANDOMTICKING);
+		//Blocks have a 16^3/randomTickSpeed chance of a random tick each game tick in vanilla
+		return state.isRandomlyTicking() && randomTickRule > 0 && level.random.nextInt(16 * 16 * 16 / level.getGameRules().getInt(GameRules.RULE_RANDOMTICKING)) < extraTicks;
 	}
 
 	@Nullable
