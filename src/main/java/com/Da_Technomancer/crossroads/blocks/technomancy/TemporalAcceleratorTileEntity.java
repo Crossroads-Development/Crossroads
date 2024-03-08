@@ -201,8 +201,9 @@ public class TemporalAcceleratorTileEntity extends IFluxLink.FluxHelper{
 								//Perform block tick effect
 								if(mode.accelerateBlockTicks){
 									BlockState state = level.getBlockState(effectPos);
+									int randomTickRule = level.getGameRules().getInt(GameRules.RULE_RANDOMTICKING);
 									//Blocks have a 16^3/randomTickSpeed chance of a random tick each game tick in vanilla
-									if(state.isRandomlyTicking() && level.random.nextInt(16 * 16 * 16 / level.getGameRules().getInt(GameRules.RULE_RANDOMTICKING)) < extraTicks){
+									if(state.isRandomlyTicking() && randomTickRule > 0 && level.random.nextInt(16 * 16 * 16 / level.getGameRules().getInt(GameRules.RULE_RANDOMTICKING)) < extraTicks){
 										state.randomTick((ServerLevel) level, effectPos, level.random);
 									}
 								}

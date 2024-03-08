@@ -4,6 +4,7 @@ package com.Da_Technomancer.crossroads.blocks.alchemy;
 import com.Da_Technomancer.crossroads.api.Capabilities;
 import com.Da_Technomancer.crossroads.api.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.api.alchemy.ReagentHolderTE;
+import com.Da_Technomancer.crossroads.api.alchemy.ReagentManager;
 import com.Da_Technomancer.crossroads.api.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
@@ -11,6 +12,7 @@ import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.blocks.electric.TeslaCoilTopTileEntity;
+import com.Da_Technomancer.crossroads.crafting.AlchemyRec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -107,6 +109,13 @@ public class ReactionChamberTileEntity extends ReagentHolderTE{
 		}
 
 		super.serverTick();
+
+		for(AlchemyRec react : ReagentManager.getReactions(level)){
+			if(react.performReaction(reactionChamber)){
+				correctReag();
+				break;
+			}
+		}
 	}
 
 	@Override

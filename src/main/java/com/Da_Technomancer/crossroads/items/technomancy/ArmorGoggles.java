@@ -8,6 +8,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -25,8 +26,8 @@ public class ArmorGoggles extends TechnomancyArmor{
 	}
 
 	@Override
-	public void onInventoryTick(ItemStack stack, Level world, Player player, int slotIndex, int selectedIndex){
-		if(slotIndex - 36 < 4){//Is equipped
+	public void inventoryTick(ItemStack stack, Level world, Entity entity, int slotIndex, boolean isSelected){
+		if(entity instanceof Player player && player.getItemBySlot(EquipmentSlot.HEAD) == stack){
 			CompoundTag nbt;
 			if(!world.isClientSide && (nbt = stack.getTag()) != null){
 				for(EnumGoggleLenses lens : EnumGoggleLenses.values()){

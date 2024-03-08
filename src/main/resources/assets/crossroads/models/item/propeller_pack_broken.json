@@ -1,6 +1,0 @@
-{
-	"parent": "item/generated",
-	"textures": {
-		"layer0": "crossroads:item/propeller_pack_armor_broken"
-	}
-}

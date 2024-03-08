@@ -6,7 +6,10 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
@@ -41,8 +44,8 @@ public class PigZombieChestsplate extends ArmorItem{
 	}
 
 	@Override
-	public void onInventoryTick(ItemStack stack, Level world, Player player, int slotIndex, int selectedIndex){
-		if(slotIndex - 36 < 4){//Is equipped
+	public void inventoryTick(ItemStack stack, Level world, Entity entity, int slotIndex, boolean isSelected){
+		if(entity instanceof Player player && player.getItemBySlot(EquipmentSlot.CHEST) == stack){
 			//Believe it or not, it is possible to die of fire while in lava without burning (if it is raining on the player). There is an isInLava check for this reason.
 			if(player.getEffect(MobEffects.FIRE_RESISTANCE) == null && (player.isOnFire() || player.isInLava())){
 				player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 10, 0, false, false));

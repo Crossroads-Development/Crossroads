@@ -419,7 +419,7 @@ public final class CRItems{
 			*/
 		});
 		//Technomancy armor
-		ItemPropertyFunction technoArmorPropertyGetter = (ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity, int unmapped) -> TechnomancyArmor.isReinforced(stack) ? TechnomancyArmor.hasDurability(stack) ? 2F : 1F : 0F;
+		ItemPropertyFunction technoArmorPropertyGetter = (ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity, int unmapped) -> TechnomancyArmor.isReinforced(stack) ? 2F : 0F;
 		ItemProperties.register(armorGoggles, new ResourceLocation("protection"), technoArmorPropertyGetter);
 		ItemProperties.register(propellerPack, new ResourceLocation("protection"), technoArmorPropertyGetter);
 		ItemProperties.register(armorToolbelt, new ResourceLocation("protection"), technoArmorPropertyGetter);

@@ -14,14 +14,10 @@ public class CRItemTags{
 
 
 	public static final TagKey<Item> INGOTS_COPPER = CraftingUtil.getTagKey(ForgeRegistries.Keys.ITEMS, new ResourceLocation(FORGE, "ingots/copper"));
-
+	public static final TagKey<Item> INGOTS_BRONZE = CraftingUtil.getTagKey(ForgeRegistries.Keys.ITEMS, new ResourceLocation(FORGE, "ingots/bronze"));
 	public static final TagKey<Item> GEMS_PURE_QUARTZ = CraftingUtil.getTagKey(ForgeRegistries.Keys.ITEMS, new ResourceLocation(CR, "gems/pure_quartz"));
 	public static final TagKey<Item> GEMS_RUBY = CraftingUtil.getTagKey(ForgeRegistries.Keys.ITEMS, new ResourceLocation(FORGE, "gems/ruby"));
 	public static final TagKey<Item> GEMS_VOID = CraftingUtil.getTagKey(ForgeRegistries.Keys.ITEMS, new ResourceLocation(CR, "gems/void"));
-
 	public static final TagKey<Item> EXPLODE_IF_KNOCKED = CraftingUtil.getTagKey(ForgeRegistries.Keys.ITEMS, new ResourceLocation(CR, "explode_on_hit"));
 	public static final TagKey<Item> SALT_REACTOR_COOLANT = CraftingUtil.getTagKey(ForgeRegistries.Keys.ITEMS, new ResourceLocation(CR, "salt_reactor_coolant"));
-
-	public static final TagKey<Item> INCUBATOR_EGG = CraftingUtil.getTagKey(ForgeRegistries.Keys.ITEMS, new ResourceLocation(CR, "incubator_egg"));
-
 }

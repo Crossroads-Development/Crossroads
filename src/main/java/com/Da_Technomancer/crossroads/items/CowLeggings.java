@@ -3,6 +3,9 @@ package com.Da_Technomancer.crossroads.items;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
@@ -23,8 +26,8 @@ public class CowLeggings extends ArmorItem{
 	}
 
 	@Override
-	public void onInventoryTick(ItemStack stack, Level world, Player player, int slotIndex, int selectedIndex){
-		if(slotIndex - 36 < 4){//Is equipped
+	public void inventoryTick(ItemStack stack, Level world, Entity entity, int slotIndex, boolean isSelected){
+		if(entity instanceof Player player && player.getItemBySlot(EquipmentSlot.LEGS) == stack){
 			if(player.getEffect(MobEffects.POISON) != null || player.getEffect(MobEffects.WITHER) != null || player.getEffect(MobEffects.CONFUSION) != null || player.getEffect(MobEffects.BLINDNESS) != null || player.getEffect(MobEffects.MOVEMENT_SLOWDOWN) != null || player.getEffect(MobEffects.WEAKNESS) != null || player.getEffect(MobEffects.HUNGER) != null){
 				player.removeEffect(MobEffects.POISON);
 				player.removeEffect(MobEffects.WITHER);

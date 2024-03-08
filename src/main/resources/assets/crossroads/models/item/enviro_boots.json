@@ -6,12 +6,6 @@
 	"overrides": [
 		{
 			"predicate": {
-				"protection": 1
-			},
-			"model": "crossroads:item/enviro_boots_broken"
-		},
-		{
-			"predicate": {
 				"protection": 2
 			},
 			"model": "crossroads:item/enviro_boots_armor"

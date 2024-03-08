@@ -10,12 +10,14 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -81,8 +83,8 @@ public class ArmorEnviroBoots extends TechnomancyArmor{
 	}
 
 	@Override
-	public void onInventoryTick(ItemStack stack, Level level, Player player, int slotIndex, int selectedIndex){
-		if(slotIndex - 36 < 4){//Is equipped
+	public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotIndex, boolean isSelected){
+		if(entity instanceof Player player && player.getItemBySlot(EquipmentSlot.FEET) == stack){
 			//Activate frost walker when sneaking
 			int frostWalkLevel = CRConfig.enviroBootFrostWalk.get();
 			if(player.isShiftKeyDown() && !level.isClientSide && frostWalkLevel > 0){
@@ -101,7 +103,6 @@ public class ArmorEnviroBoots extends TechnomancyArmor{
 				}
 			}
 		}
-		super.onInventoryTick(stack, level, player, slotIndex, selectedIndex);
 	}
 
 	private static BlockState getStateBelow(LivingEntity entity){
@@ -125,5 +126,10 @@ public class ArmorEnviroBoots extends TechnomancyArmor{
 		}
 
 		return entity.level().getBlockState(downPos);
+	}
+
+	@Override
+	public boolean canWalkOnPowderedSnow(ItemStack stack, LivingEntity wearer){
+		return true;
 	}
 }

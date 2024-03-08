@@ -2,6 +2,9 @@ package com.Da_Technomancer.crossroads.items;
 
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
@@ -22,8 +25,8 @@ public class SquidHelmet extends ArmorItem{
 	}
 
 	@Override
-	public void onInventoryTick(ItemStack stack, Level world, Player player, int slotIndex, int selectedIndex){
-		if(slotIndex - 36 < 4){//Is equipped
+	public void inventoryTick(ItemStack stack, Level world, Entity entity, int slotIndex, boolean isSelected){
+		if(entity instanceof Player player && player.getItemBySlot(EquipmentSlot.HEAD) == stack){
 			if(player.getAirSupply() <= 150){
 				player.setAirSupply(300);
 				world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.SQUID_DEATH, SoundSource.PLAYERS, 2.5F, 1F);

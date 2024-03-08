@@ -1,6 +1,0 @@
-{
-	"parent": "item/generated",
-	"textures": {
-		"layer0": "crossroads:item/module_goggles_armor_broken"
-	}
-}

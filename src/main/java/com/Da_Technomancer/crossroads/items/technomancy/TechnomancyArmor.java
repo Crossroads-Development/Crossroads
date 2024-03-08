@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.items.technomancy;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.api.templates.ICreativeTabPopulatingItem;
+import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.ChatFormatting;
@@ -28,12 +29,12 @@ public abstract class TechnomancyArmor extends ArmorItem implements ICreativeTab
 	private static final ArmorMaterial TECHNOMANCY_REINFORCED_MAT = new TechnoMatReinforced();
 	//Duplicate of the private field in ArmorItem
 	protected static final UUID[] ARMOR_MODIFIERS = new UUID[]{UUID.fromString("845DB27C-C624-495F-8C9F-6020A9A58B6B"), UUID.fromString("D8499B04-0E66-4726-AB29-64469D734E0D"), UUID.fromString("9F3D476D-C118-4544-8365-64846904B48E"), UUID.fromString("2AD3F246-FEE1-4E67-B886-69FD380BB150")};
-
 	protected final Multimap<Attribute, AttributeModifier> reinforcedProperties;
+	protected final ArmorItem.Type armorType;
 
 	public TechnomancyArmor(ArmorItem.Type type){
 		super(TECHNOMANCY_MAT, type, new Properties().stacksTo(1).fireResistant());
-
+		this.armorType = type;
 		//Prepare reinforced properties map
 		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
 		UUID uuid = ARMOR_MODIFIERS[type.getSlot().getIndex()];
@@ -54,25 +55,6 @@ public abstract class TechnomancyArmor extends ArmorItem implements ICreativeTab
 		return stack;
 	}
 
-	public static boolean hasDurability(ItemStack stack){
-		return stack.getDamageValue() < stack.getMaxDamage() - 1;
-	}
-
-	@Override
-	public boolean isDamageable(ItemStack stack){
-		return isReinforced(stack) && hasDurability(stack);
-	}
-
-	@Override
-	public boolean isBarVisible(ItemStack stack){
-		return isReinforced(stack) && isDamaged(stack);
-	}
-
-	@Override
-	public boolean isRepairable(ItemStack stack){
-		return isReinforced(stack);
-	}
-
 	@Override
 	public boolean isEnchantable(ItemStack stack){
 		return true;
@@ -81,7 +63,7 @@ public abstract class TechnomancyArmor extends ArmorItem implements ICreativeTab
 	@Override
 	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack){
 		Multimap<Attribute, AttributeModifier> baseMap = super.getAttributeModifiers(slot, stack);//The un-reinforced version with no protection
-		if(type.getSlot() == slot && isReinforced(stack) && hasDurability(stack)){
+		if(type.getSlot() == slot && isReinforced(stack)){
 			return reinforcedProperties;
 		}
 		return baseMap;
@@ -108,11 +90,29 @@ public abstract class TechnomancyArmor extends ArmorItem implements ICreativeTab
 		return slot == EquipmentSlot.LEGS ? Crossroads.MODID + ":textures/models/armor/technomancy_layer_2.png" : Crossroads.MODID + ":textures/models/armor/technomancy_layer_1.png";
 	}
 
+	@Override
+	public boolean isValidRepairItem(ItemStack stack, ItemStack repairStack){
+		if(isReinforced(stack)){
+			return TECHNOMANCY_REINFORCED_MAT.getRepairIngredient().test(repairStack);
+		}else{
+			return TECHNOMANCY_MAT.getRepairIngredient().test(repairStack);
+		}
+	}
+
+	@Override
+	public int getMaxDamage(ItemStack stack){
+		if(isReinforced(stack)){
+			return TECHNOMANCY_REINFORCED_MAT.getDurabilityForType(armorType);
+		}else{
+			return TECHNOMANCY_MAT.getDurabilityForType(armorType);
+		}
+	}
+
 	private static class TechnoMat implements ArmorMaterial{
 
 		@Override
 		public int getDurabilityForType(Type type){
-			return ArmorMaterials.NETHERITE.getDurabilityForType(type);
+			return ArmorMaterials.DIAMOND.getDurabilityForType(type);
 		}
 
 		@Override
@@ -132,7 +132,7 @@ public abstract class TechnomancyArmor extends ArmorItem implements ICreativeTab
 
 		@Override
 		public Ingredient getRepairIngredient(){
-			return Ingredient.of(Items.NETHERITE_INGOT);
+			return Ingredient.of(CRItemTags.INGOTS_BRONZE);
 		}
 
 		@Override
