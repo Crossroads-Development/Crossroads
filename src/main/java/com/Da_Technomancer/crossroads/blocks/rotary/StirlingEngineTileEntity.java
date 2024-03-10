@@ -63,7 +63,7 @@ public class StirlingEngineTileEntity extends ModuleTE{
 
 	@Override
 	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
-		chat.add(Component.translatable("tt.crossroads.stirling_engine.temp", CRConfig.formatVal(tempSide), CRConfig.formatVal(HeatUtil.toKelvin(tempSide)), CRConfig.formatVal(tempBottom), CRConfig.formatVal(HeatUtil.toKelvin(tempBottom))));
+		chat.add(Component.translatable("tt.crossroads.stirling_engine.temp", CRConfig.formatVal(tempBottom), CRConfig.formatVal(HeatUtil.toKelvin(tempBottom)), CRConfig.formatVal(tempSide), CRConfig.formatVal(HeatUtil.toKelvin(tempSide))));
 		chat.add(Component.translatable("tt.crossroads.stirling_engine.status", CRConfig.formatVal(lastHeatIn), CRConfig.formatVal(lastHeatOut), CRConfig.formatVal(lastPower)));
 		if(lastHeatIn > 0 && lastHeatOut > 0){
 			chat.add(Component.translatable("tt.crossroads.stirling_engine.efficiency", CRConfig.formatVal(lastPower / lastHeatIn), CRConfig.formatVal(lastPower / lastHeatOut)));
