@@ -85,7 +85,9 @@ public class GatewaySavedData extends SavedData{
 		}while(data.addressBook.containsKey(gateAdd) || gateAdd.equals(reserved));//Generate a new address every time the generated address is already in use
 
 		//Register this new address in the addressBook
-		data.addressBook.put(gateAdd, new GatewayAddress.Location(pos, w));
+		BlockPos pos1 = pos;
+		net.minecraft.world.level.Level world = w;
+		data.addressBook.put(gateAdd, new Location(pos1, world));
 		data.setDirty();
 
 		return gateAdd;
@@ -111,7 +113,7 @@ public class GatewaySavedData extends SavedData{
 	 * @return The mapped destination. Null if address was null or the address was not registered
 	 */
 	@Nullable
-	public static GatewayAddress.Location lookupAddress(@Nonnull ServerLevel w, @Nullable GatewayAddress address){
+	public static Location lookupAddress(@Nonnull ServerLevel w, @Nullable GatewayAddress address){
 		GatewaySavedData data = get(w);
 		return address == null ? null : data.addressBook.get(address);
 	}
@@ -130,7 +132,7 @@ public class GatewaySavedData extends SavedData{
 
 	public static final String ID = Crossroads.MODID + "_gateways";
 
-	private final Map<GatewayAddress, GatewayAddress.Location> addressBook = new HashMap<>();
+	private final Map<GatewayAddress, Location> addressBook = new HashMap<>();
 
 	private GatewaySavedData(){
 		super();
@@ -141,7 +143,9 @@ public class GatewaySavedData extends SavedData{
 		data.addressBook.clear();
 		int i = 0;
 		while(nbt.contains("key_" + i)){
-			data.addressBook.put(GatewayAddress.deserialize(nbt.getInt("key_" + i)), new GatewayAddress.Location(nbt.getLong("pos_" + i), nbt.getString("dim_" + i)));
+			long posSerial = nbt.getLong("pos_" + i);
+			String dimSerial = nbt.getString("dim_" + i);
+			data.addressBook.put(GatewayAddress.deserialize(nbt.getInt("key_" + i)), new Location(posSerial, dimSerial));
 			i++;
 		}
 		nbt.getInt("atmos_charge");
@@ -151,7 +155,7 @@ public class GatewaySavedData extends SavedData{
 	@Override
 	public CompoundTag save(CompoundTag nbt){
 		int i = 0;
-		for(Map.Entry<GatewayAddress, GatewayAddress.Location> entry : addressBook.entrySet()){
+		for(Map.Entry<GatewayAddress, Location> entry : addressBook.entrySet()){
 			nbt.putInt("key_" + i, entry.getKey().serialize());
 			nbt.putLong("pos_" + i, entry.getValue().pos.asLong());
 			nbt.putString("dim_" + i, entry.getValue().dim.toString());

@@ -19,7 +19,7 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "boost- producing (2^(extra ticks)) * 2 <thing>$(l:essentials:intro/technomancy)temporal entropy/$ per cycle (aka: +100% boost is 4TEn/cycle, +200% boost is 8TEn/cycle, +300% is 16TEn/cycle, etc.).$(br2)Multiple overlapping <item>temporal accelerators/$ stack additively. The <item>temporal accelerator/$ itself can not be time-accelerated.$(br2)"
+			"text": "boost- producing (2^(extra ticks)) * 2 <thing>$(l:essentials:intro/technomancy)temporal entropy/$ per cycle (aka: +100% boost is 4TEn/cycle, +200% boost is 8TEn/cycle, +300% is 16TEn/cycle, etc.).$(br2)Multiple overlapping <item>temporal accelerators/$ do not stack. The <item>temporal accelerator/$ itself can not be time-accelerated.$(br2)"
 		},
 		{
 			"type": "patchouli:spotlight",

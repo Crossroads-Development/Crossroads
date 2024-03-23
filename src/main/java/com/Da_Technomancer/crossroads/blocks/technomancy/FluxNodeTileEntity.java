@@ -115,6 +115,11 @@ public class FluxNodeTileEntity extends IFluxLink.FluxHelper{
 	}
 
 	@Override
+	public int modifyTransferredFlux(int toTransferRaw){
+		return toTransferRaw == 0 ? 0 : toTransferRaw + 2;//Gain of 2 flux per transfer
+	}
+
+	@Override
 	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
 		FluxUtil.addFluxInfo(chat, this, -1);
 		super.addInfo(chat, player, hit);

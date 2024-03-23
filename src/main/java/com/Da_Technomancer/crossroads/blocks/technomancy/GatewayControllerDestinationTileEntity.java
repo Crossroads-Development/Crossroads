@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.crossroads.api.technomancy.GatewayAddress;
 import com.Da_Technomancer.crossroads.api.technomancy.GatewaySavedData;
 import com.Da_Technomancer.crossroads.api.technomancy.IGateway;
+import com.Da_Technomancer.crossroads.api.technomancy.Location;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
@@ -17,6 +18,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -120,9 +122,10 @@ public class GatewayControllerDestinationTileEntity extends BlockEntity implemen
 		//If we are not currently dialed to something,
 		//connect to the previous gateway with a redstone signal
 		if(chevrons[3] == null && lastDialed.fullAddress()){
-			GatewayAddress.Location location = GatewaySavedData.lookupAddress((ServerLevel) level, lastDialed);
+			Location location = GatewaySavedData.lookupAddress((ServerLevel) level, lastDialed);
 			IGateway otherGateway;
-			if(location != null && (otherGateway = location.evalTE(level.getServer())) != null){
+			MinecraftServer server = level.getServer();
+			if(location != null && (otherGateway = GatewayAddress.evalTE(location, server)) != null){
 				otherGateway.dialTo(address, true);//The other gateway assumes the cost
 				dialTo(lastDialed, false);
 			}else{
@@ -144,9 +147,10 @@ public class GatewayControllerDestinationTileEntity extends BlockEntity implemen
 
 	private void undialLinkedGateway(){
 		GatewayAddress prevDialed = new GatewayAddress(chevrons);
-		GatewayAddress.Location prevLinkLocation = GatewaySavedData.lookupAddress((ServerLevel) level, prevDialed);
+		Location prevLinkLocation = GatewaySavedData.lookupAddress((ServerLevel) level, prevDialed);
 		if(prevLinkLocation != null){
-			IGateway prevLink = prevLinkLocation.evalTE(level.getServer());
+			MinecraftServer server = level.getServer();
+			IGateway prevLink = GatewayAddress.evalTE(prevLinkLocation, server);
 			if(prevLink != null){
 				prevLink.undial(address);
 			}
@@ -402,16 +406,19 @@ public class GatewayControllerDestinationTileEntity extends BlockEntity implemen
 			//This is both not what it's for, and exactly what it's for
 			List<Entity> entities = level.getEntitiesOfClass(Entity.class, area, EntitySelector.ENTITY_STILL_ALIVE.and(e -> IGateway.isAllowedToTeleport(e, level)));
 			if(!entities.isEmpty()){
-				GatewayAddress.Location loc = GatewaySavedData.lookupAddress((ServerLevel) level, new GatewayAddress(chevrons));
+				Location loc = GatewaySavedData.lookupAddress((ServerLevel) level, new GatewayAddress(chevrons));
 				IGateway otherTE;
-				if(loc != null && (otherTE = loc.evalTE(level.getServer())) != null){
-					Vec3 centerPos = new Vec3(worldPosition.getX() + 0.5D, worldPosition.getY() - size / 2D + 0.5D, worldPosition.getZ() + 0.5D);
-					float scalingRadius = (size - 2) / 2F;
-					for(Entity e : entities){
-						float relPosH = Mth.clamp(plane == Direction.Axis.X ? ((float) (e.getX() - centerPos.x) / scalingRadius) : ((float) (e.getZ() - centerPos.z) / scalingRadius), -1, 1);
-						float relPosV = Mth.clamp((float) (e.getY() - centerPos.y) / scalingRadius, -1, 1);
-						playTPEffect(level, e.getX(), e.getY(), e.getZ());//Play effects at the start position
-						otherTE.teleportEntity(e, relPosH, relPosV, plane);
+				if(loc != null){
+					MinecraftServer server = level.getServer();
+					if((otherTE = GatewayAddress.evalTE(loc, server)) != null){
+						Vec3 centerPos = new Vec3(worldPosition.getX() + 0.5D, worldPosition.getY() - size / 2D + 0.5D, worldPosition.getZ() + 0.5D);
+						float scalingRadius = (size - 2) / 2F;
+						for(Entity e : entities){
+							float relPosH = Mth.clamp(plane == Direction.Axis.X ? ((float) (e.getX() - centerPos.x) / scalingRadius) : ((float) (e.getZ() - centerPos.z) / scalingRadius), -1, 1);
+							float relPosV = Mth.clamp((float) (e.getY() - centerPos.y) / scalingRadius, -1, 1);
+							playTPEffect(level, e.getX(), e.getY(), e.getZ());//Play effects at the start position
+							otherTE.teleportEntity(e, relPosH, relPosV, plane);
+						}
 					}
 				}
 			}

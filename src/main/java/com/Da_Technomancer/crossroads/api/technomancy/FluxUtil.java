@@ -65,7 +65,7 @@ public class FluxUtil{
 					return null;//Invalid output, will be removed by the filter
 				}
 			}else{
-				//Known issue: Because we don't load the output, we can't verified that the output position is actually a valid accepting IFluxLink te
+				//Known issue: Because we don't load the output, we can't verify that the output position is actually a valid accepting IFluxLink te
 				return Pair.of(linkPos, (IFluxLink) null);
 			}
 		}).filter(Objects::nonNull).collect(Collectors.toList());
@@ -75,13 +75,14 @@ public class FluxUtil{
 		}
 
 		int toTransPer = toTransfer / dests.size();//Due to integer division, the source may have a small amount of flux remaining at the end
+		int toTransReceive = src.modifyTransferredFlux(toTransPer);
 		int[] renderOutput = new int[dests.size()];
 		for(int i = 0; i < dests.size(); i++){
 			Pair<BlockPos, ?> dest = dests.get(i);
 			//Skip transfer to unloaded outputs
 			if(dest.getRight() != null){
 				IFluxLink linked = (IFluxLink) dest.getRight();
-				linked.addFlux(toTransPer);
+				linked.addFlux(toTransReceive);
 //				src.addFlux(-toTransPer);
 //				renderFlux(world, pos, linked.getTE().getPos(), toTransPer);
 			}

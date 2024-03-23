@@ -21,6 +21,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -155,9 +156,10 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 
 	private void undialLinkedGateway(){
 		GatewayAddress prevDialed = new GatewayAddress(chevrons);
-		GatewayAddress.Location prevLinkLocation = GatewaySavedData.lookupAddress((ServerLevel) level, prevDialed);
+		Location prevLinkLocation = GatewaySavedData.lookupAddress((ServerLevel) level, prevDialed);
 		if(prevLinkLocation != null){
-			IGateway prevLink = prevLinkLocation.evalTE(level.getServer());
+			MinecraftServer server = level.getServer();
+			IGateway prevLink = GatewayAddress.evalTE(prevLinkLocation, server);
 			if(prevLink != null){
 				prevLink.undial(address);
 			}
@@ -441,16 +443,19 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 				//This is both not what it's for, and exactly what it's for
 				List<Entity> entities = level.getEntitiesOfClass(Entity.class, area, EntitySelector.ENTITY_STILL_ALIVE.and(e -> IGateway.isAllowedToTeleport(e, level)));
 				if(!entities.isEmpty()){
-					GatewayAddress.Location loc = GatewaySavedData.lookupAddress((ServerLevel) level, new GatewayAddress(chevrons));
+					Location loc = GatewaySavedData.lookupAddress((ServerLevel) level, new GatewayAddress(chevrons));
 					IGateway otherTE;
-					if(loc != null && (otherTE = loc.evalTE(level.getServer())) != null){
-						Vec3 centerPos = new Vec3(worldPosition.getX() + 0.5D, worldPosition.getY() - size / 2D + 0.5D, worldPosition.getZ() + 0.5D);
-						float scalingRadius = (size - 2) / 2F;
-						for(Entity e : entities){
-							float relPosH = Mth.clamp(plane == Direction.Axis.X ? ((float) (e.getX() - centerPos.x) / scalingRadius) : ((float) (e.getZ() - centerPos.z) / scalingRadius), -1, 1);
-							float relPosV = Mth.clamp((float) (e.getY() - centerPos.y) / scalingRadius, -1, 1);
-							playTPEffect(level, e.getX(), e.getY(), e.getZ());//Play effects at the start position
-							otherTE.teleportEntity(e, relPosH, relPosV, plane);
+					if(loc != null){
+						MinecraftServer server = level.getServer();
+						if((otherTE = GatewayAddress.evalTE(loc, server)) != null){
+							Vec3 centerPos = new Vec3(worldPosition.getX() + 0.5D, worldPosition.getY() - size / 2D + 0.5D, worldPosition.getZ() + 0.5D);
+							float scalingRadius = (size - 2) / 2F;
+							for(Entity e : entities){
+								float relPosH = Mth.clamp(plane == Direction.Axis.X ? ((float) (e.getX() - centerPos.x) / scalingRadius) : ((float) (e.getZ() - centerPos.z) / scalingRadius), -1, 1);
+								float relPosV = Mth.clamp((float) (e.getY() - centerPos.y) / scalingRadius, -1, 1);
+								playTPEffect(level, e.getX(), e.getY(), e.getZ());//Play effects at the start position
+								otherTE.teleportEntity(e, relPosH, relPosV, plane);
+							}
 						}
 					}
 				}
@@ -726,9 +731,10 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 			if(index == 3){
 				//If this is the final chevron, make the connection and reset the target
 				GatewayAddress targetAddress = new GatewayAddress(chevrons);
-				GatewayAddress.Location location = GatewaySavedData.lookupAddress((ServerLevel) level, targetAddress);
+				Location location = GatewaySavedData.lookupAddress((ServerLevel) level, targetAddress);
 				IGateway otherGateway;
-				if(location != null && (otherGateway = location.evalTE(level.getServer())) != null){
+				MinecraftServer server = level.getServer();
+				if(location != null && (otherGateway = GatewayAddress.evalTE(location, server)) != null){
 					otherGateway.dialTo(address, false);
 					dialTo(targetAddress, true);
 				}else{

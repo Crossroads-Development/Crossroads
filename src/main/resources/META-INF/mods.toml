@@ -1,5 +1,5 @@
 modLoader="javafml" #mandatory
-loaderVersion="[40,)" #mandatory
+loaderVersion="[${forge_major_version},)" #mandatory
 issueTrackerURL="https://github.com/Da-Technomancer/Crossroads" #optional
 license="MIT" #mandatory
 # A list of mods - how many allowed here is determined by the individual mod loader
@@ -10,11 +10,11 @@ displayName="Crossroads" #mandatory
 # updateJSONURL="http://myurl.me/" #optional
 # displayURL="http://example.com/" #optional
 # A file name (in the root of the mod JAR) containing a logo for display
-# logoFile="examplemod.png" #optional
+logoFile="cr_logo.png"
 credits='''
 Developers & Maintainers: Technomancer, Mr.No, The Minecraft Scientist.
 Artists: 5284973, Potus4mine, Unnamed1334, marbles-box, DA, Spo0ok, MushroomDynamo, Jeefle, Mikalia, and others.
-Translators: Луксиния Гримхольд, Water_Moon, kappa_maintainer.
+Translators: Lucksinia Grimhold, Water_Moon, kappa_maintainer.
 Misc Contributors: thegamemaster1234 and others.''' #optional
 authors="Technomancer" #optional
 # The description text for the mod (multi line!) (#mandatory)
@@ -25,18 +25,18 @@ A large tech mod filled with interesting automation puzzles.
 [[dependencies.crossroads]] #optional
     modId="forge" #mandatory
     mandatory=true #mandatory
-    versionRange="[40,)" #mandatory
+    versionRange="[${forge_major_version},)" #mandatory
     ordering="NONE"
     side="BOTH"
 [[dependencies.crossroads]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.19.3,]"
+    versionRange="[${mc_version},]"
     ordering="NONE"
     side="BOTH"
 [[dependencies.crossroads]]
 	modId="essentials"
 	mandatory=true
-	versionRange="[{$essentials_version},]"
+	versionRange="[${essentials_version},]"
 	ordering="NONE"
 	side="BOTH"

@@ -100,6 +100,14 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE, IIntArrayRec
 		return false;
 	}
 
+	/**
+	 * @param toTransferRaw How much flux is being removed from this block
+	 * @return How much flux will be received by the recipient block
+	 */
+	default int modifyTransferredFlux(int toTransferRaw){
+		return toTransferRaw;
+	}
+
 	enum Behaviour{
 
 		SOURCE(1, false),//Flux should be routed away from this TE

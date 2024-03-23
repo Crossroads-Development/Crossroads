@@ -1,10 +1,6 @@
 package com.Da_Technomancer.crossroads.api.technomancy;
 
-import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.beams.EnumBeamAlignments;
-import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.TicketType;
@@ -14,7 +10,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
-import java.util.Objects;
 
 public class GatewayAddress{
 
@@ -109,64 +104,19 @@ public class GatewayAddress{
 		return -1;
 	}
 
-	public static class Location{
-
-		public final BlockPos pos;
-		public final ResourceLocation dim;
-		private ResourceKey<Level> cache;//Used to retrieve the associated world data more quickly
-
-		public Location(BlockPos pos, Level world){
-			this.pos = pos.immutable();
-			cache = world.dimension();
-			this.dim = cache.location();
-		}
-
-		public Location(long posSerial, String dimSerial){
-			this.pos = BlockPos.of(posSerial);
-			this.dim = new ResourceLocation(dimSerial);
-		}
-
-		@Nullable
-		public Level evalDim(MinecraftServer server){
-			try{
-				cache = MiscUtil.getWorldKey(dim, cache);
-				return MiscUtil.getWorld(cache, server);
-			}catch(Exception e){
-				return null;
-			}
-		}
-
-		@Nullable
-		public IGateway evalTE(MinecraftServer server){
-			Level w = evalDim(server);
-			if(w == null){
-				return null;
-			}
-			//Load the chunk
-			ChunkPos chunkPos = new ChunkPos(pos);
-			((ServerChunkCache) (w.getChunkSource())).addRegionTicket(TicketType.PORTAL, chunkPos, 3, pos);
-			BlockEntity te = w.getBlockEntity(pos);
-			if(te instanceof IGateway){
-				return (IGateway) te;
-			}
+	@Nullable
+	public static IGateway evalTE(Location location, MinecraftServer server){
+		Level w = location.evalDim(server);
+		if(w == null){
 			return null;
 		}
-
-		@Override
-		public boolean equals(Object o){
-			if(this == o){
-				return true;
-			}
-			if(o == null || getClass() != o.getClass()){
-				return false;
-			}
-			Location location = (Location) o;
-			return dim == location.dim && pos.equals(location.pos);
+		//Load the chunk
+		ChunkPos chunkPos = new ChunkPos(location.pos);
+		((ServerChunkCache) (w.getChunkSource())).addRegionTicket(TicketType.PORTAL, chunkPos, 3, location.pos);
+		BlockEntity te = w.getBlockEntity(location.pos);
+		if(te instanceof IGateway gte){
+			return gte;
 		}
-
-		@Override
-		public int hashCode(){
-			return Objects.hash(pos, dim);
-		}
+		return null;
 	}
 }

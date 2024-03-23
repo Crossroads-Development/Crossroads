@@ -165,25 +165,15 @@ def reobfArtifact = artifacts.add('default', reobfFile) {
 }
 
 processResources {
-	// This will ensure that this task is redone when the versions change.
-	inputs.property 'version', project.version
-
-	// Replace stuff in mods.toml and the patchouli book version, nothing else
-	from(sourceSets.main.resources.srcDirs) {
-		include 'META-INF/mods.toml'
-
-		//Copy the Crossroads and essentials version into the toml file
-		expand 'version':project.version
-		expand 'essentials_version':"$essentials_version"
-
-		exclude 'patchouli_books/manual/book.json'
-		exclude 'META-INF/mods.toml'
-	}
-
-	// Copy everything else except the mods.toml
-//	from(sourceSets.main.resources.srcDirs) {
-//		exclude 'META-INF/mods.toml'
-//	}
+	//Update properties in mods.toml based on gradle.properties values
+	//Stole-borrowed this from Thermal Expansion. This is permitted by the CoFH "Don't be a jerk" mod license
+	filesMatching('META-INF/mods.toml', {
+		expand 'file': ['jarVersion': mod_version],
+				'mc_version': mc_version,
+				'forge_version': fg_version,
+				'forge_major_version': fg_version.split('\\.')[0],
+				'essentials_version': essentials_version
+	})
 }
 
 //We don't use Maven

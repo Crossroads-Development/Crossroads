@@ -10,6 +10,7 @@ import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.crossroads.api.packets.SendPlayerTickCountToClient;
 import com.Da_Technomancer.crossroads.api.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.api.technomancy.IFluxLink;
+import com.Da_Technomancer.crossroads.api.technomancy.Location;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.effects.beam_effects.TimeEffect;
@@ -30,6 +31,8 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 public class TemporalAcceleratorTileEntity extends IFluxLink.FluxHelper{
 
@@ -37,6 +40,11 @@ public class TemporalAcceleratorTileEntity extends IFluxLink.FluxHelper{
 
 	public static final int FLUX_MULT = 2;
 	public static final int SIZE = 5;
+	//This refuses to launch if this field is final. I don't know why- some reflection thing in Forge involving @ObjectHolder
+	public static AABB ZONE = new AABB(-SIZE / 2D, -SIZE / 2D, -SIZE / 2D, SIZE / 2D, SIZE / 2D, SIZE / 2D);
+	private static final String NBT_ENTITY_LAST_TICK = "crLastTick";
+	private static final HashMap<Location, Long> locationLastTicked = new HashMap<>();
+	private static final HashSet<Location> ACCEL_POSITIONS = new HashSet<>();
 
 	private int intensity = 0;//Power of the incoming beam
 	private int infoIntensity = 0;
@@ -112,6 +120,10 @@ public class TemporalAcceleratorTileEntity extends IFluxLink.FluxHelper{
 		return mode;
 	}
 
+	private AABB getAffectedRegion(){
+		return ZONE.move(worldPosition.getX() + 0.5D + facing.getStepX() * SIZE / 2D, worldPosition.getY() + 0.5D + facing.getStepY() * SIZE / 2D, worldPosition.getZ() + 0.5D + facing.getStepZ() * SIZE / 2D);
+	}
+
 	@Override
 	public void serverTick(){
 		//Handle flux
@@ -131,61 +143,66 @@ public class TemporalAcceleratorTileEntity extends IFluxLink.FluxHelper{
 			TemporalAccelerator.Mode mode = getMode();
 
 			if(extraTicks > 0 && !isShutDown()){
-				BlockPos startPos;//Inclusive
-				BlockPos endPos;//Exclusive
-				//Assumes SIZE is odd
-				switch(getFacing()){
-					//This should probably be done as a simple formula if it ever gets rewritten. See AutoInjectorTileEntity for an example
-					case DOWN:
-						startPos = worldPosition.offset(-SIZE / 2, -SIZE, -SIZE / 2);
-						endPos = worldPosition.offset(SIZE / 2 + 1, 0, SIZE / 2 + 1);
-						break;
-					case UP:
-						startPos = worldPosition.offset(-SIZE / 2, 1, -SIZE / 2);
-						endPos = worldPosition.offset(SIZE / 2 + 1, 1 + SIZE, SIZE / 2 + 1);
-						break;
-					case NORTH:
-						startPos = worldPosition.offset(-SIZE / 2, -SIZE / 2, -SIZE);
-						endPos = worldPosition.offset(SIZE / 2 + 1, SIZE / 2 + 1, 0);
-						break;
-					case SOUTH:
-						startPos = worldPosition.offset(-SIZE / 2, -SIZE / 2, 1);
-						endPos = worldPosition.offset(SIZE / 2 + 1, SIZE / 2 + 1, 1 + SIZE);
-						break;
-					case WEST:
-						startPos = worldPosition.offset(-SIZE, -SIZE / 2, -SIZE / 2);
-						endPos = worldPosition.offset(0, SIZE / 2 + 1, SIZE / 2 + 1);
-						break;
-					case EAST:
-					default://Should not occur
-						startPos = worldPosition.offset(1, -SIZE / 2, -SIZE / 2);
-						endPos = worldPosition.offset(1 + SIZE, SIZE / 2 + 1, SIZE / 2 + 1);
-						break;
-				}
+				AABB region = getAffectedRegion();
+				long gameTime = level.getGameTime();
 
 				if(mode.accelerateEntities){
-					AABB bb = new AABB(startPos, endPos);
 					//Perform entity effect
-					ArrayList<Entity> ents = (ArrayList<Entity>) level.getEntitiesOfClass(Entity.class, bb);
-
+					ArrayList<Entity> ents = (ArrayList<Entity>) level.getEntitiesOfClass(Entity.class, region);
 					for(Entity ent : ents){
+						//Prevents multiple temporal accelerators applying to the same entity
+						CompoundTag entNBT = ent.getPersistentData();
+						if(entNBT.getLong(NBT_ENTITY_LAST_TICK) == gameTime){
+							continue;
+						}
+						ent.getPersistentData().putLong(NBT_ENTITY_LAST_TICK, gameTime);
+
+						AABB activeRegion = region;
+						int totalExtraTicks = 0;
+						for(; totalExtraTicks < extraTicks; totalExtraTicks++){
+							ent.tick();
+							ent.tickCount += 1;
+
+							//Need to check if the entity has now passed outside the accelerator range
+							//...except they might have passed into the range of another accelerator, possibly with different acceleration
+							if(!activeRegion.contains(ent.position())){
+								//Check if they're in another accelerator
+								for(Location accelLocation : ACCEL_POSITIONS){
+									AABB otherRegion;
+									if(accelLocation.isSameWorld(level) && level.getBlockEntity(accelLocation.pos) instanceof TemporalAcceleratorTileEntity otherAccel && (otherRegion = otherAccel.getAffectedRegion()).contains(ent.position())){
+										//Found an applicable accelerator
+										//The other accelerator is now the active accelerator, controls how many extra ticks to do
+										extraTicks = extraTicks(otherAccel.infoIntensity);//There is an edge case here- technically, should be using otherAccel.intensity if it has not already ticked this tick
+										activeRegion = otherRegion;
+										continue;
+									}
+								}
+								//No other accelerator
+								extraTicks = 0;
+							}
+						}
 						if(ent instanceof ServerPlayer){
 							//Players have to tick on both the client and server side or things act very strange
-							CRPackets.sendPacketToPlayer((ServerPlayer) ent, new SendPlayerTickCountToClient(extraTicks + 1));
-						}
-						for(int i = 0; i < extraTicks; i++){
-							ent.tick();
+							CRPackets.sendPacketToPlayer((ServerPlayer) ent, new SendPlayerTickCountToClient(totalExtraTicks + 1));
 						}
 					}
 				}
 
 				boolean actOnTe = mode.accelerateTileEntities && CRConfig.teTimeAccel.get();
 				if(actOnTe || mode.accelerateBlockTicks){
+					BlockPos startPos = BlockPos.containing(region.minX, region.minY, region.minZ);//Inclusive
+					BlockPos endPos = BlockPos.containing(region.maxX, region.maxY, region.maxZ);//Exclusive
 					//Iterate over the entire affected region
 					for(int x = startPos.getX(); x < endPos.getX(); x++){
 						for(int y = startPos.getY(); y < endPos.getY(); y++){
 							for(int z = startPos.getZ(); z < endPos.getZ(); z++){
 								BlockPos effectPos = new BlockPos(x, y, z);
+
+								//Prevents multiple temporal accelerators applying to the same position
+								Location tickedLocation = new Location(effectPos, level);
+								if(locationLastTicked.getOrDefault(tickedLocation, -1L) == gameTime){
+									continue;
+								}
 
 								//Perform tile entity effect
 								if(actOnTe){
@@ -194,6 +211,7 @@ public class TemporalAcceleratorTileEntity extends IFluxLink.FluxHelper{
 										for(int run = 0; run < extraTicks; run++){
 											te.tick();
 										}
+										locationLastTicked.put(tickedLocation, gameTime);
 									}
 								}
 
@@ -203,6 +221,7 @@ public class TemporalAcceleratorTileEntity extends IFluxLink.FluxHelper{
 									if(TimeEffect.shouldApplyExtraRandomTick(level, state, extraTicks)){
 										state.randomTick((ServerLevel) level, effectPos, level.random);
 									}
+									locationLastTicked.put(tickedLocation, gameTime);
 								}
 							}
 						}
@@ -225,6 +244,16 @@ public class TemporalAcceleratorTileEntity extends IFluxLink.FluxHelper{
 	public void setRemoved(){
 		super.setRemoved();
 		beamOpt.invalidate();
+		if(!level.isClientSide){
+			ACCEL_POSITIONS.remove(new Location(worldPosition, level));
+		}
+	}
+
+	public void onLoad() {
+		super.onLoad();
+		if(!this.level.isClientSide) {
+			ACCEL_POSITIONS.add(new Location(worldPosition, level));
+		}
 	}
 
 	private LazyOptional<IBeamHandler> beamOpt = LazyOptional.of(BeamHandler::new);
