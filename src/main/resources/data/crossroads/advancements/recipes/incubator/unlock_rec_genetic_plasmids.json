@@ -1,0 +1,21 @@
+{
+	"parent": "minecraft:recipes/root",
+	"rewards": {
+		"recipes": [
+			"crossroads:incubator/genetic_plasmids"
+		]
+	},
+	"criteria": {
+		"has_recipe": {
+			"trigger": "minecraft:recipe_unlocked",
+			"conditions": {
+				"recipe": "crossroads:incubator/genetic_plasmids"
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_recipe"
+		]
+	]
+}
