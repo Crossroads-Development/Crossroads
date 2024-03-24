@@ -9,11 +9,14 @@ import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.blocks.rotary.Mechanism;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import com.Da_Technomancer.essentials.api.packets.ILongReceiver;
+import com.Da_Technomancer.essentials.api.packets.INBTReceiver;
 import com.Da_Technomancer.essentials.api.packets.SendLongToClient;
+import com.Da_Technomancer.essentials.api.packets.SendNBTToClient;
 import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -29,7 +32,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-public class MechanismTileEntity extends BlockEntity implements ITickableTileEntity, ILongReceiver, IInfoTE{
+public class MechanismTileEntity extends BlockEntity implements ITickableTileEntity, ILongReceiver, INBTReceiver, IInfoTE{
 
 	public static final BlockEntityType<MechanismTileEntity> TYPE = CRTileEntity.createType(MechanismTileEntity::new, CRBlocks.mechanism);
 
@@ -121,7 +124,10 @@ public class MechanismTileEntity extends BlockEntity implements ITickableTileEnt
 		for(int i = 0; i < 7; i++){
 			if(members[i] != null && mats[i] != null){//Sanity check. mats[i] should never be null if members[i] isn't
 				nbt.putInt("[" + i + "]memb", MECHANISMS.indexOf(members[i]));
-				nbt.putString("[" + i + "]mat", mats[i].getSaveName());
+				CompoundTag matNBT = new CompoundTag();
+				mats[i].write(matNBT);
+				nbt.put("[" + i + "]mat", matNBT);
+//				nbt.putString("[" + i + "]mat", mats[i].getSaveName());
 			}
 			nbt.putDouble("[" + i + ",1]mot", energy[i]);
 		}
@@ -140,7 +146,10 @@ public class MechanismTileEntity extends BlockEntity implements ITickableTileEnt
 		for(int i = 0; i < 7; i++){
 			if(members[i] != null && mats[i] != null){//Sanity check. mats[i] should never be null if members[i] isn't
 				nbt.putInt("[" + i + "]memb", MECHANISMS.indexOf(members[i]));
-				nbt.putString("[" + i + "]mat", mats[i].getSaveName());
+				CompoundTag matNBT = new CompoundTag();
+				mats[i].write(matNBT);
+				nbt.put("[" + i + "]mat", matNBT);
+//				nbt.putString("[" + i + "]mat", mats[i].getSaveName());
 
 //				nbt.putFloat("[" + i + "]cl_w", clientW[i]);
 //				nbt.putFloat("[" + i + "]ang", angle[i]);
@@ -173,7 +182,14 @@ public class MechanismTileEntity extends BlockEntity implements ITickableTileEnt
 					continue;//Sanity check in case a mechanism type gets removed in the future
 				}
 
-				mats[i] = members[i].loadProperty(nbt.getString("[" + i + "]mat"));
+				//Backwards compat, to be removed in a later version
+				if(nbt.getTagType("[" + i + "]mat") == Tag.TAG_STRING){
+					CompoundTag matNBT = new CompoundTag();
+					matNBT.putString("prop_data", nbt.getString("[" + i + "]mat"));
+					mats[i] = members[i].readProperty(matNBT);
+				}else{
+					mats[i] = members[i].readProperty(nbt.getCompound("[" + i + "]mat"));
+				}
 				energy[i] = nbt.getDouble("[" + i + ",1]mot");
 
 //				clientW[i] = nbt.getFloat("[" + i + "]cl_w");
@@ -192,7 +208,7 @@ public class MechanismTileEntity extends BlockEntity implements ITickableTileEnt
 			float angleIn = Float.intBitsToFloat((int) (message & 0xFFFFFFFFL));
 			angle[identifier] = Math.abs(angleIn - angle[identifier]) > 15F ? angleIn : angle[identifier];
 			clientW[identifier] = Float.intBitsToFloat((int) (message >>> 32L));
-		}else */if(identifier >= 7 && identifier < 14){
+		}else if(identifier >= 7 && identifier < 14){
 			if(message == -1){
 				members[identifier - 7] = null;
 				mats[identifier - 7] = null;
@@ -201,12 +217,25 @@ public class MechanismTileEntity extends BlockEntity implements ITickableTileEnt
 				mats[identifier - 7] = members[identifier - 7].deserializeProperty((int) (message >>> 32L));
 			}
 			axleHandlers[identifier - 7].updateStates(false);
-		}else if(identifier == 14){
+		}else */if(identifier == 14){
 			axleAxis = message == -1 ? null : Direction.Axis.values()[(int) message];
 			axleHandlers[6].updateStates(false);
 		}else if(identifier == 15){
 			redstoneIn = (int) message;
 		}
+	}
+
+	@Override
+	public void receiveNBT(CompoundTag nbt, @Nullable ServerPlayer serverPlayer){
+		int side = nbt.getInt("side");
+		if(nbt.getBoolean("empty")){
+			members[side] = null;
+			mats[side] = null;
+		}else{
+			members[side] = MECHANISMS.get(nbt.getInt("mech"));
+			mats[side] = members[side].readProperty(nbt.getCompound("prop"));
+		}
+		axleHandlers[side].updateStates(false);
 	}
 
 	@Override
@@ -382,7 +411,18 @@ public class MechanismTileEntity extends BlockEntity implements ITickableTileEnt
 			}
 
 			if(sendPacket && !level.isClientSide){
-				CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient(side + 7, members[side] == null ? -1L : (MECHANISMS.indexOf(members[side]) & 0xFFFFFFFFL) | (long) (mats[side].serialize()) << 32L, worldPosition));
+				CompoundTag updateNBT = new CompoundTag();
+				updateNBT.putInt("side", side);
+				if(members[side] == null){
+					updateNBT.putBoolean("empty", true);
+				}else{
+					updateNBT.putInt("mech", MECHANISMS.indexOf(members[side]));
+					CompoundTag propertyNBT = new CompoundTag();
+					mats[side].write(propertyNBT);
+					updateNBT.put("prop", propertyNBT);
+				}
+				CRPackets.sendPacketAround(level, worldPosition, new SendNBTToClient(updateNBT, worldPosition));
+//				CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient(side + 7, members[side] == null ? -1L : (MECHANISMS.indexOf(members[side]) & 0xFFFFFFFFL) | (long) (mats[side].serialize()) << 32L, worldPosition));
 			}
 		}
 

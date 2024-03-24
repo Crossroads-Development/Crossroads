@@ -1,7 +1,7 @@
 {
 	"category": "essentials:rotary",
 	"name": "Aesthetic Mechanisms",
-	"icon": "crossroads:gear_facade_stone_brick",
+	"icon": "crossroads:gear_facade",
 	"sortnum": 0,
 	"priority": false,
 	"read_by_default": "true",
@@ -9,7 +9,7 @@
 		{
 			"type": "patchouli:spotlight",
 			"title": "Aesthetic Mechanisms",
-			"item": "crossroads:gear_facade_stone_brick",
+			"item": "crossroads:gear_facade",
 			"text": "There are a few purely decorative <thing>$(l:essentials:rotary/gear_base)mechanisms/$ that can be placed in the same blockspace as <item>$(l:essentials:rotary/gear_base)gears, axles, etc/$.$(br2)"
 		},
 		{
@@ -36,7 +36,7 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<item>$(l:essentials:rotary/gear_base)gears & axles/$. Several can be in the same blockspace, they are solid to walk on, and they do not obstruct <item>$(l:essentials:rotary/gear_base)gear & axle/$ connections at all. They do not need a solid supporting block, and come in four varieties: Stone Bricks, Cobblestone, Iron Blocks, and Glass.$(br2)"
+			"text": "<item>$(l:essentials:rotary/gear_base)gears & axles/$. Several can be in the same blockspace, they are solid to walk on, and they do not obstruct <item>$(l:essentials:rotary/gear_base)gear & axle/$ connections at all. They do not need a solid supporting block. They can look like any solid block (shift-right-click with the item on a solid block to set the texture).$(br2)"
 		}
 	],
 	"extra_recipe_mappings": {

@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.api;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.api.rotary.IMechanismProperty;
+import net.minecraft.nbt.CompoundTag;
 
 import java.awt.*;
 import java.util.List;
@@ -212,6 +213,15 @@ public final class CRMaterialLibrary{
 		@Override
 		public String getSaveName(){
 			return getId();
+		}
+
+		@Override
+		public void write(CompoundTag nbt){
+			nbt.putString("prop_data", getId());
+		}
+
+		public static GearMaterial read(CompoundTag nbt){
+			return findMaterial(nbt.getString("prop_data"));
 		}
 
 		public static GearMaterial deserialize(int serial){

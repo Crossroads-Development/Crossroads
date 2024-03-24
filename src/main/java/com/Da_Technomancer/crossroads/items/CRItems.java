@@ -222,10 +222,15 @@ public final class CRItems{
 	public static ToggleGear invToggleGear;
 	public static LargeGear largeGear;
 	public static AxleMount axleMount;
-	public static GearFacade gearFacadeStoneBrick;
-	public static GearFacade gearFacadeCobble;
-	public static GearFacade gearFacadeIron;
-	public static GearFacade gearFacadeGlass;
+	@Deprecated
+	public static Item gearFacadeStoneBrick;
+	@Deprecated
+	public static Item gearFacadeCobble;
+	@Deprecated
+	public static Item gearFacadeIron;
+	@Deprecated
+	public static Item gearFacadeGlass;
+	public static GearFacade gearFacade;
 
 	public static void init(){
 		//Ores
@@ -259,10 +264,35 @@ public final class CRItems{
 		invToggleGear = new ToggleGear(true);
 		largeGear = new LargeGear();
 		axleMount = new AxleMount();
-		gearFacadeStoneBrick = new GearFacade(GearFacade.FacadeBlock.STONE_BRICK);
-		gearFacadeCobble = new GearFacade(GearFacade.FacadeBlock.COBBLE);
-		gearFacadeIron = new GearFacade(GearFacade.FacadeBlock.IRON);
-		gearFacadeGlass = new GearFacade(GearFacade.FacadeBlock.GLASS);
+		gearFacadeStoneBrick = queueForRegister("gear_facade_stone_brick", new Item(CRItems.baseItemProperties()){
+			@Override
+			public void appendHoverText(ItemStack p_41421_, @Nullable net.minecraft.world.level.Level p_41422_, List<Component> tt, TooltipFlag p_41424_){
+				tt.add(Component.literal("THIS ITEM IS BEING REMOVED"));
+				tt.add(Component.literal("CRAFT IT INTO THE NEW VERSION"));
+			}
+		}, null);
+		gearFacadeCobble = queueForRegister("gear_facade_cobble", new Item(CRItems.baseItemProperties()){
+			@Override
+			public void appendHoverText(ItemStack p_41421_, @Nullable net.minecraft.world.level.Level p_41422_, List<Component> tt, TooltipFlag p_41424_){
+				tt.add(Component.literal("THIS ITEM IS BEING REMOVED"));
+				tt.add(Component.literal("CRAFT IT INTO THE NEW VERSION"));
+			}
+		}, null);
+		gearFacadeIron = queueForRegister("gear_facade_iron", new Item(CRItems.baseItemProperties()){
+			@Override
+			public void appendHoverText(ItemStack p_41421_, @Nullable net.minecraft.world.level.Level p_41422_, List<Component> tt, TooltipFlag p_41424_){
+				tt.add(Component.literal("THIS ITEM IS BEING REMOVED"));
+				tt.add(Component.literal("CRAFT IT INTO THE NEW VERSION"));
+			}
+		}, null);
+		gearFacadeGlass = queueForRegister("gear_facade_glass", new Item(CRItems.baseItemProperties()){
+			@Override
+			public void appendHoverText(ItemStack p_41421_, @Nullable net.minecraft.world.level.Level p_41422_, List<Component> tt, TooltipFlag p_41424_){
+				tt.add(Component.literal("THIS ITEM IS BEING REMOVED"));
+				tt.add(Component.literal("CRAFT IT INTO THE NEW VERSION"));
+			}
+		}, null);
+		gearFacade = new GearFacade();
 		handCrank = new HandCrank();
 		debugGearWriter = new CheatWandRotary();
 		debugHeatWriter = new CheatWandHeat();

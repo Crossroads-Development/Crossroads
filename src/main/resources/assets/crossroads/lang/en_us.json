@@ -248,6 +248,7 @@
 	"item.crossroads.gear_facade_cobble": "Cobblestone Facade",
 	"item.crossroads.gear_facade_iron": "Iron Block Facade",
 	"item.crossroads.gear_facade_glass": "Glass Facade",
+	"item.crossroads.gear_facade": "Facade",
 	"block.crossroads.sequence_box": "Sequencer",
 	"block.crossroads.chunk_accelerator": "Distributed Temporal Accelerator",
 	"item.crossroads.enviro_boots": "All-Terrain Boots",
@@ -856,6 +857,8 @@
 	"tt.crossroads.blood_beam_linker.backfire": "Using a spoiled blood sample has a risk of backfiring",
 	"tt.crossroads.heated_tube.desc": "Connects to heat cables",
 	"tt.crossroads.heated_tube.circuit": "Circuits read temperature",
+	"tt.crossroads.gear_facade.desc": "Decorative cover for gears and axles. Sneak-right-click on a block to set the texture.",
+	"tt.crossroads.gear_facade.setting": "Appearance: ",
 
 	"container.crossroads.boilerplate.temp": "%1$d°C",
 	"container.crossroads.boilerplate.speed": "%1$f rad/s",

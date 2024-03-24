@@ -12,6 +12,7 @@ import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -168,12 +169,7 @@ public class MechanismSmallGear implements IMechanism<CRMaterialLibrary.GearMate
 	}
 
 	@Override
-	public CRMaterialLibrary.GearMaterial deserializeProperty(int serial){
-		return CRMaterialLibrary.GearMaterial.deserialize(serial);
-	}
-
-	@Override
-	public CRMaterialLibrary.GearMaterial loadProperty(String name){
-		return CRMaterialLibrary.findMaterial(name);
+	public CRMaterialLibrary.GearMaterial readProperty(CompoundTag nbt){
+		return CRMaterialLibrary.GearMaterial.read(nbt);
 	}
 }

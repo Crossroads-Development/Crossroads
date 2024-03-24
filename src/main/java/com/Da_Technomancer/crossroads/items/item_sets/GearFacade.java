@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.items.item_sets;
 
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.rotary.IMechanism;
 import com.Da_Technomancer.crossroads.api.rotary.IMechanismProperty;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -9,27 +8,34 @@ import com.Da_Technomancer.crossroads.blocks.rotary.mechanisms.MechanismTileEnti
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraftforge.registries.ForgeRegistries;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
+import java.util.List;
 
 public class GearFacade extends Item{
 
-	private final FacadeBlock block;
-
-	public GearFacade(FacadeBlock block){
+	public GearFacade(){
 		super(new Item.Properties());
-		this.block = block;
-		String name = "gear_facade_" + block.getSaveName();
+		String name = "gear_facade";
 		CRItems.queueForRegister(name, this);
 	}
 
@@ -37,43 +43,48 @@ public class GearFacade extends Item{
 		return MechanismTileEntity.MECHANISMS.get(7);
 	}
 
-	public FacadeBlock getMaterial(){
-		return block;
+	public FacadeBlock getMaterial(ItemStack stack){
+		CompoundTag nbt = stack.getTag();
+		if(nbt != null && nbt.contains("facadeBlock")){
+			return FacadeBlock.create(new ResourceLocation(nbt.getString("facadeBlock")));
+		}
+		return FacadeBlock.create(ForgeRegistries.BLOCKS.getKey(Blocks.STONE_BRICKS));
 	}
 
-	public static ItemStack withMaterial(FacadeBlock mat, int count){
-		if(mat == null){
-			mat = FacadeBlock.STONE_BRICK;
-		}
-		GearFacade item;
-		switch(mat){
-			default:
-			case STONE_BRICK:
-				item = CRItems.gearFacadeStoneBrick;
-				break;
-			case COBBLE:
-				item = CRItems.gearFacadeCobble;
-				break;
-			case IRON:
-				item = CRItems.gearFacadeIron;
-				break;
-			case GLASS:
-				item = CRItems.gearFacadeGlass;
-				break;
-		}
-		return new ItemStack(item, count);
+	@Override
+	public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltips, TooltipFlag flag){
+		FacadeBlock facade = getMaterial(stack);
+		tooltips.add(Component.translatable("tt.crossroads.gear_facade.desc"));
+		tooltips.add(Component.translatable("tt.crossroads.gear_facade.setting").append(Component.translatable(facade.getBlockState().getBlock().getDescriptionId())));
+	}
+
+	public void setMaterial(ItemStack stack, BlockState state){
+		CompoundTag nbt = stack.getOrCreateTag();
+		nbt.putString("facadeBlock", ForgeRegistries.BLOCKS.getKey(state.getBlock()).toString());
 	}
 
 	@Override
 	public InteractionResult useOn(UseOnContext context){
-		FacadeBlock type = getMaterial();
+		Level world = context.getLevel();
+		BlockPos pos = context.getClickedPos();//The position of the block clicked
+		Player playerIn = context.getPlayer();
+
+		if(playerIn.isShiftKeyDown()){
+			//Sneak-right-clicking sets material type
+			BlockState clickedBlock = world.getBlockState(pos);
+			if(!clickedBlock.isAir() && clickedBlock.getShape(world, pos) == Shapes.block()){
+				//Full block only
+				setMaterial(context.getItemInHand(), clickedBlock);
+			}
+			return InteractionResult.SUCCESS;
+		}
+
+		FacadeBlock type = getMaterial(context.getItemInHand());
 		if(type == null){
 			return InteractionResult.SUCCESS;
 		}
-		Level world = context.getLevel();
-		BlockPos pos = context.getClickedPos();//The position of the block clicked
+
 		Direction side = context.getClickedFace();
-		Player playerIn = context.getPlayer();
 		BlockPos placePos = pos;//Where the gear will be placed
 		BlockEntity teAtPlacement = world.getBlockEntity(placePos);
 
@@ -133,51 +144,58 @@ public class GearFacade extends Item{
 		return InteractionResult.SUCCESS;
 	}
 
-	private static final HashMap<String, FacadeBlock> NAME_MAP = new HashMap<>(4);
+	private static final HashMap<ResourceLocation, FacadeBlock> NAME_MAP = new HashMap<>(4);
 
-	public enum FacadeBlock implements IMechanismProperty{
+	public static class FacadeBlock implements IMechanismProperty{
 
-		STONE_BRICK("stone_brick", new ResourceLocation("block/stone_bricks")),
-		COBBLE("cobble", new ResourceLocation("block/cobblestone")),
-		IRON("iron", new ResourceLocation("block/iron_block")),
-		GLASS("glass", new ResourceLocation("block/glass"));
+		private final ResourceLocation blockRegName;
+		private BlockState blockstateCache;
 
-		private final String name;
-		private final ResourceLocation texture;
-
-		FacadeBlock(String name, ResourceLocation texture){
-			this.name = name;
-			this.texture = texture;
-			NAME_MAP.put(name, this);
-		}
-
-		public ResourceLocation getTexture(){
-			return texture;
-		}
-
-		@Override
-		public int serialize(){
-			return ordinal();
-		}
-
-		@Override
-		public String getSaveName(){
-			return name;
-		}
-
-		public static FacadeBlock deserialize(int serial){
-			if(serial < 0 || serial >= values().length){
-				return STONE_BRICK;
+		public static FacadeBlock create(ResourceLocation blockRegName){
+			FacadeBlock facade = NAME_MAP.get(blockRegName);
+			if(facade == null){
+				return new FacadeBlock(blockRegName);
 			}
-			return values()[serial];
+			return facade;
 		}
 
-		public static FacadeBlock loadProperty(String name){
-			return NAME_MAP.getOrDefault(name, STONE_BRICK);
+		private FacadeBlock(ResourceLocation blockRegName){
+			this.blockRegName = blockRegName;
+			NAME_MAP.put(blockRegName, this);
 		}
 
-		public String getName(){
-			return MiscUtil.localize("facade_block." + name);
+		public BlockState getBlockState(){
+			if(blockstateCache == null){
+				Block block = ForgeRegistries.BLOCKS.getValue(blockRegName);
+				if(block == null){
+					block = Blocks.STONE_BRICKS;
+				}
+				blockstateCache = block.defaultBlockState();
+				if(blockstateCache.isAir()){
+					blockstateCache = Blocks.STONE_BRICKS.defaultBlockState();
+				}
+			}
+			return blockstateCache;
+		}
+
+		@Override
+		public void write(CompoundTag nbt){
+			nbt.putString("blockRegistryName", blockRegName.toString());
+		}
+
+		public static FacadeBlock read(CompoundTag nbt){
+			if(nbt.contains("prop_data")){
+				//Backwards compat. Will be removed in future version
+				String name = nbt.getString("prop_data");
+				return switch(name){
+					case "cobble" -> create(ForgeRegistries.BLOCKS.getKey(Blocks.COBBLESTONE));
+					case "iron" -> create(ForgeRegistries.BLOCKS.getKey(Blocks.IRON_BLOCK));
+					case "glass" -> create(ForgeRegistries.BLOCKS.getKey(Blocks.GLASS));
+					default -> create(ForgeRegistries.BLOCKS.getKey(Blocks.STONE_BRICKS));
+				};
+			}
+
+			return create(new ResourceLocation(nbt.getString("blockRegistryName")));
 		}
 	}
 }

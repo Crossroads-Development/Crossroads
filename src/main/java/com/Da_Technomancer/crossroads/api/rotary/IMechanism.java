@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.blocks.rotary.mechanisms.MechanismTileEnti
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
@@ -109,9 +110,24 @@ public interface IMechanism<T extends IMechanismProperty>{
 	@OnlyIn(Dist.CLIENT)
 	void doRender(MechanismTileEntity te, PoseStack matrix, MultiBufferSource buffer, int combinedLight, float partialTicks, IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis);
 
-	T deserializeProperty(int serial);
+	@Deprecated(forRemoval = true)
+	default T deserializeProperty(int serial){
+		return null;
+	}
 
-	T loadProperty(String name);
+	@Deprecated(forRemoval = true)
+	default T loadProperty(String name){
+		return null;
+	}
+
+	/**
+	 * The default implementation for backwards compatibility; will be removed in a later version. Override this method.
+	 * @param nbt NBT with this saved.
+	 * @return A new property, read from NBT
+	 */
+	default T readProperty(CompoundTag nbt){
+		return loadProperty(nbt.getString("prop_data"));
+	}
 
 	/**
 	 * @return Whether this mechanism should break if on a side without a supporting block

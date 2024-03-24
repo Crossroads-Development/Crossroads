@@ -1,20 +1,26 @@
 package com.Da_Technomancer.crossroads.blocks.rotary.mechanisms;
 
 import com.Da_Technomancer.crossroads.api.Capabilities;
-import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.api.rotary.*;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.item_sets.GearFacade;
 import com.Da_Technomancer.crossroads.render.tesr.CRModels;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 
@@ -97,7 +103,7 @@ public class MechanismFacade implements IMechanism<GearFacade.FacadeBlock>{
 	@Override
 	public ItemStack getDrop(IMechanismProperty mat){
 		if(mat instanceof GearFacade.FacadeBlock){
-			return GearFacade.withMaterial((GearFacade.FacadeBlock) mat, 1);
+			return new ItemStack(CRItems.gearFacade);
 		}
 		return ItemStack.EMPTY;
 	}
@@ -108,30 +114,36 @@ public class MechanismFacade implements IMechanism<GearFacade.FacadeBlock>{
 	}
 
 	@Override
+	@OnlyIn(Dist.CLIENT)
 	public void doRender(MechanismTileEntity te, PoseStack matrix, MultiBufferSource buffer, int combinedLight, float partialTicks, IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis){
 		if(side == null){
 			return;
 		}
 
-		TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(mat instanceof GearFacade.FacadeBlock ? ((GearFacade.FacadeBlock) mat).getTexture() : GearFacade.FacadeBlock.STONE_BRICK.getTexture());
+		TextureAtlasSprite sprite;
+		ModelData modelData = te.getLevel().getModelDataManager().getAt(te.getBlockPos());
+		if(modelData == null){
+			modelData = ModelData.EMPTY;
+		}
+		if(mat instanceof GearFacade.FacadeBlock facade){
+			sprite = Minecraft.getInstance().getBlockRenderer().getBlockModel(facade.getBlockState()).getParticleIcon(modelData);
+		}else{
+			sprite = Minecraft.getInstance().getBlockRenderer().getBlockModel(Blocks.STONE_BRICKS.defaultBlockState()).getParticleIcon(modelData);
+		}
+//		TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(mat instanceof GearFacade.FacadeBlock ? ((GearFacade.FacadeBlock) mat).getTexture() : GearFacade.FacadeBlock.STONE_BRICK.getTexture());
 
 		matrix.mulPose(side.getRotation());
 		matrix.translate(0, 7F / 16F, 0);
 
 		//Render along the top
-		VertexConsumer builder = buffer.getBuffer(RenderType.cutoutMipped());
-		float antiZFightScale = 0.0001F * side.get3DDataValue();
+		VertexConsumer builder = buffer.getBuffer(RenderType.translucentNoCrumbling());
+		float antiZFightScale = 0.0001F * (1 + side.get3DDataValue());
 		CRModels.drawBox(matrix, builder, combinedLight, new int[] {255, 255, 255, 255}, 0.5F - antiZFightScale, 1F / 16F, 0.5F - antiZFightScale, sprite.getU0(), sprite.getV0(), sprite.getU1(), sprite.getV1(), sprite.getU0(), sprite.getV0(), sprite.getU1(), sprite.getV(2), sprite.getU0(), sprite.getV0(), sprite.getU1(), sprite.getV(2));
 	}
 
 	@Override
-	public GearFacade.FacadeBlock deserializeProperty(int serial){
-		return GearFacade.FacadeBlock.deserialize(serial);
-	}
-
-	@Override
-	public GearFacade.FacadeBlock loadProperty(String name){
-		return GearFacade.FacadeBlock.loadProperty(name);
+	public GearFacade.FacadeBlock readProperty(CompoundTag nbt){
+		return GearFacade.FacadeBlock.read(nbt);
 	}
 
 	@Override
