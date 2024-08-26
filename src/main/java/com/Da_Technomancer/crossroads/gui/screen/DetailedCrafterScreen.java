@@ -13,7 +13,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class DetailedCrafterScreen extends AbstractContainerScreen<DetailedCrafterContainer>{
 
-	private static final ResourceLocation BACKGROUND = new ResourceLocation(Crossroads.MODID, "textures/gui/container/detailed_crafter.png");
+	private static final ResourceLocation BACKGROUND = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/gui/container/detailed_crafter.png");
 
 	public DetailedCrafterScreen(DetailedCrafterContainer cont, Inventory playerInv, Component name){
 		super(cont, playerInv, name);

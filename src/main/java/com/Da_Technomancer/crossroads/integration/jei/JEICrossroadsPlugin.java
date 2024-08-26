@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 @SuppressWarnings("unused")
 public class JEICrossroadsPlugin implements IModPlugin{
 
-	private static final ResourceLocation PLUGIN_ID = new ResourceLocation(Crossroads.MODID, "jei_plugin");
+	private static final ResourceLocation PLUGIN_ID = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "jei_plugin");
 
 	@Override
 	public ResourceLocation getPluginUid(){
@@ -170,6 +170,6 @@ public class JEICrossroadsPlugin implements IModPlugin{
 
 	protected static IDrawableStatic createFluidOverlay(IGuiHelper helper){
 //		guiHelper.createDrawable(new ResourceLocation(Crossroads.MODID, "textures/gui/rectangle_fluid_overlay.png"), 0, 0, 16, 64)
-		return helper.drawableBuilder(new ResourceLocation(Crossroads.MODID, "textures/gui/rectangle_fluid_overlay.png"), 0, 0, 16, 64).setTextureSize(64, 64).build();
+		return helper.drawableBuilder(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/gui/rectangle_fluid_overlay.png"), 0, 0, 16, 64).setTextureSize(64, 64).build();
 	}
 }

@@ -6,6 +6,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -13,7 +15,6 @@ import net.minecraft.util.GsonHelper;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -104,7 +105,7 @@ public class FluidIngredient implements Predicate<FluidStack>{
 		updateCache();
 		buf.writeVarInt(matched.size());//Write how many Fluids this matches
 		for(Fluid b : matched){
-			buf.writeResourceLocation(MiscUtil.getRegistryName(b, ForgeRegistries.FLUIDS));//Write the registry name of every matched fluid.
+			buf.writeResourceLocation(MiscUtil.getRegistryName(b, BuiltInRegistries.FLUID));//Write the registry name of every matched fluid.
 		}
 	}
 
@@ -115,7 +116,7 @@ public class FluidIngredient implements Predicate<FluidStack>{
 		}
 		Fluid[] matched = new Fluid[count];
 		for(int i = 0; i < count; i++){
-			matched[i] = ForgeRegistries.FLUIDS.getValue(buf.readResourceLocation());
+			matched[i] = BuiltInRegistries.FLUID.get(buf.readResourceLocation());
 		}
 		//Create a fluid ingredient with one large IFluidList that matches every fluid. Note this doesn't preserve Tag associations of the original definition
 		return new FluidIngredient(new FluidList(matched));
@@ -143,9 +144,9 @@ public class FluidIngredient implements Predicate<FluidStack>{
 
 	private static IFluidList readIngr(JsonObject o){
 		if(o.has("tag")){
-			return new TagList(CraftingUtil.getTagKey(ForgeRegistries.Keys.FLUIDS, new ResourceLocation(GsonHelper.getAsString(o, "tag"))));
+			return new TagList(CraftingUtil.getTagKey(Registries.FLUID, ResourceLocation.parse(GsonHelper.getAsString(o, "tag"))));
 		}else if(o.has("fluid")){
-			return new SingleList(ForgeRegistries.FLUIDS.getValue(new ResourceLocation(GsonHelper.getAsString(o, "fluid"))));
+			return new SingleList(BuiltInRegistries.FLUID.get(ResourceLocation.parse(GsonHelper.getAsString(o, "fluid"))));
 		}else{
 			throw new JsonParseException("No value defined in FluidIngredient");
 		}

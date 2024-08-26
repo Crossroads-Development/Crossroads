@@ -12,7 +12,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class MillstoneScreen extends MachineScreen<MillstoneContainer, MillstoneTileEntity>{
 
-	private static final ResourceLocation BACKGROUND = new ResourceLocation(Crossroads.MODID, "textures/gui/container/millstone_gui.png");
+	private static final ResourceLocation BACKGROUND = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/gui/container/millstone_gui.png");
 
 	public MillstoneScreen(MillstoneContainer cont, Inventory playerInv, Component text){
 		super(cont, playerInv, text);

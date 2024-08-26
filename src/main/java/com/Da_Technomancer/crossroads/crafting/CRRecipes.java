@@ -30,25 +30,25 @@ public final class CRRecipes{
 	public static RecipeSerializer<?> EMBRYO_LAB_MORPH_SERIAL = null;
 	public static RecipeSerializer<?> INCUBATOR_SERIAL = null;
 
-	public static final RecipeType<MillRec> MILL_TYPE = RecipeType.simple(new ResourceLocation(Crossroads.MODID, "mill"));
-	public static final RecipeType<StampMillRec> STAMP_MILL_TYPE = RecipeType.simple(new ResourceLocation(Crossroads.MODID, "stamp_mill"));
-	public static final RecipeType<OreCleanserRec> ORE_CLEANSER_TYPE = RecipeType.simple(new ResourceLocation(Crossroads.MODID, "ore_cleanser"));
-	public static final RecipeType<BeamExtractRec> BEAM_EXTRACT_TYPE = RecipeType.simple(new ResourceLocation(Crossroads.MODID, "beam_extract"));
-	public static final RecipeType<IceboxRec> COOLING_TYPE = RecipeType.simple(new ResourceLocation(Crossroads.MODID, "cooling"));
-	public static final RecipeType<CentrifugeRec> CENTRIFUGE_TYPE = RecipeType.simple(new ResourceLocation(Crossroads.MODID, "centrifuge"));
-	public static final RecipeType<AlchemyRec> ALCHEMY_TYPE = RecipeType.simple(new ResourceLocation(Crossroads.MODID, "alchemy"));
-	public static final RecipeType<BlastFurnaceRec> BLAST_FURNACE_TYPE = RecipeType.simple(new ResourceLocation(Crossroads.MODID, "cr_blast_furnace"));
-	public static final RecipeType<FluidCoolingRec> FLUID_COOLING_TYPE = RecipeType.simple(new ResourceLocation(Crossroads.MODID, "fluid_cooling"));
-	public static final RecipeType<CrucibleRec> CRUCIBLE_TYPE = RecipeType.simple(new ResourceLocation(Crossroads.MODID, "crucible"));
-	public static final RecipeType<DetailedCrafterRec> DETAILED_TYPE = RecipeType.simple(new ResourceLocation(Crossroads.MODID, "detailed_crafter"));
-	public static final RecipeType<BeamTransmuteRec> BEAM_TRANSMUTE_TYPE = RecipeType.simple(new ResourceLocation(Crossroads.MODID, "beam_transmute"));
-	public static final RecipeType<BoboRec> BOBO_TYPE = RecipeType.simple(new ResourceLocation(Crossroads.MODID, "bobo"));
-	public static final RecipeType<CopshowiumRec> COPSHOWIUM_TYPE = RecipeType.simple(new ResourceLocation(Crossroads.MODID, "copshowium"));
-	public static final RecipeType<ReagentRec> REAGENT_TYPE = RecipeType.simple(new ResourceLocation(Crossroads.MODID, "reagents"));
-	public static final RecipeType<FormulationVatRec> FORMULATION_VAT_TYPE = RecipeType.simple(new ResourceLocation(Crossroads.MODID, "formulation_vat"));
-	public static final RecipeType<BeamLensRec> BEAM_LENS_TYPE = RecipeType.simple(new ResourceLocation(Crossroads.MODID, "beam_lens"));
-	public static final RecipeType<EmbryoLabMorphRec> EMBRYO_LAB_MORPH_TYPE = RecipeType.simple(new ResourceLocation(Crossroads.MODID, "embryo_lab_morph"));
-	public static final RecipeType<IncubatorRec> INCUBATOR_TYPE = RecipeType.simple(new ResourceLocation(Crossroads.MODID, "incubator"));
+	public static final RecipeType<MillRec> MILL_TYPE = RecipeType.simple(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "mill"));
+	public static final RecipeType<StampMillRec> STAMP_MILL_TYPE = RecipeType.simple(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "stamp_mill"));
+	public static final RecipeType<OreCleanserRec> ORE_CLEANSER_TYPE = RecipeType.simple(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "ore_cleanser"));
+	public static final RecipeType<BeamExtractRec> BEAM_EXTRACT_TYPE = RecipeType.simple(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "beam_extract"));
+	public static final RecipeType<IceboxRec> COOLING_TYPE = RecipeType.simple(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "cooling"));
+	public static final RecipeType<CentrifugeRec> CENTRIFUGE_TYPE = RecipeType.simple(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "centrifuge"));
+	public static final RecipeType<AlchemyRec> ALCHEMY_TYPE = RecipeType.simple(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "alchemy"));
+	public static final RecipeType<BlastFurnaceRec> BLAST_FURNACE_TYPE = RecipeType.simple(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "cr_blast_furnace"));
+	public static final RecipeType<FluidCoolingRec> FLUID_COOLING_TYPE = RecipeType.simple(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "fluid_cooling"));
+	public static final RecipeType<CrucibleRec> CRUCIBLE_TYPE = RecipeType.simple(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "crucible"));
+	public static final RecipeType<DetailedCrafterRec> DETAILED_TYPE = RecipeType.simple(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "detailed_crafter"));
+	public static final RecipeType<BeamTransmuteRec> BEAM_TRANSMUTE_TYPE = RecipeType.simple(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "beam_transmute"));
+	public static final RecipeType<BoboRec> BOBO_TYPE = RecipeType.simple(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "bobo"));
+	public static final RecipeType<CopshowiumRec> COPSHOWIUM_TYPE = RecipeType.simple(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "copshowium"));
+	public static final RecipeType<ReagentRec> REAGENT_TYPE = RecipeType.simple(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "reagents"));
+	public static final RecipeType<FormulationVatRec> FORMULATION_VAT_TYPE = RecipeType.simple(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "formulation_vat"));
+	public static final RecipeType<BeamLensRec> BEAM_LENS_TYPE = RecipeType.simple(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "beam_lens"));
+	public static final RecipeType<EmbryoLabMorphRec> EMBRYO_LAB_MORPH_TYPE = RecipeType.simple(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "embryo_lab_morph"));
+	public static final RecipeType<IncubatorRec> INCUBATOR_TYPE = RecipeType.simple(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "incubator"));
 
 	private static boolean hasInit = false;
 

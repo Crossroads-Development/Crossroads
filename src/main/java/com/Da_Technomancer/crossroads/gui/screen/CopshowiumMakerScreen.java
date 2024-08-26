@@ -11,7 +11,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class CopshowiumMakerScreen extends MachineScreen<CopshowiumMakerContainer, CopshowiumCreationChamberTileEntity>{
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/gui/container/radiator_gui.png");
+	private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/gui/container/radiator_gui.png");
 
 	public CopshowiumMakerScreen(CopshowiumMakerContainer cont, Inventory playerInv, Component name){
 		super(cont, playerInv, name);

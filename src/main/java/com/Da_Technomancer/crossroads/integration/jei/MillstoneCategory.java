@@ -31,8 +31,8 @@ public class MillstoneCategory implements IRecipeCategory<MillRec>{
 	protected MillstoneCategory(IGuiHelper guiHelper){
 		back = guiHelper.createBlankDrawable(180, 100);
 		slot = guiHelper.getSlotDrawable();
-		arrowStatic = guiHelper.createDrawable(new ResourceLocation(Crossroads.MODID, "textures/gui/container/millstone_gui.png"), 66, 35, 44, 17);
-		arrow = guiHelper.createAnimatedDrawable(guiHelper.createDrawable(new ResourceLocation(Crossroads.MODID, "textures/gui/container/millstone_gui.png"), 176, 0, 44, 17), 40, IDrawableAnimated.StartDirection.TOP, false);
+		arrowStatic = guiHelper.createDrawable(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/gui/container/millstone_gui.png"), 66, 35, 44, 17);
+		arrow = guiHelper.createAnimatedDrawable(guiHelper.createDrawable(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/gui/container/millstone_gui.png"), 176, 0, 44, 17), 40, IDrawableAnimated.StartDirection.TOP, false);
 		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(CRBlocks.millstone, 1));
 	}
 

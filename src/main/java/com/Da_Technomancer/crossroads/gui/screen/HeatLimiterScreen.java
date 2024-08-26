@@ -19,7 +19,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class HeatLimiterScreen extends AbstractContainerScreen<HeatLimiterContainer>{
 
-	private static final ResourceLocation SEARCH_BAR_TEXTURE = new ResourceLocation(Essentials.MODID, "textures/gui/search_bar.png");
+	private static final ResourceLocation SEARCH_BAR_TEXTURE = ResourceLocation.fromNamespaceAndPath(Essentials.MODID, "textures/gui/search_bar.png");
 	private EditBox searchBar;
 
 	public HeatLimiterScreen(HeatLimiterContainer cont, Inventory playerInventory, Component text){

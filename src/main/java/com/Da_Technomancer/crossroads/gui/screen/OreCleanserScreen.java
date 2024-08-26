@@ -12,7 +12,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class OreCleanserScreen extends MachineScreen<OreCleanserContainer, OreCleanserTileEntity>{
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/gui/container/ore_cleanser_gui.png");
+	private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/gui/container/ore_cleanser_gui.png");
 
 	public OreCleanserScreen(OreCleanserContainer cont, Inventory playerInv, Component name){
 		super(cont, playerInv, name);

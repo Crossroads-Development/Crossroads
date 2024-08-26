@@ -12,7 +12,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class BloodBeamLinkerScreen extends BlockMenuScreen<BloodBeamLinkerContainer, BloodBeamLinkerTileEntity>{
 
-	private static final ResourceLocation GUI_TEXTURES = new ResourceLocation(Crossroads.MODID + ":textures/gui/container/blood_beam_linker_gui.png");
+	private static final ResourceLocation GUI_TEXTURES = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/gui/container/blood_beam_linker_gui.png");
 
 	public BloodBeamLinkerScreen(BloodBeamLinkerContainer cont, Inventory playerInv, Component name){
 		super(cont, playerInv, name);

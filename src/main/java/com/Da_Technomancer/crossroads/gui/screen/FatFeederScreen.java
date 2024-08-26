@@ -11,7 +11,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class FatFeederScreen extends MachineScreen<FatFeederContainer, FatFeederTileEntity>{
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/gui/container/fat_feeder_gui.png");
+	private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/gui/container/fat_feeder_gui.png");
 
 	public FatFeederScreen(FatFeederContainer cont, Inventory playerInv, Component text){
 		super(cont, playerInv, text);

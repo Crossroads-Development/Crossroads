@@ -99,15 +99,15 @@ public class EmbryoLabMorphRec implements IOptionalRecipe<Container>{
 			String s = GsonHelper.getAsString(json, "group", "");
 
 			if(!CraftingUtil.isActiveJSON(json)){
-				return new EmbryoLabMorphRec(recipeId, s, new ResourceLocation("none"), new ResourceLocation("none"), Ingredient.EMPTY, false);
+				return new EmbryoLabMorphRec(recipeId, s, ResourceLocation.withDefaultNamespace("none"), ResourceLocation.withDefaultNamespace("none"), Ingredient.EMPTY, false);
 			}
 
 			//Input mob as a string registry name
 			String inputName = GsonHelper.getAsString(json, "input_mob");
-			ResourceLocation inputMob = new ResourceLocation(inputName);
+			ResourceLocation inputMob = ResourceLocation.withDefaultNamespace(inputName);
 			//Output mob as a string registry name
 			String outputName = GsonHelper.getAsString(json, "output_mob");
-			ResourceLocation ouputMob = new ResourceLocation(outputName);
+			ResourceLocation ouputMob = ResourceLocation.withDefaultNamespace(outputName);
 
 			Ingredient inputIngr = CraftingUtil.getIngredient(json, "input", true);
 
@@ -120,12 +120,12 @@ public class EmbryoLabMorphRec implements IOptionalRecipe<Container>{
 			String s = buffer.readUtf(Short.MAX_VALUE);
 			boolean active = buffer.readBoolean();
 			if(active){
-				ResourceLocation inputMob = new ResourceLocation(buffer.readUtf());
-				ResourceLocation outputMob = new ResourceLocation(buffer.readUtf());
+				ResourceLocation inputMob = ResourceLocation.withDefaultNamespace(buffer.readUtf());
+				ResourceLocation outputMob = ResourceLocation.withDefaultNamespace(buffer.readUtf());
 				Ingredient input = Ingredient.fromNetwork(buffer);
 				return new EmbryoLabMorphRec(recipeId, s, inputMob, outputMob, input, true);
 			}else{
-				return new EmbryoLabMorphRec(recipeId, s, new ResourceLocation("none"), new ResourceLocation("none"), Ingredient.EMPTY, false);
+				return new EmbryoLabMorphRec(recipeId, s, ResourceLocation.withDefaultNamespace("none"), ResourceLocation.withDefaultNamespace("none"), Ingredient.EMPTY, false);
 			}
 		}
 

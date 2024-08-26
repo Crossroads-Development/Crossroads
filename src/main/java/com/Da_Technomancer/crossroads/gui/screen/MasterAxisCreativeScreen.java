@@ -18,7 +18,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class MasterAxisCreativeScreen extends AbstractContainerScreen<MasterAxisCreativeContainer>{
 
-	private static final ResourceLocation SEARCH_BAR_TEXTURE = new ResourceLocation(Essentials.MODID, "textures/gui/search_bar.png");
+	private static final ResourceLocation SEARCH_BAR_TEXTURE = ResourceLocation.fromNamespaceAndPath(Essentials.MODID, "textures/gui/search_bar.png");
 	private EditBox searchBar;
 
 	public MasterAxisCreativeScreen(MasterAxisCreativeContainer cont, Inventory playerInventory, Component text){

@@ -12,7 +12,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class RotaryPumpScreen extends MachineScreen<RotaryPumpContainer, RotaryPumpTileEntity>{
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/gui/container/rotary_pump_gui.png");
+	private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/gui/container/rotary_pump_gui.png");
 
 	public RotaryPumpScreen(RotaryPumpContainer cont, Inventory playerInv, Component name){
 		super(cont, playerInv, name);

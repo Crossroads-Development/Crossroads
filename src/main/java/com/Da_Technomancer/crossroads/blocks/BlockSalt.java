@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.entity.CRMobDamage;
 import com.Da_Technomancer.essentials.blocks.FertileSoil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -21,7 +22,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
-import net.minecraftforge.registries.ForgeRegistries;
+
 
 import javax.annotation.Nullable;
 import java.awt.*;
@@ -31,7 +32,7 @@ import java.util.List;
 public class BlockSalt extends FallingBlock{
 
 	private static final HashMap<Block, Block> coralMap = new HashMap<>(20);//The field to get the dead version of a coral from the live block is private, and having a big map is better than reflection
-	private static final TagKey<EntityType<?>> SALT_VULNERABLE = CraftingUtil.getTagKey(ForgeRegistries.Keys.ENTITY_TYPES, new ResourceLocation(Crossroads.MODID, "salt_vulnerable"));
+	private static final TagKey<EntityType<?>> SALT_VULNERABLE = CraftingUtil.getTagKey(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "salt_vulnerable"));
 
 	static {
 		coralMap.put(Blocks.TUBE_CORAL_BLOCK, Blocks.DEAD_TUBE_CORAL_BLOCK);

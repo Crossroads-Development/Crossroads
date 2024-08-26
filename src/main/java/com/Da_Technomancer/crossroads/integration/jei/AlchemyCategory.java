@@ -29,7 +29,7 @@ import java.util.List;
 public class AlchemyCategory implements IRecipeCategory<AlchemyRec>{
 
 	public static final RecipeType<AlchemyRec> TYPE = RecipeType.create(Crossroads.MODID, "reaction", AlchemyRec.class);
-	protected static final ResourceLocation ICONS = new ResourceLocation(Crossroads.MODID, "textures/gui/icons.png");
+	protected static final ResourceLocation ICONS = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/gui/icons.png");
 
 	private final IDrawable back;
 	private final IDrawableAnimated arrow;

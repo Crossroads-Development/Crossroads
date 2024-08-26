@@ -12,7 +12,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class ColdStorageScreen extends MachineScreen<ColdStorageContainer, ColdStorageTileEntity>{
 
-	private static final ResourceLocation GUI_TEXTURES = new ResourceLocation(Crossroads.MODID + ":textures/gui/container/cold_storage_gui.png");
+	private static final ResourceLocation GUI_TEXTURES = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/gui/container/cold_storage_gui.png");
 
 	public ColdStorageScreen(ColdStorageContainer cont, Inventory playerInv, Component name){
 		super(cont, playerInv, name);

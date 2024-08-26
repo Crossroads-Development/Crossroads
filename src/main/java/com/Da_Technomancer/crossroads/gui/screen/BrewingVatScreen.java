@@ -11,7 +11,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class BrewingVatScreen extends MachineScreen<BrewingVatContainer, BrewingVatTileEntity>{
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/gui/container/brewing_vat_gui.png");
+	private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/gui/container/brewing_vat_gui.png");
 
 	public BrewingVatScreen(BrewingVatContainer cont, Inventory playerInv, Component name){
 		super(cont, playerInv, name);

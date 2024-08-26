@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.entity.CRMobDamage;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -21,13 +22,12 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.Tags;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class AcidAlchemyEffect implements IAlchEffect{
 
-	private static final TagKey<Block> copperBlock = CraftingUtil.getTagKey(ForgeRegistries.Keys.BLOCKS, new ResourceLocation("forge", "storage_blocks/copper"));
-	private static final TagKey<Block> tinBlock = CraftingUtil.getTagKey(ForgeRegistries.Keys.BLOCKS, new ResourceLocation("forge", "storage_blocks/tin"));
-	private static final TagKey<Block> bronzeBlock = CraftingUtil.getTagKey(ForgeRegistries.Keys.BLOCKS, new ResourceLocation("forge", "storage_blocks/bronze"));
+	private static final TagKey<Block> copperBlock = CraftingUtil.getTagKey(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath("forge", "storage_blocks/copper"));
+	private static final TagKey<Block> tinBlock = CraftingUtil.getTagKey(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath("forge", "storage_blocks/tin"));
+	private static final TagKey<Block> bronzeBlock = CraftingUtil.getTagKey(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath("forge", "storage_blocks/bronze"));
 
 	protected int getDamage(){
 		return 8;

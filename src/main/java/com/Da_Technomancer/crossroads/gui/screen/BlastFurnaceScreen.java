@@ -11,7 +11,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class BlastFurnaceScreen extends MachineScreen<BlastFurnaceContainer, BlastFurnaceTileEntity>{
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/gui/container/blast_furnace_gui.png");
+	private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/gui/container/blast_furnace_gui.png");
 
 	public BlastFurnaceScreen(BlastFurnaceContainer cont, Inventory playerInv, Component text){
 		super(cont, playerInv, text);

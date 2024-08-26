@@ -11,7 +11,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class FormulationVatScreen extends MachineScreen<FormulationVatContainer, FormulationVatTileEntity>{
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/gui/container/formulation_vat_gui.png");
+	private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/gui/container/formulation_vat_gui.png");
 
 	public FormulationVatScreen(FormulationVatContainer cont, Inventory playerInv, Component name){
 		super(cont, playerInv, name);

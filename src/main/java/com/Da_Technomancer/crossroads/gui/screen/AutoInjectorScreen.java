@@ -14,7 +14,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class AutoInjectorScreen extends MachineScreen<AutoInjectorContainer, AutoInjectorTileEntity>{
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/gui/container/auto_injector_gui.png");
+	private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/gui/container/auto_injector_gui.png");
 
 	public AutoInjectorScreen(AutoInjectorContainer cont, Inventory playerInv, Component name){
 		super(cont, playerInv, name);

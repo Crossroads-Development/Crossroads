@@ -24,7 +24,7 @@ public class Location{
 
 	public Location(long posSerial, String dimSerial){
 		this.pos = BlockPos.of(posSerial);
-		this.dim = new ResourceLocation(dimSerial);
+		this.dim = ResourceLocation.withDefaultNamespace(dimSerial);
 	}
 
 	@Nullable

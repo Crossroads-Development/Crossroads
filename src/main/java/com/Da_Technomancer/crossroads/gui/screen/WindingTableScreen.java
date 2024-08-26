@@ -12,7 +12,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class WindingTableScreen extends MachineScreen<WindingTableContainer, WindingTableTileEntity>{
 
-	private static final ResourceLocation GUI_TEXTURES = new ResourceLocation(Crossroads.MODID, "textures/gui/container/winding_table_gui.png");
+	private static final ResourceLocation GUI_TEXTURES = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/gui/container/winding_table_gui.png");
 
 	public WindingTableScreen(WindingTableContainer cont, Inventory playerInv, Component name){
 		super(cont, playerInv, name);

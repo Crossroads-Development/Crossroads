@@ -6,6 +6,7 @@ import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
 import com.google.common.collect.Lists;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.Level;
@@ -15,7 +16,6 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.loading.FMLPaths;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -125,7 +125,7 @@ public class CRConfig{
 	public static ForgeConfigSpec.BooleanValue readoutChat;
 	public static ForgeConfigSpec.BooleanValue permanentPotionParticles;
 
-	private static final TagKey<Block> destroyBlacklist = CraftingUtil.getTagKey(ForgeRegistries.Keys.BLOCKS, new ResourceLocation(Crossroads.MODID, "destroy_blacklist"));
+	private static final TagKey<Block> destroyBlacklist = CraftingUtil.getTagKey(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "destroy_blacklist"));
 
 	private static ForgeConfigSpec clientSpec;
 	private static ForgeConfigSpec serverSpec;

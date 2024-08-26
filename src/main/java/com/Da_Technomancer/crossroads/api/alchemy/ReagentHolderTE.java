@@ -18,6 +18,7 @@ import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -38,7 +39,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.Level;
 
 import javax.annotation.Nonnull;
@@ -533,7 +533,7 @@ public abstract class ReagentHolderTE extends BlockEntity implements ITickableTi
 				int refQty = r.getFluidQty();
 				int qty = contents.getQty(id);
 				if(qty > 0 && r.getPhase(contents.getTempC()) == EnumMatterPhase.LIQUID){
-					return new FluidStack(CraftingUtil.getPreferredEntry(refStack.getMatchedFluids(), ForgeRegistries.Keys.FLUIDS), qty * refQty);
+					return new FluidStack(CraftingUtil.getPreferredEntry(refStack.getMatchedFluids(), Registries.FLUID), qty * refQty);
 				}
 			}
 			return FluidStack.EMPTY;

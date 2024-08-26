@@ -12,7 +12,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class StasisStorageScreen extends MachineScreen<StasisStorageContainer, StasisStorageTileEntity>{
 
-	private static final ResourceLocation GUI_TEXTURES = new ResourceLocation(Crossroads.MODID + ":textures/gui/container/stasis_storage_gui.png");
+	private static final ResourceLocation GUI_TEXTURES = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/gui/container/stasis_storage_gui.png");
 
 	public StasisStorageScreen(StasisStorageContainer cont, Inventory playerInv, Component name){
 		super(cont, playerInv, name);

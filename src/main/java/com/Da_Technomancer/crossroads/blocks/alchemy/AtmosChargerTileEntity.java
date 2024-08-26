@@ -13,6 +13,7 @@ import com.Da_Technomancer.crossroads.blocks.electric.TeslaCoilTopTileEntity;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -28,7 +29,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 
@@ -36,7 +36,7 @@ public class AtmosChargerTileEntity extends BlockEntity implements ITickableTile
 
 	public static final BlockEntityType<AtmosChargerTileEntity> TYPE = CRTileEntity.createType(AtmosChargerTileEntity::new, CRBlocks.atmosCharger);
 
-	private static final TagKey<Block> ANTENNA_TAG = CraftingUtil.getTagKey(ForgeRegistries.Keys.BLOCKS, new ResourceLocation(Crossroads.MODID, "atmos_antenna"));
+	private static final TagKey<Block> ANTENNA_TAG = CraftingUtil.getTagKey(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "atmos_antenna"));
 
 	private static final int FE_CAPACITY = 20_000;
 

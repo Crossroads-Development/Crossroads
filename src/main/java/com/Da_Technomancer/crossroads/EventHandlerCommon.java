@@ -31,6 +31,7 @@ import com.Da_Technomancer.crossroads.world.CRWorldGen;
 import com.Da_Technomancer.essentials.api.ReflectionUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -75,12 +76,12 @@ import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.level.ExplosionEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegisterEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
+import net.neoforged.neoforge.registries.RegisterEvent;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -103,74 +104,74 @@ public class EventHandlerCommon{
 		@SuppressWarnings("unused")
 		@SubscribeEvent
 		public static void register(RegisterEvent e){
-			e.register(ForgeRegistries.Keys.BLOCKS, helper -> {
+			e.register(Registries.BLOCK, helper -> {
 				CRBlocks.init();
 				CRMaterialLibrary.loadConfig();
 				CRFluids.init();
 				CRBlocks.registerBlocks(helper);
 			});
 
-			e.register(ForgeRegistries.Keys.ITEMS, helper -> {
+			e.register(Registries.ITEM, helper -> {
 				CRItems.init();
 				CRFluids.init();
 				CRItems.registerItems(helper);
 			});
 
-			e.register(ForgeRegistries.Keys.FLUID_TYPES, helper -> {
+			e.register(NeoForgeRegistries.Keys.FLUID_TYPES, helper -> {
 				CRFluids.init();
 				registerAll(helper, CRFluids.toRegisterType);
 			});
 
-			e.register(ForgeRegistries.Keys.FLUIDS, helper -> {
+			e.register(Registries.FLUID, helper -> {
 				CRFluids.init();
 				registerAll(helper, CRFluids.toRegisterFluid);
 			});
 
-			e.register(ForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS, helper -> {
+			e.register(NeoForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS, helper -> {
 				CRLootModifiers.init();
 				registerAll(helper, CRLootModifiers.toRegister);
 			});
 
-			e.register(ForgeRegistries.Keys.ENTITY_TYPES, helper -> {
+			e.register(Registries.ENTITY_TYPE, helper -> {
 				CREntities.init();
 				registerAll(helper, CREntities.toRegister);
 			});
 
-			e.register(ForgeRegistries.Keys.BLOCK_ENTITY_TYPES, helper -> {
+			e.register(Registries.BLOCK_ENTITY_TYPE, helper -> {
 				CRTileEntity.init();
 				registerAll(helper, CRTileEntity.toRegister);
 			});
 
-			e.register(ForgeRegistries.Keys.FEATURES, helper -> {
+			e.register(Registries.FEATURE, helper -> {
 				CRWorldGen.init();
 				registerAll(helper, CRWorldGen.toRegisterFeature);
 			});
 
-			e.register(ForgeRegistries.Keys.SOUND_EVENTS, helper -> {
+			e.register(Registries.SOUND_EVENT, helper -> {
 				registerAll(helper, CRSounds.soundsToRegister);
 			});
 
-			e.register(ForgeRegistries.Keys.MOB_EFFECTS, helper -> {
+			e.register(Registries.MOB_EFFECT, helper -> {
 				registerAll(helper, CRPotions.toRegisterEffect);
 			});
 
-			e.register(ForgeRegistries.Keys.POTIONS, helper -> {
+			e.register(Registries.POTION, helper -> {
 				CRPotions.init();
 				registerAll(helper, CRPotions.toRegisterPotion);
 				CRPotions.registerPotionRecipes();
 			});
 
-			e.register(ForgeRegistries.Keys.PARTICLE_TYPES, helper -> {
+			e.register(Registries.PARTICLE_TYPE, helper -> {
 				CRParticles.init();
 				registerAll(helper, CRParticles.toRegister);
 			});
 
-			e.register(ForgeRegistries.Keys.RECIPE_SERIALIZERS, helper -> {
+			e.register(Registries.RECIPE_SERIALIZER, helper -> {
 				CRRecipes.init();
 				registerAll(helper, CRRecipes.toRegisterSerializer);
 			});
 
-			e.register(ForgeRegistries.Keys.RECIPE_TYPES, helper -> {
+			e.register(Registries.RECIPE_TYPE, helper -> {
 				CRRecipes.init();
 				registerAll(helper, CRRecipes.toRegisterType);
 			});
@@ -179,7 +180,7 @@ public class EventHandlerCommon{
 				registerAll(helper, CRWorldGen.toRegisterModifier);
 			});
 
-			e.register(Registries.CREATIVE_MODE_TAB, helper -> {
+			e.register(BuiltInRegistries.CREATIVE_MODE_TAB, helper -> {
 				CRItems.MAIN_CREATIVE_TAB = CreativeModeTab.builder()
 						.title(Component.translatable("item_group." + CRItems.MAIN_CREATIVE_TAB_ID))
 						.icon(() -> new ItemStack(CRItems.omnimeter))
@@ -191,7 +192,7 @@ public class EventHandlerCommon{
 									}
 								}
 						).build();
-				helper.register(new ResourceLocation(Crossroads.MODID, CRItems.MAIN_CREATIVE_TAB_ID), CRItems.MAIN_CREATIVE_TAB);
+				helper.register(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, CRItems.MAIN_CREATIVE_TAB_ID), CRItems.MAIN_CREATIVE_TAB);
 
 				CRItems.HEAT_CABLE_CREATIVE_TAB = CreativeModeTab.builder()
 						.title(Component.translatable("item_group." + CRItems.HEAT_CABLE_CREATIVE_TAB_ID))
@@ -204,7 +205,7 @@ public class EventHandlerCommon{
 									}
 								}
 						).build();
-				helper.register(new ResourceLocation(Crossroads.MODID, CRItems.HEAT_CABLE_CREATIVE_TAB_ID), CRItems.HEAT_CABLE_CREATIVE_TAB);
+				helper.register(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, CRItems.HEAT_CABLE_CREATIVE_TAB_ID), CRItems.HEAT_CABLE_CREATIVE_TAB);
 
 				CRItems.GEAR_CREATIVE_TAB = CreativeModeTab.builder()
 						.title(Component.translatable("item_group." + CRItems.GEAR_CREATIVE_TAB_ID))
@@ -217,7 +218,7 @@ public class EventHandlerCommon{
 									}
 								}
 						).build();
-				helper.register(new ResourceLocation(Crossroads.MODID, CRItems.GEAR_CREATIVE_TAB_ID), CRItems.GEAR_CREATIVE_TAB);
+				helper.register(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, CRItems.GEAR_CREATIVE_TAB_ID), CRItems.GEAR_CREATIVE_TAB);
 			});
 		}
 
@@ -610,7 +611,7 @@ public class EventHandlerCommon{
 		}
 	}
 
-	private static final TagKey<EntityType<?>> GHOST_MOB = CraftingUtil.getTagKey(ForgeRegistries.Keys.ENTITY_TYPES, new ResourceLocation(Crossroads.MODID, "ghost"));
+	private static final TagKey<EntityType<?>> GHOST_MOB = CraftingUtil.getTagKey(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "ghost"));
 
 	@SubscribeEvent()
 	@SuppressWarnings("unused")

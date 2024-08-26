@@ -16,7 +16,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class BeaconHarnessScreen extends AbstractContainerScreen<BeaconHarnessContainer>{
 
-	private static final ResourceLocation GUI_TEXTURES = new ResourceLocation(Crossroads.MODID, "textures/gui/container/beacon_harness_gui.png");
+	private static final ResourceLocation GUI_TEXTURES = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/gui/container/beacon_harness_gui.png");
 
 	public BeaconHarnessScreen(BeaconHarnessContainer cont, Inventory playerInv, Component name){
 		super(cont, playerInv, name);

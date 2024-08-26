@@ -11,7 +11,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 
@@ -44,7 +43,7 @@ public class Sedation extends MobEffect{
 
 			//Check against the blacklist
 			List<? extends String> blacklist = CRConfig.sedationBlacklist.get();
-			if(blacklist.stream().anyMatch(entry -> new ResourceLocation(entry).equals(MiscUtil.getRegistryName(entity.getType(), ForgeRegistries.ENTITY_TYPES)))){
+			if(blacklist.stream().anyMatch(entry -> ResourceLocation.withDefaultNamespace(entry).equals(MiscUtil.getRegistryName(entity.getType(), BuiltInRegistries.ENTITY_TYPE)))){
 				return false;
 			}
 

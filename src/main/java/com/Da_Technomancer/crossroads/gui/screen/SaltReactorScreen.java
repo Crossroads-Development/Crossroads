@@ -12,7 +12,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class SaltReactorScreen extends MachineScreen<SaltReactorContainer, SaltReactorTileEntity>{
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/gui/container/salt_reactor_gui.png");
+	private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/gui/container/salt_reactor_gui.png");
 
 	public SaltReactorScreen(SaltReactorContainer cont, Inventory playerInv, Component name){
 		super(cont, playerInv, name);

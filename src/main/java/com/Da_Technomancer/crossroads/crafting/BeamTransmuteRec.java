@@ -8,6 +8,7 @@ import com.Da_Technomancer.crossroads.api.crafting.IOptionalRecipe;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -19,7 +20,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.util.Locale;
@@ -150,8 +150,8 @@ public class BeamTransmuteRec implements IOptionalRecipe<Container>{
 			//BlockIngredient input, with name "input"
 			BlockIngredient in = CraftingUtil.getBlockIngredient(json, "input", false);
 			//Block output
-			ResourceLocation outName = new ResourceLocation(GsonHelper.getAsString(json, "output"));
-			Block created = ForgeRegistries.BLOCKS.getValue(outName);
+			ResourceLocation outName = Resourcelocation.parse(GsonHelper.getAsString(json, "output"));
+			Block created = BuiltInRegistries.BLOCK.get(outName);
 			if(created == null){
 				throw new JsonParseException("Non-existent output specified");
 			}
@@ -167,7 +167,7 @@ public class BeamTransmuteRec implements IOptionalRecipe<Container>{
 				EnumBeamAlignments align = EnumBeamAlignments.values()[buffer.readVarInt()];
 				boolean voi = buffer.readBoolean();
 				int power = buffer.readVarInt();
-				Block out = ForgeRegistries.BLOCKS.getValue(buffer.readResourceLocation());
+				Block out = BuiltInRegistries.BLOCK.get(buffer.readResourceLocation());
 				BlockIngredient input = BlockIngredient.readFromBuffer(buffer);
 				return new BeamTransmuteRec(recipeId, s, align, voi, input, out, power, true);
 			}else{
@@ -183,7 +183,7 @@ public class BeamTransmuteRec implements IOptionalRecipe<Container>{
 				buffer.writeVarInt(recipe.align.ordinal());
 				buffer.writeBoolean(recipe.voi);
 				buffer.writeVarInt(recipe.power);
-				buffer.writeResourceLocation(MiscUtil.getRegistryName(recipe.output, ForgeRegistries.BLOCKS));
+				buffer.writeResourceLocation(MiscUtil.getRegistryName(recipe.output, BuiltInRegistries.BLOCK));
 				recipe.ingr.writeToBuffer(buffer);
 			}
 		}

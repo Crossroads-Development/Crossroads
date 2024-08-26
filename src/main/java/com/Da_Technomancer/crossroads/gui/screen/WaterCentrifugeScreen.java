@@ -11,7 +11,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class WaterCentrifugeScreen extends MachineScreen<WaterCentrifugeContainer, WaterCentrifugeTileEntity>{
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/gui/container/steam_boiler_gui.png");
+	private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/gui/container/steam_boiler_gui.png");
 
 	public WaterCentrifugeScreen(WaterCentrifugeContainer cont, Inventory playerInv, Component name){
 		super(cont, playerInv, name);

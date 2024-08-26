@@ -8,6 +8,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -17,7 +18,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryManager;
 import net.minecraftforge.registries.tags.ITagManager;
 import org.apache.commons.lang3.tuple.Pair;
@@ -50,7 +50,7 @@ public class CraftingUtil{
 	public static FluidStack getFluidStack(JsonObject json, String memberName){
 		JsonObject obj = GsonHelper.getAsJsonObject(json, memberName);
 		String name = GsonHelper.getAsString(obj, "fluid");
-		Fluid f = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(name));
+		Fluid f = BuiltInRegistries.FLUID.get(ResourceLocation.withDefaultNamespace(name));
 		int qty = GsonHelper.getAsInt(obj, "amount");
 		//Note: Does not currently support NBT
 		return f == null || qty <= 0 ? FluidStack.EMPTY : new FluidStack(f, qty);

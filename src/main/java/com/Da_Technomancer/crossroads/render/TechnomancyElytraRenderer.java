@@ -12,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class TechnomancyElytraRenderer<T extends LivingEntity, M extends EntityModel<T>> extends ElytraLayer<T, M>{
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/entities/techno_elytra.png");
+	private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/entities/techno_elytra.png");
 
 	public TechnomancyElytraRenderer(RenderLayerParent<T, M> rendererIn, EntityModelSet modelSet){
 		super(rendererIn, modelSet);

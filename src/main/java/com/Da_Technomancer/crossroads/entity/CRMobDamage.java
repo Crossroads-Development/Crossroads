@@ -14,15 +14,15 @@ import net.minecraft.world.level.Level;
 
 public class CRMobDamage{
 
-	public static final ResourceKey<DamageType> SALT = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(Crossroads.MODID, "salt"));
-	public static final ResourceKey<DamageType> DRILL = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(Crossroads.MODID, "drill"));
-	public static final ResourceKey<DamageType> CR_SYRINGE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(Crossroads.MODID, "cr_syringe"));
-	public static final ResourceKey<DamageType> VODKA = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(Crossroads.MODID, "vodka"));
-	public static final ResourceKey<DamageType> WINDMILL = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(Crossroads.MODID, "windmill"));
-	public static final ResourceKey<DamageType> VOID = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(Crossroads.MODID, "void"));
-	public static final ResourceKey<DamageType> POTENTIALVOID = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(Crossroads.MODID, "potentialvoid"));
-	public static final ResourceKey<DamageType> CHEMICAL = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(Crossroads.MODID, "chemical"));
-	public static final ResourceKey<DamageType> NON_VIABLE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(Crossroads.MODID, "non_viable"));
+	public static final ResourceKey<DamageType> SALT = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "salt"));
+	public static final ResourceKey<DamageType> DRILL = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "drill"));
+	public static final ResourceKey<DamageType> CR_SYRINGE = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "cr_syringe"));
+	public static final ResourceKey<DamageType> VODKA = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "vodka"));
+	public static final ResourceKey<DamageType> WINDMILL = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "windmill"));
+	public static final ResourceKey<DamageType> VOID = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "void"));
+	public static final ResourceKey<DamageType> POTENTIALVOID = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "potentialvoid"));
+	public static final ResourceKey<DamageType> CHEMICAL = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "chemical"));
+	public static final ResourceKey<DamageType> NON_VIABLE = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "non_viable"));
 
 	private static Registry<DamageType> registryCache;
 

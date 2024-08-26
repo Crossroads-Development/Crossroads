@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -18,7 +19,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.common.crafting.StrictNBTIngredient;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.HashMap;
 import java.util.List;
@@ -102,9 +102,9 @@ public class CRPotions{
 	public static boolean canBePermanentEffect(MobEffectInstance effect){
 		if(!effect.getEffect().isInstantenous()){
 			//Confirm the effect isn't blacklisted
-			ResourceLocation effectRegistryName = MiscUtil.getRegistryName(effect.getEffect(), ForgeRegistries.MOB_EFFECTS);
+			ResourceLocation effectRegistryName = MiscUtil.getRegistryName(effect.getEffect(), BuiltInRegistries.MOB_EFFECT);
 			List<? extends String> blacklist = CRConfig.permanentEffectBlacklist.get();
-			return blacklist.stream().noneMatch(entry -> new ResourceLocation(entry).equals(effectRegistryName));
+			return blacklist.stream().noneMatch(entry -> ResourceLocation.withDefaultNamespace(entry).equals(effectRegistryName));
 		}
 		return false;
 	}

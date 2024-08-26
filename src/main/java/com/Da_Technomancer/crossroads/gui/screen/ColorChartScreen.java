@@ -20,8 +20,8 @@ import java.util.Locale;
 public class ColorChartScreen extends AbstractContainerScreen<ColorChartContainer>{
 
 	//This texture is a 4x4 grid of 300x300 color charts, with different alignments colored in. The top second-left one is fully B&W
-	private static final ResourceLocation BACKGROUND = new ResourceLocation(Crossroads.MODID, "textures/gui/container/color_chart_gui.png");
-//	private static final ResourceLocation BACKGROUND_MONO = new ResourceLocation(Crossroads.MODID, "textures/gui/container/color_chart_mono_gui.png");
+	private static final ResourceLocation BACKGROUND = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/gui/container/color_chart_gui.png");
+//	private static final ResourceLocation BACKGROUND_MONO = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/gui/container/color_chart_mono_gui.png");
 	private static final int xCENTER = 150;
 	private static final int yCENTER = 150;
 	private static final int RADIUS = 138;

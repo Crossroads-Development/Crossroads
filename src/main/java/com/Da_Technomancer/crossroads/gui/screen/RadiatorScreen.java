@@ -19,7 +19,7 @@ import net.minecraftforge.client.gui.widget.ExtendedButton;
 
 public class RadiatorScreen extends MachineScreen<RadiatorContainer, RadiatorTileEntity>{
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/gui/container/radiator_gui.png");
+	private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/gui/container/radiator_gui.png");
 
 	private ExtendedButton upButton;
 	private ExtendedButton downButton;

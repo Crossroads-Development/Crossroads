@@ -14,7 +14,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class BloodCentrifugeScreen extends MachineScreen<BloodCentrifugeContainer, BloodCentrifugeTileEntity>{
 
-	private static final ResourceLocation BACKGROUND = new ResourceLocation(Crossroads.MODID, "textures/gui/container/blood_centrifuge_gui.png");
+	private static final ResourceLocation BACKGROUND = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/gui/container/blood_centrifuge_gui.png");
 
 	public BloodCentrifugeScreen(BloodCentrifugeContainer cont, Inventory playerInv, Component text){
 		super(cont, playerInv, text);

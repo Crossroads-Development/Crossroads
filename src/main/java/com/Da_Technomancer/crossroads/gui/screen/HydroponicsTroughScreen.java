@@ -11,7 +11,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class HydroponicsTroughScreen extends MachineScreen<HydroponicsTroughContainer, HydroponicsTroughTileEntity>{
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/gui/container/hydroponics_trough_gui.png");
+	private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/gui/container/hydroponics_trough_gui.png");
 
 	public HydroponicsTroughScreen(HydroponicsTroughContainer cont, Inventory playerInv, Component name){
 		super(cont, playerInv, name);

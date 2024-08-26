@@ -6,6 +6,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -14,7 +16,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -90,7 +91,7 @@ public class BlockIngredient implements Predicate<BlockState>{
 		updateCache();
 		buf.writeVarInt(matched.size());//Write how many Blocks this matches
 		for(Block b : matched){
-			buf.writeResourceLocation(MiscUtil.getRegistryName(b, ForgeRegistries.BLOCKS));//Write the registry name of every matched block.
+			buf.writeResourceLocation(MiscUtil.getRegistryName(b, BuiltInRegistries.BLOCK));//Write the registry name of every matched block.
 		}
 	}
 
@@ -98,7 +99,7 @@ public class BlockIngredient implements Predicate<BlockState>{
 		int count = buf.readVarInt();
 		Block[] matched = new Block[count];
 		for(int i = 0; i < count; i++){
-			matched[i] = ForgeRegistries.BLOCKS.getValue(buf.readResourceLocation());
+			matched[i] = BuiltInRegistries.BLOCK.get(buf.readResourceLocation());
 		}
 		//Create a block ingredient with one large IBlockList that matches every block. Note this doesn't preserve Tag associations of the original definition
 		return new BlockIngredient(new BlockList(matched));
@@ -126,9 +127,9 @@ public class BlockIngredient implements Predicate<BlockState>{
 
 	private static IBlockList readIngr(JsonObject o){
 		if(o.has("tag")){
-			return new TagList(CraftingUtil.getTagKey(ForgeRegistries.Keys.BLOCKS, new ResourceLocation(GsonHelper.getAsString(o, "tag"))));
+			return new TagList(CraftingUtil.getTagKey(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(GsonHelper.getAsString(o, "tag"))));
 		}else if(o.has("block")){
-			return new SingleList(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(GsonHelper.getAsString(o, "block"))));
+			return new SingleList(BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath(GsonHelper.getAsString(o, "block"))));
 		}else{
 			throw new JsonParseException("No value defined in BlockIngredient");
 		}

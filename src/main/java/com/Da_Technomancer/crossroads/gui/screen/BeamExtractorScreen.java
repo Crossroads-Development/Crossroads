@@ -11,7 +11,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class BeamExtractorScreen extends com.Da_Technomancer.essentials.api.BlockMenuScreen<BeamExtractorContainer, BeamExtractorTileEntity>{
 
-	private static final ResourceLocation GUI_TEXTURES = new ResourceLocation(Crossroads.MODID + ":textures/gui/container/arcane_extractor_gui.png");
+	private static final ResourceLocation GUI_TEXTURES = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/gui/container/arcane_extractor_gui.png");
 
 	public BeamExtractorScreen(BeamExtractorContainer cont, Inventory playerInv, Component name){
 		super(cont, playerInv, name);

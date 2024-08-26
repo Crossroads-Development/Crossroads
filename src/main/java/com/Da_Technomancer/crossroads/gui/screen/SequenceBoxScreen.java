@@ -22,8 +22,8 @@ import org.lwjgl.glfw.GLFW;
 
 public class SequenceBoxScreen extends AbstractContainerScreen<SequenceBoxContainer>{
 
-	private static final ResourceLocation SEARCH_BAR_TEXTURE = new ResourceLocation(Essentials.MODID, "textures/gui/search_bar.png");
-	private static final ResourceLocation BACKGROUND_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/gui/container/sequence_box_gui.png");
+	private static final ResourceLocation SEARCH_BAR_TEXTURE = ResourceLocation.fromNamespaceAndPath(Essentials.MODID, "textures/gui/search_bar.png");
+	private static final ResourceLocation BACKGROUND_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/gui/container/sequence_box_gui.png");
 
 	//Should probably explain what's going on here:
 	//The 'proper' way to have a multiline edit-able text screen is to basically make my own, which would involve writing handling for copy-pasting, multi-line selection, weird keyboard buttons, and so on

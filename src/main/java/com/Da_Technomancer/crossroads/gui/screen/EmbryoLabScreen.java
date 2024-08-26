@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class EmbryoLabScreen extends MachineScreen<EmbryoLabContainer, EmbryoLabTileEntity>{
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/gui/container/embryo_lab_gui.png");
+	private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/gui/container/embryo_lab_gui.png");
 
 	public EmbryoLabScreen(EmbryoLabContainer cont, Inventory playerInv, Component name){
 		super(cont, playerInv, name);

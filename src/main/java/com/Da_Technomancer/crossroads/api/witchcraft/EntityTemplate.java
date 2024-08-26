@@ -9,6 +9,7 @@ import com.Da_Technomancer.crossroads.entity.mob_effects.CRPotions;
 import com.Da_Technomancer.essentials.api.ReflectionUtil;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
@@ -22,7 +23,6 @@ import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.common.util.INBTSerializable;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -82,7 +82,7 @@ public class EntityTemplate implements INBTSerializable<CompoundTag>{
 	public EntityType<?> getEntityType(){
 		if(entityType == null){
 			//Generate a cache based on entityName
-			entityType = entityName == null ? null : ForgeRegistries.ENTITY_TYPES.getValue(entityName);
+			entityType = entityName == null ? null : BuiltInRegistries.ENTITY_TYPE.get(entityName);
 		}
 		return entityType;
 	}
@@ -179,7 +179,7 @@ public class EntityTemplate implements INBTSerializable<CompoundTag>{
 	@Override
 	public void deserializeNBT(CompoundTag nbt){
 		String name = nbt.getString("entity_name");
-		entityName = name == null || name.length() == 0 ? null : new ResourceLocation(name);
+		entityName = name == null || name.length() == 0 ? null : ResourceLocation.withDefaultNamespace(name);
 		entityType = null;
 		loyal = nbt.getBoolean("loyal");
 		respawning = nbt.getBoolean("respawning");
@@ -397,7 +397,7 @@ public class EntityTemplate implements INBTSerializable<CompoundTag>{
 
 	public static EntityTemplate getTemplateFromEntity(LivingEntity source){
 		EntityTemplate template = new EntityTemplate();
-		template.setEntityName(MiscUtil.getRegistryName(source.getType(), ForgeRegistries.ENTITY_TYPES));
+		template.setEntityName(MiscUtil.getRegistryName(source.getType(), BuiltInRegistries.ENTITY_TYPE));
 		template.setRespawning(source.getPersistentData().getBoolean(RESPAWNING_KEY));
 		template.setLoyal(source.getPersistentData().getBoolean(LOYAL_KEY));
 		if(source.getPersistentData().contains(OWNER_KEY)){
@@ -412,7 +412,7 @@ public class EntityTemplate implements INBTSerializable<CompoundTag>{
 		int degrade = 0;
 		ArrayList<MobEffectInstance> permanentEffects = new ArrayList<>(0);
 		for(MobEffectInstance instance : effects){
-			if(MiscUtil.getRegistryName(CRPotions.HEALTH_PENALTY_EFFECT, ForgeRegistries.MOB_EFFECTS).equals(MiscUtil.getRegistryName(instance.getEffect(), ForgeRegistries.MOB_EFFECTS))){
+			if(MiscUtil.getRegistryName(CRPotions.HEALTH_PENALTY_EFFECT, BuiltInRegistries.MOB_EFFECT).equals(MiscUtil.getRegistryName(instance.getEffect(), BuiltInRegistries.MOB_EFFECT))){
 				//This is the health penalty, interpret as degradation
 				degrade += (instance.getAmplifier() + 1) / 2;//We divide by 2, as degradation is measured in hearts
 			}else if(!instance.getEffect().isInstantenous() && instance.getDuration() > CRPotions.PERM_EFFECT_CUTOFF){
@@ -427,11 +427,11 @@ public class EntityTemplate implements INBTSerializable<CompoundTag>{
 	}
 
 	public static boolean isCloningAllowed(ResourceLocation entityName){
-		if(entityName.equals(new ResourceLocation("minecraft:player"))){
+		if(entityName.equals(ResourceLocation.parse("minecraft:player"))){
 			return false;
 		}
 		List<? extends String> blacklist = CRConfig.cloningBlacklist.get();
-		return blacklist.stream().noneMatch(entry -> new ResourceLocation(entry).equals(entityName));
+		return blacklist.stream().noneMatch(entry -> ResourceLocation.withDefaultNamespace(entry).equals(entityName));
 	}
 
 	public static void handleEntityDeath(LivingEntity entity){

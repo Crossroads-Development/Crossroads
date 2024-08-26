@@ -29,7 +29,7 @@ import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ForgeSpawnEggItem;
-import net.minecraftforge.registries.RegisterEvent;
+import net.neoforged.neoforge.registries.RegisterEvent;
 import org.apache.logging.log4j.Level;
 
 import javax.annotation.Nonnull;
@@ -408,7 +408,7 @@ public final class CRItems{
 	public static void clientInit(){
 		//Properties
 		//Whirligig rotation
-		ItemProperties.register(whirligig, new ResourceLocation("angle"), (ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity, int unmapped) -> {
+		ItemProperties.register(whirligig, ResourceLocation.withDefaultNamespace("angle"), (ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity, int unmapped) -> {
 			if(entity == null || entity.getUseItem() != stack){
 				return 0;
 			}
@@ -450,21 +450,21 @@ public final class CRItems{
 		});
 		//Technomancy armor
 		ItemPropertyFunction technoArmorPropertyGetter = (ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity, int unmapped) -> TechnomancyArmor.isReinforced(stack) ? 2F : 0F;
-		ItemProperties.register(armorGoggles, new ResourceLocation("protection"), technoArmorPropertyGetter);
-		ItemProperties.register(propellerPack, new ResourceLocation("protection"), technoArmorPropertyGetter);
-		ItemProperties.register(armorToolbelt, new ResourceLocation("protection"), technoArmorPropertyGetter);
-		ItemProperties.register(armorEnviroBoots, new ResourceLocation("protection"), technoArmorPropertyGetter);
+		ItemProperties.register(armorGoggles, ResourceLocation.withDefaultNamespace("protection"), technoArmorPropertyGetter);
+		ItemProperties.register(propellerPack, ResourceLocation.withDefaultNamespace("protection"), technoArmorPropertyGetter);
+		ItemProperties.register(armorToolbelt, ResourceLocation.withDefaultNamespace("protection"), technoArmorPropertyGetter);
+		ItemProperties.register(armorEnviroBoots, ResourceLocation.withDefaultNamespace("protection"), technoArmorPropertyGetter);
 		//Rotting samples
 		ItemPropertyFunction rottingPropertyGetter = (ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity, int unmapped) -> stack.getItem() instanceof IPerishable && IPerishable.isSpoiled(stack, world) ? 1F : 0F;
-		ItemProperties.register(bloodSample, new ResourceLocation("spoiled"), rottingPropertyGetter);
-		ItemProperties.register(separatedBloodSample, new ResourceLocation("spoiled"), rottingPropertyGetter);
-		ItemProperties.register(potionExtension, new ResourceLocation("spoiled"), rottingPropertyGetter);
-		ItemProperties.register(embryo, new ResourceLocation("spoiled"), rottingPropertyGetter);
+		ItemProperties.register(bloodSample, ResourceLocation.withDefaultNamespace("spoiled"), rottingPropertyGetter);
+		ItemProperties.register(separatedBloodSample, ResourceLocation.withDefaultNamespace("spoiled"), rottingPropertyGetter);
+		ItemProperties.register(potionExtension, ResourceLocation.withDefaultNamespace("spoiled"), rottingPropertyGetter);
+		ItemProperties.register(embryo, ResourceLocation.withDefaultNamespace("spoiled"), rottingPropertyGetter);
 		//Syringe treatment
 		ItemPropertyFunction syringePropertyGetter = (ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity, int unmapped) -> syringe.isTreated(stack) ? 1 : 0;
-		ItemProperties.register(syringe, new ResourceLocation("treated"), syringePropertyGetter);
+		ItemProperties.register(syringe, ResourceLocation.withDefaultNamespace("treated"), syringePropertyGetter);
 		//Blood compass
-		ItemProperties.register(bloodCompass, new ResourceLocation("angle"), new CompassItemPropertyFunction((world, stack, player) -> bloodCompass.getTarget(stack, player, world)));
+		ItemProperties.register(bloodCompass, ResourceLocation.withDefaultNamespace("angle"), new CompassItemPropertyFunction((world, stack, player) -> bloodCompass.getTarget(stack, player, world)));
 	}
 
 	/**

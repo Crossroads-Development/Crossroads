@@ -18,7 +18,7 @@ public class CRWorldGen{
 	public static final HashMap<String, PlacementModifierType<? extends PlacementModifier>> toRegisterModifier = new HashMap<>(1);
 
 	//Maps to crossroads:configured_feature/empty.json, which is a feature that does nothing and returns false
-	public static ResourceKey<ConfiguredFeature<?, ?>> EMPTY_KEY = ResourceKey.create(Registries.CONFIGURED_FEATURE, new ResourceLocation(Crossroads.MODID, "empty"));
+	public static ResourceKey<ConfiguredFeature<?, ?>> EMPTY_KEY = ResourceKey.create(Registries.CONFIGURED_FEATURE, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "empty"));
 
 	private static boolean hasInit = false;
 

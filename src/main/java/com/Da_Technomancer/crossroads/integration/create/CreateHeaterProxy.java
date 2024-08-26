@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class CreateHeaterProxy{
 
 	protected static void registerHeatSources(){
-		BoilerHeaters.registerHeater(new ResourceLocation(Crossroads.MODID, "heat_sink"), new HeatSinkHeater());
+		BoilerHeaters.registerHeater(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "heat_sink"), new HeatSinkHeater());
 	}
 
 	private static class HeatSinkHeater implements BoilerHeaters.Heater{

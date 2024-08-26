@@ -11,7 +11,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class CrucibleScreen extends MachineScreen<CrucibleContainer, HeatingCrucibleTileEntity>{
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/gui/container/fat_collector_gui.png");
+	private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/gui/container/fat_collector_gui.png");
 
 	public CrucibleScreen(CrucibleContainer container, Inventory playerInv, Component name){
 		super(container, playerInv, name);

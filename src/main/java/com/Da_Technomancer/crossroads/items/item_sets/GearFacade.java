@@ -8,6 +8,7 @@ import com.Da_Technomancer.crossroads.blocks.rotary.mechanisms.MechanismTileEnti
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -25,7 +26,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -46,9 +46,9 @@ public class GearFacade extends Item{
 	public FacadeBlock getMaterial(ItemStack stack){
 		CompoundTag nbt = stack.getTag();
 		if(nbt != null && nbt.contains("facadeBlock")){
-			return FacadeBlock.create(new ResourceLocation(nbt.getString("facadeBlock")));
+			return FacadeBlock.create(ResourceLocation.withDefaultNamespace(nbt.getString("facadeBlock")));
 		}
-		return FacadeBlock.create(ForgeRegistries.BLOCKS.getKey(Blocks.STONE_BRICKS));
+		return FacadeBlock.create(BuiltInRegistries.BLOCKS.getKey(Blocks.STONE_BRICKS));
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public class GearFacade extends Item{
 
 	public void setMaterial(ItemStack stack, BlockState state){
 		CompoundTag nbt = stack.getOrCreateTag();
-		nbt.putString("facadeBlock", ForgeRegistries.BLOCKS.getKey(state.getBlock()).toString());
+		nbt.putString("facadeBlock", BuiltInRegistries.BLOCK.getKey(state.getBlock()).toString());
 	}
 
 	@Override
@@ -166,7 +166,7 @@ public class GearFacade extends Item{
 
 		public BlockState getBlockState(){
 			if(blockstateCache == null){
-				Block block = ForgeRegistries.BLOCKS.getValue(blockRegName);
+				Block block = BuiltInRegistries.BLOCK.getValue(blockRegName);
 				if(block == null){
 					block = Blocks.STONE_BRICKS;
 				}
@@ -188,14 +188,14 @@ public class GearFacade extends Item{
 				//Backwards compat. Will be removed in future version
 				String name = nbt.getString("prop_data");
 				return switch(name){
-					case "cobble" -> create(ForgeRegistries.BLOCKS.getKey(Blocks.COBBLESTONE));
-					case "iron" -> create(ForgeRegistries.BLOCKS.getKey(Blocks.IRON_BLOCK));
-					case "glass" -> create(ForgeRegistries.BLOCKS.getKey(Blocks.GLASS));
-					default -> create(ForgeRegistries.BLOCKS.getKey(Blocks.STONE_BRICKS));
+					case "cobble" -> create(BuiltInRegistries.BLOCK.getKey(Blocks.COBBLESTONE));
+					case "iron" -> create(BuiltInRegistries.BLOCK.getKey(Blocks.IRON_BLOCK));
+					case "glass" -> create(BuiltInRegistries.BLOCK.getKey(Blocks.GLASS));
+					default -> create(BuiltInRegistries.BLOCK.getKey(Blocks.STONE_BRICKS));
 				};
 			}
 
-			return create(new ResourceLocation(nbt.getString("blockRegistryName")));
+			return create(ResourceLocation.withDefaultNamespace(nbt.getString("blockRegistryName"));
 		}
 	}
 }

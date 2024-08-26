@@ -15,7 +15,7 @@ import java.awt.*;
 
 public class IncubatorScreen extends MachineScreen<IncubatorContainer, IncubatorTileEntity>{
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/gui/container/incubator_gui.png");
+	private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/gui/container/incubator_gui.png");
 
 	public IncubatorScreen(IncubatorContainer container, Inventory playerInv, Component name){
 		super(container, playerInv, name);

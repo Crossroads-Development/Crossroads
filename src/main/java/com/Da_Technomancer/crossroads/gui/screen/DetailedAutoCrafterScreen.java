@@ -9,7 +9,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class DetailedAutoCrafterScreen extends AutoCrafterScreen{
 
-	private static final ResourceLocation GUI_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/gui/container/detailed_auto_crafter.png");
+	private static final ResourceLocation GUI_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/gui/container/detailed_auto_crafter.png");
 
 	public DetailedAutoCrafterScreen(AutoCrafterContainer cont, Inventory playerInventory, Component text){
 		super(cont, playerInventory, text);

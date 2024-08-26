@@ -12,7 +12,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class StampMillScreen extends MachineScreen<StampMillContainer, StampMillTileEntity>{
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/gui/container/stamp_mill_gui.png");
+	private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/gui/container/stamp_mill_gui.png");
 
 	public StampMillScreen(StampMillContainer cont, Inventory playerInv, Component text){
 		super(cont, playerInv, text);

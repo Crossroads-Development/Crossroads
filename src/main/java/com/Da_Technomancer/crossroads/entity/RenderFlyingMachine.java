@@ -13,7 +13,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class RenderFlyingMachine extends EntityRenderer<EntityFlyingMachine>{
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/entities/flying_machine.png");
+	private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/entities/flying_machine.png");
 
 	protected RenderFlyingMachine(EntityRendererProvider.Context context){
 		super(context);

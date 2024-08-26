@@ -11,7 +11,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class FatCongealerScreen extends MachineScreen<FatCongealerContainer, FatCongealerTileEntity>{
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/gui/container/fat_congealer_gui.png");
+	private static final ResourceLocation TEXTURE = gui/container/fat_congealer_gui.png");
 
 	public FatCongealerScreen(FatCongealerContainer cont, Inventory playerInv, Component name){
 		super(cont, playerInv, name);

@@ -20,7 +20,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class BeamExtractorCreativeScreen extends AbstractContainerScreen<BeamExtractorCreativeContainer>{
 
-	private static final ResourceLocation SEARCH_BAR_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/gui/container/beam_extractor_creative_gui.png");
+	private static final ResourceLocation SEARCH_BAR_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/gui/container/beam_extractor_creative_gui.png");
 	private EditBox[] searchBars;//En, Po, St, Vo
 
 	public BeamExtractorCreativeScreen(BeamExtractorCreativeContainer cont, Inventory playerInventory, Component text){

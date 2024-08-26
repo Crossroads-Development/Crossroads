@@ -2,11 +2,12 @@ package com.Da_Technomancer.crossroads.fluids;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.fluids.FluidType;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.fluids.FluidType;
 
 import java.util.HashMap;
 
@@ -27,9 +28,9 @@ public final class CRFluids{
 	public static GenericFluid.FluidData fertilizerSolution;
 	public static GenericFluid.FluidData soulEssence;
 
-	public static final TagKey<Fluid> STEAM = CraftingUtil.getTagKey(ForgeRegistries.Keys.FLUIDS, new ResourceLocation("forge:steam"));
-	public static final TagKey<Fluid> DISTILLED_WATER = CraftingUtil.getTagKey(ForgeRegistries.Keys.FLUIDS, new ResourceLocation(Crossroads.MODID, "distilled_water"));
-	public static final TagKey<Fluid> LIQUID_FAT = CraftingUtil.getTagKey(ForgeRegistries.Keys.FLUIDS, new ResourceLocation(Crossroads.MODID, "liquid_fat"));
+	public static final TagKey<Fluid> STEAM = CraftingUtil.getTagKey(Registries.FLUID, ResourceLocation.parse("forge:steam"));
+	public static final TagKey<Fluid> DISTILLED_WATER = CraftingUtil.getTagKey(Registries.FLUID, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "distilled_water"));
+	public static final TagKey<Fluid> LIQUID_FAT = CraftingUtil.getTagKey(Registries.FLUID, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "liquid_fat"));
 
 	public static final HashMap<String, FluidType> toRegisterType = new HashMap<>();
 	public static final HashMap<String, Fluid> toRegisterFluid = new HashMap<>();

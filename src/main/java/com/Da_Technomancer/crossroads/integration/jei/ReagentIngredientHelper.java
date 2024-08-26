@@ -54,7 +54,7 @@ public class ReagentIngredientHelper implements IIngredientHelper<ReagIngr>{
 
 	@Override
 	public ResourceLocation getResourceLocation(ReagIngr ingredient){
-		return new ResourceLocation(Crossroads.MODID, ingredient.getReag().getID());
+		return ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, ingredient.getReag().getID());
 	}
 
 	@Override

@@ -36,8 +36,8 @@ public class FluidCoolingCategory implements IRecipeCategory<FluidCoolingRec>{
 		back = guiHelper.createBlankDrawable(180, 100);
 		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(CRBlocks.fluidCoolingChamber, 1));
 		slot = guiHelper.getSlotDrawable();
-		arrowStatic = guiHelper.createDrawable(new ResourceLocation("textures/gui/container/furnace.png"), 79, 35, 24, 17);
-		arrow = guiHelper.createAnimatedDrawable(guiHelper.createDrawable(new ResourceLocation("textures/gui/container/furnace.png"), 176, 14, 24, 17), 40, IDrawableAnimated.StartDirection.LEFT, false);
+		arrowStatic = guiHelper.createDrawable(ResourceLocation.withDefaultNamespace("textures/gui/container/furnace.png"), 79, 35, 24, 17);
+		arrow = guiHelper.createAnimatedDrawable(guiHelper.createDrawable(ResourceLocation.withDefaultNamespace("textures/gui/container/furnace.png"), 176, 14, 24, 17), 40, IDrawableAnimated.StartDirection.LEFT, false);
 		fluidOverlay = JEICrossroadsPlugin.createFluidOverlay(guiHelper);
 	}
 

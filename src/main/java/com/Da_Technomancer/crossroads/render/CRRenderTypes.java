@@ -14,52 +14,52 @@ public class CRRenderTypes extends RenderType{
 	//Textures
 
 	//Stitched to block atlas
-	public static final ResourceLocation WINDMILL_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/wind_turbine_blade");
-	public static final ResourceLocation DRILL_TEXTURE = new ResourceLocation("block/iron_block");
-	public static final ResourceLocation NODE_GIMBAL_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/gimbal");
-	public static final ResourceLocation COPSHOWIUM_TEXTURE = new ResourceLocation(Crossroads.MODID, "block/block_copshowium");
-	public static final ResourceLocation QUARTZ_TEXTURE = new ResourceLocation(Crossroads.MODID, "block/block_pure_quartz");
-	public static final ResourceLocation CAST_IRON_TEXTURE = new ResourceLocation(Crossroads.MODID, "block/block_cast_iron");
-	public static final ResourceLocation AXLE_ENDS_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/axle_end");
-	public static final ResourceLocation AXLE_SIDE_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/axle");
-	public static final ResourceLocation HAMSTER_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/hamster");
-	public static final ResourceLocation GEAR_8_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/gear_oct");
-	public static final ResourceLocation GEAR_8_RIM_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/gear_oct_rim");
-	public static final ResourceLocation GEAR_8_TOOTH_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/gear_oct_tooth");
-	public static final ResourceLocation GEAR_24_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/gear_24");
-	public static final ResourceLocation GEAR_24_RIM_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/gear_24_rim");
-	public static final ResourceLocation GEAR_24_TOOTH_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/gear_24_tooth");
-	public static final ResourceLocation CLUTCH_END_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/clutch_end");
-	public static final ResourceLocation CLUTCH_SIDE_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/clutch_side");
-	public static final ResourceLocation CLUTCH_SIDE_INVERTED_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/clutch_side_inv");
-	public static final ResourceLocation GATEWAY_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/gateway");
-	public static final ResourceLocation AXLE_MOUNT_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/axle_mount");
-	public static final ResourceLocation AXLE_MOUNT_OCT_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/axle_mount_oct");
-	public static final ResourceLocation AXLE_MOUNT_RIM_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/axle_mount_rim");
-	public static final ResourceLocation BRONZE_TEXTURE = new ResourceLocation(Crossroads.MODID, "block/block_bronze");
-	public static final ResourceLocation BEAM_CANNON_BARREL_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/beam_cannon");
-	public static final ResourceLocation ITEM_CANNON_BARREL_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/item_cannon");
-	public static final ResourceLocation EMBRYO_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/embryo");
-	public static final ResourceLocation VILLAGER_BRAIN_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/villager_brain");
-	public static final ResourceLocation REAGENT_TEXTURE = new ResourceLocation(Crossroads.MODID, "models/reagent_fill");
+	public static final ResourceLocation WINDMILL_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "models/wind_turbine_blade");
+	public static final ResourceLocation DRILL_TEXTURE = ResourceLocation.withDefaultNamespace("block/iron_block");
+	public static final ResourceLocation NODE_GIMBAL_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "models/gimbal");
+	public static final ResourceLocation COPSHOWIUM_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "block/block_copshowium");
+	public static final ResourceLocation QUARTZ_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "block/block_pure_quartz");
+	public static final ResourceLocation CAST_IRON_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "block/block_cast_iron");
+	public static final ResourceLocation AXLE_ENDS_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "models/axle_end");
+	public static final ResourceLocation AXLE_SIDE_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "models/axle");
+	public static final ResourceLocation HAMSTER_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "models/hamster");
+	public static final ResourceLocation GEAR_8_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "models/gear_oct");
+	public static final ResourceLocation GEAR_8_RIM_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "models/gear_oct_rim");
+	public static final ResourceLocation GEAR_8_TOOTH_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "models/gear_oct_tooth");
+	public static final ResourceLocation GEAR_24_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "models/gear_24");
+	public static final ResourceLocation GEAR_24_RIM_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "models/gear_24_rim");
+	public static final ResourceLocation GEAR_24_TOOTH_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "models/gear_24_tooth");
+	public static final ResourceLocation CLUTCH_END_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "models/clutch_end");
+	public static final ResourceLocation CLUTCH_SIDE_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "models/clutch_side");
+	public static final ResourceLocation CLUTCH_SIDE_INVERTED_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "models/clutch_side_inv");
+	public static final ResourceLocation GATEWAY_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "models/gateway");
+	public static final ResourceLocation AXLE_MOUNT_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "models/axle_mount");
+	public static final ResourceLocation AXLE_MOUNT_OCT_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "models/axle_mount_oct");
+	public static final ResourceLocation AXLE_MOUNT_RIM_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "models/axle_mount_rim");
+	public static final ResourceLocation BRONZE_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "block/block_bronze");
+	public static final ResourceLocation BEAM_CANNON_BARREL_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "models/beam_cannon");
+	public static final ResourceLocation ITEM_CANNON_BARREL_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "models/item_cannon");
+	public static final ResourceLocation EMBRYO_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "models/embryo");
+	public static final ResourceLocation VILLAGER_BRAIN_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "models/villager_brain");
+	public static final ResourceLocation REAGENT_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "models/reagent_fill");
 
 	//Stitched to beam atlas
-	public static final ResourceLocation BEAM_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/models/beam.png");
+	public static final ResourceLocation BEAM_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/models/beam.png");
 
 	//Stitched to flux sink atlas
-	public static final ResourceLocation FLUX_SINK_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/models/flux_sink.png");
+	public static final ResourceLocation FLUX_SINK_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/models/flux_sink.png");
 
 	//Stitched to area-of-effect atlas
-	public static final ResourceLocation AREA_OVERLAY_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/models/field.png");
+	public static final ResourceLocation AREA_OVERLAY_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/models/field.png");
 
 	//Stitched to flux transfer type
-	public static final ResourceLocation FLUX_EXTRUSION_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/models/flux_extrusion.png");
+	public static final ResourceLocation FLUX_EXTRUSION_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/models/flux_extrusion.png");
 
 	//Stitched to beam info overlay atlas
-	public static final ResourceLocation BEAM_INFO_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/gui/beam_info.png");
+	public static final ResourceLocation BEAM_INFO_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/gui/beam_info.png");
 
 	//Stitched to the flame core atlas
-	public static final ResourceLocation FLAME_CORE_TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/entities/flame.png");
+	public static final ResourceLocation FLAME_CORE_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/entities/flame.png");
 
 
 	//Types

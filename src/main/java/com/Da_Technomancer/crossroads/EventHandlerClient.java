@@ -26,6 +26,7 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -46,8 +47,8 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegisterEvent;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
+import net.neoforged.neoforge.registries.RegisterEvent;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -61,7 +62,10 @@ public class EventHandlerClient{
 		@SuppressWarnings("unused")
 		@SubscribeEvent
 		public static void register(RegisterEvent e){
-			e.register(ForgeRegistries.Keys.MENU_TYPES, helper -> {
+			//TODO MENU_TYPES (or MENU_TYPE) don't seem to exist; https://docs.neoforged.net/docs/gui/menus/#menutype
+			// says you need to register them, but the only example given is using a DeferredRegister; setting this
+			// aside for now.
+			e.register(Registries.MENU_TYPES, helper -> {
 				//The other half of this is in EventHandlerServer
 				CRContainers.initClient();
 				EventHandlerCommon.CRModEventsCommon.registerAll(helper, CRContainers.toRegisterMenu);
@@ -105,7 +109,7 @@ public class EventHandlerClient{
 		@SubscribeEvent
 		public static void registerOverlays(RegisterGuiOverlaysEvent e){
 			e.registerAboveAll("crossroad_beam_tool_overlay", new BeamToolOverlay());
-			e.registerBelow(new ResourceLocation("record_overlay"), "crossroad_multi_line_overlay", new MultiLineMessageOverlay());
+			e.registerBelow(ResourceLocation.withDefaultNamespace("record_overlay"), "crossroad_multi_line_overlay", new MultiLineMessageOverlay());
 		}
 
 		@SuppressWarnings("unused")
@@ -204,7 +208,7 @@ public class EventHandlerClient{
 			for(Entity ent : game.level.entitiesForRendering()){
 				CompoundTag entNBT = ent.getPersistentData();
 				if(entNBT == null){
-					Crossroads.logger.info("Found entity with null persistent data! Report to the mod author of the mod that added the entity: %s", MiscUtil.getRegistryName(ent.getType(), ForgeRegistries.Keys.ENTITY_TYPES).toString());
+					Crossroads.logger.info("Found entity with null persistent data! Report to the mod author of the mod that added the entity: %s", MiscUtil.getRegistryName(ent.getType(), Registries.ENTITY_TYPE).toString());
 					continue;//Should never be null, but some mods override the entNBT method to return null for some reason
 				}
 
@@ -226,9 +230,9 @@ public class EventHandlerClient{
 		}
 	}
 
-//	private static final ResourceLocation MAGIC_BAR_BACKGROUND = new ResourceLocation(Crossroads.MODID, "textures/gui/magic_info_back.png");
-//	private static final ResourceLocation MAGIC_BAR_FOREGROUND = new ResourceLocation(Crossroads.MODID, "textures/gui/magic_info_front.png");
-//	private static final ResourceLocation COLOR_SHEET = new ResourceLocation(Crossroads.MODID, "textures/block/color_sheet.png");
+//	private static final ResourceLocation MAGIC_BAR_BACKGROUND = gui/magic_info_back.png");
+//	private static final ResourceLocation MAGIC_BAR_FOREGROUND = gui/magic_info_front.png");
+//	private static final ResourceLocation COLOR_SHEET = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/block/color_sheet.png");
 
 //	@SubscribeEvent
 //	@SuppressWarnings("unused")

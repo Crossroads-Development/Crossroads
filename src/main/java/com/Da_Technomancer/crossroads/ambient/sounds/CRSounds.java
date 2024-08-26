@@ -26,7 +26,7 @@ public class CRSounds{
 	public static final SoundEvent WATER_BUBBLING = createEvent("bubbling_water");
 
 	private static SoundEvent createEvent(String name){
-		ResourceLocation id = new ResourceLocation(Crossroads.MODID, name);
+		ResourceLocation id = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, name);
 		SoundEvent created = SoundEvent.createVariableRangeEvent(id);
 		soundsToRegister.put(name, created);
 		return created;

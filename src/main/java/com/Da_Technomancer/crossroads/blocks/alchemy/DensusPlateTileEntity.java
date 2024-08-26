@@ -9,6 +9,7 @@ import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
@@ -18,7 +19,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class DensusPlateTileEntity extends BlockEntity implements ITickableTileE
 
 	public static final BlockEntityType<DensusPlateTileEntity> TYPE = CRTileEntity.createType(DensusPlateTileEntity::new, CRBlocks.antiDensusPlate, CRBlocks.densusPlate);
 
-	private static final TagKey<Block> gravityBlocking = CraftingUtil.getTagKey(ForgeRegistries.Keys.BLOCKS, new ResourceLocation(Crossroads.MODID, "gravity_blocking"));
+	private static final TagKey<Block> gravityBlocking = CraftingUtil.getTagKey(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "gravity_blocking"));
 
 	private final int RANGE = CRConfig.gravRange.get();
 	private final double ACCEL = CRConfig.gravAccel.get();

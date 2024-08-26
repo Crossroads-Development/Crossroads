@@ -8,6 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -15,7 +16,6 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -28,16 +28,16 @@ public class CRPackets{
 	private static final HashSet<Class<? extends Packet>> registeredTypes = new HashSet<>(20);
 
 	public static void init(){
-		channel = NetworkRegistry.newSimpleChannel(new ResourceLocation(Crossroads.MODID, "channel"), () -> "1.0.0", (s) -> s.equals("1.0.0"), (s) -> s.equals("1.0.0"));
+		channel = NetworkRegistry.newSimpleChannel(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "channel"), () -> "1.0.0", (s) -> s.equals("1.0.0"), (s) -> s.equals("1.0.0"));
 		//Create codecs for additional data types
 		PacketManager.addCodec(int[].class, (val, buf) -> buf.writeVarIntArray((int[]) val), FriendlyByteBuf::readVarIntArray);
 		PacketManager.addCodec(ParticleOptions.class,
 				(Object val, FriendlyByteBuf buf) -> {
 					ParticleOptions data = (ParticleOptions) val;
-					buf.writeResourceLocation(Objects.requireNonNull(MiscUtil.getRegistryName(data.getType(), ForgeRegistries.PARTICLE_TYPES)));
+					buf.writeResourceLocation(Objects.requireNonNull(MiscUtil.getRegistryName(data.getType(), BuiltInRegistries.PARTICLE_TYPE)));
 					data.writeToNetwork(buf);
 				},
-				(FriendlyByteBuf buf) -> readParticleData(ForgeRegistries.PARTICLE_TYPES.getValue(buf.readResourceLocation()), buf)
+				(FriendlyByteBuf buf) -> readParticleData(BuiltInRegistries.PARTICLE_TYPE.get(buf.readResourceLocation()), buf)
 		);
 		PacketManager.addCodec(ResourceLocation.class, (val, buf) -> buf.writeResourceLocation((ResourceLocation) val), FriendlyByteBuf::readResourceLocation);
 		PacketManager.addCodec(GlobalPos.class, (val, buf) -> buf.writeGlobalPos((GlobalPos) val), FriendlyByteBuf::readGlobalPos);

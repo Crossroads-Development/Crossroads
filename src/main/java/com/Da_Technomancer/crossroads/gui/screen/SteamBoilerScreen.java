@@ -12,7 +12,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class SteamBoilerScreen extends MachineScreen<SteamBoilerContainer, SteamBoilerTileEntity>{
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/gui/container/steam_boiler_gui.png");
+	private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/gui/container/steam_boiler_gui.png");
 
 	public SteamBoilerScreen(SteamBoilerContainer cont, Inventory playerInv, Component name){
 		super(cont, playerInv, name);

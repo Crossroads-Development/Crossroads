@@ -8,12 +8,12 @@ import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.entity.EntityFlameCore;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.awt.*;
@@ -200,7 +200,7 @@ public class AlchemyUtil{
 	public static double getInputFluidTemp(IReagent reagent, double biomeTemp){
 		Predicate<Double> legal = (temp) -> temp >= reagent.getMeltingPoint() && temp < reagent.getBoilingPoint();
 		//Try the fluid's modder-defined temperature
-		Fluid reagentFluid = CraftingUtil.getPreferredEntry(reagent.getFluid().getMatchedFluids(), ForgeRegistries.Keys.FLUIDS);
+		Fluid reagentFluid = CraftingUtil.getPreferredEntry(reagent.getFluid().getMatchedFluids(), Registries.FLUID);
 		if(reagentFluid == null){
 			//Why are we checking fluid temperature for a reagent with no fluid?
 			Crossroads.logger.warn("Reagent fluid temperature queried for invalid reagent: " + reagent.getID());

@@ -11,7 +11,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class CultivatorVatScreen extends MachineScreen<CultivatorVatContainer, CultivatorVatTileEntity>{
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/gui/container/cultivator_vat_gui.png");
+	private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/gui/container/cultivator_vat_gui.png");
 
 	public CultivatorVatScreen(CultivatorVatContainer container, Inventory playerInv, Component name){
 		super(container, playerInv, name);

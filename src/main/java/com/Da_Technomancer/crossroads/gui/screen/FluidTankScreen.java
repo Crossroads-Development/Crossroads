@@ -11,7 +11,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class FluidTankScreen extends MachineScreen<FluidTankContainer, FluidTankTileEntity>{
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/gui/container/fat_feeder_gui.png");
+	private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/gui/container/fat_feeder_gui.png");
 
 	public FluidTankScreen(FluidTankContainer cont, Inventory playerInv, Component text){
 		super(cont, playerInv, text);

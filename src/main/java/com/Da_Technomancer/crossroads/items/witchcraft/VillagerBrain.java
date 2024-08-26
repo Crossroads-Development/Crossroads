@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.items.witchcraft;
 import com.Da_Technomancer.crossroads.api.witchcraft.ICultivatable;
 import com.Da_Technomancer.crossroads.api.witchcraft.IPerishable;
 import com.Da_Technomancer.crossroads.items.CRItems;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
@@ -18,7 +19,6 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -117,7 +117,9 @@ public class VillagerBrain extends Item implements ICultivatable{
 			totalEnchants = enchantList.size();
 			CompoundTag compoundnbt = enchantList.getCompound(0);
 
-			Enchantment firstEnchant = ForgeRegistries.ENCHANTMENTS.getValue(ResourceLocation.tryParse(compoundnbt.getString("id")));
+			//TODO None of the registries store the Enchantment type; there are 6 related ones however; work out which
+			// is appropriate.
+			Enchantment firstEnchant = BuiltInRegistries.ENCHANTMENT.get(ResourceLocation.tryParse(compoundnbt.getString("id")));
 			if(firstEnchant != null){
 				firstEnchantName = firstEnchant.getFullname(compoundnbt.getInt("lvl"));
 			}
@@ -126,7 +128,8 @@ public class VillagerBrain extends Item implements ICultivatable{
 			ListTag enchantList = EnchantedBookItem.getEnchantments(stack);
 			totalEnchants = enchantList.size();
 			CompoundTag compoundnbt = enchantList.getCompound(0);
-			Enchantment firstEnchant = ForgeRegistries.ENCHANTMENTS.getValue(ResourceLocation.tryParse(compoundnbt.getString("id")));
+			//TODO see above
+			Enchantment firstEnchant = BuiltInRegistries.ENCHANTMENT.getValue(ResourceLocation.tryParse(compoundnbt.getString("id")));
 			if(firstEnchant != null){
 				firstEnchantName = firstEnchant.getFullname(compoundnbt.getInt("lvl"));
 			}

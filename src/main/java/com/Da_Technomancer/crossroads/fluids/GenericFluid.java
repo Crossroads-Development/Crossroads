@@ -66,8 +66,8 @@ public class GenericFluid extends LiquidBlock{
 			properties.sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL).sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY).sound(SoundActions.FLUID_VAPORIZE, SoundEvents.FIRE_EXTINGUISH);
 		}
 
-		final ResourceLocation stillTexture = new ResourceLocation(Crossroads.MODID, "block/" + name + "_still");
-		final ResourceLocation flowTexture = new ResourceLocation(Crossroads.MODID, "block/" + name + "_flow");
+		final ResourceLocation stillTexture = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "block/" + name + "_still");
+		final ResourceLocation flowTexture = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "block/" + name + "_flow");
 
 		data.type = new FluidType(properties){
 			@Override

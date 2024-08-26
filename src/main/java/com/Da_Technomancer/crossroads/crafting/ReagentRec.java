@@ -9,8 +9,10 @@ import com.Da_Technomancer.crossroads.items.CRItems;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.Container;
@@ -20,7 +22,6 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
@@ -238,7 +239,7 @@ public class ReagentRec implements Recipe<Container>, IReagent{
 			if(melting > boiling){
 				boiling = melting;//Equal melting and boiling point would cause sublimation, skipping liquid
 			}
-			TagKey<Item> item = CraftingUtil.getTagKey(ForgeRegistries.Keys.ITEMS, new ResourceLocation(GsonHelper.getAsString(json, "item", "crossroads:empty")));
+			TagKey<Item> item = CraftingUtil.getTagKey(Registries.ITEM, ResourceLocation.parse(GsonHelper.getAsString(json, "item", "crossroads:empty")));
 			//Fluid definition is optional, but must have a quantity and be specified in a subelement if present
 			Pair<FluidIngredient, Integer> fluid = json.has("fluid") ? CraftingUtil.getFluidIngredientAndQuantity(json, "fluid", false, -1) : null;
 			ContainRequirements vessel = containTypeMap.getOrDefault(GsonHelper.getAsString(json, "vessel", "none"), ContainRequirements.NONE);
@@ -279,7 +280,7 @@ public class ReagentRec implements Recipe<Container>, IReagent{
 			double melting = buffer.readDouble();
 			double boiling = buffer.readDouble();
 			boolean flame = buffer.readBoolean();
-			TagKey<Item> solid = CraftingUtil.getTagKey(ForgeRegistries.Keys.ITEMS, new ResourceLocation(buffer.readUtf()));
+			TagKey<Item> solid = CraftingUtil.getTagKey(Registries.ITEM, ResourceLocation.withDefaultNamespace(buffer.readUtf()));
 			FluidIngredient fl = FluidIngredient.readFromBuffer(buffer);
 			int flQty = buffer.readVarInt();
 			ContainRequirements vessel = ContainRequirements.values()[buffer.readVarInt()];

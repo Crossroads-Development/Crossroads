@@ -13,7 +13,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class FluidCoolerScreen extends MachineScreen<FluidCoolerContainer, FluidCoolingChamberTileEntity>{
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Crossroads.MODID, "textures/gui/container/fluid_cooler_gui.png");
+	private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/gui/container/fluid_cooler_gui.png");
 
 	public FluidCoolerScreen(FluidCoolerContainer cont, Inventory playerInv, Component name){
 		super(cont, playerInv, name);

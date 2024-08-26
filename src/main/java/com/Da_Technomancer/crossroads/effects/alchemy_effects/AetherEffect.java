@@ -15,6 +15,8 @@ import com.Da_Technomancer.essentials.api.ReflectionUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.QuartPos;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -32,19 +34,18 @@ import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.LevelChunkSection;
 import net.minecraft.world.level.chunk.PalettedContainer;
 import net.minecraft.world.level.chunk.PalettedContainerRO;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 
 public class AetherEffect implements IAlchEffect{
 
-	private static final TagKey<Block> SOIL_GROUP = CraftingUtil.getTagKey(ForgeRegistries.Keys.BLOCKS, new ResourceLocation(Crossroads.MODID, "alchemy_soil"));
-	private static final TagKey<Block> ROCK_GROUP = CraftingUtil.getTagKey(ForgeRegistries.Keys.BLOCKS, new ResourceLocation(Crossroads.MODID, "alchemy_rock"));
-	private static final TagKey<Block> FLUD_GROUP = CraftingUtil.getTagKey(ForgeRegistries.Keys.BLOCKS, new ResourceLocation(Crossroads.MODID, "alchemy_fluid"));//Was going to be named FLUID_GROUP, but the other two fields had the same name lengths and I couldn't resist
-	private static final TagKey<Block> CRYS_GROUP = CraftingUtil.getTagKey(ForgeRegistries.Keys.BLOCKS, new ResourceLocation(Crossroads.MODID, "alchemy_crystal"));
-	private static final TagKey<Block> WOOD_GROUP = CraftingUtil.getTagKey(ForgeRegistries.Keys.BLOCKS, new ResourceLocation(Crossroads.MODID, "alchemy_wood"));
-	private static final TagKey<Block> FOLI_GROUP = CraftingUtil.getTagKey(ForgeRegistries.Keys.BLOCKS, new ResourceLocation(Crossroads.MODID, "alchemy_foliage"));
+	private static final TagKey<Block> SOIL_GROUP = CraftingUtil.getTagKey(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "alchemy_soil"));
+	private static final TagKey<Block> ROCK_GROUP = CraftingUtil.getTagKey(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "alchemy_rock"));
+	private static final TagKey<Block> FLUD_GROUP = CraftingUtil.getTagKey(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "alchemy_fluid"));//Was going to be named FLUID_GROUP, but the other two fields had the same name lengths and I couldn't resist
+	private static final TagKey<Block> CRYS_GROUP = CraftingUtil.getTagKey(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "alchemy_crystal"));
+	private static final TagKey<Block> WOOD_GROUP = CraftingUtil.getTagKey(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "alchemy_wood"));
+	private static final TagKey<Block> FOLI_GROUP = CraftingUtil.getTagKey(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "alchemy_foliage"));
 
 	protected Block soilBlock(){
 		return Blocks.GRASS_BLOCK;
@@ -149,7 +150,7 @@ public class AetherEffect implements IAlchEffect{
 
 	@Nullable
 	public static Holder<Biome> getBiomeHolder(ResourceLocation registryID){
-		return ForgeRegistries.BIOMES.getHolder(registryID).orElse(null);
+		return BuiltInRegistries.BIOME_SOURCE.getHolder(registryID).orElse(null);
 	}
 
 	/**

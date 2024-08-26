@@ -9,6 +9,7 @@ import com.Da_Technomancer.crossroads.crafting.DetailedCrafterRec;
 import com.Da_Technomancer.essentials.api.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.resources.ResourceLocation;
@@ -27,7 +28,6 @@ import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -41,12 +41,12 @@ public class DetailedCrafterContainer extends RecipeBookMenu<CraftingContainer>{
 
 	@SuppressWarnings("unchecked")
 	private static final TagKey<Item>[] unlockKeys = new TagKey[3];
-	private static final TagKey<Item> fillerMats = CraftingUtil.getTagKey(ForgeRegistries.Keys.ITEMS, new ResourceLocation(Crossroads.MODID, "path_unlock_filler"));
+	private static final TagKey<Item> fillerMats = CraftingUtil.getTagKey(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "path_unlock_filler"));
 
 	static{
-		unlockKeys[0] = CraftingUtil.getTagKey(ForgeRegistries.Keys.ITEMS, new ResourceLocation(Crossroads.MODID, "technomancy_unlock_key"));
-		unlockKeys[1] = CraftingUtil.getTagKey(ForgeRegistries.Keys.ITEMS, new ResourceLocation(Crossroads.MODID, "alchemy_unlock_key"));
-		unlockKeys[2] = CraftingUtil.getTagKey(ForgeRegistries.Keys.ITEMS, new ResourceLocation(Crossroads.MODID, "witchcraft_unlock_key"));
+		unlockKeys[0] = CraftingUtil.getTagKey(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "technomancy_unlock_key"));
+		unlockKeys[1] = CraftingUtil.getTagKey(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "alchemy_unlock_key"));
+		unlockKeys[2] = CraftingUtil.getTagKey(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "witchcraft_unlock_key"));
 	}
 
 	private final CraftingContainer inInv = new TransientCraftingContainer(this, 3, 3);
