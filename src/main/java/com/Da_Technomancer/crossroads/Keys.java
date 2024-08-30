@@ -2,20 +2,20 @@ package com.Da_Technomancer.crossroads;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
-import net.minecraftforge.client.extensions.IForgeKeyMapping;
+import net.neoforged.neoforge.client.extensions.IKeyMappingExtension;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 public class Keys{
 
-	//Stored as IForgeKeyMapping instead of KeyBinding as KeyBinding is a client-side-only class.
-	public static IForgeKeyMapping controlEnergy;
-	public static IForgeKeyMapping controlPotential;
-	public static IForgeKeyMapping controlStability;
-	public static IForgeKeyMapping controlVoid;
-	public static IForgeKeyMapping controlZoom;
-	public static IForgeKeyMapping boost;
+	//Stored as IKeyMappingExtension instead of KeyBinding as KeyBinding is a client-side-only class.
+	public static IKeyMappingExtension controlEnergy;
+	public static IKeyMappingExtension controlPotential;
+	public static IKeyMappingExtension controlStability;
+	public static IKeyMappingExtension controlVoid;
+	public static IKeyMappingExtension controlZoom;
+	public static IKeyMappingExtension boost;
 
 	public static boolean keysInitialized = false;
 
@@ -42,13 +42,13 @@ public class Keys{
 		toRegister.add((KeyMapping) boost);
 	}
 
-	public static boolean isKeyActiveAndMatch(IForgeKeyMapping key, int activeKeyCode, int scanCode){
+	public static boolean isKeyActiveAndMatch(IKeyMappingExtension key, int activeKeyCode, int scanCode){
 		InputConstants.Key input = InputConstants.getKey(activeKeyCode, scanCode);
 		return key.isActiveAndMatches(input);
 	}
 
 	@Nullable
-	public static KeyMapping asKeyMapping(IForgeKeyMapping key){
+	public static KeyMapping asKeyMapping(IKeyMappingExtension key){
 		if(key instanceof KeyMapping mapping){
 			return mapping;
 		}

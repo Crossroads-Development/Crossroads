@@ -13,8 +13,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.extensions.IForgeKeyMapping;
 import net.minecraftforge.common.Tags;
+import net.neoforged.neoforge.client.extensions.IKeyMappingExtension;
 
 import javax.annotation.Nullable;
 import java.util.Locale;
@@ -35,10 +35,10 @@ public enum EnumGoggleLenses{
 	private final IGoggleEffect effect;
 	//This is a supplier to allow lazy-loading the keys, which may not be registered at initialization time
 	@Nullable
-	private final Supplier<IForgeKeyMapping> key;
+	private final Supplier<IKeyMappingExtension> key;
 	private final boolean requireEnable;
 
-	EnumGoggleLenses(TagKey<Item> item, String texturePath, IGoggleEffect effect, @Nullable Supplier<IForgeKeyMapping> toggleKey, boolean requireEnable){
+	EnumGoggleLenses(TagKey<Item> item, String texturePath, IGoggleEffect effect, @Nullable Supplier<IKeyMappingExtension> toggleKey, boolean requireEnable){
 		this.item = item;
 		this.texturePath = texturePath;
 		this.effect = effect;
@@ -56,7 +56,7 @@ public enum EnumGoggleLenses{
 
 	@Nullable
 	@OnlyIn(Dist.CLIENT)
-	public IForgeKeyMapping getKey(){
+	public IKeyMappingExtension getKey(){
 		if(key == null){
 			return null;
 		}
