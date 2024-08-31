@@ -2,6 +2,7 @@
 	"replace": false,
 	"values": [
 		"crossroads:ore_tin",
+		"crossroads:ore_tin_deep",
 		"crossroads:block_tin",
 		"crossroads:block_bronze",
 		"crossroads:block_copshowium"

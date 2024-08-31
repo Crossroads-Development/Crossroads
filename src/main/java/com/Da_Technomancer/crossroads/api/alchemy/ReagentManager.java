@@ -12,14 +12,19 @@ import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public final class ReagentManager{
 
-	private static final HashMap<String, IReagent> REAGENTS = new HashMap<>(EnumReagents.values().length);
-	private static final HashMap<IReagent, Predicate<Item>> REAGENT_FROM_ITEM = new HashMap<>();
-	private static final ArrayList<String> REAGENT_WITH_FLUID = new ArrayList<>(6);
+//	private static final HashMap<String, IReagent> REAGENTS = new HashMap<>(EnumReagents.values().length);
+	private static final ConcurrentHashMap<String, IReagent> REAGENTS = new ConcurrentHashMap<>(EnumReagents.values().length);
+//	private static final HashMap<IReagent, Predicate<Item>> REAGENT_FROM_ITEM = new HashMap<>();
+	private static final ConcurrentHashMap<IReagent, Predicate<Item>> REAGENT_FROM_ITEM = new ConcurrentHashMap<>();
+//	private static final ArrayList<String> REAGENT_WITH_FLUID = new ArrayList<>(6);
+	private static final CopyOnWriteArrayList<String> REAGENT_WITH_FLUID = new CopyOnWriteArrayList<>();
 
 	@Nullable
 	public static IReagent getReagent(String id){
@@ -32,6 +37,7 @@ public final class ReagentManager{
 
 	/**
 	 * Lists all reagents with an associated fluid
+	 * Order is consistent between calls, but entries are unsorted
 	 * @return A list of all reagents with an associated fluid
 	 */
 	public static List<String> getFluidReags(){
@@ -57,6 +63,7 @@ public final class ReagentManager{
 	public static void updateReagent(ReagentRec changedReag){
 		//Adding and updating reagents is done through this method, which is called via the RecipeManager when the reagent recipes change
 		//This method does not remove reagents
+		//This method needs to be multithreading-safe
 		REAGENTS.put(changedReag.getID(), changedReag);
 		FluidIngredient fluid = changedReag.getFluid();
 		if(fluid.isStrictlyEmpty()){

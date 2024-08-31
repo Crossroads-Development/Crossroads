@@ -138,7 +138,8 @@ public class ReagentRec implements Recipe<Container>, IReagent{
 	@Override
 	@Nonnull
 	public IAlchEffect getEffect(){
-		return effect;
+		//FlameEffect does nothing, but is used for localization
+		return "none".equals(effectName) && flame ? FlameEffect.INSTANCE : effect;
 	}
 
 	@Override
