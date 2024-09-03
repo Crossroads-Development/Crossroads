@@ -4,13 +4,13 @@ import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.integration.CRIntegration;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLDedicatedServerSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.fml.event.lifecycle.FMLDedicatedServerSetupEvent;
+import net.neoforged.neoforge.common.NeoForge;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -25,14 +25,14 @@ public final class Crossroads{
 	public static final Logger logger = LogManager.getLogger(MODNAME);
 
 	public Crossroads(){
-		final IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+        final IEventBus bus = ModLoadingContext.get().getModEventBus();
 		bus.addListener(this::commonInit);
 		bus.addListener(this::clientInit);
 		bus.addListener(this::serverInit);
 
 		CRConfig.init();
 
-		MinecraftForge.EVENT_BUS.register(this);
+        NeoForge.EVENT_BUS.register(this);
 
 		CRConfig.load();
 	}

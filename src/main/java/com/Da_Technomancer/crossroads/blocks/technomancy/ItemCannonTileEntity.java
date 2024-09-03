@@ -23,10 +23,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
+
+import net.neoforged.neoforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -120,19 +118,19 @@ public class ItemCannonTileEntity extends AbstractCannonTileEntity{
 		redsOpt.invalidate();
 	}
 
-	private final LazyOptional<IItemHandler> itemOpt = LazyOptional.of(InventoryHandler::new);
+	private final IItemHandler itemOpt = LazyOptional.of(InventoryHandler::new);
 	public final CircuitUtil.InputCircHandler redsHandler = new CircuitUtil.InputCircHandler();
-	private final LazyOptional<IRedstoneHandler> redsOpt = CircuitUtil.makeBaseCircuitOptional(this, redsHandler, 0);
+	private final IRedstoneHandler redsOpt = CircuitUtil.makeBaseCircuitOptional(this, redsHandler, 0);
 
 	@Nonnull
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side){
+	public <T> T getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
 		if(cap == ForgeCapabilities.ITEM_HANDLER){
-			return (LazyOptional<T>) itemOpt;
+			return (T) itemOpt;
 		}
 		if(cap == RedstoneUtil.REDSTONE_CAPABILITY){
-			return (LazyOptional<T>) redsOpt;
+			return (T) redsOpt;
 		}
 
 		return super.getCapability(cap, side);

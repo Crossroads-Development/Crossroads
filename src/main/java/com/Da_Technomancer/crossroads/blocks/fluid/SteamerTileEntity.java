@@ -21,11 +21,9 @@ import net.minecraft.world.item.crafting.SmokingRecipe;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -123,17 +121,17 @@ public class SteamerTileEntity extends InventoryTE{
 		waterOpt.invalidate();
 	}
 
-	private final LazyOptional<IFluidHandler> steamOpt = LazyOptional.of(() -> new FluidHandler(0));
-	private final LazyOptional<IFluidHandler> waterOpt = LazyOptional.of(() -> new FluidHandler(1));
+	private final IFluidHandler steamOpt = LazyOptional.of(() -> new FluidHandler(0));
+	private final IFluidHandler waterOpt = LazyOptional.of(() -> new FluidHandler(1));
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
+	public <T> T getCapability(Capability<T> cap, Direction side) {
 		if(cap == ForgeCapabilities.FLUID_HANDLER){
 			if(side == Direction.UP || side == Direction.DOWN){
-				return (LazyOptional<T>) waterOpt;
+				return (T) waterOpt;
 			}else if(side != null){
-				return (LazyOptional<T>) steamOpt;
+				return (T) steamOpt;
 			}
 		}
 

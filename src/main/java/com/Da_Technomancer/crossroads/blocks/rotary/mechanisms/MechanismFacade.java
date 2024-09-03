@@ -18,11 +18,10 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.data.ModelData;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.client.model.data.ModelData;
+
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -83,11 +82,11 @@ public class MechanismFacade implements IMechanism<GearFacade.FacadeBlock>{
 
 		//Connected block
 		if(sideTE != null){
-			LazyOptional<IAxisHandler> axisOpt = sideTE.getCapability(Capabilities.AXIS_CAPABILITY, side.getOpposite());
+			IAxisHandler axisOpt = sideTE.getCapability(Capabilities.AXIS_CAPABILITY, side.getOpposite());
 			if(axisOpt.isPresent()){
 				axisOpt.orElseThrow(NullPointerException::new).trigger(masterIn, key);
 			}
-			LazyOptional<IAxleHandler> axleOpt = sideTE.getCapability(Capabilities.AXLE_CAPABILITY, side.getOpposite());
+			IAxleHandler axleOpt = sideTE.getCapability(Capabilities.AXLE_CAPABILITY, side.getOpposite());
 			if(axleOpt.isPresent()){
 				axleOpt.orElseThrow(NullPointerException::new).propagate(masterIn, key, rotRatioIn, 0, handler.renderOffset());
 			}

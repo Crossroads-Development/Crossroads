@@ -17,8 +17,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
+
 
 public class RedstoneAxisTileEntity extends MasterAxisTileEntity{
 
@@ -52,7 +51,7 @@ public class RedstoneAxisTileEntity extends MasterAxisTileEntity{
 
 		double cost = sumIRot * Math.pow(targetBaseSpeed, 2) / 2D;//Total energy required to hold the output at the requested base speed
 		BlockEntity backTE = level.getBlockEntity(worldPosition.relative(facing.getOpposite()));
-		LazyOptional<IAxleHandler> backOpt = backTE == null ? LazyOptional.empty() : backTE.getCapability(Capabilities.AXLE_CAPABILITY, facing);
+		IAxleHandler backOpt = backTE == null ? LazyOptional.empty() : backTE.getCapability(Capabilities.AXLE_CAPABILITY, facing);
 		IAxleHandler sourceAxle = backOpt.isPresent() ? backOpt.orElseThrow(NullPointerException::new) : null;
 		double availableEnergy = Math.abs(energyCalcResults[0]);
 		//Add energy from the gear on the back. Don't double count if it's in this gear network
@@ -122,13 +121,13 @@ public class RedstoneAxisTileEntity extends MasterAxisTileEntity{
 	}
 
 	public final CircuitUtil.InputCircHandler redsHandler = new CircuitUtil.InputCircHandler();
-	private LazyOptional<IRedstoneHandler> redsOpt = CircuitUtil.makeBaseCircuitOptional(this, redsHandler, 0);
+	private IRedstoneHandler redsOpt = CircuitUtil.makeBaseCircuitOptional(this, redsHandler, 0);
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction dir){
+	public <T> T getCapability(Capability<T> cap, Direction dir) {
 		if(cap == RedstoneUtil.REDSTONE_CAPABILITY){
-			return (LazyOptional<T>) redsOpt;
+			return (T) redsOpt;
 		}
 		return super.getCapability(cap, dir);
 	}

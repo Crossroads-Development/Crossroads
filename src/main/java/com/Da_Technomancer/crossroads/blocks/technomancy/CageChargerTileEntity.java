@@ -19,10 +19,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
+
+import net.neoforged.neoforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -74,17 +72,17 @@ public class CageChargerTileEntity extends BlockEntity implements IInfoTE{
 		itemOpt.invalidate();
 	}
 
-	private final LazyOptional<IBeamHandler> beamOpt = LazyOptional.of(BeamHandler::new);
-	private final LazyOptional<IItemHandler> itemOpt = LazyOptional.of(ItemHandler::new);
+	private final IBeamHandler beamOpt = LazyOptional.of(BeamHandler::new);
+	private final IItemHandler itemOpt = LazyOptional.of(ItemHandler::new);
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
+	public <T> T getCapability(Capability<T> cap, Direction side) {
 		if(cap == Capabilities.BEAM_CAPABILITY){
-			return (LazyOptional<T>) beamOpt;
+			return (T) beamOpt;
 		}
 		if(cap == ForgeCapabilities.ITEM_HANDLER){
-			return (LazyOptional<T>) itemOpt;
+			return (T) itemOpt;
 		}
 
 		return super.getCapability(cap, side);

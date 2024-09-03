@@ -21,10 +21,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+
 import org.joml.Quaternionf;
 
 import javax.annotation.Nonnull;
@@ -111,12 +110,12 @@ public class MechanismClutch extends MechanismAxle{
 				BlockEntity endTE = te.getLevel().getBlockEntity(te.getBlockPos().relative(endDir));
 				Direction oEndDir = endDir.getOpposite();
 				if(endTE != null){
-					LazyOptional<IAxisHandler> axisOpt = endTE.getCapability(Capabilities.AXIS_CAPABILITY, oEndDir);
+					IAxisHandler axisOpt = endTE.getCapability(Capabilities.AXIS_CAPABILITY, oEndDir);
 					if(axisOpt.isPresent()){
 						axisOpt.orElseThrow(NullPointerException::new).trigger(masterIn, key);
 					}
 
-					LazyOptional<IAxleHandler> axleOpt = endTE.getCapability(Capabilities.AXLE_CAPABILITY, oEndDir);
+					IAxleHandler axleOpt = endTE.getCapability(Capabilities.AXLE_CAPABILITY, oEndDir);
 					if(axleOpt.isPresent()){
 						axleOpt.orElseThrow(NullPointerException::new).propagate(masterIn, key, handler.getRotationRatio(), 0, handler.renderOffset());
 					}

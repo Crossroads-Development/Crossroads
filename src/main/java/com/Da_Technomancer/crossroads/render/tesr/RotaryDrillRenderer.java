@@ -18,7 +18,6 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.util.LazyOptional;
 
 public class RotaryDrillRenderer implements BlockEntityRenderer<RotaryDrillTileEntity>{
 
@@ -29,7 +28,7 @@ public class RotaryDrillRenderer implements BlockEntityRenderer<RotaryDrillTileE
 	@Override
 	public void render(RotaryDrillTileEntity te, float partialTicks, PoseStack matrix, MultiBufferSource buffer, int combinedLight, int combinedOverlay){
 		BlockState state = te.getBlockState();
-		LazyOptional<IAxleHandler> axle = te.getCapability(Capabilities.AXLE_CAPABILITY, null);
+        IAxleHandler axle = te.getCapability(Capabilities.AXLE_CAPABILITY, null);
 
 		if(!(state.getBlock() instanceof RotaryDrill) || !axle.isPresent()){
 			return;

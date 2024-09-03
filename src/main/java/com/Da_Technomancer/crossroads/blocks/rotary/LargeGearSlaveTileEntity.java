@@ -18,8 +18,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
+
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -105,13 +104,13 @@ public class LargeGearSlaveTileEntity extends BlockEntity implements IInfoTE{
 	}
 
 	private final ICogHandler handler = new CogHandler();
-	private final LazyOptional<ICogHandler> cogOpt = LazyOptional.of(() -> handler);
+	private final ICogHandler cogOpt = LazyOptional.of(() -> handler);
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing) {
 		if(capability == Capabilities.COG_CAPABILITY && isEdge() && getFacing() == facing){
-			return (LazyOptional<T>) cogOpt;
+			return (T) cogOpt;
 		}else{
 			return super.getCapability(capability, facing);
 		}
@@ -136,7 +135,7 @@ public class LargeGearSlaveTileEntity extends BlockEntity implements IInfoTE{
 			}
 			BlockEntity te = level.getBlockEntity(worldPosition.offset(masterPos));
 			if(te instanceof LargeGearMasterTileEntity){
-				LazyOptional<IAxleHandler> axleOpt = te.getCapability(Capabilities.AXLE_CAPABILITY, getFacing());
+				IAxleHandler axleOpt = te.getCapability(Capabilities.AXLE_CAPABILITY, getFacing());
 				return axleOpt.isPresent() ? axleOpt.orElseThrow(NullPointerException::new) : null;
 			}
 			return null;

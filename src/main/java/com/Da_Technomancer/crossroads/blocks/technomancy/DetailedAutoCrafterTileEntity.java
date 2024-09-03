@@ -6,8 +6,6 @@ import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.DetailedCrafterRec;
 import com.Da_Technomancer.crossroads.gui.container.DetailedAutoCrafterContainer;
 import com.Da_Technomancer.crossroads.items.PathSigil;
-import com.Da_Technomancer.essentials.blocks.AutoCrafterTileEntity;
-import com.Da_Technomancer.essentials.gui.container.AutoCrafterContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -22,6 +20,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import javax.annotation.Nullable;
 import java.util.List;
 
+//TODO: Probably outmoded, see DetailedAutoCrafter
 public class DetailedAutoCrafterTileEntity extends AutoCrafterTileEntity{
 
 	public static final BlockEntityType<DetailedAutoCrafterTileEntity> TYPE = CRTileEntity.createType(DetailedAutoCrafterTileEntity::new, CRBlocks.detailedAutoCrafter);

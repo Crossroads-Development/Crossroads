@@ -22,8 +22,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
+
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -125,14 +124,14 @@ public class SequenceBoxTileEntity extends BlockEntity implements INBTReceiver, 
 	}
 
 	public final CircuitUtil.OutputCircHandler circHandler = new CircuitUtil.OutputCircHandler();
-	private final LazyOptional<IRedstoneHandler> circOpt = CircuitUtil.makeBaseCircuitOptional(this, circHandler, () -> index < sequenceVal.size() ? sequenceVal.get(index) : 0F);
+	private final IRedstoneHandler circOpt = CircuitUtil.makeBaseCircuitOptional(this, circHandler, () -> index < sequenceVal.size() ? sequenceVal.get(index) : 0F);
 
 	@Nonnull
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side){
+	public <T> T getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
 		if(cap == RedstoneUtil.REDSTONE_CAPABILITY){
-			return (LazyOptional<T>) circOpt;
+			return (T) circOpt;
 		}
 		return super.getCapability(cap, side);
 	}

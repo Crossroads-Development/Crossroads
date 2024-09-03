@@ -18,10 +18,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -96,7 +95,7 @@ public class MechanismSmallGear implements IMechanism<CRMaterialLibrary.GearMate
 				// Adjacent gears
 				BlockEntity adjTE = te.getLevel().getBlockEntity(te.getBlockPos().relative(facing));
 				if(adjTE != null){
-					LazyOptional<ICogHandler> cogOpt;
+					ICogHandler cogOpt;
 					if((cogOpt = adjTE.getCapability(Capabilities.COG_CAPABILITY, side)).isPresent()){
 						cogOpt.orElseThrow(NullPointerException::new).connect(masterIn, key, -handler.getRotationRatio(), .5D, facing.getOpposite(), handler.renderOffset());
 					}else if((cogOpt = adjTE.getCapability(Capabilities.COG_CAPABILITY, facing.getOpposite())).isPresent()){
@@ -107,7 +106,7 @@ public class MechanismSmallGear implements IMechanism<CRMaterialLibrary.GearMate
 
 				// Diagonal gears
 				BlockEntity diagTE = te.getLevel().getBlockEntity(te.getBlockPos().relative(facing).relative(side));
-				LazyOptional<ICogHandler> cogOpt;
+				ICogHandler cogOpt;
 				if(diagTE != null && (cogOpt = diagTE.getCapability(Capabilities.COG_CAPABILITY, facing.getOpposite())).isPresent() && RotaryUtil.canConnectThrough(te.getLevel(), te.getBlockPos().relative(facing), facing.getOpposite(), side)){
 					cogOpt.orElseThrow(NullPointerException::new).connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * handler.getRotationRatio(), .5D, side.getOpposite(), handler.renderOffset());
 				}
@@ -121,11 +120,11 @@ public class MechanismSmallGear implements IMechanism<CRMaterialLibrary.GearMate
 		//Connected block
 		RotaryUtil.propagateAxially(sideTE, side.getOpposite(), handler, masterIn, key, handler.renderOffset());
 //		if(sideTE != null){
-//			LazyOptional<IAxisHandler> axisOpt = sideTE.getCapability(Capabilities.AXIS_CAPABILITY, side.getOpposite());
+//			IAxisHandler axisOpt = sideTE.getCapability(Capabilities.AXIS_CAPABILITY, side.getOpposite());
 //			if(axisOpt.isPresent()){
 //				axisOpt.orElseThrow(NullPointerException::new).trigger(masterIn, key);
 //			}
-//			LazyOptional<IAxleHandler> axleOpt = sideTE.getCapability(Capabilities.AXLE_CAPABILITY, side.getOpposite());
+//			IAxleHandler axleOpt = sideTE.getCapability(Capabilities.AXLE_CAPABILITY, side.getOpposite());
 //			if(axleOpt.isPresent()){
 //				axleOpt.orElseThrow(NullPointerException::new).propagate(masterIn, key, handler.rotRatio, 0, handler.renderOffset);
 //			}

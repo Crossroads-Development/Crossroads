@@ -15,11 +15,10 @@ import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.common.SoundActions;
-import net.minecraftforge.fluids.FluidType;
-import net.minecraftforge.fluids.ForgeFlowingFluid;
+import net.minecraft.world.level.pathfinder.PathType;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.common.SoundActions;
+import net.neoforged.neoforge.fluids.FluidType;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -42,7 +41,7 @@ public class GenericFluid extends LiquidBlock{
 			properties.sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL_LAVA).sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY_LAVA);
 			properties.canSwim(false);
 			properties.canDrown(false);
-			properties.pathType(BlockPathTypes.LAVA);
+			properties.pathType(PathType.LAVA);
 			properties.adjacentPathType(null);
 			properties.temperature(1500);
 			properties.viscosity(6000);
@@ -55,7 +54,7 @@ public class GenericFluid extends LiquidBlock{
 			if(gaseous){
 				properties.canDrown(false);
 				properties.canSwim(false);
-				properties.pathType(BlockPathTypes.OPEN);
+				properties.pathType(PathType.OPEN);
 				properties.adjacentPathType(null);
 				properties.viscosity(500);
 				properties.density(-100);

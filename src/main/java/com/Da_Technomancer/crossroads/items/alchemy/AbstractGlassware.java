@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.api.alchemy.IReagent;
 import com.Da_Technomancer.crossroads.api.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.blocks.alchemy.GlasswareHolderTileEntity;
-import net.minecraft.core.BlockSource;
+import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.Direction;
 import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
 import net.minecraft.nbt.CompoundTag;

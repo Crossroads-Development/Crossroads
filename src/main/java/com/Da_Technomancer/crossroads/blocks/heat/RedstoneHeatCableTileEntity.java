@@ -14,8 +14,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
+
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -73,10 +72,10 @@ public class RedstoneHeatCableTileEntity extends HeatCableTileEntity{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing) {
 		if(capability == Capabilities.HEAT_CAPABILITY){
 			if((facing == null || !locked(facing.get3DDataValue())) && isUnlocked()){
-				return (LazyOptional<T>) heatOpt;
+				return (T) heatOpt;
 			}else{
 				return LazyOptional.empty();
 			}

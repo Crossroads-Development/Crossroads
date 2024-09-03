@@ -26,10 +26,8 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
+
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
 import java.awt.*;
@@ -126,12 +124,12 @@ public class SteamTurbineTileEntity extends InventoryTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing) {
 		if(capability == ForgeCapabilities.FLUID_HANDLER){
-			return (LazyOptional<T>) globalFluidOpt;
+			return (T) globalFluidOpt;
 		}
 		if(capability == Capabilities.AXLE_CAPABILITY && facing == Direction.UP){
-			return (LazyOptional<T>) axleOpt;
+			return (T) axleOpt;
 		}
 
 		return super.getCapability(capability, facing);

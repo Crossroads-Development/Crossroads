@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.CentrifugeRec;
 import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.forge.ForgeTypes;
+import mezz.jei.api.neoforge.NeoForgeTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
@@ -63,8 +63,8 @@ public class CentrifugeCategory implements IRecipeCategory<CentrifugeRec>{
 
 	@Override
 	public void setRecipe(IRecipeLayoutBuilder builder, CentrifugeRec recipe, IFocusGroup focuses){
-		builder.addSlot(RecipeIngredientRole.INPUT, 51, 31).addIngredient(ForgeTypes.FLUID_STACK, recipe.getInput()).setFluidRenderer(4000, true, 16, 64).setOverlay(fluidOverlay, 0, 0);
-		builder.addSlot(RecipeIngredientRole.OUTPUT, 111, 31).addIngredient(ForgeTypes.FLUID_STACK, recipe.getFluidOutput()).setFluidRenderer(4000, true, 16, 64).setOverlay(fluidOverlay, 0, 0);
+		builder.addSlot(RecipeIngredientRole.INPUT, 51, 31).addIngredient(NeoForgeTypes.FLUID_STACK, recipe.getInput()).setFluidRenderer(4000, true, 16, 64).setOverlay(fluidOverlay, 0, 0);
+		builder.addSlot(RecipeIngredientRole.OUTPUT, 111, 31).addIngredient(NeoForgeTypes.FLUID_STACK, recipe.getFluidOutput()).setFluidRenderer(4000, true, 16, 64).setOverlay(fluidOverlay, 0, 0);
 		builder.addSlot(RecipeIngredientRole.OUTPUT, 131, 31).addItemStacks(recipe.getOutputList());
 	}
 

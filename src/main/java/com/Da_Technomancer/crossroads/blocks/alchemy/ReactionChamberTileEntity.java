@@ -19,11 +19,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.items.IItemHandler;
+
+import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.items.IItemHandler;
 import org.apache.commons.lang3.tuple.Pair;
 import org.joml.Vector3f;
 
@@ -155,25 +153,25 @@ public class ReactionChamberTileEntity extends ReagentHolderTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
+	public <T> T getCapability(Capability<T> cap, Direction side) {
 		if(cap == Capabilities.CHEMICAL_CAPABILITY){
-			return (LazyOptional<T>) chemOpt;
+			return (T) chemOpt;
 		}
 		if(cap == Capabilities.HEAT_CAPABILITY){
-			return (LazyOptional<T>) heatOpt;
+			return (T) heatOpt;
 		}
 		if(cap == ForgeCapabilities.ITEM_HANDLER){
-			return (LazyOptional<T>) itemOpt;
+			return (T) itemOpt;
 		}
 		if(cap == ForgeCapabilities.ENERGY && (side == null || side.getAxis() != Direction.Axis.Y)){
-			return (LazyOptional<T>) energyOpt;
+			return (T) energyOpt;
 		}
 		return super.getCapability(cap, side);
 	}
 
-	private final LazyOptional<IHeatHandler> heatOpt = LazyOptional.of(HeatHandler::new);
-	private final LazyOptional<IItemHandler> itemOpt = LazyOptional.of(ItemHandler::new);
-	private final LazyOptional<IEnergyStorage> energyOpt  = LazyOptional.of(EnergyHandler::new);
+	private final IHeatHandler heatOpt = LazyOptional.of(HeatHandler::new);
+	private final IItemHandler itemOpt = LazyOptional.of(ItemHandler::new);
+	private final IEnergyStorage energyOpt = LazyOptional.of(EnergyHandler::new);
 
 	private class EnergyHandler implements IEnergyStorage{
 

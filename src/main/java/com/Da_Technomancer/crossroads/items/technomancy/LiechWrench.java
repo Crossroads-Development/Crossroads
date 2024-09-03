@@ -17,8 +17,8 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.ToolAction;
-import net.minecraftforge.common.ToolActions;
+import net.neoforged.neoforge.common.ItemAbilities;
+import net.neoforged.neoforge.common.ItemAbility;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -83,7 +83,7 @@ public class LiechWrench extends Item{
 	}
 
 	@Override
-	public boolean canPerformAction(ItemStack stack, ToolAction toolAction){
-		return toolAction == ConfigUtil.WRENCH_ACTION || ToolActions.DEFAULT_AXE_ACTIONS.contains(toolAction) || ToolActions.HOE_DIG == toolAction || ToolActions.DEFAULT_PICKAXE_ACTIONS.contains(toolAction) || ToolActions.DEFAULT_SHOVEL_ACTIONS.contains(toolAction);
+	public boolean canPerformAction(ItemStack stack, ItemAbility itemAbility) {
+		return toolAction == ConfigUtil.WRENCH_ACTION || ItemAbilities.DEFAULT_AXE_ACTIONS.contains(toolAction) || ItemAbilities.HOE_DIG == toolAction || ItemAbilities.DEFAULT_PICKAXE_ACTIONS.contains(toolAction) || ItemAbilities.DEFAULT_SHOVEL_ACTIONS.contains(toolAction);
 	}
 }

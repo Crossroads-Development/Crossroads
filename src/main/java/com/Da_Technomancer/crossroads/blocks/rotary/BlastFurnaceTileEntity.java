@@ -28,10 +28,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
+
+import net.neoforged.neoforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -188,19 +186,19 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 		return Component.translatable("container.ind_blast_furnace");
 	}
 
-	private final LazyOptional<IItemHandler> itemOpt = LazyOptional.of(ItemHandler::new);
+	private final IItemHandler itemOpt = LazyOptional.of(ItemHandler::new);
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
+	public <T> T getCapability(Capability<T> cap, Direction side) {
 		if(cap == ForgeCapabilities.ITEM_HANDLER){
-			return (LazyOptional<T>) itemOpt;
+			return (T) itemOpt;
 		}
 		if(cap == Capabilities.AXLE_CAPABILITY && (side == Direction.UP || side == null)){
-			return (LazyOptional<T>) axleOpt;
+			return (T) axleOpt;
 		}
 		if(cap == ForgeCapabilities.FLUID_HANDLER){
-			return (LazyOptional<T>) globalFluidOpt;
+			return (T) globalFluidOpt;
 		}
 
 		return super.getCapability(cap, side);

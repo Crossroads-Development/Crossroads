@@ -21,8 +21,8 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.common.util.FakePlayerFactory;
-import net.minecraftforge.common.util.INBTSerializable;
+import net.neoforged.neoforge.common.util.FakePlayerFactory;
+import net.neoforged.neoforge.common.util.INBTSerializable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -30,7 +30,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
-public class EntityTemplate implements INBTSerializable<CompoundTag>{
+public class EntityTemplate implements INBTSerializable<CompoundTag> {
 
 	public static final String RESPAWNING_KEY = "cr_respawning";
 	public static final String LOYAL_KEY = "cr_loyal";

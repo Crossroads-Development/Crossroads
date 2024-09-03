@@ -6,13 +6,13 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.BlastFurnaceRec;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.neoforge.NeoForgeTypes;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
@@ -70,7 +70,7 @@ public class BlastFurnaceCategory implements IRecipeCategory<BlastFurnaceRec>{
 	public void setRecipe(IRecipeLayoutBuilder builder, BlastFurnaceRec recipe, IFocusGroup focuses){
 		builder.addSlot(RecipeIngredientRole.INPUT, 55, 56).addIngredients(recipe.getIngredient());
 		builder.addSlot(RecipeIngredientRole.OUTPUT, 131, 56).addItemStack(new ItemStack(CRItems.slag, recipe.getSlag()));
-		builder.addSlot(RecipeIngredientRole.OUTPUT, 111, 23).addIngredient(ForgeTypes.FLUID_STACK, recipe.getOutput()).setFluidRenderer(1000, true, 16, 64).setOverlay(fluidOverlay, 0, 0);
+		builder.addSlot(RecipeIngredientRole.OUTPUT, 111, 23).addIngredient(NeoForgeTypes.FLUID_STACK, recipe.getOutput()).setFluidRenderer(1000, true, 16, 64).setOverlay(fluidOverlay, 0, 0);
 	}
 
 	@Override

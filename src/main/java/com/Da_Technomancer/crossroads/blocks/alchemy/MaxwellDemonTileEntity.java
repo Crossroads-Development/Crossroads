@@ -17,8 +17,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
+
 
 import java.util.ArrayList;
 
@@ -74,7 +73,7 @@ public class MaxwellDemonTileEntity extends BlockEntity implements ITickableTile
 			Direction dir = Direction.from3DDataValue(i);
 
 			BlockEntity te = level.getBlockEntity(worldPosition.relative(dir));
-			LazyOptional<IHeatHandler> heatOpt;
+			IHeatHandler heatOpt;
 			if(te != null && (heatOpt = te.getCapability(Capabilities.HEAT_CAPABILITY, dir.getOpposite())).isPresent()){
 				double reservePool = i == 0 ? tempDown : tempUp;
 				if(i == 0){
@@ -120,17 +119,17 @@ public class MaxwellDemonTileEntity extends BlockEntity implements ITickableTile
 		heatOptDown.invalidate();
 	}
 
-	private final LazyOptional<IHeatHandler> heatOptUp = LazyOptional.of(() -> new HeatHandler(true));
-	private final LazyOptional<IHeatHandler> heatOptDown = LazyOptional.of(() -> new HeatHandler(false));
+	private final IHeatHandler heatOptUp = LazyOptional.of(() -> new HeatHandler(true));
+	private final IHeatHandler heatOptDown = LazyOptional.of(() -> new HeatHandler(false));
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
+	public <T> T getCapability(Capability<T> cap, Direction side) {
 		if(cap == Capabilities.HEAT_CAPABILITY){
 			if(side == null || side == Direction.UP){
-				return (LazyOptional<T>) heatOptUp;
+				return (T) heatOptUp;
 			}else if(side == Direction.DOWN){
-				return (LazyOptional<T>) heatOptDown;
+				return (T) heatOptDown;
 			}
 		}
 		return super.getCapability(cap, side);

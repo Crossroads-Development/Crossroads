@@ -7,7 +7,6 @@ import com.Da_Technomancer.crossroads.api.beams.*;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import com.Da_Technomancer.essentials.api.packets.ILongReceiver;
-import com.Da_Technomancer.essentials.api.packets.SendLongToClient;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -17,8 +16,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
+
 
 import javax.annotation.Nonnull;
 
@@ -202,7 +200,7 @@ public abstract class BeamRenderTE extends BlockEntity implements IBeamRenderTE,
 		return new BeamHandler();
 	}
 
-	protected LazyOptional<IBeamHandler> lazyOptional = LazyOptional.of(this::createBeamHandler);
+	protected IBeamHandler lazyOptional = LazyOptional.of(this::createBeamHandler);
 
 	@Override
 	public void setRemoved(){
@@ -221,9 +219,9 @@ public abstract class BeamRenderTE extends BlockEntity implements IBeamRenderTE,
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction dir){
+	public <T> T getCapability(Capability<T> cap, Direction dir) {
 		if(cap == Capabilities.BEAM_CAPABILITY && (dir == null || inputSides()[dir.get3DDataValue()])){
-			return (LazyOptional<T>) lazyOptional;
+			return (T) lazyOptional;
 		}
 		return super.getCapability(cap, dir);
 	}

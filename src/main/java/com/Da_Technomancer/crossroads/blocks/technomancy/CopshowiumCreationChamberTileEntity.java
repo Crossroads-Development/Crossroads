@@ -28,11 +28,9 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -195,19 +193,19 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 	}
 
 	//Make the top handler an IFluidTank to allow pipes to do bi-directional stuff
-	private final LazyOptional<IFluidHandler> inputOpt = LazyOptional.of(() -> new FluidTankHandler(0));
-	private final LazyOptional<IFluidHandler> outputOpt = LazyOptional.of(() -> new FluidHandler(1));
-	private final LazyOptional<IBeamHandler> beamOpt = LazyOptional.of(BeamHandler::new);
+	private final IFluidHandler inputOpt = LazyOptional.of(() -> new FluidTankHandler(0));
+	private final IFluidHandler outputOpt = LazyOptional.of(() -> new FluidHandler(1));
+	private final IBeamHandler beamOpt = LazyOptional.of(BeamHandler::new);
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing) {
 		if(capability == ForgeCapabilities.FLUID_HANDLER){
-			return facing == null ? (LazyOptional<T>) globalFluidOpt : facing == Direction.UP ? (LazyOptional<T>) inputOpt : facing == Direction.DOWN ? (LazyOptional<T>) outputOpt : LazyOptional.empty();
+			return facing == null ? (T) globalFluidOpt : facing == Direction.UP ? (T) inputOpt : facing == Direction.DOWN ? (T) outputOpt : LazyOptional.empty();
 		}
 
 		if(capability == Capabilities.BEAM_CAPABILITY && (facing == null || facing.getAxis() != Direction.Axis.Y)){
-			return (LazyOptional<T>) beamOpt;
+			return (T) beamOpt;
 		}
 
 		return super.getCapability(capability, facing);

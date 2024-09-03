@@ -12,10 +12,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.IEnergyStorage;
+
+import net.neoforged.neoforge.energy.IEnergyStorage;
 
 public class ChargingStandTileEntity extends GlasswareHolderTileEntity{
 
@@ -72,13 +70,13 @@ public class ChargingStandTileEntity extends GlasswareHolderTileEntity{
 		elecOpt.invalidate();
 	}
 
-	private final LazyOptional<IEnergyStorage> elecOpt = LazyOptional.of(ElecHandler::new);
+    private final IEnergyStorage elecOpt = LazyOptional.of(ElecHandler::new);
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
+    public <T> T getCapability(Capability<T> cap, Direction side) {
 		if(cap == ForgeCapabilities.ENERGY){
-			return (LazyOptional<T>) elecOpt;
+            return (T) elecOpt;
 		}
 		if(side == Direction.UP && cap == Capabilities.CHEMICAL_CAPABILITY){
 			//The super class (glassware holder) would return the handler for a conduit connection on the top

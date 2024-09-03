@@ -12,8 +12,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
+
 
 import java.util.HashSet;
 
@@ -65,13 +64,13 @@ public class ChemicalVentTileEntity extends BlockEntity implements ITickableTile
 		alcOpt.invalidate();
 	}
 
-	private final LazyOptional<IChemicalHandler> alcOpt = LazyOptional.of(AlchHandler::new);
+	private final IChemicalHandler alcOpt = LazyOptional.of(AlchHandler::new);
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
+	public <T> T getCapability(Capability<T> cap, Direction side) {
 		if(cap == Capabilities.CHEMICAL_CAPABILITY){
-			return (LazyOptional<T>) alcOpt;
+			return (T) alcOpt;
 		}
 		return super.getCapability(cap, side);
 	}

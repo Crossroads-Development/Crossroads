@@ -22,8 +22,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
+
 import org.apache.commons.lang3.tuple.Pair;
 import org.joml.Vector3f;
 
@@ -125,7 +124,7 @@ public class ReagentFilterTileEntity extends ReagentHolderTE implements MenuProv
 
 	private boolean transfer(ReagentMap toTrans, Direction side){
 		BlockEntity te = level.getBlockEntity(worldPosition.relative(side));
-		LazyOptional<IChemicalHandler> chemOpt;
+		IChemicalHandler chemOpt;
 		if(toTrans.getTotalQty() <= 0 || te == null || !(chemOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())).isPresent()){
 			return false;
 		}
@@ -139,9 +138,9 @@ public class ReagentFilterTileEntity extends ReagentHolderTE implements MenuProv
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing) {
 		if(capability == Capabilities.CHEMICAL_CAPABILITY && (facing == getFacing() || facing != null && facing.getAxis() == Direction.Axis.Y)){
-			return (LazyOptional<T>) chemOpt;
+			return (T) chemOpt;
 		}
 		return super.getCapability(capability, facing);
 	}

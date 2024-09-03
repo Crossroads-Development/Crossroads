@@ -10,7 +10,6 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -28,7 +27,7 @@ public class CheatWandHeat extends Item{
 	@Override
 	public InteractionResult useOn(UseOnContext context){
 		BlockEntity te = context.getLevel().getBlockEntity(context.getClickedPos());
-		LazyOptional<IHeatHandler> heatOpt;
+        IHeatHandler heatOpt;
 		if(te != null && (heatOpt = te.getCapability(Capabilities.HEAT_CAPABILITY, null)).isPresent()){
 			IHeatHandler cable = heatOpt.orElseThrow(NullPointerException::new);
 			if(context.getPlayer() != null && context.getPlayer().isShiftKeyDown()){

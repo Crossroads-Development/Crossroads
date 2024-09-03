@@ -9,11 +9,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.IEnergyStorage;
+
+import net.neoforged.neoforge.energy.IEnergyStorage;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -71,7 +68,7 @@ public class LeydenJar extends Item implements ICreativeTabPopulatingItem{
 
 	private static class ItemEnergyHandler implements IEnergyStorage, ICapabilityProvider{
 
-		private final LazyOptional<IEnergyStorage> holder = LazyOptional.of(() -> this);
+		private final IEnergyStorage holder = LazyOptional.of(() -> this);
 
 		private final ItemStack stack;
 
@@ -81,9 +78,9 @@ public class LeydenJar extends Item implements ICreativeTabPopulatingItem{
 
 		@Override
 		@SuppressWarnings("unchecked")
-		public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction dir){
+		public <T> T getCapability(Capability<T> cap, Direction dir) {
 			if(cap == ForgeCapabilities.ENERGY){
-				return (LazyOptional<T>) holder;
+				return (T) holder;
 			}
 			return LazyOptional.empty();
 		}

@@ -20,12 +20,10 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.IItemHandler;
+
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
@@ -118,19 +116,19 @@ public class OreCleanserTileEntity extends InventoryTE{
 		outOpt.invalidate();
 	}
 
-	private final LazyOptional<IItemHandler> itemOpt = LazyOptional.of(ItemHandler::new);
-	private final LazyOptional<IFluidHandler> inOpt = LazyOptional.of(() -> new FluidHandler(0));
-	private final LazyOptional<IFluidHandler> outOpt = LazyOptional.of(() -> new FluidHandler(1));
+	private final IItemHandler itemOpt = LazyOptional.of(ItemHandler::new);
+	private final IFluidHandler inOpt = LazyOptional.of(() -> new FluidHandler(0));
+	private final IFluidHandler outOpt = LazyOptional.of(() -> new FluidHandler(1));
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing) {
 		if(capability == ForgeCapabilities.FLUID_HANDLER){
-			return (LazyOptional<T>) (facing == null ? globalFluidOpt : facing == Direction.UP ? outOpt : inOpt);
+			return (T) (facing == null ? globalFluidOpt : facing == Direction.UP ? outOpt : inOpt);
 		}
 
 		if(capability == ForgeCapabilities.ITEM_HANDLER){
-			return (LazyOptional<T>) itemOpt;
+			return (T) itemOpt;
 		}
 
 		return super.getCapability(capability, facing);

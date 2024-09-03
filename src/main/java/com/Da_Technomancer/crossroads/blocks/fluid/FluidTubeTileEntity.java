@@ -13,13 +13,10 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.common.util.NonNullSupplier;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidTank;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.IFluidTank;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -46,10 +43,10 @@ public class FluidTubeTileEntity extends BlockEntity implements ITickableTileEnt
 
 	//Cache of neighboring optionals
 	@SuppressWarnings("unchecked")
-	private LazyOptional<IFluidHandler>[] otherOpts = new LazyOptional[] {LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty()};
+	private IFluidHandler[] otherOpts = new LazyOptional[]{LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty()};
 	//The optionals of this tube, in order both, in, out
 	@SuppressWarnings("unchecked")
-	private LazyOptional<IFluidHandler>[] internalOpts = new LazyOptional[] {LazyOptional.of(mainHandler), LazyOptional.of(inHandler), LazyOptional.of(outHandler), LazyOptional.of(innerHandler)};
+	private IFluidHandler[] internalOpts = new LazyOptional[]{LazyOptional.of(mainHandler), LazyOptional.of(inHandler), LazyOptional.of(outHandler), LazyOptional.of(innerHandler)};
 
 	@Nonnull
 	private FluidStack content = FluidStack.EMPTY;
@@ -66,7 +63,7 @@ public class FluidTubeTileEntity extends BlockEntity implements ITickableTileEnt
 	public void setBlockState(BlockState stateIn){
 		super.setBlockState(stateIn);
 		//Invalidate and regenerate all the optionals
-		for(LazyOptional<IFluidHandler> internalOpt : internalOpts){
+		for (IFluidHandler internalOpt : internalOpts) {
 			internalOpt.invalidate();
 		}
 		internalOpts[0] = LazyOptional.of(mainHandler);
@@ -339,7 +336,7 @@ public class FluidTubeTileEntity extends BlockEntity implements ITickableTileEnt
 	@Override
 	public void setRemoved(){
 		super.setRemoved();
-		for(LazyOptional<?> opt : internalOpts){
+		for (? opt : internalOpts) {
 			opt.invalidate();
 		}
 		internalOpts[0].invalidate();
@@ -355,15 +352,15 @@ public class FluidTubeTileEntity extends BlockEntity implements ITickableTileEnt
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction side){
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction side) {
 		if(capability == ForgeCapabilities.FLUID_HANDLER){
 			if(side == null){
-				return (LazyOptional<T>) internalOpts[3];//Inner handler
+				return (T) internalOpts[3];//Inner handler
 			}else if(canConnect(side)){
 				return switch(modes[side.get3DDataValue()]){
-					case INPUT -> (LazyOptional<T>) internalOpts[1];
-					case OUTPUT -> (LazyOptional<T>) internalOpts[2];
-					case BOTH -> (LazyOptional<T>) internalOpts[0];
+					case INPUT -> (T) internalOpts[1];
+					case OUTPUT -> (T) internalOpts[2];
+					case BOTH -> (T) internalOpts[0];
 					case NONE -> LazyOptional.empty();
 				};
 			}
@@ -395,7 +392,7 @@ public class FluidTubeTileEntity extends BlockEntity implements ITickableTileEnt
 		Direction face = Direction.from3DDataValue(side);
 		BlockEntity neighTE = level.getBlockEntity(worldPosition.relative(face));
 		if(neighTE != null){
-			LazyOptional<IFluidHandler> opt = neighTE.getCapability(ForgeCapabilities.FLUID_HANDLER, face.getOpposite());
+			IFluidHandler opt = neighTE.getCapability(ForgeCapabilities.FLUID_HANDLER, face.getOpposite());
 			return opt.isPresent();
 		}
 		return false;

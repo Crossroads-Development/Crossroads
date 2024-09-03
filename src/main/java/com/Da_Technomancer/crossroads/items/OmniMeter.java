@@ -20,10 +20,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 import java.util.ArrayList;
 
@@ -49,7 +47,7 @@ public class OmniMeter extends Item{
 	public static void measure(ArrayList<Component> chat, Player player, Level world, BlockPos pos, Direction facing, BlockHitResult hit){
 		BlockEntity te = world.getBlockEntity(pos);
 		if(te != null){
-			LazyOptional<IFluidHandler> fluidOpt;
+			IFluidHandler fluidOpt;
 			if((fluidOpt = te.getCapability(ForgeCapabilities.FLUID_HANDLER, null)).isPresent()){
 				IFluidHandler pipe = fluidOpt.orElseThrow(NullPointerException::new);
 
@@ -68,21 +66,21 @@ public class OmniMeter extends Item{
 				}
 			}
 
-			LazyOptional<IAxisHandler> axisOpt;
+			IAxisHandler axisOpt;
 			if((axisOpt = te.getCapability(Capabilities.AXIS_CAPABILITY, null)).isPresent()){
 				IAxisHandler axisHandler = axisOpt.orElseThrow(NullPointerException::new);
 				chat.add(Component.translatable("tt.crossroads.meter.axis.current", CRConfig.formatVal(axisHandler.getTotalEnergy()), CRConfig.formatVal(axisHandler.getBaseSpeed())));
 				chat.add(Component.translatable("tt.crossroads.meter.axis.change", CRConfig.formatVal(axisHandler.getEnergyChange()), CRConfig.formatVal(axisHandler.getEnergyLost())));
 			}
 
-			LazyOptional<IEnergyStorage> engOpt;
+			IEnergyStorage engOpt;
 			if((engOpt = te.getCapability(ForgeCapabilities.ENERGY, null)).isPresent()){
 				IEnergyStorage batt = engOpt.orElseThrow(NullPointerException::new);
 				chat.add(Component.translatable("tt.crossroads.meter.fe", batt.getEnergyStored(), batt.getMaxEnergyStored()));
 			}
 
 			//Read circuit output
-			LazyOptional<IRedstoneHandler> redsOpt;
+			IRedstoneHandler redsOpt;
 			if((redsOpt = te.getCapability(RedstoneUtil.REDSTONE_CAPABILITY, null)).isPresent()){
 				IRedstoneHandler redstoneHandler = redsOpt.orElseThrow(NullPointerException::new);
 				chat.add(Component.translatable("tt.crossroads.meter.circuit", CRConfig.formatVal(redstoneHandler.getOutput())));

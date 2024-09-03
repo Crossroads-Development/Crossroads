@@ -9,9 +9,7 @@ import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 
 import java.util.List;
 
@@ -35,7 +33,7 @@ public class ChargeEffect extends BeamEffect{
 				for(Player player : players){
 					CurioHelper.forAllInventoryItems(player, (ItemStack item) -> {
 						if(!item.isEmpty() && item.getCapability(ForgeCapabilities.ENERGY).isPresent()){
-							LazyOptional<IEnergyStorage> energyStor;
+							IEnergyStorage energyStor;
 							ItemStack copy = item.copy();
 							if((energyStor = copy.getCapability(ForgeCapabilities.ENERGY)).isPresent()){
 								availableFE[0] -= energyStor.orElseThrow(NullPointerException::new).extractEnergy(availableFE[0], false);
@@ -62,7 +60,7 @@ public class ChargeEffect extends BeamEffect{
 				for(Player player : players){
 					CurioHelper.forAllInventoryItems(player, (ItemStack item) -> {
 						if(!item.isEmpty() && item.getCapability(ForgeCapabilities.ENERGY).isPresent()){
-							LazyOptional<IEnergyStorage> energyStor;
+							IEnergyStorage energyStor;
 							ItemStack copy = item.copy();
 							if((energyStor = copy.getCapability(ForgeCapabilities.ENERGY)).isPresent()){
 								availableFE[0] -= energyStor.orElseThrow(NullPointerException::new).receiveEnergy(availableFE[0], false);

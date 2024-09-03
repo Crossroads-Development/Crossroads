@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.items.alchemy;
 import com.Da_Technomancer.crossroads.api.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.entity.EntityShell;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import net.minecraft.core.BlockSource;
+import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.Direction;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;

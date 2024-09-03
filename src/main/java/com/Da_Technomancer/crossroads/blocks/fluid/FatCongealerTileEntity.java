@@ -23,10 +23,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
+
+import net.neoforged.neoforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -73,7 +71,7 @@ public class FatCongealerTileEntity extends InventoryTE{
 		//This machine can be disabled by a redstone signal
 		if(!level.hasNeighborSignal(worldPosition)){
 			BlockEntity adjTE;
-			LazyOptional<IAxleHandler> otherOpt;
+			IAxleHandler otherOpt;
 			IAxleHandler topHandler = null;
 			IAxleHandler bottomHandler = null;
 
@@ -131,16 +129,16 @@ public class FatCongealerTileEntity extends InventoryTE{
 		itemOpt = LazyOptional.of(ItemHandler::new);
 	}
 
-	private LazyOptional<IItemHandler> itemOpt = LazyOptional.of(ItemHandler::new);
+	private IItemHandler itemOpt = LazyOptional.of(ItemHandler::new);
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing) {
 		if(capability == ForgeCapabilities.FLUID_HANDLER && facing != Direction.DOWN && facing != Direction.UP && facing != getFacing()){
-			return (LazyOptional<T>) globalFluidOpt;
+			return (T) globalFluidOpt;
 		}
 		if(capability == ForgeCapabilities.ITEM_HANDLER && (facing == null || facing == getFacing())){
-			return (LazyOptional<T>) itemOpt;
+			return (T) itemOpt;
 		}
 
 		return super.getCapability(capability, facing);

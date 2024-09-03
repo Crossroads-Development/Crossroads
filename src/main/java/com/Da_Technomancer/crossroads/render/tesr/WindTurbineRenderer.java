@@ -19,7 +19,6 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.util.LazyOptional;
 
 public class WindTurbineRenderer implements BlockEntityRenderer<WindTurbineTileEntity>{
 
@@ -30,7 +29,7 @@ public class WindTurbineRenderer implements BlockEntityRenderer<WindTurbineTileE
 	@Override
 	public void render(WindTurbineTileEntity te, float partialTicks, PoseStack matrix, MultiBufferSource buffer, int combinedLight, int combinedOverlay){
 		BlockState state = te.getBlockState();
-		LazyOptional<IAxleHandler> axle = te.getCapability(Capabilities.AXLE_CAPABILITY, null);
+        IAxleHandler axle = te.getCapability(Capabilities.AXLE_CAPABILITY, null);
 
 		if(state.getBlock() != CRBlocks.windTurbine || !axle.isPresent()){
 			return;

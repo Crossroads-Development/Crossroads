@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.essentials.blocks.AutoCrafter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -14,6 +13,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import javax.annotation.Nullable;
 import java.util.List;
 
+
+// TODO: Essentials version of this was outmoded by MC vanilla, this one probably is too.
 public class DetailedAutoCrafter extends AutoCrafter{
 
 	public DetailedAutoCrafter(){

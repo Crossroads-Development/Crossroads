@@ -27,8 +27,7 @@ import net.minecraft.world.level.block.entity.TickingBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -256,13 +255,13 @@ public class TemporalAcceleratorTileEntity extends IFluxLink.FluxHelper{
 		}
 	}
 
-	private LazyOptional<IBeamHandler> beamOpt = LazyOptional.of(BeamHandler::new);
+	private IBeamHandler beamOpt = LazyOptional.of(BeamHandler::new);
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
+	public <T> T getCapability(Capability<T> cap, Direction side) {
 		if(cap == Capabilities.BEAM_CAPABILITY && (side == null || side == getFacing().getOpposite())){
-			return (LazyOptional<T>) beamOpt;
+			return (T) beamOpt;
 		}
 
 		return super.getCapability(cap, side);

@@ -12,8 +12,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
+
 
 public class SolarHeaterTileEntity extends ModuleTE{
 
@@ -73,9 +72,9 @@ public class SolarHeaterTileEntity extends ModuleTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing){
+	public <T> T getCapability(Capability<T> capability, Direction facing) {
 		if(capability == Capabilities.HEAT_CAPABILITY && (facing == null || facing.getAxis() == level.getBlockState(worldPosition).getValue(CRProperties.HORIZ_AXIS))){
-			return (LazyOptional<T>) heatOpt;
+			return (T) heatOpt;
 		}
 		return super.getCapability(capability, facing);
 	}

@@ -15,7 +15,6 @@ import com.Da_Technomancer.crossroads.api.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.api.technomancy.*;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
-import com.Da_Technomancer.essentials.api.packets.SendLongToClient;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -37,8 +36,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
+
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -65,8 +63,8 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 	private boolean origin = false;//Whether this gateway started the connection in dialed (determines which side has flux)
 
 	private IAxleHandler axleHandler = null;
-	private LazyOptional<IAxleHandler> axleOpt = null;
-	private LazyOptional<IBeamHandler> beamOpt = null;
+	private IAxleHandler axleOpt = null;
+	private IBeamHandler beamOpt = null;
 
 	private int size = 0;//Diameter of the multiblock, from top center to bottom center
 	private Direction.Axis plane = null;//Legal values are null (unformed), x (for structure in x-y plane), and z (for structure in y-z plane). This should never by y
@@ -603,14 +601,14 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 	@Nonnull
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side){
+	public <T> T getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
 		if(isActive()){
 			genOptionals();
 			if(cap == Capabilities.AXLE_CAPABILITY && (side == null || side == Direction.UP)){
-				return (LazyOptional<T>) axleOpt;
+				return (T) axleOpt;
 			}
 			if(cap == Capabilities.BEAM_CAPABILITY){
-				return (LazyOptional<T>) beamOpt;
+				return (T) beamOpt;
 			}
 		}
 		return super.getCapability(cap, side);

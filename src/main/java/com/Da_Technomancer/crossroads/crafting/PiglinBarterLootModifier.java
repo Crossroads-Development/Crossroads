@@ -9,13 +9,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraftforge.common.crafting.CraftingHelper;
-import net.minecraftforge.common.loot.IGlobalLootModifier;
-import net.minecraftforge.common.loot.LootModifier;
+import net.neoforged.neoforge.common.crafting.CraftingHelper;
+import net.neoforged.neoforge.common.loot.IGlobalLootModifier;
+import net.neoforged.neoforge.common.loot.LootModifier;
 
 import javax.annotation.Nonnull;
 
-public class PiglinBarterLootModifier extends LootModifier{
+public class PiglinBarterLootModifier extends LootModifier {
 
 	protected static final Codec<PiglinBarterLootModifier> CODEC = RecordCodecBuilder.create(inst -> codecStart(inst)
 		.and(Codec.BOOL.optionalFieldOf("active", true).forGetter(PiglinBarterLootModifier::isActive))

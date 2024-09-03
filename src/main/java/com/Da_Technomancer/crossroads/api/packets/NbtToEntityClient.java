@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.api.packets;
 
-import com.Da_Technomancer.essentials.api.packets.ClientPacket;
+
 import com.Da_Technomancer.essentials.api.packets.INBTReceiver;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;

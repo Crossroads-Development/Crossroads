@@ -31,7 +31,6 @@ import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nullable;
 import java.awt.*;
@@ -124,7 +123,7 @@ public class Wheezewort extends DoublePlantBlock implements BonemealableBlock{
 		CRSounds.playSoundServer(world, pos, CRSounds.STEAM_RELEASE, SoundSource.BLOCKS, 0.75F, 0.5F + world.random.nextFloat());
 		CRParticles.summonParticlesFromServer(world, new ColorParticleData(CRParticles.COLOR_SOLID, Color.WHITE), 8, pos.getX() + 0.5F, pos.getY() + 0.55F, pos.getZ() + 0.5F, 0.1F, 0, 0.1F, 0, 0.15F, 0, 0.005F, 0.05F, 0.005F, false);
 		BlockEntity te = world.getBlockEntity(pos.above());
-		LazyOptional<IHeatHandler> heatOpt;
+        IHeatHandler heatOpt;
 		if(te != null && (heatOpt = te.getCapability(Capabilities.HEAT_CAPABILITY)).isPresent()){
 			heatOpt.orElseThrow(NullPointerException::new).addHeat(-COOLING);
 			//Almost certainly drops it to absolute zero for anything normal

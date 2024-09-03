@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.api.packets;
 
-import com.Da_Technomancer.essentials.api.packets.ClientPacket;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 

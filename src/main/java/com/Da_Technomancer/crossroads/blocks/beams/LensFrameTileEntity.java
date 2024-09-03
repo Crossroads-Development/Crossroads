@@ -10,7 +10,6 @@ import com.Da_Technomancer.crossroads.crafting.BeamLensRec;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.essentials.api.BlockUtil;
 import com.Da_Technomancer.essentials.api.packets.INBTReceiver;
-import com.Da_Technomancer.essentials.api.packets.SendNBTToClient;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.AxisDirection;
@@ -22,10 +21,8 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
+
+import net.neoforged.neoforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -151,13 +148,13 @@ public class LensFrameTileEntity extends BeamRenderTE implements INBTReceiver, C
 		lensOpt.invalidate();
 	}
 
-	private final LazyOptional<IItemHandler> lensOpt = LazyOptional.of(LensHandler::new);
+	private final IItemHandler lensOpt = LazyOptional.of(LensHandler::new);
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
+	public <T> T getCapability(Capability<T> cap, Direction side) {
 		if(cap == ForgeCapabilities.ITEM_HANDLER){
-			return (LazyOptional<T>)lensOpt;
+			return (T) lensOpt;
 		}
 
 		return super.getCapability(cap, side);

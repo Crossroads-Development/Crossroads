@@ -17,9 +17,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DiodeBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.util.LazyOptional;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
@@ -99,18 +98,18 @@ public class CircuitUtil extends RedstoneUtil{
 		return f;
 	}
 
-	public static LazyOptional<IRedstoneHandler> makeBaseCircuitOptional(BlockEntity te, InputCircHandler handler, float startingRedstone){
+	public static IRedstoneHandler makeBaseCircuitOptional(BlockEntity te, InputCircHandler handler, float startingRedstone) {
 		return makeBaseCircuitOptional(te, handler, startingRedstone, null);
 	}
 
-	public static LazyOptional<IRedstoneHandler> makeBaseCircuitOptional(BlockEntity te, InputCircHandler handler, float startingRedstone, @Nullable Listener changeListener){
-		LazyOptional<IRedstoneHandler> optional = LazyOptional.of(() -> handler);
+	public static IRedstoneHandler makeBaseCircuitOptional(BlockEntity te, InputCircHandler handler, float startingRedstone, @Nullable Listener changeListener) {
+		IRedstoneHandler optional = LazyOptional.of(() -> handler);
 		handler.setup(optional, te, startingRedstone, changeListener == null ? te::setChanged : changeListener);
 		return optional;
 	}
 
-	public static LazyOptional<IRedstoneHandler> makeBaseCircuitOptional(BlockEntity te, OutputCircHandler handler, Supplier<Float> outputSupplier){
-		LazyOptional<IRedstoneHandler> optional = LazyOptional.of(() -> handler);
+	public static IRedstoneHandler makeBaseCircuitOptional(BlockEntity te, OutputCircHandler handler, Supplier<Float> outputSupplier) {
+		IRedstoneHandler optional = LazyOptional.of(() -> handler);
 		handler.setup(optional, te, outputSupplier);
 		return optional;
 	}
@@ -151,13 +150,13 @@ public class CircuitUtil extends RedstoneUtil{
 	 */
 	public static class OutputCircHandler implements IRedstoneHandler{
 
-		private WeakReference<LazyOptional<IRedstoneHandler>> redsRef;
-		private final ArrayList<WeakReference<LazyOptional<IRedstoneHandler>>> dependents = new ArrayList<>(1);
+		private WeakReference<IRedstoneHandler> redsRef;
+		private final ArrayList<WeakReference<IRedstoneHandler>> dependents = new ArrayList<>(1);
 		private Supplier<Float> outputSupplier;
 		private BlockEntity te;
 		private boolean builtConnections = false;
 
-		private void setup(LazyOptional<IRedstoneHandler> circuitOpt, BlockEntity te, Supplier<Float> outputSupplier){
+		private void setup(IRedstoneHandler circuitOpt, BlockEntity te, Supplier<Float> outputSupplier) {
 			redsRef = new WeakReference<>(circuitOpt);
 			this.te = te;
 			this.outputSupplier = outputSupplier;
@@ -170,8 +169,8 @@ public class CircuitUtil extends RedstoneUtil{
 		public void notifyOutputChange(){
 			//Notify dependents and/or neighbors that getPower output has changed
 			for(int i = 0; i < dependents.size(); i++){
-				WeakReference<LazyOptional<IRedstoneHandler>> depend = dependents.get(i);
-				LazyOptional<IRedstoneHandler> optional;
+				WeakReference<IRedstoneHandler> depend = dependents.get(i);
+				IRedstoneHandler optional;
 				//Validate dependent
 				if(depend == null || (optional = depend.get()) == null || !optional.isPresent()){
 					dependents.remove(i);
@@ -201,7 +200,7 @@ public class CircuitUtil extends RedstoneUtil{
 				//Check in all 6 directions because this block outputs in every direction
 				for(Direction dir : Direction.values()){
 					BlockEntity te = world.getBlockEntity(pos.relative(dir));
-					LazyOptional<IRedstoneHandler> otherOpt;
+					IRedstoneHandler otherOpt;
 					if(te != null && (otherOpt = te.getCapability(RedstoneUtil.REDSTONE_CAPABILITY, dir.getOpposite())).isPresent()){
 						IRedstoneHandler otherHandler = otherOpt.orElseThrow(NullPointerException::new);
 						otherHandler.findDependents(redsRef, 0, dir.getOpposite(), dir);
@@ -216,13 +215,13 @@ public class CircuitUtil extends RedstoneUtil{
 		}
 
 		@Override
-		public void findDependents(WeakReference<LazyOptional<IRedstoneHandler>> src, int dist, Direction fromSide, Direction nominalSide){
+		public void findDependents(WeakReference<IRedstoneHandler> src, int dist, Direction fromSide, Direction nominalSide) {
 			//No-Op
 		}
 
 		@Override
-		public void requestSrc(WeakReference<LazyOptional<IRedstoneHandler>> dependency, int dist, Direction toSide, Direction nominalSide){
-			LazyOptional<IRedstoneHandler> depenOption;
+		public void requestSrc(WeakReference<IRedstoneHandler> dependency, int dist, Direction toSide, Direction nominalSide) {
+			IRedstoneHandler depenOption;
 			if((depenOption = dependency.get()) != null && depenOption.isPresent()){
 				IRedstoneHandler depHandler = depenOption.orElseThrow(NullPointerException::new);
 				depHandler.addSrc(redsRef, nominalSide);
@@ -233,19 +232,19 @@ public class CircuitUtil extends RedstoneUtil{
 		}
 
 		@Override
-		public void addSrc(WeakReference<LazyOptional<IRedstoneHandler>> src, Direction fromSide){
+		public void addSrc(WeakReference<IRedstoneHandler> src, Direction fromSide) {
 
 		}
 
 		@Override
-		public void addDependent(WeakReference<LazyOptional<IRedstoneHandler>> dependent, Direction toSide){
+		public void addDependent(WeakReference<IRedstoneHandler> dependent, Direction toSide) {
 			if(!dependents.contains(dependent)){
 				dependents.add(dependent);
 			}
 		}
 
 		@Override
-		public void notifyInputChange(WeakReference<LazyOptional<IRedstoneHandler>> src){
+		public void notifyInputChange(WeakReference<IRedstoneHandler> src) {
 
 		}
 	}
@@ -265,15 +264,15 @@ public class CircuitUtil extends RedstoneUtil{
 		 *
 		 * World redstone will not be checked in any direction with a valid source
 		 */
-		private final ArrayList<Pair<WeakReference<LazyOptional<IRedstoneHandler>>, Direction>> sources = new ArrayList<>(1);
+		private final ArrayList<Pair<WeakReference<IRedstoneHandler>, Direction>> sources = new ArrayList<>(1);
 		private boolean builtConnections = false;
-		private WeakReference<LazyOptional<IRedstoneHandler>> redsRef;
+		private WeakReference<IRedstoneHandler> redsRef;
 		private float circRedstone;
 		private int worldRedstone;
 		private BlockEntity te;
 		private Listener changeListener;
 
-		private void setup(LazyOptional<IRedstoneHandler> circuitOpt, BlockEntity te, float initCircRedstone, Listener changeListener){
+		private void setup(IRedstoneHandler circuitOpt, BlockEntity te, float initCircRedstone, Listener changeListener) {
 			redsRef = new WeakReference<>(circuitOpt);
 			circRedstone = initCircRedstone;
 			this.te = te;
@@ -314,8 +313,8 @@ public class CircuitUtil extends RedstoneUtil{
 			int prevWorldReds = worldRedstone;
 			worldRedstone = 0;
 			Direction[] dirsToCheck = Direction.values();
-			for(Pair<WeakReference<LazyOptional<IRedstoneHandler>>, Direction> src : sources){
-				LazyOptional<IRedstoneHandler> srcOpt;
+			for (Pair<WeakReference<IRedstoneHandler>, Direction> src : sources) {
+				IRedstoneHandler srcOpt;
 				if((srcOpt = src.getLeft().get()) != null && srcOpt.isPresent()){
 					dirsToCheck[src.getRight().get3DDataValue()] = null;//Mark any direction with a circuit input as not to be checked
 				}
@@ -341,7 +340,7 @@ public class CircuitUtil extends RedstoneUtil{
 			if(te != null && (world = te.getLevel()) != null && !world.isClientSide){
 				BlockPos pos = te.getBlockPos();
 				builtConnections = true;
-				ArrayList<Pair<WeakReference<LazyOptional<IRedstoneHandler>>, Direction>> preSrc = new ArrayList<>(sources.size());
+				ArrayList<Pair<WeakReference<IRedstoneHandler>, Direction>> preSrc = new ArrayList<>(sources.size());
 				preSrc.addAll(sources);
 				//Wipe old sources
 				sources.clear();
@@ -371,12 +370,12 @@ public class CircuitUtil extends RedstoneUtil{
 		}
 
 		@Override
-		public void findDependents(WeakReference<LazyOptional<IRedstoneHandler>> weakReference, int i, Direction fromSide, Direction nominalSide){
-			LazyOptional<IRedstoneHandler> srcOption = weakReference.get();
+		public void findDependents(WeakReference<IRedstoneHandler> weakReference, int i, Direction fromSide, Direction nominalSide) {
+			IRedstoneHandler srcOption = weakReference.get();
 			if(srcOption != null && srcOption.isPresent()){
 				IRedstoneHandler srcHandler = BlockUtil.get(srcOption);
 				srcHandler.addDependent(redsRef, nominalSide);
-				Pair<WeakReference<LazyOptional<IRedstoneHandler>>, Direction> srcEntry = Pair.of(weakReference, fromSide);
+				Pair<WeakReference<IRedstoneHandler>, Direction> srcEntry = Pair.of(weakReference, fromSide);
 				if(!sources.contains(srcEntry)){
 					sources.add(srcEntry);
 				}
@@ -384,13 +383,13 @@ public class CircuitUtil extends RedstoneUtil{
 		}
 
 		@Override
-		public void requestSrc(WeakReference<LazyOptional<IRedstoneHandler>> weakReference, int i, Direction direction, Direction direction1){
+		public void requestSrc(WeakReference<IRedstoneHandler> weakReference, int i, Direction direction, Direction direction1) {
 			//No-op
 		}
 
 		@Override
-		public void addSrc(WeakReference<LazyOptional<IRedstoneHandler>> weakReference, Direction direction){
-			Pair<WeakReference<LazyOptional<IRedstoneHandler>>, Direction> srcEntry = Pair.of(weakReference, direction);
+		public void addSrc(WeakReference<IRedstoneHandler> weakReference, Direction direction) {
+			Pair<WeakReference<IRedstoneHandler>, Direction> srcEntry = Pair.of(weakReference, direction);
 			if(!sources.contains(srcEntry)){
 				sources.add(srcEntry);
 				notifyInputChange(weakReference);
@@ -400,17 +399,17 @@ public class CircuitUtil extends RedstoneUtil{
 		}
 
 		@Override
-		public void addDependent(WeakReference<LazyOptional<IRedstoneHandler>> weakReference, Direction direction){
+		public void addDependent(WeakReference<IRedstoneHandler> weakReference, Direction direction) {
 			//No-op
 		}
 
 		@Override
-		public void notifyInputChange(WeakReference<LazyOptional<IRedstoneHandler>> weakReference){
+		public void notifyInputChange(WeakReference<IRedstoneHandler> weakReference) {
 			float prevCirc = circRedstone;
 			circRedstone = 0;
 			for(int i = 0; i < sources.size(); i++){
-				WeakReference<LazyOptional<IRedstoneHandler>> src = sources.get(i).getLeft();
-				LazyOptional<IRedstoneHandler> srcOpt;
+				WeakReference<IRedstoneHandler> src = sources.get(i).getLeft();
+				IRedstoneHandler srcOpt;
 				if((srcOpt = src.get()) != null && srcOpt.isPresent()){
 					circRedstone = RedstoneUtil.chooseInput(circRedstone, RedstoneUtil.sanitize(srcOpt.orElseThrow(NullPointerException::new).getOutput()));
 				}else{

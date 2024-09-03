@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.api.packets;
 
 import com.Da_Technomancer.crossroads.effects.alchemy_effects.AetherEffect;
-import com.Da_Technomancer.essentials.api.packets.ClientPacket;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;

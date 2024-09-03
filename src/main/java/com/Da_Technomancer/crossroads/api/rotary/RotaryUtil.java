@@ -19,7 +19,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -206,12 +205,12 @@ public class RotaryUtil{
 	 */
 	public static void propagateAxially(@Nullable BlockEntity te, Direction direction, IAxleHandler srcHandler, IAxisHandler master, byte key, boolean shouldRenderOffset){
 		if(te != null){
-			LazyOptional<IAxisHandler> axisOpt = te.getCapability(Capabilities.AXIS_CAPABILITY, direction);
+			IAxisHandler axisOpt = te.getCapability(Capabilities.AXIS_CAPABILITY, direction);
 			if(axisOpt.isPresent()){
 				axisOpt.orElseThrow(NullPointerException::new).trigger(master, key);
 			}
 
-			LazyOptional<IAxleHandler> axleOpt = te.getCapability(Capabilities.AXLE_CAPABILITY, direction);
+			IAxleHandler axleOpt = te.getCapability(Capabilities.AXLE_CAPABILITY, direction);
 			if(axleOpt.isPresent()){
 				axleOpt.orElseThrow(NullPointerException::new).propagate(master, key, srcHandler.getRotationRatio(), 0, shouldRenderOffset);
 			}

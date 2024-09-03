@@ -18,10 +18,8 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
+
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -144,7 +142,7 @@ public class FluidCoolingChamberTileEntity extends InventoryTE{
 		nbt.putDouble("max_recipe_temp", maxRecipeTemp);
 	}
 
-	private final LazyOptional<ItemHandler> itemOpt = LazyOptional.of(ItemHandler::new);
+	private final ItemHandler itemOpt = LazyOptional.of(ItemHandler::new);
 
 	@Override
 	public void setRemoved(){
@@ -155,15 +153,15 @@ public class FluidCoolingChamberTileEntity extends InventoryTE{
 	@Nonnull
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction dir){
+	public <T> T getCapability(@Nonnull Capability<T> cap, @Nullable Direction dir) {
 		if(cap == Capabilities.HEAT_CAPABILITY && dir == Direction.UP){
-			return (LazyOptional<T>) heatOpt;
+			return (T) heatOpt;
 		}
 		if(cap == ForgeCapabilities.ITEM_HANDLER){
-			return (LazyOptional<T>) itemOpt;
+			return (T) itemOpt;
 		}
 		if(cap == ForgeCapabilities.FLUID_HANDLER){
-			return (LazyOptional<T>) globalFluidOpt;
+			return (T) globalFluidOpt;
 		}
 
 		return super.getCapability(cap, dir);

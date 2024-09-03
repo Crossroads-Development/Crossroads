@@ -23,7 +23,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.util.LazyOptional;
 
 import java.awt.*;
 
@@ -36,7 +35,7 @@ public class BloodCentrifugeRenderer implements BlockEntityRenderer<BloodCentrif
 	@Override
 	public void render(BloodCentrifugeTileEntity te, float partialTicks, PoseStack matrix, MultiBufferSource buffer, int combinedLight, int combinedOverlay){
 		BlockState state = te.getBlockState();
-		LazyOptional<IAxleHandler> axle = te.getCapability(Capabilities.AXLE_CAPABILITY, null);
+        IAxleHandler axle = te.getCapability(Capabilities.AXLE_CAPABILITY, null);
 		if(state.getBlock() != CRBlocks.bloodCentrifuge || !axle.isPresent()){
 			return;
 		}

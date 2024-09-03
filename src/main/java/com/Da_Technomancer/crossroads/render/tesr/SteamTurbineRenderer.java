@@ -13,7 +13,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraftforge.common.util.LazyOptional;
 
 import java.awt.*;
 
@@ -26,7 +25,7 @@ public class SteamTurbineRenderer implements BlockEntityRenderer<SteamTurbineTil
 	@Override
 	public void render(SteamTurbineTileEntity te, float partialTicks, PoseStack matrix, MultiBufferSource buffer, int combinedLight, int combinedOverlay){
 		matrix.translate(0.5D, 0.5D, 0.5D);
-		LazyOptional<IAxleHandler> opt = te.getCapability(Capabilities.AXLE_CAPABILITY, null);
+        IAxleHandler opt = te.getCapability(Capabilities.AXLE_CAPABILITY, null);
 		if(opt.isPresent()){
 			matrix.mulPose(Axis.YP.rotationDegrees(opt.orElseThrow(NullPointerException::new).getAngle(partialTicks)));
 		}

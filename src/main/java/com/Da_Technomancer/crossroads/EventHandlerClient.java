@@ -26,6 +26,7 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -40,15 +41,15 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.*;
-import net.minecraftforge.common.ForgeSpawnEggItem;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.registries.RegisterEvent;
+import net.neoforged.neoforge.common.DeferredSpawnEggItem;
+
+
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -56,16 +57,13 @@ import java.util.Random;
 
 public class EventHandlerClient{
 
-	@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, modid = Crossroads.MODID, value = Dist.CLIENT)
+    @EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD, modid = Crossroads.MODID, value = Dist.CLIENT)
 	public static class CRModEventsClient{
 
 		@SuppressWarnings("unused")
 		@SubscribeEvent
 		public static void register(RegisterEvent e){
-			//TODO MENU_TYPES (or MENU_TYPE) don't seem to exist; https://docs.neoforged.net/docs/gui/menus/#menutype
-			// says you need to register them, but the only example given is using a DeferredRegister; setting this
-			// aside for now.
-			e.register(Registries.MENU_TYPES, helper -> {
+            e.register(BuiltInRegistries.MENU, helper -> {
 				//The other half of this is in EventHandlerServer
 				CRContainers.initClient();
 				EventHandlerCommon.CRModEventsCommon.registerAll(helper, CRContainers.toRegisterMenu);
@@ -136,7 +134,7 @@ public class EventHandlerClient{
 					EntityTemplate template = ((GeneticSpawnEgg) stack.getItem()).getEntityTypeData(stack);
 					EntityType<?> type = template.getEntityType();
 					if(type != null){
-						SpawnEggItem vanillaEgg = ForgeSpawnEggItem.fromEntityType(type);
+                        SpawnEggItem vanillaEgg = DeferredSpawnEggItem.byId(type);
 						if(vanillaEgg != null){
 							return vanillaEgg.getColor(tintIndex);
 						}

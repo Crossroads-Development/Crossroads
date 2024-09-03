@@ -10,8 +10,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
+
 
 public class HeatReservoirTileEntity extends ModuleTE{
 
@@ -40,9 +39,9 @@ public class HeatReservoirTileEntity extends ModuleTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing){
+	public <T> T getCapability(Capability<T> capability, Direction facing) {
 		if(capability == Capabilities.HEAT_CAPABILITY){
-			return (LazyOptional<T>) heatOpt;
+			return (T) heatOpt;
 		}
 		return super.getCapability(capability, facing);
 	}

@@ -7,7 +7,6 @@ import com.Da_Technomancer.crossroads.api.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.api.technomancy.IFluxLink;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
-import com.Da_Technomancer.essentials.api.packets.SendLongToClient;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -19,10 +18,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.IEnergyStorage;
+
+import net.neoforged.neoforge.energy.IEnergyStorage;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -99,7 +96,7 @@ public class ChronoHarnessTileEntity extends IFluxLink.FluxHelper{
 		if(fe != 0){
 			//Transfer FE to a machine above
 			BlockEntity neighbor = level.getBlockEntity(worldPosition.relative(Direction.UP));
-			LazyOptional<IEnergyStorage>  otherOpt;
+			IEnergyStorage otherOpt;
 			if(neighbor != null && (otherOpt = neighbor.getCapability(ForgeCapabilities.ENERGY, Direction.DOWN)).isPresent()){
 				IEnergyStorage storage = otherOpt.orElseThrow(NullPointerException::new);
 				if(storage.canReceive()){
@@ -156,13 +153,13 @@ public class ChronoHarnessTileEntity extends IFluxLink.FluxHelper{
 		energyOpt.invalidate();
 	}
 
-	private final LazyOptional<IEnergyStorage> energyOpt = LazyOptional.of(EnergyHandler::new);
+	private final IEnergyStorage energyOpt = LazyOptional.of(EnergyHandler::new);
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
+	public <T> T getCapability(Capability<T> cap, Direction side) {
 		if(cap == ForgeCapabilities.ENERGY){
-			return (LazyOptional<T>) energyOpt;
+			return (T) energyOpt;
 		}
 
 		return super.getCapability(cap, side);

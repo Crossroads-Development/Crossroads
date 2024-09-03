@@ -11,7 +11,6 @@ import com.Da_Technomancer.crossroads.api.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.api.templates.IInfoTE;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import com.Da_Technomancer.essentials.api.packets.ILongReceiver;
-import com.Da_Technomancer.essentials.api.packets.SendLongToClient;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -24,8 +23,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
+
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
@@ -251,22 +249,22 @@ public abstract class AbstractCannonTileEntity extends BlockEntity implements IT
 	private final AxleHandler baseAxleHandler = new AxleHandler(0, false);
 	private final AxleHandler sideAxleHandler = new AxleHandler(1, false);
 	private final AxleHandler sideAxleHandlerAlt = new AxleHandler(1, true);
-	private LazyOptional<IAxleHandler> baseAxleOpt = LazyOptional.of(() -> baseAxleHandler);
-	private LazyOptional<IAxleHandler> sideAxleOpt = LazyOptional.of(() -> sideAxleHandler);
-	private LazyOptional<IAxleHandler> sideAxleAltOpt = LazyOptional.of(() -> sideAxleHandlerAlt);
+	private IAxleHandler baseAxleOpt = LazyOptional.of(() -> baseAxleHandler);
+	private IAxleHandler sideAxleOpt = LazyOptional.of(() -> sideAxleHandler);
+	private IAxleHandler sideAxleAltOpt = LazyOptional.of(() -> sideAxleHandlerAlt);
 
 	@Nonnull
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side){
+	public <T> T getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
 		Direction blockFacing = getBlockState().getValue(CRProperties.FACING);
 		if(cap == Capabilities.AXLE_CAPABILITY && blockFacing != side){
 			if(side == null || side == blockFacing.getOpposite()){
-				return (LazyOptional<T>) baseAxleOpt;
+				return (T) baseAxleOpt;
 			}else if((blockFacing.getAxis() == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.Y) == side.getAxis()){
-				return (LazyOptional<T>) sideAxleAltOpt;
+				return (T) sideAxleAltOpt;
 			}else{
-				return (LazyOptional<T>) sideAxleOpt;
+				return (T) sideAxleOpt;
 			}
 		}
 

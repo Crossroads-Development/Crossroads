@@ -10,8 +10,6 @@ import com.Da_Technomancer.crossroads.blocks.rotary.Mechanism;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import com.Da_Technomancer.essentials.api.packets.ILongReceiver;
 import com.Da_Technomancer.essentials.api.packets.INBTReceiver;
-import com.Da_Technomancer.essentials.api.packets.SendLongToClient;
-import com.Da_Technomancer.essentials.api.packets.SendNBTToClient;
 import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -26,8 +24,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
+
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -273,9 +270,9 @@ public class MechanismTileEntity extends BlockEntity implements ITickableTileEnt
 	protected final SidedAxleHandler[] axleHandlers = {new SidedAxleHandler(0), new SidedAxleHandler(1), new SidedAxleHandler(2), new SidedAxleHandler(3), new SidedAxleHandler(4), new SidedAxleHandler(5), new SidedAxleHandler(6)};
 
 	@SuppressWarnings("unchecked")
-	private final LazyOptional<IAxleHandler>[] axleOpts = new LazyOptional[] {LazyOptional.of(() -> axleHandlers[0]), LazyOptional.of(() -> axleHandlers[1]), LazyOptional.of(() -> axleHandlers[2]), LazyOptional.of(() -> axleHandlers[3]), LazyOptional.of(() -> axleHandlers[4]), LazyOptional.of(() -> axleHandlers[5]), LazyOptional.of(() -> axleHandlers[6])};
+	private final IAxleHandler[] axleOpts = new LazyOptional[]{LazyOptional.of(() -> axleHandlers[0]), LazyOptional.of(() -> axleHandlers[1]), LazyOptional.of(() -> axleHandlers[2]), LazyOptional.of(() -> axleHandlers[3]), LazyOptional.of(() -> axleHandlers[4]), LazyOptional.of(() -> axleHandlers[5]), LazyOptional.of(() -> axleHandlers[6])};
 	@SuppressWarnings("unchecked")
-	private final LazyOptional<ICogHandler>[] cogOpts = new LazyOptional[] {LazyOptional.of(() -> new SidedCogHandler(0)), LazyOptional.of(() -> new SidedCogHandler(1)), LazyOptional.of(() -> new SidedCogHandler(2)), LazyOptional.of(() -> new SidedCogHandler(3)), LazyOptional.of(() -> new SidedCogHandler(4)), LazyOptional.of(() -> new SidedCogHandler(5))};
+	private final ICogHandler[] cogOpts = new LazyOptional[]{LazyOptional.of(() -> new SidedCogHandler(0)), LazyOptional.of(() -> new SidedCogHandler(1)), LazyOptional.of(() -> new SidedCogHandler(2)), LazyOptional.of(() -> new SidedCogHandler(3)), LazyOptional.of(() -> new SidedCogHandler(4)), LazyOptional.of(() -> new SidedCogHandler(5))};
 
 	@Override
 	public void setRemoved(){
@@ -289,10 +286,10 @@ public class MechanismTileEntity extends BlockEntity implements ITickableTileEnt
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing) {
 		if(capability == Capabilities.COG_CAPABILITY && facing != null){
 			if(members[facing.get3DDataValue()] != null && members[facing.get3DDataValue()].hasCap(capability, facing, mats[facing.get3DDataValue()], facing, getAxleAxis(), this)){
-				return (LazyOptional<T>) cogOpts[facing.get3DDataValue()];
+				return (T) cogOpts[facing.get3DDataValue()];
 			}else{
 				return LazyOptional.empty();
 			}
@@ -300,10 +297,10 @@ public class MechanismTileEntity extends BlockEntity implements ITickableTileEnt
 		if(capability == Capabilities.AXLE_CAPABILITY && facing != null){
 			if(members[facing.get3DDataValue()] == null && getAxleAxis() == facing.getAxis() && members[6] != null){
 				//Connect to axle
-				return members[6].hasCap(capability, facing, mats[6], null, getAxleAxis(), this) ? (LazyOptional<T>) axleOpts[6] : LazyOptional.empty();
+				return members[6].hasCap(capability, facing, mats[6], null, getAxleAxis(), this) ? (T) axleOpts[6] : LazyOptional.empty();
 			}else{
 				//Connect to gear on that side
-				return members[facing.get3DDataValue()] != null && members[facing.get3DDataValue()].hasCap(capability, facing, mats[facing.get3DDataValue()], facing, getAxleAxis(), this) ? (LazyOptional<T>) axleOpts[facing.get3DDataValue()] : LazyOptional.empty();
+				return members[facing.get3DDataValue()] != null && members[facing.get3DDataValue()].hasCap(capability, facing, mats[facing.get3DDataValue()], facing, getAxleAxis(), this) ? (T) axleOpts[facing.get3DDataValue()] : LazyOptional.empty();
 			}
 		}
 

@@ -13,10 +13,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.IEnergyStorage;
+
+import net.neoforged.neoforge.energy.IEnergyStorage;
 
 public class LodestoneDynamoTileEntity extends ModuleTE{
 
@@ -82,16 +80,16 @@ public class LodestoneDynamoTileEntity extends ModuleTE{
 		feOpt.invalidate();
 	}
 
-	private LazyOptional<IEnergyStorage> feOpt = LazyOptional.of(LodestoneDynamoEnergyHandler::new);
+	private IEnergyStorage feOpt = LazyOptional.of(LodestoneDynamoEnergyHandler::new);
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
+	public <T> T getCapability(Capability<T> cap, Direction side) {
 		if(cap == Capabilities.AXLE_CAPABILITY && (side == null || side == getBlockState().getValue(CRProperties.HORIZ_FACING))){
-			return (LazyOptional<T>) axleOpt;
+			return (T) axleOpt;
 		}
 		if(cap == ForgeCapabilities.ENERGY && (side == null || side == getBlockState().getValue(CRProperties.HORIZ_FACING).getOpposite())){
-			return (LazyOptional<T>) feOpt;
+			return (T) feOpt;
 		}
 		return super.getCapability(cap, side);
 	}

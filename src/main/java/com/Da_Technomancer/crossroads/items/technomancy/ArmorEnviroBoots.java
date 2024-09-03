@@ -21,11 +21,10 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.enchantment.FrostWalkerEnchantment;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeMod;
+import net.neoforged.neoforge.common.NeoForgeMod;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -64,7 +63,7 @@ public class ArmorEnviroBoots extends TechnomancyArmor{
 					//We have to lazy-load this, as ForgeMod.SWIM_SPEED isn't populated at construct time
 					ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
 					builder.putAll(super.getAttributeModifiers(EquipmentSlot.FEET, stack));
-					builder.put(ForgeMod.SWIM_SPEED.get(), new AttributeModifier("depth_strider", CRConfig.enviroBootDepth.get(), AttributeModifier.Operation.ADDITION));
+					builder.put(NeoForgeMod.SWIM_SPEED.get(), new AttributeModifier("depth_strider", CRConfig.enviroBootDepth.get(), AttributeModifier.Operation.ADDITION));
 					attributesReinf = builder.build();
 				}
 				return attributesReinf;
@@ -73,7 +72,7 @@ public class ArmorEnviroBoots extends TechnomancyArmor{
 					//We have to lazy-load this, as ForgeMod.SWIM_SPEED isn't populated at construct time
 					ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
 					builder.putAll(super.getAttributeModifiers(EquipmentSlot.FEET, stack));
-					builder.put(ForgeMod.SWIM_SPEED.get(), new AttributeModifier("depth_strider", CRConfig.enviroBootDepth.get(), AttributeModifier.Operation.ADDITION));
+					builder.put(NeoForgeMod.SWIM_SPEED.get(), new AttributeModifier("depth_strider", CRConfig.enviroBootDepth.get(), AttributeModifier.Operation.ADDITION));
 					attributes = builder.build();
 				}
 				return attributes;

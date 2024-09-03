@@ -33,7 +33,8 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
 
-import static net.minecraftforge.common.ForgeHooks.setCraftingPlayer;
+import static net.neoforged.neoforge.common.CommonHooks.setCraftingPlayer;
+
 
 public class DetailedCrafterContainer extends RecipeBookMenu<CraftingContainer>{
 

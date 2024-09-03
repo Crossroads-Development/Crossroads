@@ -10,7 +10,6 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
-import net.minecraftforge.common.util.LazyOptional;
 
 public class LargeGearRenderer implements BlockEntityRenderer<LargeGearMasterTileEntity>{
 
@@ -26,7 +25,7 @@ public class LargeGearRenderer implements BlockEntityRenderer<LargeGearMasterTil
 
 		matrix.translate(0.5D, 0.5D, 0.5D);
 		Direction facing = gear.getFacing();
-		LazyOptional<IAxleHandler> handler = gear.getCapability(Capabilities.AXLE_CAPABILITY, facing);
+        IAxleHandler handler = gear.getCapability(Capabilities.AXLE_CAPABILITY, facing);
 		float dirMult = facing.getAxisDirection() == Direction.AxisDirection.POSITIVE ? -1 : 1;
 
 		matrix.mulPose(facing.getOpposite().getRotation());

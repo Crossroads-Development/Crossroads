@@ -4,8 +4,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.SlotResult;
 import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
@@ -49,7 +48,7 @@ public class CuriosInventoryProxy implements IInventoryProxy{
 		}
 
 		//Check curios, if applicable
-		LazyOptional<ICuriosItemHandler> curioOpt = CuriosApi.getCuriosInventory(player);
+		ICuriosItemHandler curioOpt = CuriosApi.getCuriosInventory(player);
 		if(curioOpt.isPresent()){
 			Optional<SlotResult> resultOpt = curioOpt.orElseThrow(NullPointerException::new).findFirstCurio(itemFilter);
 			if(resultOpt.isPresent()){
@@ -69,7 +68,7 @@ public class CuriosInventoryProxy implements IInventoryProxy{
 	@Override
 	public void forAllInventoryItems(Player player, Function<ItemStack, ItemStack> stackModifier){
 
-		LazyOptional<ICuriosItemHandler> curioOpt = CuriosApi.getCuriosInventory(player);
+		ICuriosItemHandler curioOpt = CuriosApi.getCuriosInventory(player);
 		if(curioOpt.isPresent()){
 			IItemHandlerModifiable curioCont = curioOpt.orElseThrow(NullPointerException::new).getEquippedCurios();
 			for(int i = 0; i < curioCont.getSlots(); i++){

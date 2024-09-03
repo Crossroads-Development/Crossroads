@@ -3,7 +3,6 @@ package com.Da_Technomancer.crossroads.integration.jei;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.crossroads.crafting.DetailedCrafterRec;
 import com.Da_Technomancer.crossroads.gui.container.DetailedAutoCrafterContainer;
-import com.Da_Technomancer.essentials.api.packets.SendNBTToServer;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.transfer.IRecipeTransferError;

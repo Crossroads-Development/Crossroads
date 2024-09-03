@@ -23,8 +23,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
+
 import org.apache.commons.lang3.tuple.Pair;
 import org.joml.Vector3f;
 
@@ -245,18 +244,18 @@ public class GlasswareHolderTileEntity extends ReagentHolderTE{
 		return getBlockState().getOptionalValue(CRProperties.INVERTED).orElseGet(() -> false) ? Direction.DOWN : Direction.UP;
 	}
 
-	private LazyOptional<IHeatHandler> heatOpt = LazyOptional.of(HeatHandler::new);
+	private IHeatHandler heatOpt = LazyOptional.of(HeatHandler::new);
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
+	public <T> T getCapability(Capability<T> cap, Direction side) {
 		if(!(this instanceof ChargingStandTileEntity)){
 			//Glassware stand can connect to cables/conduits, subclass charging stand can not
 			if((side == null || side == getTopSide()) && cap == Capabilities.CHEMICAL_CAPABILITY && heldType() != AbstractGlassware.GlasswareTypes.NONE){
-				return (LazyOptional<T>) chemOpt;
+				return (T) chemOpt;
 			}
 			if((side == null || side == getTopSide().getOpposite()) && cap == Capabilities.HEAT_CAPABILITY && heldType().connectToCable){
-				return (LazyOptional<T>) heatOpt;
+				return (T) heatOpt;
 			}
 		}
 		return super.getCapability(cap, side);

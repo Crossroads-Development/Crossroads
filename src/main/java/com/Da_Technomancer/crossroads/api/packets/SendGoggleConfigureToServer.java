@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.api.packets;
 import com.Da_Technomancer.crossroads.api.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.gui.container.DetailedCrafterContainer;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.Da_Technomancer.essentials.api.packets.ServerPacket;
+
 import io.netty.buffer.Unpooled;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -15,7 +15,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

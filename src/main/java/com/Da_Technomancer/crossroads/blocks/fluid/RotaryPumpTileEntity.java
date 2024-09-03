@@ -11,8 +11,6 @@ import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.RotaryPumpContainer;
 import com.Da_Technomancer.essentials.api.BlockUtil;
 import com.Da_Technomancer.essentials.api.packets.INBTReceiver;
-import com.Da_Technomancer.essentials.api.packets.SendLongToClient;
-import com.Da_Technomancer.essentials.api.packets.SendNBTToClient;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -33,12 +31,10 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.common.SoundActions;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
+
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.common.SoundActions;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
 import java.awt.*;
@@ -344,12 +340,12 @@ public class RotaryPumpTileEntity extends InventoryTE implements INBTReceiver{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing) {
 		if(capability == ForgeCapabilities.FLUID_HANDLER && facing != Direction.DOWN && facing != Direction.UP){
-			return (LazyOptional<T>) globalFluidOpt;
+			return (T) globalFluidOpt;
 		}
 		if(capability == Capabilities.AXLE_CAPABILITY && (facing == Direction.UP || facing == null)){
-			return (LazyOptional<T>) axleOpt;
+			return (T) axleOpt;
 		}
 
 		return super.getCapability(capability, facing);

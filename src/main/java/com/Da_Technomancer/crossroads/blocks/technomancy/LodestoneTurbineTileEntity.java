@@ -9,8 +9,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
+
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -52,9 +51,9 @@ public class LodestoneTurbineTileEntity extends ModuleTE{
 	@Nonnull
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side){
+	public <T> T getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
 		if(cap == Capabilities.AXLE_CAPABILITY && side == Direction.UP){
-			return (LazyOptional<T>) axleOpt;
+			return (T) axleOpt;
 		}
 		return super.getCapability(cap, side);
 	}

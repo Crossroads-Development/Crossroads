@@ -18,10 +18,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
+
 
 import javax.annotation.Nullable;
 
@@ -92,22 +89,22 @@ public class FireboxTileEntity extends InventoryTE{
 		nbt.putInt("max_burn", maxBurnTime);
 	}
 
-	private LazyOptional<ItemHandler> itemOpt = LazyOptional.of(ItemHandler::new);
+	private ItemHandler itemHandler = new ItemHandler();
 
 	@Override
 	public void setRemoved(){
 		super.setRemoved();
-		itemOpt.invalidate();
+		itemHandler.invalidate();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing){
+	public <T> T getCapability(Capability<T> capability, Direction facing) {
 		if(capability == Capabilities.HEAT_CAPABILITY && (facing == Direction.UP || facing == null)){
-			return (LazyOptional<T>) heatOpt;
+			return (T) heatOpt;
 		}
 		if(capability == ForgeCapabilities.ITEM_HANDLER){
-			return (LazyOptional<T>) itemOpt;
+			return (T) itemHandler;
 		}
 		return super.getCapability(capability, facing);
 	}

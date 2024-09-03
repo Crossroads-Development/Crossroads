@@ -24,7 +24,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
-import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -79,7 +78,7 @@ public class HeatReservoir extends BaseEntityBlock implements IReadable{
 		BlockEntity te;
 		CompoundTag nbt;
 		if((nbt = stack.getTag()) != null && (te = world.getBlockEntity(pos)) instanceof HeatReservoirTileEntity){
-			LazyOptional<IHeatHandler> heatOpt = te.getCapability(Capabilities.HEAT_CAPABILITY, null);
+            IHeatHandler heatOpt = te.getCapability(Capabilities.HEAT_CAPABILITY, null);
 			if(heatOpt.isPresent()){
 				heatOpt.orElseThrow(NullPointerException::new).setTemp(nbt.getDouble("temp"));
 			}
@@ -99,7 +98,7 @@ public class HeatReservoir extends BaseEntityBlock implements IReadable{
 	@Override
 	public float read(Level world, BlockPos pos, BlockState state){
 		BlockEntity te = world.getBlockEntity(pos);
-		LazyOptional<IHeatHandler> heatOpt;
+        IHeatHandler heatOpt;
 		if(te != null && (heatOpt = te.getCapability(Capabilities.HEAT_CAPABILITY, null)).isPresent()){
 			return (float) heatOpt.orElseThrow(NullPointerException::new).getTemp();
 		}

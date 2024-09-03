@@ -26,11 +26,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.items.IItemHandler;
+
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 import java.awt.*;
@@ -194,21 +192,21 @@ public class FormulationVatTileEntity extends InventoryTE{
 		}
 	}
 
-	private final LazyOptional<IItemHandler> itemOpt = LazyOptional.of(ItemHandler::new);
+    private final IItemHandler itemOpt = LazyOptional.of(ItemHandler::new);
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
+    public <T> T getCapability(Capability<T> capability, @Nullable Direction facing) {
 		if(capability == ForgeCapabilities.FLUID_HANDLER && facing != Direction.UP){
-			return (LazyOptional<T>) globalFluidOpt;
+            return (T) globalFluidOpt;
 		}
 
 		if(capability == Capabilities.HEAT_CAPABILITY && facing != Direction.UP){
-			return (LazyOptional<T>) heatOpt;
+            return (T) heatOpt;
 		}
 
 		if(capability == ForgeCapabilities.ITEM_HANDLER && facing != Direction.UP){
-			return (LazyOptional<T>) itemOpt;
+            return (T) itemOpt;
 		}
 
 		return super.getCapability(capability, facing);

@@ -30,7 +30,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nullable;
 
@@ -123,7 +122,7 @@ public class ReagentPump extends BaseEntityBlock{
 		EnumContainerType contType = crystal ? EnumContainerType.CRYSTAL : EnumContainerType.GLASS;
 		for(int i = 2; i < 6; i++){
 			BlockEntity te = context.getLevel().getBlockEntity(context.getClickedPos().relative(Direction.from3DDataValue(i)));
-			LazyOptional<IChemicalHandler> otherOpt;
+			IChemicalHandler otherOpt;
 			IChemicalHandler otherHandler;
 			Direction dir = Direction.from3DDataValue(i).getOpposite();
 			if(te != null && (otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, Direction.from3DDataValue(i).getOpposite())).isPresent() && (otherHandler = otherOpt.orElseThrow(NullPointerException::new)).getChannel(dir).connectsWith(contType) && otherHandler.getMode(dir).connectsWith(EnumTransferMode.INPUT)){
@@ -137,7 +136,7 @@ public class ReagentPump extends BaseEntityBlock{
 	public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos pos, BlockPos facingPos){
 		BlockEntity te = worldIn.getBlockEntity(facingPos);
 		BlockEntity thisTE = worldIn.getBlockEntity(pos);
-		LazyOptional<IChemicalHandler> otherOpt;
+		IChemicalHandler otherOpt;
 		IChemicalHandler otherHandler;
 		Direction dir = facing.getOpposite();
 		boolean connect = thisTE instanceof ReagentPumpTileEntity && te != null && (otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, facing.getOpposite())).isPresent() && (otherHandler = otherOpt.orElseThrow(NullPointerException::new)).getChannel(dir).connectsWith(crystal ? EnumContainerType.CRYSTAL : EnumContainerType.GLASS) && otherHandler.getMode(dir).connectsWith(EnumTransferMode.INPUT);

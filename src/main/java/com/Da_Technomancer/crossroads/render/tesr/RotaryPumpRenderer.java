@@ -14,7 +14,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraftforge.common.util.LazyOptional;
 import org.joml.Quaternionf;
 
 import java.awt.*;
@@ -30,7 +29,7 @@ public class RotaryPumpRenderer implements BlockEntityRenderer<RotaryPumpTileEnt
 		//Render the screw
 		matrix.pushPose();
 		matrix.translate(0.5D, 0.5D, 0.5D);
-		LazyOptional<IAxleHandler> opt = te.getCapability(Capabilities.AXLE_CAPABILITY, null);
+        IAxleHandler opt = te.getCapability(Capabilities.AXLE_CAPABILITY, null);
 
 		double screwOffset = 0.1D;
 		float screwScale = 0.45F;

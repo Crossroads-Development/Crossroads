@@ -7,7 +7,6 @@ import com.Da_Technomancer.crossroads.api.templates.WidgetUtil;
 import com.Da_Technomancer.crossroads.blocks.technomancy.SequenceBoxTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.SequenceBoxContainer;
 import com.Da_Technomancer.essentials.Essentials;
-import com.Da_Technomancer.essentials.api.packets.SendNBTToServer;
 import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;

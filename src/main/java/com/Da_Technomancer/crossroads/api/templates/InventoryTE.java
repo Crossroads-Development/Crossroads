@@ -12,8 +12,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -193,7 +193,7 @@ public abstract class InventoryTE extends ModuleTE implements IItemContainer, Me
 		return globalFluidHandler;
 	}
 
-	protected class ItemHandler implements IItemHandlerModifiable{
+	protected class ItemHandler implements IItemHandlerModifiable {
 
 		/**
 		 * A direction that this should act as internally. Does not need to match the side passed to the getCapability call

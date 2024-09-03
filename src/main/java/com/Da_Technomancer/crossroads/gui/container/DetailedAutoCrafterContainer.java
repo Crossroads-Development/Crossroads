@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.gui.container;
 
 import com.Da_Technomancer.crossroads.items.PathSigil;
-import com.Da_Technomancer.essentials.gui.container.AutoCrafterContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
@@ -11,6 +10,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
+//TODO: Probably outmoded, see DetailedAutoCrafter
 public class DetailedAutoCrafterContainer extends AutoCrafterContainer{
 
 	protected static final MenuType<DetailedAutoCrafterContainer> TYPE = CRContainers.createConType(DetailedAutoCrafterContainer::new);

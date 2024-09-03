@@ -21,10 +21,8 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
+
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
 
@@ -90,16 +88,16 @@ public class RadiatorTileEntity extends InventoryTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
+	public <T> T getCapability(Capability<T> cap, Direction side) {
 
 		if(cap == ForgeCapabilities.FLUID_HANDLER){
 			if(side == null || side.getAxis() == Direction.Axis.Y){
-				return (LazyOptional<T>) globalFluidOpt;
+				return (T) globalFluidOpt;
 			}
 		}
 
 		if(cap == Capabilities.HEAT_CAPABILITY && side != Direction.UP && side != Direction.DOWN){
-			return (LazyOptional<T>) heatOpt;
+			return (T) heatOpt;
 		}
 
 		return super.getCapability(cap, side);

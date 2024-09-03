@@ -34,7 +34,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.ForgeMod;
+import net.neoforged.neoforge.common.NeoForgeMod;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -213,7 +213,7 @@ public class Mechanism extends BaseEntityBlock implements IReadable{
 		if(ConfigUtil.isWrench(player.getItemInHand(hand))){
 			BlockEntity te = worldIn.getBlockEntity(pos);
 			if(te instanceof MechanismTileEntity gear){
-				double reDist = player.getAttribute(ForgeMod.BLOCK_REACH.get()).getValue();//Player reach distance
+				double reDist = player.getAttribute(NeoForgeMod.BLOCK_REACH.get()).getValue();//Player reach distance
 				Vec3 start = new Vec3(player.xo, player.yo + (double) player.getEyeHeight(), player.zo).subtract(pos.getX(), pos.getY(), pos.getZ());
 				Vec3 end = start.add(player.getViewVector(0F).x * reDist, player.getViewVector(0F).y * reDist, player.getViewVector(0F).z * reDist);
 

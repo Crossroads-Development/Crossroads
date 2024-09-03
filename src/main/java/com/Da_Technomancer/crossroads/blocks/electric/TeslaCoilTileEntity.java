@@ -10,7 +10,6 @@ import com.Da_Technomancer.crossroads.items.LeydenJar;
 import com.Da_Technomancer.essentials.api.IItemStorage;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import com.Da_Technomancer.essentials.api.packets.ILongReceiver;
-import com.Da_Technomancer.essentials.api.packets.SendLongToClient;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -21,11 +20,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.items.IItemHandler;
+
+import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -44,7 +41,7 @@ public class TeslaCoilTileEntity extends BlockEntity implements ITickableTileEnt
 		super(TYPE, pos, state);
 	}
 
-	private LazyOptional<IEnergyStorage> stackOpt;
+	private IEnergyStorage stackOpt;
 	@Nullable
 	private IEnergyStorage getBatteryHandler(){
 		if(battery.isEmpty()){
@@ -176,7 +173,7 @@ public class TeslaCoilTileEntity extends BlockEntity implements ITickableTileEnt
 		if(!redstone && (totalFE = getTotalFE()) > 0){
 			Direction facing = getBlockState().getValue(CRProperties.HORIZ_FACING);
 			BlockEntity te = level.getBlockEntity(worldPosition.relative(facing));
-			LazyOptional<IEnergyStorage> energyOpt;
+			IEnergyStorage energyOpt;
 			if(te != null && (energyOpt = te.getCapability(ForgeCapabilities.ENERGY, facing.getOpposite())).isPresent()){
 				IEnergyStorage storage = energyOpt.orElseThrow(NullPointerException::new);
 				int moved = storage.receiveEnergy(totalFE, false);
@@ -243,17 +240,17 @@ public class TeslaCoilTileEntity extends BlockEntity implements ITickableTileEnt
 		itemOpt.invalidate();
 	}
 
-	private LazyOptional<IEnergyStorage> optIn = LazyOptional.of(EnergyHandlerIn::new);
-	private LazyOptional<IEnergyStorage> optOut = LazyOptional.of(EnergyHandlerOut::new);
-	private LazyOptional<IItemHandler> itemOpt = LazyOptional.of(ItemHandler::new);
+	private IEnergyStorage optIn = LazyOptional.of(EnergyHandlerIn::new);
+	private IEnergyStorage optOut = LazyOptional.of(EnergyHandlerOut::new);
+	private IItemHandler itemOpt = LazyOptional.of(ItemHandler::new);
 
 	@SuppressWarnings("unchecked")
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
+	public <T> T getCapability(Capability<T> cap, Direction side) {
 		if(cap == ForgeCapabilities.ENERGY){
-			return (LazyOptional<T>) (side == getBlockState().getValue(CRProperties.HORIZ_FACING) ? optOut : optIn);
+			return (T) (side == getBlockState().getValue(CRProperties.HORIZ_FACING) ? optOut : optIn);
 		}
 		if(cap == ForgeCapabilities.ITEM_HANDLER){
-			return (LazyOptional<T>) itemOpt;
+			return (T) itemOpt;
 		}
 		return super.getCapability(cap, side);
 	}

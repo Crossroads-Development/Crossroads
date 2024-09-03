@@ -15,7 +15,6 @@ import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import com.Da_Technomancer.essentials.api.packets.ILongReceiver;
-import com.Da_Technomancer.essentials.api.packets.SendLongToClient;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -30,8 +29,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
+
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -192,13 +190,13 @@ public class LargeGearMasterTileEntity extends BlockEntity implements ILongRecei
 	}
 
 	private final IAxleHandler axleHandler = new AxleHandler();
-	private final LazyOptional<IAxleHandler> mainOpt = LazyOptional.of(() -> axleHandler);
+	private final IAxleHandler mainOpt = LazyOptional.of(() -> axleHandler);
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing) {
 		if(capability == Capabilities.AXLE_CAPABILITY && (facing == null || facing.getAxis() == getFacing().getAxis())){
-			return (LazyOptional<T>) mainOpt;
+			return (T) mainOpt;
 		}
 		return super.getCapability(capability, facing);
 	}
@@ -263,7 +261,7 @@ public class LargeGearMasterTileEntity extends BlockEntity implements ILongRecei
 					// Adjacent gears
 					BlockEntity adjTE = level.getBlockEntity(worldPosition.relative(facing, 2));
 					if(adjTE != null){
-						LazyOptional<ICogHandler> cogOpt;
+						ICogHandler cogOpt;
 						if((cogOpt = adjTE.getCapability(Capabilities.COG_CAPABILITY, side)).isPresent()){
 							cogOpt.orElseThrow(NullPointerException::new).connect(masterIn, key, -rotRatio, 1.5D, facing.getOpposite(), renderOffset);
 						}else if((cogOpt = adjTE.getCapability(Capabilities.COG_CAPABILITY, facing.getOpposite())).isPresent()){
@@ -274,7 +272,7 @@ public class LargeGearMasterTileEntity extends BlockEntity implements ILongRecei
 
 					// Diagonal gears
 					BlockEntity diagTE = level.getBlockEntity(worldPosition.relative(facing, 2).relative(side));
-					LazyOptional<ICogHandler> cogOpt;
+					ICogHandler cogOpt;
 					if(diagTE != null && (cogOpt = diagTE.getCapability(Capabilities.COG_CAPABILITY, facing.getOpposite())).isPresent() && RotaryUtil.canConnectThrough(level, worldPosition.relative(facing, 2), facing.getOpposite(), side)){
 						cogOpt.orElseThrow(NullPointerException::new).connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * rotRatio, 1.5D, side.getOpposite(), renderOffset);
 					}
@@ -292,11 +290,11 @@ public class LargeGearMasterTileEntity extends BlockEntity implements ILongRecei
 				BlockEntity connectTE = level.getBlockEntity(worldPosition.relative(axleDir));
 
 				if(connectTE != null){
-					LazyOptional<IAxisHandler> axisOpt;
+					IAxisHandler axisOpt;
 					if((axisOpt = connectTE.getCapability(Capabilities.AXIS_CAPABILITY, axleDir.getOpposite())).isPresent()){
 						axisOpt.orElseThrow(NullPointerException::new).trigger(masterIn, key);
 					}
-					LazyOptional<IAxleHandler> axleOpt;
+					IAxleHandler axleOpt;
 					if((axleOpt = connectTE.getCapability(Capabilities.AXLE_CAPABILITY, axleDir.getOpposite())).isPresent()){
 						axleOpt.orElseThrow(NullPointerException::new).propagate(masterIn, key, rotRatio, 0, renderOffset);
 					}

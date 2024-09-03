@@ -17,10 +17,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.IEnergyStorage;
+
+import net.neoforged.neoforge.energy.IEnergyStorage;
 
 import java.util.ArrayList;
 
@@ -56,7 +54,7 @@ public class VoltusGeneratorTileEntity extends BlockEntity implements ITickableT
 
 		for(Direction dir : Direction.values()){
 			BlockEntity te = level.getBlockEntity(worldPosition.relative(dir));
-			LazyOptional<IEnergyStorage> energyOpt;
+			IEnergyStorage energyOpt;
 			if(te != null && (energyOpt = te.getCapability(ForgeCapabilities.ENERGY, dir.getOpposite())).isPresent()){
 				IEnergyStorage storage = energyOpt.orElseThrow(NullPointerException::new);
 				int moved = storage.receiveEnergy(fe, false);
@@ -89,17 +87,17 @@ public class VoltusGeneratorTileEntity extends BlockEntity implements ITickableT
 		feOpt.invalidate();
 	}
 
-	private LazyOptional<IChemicalHandler> chemOpt = LazyOptional.of(AlchHandler::new);
-	private LazyOptional<ElecHandler> feOpt = LazyOptional.of(ElecHandler::new);
+	private IChemicalHandler chemOpt = LazyOptional.of(AlchHandler::new);
+	private ElecHandler feOpt = LazyOptional.of(ElecHandler::new);
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
+	public <T> T getCapability(Capability<T> cap, Direction side) {
 		if(cap == Capabilities.CHEMICAL_CAPABILITY){
-			return (LazyOptional<T>) chemOpt;
+			return (T) chemOpt;
 		}
 		if(cap == ForgeCapabilities.ENERGY){
-			return (LazyOptional<T>) feOpt;
+			return (T) feOpt;
 		}
 		return super.getCapability(cap, side);
 	}

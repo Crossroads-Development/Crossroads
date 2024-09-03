@@ -13,7 +13,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.util.LazyOptional;
 
 public class HamsterWheelTileEntity extends BlockEntity implements ITickableTileEntity{
 
@@ -30,7 +29,7 @@ public class HamsterWheelTileEntity extends BlockEntity implements ITickableTile
 	public void tick(){
 		Direction facing = getBlockState().getValue(CRProperties.HORIZ_FACING);
 		BlockEntity te = level.getBlockEntity(worldPosition.relative(facing));
-		LazyOptional<IAxleHandler> axleOpt;
+        IAxleHandler axleOpt;
 		if(te != null && (axleOpt = te.getCapability(Capabilities.AXLE_CAPABILITY, facing.getOpposite())).isPresent()){
 			IAxleHandler axle = axleOpt.orElseThrow(NullPointerException::new);
 			if(level.isClientSide){

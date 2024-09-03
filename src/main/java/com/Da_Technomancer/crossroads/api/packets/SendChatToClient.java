@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.api.packets;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.render.MultiLineMessageOverlay;
-import com.Da_Technomancer.essentials.api.packets.ClientPacket;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 

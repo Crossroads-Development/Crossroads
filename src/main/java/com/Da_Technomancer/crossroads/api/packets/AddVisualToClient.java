@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.api.packets;
 
 import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.api.render.IVisualEffect;
-import com.Da_Technomancer.essentials.api.packets.ClientPacket;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 

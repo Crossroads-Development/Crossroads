@@ -6,7 +6,7 @@ import com.Da_Technomancer.crossroads.api.alchemy.FlameCoresSavedData;
 import com.Da_Technomancer.crossroads.entity.EntityFlameCore;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.BlockSource;
+import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.particles.ParticleTypes;

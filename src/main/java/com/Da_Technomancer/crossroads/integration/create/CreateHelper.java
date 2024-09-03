@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.integration.create;
 
-import net.minecraftforge.fml.ModList;
+
+import net.neoforged.fml.ModList;
 
 /**
  * Interacts with the Create mod

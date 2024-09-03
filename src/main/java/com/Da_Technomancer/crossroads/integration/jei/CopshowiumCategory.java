@@ -6,7 +6,7 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.CopshowiumRec;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.forge.ForgeTypes;
+import mezz.jei.api.neoforge.NeoForgeTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
@@ -22,7 +22,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 public class CopshowiumCategory implements IRecipeCategory<CopshowiumRec>{
 
@@ -68,8 +68,8 @@ public class CopshowiumCategory implements IRecipeCategory<CopshowiumRec>{
 	@Override
 	public void setRecipe(IRecipeLayoutBuilder builder, CopshowiumRec recipe, IFocusGroup focuses){
 		int displaySize = 1000;
-		builder.addSlot(RecipeIngredientRole.INPUT, 51, 31).addIngredients(ForgeTypes.FLUID_STACK, recipe.getInput().getMatchedFluidStacks(displaySize)).setFluidRenderer(4000, true, 16, 64).setOverlay(fluidOverlay, 0, 0);
-		builder.addSlot(RecipeIngredientRole.OUTPUT, 111, 31).addIngredient(ForgeTypes.FLUID_STACK, new FluidStack(CRFluids.moltenCopshowium.getStill(), (int) (displaySize * recipe.getMult()))).setFluidRenderer(4000, true, 16, 64).setOverlay(fluidOverlay, 0, 0);
+		builder.addSlot(RecipeIngredientRole.INPUT, 51, 31).addIngredients(NeoForgeTypes.FLUID_STACK, recipe.getInput().getMatchedFluidStacks(displaySize)).setFluidRenderer(4000, true, 16, 64).setOverlay(fluidOverlay, 0, 0);
+		builder.addSlot(RecipeIngredientRole.OUTPUT, 111, 31).addIngredient(NeoForgeTypes.FLUID_STACK, new FluidStack(CRFluids.moltenCopshowium.getStill(), (int) (displaySize * recipe.getMult()))).setFluidRenderer(4000, true, 16, 64).setOverlay(fluidOverlay, 0, 0);
 	}
 
 	@Override

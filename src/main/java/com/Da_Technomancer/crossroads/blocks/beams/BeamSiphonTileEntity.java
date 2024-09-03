@@ -15,8 +15,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
+
 
 public class BeamSiphonTileEntity extends BeamRenderTE{
 
@@ -155,13 +154,13 @@ public class BeamSiphonTileEntity extends BeamRenderTE{
 	}
 
 	public final CircuitUtil.InputCircHandler redsHandler = new CircuitUtil.InputCircHandler();
-	private final LazyOptional<IRedstoneHandler> redsOpt = CircuitUtil.makeBaseCircuitOptional(this, redsHandler, 0, this::updateSignalState);
+	private final IRedstoneHandler redsOpt = CircuitUtil.makeBaseCircuitOptional(this, redsHandler, 0, this::updateSignalState);
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction dir){
+	public <T> T getCapability(Capability<T> cap, Direction dir) {
 		if(cap == RedstoneUtil.REDSTONE_CAPABILITY){
-			return (LazyOptional<T>) redsOpt;
+			return (T) redsOpt;
 		}
 		return super.getCapability(cap, dir);
 	}

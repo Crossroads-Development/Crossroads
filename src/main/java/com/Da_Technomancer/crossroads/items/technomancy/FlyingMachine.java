@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.items.technomancy;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.entity.EntityFlyingMachine;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import net.minecraft.core.BlockSource;
+import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.server.level.ServerLevel;

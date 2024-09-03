@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.api.packets;
 
 import com.Da_Technomancer.crossroads.ambient.particles.CRParticles;
-import com.Da_Technomancer.essentials.api.packets.ClientPacket;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.world.level.Level;
 

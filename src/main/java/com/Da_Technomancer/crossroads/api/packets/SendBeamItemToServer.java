@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.api.packets;
 
 import com.Da_Technomancer.crossroads.items.technomancy.BeamUsingItem;
-import com.Da_Technomancer.essentials.api.packets.ServerPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 

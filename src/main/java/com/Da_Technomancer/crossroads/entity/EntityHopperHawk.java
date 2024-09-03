@@ -32,11 +32,10 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
@@ -57,9 +56,9 @@ public class EntityHopperHawk extends ShoulderRidingEntity implements FlyingAnim
 		super(type, worldIn);
 		moveControl = new FlyingMoveControl(this, 10, false);
 		//Copied from parrots
-		setPathfindingMalus(BlockPathTypes.DANGER_FIRE, -1.0F);
-		setPathfindingMalus(BlockPathTypes.DAMAGE_FIRE, -1.0F);
-		setPathfindingMalus(BlockPathTypes.COCOA, -1.0F);
+		setPathfindingMalus(PathType.DANGER_FIRE, -1.0F);
+		setPathfindingMalus(PathType.DAMAGE_FIRE, -1.0F);
+		setPathfindingMalus(PathType.COCOA, -1.0F);
 	}
 
 	public static AttributeSupplier createAttributes(){
@@ -297,8 +296,8 @@ public class EntityHopperHawk extends ShoulderRidingEntity implements FlyingAnim
 		public void start(){
 			super.start();
 			//Disable attempting to avoid water while collecting an item
-			oldWaterCost = mob.getPathfindingMalus(BlockPathTypes.WATER);
-			mob.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
+			oldWaterCost = mob.getPathfindingMalus(PathType.WATER);
+			mob.setPathfindingMalus(PathType.WATER, 0.0F);
 
 			targetEntity = findNewTarget();
 			canFitTargetCache = true;
@@ -312,7 +311,7 @@ public class EntityHopperHawk extends ShoulderRidingEntity implements FlyingAnim
 			super.stop();
 			targetEntity = null;
 			navigation.stop();
-			mob.setPathfindingMalus(BlockPathTypes.WATER, oldWaterCost);
+			mob.setPathfindingMalus(PathType.WATER, oldWaterCost);
 		}
 
 		@Override

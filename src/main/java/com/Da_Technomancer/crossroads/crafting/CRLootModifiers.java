@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.crafting;
 
 import com.mojang.serialization.Codec;
-import net.minecraftforge.common.loot.IGlobalLootModifier;
+import net.neoforged.neoforge.common.loot.IGlobalLootModifier;
 
 import java.util.HashMap;
 

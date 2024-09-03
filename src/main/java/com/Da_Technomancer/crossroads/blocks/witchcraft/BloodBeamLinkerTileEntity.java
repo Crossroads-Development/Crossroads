@@ -23,10 +23,8 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
+
+import net.neoforged.neoforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -84,17 +82,17 @@ public class BloodBeamLinkerTileEntity extends InventoryTE{
 		beamOpt.invalidate();
 	}
 
-	private final LazyOptional<IItemHandler> itemOpt = LazyOptional.of(ItemHandler::new);
-	private final LazyOptional<IBeamHandler> beamOpt = LazyOptional.of(BeamHandler::new);
+    private final IItemHandler itemOpt = LazyOptional.of(ItemHandler::new);
+    private final IBeamHandler beamOpt = LazyOptional.of(BeamHandler::new);
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
+    public <T> T getCapability(Capability<T> capability, @Nullable Direction facing) {
 		if(capability == Capabilities.BEAM_CAPABILITY){
-			return (LazyOptional<T>) beamOpt;
+            return (T) beamOpt;
 		}
 		if(capability == ForgeCapabilities.ITEM_HANDLER){
-			return (LazyOptional<T>) itemOpt;
+            return (T) itemOpt;
 		}
 
 		return super.getCapability(capability, facing);

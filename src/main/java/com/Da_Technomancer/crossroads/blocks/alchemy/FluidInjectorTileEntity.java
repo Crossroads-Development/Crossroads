@@ -9,10 +9,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.apache.commons.lang3.tuple.Pair;
 import org.joml.Vector3f;
 
@@ -41,17 +39,17 @@ public class FluidInjectorTileEntity extends ReagentHolderTE{
 		fluidOpt.invalidate();
 	}
 
-	private final LazyOptional<IFluidHandler> fluidOpt = LazyOptional.of(this::getInternalFluidHandler);
+	private final IFluidHandler fluidOpt = LazyOptional.of(this::getInternalFluidHandler);
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
+	public <T> T getCapability(Capability<T> cap, Direction side) {
 		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || side == Direction.DOWN)){
-			return (LazyOptional<T>) chemOpt;
+			return (T) chemOpt;
 		}
 		if(cap == ForgeCapabilities.FLUID_HANDLER){
 			if(side == null || side == Direction.UP){
-				return (LazyOptional<T>) fluidOpt;
+				return (T) fluidOpt;
 			}
 		}
 		return super.getCapability(cap, side);

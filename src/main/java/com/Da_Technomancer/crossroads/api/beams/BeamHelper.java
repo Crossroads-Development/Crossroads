@@ -40,7 +40,7 @@ public class BeamHelper{
 //		Moved to BeamEffect::performTransmute
 //		//Check for machine receiving beams
 //		BlockEntity checkTE = beamHit.getEndBlockEntity();
-//		LazyOptional<IBeamHandler> opt;
+//		IBeamHandler opt;
 //		if(checkTE != null && (opt = checkTE.getCapability(Capabilities.BEAM_CAPABILITY, dir.getOpposite())).isPresent()){
 //			opt.orElseThrow(NullPointerException::new).setBeam(mag);
 //			return updateBeamRender(mag, newDist);

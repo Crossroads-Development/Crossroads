@@ -34,11 +34,10 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.IItemHandler;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidUtil;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.items.IItemHandler;
 import org.apache.logging.log4j.Level;
 
 import javax.annotation.Nonnull;
@@ -223,7 +222,7 @@ public abstract class ReagentHolderTE extends BlockEntity implements ITickableTi
 			if(modes[i].isOutput()){
 				Direction side = Direction.from3DDataValue(i);
 				BlockEntity te = level.getBlockEntity(worldPosition.relative(side));
-				LazyOptional<IChemicalHandler> otherOpt;
+				IChemicalHandler otherOpt;
 				if(contents.getTotalQty() <= 0 || te == null || !(otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())).isPresent()){
 					continue;
 				}
@@ -423,7 +422,7 @@ public abstract class ReagentHolderTE extends BlockEntity implements ITickableTi
 	}
 
 	protected IChemicalHandler handler = new AlchHandler();
-	protected LazyOptional<IChemicalHandler> chemOpt = LazyOptional.of(() -> handler);
+	protected IChemicalHandler chemOpt = LazyOptional.of(() -> handler);
 
 	protected class AlchHandler implements IChemicalHandler{
 
@@ -638,7 +637,7 @@ public abstract class ReagentHolderTE extends BlockEntity implements ITickableTi
 		}
 	}
 
-	protected class ItemHandler implements IItemHandler{
+	protected class ItemHandler implements IItemHandler {
 
 		private final ItemStack[] fakeInventory = new ItemStack[ReagentManager.getRegisteredReags().size()];
 

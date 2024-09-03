@@ -9,8 +9,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -193,7 +191,7 @@ public class BeamHit{
 			return null;
 		}
 		//Try hit face first
-		LazyOptional<T> opt = te.getCapability(capability, getDirection());
+		T opt = te.getCapability(capability, getDirection());
 		if(opt.isPresent()){
 			return opt.orElseThrow(NullPointerException::new);
 		}else if(allowNull){

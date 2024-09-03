@@ -20,8 +20,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
+
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -353,13 +352,13 @@ public class MasterAxisTileEntity extends BlockEntity implements ITickableTileEn
 	}
 
 	protected final IAxisHandler handler = new AxisHandler();
-	protected LazyOptional<IAxisHandler> axisOpt = LazyOptional.of(() -> handler);
+	protected IAxisHandler axisOpt = LazyOptional.of(() -> handler);
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
+	public <T> T getCapability(Capability<T> cap, Direction side) {
 		if(cap == Capabilities.AXIS_CAPABILITY && (side == null || side == getFacing())){
-			return (LazyOptional<T>) axisOpt;
+			return (T) axisOpt;
 		}
 		return super.getCapability(cap, side);
 	}
@@ -382,7 +381,7 @@ public class MasterAxisTileEntity extends BlockEntity implements ITickableTileEn
 			locked = false;
 			Direction dir = getFacing();
 			BlockEntity te = level.getBlockEntity(worldPosition.relative(dir));
-			LazyOptional<IAxleHandler> axleOpt;
+			IAxleHandler axleOpt;
 			if(te != null && (axleOpt = te.getCapability(Capabilities.AXLE_CAPABILITY, dir.getOpposite())).isPresent()){
 				byte keyNew;
 				do {

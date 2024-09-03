@@ -8,7 +8,6 @@ import com.Da_Technomancer.crossroads.api.beams.*;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
-import com.Da_Technomancer.essentials.api.packets.SendLongToClient;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -21,8 +20,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
+
 import org.joml.Vector3f;
 
 import javax.annotation.Nonnull;
@@ -97,7 +95,7 @@ public class BeamCannonTileEntity extends AbstractCannonTileEntity{
 					outLength = (float) beamHitResult.getHitPos().distanceTo(rayTraceSt);
 //					Direction effectDir = beamHitResult.getDirection();
 //					BlockEntity te = level.getBlockEntity(endPos);
-//					LazyOptional<IBeamHandler> opt;
+//					IBeamHandler opt;
 //					if(te != null && (opt = te.getCapability(Capabilities.BEAM_CAPABILITY, effectDir)).isPresent()){
 //						opt.orElseThrow(NullPointerException::new).setBeam(out);
 //					}else{
@@ -198,14 +196,14 @@ public class BeamCannonTileEntity extends AbstractCannonTileEntity{
 	}
 
 	private final BeamHandler beamHandler = new BeamHandler();
-	private LazyOptional<IBeamHandler> beamOpt = LazyOptional.of(() -> beamHandler);
+	private IBeamHandler beamOpt = LazyOptional.of(() -> beamHandler);
 
 	@Nonnull
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side){
+	public <T> T getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
 		if(cap == Capabilities.BEAM_CAPABILITY){
-			return (LazyOptional<T>) beamOpt;
+			return (T) beamOpt;
 		}
 
 		return super.getCapability(cap, side);

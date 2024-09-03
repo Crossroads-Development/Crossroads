@@ -13,7 +13,6 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -36,7 +35,7 @@ public class HandCrank extends Item{
 	@Override
 	public InteractionResult useOn(UseOnContext context){
 		BlockEntity te = context.getLevel().getBlockEntity(context.getClickedPos());
-		LazyOptional<IAxleHandler> axleOpt;
+		IAxleHandler axleOpt;
 		Direction side = context.getClickedFace().getOpposite();
 		if(te != null && (axleOpt = te.getCapability(Capabilities.AXLE_CAPABILITY, side)).isPresent()){
 			double signMult = -1;

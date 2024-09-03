@@ -19,12 +19,10 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidTank;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.IFluidTank;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -201,26 +199,26 @@ public abstract class ModuleTE extends BlockEntity implements ITickableTileEntit
 	@Nonnull
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side){
+	public <T> T getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
 		//Return the global optional for internal-side (null) checks
-		if(cap == ForgeCapabilities.FLUID_HANDLER && side == null && globalFluidOpt != null){
-			return (LazyOptional<T>) globalFluidOpt;
+		if (cap == Capabilities.FLUID_HANDLER && side == null && globalFluidOpt != null) {
+			return (T) globalFluidOpt;
 		}
 		if(cap == Capabilities.HEAT_CAPABILITY && side == null && useHeat()){
-			return (LazyOptional<T>) heatOpt;
+			return (T) heatOpt;
 		}
 		if(cap == Capabilities.AXLE_CAPABILITY && side == null && useRotary()){
-			return (LazyOptional<T>) axleOpt;
+			return (T) axleOpt;
 		}
 		return super.getCapability(cap, side);
 	}
 
 	protected HeatHandler heatHandler;
-	protected LazyOptional<IHeatHandler> heatOpt;
+	protected IHeatHandler heatOpt;
 	protected AxleHandler axleHandler;
-	protected LazyOptional<IAxleHandler> axleOpt;
+	protected IAxleHandler axleOpt;
 	protected IFluidHandler globalFluidHandler;
-	protected LazyOptional<IFluidHandler> globalFluidOpt;
+	protected IFluidHandler globalFluidOpt;
 
 	protected class FluidHandler implements IFluidHandler{
 
@@ -379,7 +377,7 @@ public abstract class ModuleTE extends BlockEntity implements ITickableTileEntit
 	 * A version of the FluidHandler which also acts as an IFluidTank- allowing pipes to do bidirectional access and having a stricter contract
 	 * Does not allow accessing multiple internal tanks
 	 */
-	protected class FluidTankHandler extends FluidHandler implements IFluidTank{
+	protected class FluidTankHandler extends FluidHandler implements IFluidTank {
 
 		/**
 		 * @param tank The index of the FluidStack this is allowed to access. Does not allow setting a negative value or accessing more than one tank. Must be less than fluidTanks()

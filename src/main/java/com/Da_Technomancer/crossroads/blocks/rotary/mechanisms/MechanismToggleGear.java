@@ -19,10 +19,9 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -93,7 +92,7 @@ public class MechanismToggleGear extends MechanismSmallGear{
 					// Adjacent gears
 					BlockEntity adjTE = te.getLevel().getBlockEntity(te.getBlockPos().relative(facing));
 					if(adjTE != null){
-						LazyOptional<ICogHandler> cogOpt;
+						ICogHandler cogOpt;
 						if((cogOpt = adjTE.getCapability(Capabilities.COG_CAPABILITY, side)).isPresent()){
 							cogOpt.orElseThrow(NullPointerException::new).connect(masterIn, key, -handler.getRotationRatio(), .5D, facing.getOpposite(), handler.renderOffset());
 						}else if((cogOpt = adjTE.getCapability(Capabilities.COG_CAPABILITY, facing.getOpposite())).isPresent()){
@@ -104,7 +103,7 @@ public class MechanismToggleGear extends MechanismSmallGear{
 
 					// Diagonal gears
 					BlockEntity diagTE = te.getLevel().getBlockEntity(te.getBlockPos().relative(facing).relative(side));
-					LazyOptional<ICogHandler> cogOpt;
+					ICogHandler cogOpt;
 					if(diagTE != null && (cogOpt = diagTE.getCapability(Capabilities.COG_CAPABILITY, facing.getOpposite())).isPresent() && RotaryUtil.canConnectThrough(te.getLevel(), te.getBlockPos().relative(facing), facing.getOpposite(), side)){
 						cogOpt.orElseThrow(NullPointerException::new).connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * handler.getRotationRatio(), .5D, side.getOpposite(), handler.renderOffset());
 					}
@@ -118,11 +117,11 @@ public class MechanismToggleGear extends MechanismSmallGear{
 
 		//Connected block
 		if(sideTE != null){
-			LazyOptional<IAxisHandler> axisOpt = sideTE.getCapability(Capabilities.AXIS_CAPABILITY, side.getOpposite());
+			IAxisHandler axisOpt = sideTE.getCapability(Capabilities.AXIS_CAPABILITY, side.getOpposite());
 			if(axisOpt.isPresent()){
 				axisOpt.orElseThrow(NullPointerException::new).trigger(masterIn, key);
 			}
-			LazyOptional<IAxleHandler> axleOpt = sideTE.getCapability(Capabilities.AXLE_CAPABILITY, side.getOpposite());
+			IAxleHandler axleOpt = sideTE.getCapability(Capabilities.AXLE_CAPABILITY, side.getOpposite());
 			if(axleOpt.isPresent()){
 				axleOpt.orElseThrow(NullPointerException::new).propagate(masterIn, key, handler.getRotationRatio(), 0, handler.renderOffset());
 			}

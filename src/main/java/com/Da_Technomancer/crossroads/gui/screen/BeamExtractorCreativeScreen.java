@@ -6,7 +6,6 @@ import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.gui.container.BeamExtractorCreativeContainer;
 import com.Da_Technomancer.essentials.api.packets.EssentialsPackets;
-import com.Da_Technomancer.essentials.api.packets.SendNBTToServer;
 import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;

@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.api.packets;
 
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.witchcraft.BloodCompass;
-import com.Da_Technomancer.essentials.api.packets.ClientPacket;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.GlobalPos;
 

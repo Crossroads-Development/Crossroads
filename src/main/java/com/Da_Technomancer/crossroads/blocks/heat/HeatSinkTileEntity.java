@@ -15,8 +15,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
+
 
 import java.util.ArrayList;
 
@@ -112,9 +111,9 @@ public class HeatSinkTileEntity extends ModuleTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing){
+	public <T> T getCapability(Capability<T> capability, Direction facing) {
 		if(capability == Capabilities.HEAT_CAPABILITY){
-			return (LazyOptional<T>) heatOpt;
+			return (T) heatOpt;
 		}
 
 		return super.getCapability(capability, facing);

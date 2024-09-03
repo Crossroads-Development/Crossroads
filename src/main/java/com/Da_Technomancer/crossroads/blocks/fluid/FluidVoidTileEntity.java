@@ -7,11 +7,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -26,9 +24,9 @@ public class FluidVoidTileEntity extends BlockEntity{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing) {
 		if(capability == ForgeCapabilities.FLUID_HANDLER){
-			return (LazyOptional<T>) mainOpt;
+			return (T) mainOpt;
 		}
 
 		return super.getCapability(capability, facing);
@@ -40,7 +38,7 @@ public class FluidVoidTileEntity extends BlockEntity{
 		mainOpt.invalidate();
 	}
 
-	private final LazyOptional<IFluidHandler> mainOpt = LazyOptional.of(VoidHandler::new);
+	private final IFluidHandler mainOpt = LazyOptional.of(VoidHandler::new);
 
 	private static class VoidHandler implements IFluidHandler{
 

@@ -23,8 +23,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
+
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -144,20 +143,20 @@ public class HeatLimiterBasicTileEntity extends BlockEntity implements ITickable
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
+	public <T> T getCapability(Capability<T> cap, Direction side) {
 		Direction facing = getBlockState().getValue(CRProperties.FACING);
 		if(cap == Capabilities.HEAT_CAPABILITY){
 			if(side == null || side == facing.getOpposite()){
-				return (LazyOptional<T>) heatInOpt;
+				return (T) heatInOpt;
 			}else if(side == facing){
-				return (LazyOptional<T>) heatOutOpt;
+				return (T) heatOutOpt;
 			}
 		}
 		return super.getCapability(cap, side);
 	}
 
-	private LazyOptional<IHeatHandler> heatInOpt = LazyOptional.of(() -> new HeatHandler(true));
-	private LazyOptional<IHeatHandler> heatOutOpt = LazyOptional.of(() -> new HeatHandler(false));
+	private IHeatHandler heatInOpt = LazyOptional.of(() -> new HeatHandler(true));
+	private IHeatHandler heatOutOpt = LazyOptional.of(() -> new HeatHandler(false));
 
 	@Override
 	public Component getDisplayName(){

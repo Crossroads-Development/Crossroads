@@ -26,8 +26,6 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -91,7 +89,7 @@ public class HeatReservoirCreative extends BaseEntityBlock implements IReadable,
 	@Override
 	public float read(Level world, BlockPos pos, BlockState state){
 		BlockEntity te = world.getBlockEntity(pos);
-		LazyOptional<IHeatHandler> heatOpt;
+		IHeatHandler heatOpt;
 		if(te != null && (heatOpt = te.getCapability(Capabilities.HEAT_CAPABILITY, null)).isPresent()){
 			return (float) heatOpt.orElseThrow(NullPointerException::new).getTemp();
 		}

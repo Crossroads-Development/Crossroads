@@ -12,8 +12,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
+
 import org.apache.commons.lang3.tuple.Pair;
 import org.joml.Vector3f;
 
@@ -33,7 +32,7 @@ public class ReagentPumpTileEntity extends ReagentHolderTE{
 		RENDER_SHAPE_EDGE[5] = Pair.of(new Vector3f((16F-7F)/16, 7F/16F, 7F/16F), new Vector3f(1, (16F-7F)/16F, (16F-7F)/16F));
 	}
 	@SuppressWarnings("unchecked")//Darn Java, not being able to verify arrays of parameterized types. Bah Humbug!
-	protected final LazyOptional<IChemicalHandler>[] neighCache = new LazyOptional[] {LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty()};
+	protected final IChemicalHandler[] neighCache = new LazyOptional[]{LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty()};
 
 	public ReagentPumpTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state);
@@ -50,9 +49,9 @@ public class ReagentPumpTileEntity extends ReagentHolderTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
+	public <T> T getCapability(Capability<T> cap, Direction side) {
 		if(cap == Capabilities.CHEMICAL_CAPABILITY){
-			return (LazyOptional<T>) chemOpt;
+			return (T) chemOpt;
 		}
 		return super.getCapability(cap, side);
 	}

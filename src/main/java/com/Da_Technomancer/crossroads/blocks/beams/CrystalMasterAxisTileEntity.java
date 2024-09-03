@@ -21,8 +21,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
+
 
 import java.util.ArrayList;
 
@@ -121,13 +120,13 @@ public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements
 		magicOpt.invalidate();
 	}
 
-	private final LazyOptional<IBeamHandler> magicOpt = LazyOptional.of(BeamHandler::new);
+	private final IBeamHandler magicOpt = LazyOptional.of(BeamHandler::new);
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
+	public <T> T getCapability(Capability<T> cap, Direction side) {
 		if(cap == Capabilities.BEAM_CAPABILITY && side != getFacing()){
-			return (LazyOptional<T>) magicOpt;
+			return (T) magicOpt;
 		}
 
 		return super.getCapability(cap, side);

@@ -23,8 +23,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
+
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,7 +34,7 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 	public static final BlockEntityType<HeatCableTileEntity> TYPE = CRTileEntity.createType(HeatCableTileEntity::new, CRBlocks.HEAT_CABLES.values().toArray(new HeatCable[0]));
 
 	@SuppressWarnings("unchecked")//Darn Java, not being able to verify arrays of parameterized types. Bah Humbug!
-	protected final LazyOptional<IHeatHandler>[] neighCache = new LazyOptional[] {LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty()};
+	protected final IHeatHandler[] neighCache = new LazyOptional[]{LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty()};
 	protected HeatInsulators insulator;
 	protected boolean[] matches = new boolean[6];
 	protected EnumTransferMode[] modes = ConduitBlock.IConduitTE.genModeArray(EnumTransferMode.BOTH);
@@ -97,7 +96,7 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 			if(locked(side.get3DDataValue())){
 				continue;
 			}
-			LazyOptional<IHeatHandler> otherOpt = neighCache[side.get3DDataValue()];
+			IHeatHandler otherOpt = neighCache[side.get3DDataValue()];
 			if(!neighCache[side.get3DDataValue()].isPresent()){
 				BlockEntity te = level.getBlockEntity(worldPosition.relative(side));
 				if(te != null){
@@ -183,9 +182,9 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing) {
 		if(capability == Capabilities.HEAT_CAPABILITY && (facing == null || !locked(facing.get3DDataValue()))){
-			return (LazyOptional<T>) heatOpt;
+			return (T) heatOpt;
 		}
 		return super.getCapability(capability, facing);
 	}

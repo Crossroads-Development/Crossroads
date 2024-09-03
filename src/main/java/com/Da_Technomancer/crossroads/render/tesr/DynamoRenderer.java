@@ -18,7 +18,6 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.common.util.LazyOptional;
 
 public class DynamoRenderer implements BlockEntityRenderer<ModuleTE>{
 
@@ -34,7 +33,7 @@ public class DynamoRenderer implements BlockEntityRenderer<ModuleTE>{
 		}
 
 		Direction facing = dynamo.getBlockState().getValue(CRProperties.HORIZ_FACING);
-		LazyOptional<IAxleHandler> axle = dynamo.getCapability(Capabilities.AXLE_CAPABILITY, null);
+        IAxleHandler axle = dynamo.getCapability(Capabilities.AXLE_CAPABILITY, null);
 		if(!axle.isPresent()){
 			return;
 		}

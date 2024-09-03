@@ -16,8 +16,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
+
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -158,17 +157,17 @@ public class StirlingEngineTileEntity extends ModuleTE{
 		bottomHeatOpt.invalidate();
 	}
 
-	private final LazyOptional<IHeatHandler> sideHeatOpt = LazyOptional.of(SideHeatHandler::new);
-	private final LazyOptional<IHeatHandler> bottomHeatOpt = LazyOptional.of(BottomHeatHandler::new);
+	private final IHeatHandler sideHeatOpt = LazyOptional.of(SideHeatHandler::new);
+	private final IHeatHandler bottomHeatOpt = LazyOptional.of(BottomHeatHandler::new);
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing){
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing) {
 		if(capability == Capabilities.AXLE_CAPABILITY && (facing == null || facing == Direction.UP)){
-			return (LazyOptional<T>) axleOpt;
+			return (T) axleOpt;
 		}
 		if(capability == Capabilities.HEAT_CAPABILITY && facing != Direction.UP){
-			return facing == Direction.DOWN ? (LazyOptional<T>) bottomHeatOpt : (LazyOptional<T>) sideHeatOpt;
+			return facing == Direction.DOWN ? (T) bottomHeatOpt : (T) sideHeatOpt;
 		}
 
 		return super.getCapability(capability, facing);

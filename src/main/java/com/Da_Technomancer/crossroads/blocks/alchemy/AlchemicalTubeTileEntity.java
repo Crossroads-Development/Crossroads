@@ -12,8 +12,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
+
 import org.apache.commons.lang3.tuple.Pair;
 import org.joml.Vector3f;
 
@@ -80,7 +79,7 @@ public class AlchemicalTubeTileEntity extends ReagentHolderTE implements Conduit
 		Direction opposite = face.getOpposite();
 		BlockEntity neighTE = level.getBlockEntity(worldPosition.relative(face));
 		//Check for a neighbor w/ an alchemy reagent handler of a compatible channel
-		LazyOptional<IChemicalHandler> otherOpt;
+		IChemicalHandler otherOpt;
 		IChemicalHandler otherHandler;
 		return neighTE != null && (otherOpt = neighTE.getCapability(Capabilities.CHEMICAL_CAPABILITY, face.getOpposite())).isPresent() && (otherHandler = otherOpt.orElseThrow(NoSuchFieldError::new)).getChannel(opposite).connectsWith(getChannel()) && otherHandler.getMode(opposite).connectsWith(mode);
 	}
@@ -105,7 +104,7 @@ public class AlchemicalTubeTileEntity extends ReagentHolderTE implements Conduit
 			if(modes[i].isConnection()){
 				Direction side = Direction.from3DDataValue(i);
 				BlockEntity te = level.getBlockEntity(worldPosition.relative(side));
-				LazyOptional<IChemicalHandler> otherOpt;
+				IChemicalHandler otherOpt;
 				if(te == null || !(otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())).isPresent()){
 					setData(i, false, modes[i]);
 					continue;
@@ -151,9 +150,9 @@ public class AlchemicalTubeTileEntity extends ReagentHolderTE implements Conduit
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side){
+	public <T> T getCapability(Capability<T> cap, Direction side) {
 		if(cap == Capabilities.CHEMICAL_CAPABILITY && allowConnect(side)){
-			return (LazyOptional<T>) chemOpt;
+			return (T) chemOpt;
 		}
 		return super.getCapability(cap, side);
 	}
