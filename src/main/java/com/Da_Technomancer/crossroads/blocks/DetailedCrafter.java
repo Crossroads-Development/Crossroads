@@ -50,7 +50,10 @@ public class DetailedCrafter extends Block{
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		if(!worldIn.isClientSide){
 //			StoreNBTToClient.syncNBTToClient((ServerPlayerEntity) playerIn);//Sync player path data to client
-			NetworkHooks.openScreen((ServerPlayer) playerIn, new DetailedCrafterProvider(pos), buf -> {buf.writeBoolean(false); buf.writeBlockPos(pos);});
+			NetworkHooks.openScreen((ServerPlayer) playerIn, new DetailedCrafterProvider(pos), buf -> {
+				buf.writeBoolean(false);
+				buf.writeBlockPos(pos);
+			});
 		}
 		return InteractionResult.SUCCESS;
 	}

@@ -126,7 +126,7 @@ public class SteamerTileEntity extends InventoryTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side) {
+	public <T> T getCapability(Capability<T> cap, Direction side){
 		if(cap == ForgeCapabilities.FLUID_HANDLER){
 			if(side == Direction.UP || side == Direction.DOWN){
 				return (T) waterOpt;

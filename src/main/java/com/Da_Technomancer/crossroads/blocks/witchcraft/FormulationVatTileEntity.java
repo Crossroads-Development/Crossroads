@@ -183,7 +183,7 @@ public class FormulationVatTileEntity extends InventoryTE{
 			BlockState state = getBlockState();
 			int powerLevel = 0;
 			if(!fluids[0].isEmpty()){
-				powerLevel = HeatUtil.getHeatTier(temp, TEMP_TIERS)+1;
+				powerLevel = HeatUtil.getHeatTier(temp, TEMP_TIERS) + 1;
 			}
 			BlockState newState = state.setValue(CRProperties.POWER_LEVEL_7, powerLevel);
 			if(state != newState){
@@ -192,21 +192,21 @@ public class FormulationVatTileEntity extends InventoryTE{
 		}
 	}
 
-    private final IItemHandler itemOpt = LazyOptional.of(ItemHandler::new);
+	private final IItemHandler itemOpt = LazyOptional.of(ItemHandler::new);
 
 	@SuppressWarnings("unchecked")
 	@Override
-    public <T> T getCapability(Capability<T> capability, @Nullable Direction facing) {
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == ForgeCapabilities.FLUID_HANDLER && facing != Direction.UP){
-            return (T) globalFluidOpt;
+			return (T) globalFluidOpt;
 		}
 
 		if(capability == Capabilities.HEAT_CAPABILITY && facing != Direction.UP){
-            return (T) heatOpt;
+			return (T) heatOpt;
 		}
 
 		if(capability == ForgeCapabilities.ITEM_HANDLER && facing != Direction.UP){
-            return (T) itemOpt;
+			return (T) itemOpt;
 		}
 
 		return super.getCapability(capability, facing);

@@ -159,10 +159,10 @@ public class StirlingEngineTileEntity extends ModuleTE{
 
 	private final IHeatHandler sideHeatOpt = LazyOptional.of(SideHeatHandler::new);
 	private final IHeatHandler bottomHeatOpt = LazyOptional.of(BottomHeatHandler::new);
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing) {
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == Capabilities.AXLE_CAPABILITY && (facing == null || facing == Direction.UP)){
 			return (T) axleOpt;
 		}

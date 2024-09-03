@@ -188,7 +188,7 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements INBTReceiv
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing) {
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == ForgeCapabilities.FLUID_HANDLER && facing != Direction.UP){
 			return (T) globalFluidOpt;
 		}

@@ -23,7 +23,7 @@ import java.util.List;
 
 public class ChargingStand extends GlasswareHolder{
 
-	private static final VoxelShape SHAPE = Shapes.or(box(0, 0, 0, 16, 2, 16), box(0, 14, 0, 16, 16, 16), box(5, 2, 0, 11, 14, 1), box(5, 2, 15, 11, 14,16), box(0, 2, 5, 1, 4, 11), box(15, 2, 5, 16, 14, 11), box(5, 2, 5, 11, 14, 11));
+	private static final VoxelShape SHAPE = Shapes.or(box(0, 0, 0, 16, 2, 16), box(0, 14, 0, 16, 16, 16), box(5, 2, 0, 11, 14, 1), box(5, 2, 15, 11, 14, 16), box(0, 2, 5, 1, 4, 11), box(15, 2, 5, 16, 14, 11), box(5, 2, 5, 11, 14, 11));
 
 	public ChargingStand(){
 		super("charging_stand");

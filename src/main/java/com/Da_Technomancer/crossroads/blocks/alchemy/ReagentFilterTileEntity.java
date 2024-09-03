@@ -33,7 +33,7 @@ public class ReagentFilterTileEntity extends ReagentHolderTE implements MenuProv
 
 	public static final BlockEntityType<ReagentFilterTileEntity> TYPE = CRTileEntity.createType(ReagentFilterTileEntity::new, CRBlocks.reagentFilterGlass, CRBlocks.reagentFilterCrystal);
 
-	private static final Pair<Vector3f, Vector3f>[] RENDER_SHAPE = new Pair[] {Pair.of(new Vector3f(3F/16F, 4F/16F, 3F/16F), new Vector3f(13F/16F, 12F/16F, 13F/16F))};
+	private static final Pair<Vector3f, Vector3f>[] RENDER_SHAPE = new Pair[] {Pair.of(new Vector3f(3F / 16F, 4F / 16F, 3F / 16F), new Vector3f(13F / 16F, 12F / 16F, 13F / 16F))};
 
 	private Direction facing = null;
 	private ItemStack inventory = ItemStack.EMPTY;
@@ -138,7 +138,7 @@ public class ReagentFilterTileEntity extends ReagentHolderTE implements MenuProv
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing) {
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == Capabilities.CHEMICAL_CAPABILITY && (facing == getFacing() || facing != null && facing.getAxis() == Direction.Axis.Y)){
 			return (T) chemOpt;
 		}

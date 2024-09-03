@@ -51,7 +51,7 @@ public class LodestoneTurbineTileEntity extends ModuleTE{
 	@Nonnull
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> T getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+	public <T> T getCapability(@Nonnull Capability<T> cap, @Nullable Direction side){
 		if(cap == Capabilities.AXLE_CAPABILITY && side == Direction.UP){
 			return (T) axleOpt;
 		}

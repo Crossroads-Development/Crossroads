@@ -64,7 +64,7 @@ public class BeamLensCategory implements IRecipeCategory<BeamLensRec>{
 		//Render without shadow
 
 		// Draw relevant transmutation data
-		if(recipe.getTransmuteAlignment() != EnumBeamAlignments.NO_MATCH) {
+		if(recipe.getTransmuteAlignment() != EnumBeamAlignments.NO_MATCH){
 			String align = recipe.getTransmuteAlignment().getLocalName(recipe.isVoid());
 			graphics.drawString(Minecraft.getInstance().font, Component.translatable("crossroads.jei.beam_trans.align", align), 2, 2, 0x404040, false);
 			slot.draw(graphics, 20, 60);//Output
@@ -76,26 +76,26 @@ public class BeamLensCategory implements IRecipeCategory<BeamLensRec>{
 			matrix.mulPose(Axis.ZN.rotationDegrees(-90));
 			arrowStatic.draw(graphics, 0, 0);
 			matrix.popPose();
-		} else {
+		}else{
 			graphics.drawString(Minecraft.getInstance().font, Component.translatable("crossroads.jei.beam_lens.no_trans"), 2, 2, 0x404040, false);
 		}
 
 		BeamMod output = recipe.getOutput();
-		int energy = (int)(output.getEnergyMult() * 100);
-		int potential = (int)(output.getPotentialMult() * 100);
-		int stability = (int)(output.getStabilityMult() * 100);
-		int voi = (int)(output.getVoidMult() * 100);
-		int voidConv = (int)(output.getVoidConvert() * 100);
+		int energy = (int) (output.getEnergyMult() * 100);
+		int potential = (int) (output.getPotentialMult() * 100);
+		int stability = (int) (output.getStabilityMult() * 100);
+		int voi = (int) (output.getVoidMult() * 100);
+		int voidConv = (int) (output.getVoidConvert() * 100);
 
 		int x = 50;
 		int y = 18;
 		int ySpacing = 15;
 
-		if(output.isEmpty()) {
+		if(output.isEmpty()){
 			graphics.drawString(Minecraft.getInstance().font, Component.translatable("crossroads.jei.beam_lens.no_change"), x, 37, 0x404040, false);
-		} else {
+		}else{
 			// Display all primary colors if any of them is changed
-			if(energy != 100 || potential != 100 || stability != 100) {
+			if(energy != 100 || potential != 100 || stability != 100){
 				graphics.drawString(Minecraft.getInstance().font, Component.translatable("crossroads.jei.beam_lens.energy", energy), x, y, 0x404040, false);
 				y += ySpacing;
 				graphics.drawString(Minecraft.getInstance().font, Component.translatable("crossroads.jei.beam_lens.potential", potential), x, y, 0x404040, false);
@@ -104,12 +104,12 @@ public class BeamLensCategory implements IRecipeCategory<BeamLensRec>{
 				y += ySpacing;
 			}
 			// Display void if void is changed
-			if(voi != 100) {
+			if(voi != 100){
 				graphics.drawString(Minecraft.getInstance().font, Component.translatable("crossroads.jei.beam_lens.void", voi), x, y, 0x404040, false);
 				y += ySpacing;
 			}
 			// Display void conversion if conversion is taking place
-			if(voidConv != 0) {
+			if(voidConv != 0){
 				graphics.drawString(Minecraft.getInstance().font, Component.translatable("crossroads.jei.beam_lens.void_convert", voidConv), x, y, 0x404040, false);
 			}
 		}
@@ -119,7 +119,7 @@ public class BeamLensCategory implements IRecipeCategory<BeamLensRec>{
 	public void setRecipe(IRecipeLayoutBuilder builder, BeamLensRec recipe, IFocusGroup focuses){
 		builder.addSlot(RecipeIngredientRole.INPUT, 21, 16).addIngredients(recipe.getIngr());
 		// Don't draw the second item if there is no valid transmutation
-		if(recipe.getTransmuteAlignment() != EnumBeamAlignments.NO_MATCH) {
+		if(recipe.getTransmuteAlignment() != EnumBeamAlignments.NO_MATCH){
 			builder.addSlot(RecipeIngredientRole.OUTPUT, 21, 61).addItemStack(recipe.getResultItem());
 		}
 	}

@@ -70,7 +70,7 @@ public class StampMillRenderer implements BlockEntityRenderer<StampMillTileEntit
 			}
 			offset[i] = position * 8.3D / 32D;
 		}
-		matrix.translate(-5F/ 16F, offset[1], -2F / 8F);
+		matrix.translate(-5F / 16F, offset[1], -2F / 8F);
 
 		TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(CRRenderTypes.CAST_IRON_TEXTURE);
 		VertexConsumer builder = buffer.getBuffer(RenderType.solid());

@@ -12,7 +12,7 @@ import java.awt.*;
 import java.util.Random;
 
 public class LooseBeamRenderable implements IVisualEffect{
-	
+
 	public final double x;
 	public final double y;
 	public final double z;
@@ -34,7 +34,7 @@ public class LooseBeamRenderable implements IVisualEffect{
 		this.width = width;
 		this.color = color;
 	}
-	
+
 	public static LooseBeamRenderable readFromNBT(Level world, CompoundTag nbt){
 		return new LooseBeamRenderable(nbt.getFloat("x"), nbt.getFloat("y"), nbt.getFloat("z"), nbt.getDouble("length"), nbt.getFloat("angle_x"), nbt.getFloat("angle_y"), nbt.getByte("width"), nbt.getInt("color"));
 	}

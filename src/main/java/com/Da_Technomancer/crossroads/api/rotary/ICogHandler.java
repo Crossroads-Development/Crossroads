@@ -12,7 +12,7 @@ import javax.annotation.Nonnull;
  * In most cases, the AxleHandler and CogHandler are on the same side, though there are exceptions. Some blocks may only have one of them.
  */
 public interface ICogHandler{
-	
+
 	/**
 	 * Should redirect to the AxleHandler propogate method.
 	 * @param cogOrient The orientation of the cogs in the plane (as opposed to the alignment of the plane, which is the capability side)

@@ -95,7 +95,7 @@ public class GatewayControllerDestinationRenderer implements BlockEntityRenderer
 
 		//The outer edge of the render is aligned with the outside of the block frame. The inside is not aligned with anything
 		VertexConsumer builder = buffer.getBuffer(RenderType.cutout());
-		
+
 		//Fixed square ring
 		matrix.pushPose();
 		Quaternionf ringRotation = Axis.ZP.rotationDegrees(90);
@@ -183,7 +183,7 @@ public class GatewayControllerDestinationRenderer implements BlockEntityRenderer
 
 			//Switch builder to translucent
 			builder = buffer.getBuffer(RenderType.translucentNoCrumbling());
-			
+
 			//Vertices are commented with the number of the vertex on the final octagon
 
 			//Front

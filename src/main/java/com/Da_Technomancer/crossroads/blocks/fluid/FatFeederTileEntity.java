@@ -55,7 +55,8 @@ public class FatFeederTileEntity extends InventoryTE{
 		super.serverTick();
 
 		//Player feeding
-		float gain = (float) Math.abs(fluids[0].getAmount() - fluidProps[0].capacity / 2) / (float) (fluidProps[0].capacity / 2);;
+		float gain = (float) Math.abs(fluids[0].getAmount() - fluidProps[0].capacity / 2) / (float) (fluidProps[0].capacity / 2);
+		;
 		int range = Math.round((1F - gain) * (MAX_RANGE - MIN_RANGE) + MIN_RANGE);
 		List<Player> players = level.getEntitiesOfClass(Player.class, new AABB(worldPosition.subtract(new Vec3i(range, range, range)), worldPosition.offset(new Vec3i(range, range, range))), EntitySelector.ENTITY_STILL_ALIVE);
 		for(Player play : players){
@@ -122,7 +123,7 @@ public class FatFeederTileEntity extends InventoryTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing) {
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == ForgeCapabilities.FLUID_HANDLER){
 			return (T) globalFluidOpt;
 		}

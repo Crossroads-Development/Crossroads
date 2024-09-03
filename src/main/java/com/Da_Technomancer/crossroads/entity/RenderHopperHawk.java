@@ -13,7 +13,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 public class RenderHopperHawk extends MobRenderer<EntityHopperHawk, ModelHopperHawk>{
 
 	public static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/entities/hopper_hawk.png");
-	public static final ModelLayerLocation HOPPER_HAWK_MODEL_LAYER =new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "hopper_hawk"), "main");
+	public static final ModelLayerLocation HOPPER_HAWK_MODEL_LAYER = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "hopper_hawk"), "main");
 
 	protected RenderHopperHawk(EntityRendererProvider.Context context){
 		super(context, new ModelHopperHawk(context.bakeLayer(HOPPER_HAWK_MODEL_LAYER)), 0.3F);

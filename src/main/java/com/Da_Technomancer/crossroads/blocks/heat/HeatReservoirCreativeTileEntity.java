@@ -79,7 +79,7 @@ public class HeatReservoirCreativeTileEntity extends ModuleTE implements INBTRec
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, Direction facing) {
+	public <T> T getCapability(Capability<T> capability, Direction facing){
 		if(capability == Capabilities.HEAT_CAPABILITY){
 			return (T) heatOpt;
 		}

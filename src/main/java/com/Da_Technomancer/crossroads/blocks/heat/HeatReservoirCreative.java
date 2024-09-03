@@ -63,7 +63,11 @@ public class HeatReservoirCreative extends BaseEntityBlock implements IReadable,
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		if(!worldIn.isClientSide){
 			if(worldIn.getBlockEntity(pos) instanceof HeatReservoirCreativeTileEntity menuTE){
-				NetworkHooks.openScreen((ServerPlayer) playerIn, menuTE, buf -> {buf.writeFloat(menuTE.setting); buf.writeUtf(menuTE.expression); buf.writeBlockPos(pos);});
+				NetworkHooks.openScreen((ServerPlayer) playerIn, menuTE, buf -> {
+					buf.writeFloat(menuTE.setting);
+					buf.writeUtf(menuTE.expression);
+					buf.writeBlockPos(pos);
+				});
 			}
 		}
 		return InteractionResult.SUCCESS;

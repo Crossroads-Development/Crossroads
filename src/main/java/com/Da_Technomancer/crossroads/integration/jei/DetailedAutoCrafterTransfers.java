@@ -21,11 +21,11 @@ public class DetailedAutoCrafterTransfers{
 
 		private final IRecipeTransferHandlerHelper helper;
 
-		public DetailedRecipeTransfer(IRecipeTransferHandlerHelper helper) {
+        public DetailedRecipeTransfer(IRecipeTransferHandlerHelper helper){
 			this.helper = helper;
 		}
 
-		public Class<DetailedAutoCrafterContainer> getContainerClass() {
+        public Class<DetailedAutoCrafterContainer> getContainerClass(){
 			return DetailedAutoCrafterContainer.class;
 		}
 

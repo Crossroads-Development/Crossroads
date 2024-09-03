@@ -9,7 +9,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import java.util.HashMap;
 
 public final class CRRecipes{
-	
+
 	public static RecipeSerializer<?> STAMP_MILL_SERIAL = null;
 	public static RecipeSerializer<?> MILL_SERIAL = null;
 	public static RecipeSerializer<?> ORE_CLEANSER_SERIAL = null;
@@ -98,7 +98,7 @@ public final class CRRecipes{
 		EMBRYO_LAB_MORPH_SERIAL = MiscUtil.putReturn(toRegisterSerializer, "embryo_lab_morph", new EmbryoLabMorphRec.Serializer());
 		INCUBATOR_SERIAL = MiscUtil.putReturn(toRegisterSerializer, "incubator", new IncubatorRec.Serializer());
 	}
-	
+
 	public static final HashMap<String, RecipeSerializer<?>> toRegisterSerializer = new HashMap<>();
 	public static final HashMap<String, RecipeType<?>> toRegisterType = new HashMap<>();
 }

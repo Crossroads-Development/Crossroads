@@ -135,6 +135,6 @@ public interface IMechanism<T extends IMechanismProperty>{
 	default boolean requiresSupport(){
 		return true;
 	}
-	
-	
+
+
 }

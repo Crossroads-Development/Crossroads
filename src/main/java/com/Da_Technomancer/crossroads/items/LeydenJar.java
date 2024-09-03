@@ -18,14 +18,14 @@ import java.util.List;
 public class LeydenJar extends Item implements ICreativeTabPopulatingItem{
 
 	public static final int MAX_CHARGE = 100_000;
-	
+
 	protected LeydenJar(){
 		super(new Properties().stacksTo(1));
 		String name = "leyden_jar";
 //		hasSubtypes = true;
 		CRItems.queueForRegister(name, this);
 	}
-	
+
 	public static int getCharge(ItemStack stack){
 		CompoundTag nbt = stack.getTag();
 		if(stack.getItem() == CRItems.leydenJar && nbt != null){
@@ -34,7 +34,7 @@ public class LeydenJar extends Item implements ICreativeTabPopulatingItem{
 			return 0;
 		}
 	}
-	
+
 	public static void setCharge(ItemStack stack, int chargeIn){
 		CompoundTag nbt = stack.getTag();
 		if(nbt != null){
@@ -78,7 +78,7 @@ public class LeydenJar extends Item implements ICreativeTabPopulatingItem{
 
 		@Override
 		@SuppressWarnings("unchecked")
-		public <T> T getCapability(Capability<T> cap, Direction dir) {
+		public <T> T getCapability(Capability<T> cap, Direction dir){
 			if(cap == ForgeCapabilities.ENERGY){
 				return (T) holder;
 			}
@@ -99,7 +99,7 @@ public class LeydenJar extends Item implements ICreativeTabPopulatingItem{
 		public int extractEnergy(int maxExtract, boolean simulate){
 			int currentCharge = getEnergyStored();
 			int energyExtracted = Math.min(currentCharge, maxExtract);
-			if (!simulate){
+			if(!simulate){
 				LeydenJar.setCharge(stack, currentCharge - energyExtracted);
 			}
 			return energyExtracted;

@@ -8,20 +8,20 @@ import javax.annotation.Nonnull;
  * Allows the transfer of alchemical reagents and heat. 
  */
 public interface IChemicalHandler{
-	
+
 	/**
 	 * @param type The reagent to check
 	 * @return The contained amount of the passed reagent type.
 	 */
 	int getContent(IReagent type);
-	
+
 	int getTransferCapacity();
 
 	/**
 	 * @return The temperature in degrees C
 	 */
 	double getTemp();
-	
+
 	/**
 	 * @param reag A standard reagent storage map. Moved reagents will be taken from it directly, so it should be mutable and write back to the caller.
 	 * @param side The side this is calling (for programming convenience- allows returning the same handler to multiple sides).
@@ -31,7 +31,7 @@ public interface IChemicalHandler{
 	default boolean insertReagents(ReagentMap reag, Direction side, @Nonnull IChemicalHandler caller){
 		return insertReagents(reag, side, caller, false);
 	}
-	
+
 	/**
 	 * @param reag A standard reagent storage map. Moved reagents will be taken from it directly, so it should be mutable and write back to the caller.
 	 * @param side The side this is calling (for programming convenience- allows returning the same handler to multiple sides).
@@ -40,7 +40,7 @@ public interface IChemicalHandler{
 	 * @return Whether anything in reag was changed. 
 	 */
 	boolean insertReagents(ReagentMap reag, Direction side, @Nonnull IChemicalHandler caller, boolean ignorePhase);
-	
+
 	@Nonnull
 	EnumTransferMode getMode(Direction side);
 

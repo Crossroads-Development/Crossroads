@@ -19,7 +19,7 @@ public class NbtToEntityClient extends ClientPacket{
 
 	@SuppressWarnings("unused")
 	public NbtToEntityClient(){
-		
+
 	}
 
 	public NbtToEntityClient(UUID entity, CompoundTag nbt){

@@ -50,7 +50,7 @@ public class FluidVoid extends BaseEntityBlock implements ICustomItemBlock{
 	public RenderShape getRenderShape(BlockState state){
 		return RenderShape.MODEL;
 	}
-	
+
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
 		tooltip.add(Component.translatable("tt.crossroads.fluid_void.quip").setStyle(MiscUtil.TT_QUIP));

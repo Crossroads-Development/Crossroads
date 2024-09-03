@@ -20,8 +20,8 @@ public class HeatedTubeTileEntity extends ReagentHolderTE{
 
 	public static final BlockEntityType<HeatedTubeTileEntity> TYPE = CRTileEntity.createType(HeatedTubeTileEntity::new, CRBlocks.heatedTubeGlass, CRBlocks.heatedTubeCrystal);
 
-	private static final Pair<Vector3f, Vector3f>[] RENDER_SHAPE_X = new Pair[] {Pair.of(new Vector3f(0, 7/16F, 7/16F), new Vector3f(1, 1F-7/16F, 1F-7/16F))};
-	private static final Pair<Vector3f, Vector3f>[] RENDER_SHAPE_Z = new Pair[] {Pair.of(new Vector3f(7/16F, 7/16F, 0), new Vector3f(1F-7/16F, 1F-7/16F, 1))};
+	private static final Pair<Vector3f, Vector3f>[] RENDER_SHAPE_X = new Pair[] {Pair.of(new Vector3f(0, 7 / 16F, 7 / 16F), new Vector3f(1, 1F - 7 / 16F, 1F - 7 / 16F))};
+	private static final Pair<Vector3f, Vector3f>[] RENDER_SHAPE_Z = new Pair[] {Pair.of(new Vector3f(7 / 16F, 7 / 16F, 0), new Vector3f(1F - 7 / 16F, 1F - 7 / 16F, 1))};
 
 	public HeatedTubeTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state);
@@ -67,7 +67,7 @@ public class HeatedTubeTileEntity extends ReagentHolderTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side) {
+	public <T> T getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || side.getAxis() == getBlockState().getValue(CRProperties.HORIZ_FACING).getAxis())){
 			return (T) chemOpt;
 		}

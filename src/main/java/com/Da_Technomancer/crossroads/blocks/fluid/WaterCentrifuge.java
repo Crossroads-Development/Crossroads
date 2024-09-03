@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class WaterCentrifuge extends BaseEntityBlock{
-	
+
 	public WaterCentrifuge(){
 		super(CRBlocks.getMetalProperty());
 		String name = "water_centrifuge";

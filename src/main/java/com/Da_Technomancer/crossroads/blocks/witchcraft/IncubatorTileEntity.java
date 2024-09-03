@@ -181,16 +181,16 @@ public class IncubatorTileEntity extends InventoryTE{
 		itemOpt.invalidate();
 	}
 
-    private IItemHandler itemOpt = LazyOptional.of(ItemHandler::new);
+	private IItemHandler itemOpt = LazyOptional.of(ItemHandler::new);
 
 	@SuppressWarnings("unchecked")
 	@Override
-    public <T> T getCapability(Capability<T> capability, Direction facing) {
+	public <T> T getCapability(Capability<T> capability, Direction facing){
 		if(capability == Capabilities.HEAT_CAPABILITY){
-            return (T) heatOpt;
+			return (T) heatOpt;
 		}
 		if(capability == ForgeCapabilities.ITEM_HANDLER){
-            return (T) itemOpt;
+			return (T) itemOpt;
 		}
 		return super.getCapability(capability, facing);
 	}

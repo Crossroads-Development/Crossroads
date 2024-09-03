@@ -169,34 +169,34 @@ public class BeamCannonRenderer implements BlockEntityRenderer<BeamCannonTileEnt
 		float bVSideEn = barrelSprite.getV(0);
 
 		//Bottom
-		CRRenderUtil.addVertexBlock(builder, matrix, -barrelWidth, barrelBottom, -barrelWidth, bUTopSt, bVTopSt, 0,  -1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, barrelWidth, barrelBottom, -barrelWidth, bUTopEn, bVTopSt, 0,  -1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, barrelWidth, barrelBottom, barrelWidth, bUTopEn, bVTopEn, 0,  -1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -barrelWidth, barrelBottom, barrelWidth, bUTopSt, bVTopEn, 0,  -1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -barrelWidth, barrelBottom, -barrelWidth, bUTopSt, bVTopSt, 0, -1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, barrelWidth, barrelBottom, -barrelWidth, bUTopEn, bVTopSt, 0, -1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, barrelWidth, barrelBottom, barrelWidth, bUTopEn, bVTopEn, 0, -1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -barrelWidth, barrelBottom, barrelWidth, bUTopSt, bVTopEn, 0, -1, 0, light);
 		//Top
-		CRRenderUtil.addVertexBlock(builder, matrix, -barrelWidth, barrelTop, -barrelWidth, bUTopSt, bVTopSt, 0,  1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -barrelWidth, barrelTop, barrelWidth, bUTopSt, bVTopEn, 0,  1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, barrelWidth, barrelTop, barrelWidth, bUTopEn, bVTopEn, 0,  1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, barrelWidth, barrelTop, -barrelWidth, bUTopEn, bVTopSt, 0,  1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -barrelWidth, barrelTop, -barrelWidth, bUTopSt, bVTopSt, 0, 1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -barrelWidth, barrelTop, barrelWidth, bUTopSt, bVTopEn, 0, 1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, barrelWidth, barrelTop, barrelWidth, bUTopEn, bVTopEn, 0, 1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, barrelWidth, barrelTop, -barrelWidth, bUTopEn, bVTopSt, 0, 1, 0, light);
 		//-X
-		CRRenderUtil.addVertexBlock(builder, matrix, -barrelWidth, barrelBottom, -barrelWidth, bUSideSt, bVSideSt, -1,  0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -barrelWidth, barrelBottom, barrelWidth, bUSideEn, bVSideSt, -1,  0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -barrelWidth, barrelTop, barrelWidth, bUSideEn, bVSideEn, -1,  0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -barrelWidth, barrelTop, -barrelWidth, bUSideSt, bVSideEn, -1,  0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -barrelWidth, barrelBottom, -barrelWidth, bUSideSt, bVSideSt, -1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -barrelWidth, barrelBottom, barrelWidth, bUSideEn, bVSideSt, -1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -barrelWidth, barrelTop, barrelWidth, bUSideEn, bVSideEn, -1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -barrelWidth, barrelTop, -barrelWidth, bUSideSt, bVSideEn, -1, 0, 0, light);
 		//+X
-		CRRenderUtil.addVertexBlock(builder, matrix, barrelWidth, barrelBottom, -barrelWidth, bUSideSt, bVSideSt, 1,  0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, barrelWidth, barrelTop, -barrelWidth, bUSideSt, bVSideEn, 1,  0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, barrelWidth, barrelTop, barrelWidth, bUSideEn, bVSideEn, 1,  0, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, barrelWidth, barrelBottom, barrelWidth, bUSideEn, bVSideSt, 1,  0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, barrelWidth, barrelBottom, -barrelWidth, bUSideSt, bVSideSt, 1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, barrelWidth, barrelTop, -barrelWidth, bUSideSt, bVSideEn, 1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, barrelWidth, barrelTop, barrelWidth, bUSideEn, bVSideEn, 1, 0, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, barrelWidth, barrelBottom, barrelWidth, bUSideEn, bVSideSt, 1, 0, 0, light);
 		//-Z
-		CRRenderUtil.addVertexBlock(builder, matrix, -barrelWidth, barrelBottom, -barrelWidth, bUSideSt, bVSideSt, 0,  0, -1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -barrelWidth, barrelTop, -barrelWidth, bUSideSt, bVSideEn, 0,  0, -1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, barrelWidth, barrelTop, -barrelWidth, bUSideEn, bVSideEn, 0,  0, -1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, barrelWidth, barrelBottom, -barrelWidth, bUSideEn, bVSideSt, 0,  0, -1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -barrelWidth, barrelBottom, -barrelWidth, bUSideSt, bVSideSt, 0, 0, -1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -barrelWidth, barrelTop, -barrelWidth, bUSideSt, bVSideEn, 0, 0, -1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, barrelWidth, barrelTop, -barrelWidth, bUSideEn, bVSideEn, 0, 0, -1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, barrelWidth, barrelBottom, -barrelWidth, bUSideEn, bVSideSt, 0, 0, -1, light);
 		//+Z
-		CRRenderUtil.addVertexBlock(builder, matrix, -barrelWidth, barrelBottom, barrelWidth, bUSideSt, bVSideSt, 0,  0, 1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, barrelWidth, barrelBottom, barrelWidth, bUSideEn, bVSideSt, 0,  0, 1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, barrelWidth, barrelTop, barrelWidth, bUSideEn, bVSideEn, 0,  0, 1, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, -barrelWidth, barrelTop, barrelWidth, bUSideSt, bVSideEn, 0,  0, 1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -barrelWidth, barrelBottom, barrelWidth, bUSideSt, bVSideSt, 0, 0, 1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, barrelWidth, barrelBottom, barrelWidth, bUSideEn, bVSideSt, 0, 0, 1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, barrelWidth, barrelTop, barrelWidth, bUSideEn, bVSideEn, 0, 0, 1, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, -barrelWidth, barrelTop, barrelWidth, bUSideSt, bVSideEn, 0, 0, 1, light);
 	}
 }

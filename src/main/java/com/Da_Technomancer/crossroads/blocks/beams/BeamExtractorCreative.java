@@ -52,8 +52,10 @@ public class BeamExtractorCreative extends BeamBlock implements ICustomItemBlock
 			if(worldIn.getBlockEntity(pos) instanceof BeamExtractorCreativeTileEntity menuTE){
 				NetworkHooks.openScreen((ServerPlayer) playerIn, menuTE, buf -> {
 					buf.writeVarIntArray(menuTE.output.getValues());
-					buf.writeUtf(menuTE.expression[0]); buf.writeUtf(menuTE.expression[1]);
-					buf.writeUtf(menuTE.expression[2]); buf.writeUtf(menuTE.expression[3]);
+					buf.writeUtf(menuTE.expression[0]);
+					buf.writeUtf(menuTE.expression[1]);
+					buf.writeUtf(menuTE.expression[2]);
+					buf.writeUtf(menuTE.expression[3]);
 					buf.writeBlockPos(pos);
 				});
 			}

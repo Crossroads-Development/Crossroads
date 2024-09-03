@@ -33,8 +33,8 @@ public class OreCleanserCategory implements IRecipeCategory<OreCleanserRec>{
 	private final IDrawableStatic arrowStatic;
 	private final IDrawable fluidOverlay;
 	private final IDrawable icon;
-	
-	protected OreCleanserCategory(IGuiHelper guiHelper){
+
+    protected OreCleanserCategory(IGuiHelper guiHelper){
 		back = guiHelper.createBlankDrawable(180, 100);
 		slot = guiHelper.getSlotDrawable();
 		arrowStatic = guiHelper.createDrawable(ResourceLocation.withDefaultNamespace("textures/gui/container/furnace.png"), 79, 35, 24, 17);

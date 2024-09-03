@@ -98,7 +98,7 @@ public class LensFrameTileEntity extends BeamRenderTE implements INBTReceiver, C
 	}
 
 	@Nullable
-	public BeamLensRec getCurrRec() {
+	public BeamLensRec getCurrRec(){
 		if(!recipeCheck){
 			Optional<BeamLensRec> rec = level.getRecipeManager().getRecipeFor(CRRecipes.BEAM_LENS_TYPE, inventoryWrapper, level);
 			currRec = rec.orElse(null);
@@ -152,7 +152,7 @@ public class LensFrameTileEntity extends BeamRenderTE implements INBTReceiver, C
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side) {
+	public <T> T getCapability(Capability<T> cap, Direction side){
 		if(cap == ForgeCapabilities.ITEM_HANDLER){
 			return (T) lensOpt;
 		}
@@ -195,7 +195,7 @@ public class LensFrameTileEntity extends BeamRenderTE implements INBTReceiver, C
 				if(helper.getLastSent().isEmpty()){
 					//Delay disabling the rendered output by one tick
 					//Slight visual desync, but prevents tick-order dependent flickering
-					needUpdateBeamRender |= i+1;
+					needUpdateBeamRender |= i + 1;
 				}else{
 					refreshBeam(dir);
 				}
@@ -243,7 +243,7 @@ public class LensFrameTileEntity extends BeamRenderTE implements INBTReceiver, C
 		return new LensBeamHandler();
 	}
 
-	private class LensBeamHandler implements IBeamHandler {
+	private class LensBeamHandler implements IBeamHandler{
 
 		@Override
 		public void setBeam(@Nonnull BeamUnit beamIn, BeamHit beamHit){
@@ -290,7 +290,7 @@ public class LensFrameTileEntity extends BeamRenderTE implements INBTReceiver, C
 		}
 	}
 
-	private class LensHandler implements IItemHandler {
+	private class LensHandler implements IItemHandler{
 
 		@Override
 		public int getSlots(){

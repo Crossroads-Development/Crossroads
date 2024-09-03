@@ -62,7 +62,7 @@ public class DetailedCrafterRec extends ShapedRecipe implements IOptionalRecipe<
 		return active && super.matches(inv, world);
 	}
 
-	public static class Serializer  implements RecipeSerializer<DetailedCrafterRec> {
+	public static class Serializer implements RecipeSerializer<DetailedCrafterRec>{
 
 		@Override
 		public DetailedCrafterRec fromJson(ResourceLocation recipeId, JsonObject json){

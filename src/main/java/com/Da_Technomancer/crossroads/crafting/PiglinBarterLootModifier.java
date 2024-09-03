@@ -15,15 +15,15 @@ import net.neoforged.neoforge.common.loot.LootModifier;
 
 import javax.annotation.Nonnull;
 
-public class PiglinBarterLootModifier extends LootModifier {
+public class PiglinBarterLootModifier extends LootModifier{
 
 	protected static final Codec<PiglinBarterLootModifier> CODEC = RecordCodecBuilder.create(inst -> codecStart(inst)
-		.and(Codec.BOOL.optionalFieldOf("active", true).forGetter(PiglinBarterLootModifier::isActive))
-		.and(Codec.STRING.fieldOf("item_name").forGetter(PiglinBarterLootModifier::getItem))
-		.and(Codec.INT.optionalFieldOf("min", 1).forGetter(PiglinBarterLootModifier::getMin))
-		.and(Codec.INT.optionalFieldOf("max", 1).forGetter(PiglinBarterLootModifier::getMax))
-		.and(Codec.FLOAT.fieldOf("override_chance").forGetter(PiglinBarterLootModifier::getOverrideChance))
-		.apply(inst, PiglinBarterLootModifier::new));
+            .and(Codec.BOOL.optionalFieldOf("active", true).forGetter(PiglinBarterLootModifier::isActive))
+            .and(Codec.STRING.fieldOf("item_name").forGetter(PiglinBarterLootModifier::getItem))
+            .and(Codec.INT.optionalFieldOf("min", 1).forGetter(PiglinBarterLootModifier::getMin))
+            .and(Codec.INT.optionalFieldOf("max", 1).forGetter(PiglinBarterLootModifier::getMax))
+            .and(Codec.FLOAT.fieldOf("override_chance").forGetter(PiglinBarterLootModifier::getOverrideChance))
+            .apply(inst, PiglinBarterLootModifier::new));
 
 	private final boolean active;
 	private final String itemName;

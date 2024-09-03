@@ -74,7 +74,7 @@ public class Icebox extends BaseEntityBlock implements IReadable{
 		}
 		return InteractionResult.SUCCESS;
 	}
-	
+
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
 		tooltip.add(Component.translatable("tt.crossroads.icebox.desc", IceboxTileEntity.RATE));

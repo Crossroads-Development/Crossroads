@@ -637,7 +637,7 @@ public abstract class ReagentHolderTE extends BlockEntity implements ITickableTi
 		}
 	}
 
-	protected class ItemHandler implements IItemHandler {
+	protected class ItemHandler implements IItemHandler{
 
 		private final ItemStack[] fakeInventory = new ItemStack[ReagentManager.getRegisteredReags().size()];
 

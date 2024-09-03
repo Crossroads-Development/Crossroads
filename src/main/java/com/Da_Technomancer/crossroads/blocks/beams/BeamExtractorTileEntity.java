@@ -106,13 +106,13 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements Container, 
 		itemOpt = LazyOptional.of(ItemHandler::new);
 	}
 
-    private IItemHandler itemOpt = LazyOptional.of(ItemHandler::new);
+	private IItemHandler itemOpt = LazyOptional.of(ItemHandler::new);
 
 	@SuppressWarnings("unchecked")
 	@Override
-    public <T> T getCapability(Capability<T> capability, @Nullable Direction facing) {
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == ForgeCapabilities.ITEM_HANDLER && facing != getFacing()){
-            return (T) itemOpt;
+			return (T) itemOpt;
 		}
 
 		return super.getCapability(capability, facing);

@@ -42,6 +42,7 @@ public class TeslaCoilTileEntity extends BlockEntity implements ITickableTileEnt
 	}
 
 	private IEnergyStorage stackOpt;
+
 	@Nullable
 	private IEnergyStorage getBatteryHandler(){
 		if(battery.isEmpty()){
@@ -245,7 +246,7 @@ public class TeslaCoilTileEntity extends BlockEntity implements ITickableTileEnt
 	private IItemHandler itemOpt = LazyOptional.of(ItemHandler::new);
 
 	@SuppressWarnings("unchecked")
-	public <T> T getCapability(Capability<T> cap, Direction side) {
+	public <T> T getCapability(Capability<T> cap, Direction side){
 		if(cap == ForgeCapabilities.ENERGY){
 			return (T) (side == getBlockState().getValue(CRProperties.HORIZ_FACING) ? optOut : optIn);
 		}

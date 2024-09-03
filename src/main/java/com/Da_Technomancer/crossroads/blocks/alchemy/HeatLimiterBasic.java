@@ -70,7 +70,11 @@ public class HeatLimiterBasic extends BaseEntityBlock{
 					worldIn.setBlockAndUpdate(pos, state.cycle(CRProperties.FACING));
 				}
 			}else if((te = worldIn.getBlockEntity(pos)) instanceof HeatLimiterBasicTileEntity){
-				NetworkHooks.openScreen((ServerPlayer) playerIn, (MenuProvider) te, buf -> {buf.writeFloat(((HeatLimiterBasicTileEntity) te).setting); buf.writeUtf(((HeatLimiterBasicTileEntity) te).expression); buf.writeBlockPos(pos);});
+				NetworkHooks.openScreen((ServerPlayer) playerIn, (MenuProvider) te, buf -> {
+					buf.writeFloat(((HeatLimiterBasicTileEntity) te).setting);
+					buf.writeUtf(((HeatLimiterBasicTileEntity) te).expression);
+					buf.writeBlockPos(pos);
+				});
 			}
 		}
 		return InteractionResult.SUCCESS;

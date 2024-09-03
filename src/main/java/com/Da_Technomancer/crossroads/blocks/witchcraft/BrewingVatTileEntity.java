@@ -118,7 +118,7 @@ public class BrewingVatTileEntity extends InventoryTE{
 				if(bubbleParticle == null){
 					bubbleParticle = new ColorParticleData(CRParticles.COLOR_GAS, Color.CYAN);
 				}
-				CRParticles.summonParticlesFromClient(level, bubbleParticle, (int) (powerLevel * 1.5), worldPosition.getX() + 0.5, worldPosition.getY() + 12.5/16, worldPosition.getZ() + 0.5, 0.35, 0, 0.35, 0, 0.01 * powerLevel, 0, 0, 0, 0, false);
+				CRParticles.summonParticlesFromClient(level, bubbleParticle, (int) (powerLevel * 1.5), worldPosition.getX() + 0.5, worldPosition.getY() + 12.5 / 16, worldPosition.getZ() + 0.5, 0.35, 0, 0.35, 0, 0.01 * powerLevel, 0, 0, 0, 0, false);
 				if(gametime % 40 == 0){
 					CRSounds.playSoundClientLocal(level, worldPosition, CRSounds.WATER_BUBBLING, SoundSource.BLOCKS, 0.2F * powerLevel, 1);
 				}
@@ -127,7 +127,7 @@ public class BrewingVatTileEntity extends InventoryTE{
 				if(steamParticle == null){
 					steamParticle = new ColorParticleData(CRParticles.COLOR_SOLID, Color.LIGHT_GRAY);
 				}
-				CRParticles.summonParticlesFromClient(level, steamParticle, 2, worldPosition.getX() + 0.5, worldPosition.getY() + 12.5/16, worldPosition.getZ() + 0.5, 0.25, 0, 0.25, 0, 0.06, 0, 0, 0.02, 0, false);
+				CRParticles.summonParticlesFromClient(level, steamParticle, 2, worldPosition.getX() + 0.5, worldPosition.getY() + 12.5 / 16, worldPosition.getZ() + 0.5, 0.25, 0, 0.25, 0, 0.06, 0, 0, 0.02, 0, false);
 				if(gametime % 24 == 0){
 					CRSounds.playSoundClientLocal(level, worldPosition, CRSounds.STEAM_RELEASE, SoundSource.BLOCKS, 0.1F, 1);
 				}
@@ -166,7 +166,7 @@ public class BrewingVatTileEntity extends InventoryTE{
 		if(level != null && !level.isClientSide){
 			//Update the blockstate in the world
 			BlockState state = getBlockState();
-			BlockState newState = state.setValue(CRProperties.POWER_LEVEL_4, HeatUtil.getHeatTier(temp, TEMP_TIERS)+1);
+			BlockState newState = state.setValue(CRProperties.POWER_LEVEL_4, HeatUtil.getHeatTier(temp, TEMP_TIERS) + 1);
 			for(int i = 0; i < 3; i++){
 				newState = newState.setValue(CRProperties.SLOT_FILLED[i], !inventory[i + 1].isEmpty() || !inventory[4 + i].isEmpty());
 			}
@@ -180,7 +180,7 @@ public class BrewingVatTileEntity extends InventoryTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing) {
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == Capabilities.HEAT_CAPABILITY && facing != Direction.UP){
 			return (T) heatOpt;
 		}

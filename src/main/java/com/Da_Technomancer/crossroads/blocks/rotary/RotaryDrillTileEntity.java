@@ -107,7 +107,7 @@ public class RotaryDrillTileEntity extends ModuleTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side) {
+	public <T> T getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.AXLE_CAPABILITY && (side == null || side == getFacing().getOpposite())){
 			return (T) axleOpt;
 		}

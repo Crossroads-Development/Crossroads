@@ -21,7 +21,7 @@ public class RainIdol extends Item{
 
 	private static final String NBT_KEY = "rain_idol";
 	private static final String NBT_KEY_TIME = "rain_idol_time";
-	
+
 	protected RainIdol(){
 		super(new Properties().stacksTo(1));
 		String name = "rain_idol";

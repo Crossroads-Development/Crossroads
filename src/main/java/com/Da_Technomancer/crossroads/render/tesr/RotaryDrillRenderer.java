@@ -28,7 +28,7 @@ public class RotaryDrillRenderer implements BlockEntityRenderer<RotaryDrillTileE
 	@Override
 	public void render(RotaryDrillTileEntity te, float partialTicks, PoseStack matrix, MultiBufferSource buffer, int combinedLight, int combinedOverlay){
 		BlockState state = te.getBlockState();
-        IAxleHandler axle = te.getCapability(Capabilities.AXLE_CAPABILITY, null);
+		IAxleHandler axle = te.getCapability(Capabilities.AXLE_CAPABILITY, null);
 
 		if(!(state.getBlock() instanceof RotaryDrill) || !axle.isPresent()){
 			return;
@@ -92,7 +92,7 @@ public class RotaryDrillRenderer implements BlockEntityRenderer<RotaryDrillTileE
 		CRRenderUtil.addVertexBlock(builder, matrix, end, bottom, start, uEn, vSt, 0, -1, 0, light, color);
 		CRRenderUtil.addVertexBlock(builder, matrix, end, bottom, end, uEn, vEn, 0, -1, 0, light, color);
 		CRRenderUtil.addVertexBlock(builder, matrix, start, bottom, end, uSt, vEn, 0, -1, 0, light, color);
-		
+
 		//side
 		CRRenderUtil.addVertexBlock(builder, matrix, start, bottom, start, uSt, vSt, 0, 0, -1, light, color);
 		CRRenderUtil.addVertexBlock(builder, matrix, start, top, start, uHe, vSt, 0, 0, -1, light, color);

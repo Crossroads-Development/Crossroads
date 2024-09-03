@@ -72,7 +72,7 @@ public class RedstoneHeatCableTileEntity extends HeatCableTileEntity{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing) {
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == Capabilities.HEAT_CAPABILITY){
 			if((facing == null || !locked(facing.get3DDataValue())) && isUnlocked()){
 				return (T) heatOpt;

@@ -75,7 +75,7 @@ public class MasterAxisTileEntity extends BlockEntity implements ITickableTileEn
 	 */
 	private float[] prevAngles = new float[4];
 
-//	private static final float ANGLE_MARGIN = CRConfig.speedPrecision.get().floatValue();
+	//	private static final float ANGLE_MARGIN = CRConfig.speedPrecision.get().floatValue();
 	protected static final int UPDATE_TIME = CRConfig.gearResetTime.get();
 
 	public MasterAxisTileEntity(BlockPos pos, BlockState state){
@@ -356,7 +356,7 @@ public class MasterAxisTileEntity extends BlockEntity implements ITickableTileEn
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side) {
+	public <T> T getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.AXIS_CAPABILITY && (side == null || side == getFacing())){
 			return (T) axisOpt;
 		}
@@ -384,7 +384,7 @@ public class MasterAxisTileEntity extends BlockEntity implements ITickableTileEn
 			IAxleHandler axleOpt;
 			if(te != null && (axleOpt = te.getCapability(Capabilities.AXLE_CAPABILITY, dir.getOpposite())).isPresent()){
 				byte keyNew;
-				do {
+				do{
 					keyNew = (byte) (RAND.nextInt(100) + 1);
 				}while(key == keyNew);
 				key = keyNew;

@@ -59,7 +59,7 @@ public class CultivatorVat extends TEBlock implements IReadable{
 	}
 
 	@Override
-	public VoxelShape getVisualShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext selection) {
+	public VoxelShape getVisualShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext selection){
 		return VISUAL_SHAPE;
 	}
 

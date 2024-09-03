@@ -39,7 +39,7 @@ public class HeatReservoirTileEntity extends ModuleTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, Direction facing) {
+	public <T> T getCapability(Capability<T> capability, Direction facing){
 		if(capability == Capabilities.HEAT_CAPABILITY){
 			return (T) heatOpt;
 		}

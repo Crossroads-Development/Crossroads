@@ -53,7 +53,7 @@ public class LargeGearMasterTileEntity extends BlockEntity implements ILongRecei
 	public LargeGearMasterTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state);
 	}
-	
+
 	public Direction getFacing(){
 		if(facing == null){
 			BlockState state = getBlockState();
@@ -194,7 +194,7 @@ public class LargeGearMasterTileEntity extends BlockEntity implements ILongRecei
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing) {
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == Capabilities.AXLE_CAPABILITY && (facing == null || facing.getAxis() == getFacing().getAxis())){
 			return (T) mainOpt;
 		}
@@ -254,7 +254,7 @@ public class LargeGearMasterTileEntity extends BlockEntity implements ILongRecei
 			updateKey = key;
 
 			Direction side = getFacing();
-			
+
 			for(int i = 0; i < 6; i++){
 				if(i != side.get3DDataValue() && i != side.getOpposite().get3DDataValue()){
 					Direction facing = Direction.from3DDataValue(i);

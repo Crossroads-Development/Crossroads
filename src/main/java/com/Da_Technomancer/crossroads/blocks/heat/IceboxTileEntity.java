@@ -101,7 +101,7 @@ public class IceboxTileEntity extends InventoryTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, Direction facing) {
+	public <T> T getCapability(Capability<T> capability, Direction facing){
 		if(capability == Capabilities.HEAT_CAPABILITY && (facing == Direction.UP || facing == null)){
 			return (T) heatOpt;
 		}

@@ -30,7 +30,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
-public class EntityTemplate implements INBTSerializable<CompoundTag> {
+public class EntityTemplate implements INBTSerializable<CompoundTag>{
 
 	public static final String RESPAWNING_KEY = "cr_respawning";
 	public static final String LOYAL_KEY = "cr_loyal";

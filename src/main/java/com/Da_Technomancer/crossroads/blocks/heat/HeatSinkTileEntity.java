@@ -61,7 +61,7 @@ public class HeatSinkTileEntity extends ModuleTE{
 
 	@Override
 	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
-		chat.add(Component.translatable("tt.crossroads.heat_sink.loss",  MODES[mode]));
+		chat.add(Component.translatable("tt.crossroads.heat_sink.loss", MODES[mode]));
 		super.addInfo(chat, player, hit);
 
 		if(CreateHelper.hasCreate()){
@@ -111,7 +111,7 @@ public class HeatSinkTileEntity extends ModuleTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, Direction facing) {
+	public <T> T getCapability(Capability<T> capability, Direction facing){
 		if(capability == Capabilities.HEAT_CAPABILITY){
 			return (T) heatOpt;
 		}

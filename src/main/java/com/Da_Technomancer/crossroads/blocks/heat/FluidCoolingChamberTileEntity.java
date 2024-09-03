@@ -153,7 +153,7 @@ public class FluidCoolingChamberTileEntity extends InventoryTE{
 	@Nonnull
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> T getCapability(@Nonnull Capability<T> cap, @Nullable Direction dir) {
+	public <T> T getCapability(@Nonnull Capability<T> cap, @Nullable Direction dir){
 		if(cap == Capabilities.HEAT_CAPABILITY && dir == Direction.UP){
 			return (T) heatOpt;
 		}

@@ -9,7 +9,7 @@ import java.util.Arrays;
 /**
  * An immutable class that represents a modification to be performed to incoming beam units
  */
-public class BeamMod {
+public class BeamMod{
 
 	public static final BeamMod IDENTITY = new BeamMod(1, 1, 1, 1, 0);
 
@@ -54,10 +54,10 @@ public class BeamMod {
 	public boolean isEmpty(){
 		return this == BeamMod.IDENTITY ||
 				multipliers[0] == 1
-				&& multipliers[1] == 1
-				&& multipliers[2] == 1
-				&& multipliers[3] == 1
-				&& multipliers[4] == 0;
+						&& multipliers[1] == 1
+						&& multipliers[2] == 1
+						&& multipliers[3] == 1
+						&& multipliers[4] == 0;
 	}
 
 	/**
@@ -79,8 +79,8 @@ public class BeamMod {
 		int voi = Math.round(u.getVoid() * getVoidMult());
 
 		int powToVoid = Math.round((energy + potential + stability) * getVoidConvert());
-		if(powToVoid > 0) {
-			int[] toWithdraw = MiscUtil.withdrawExact(new int[]{energy, potential, stability}, powToVoid);
+		if(powToVoid > 0){
+			int[] toWithdraw = MiscUtil.withdrawExact(new int[] {energy, potential, stability}, powToVoid);
 
 			energy -= toWithdraw[0];
 			potential -= toWithdraw[1];
@@ -94,13 +94,13 @@ public class BeamMod {
 	@Override
 	public boolean equals(Object other){
 		if(other instanceof BeamMod){
-			BeamMod o = (BeamMod)other;
+			BeamMod o = (BeamMod) other;
 			return o == this ||
 					o.multipliers[0] == multipliers[0]
-					&& o.multipliers[1] == multipliers[1]
-					&& o.multipliers[2] == multipliers[2]
-					&& o.multipliers[3] == multipliers[3]
-					&& o.multipliers[4] == multipliers[4];
+							&& o.multipliers[1] == multipliers[1]
+							&& o.multipliers[2] == multipliers[2]
+							&& o.multipliers[3] == multipliers[3]
+							&& o.multipliers[4] == multipliers[4];
 		}
 		return false;
 	}

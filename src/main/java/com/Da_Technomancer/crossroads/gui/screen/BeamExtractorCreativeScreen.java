@@ -33,7 +33,7 @@ public class BeamExtractorCreativeScreen extends AbstractContainerScreen<BeamExt
 		super.init();
 		searchBars = new EditBox[4];
 		for(int i = 0; i < 4; i++){
-			searchBars[i] = CircuitUtil.createFormulaInputUIComponent(this, font, 4 + 20, 8 + 18*i, Component.translatable("container.search_bar"), this::entryChanged, menu.conf[i]);
+			searchBars[i] = CircuitUtil.createFormulaInputUIComponent(this, font, 4 + 20, 8 + 18 * i, Component.translatable("container.search_bar"), this::entryChanged, menu.conf[i]);
 			searchBars[i].setCanLoseFocus(true);
 			addWidget(searchBars[i]);
 		}

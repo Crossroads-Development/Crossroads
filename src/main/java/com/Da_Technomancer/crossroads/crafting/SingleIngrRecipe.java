@@ -15,7 +15,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
 public abstract class SingleIngrRecipe implements IOptionalRecipe<Container>{
-	
+
 	protected final Ingredient ingredient;
 	protected final ItemStack result;
 	private final RecipeType<?> type;
@@ -35,17 +35,17 @@ public abstract class SingleIngrRecipe implements IOptionalRecipe<Container>{
 	}
 
 	@Override
-	public RecipeType<?> getType() {
+	public RecipeType<?> getType(){
 		return type;
 	}
 
 	@Override
-	public RecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<?> getSerializer(){
 		return serializer;
 	}
 
 	@Override
-	public ResourceLocation getId() {
+	public ResourceLocation getId(){
 		return id;
 	}
 
@@ -58,7 +58,7 @@ public abstract class SingleIngrRecipe implements IOptionalRecipe<Container>{
 	 * Recipes with equal group are combined into one button in the recipe book
 	 */
 	@Override
-	public String getGroup() {
+	public String getGroup(){
 		return group;
 	}
 
@@ -67,7 +67,7 @@ public abstract class SingleIngrRecipe implements IOptionalRecipe<Container>{
 	 * possible result (e.g. it's dynamic and depends on its inputs), then return an empty stack.
 	 */
 	@Override
-	public ItemStack getResultItem() {
+	public ItemStack getResultItem(){
 		return result;
 	}
 
@@ -76,7 +76,7 @@ public abstract class SingleIngrRecipe implements IOptionalRecipe<Container>{
 	}
 
 	@Override
-	public NonNullList<Ingredient> getIngredients() {
+	public NonNullList<Ingredient> getIngredients(){
 		NonNullList<Ingredient> nonnulllist = NonNullList.create();
 		nonnulllist.add(ingredient);
 		return nonnulllist;
@@ -91,7 +91,7 @@ public abstract class SingleIngrRecipe implements IOptionalRecipe<Container>{
 	 * Used to determine if this recipe can fit in a grid of the given width/height
 	 */
 	@Override
-	public boolean canCraftInDimensions(int width, int height) {
+	public boolean canCraftInDimensions(int width, int height){
 		return width != 0 && height != 0;
 	}
 

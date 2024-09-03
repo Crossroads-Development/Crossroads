@@ -29,7 +29,7 @@ public class MasterAxisCreativeScreen extends AbstractContainerScreen<MasterAxis
 	@Override
 	protected void init(){
 		super.init();
-		searchBar = CircuitUtil.createFormulaInputUIComponent(this, font, 4,8, Component.translatable("container.crossroads.master_axis_creative.text_input"), this::entryChanged, menu.conf);
+		searchBar = CircuitUtil.createFormulaInputUIComponent(this, font, 4, 8, Component.translatable("container.crossroads.master_axis_creative.text_input"), this::entryChanged, menu.conf);
 		addWidget(searchBar);
 		setInitialFocus(searchBar);
 	}

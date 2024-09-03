@@ -84,7 +84,7 @@ public class StampMill extends BaseEntityBlock implements IReadable{
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> type){
 		return ITickableTileEntity.createTicker(type, StampMillTileEntity.TYPE);
 	}
-	
+
 	@Override
 	public RenderShape getRenderShape(BlockState state){
 		return RenderShape.MODEL;
@@ -106,7 +106,7 @@ public class StampMill extends BaseEntityBlock implements IReadable{
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder){
 		builder.add(CRProperties.HORIZ_AXIS);
 	}
-	
+
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
 		tooltip.add(Component.translatable("tt.crossroads.stamp_mill.desc", StampMillTileEntity.REQUIRED / StampMillTileEntity.TIME_LIMIT / StampMillTileEntity.PROGRESS_PER_RADIAN * 20));

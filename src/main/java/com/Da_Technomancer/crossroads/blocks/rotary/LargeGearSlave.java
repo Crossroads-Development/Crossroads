@@ -74,7 +74,7 @@ public class LargeGearSlave extends BaseEntityBlock{
 	public VoxelShape getOcclusionShape(BlockState state, BlockGetter worldIn, BlockPos pos){
 		return Shapes.empty();
 	}
-	
+
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state){
 		return new LargeGearSlaveTileEntity(pos, state);

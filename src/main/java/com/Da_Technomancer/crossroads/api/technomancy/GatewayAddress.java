@@ -57,7 +57,7 @@ public class GatewayAddress{
 	public int serialize(){
 		int serial = 0;
 		for(int i = 0; i < 4; i++){
-			serial |= address[i] == null ? 0 : (address[i].ordinal() + 1) << 4*i;
+			serial |= address[i] == null ? 0 : (address[i].ordinal() + 1) << 4 * i;
 		}
 		return serial;
 	}
@@ -67,7 +67,7 @@ public class GatewayAddress{
 		final int mask = 0xF;
 		EnumBeamAlignments[] entries = new EnumBeamAlignments[4];
 		for(int i = 0; i < 4; i++){
-			int subSerial = (serial >>> i*4) & mask;
+			int subSerial = (serial >>> i * 4) & mask;
 			entries[i] = subSerial == 0 ? null : vals[subSerial - 1];
 		}
 		return new GatewayAddress(entries);

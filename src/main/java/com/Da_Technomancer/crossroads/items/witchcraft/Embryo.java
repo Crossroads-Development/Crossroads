@@ -78,7 +78,7 @@ public class Embryo extends Item implements ICultivatable{
 	@Override
 	public CultivationTrade getCultivationTrade(ItemStack self, Level world){
 		//Produces (near)-copies of itself, using soul clusters &/or genetic plasmids as applicable
-		
+
 		if(IPerishable.isSpoiled(self, world)){
 			return null;
 		}

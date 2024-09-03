@@ -131,7 +131,7 @@ public class BeamUnit{
 		}
 		return false;
 	}
-	
+
 	@Override
 	public int hashCode(){
 		return ((contents[0] & 0xFF) << 24) + ((contents[1] & 0xFF) << 16) + ((contents[2] & 0xFF) << 8) + (contents[3] & 0xFF);

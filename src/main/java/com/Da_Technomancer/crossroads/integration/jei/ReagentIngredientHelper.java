@@ -22,7 +22,7 @@ public class ReagentIngredientHelper implements IIngredientHelper<ReagIngr>{
 		CRItems.phialCrystal.setReagents(toGive, reags);
 		return toGive;
 	}
-	
+
 	@Override
 	public boolean isValidIngredient(ReagIngr ingredient){
 		return ingredient.getReag() != null && ingredient.getParts() >= 0;

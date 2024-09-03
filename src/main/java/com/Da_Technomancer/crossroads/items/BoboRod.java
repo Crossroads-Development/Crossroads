@@ -62,7 +62,7 @@ public class BoboRod extends Item{
 	public InteractionResult useOn(UseOnContext context){
 		return act(context.getLevel(), context.getClickedPos(), context.getClickLocation(), context.getPlayer()) ? InteractionResult.SUCCESS : InteractionResult.FAIL;
 	}
-	
+
 	private static boolean act(Level world, BlockPos pos, Vec3 hitVec, @Nullable Player player){
 		List<ItemEntity> items = world.getEntitiesOfClass(ItemEntity.class, new AABB(hitVec.add(-1, -1, -1), hitVec.add(1, 1, 1)), Entity::isAlive);
 		if(items.size() == 4){

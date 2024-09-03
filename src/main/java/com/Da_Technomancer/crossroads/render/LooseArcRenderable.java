@@ -113,7 +113,7 @@ public class LooseArcRenderable implements IVisualEffect{
 						states[i][node] = states[i][node].add(rand.nextDouble() / 4D, rand.nextDouble() / 4D, rand.nextDouble() / 4D);
 					}
 				}
-				
+
 				//Rotates crossVec angle radians about lengthVec
 				//This formula is only valid because crossVec and lengthVec are perpendicular
 				crossVec = crossVec.scale(Math.cos(angle)).add(crossVec.cross(lengthVec).scale(Math.sin(angle)));

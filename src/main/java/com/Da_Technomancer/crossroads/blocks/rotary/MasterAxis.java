@@ -21,7 +21,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import javax.annotation.Nullable;
 
 public class MasterAxis extends BaseEntityBlock{
-	
+
 	public MasterAxis(){
 		super(CRBlocks.getMetalProperty());
 		String name = "master_axis";

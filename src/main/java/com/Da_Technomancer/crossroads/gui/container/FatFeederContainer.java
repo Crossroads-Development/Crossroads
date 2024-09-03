@@ -19,7 +19,7 @@ public class FatFeederContainer extends MachineContainer<FatFeederTileEntity>{
 
 	@Override
 	protected void addSlots(){
-		Pair<Slot, Slot> flSlots = FluidSlotManager.createFluidSlots(new FluidSlotManager.FakeInventory(this), 0, 100,19, 100, 54, te, new int[] {0});
+		Pair<Slot, Slot> flSlots = FluidSlotManager.createFluidSlots(new FluidSlotManager.FakeInventory(this), 0, 100, 19, 100, 54, te, new int[] {0});
 		addFluidManagerSlots(flSlots);
 	}
 

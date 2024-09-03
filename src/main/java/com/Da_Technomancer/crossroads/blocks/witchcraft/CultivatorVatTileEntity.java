@@ -220,17 +220,17 @@ public class CultivatorVatTileEntity extends AbstractNutrientEnvironmentTileEnti
 		itemOpt.invalidate();
 	}
 
-    private final IItemHandler itemOpt = LazyOptional.of(ItemHandler::new);
+	private final IItemHandler itemOpt = LazyOptional.of(ItemHandler::new);
 
 	@SuppressWarnings("unchecked")
 	@Override
-    public <T> T getCapability(Capability<T> capability, @Nullable Direction facing) {
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == ForgeCapabilities.FLUID_HANDLER){
-            return (T) globalFluidOpt;
+			return (T) globalFluidOpt;
 		}
 
 		if(capability == ForgeCapabilities.ITEM_HANDLER){
-            return (T) itemOpt;
+			return (T) itemOpt;
 		}
 
 		return super.getCapability(capability, facing);

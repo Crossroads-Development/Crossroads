@@ -21,7 +21,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import javax.annotation.Nullable;
 
 public class MasterAxisCreativeTileEntity extends MasterAxisTileEntity implements INBTReceiver, MenuProvider{
-	
+
 	public static final BlockEntityType<MasterAxisCreativeTileEntity> TYPE = CRTileEntity.createType(MasterAxisCreativeTileEntity::new, CRBlocks.masterAxisCreative);
 
 	public MasterAxisCreativeTileEntity(BlockPos pos, BlockState state){

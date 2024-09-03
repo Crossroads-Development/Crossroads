@@ -324,7 +324,7 @@ public class CRBlocks{
 			}
 
 			@Override
-			public int getSignal(BlockState state, BlockGetter world, BlockPos pos, Direction side) {
+			public int getSignal(BlockState state, BlockGetter world, BlockPos pos, Direction side){
 				return 15;
 			}
 
@@ -475,7 +475,7 @@ public class CRBlocks{
 //	}
 
 	@OnlyIn(Dist.CLIENT)
-	private static void setFluidTrans(GenericFluid.FluidData...fluids){
+	private static void setFluidTrans(GenericFluid.FluidData... fluids){
 		RenderType type = RenderType.translucent();
 		for(GenericFluid.FluidData f : fluids){
 			ItemBlockRenderTypes.setRenderLayer(f.getStill(), type);

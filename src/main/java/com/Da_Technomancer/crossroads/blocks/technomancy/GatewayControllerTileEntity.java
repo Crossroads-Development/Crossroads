@@ -601,7 +601,7 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 	@Nonnull
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> T getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+	public <T> T getCapability(@Nonnull Capability<T> cap, @Nullable Direction side){
 		if(isActive()){
 			genOptionals();
 			if(cap == Capabilities.AXLE_CAPABILITY && (side == null || side == Direction.UP)){

@@ -87,7 +87,10 @@ public class TeslaRay extends Item{
 			//Removes entities from the list if they aren't in the conical region in the direction the player is looking, and checks PVP rules
 			Vec3 look = playerIn.getLookAngle();
 			Vec3 playPos = playerIn.getEyePosition(0);
-			entities.removeIf((LivingEntity e) -> {Vec3 ePos = e.position().subtract(playPos); return ePos.cross(look).lengthSqr() > RADIUS * RADIUS || ePos.dot(look) > RANGE || ePos.dot(look) < 0 || cannotTarget.test(e);});
+			entities.removeIf((LivingEntity e) -> {
+				Vec3 ePos = e.position().subtract(playPos);
+				return ePos.cross(look).lengthSqr() > RADIUS * RADIUS || ePos.dot(look) > RANGE || ePos.dot(look) < 0 || cannotTarget.test(e);
+			});
 
 			double minDist = Integer.MAX_VALUE;
 			LivingEntity closest = null;

@@ -96,18 +96,18 @@ public class StasisStorageTileEntity extends InventoryTE{
 		beamOpt.invalidate();
 	}
 
-    private final IItemHandler itemOpt = LazyOptional.of(ItemHandler::new);
-    private final IBeamHandler beamOpt = LazyOptional.of(BeamHandler::new);
+	private final IItemHandler itemOpt = LazyOptional.of(ItemHandler::new);
+	private final IBeamHandler beamOpt = LazyOptional.of(BeamHandler::new);
 
 	@SuppressWarnings("unchecked")
 	@Override
-    public <T> T getCapability(Capability<T> capability, @Nullable Direction facing) {
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == Capabilities.BEAM_CAPABILITY){
-            return (T) beamOpt;
+			return (T) beamOpt;
 		}
 
 		if(capability == ForgeCapabilities.ITEM_HANDLER){
-            return (T) itemOpt;
+			return (T) itemOpt;
 		}
 
 		return super.getCapability(capability, facing);

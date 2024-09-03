@@ -56,12 +56,13 @@ public class EdibleBlob extends Item{
 	@Override
 	@Nullable
 	// build FoodProperties from NBT on-the-fly
-	public FoodProperties getFoodProperties(ItemStack stack, @Nullable LivingEntity entity) {
+	public FoodProperties getFoodProperties(ItemStack stack, @Nullable LivingEntity entity){
 		int hun = getHealAmount(stack);
 		int sat = getTrueSat(stack);
 		float sat_mod = (float) sat / (float) hun;
 		return new FoodProperties.Builder().nutrition(hun).saturationMod(sat_mod).meat().build();
 	}
+
 	@Override
 	public boolean isEdible(){
 		return true;

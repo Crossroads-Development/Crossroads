@@ -85,7 +85,9 @@ public class LensFrame extends TEBlock implements IReadable{
 
 		if(ConfigUtil.isWrench(stack)){
 			// Wrenches rotate the block instead
-			if(!worldIn.isClientSide) worldIn.setBlockAndUpdate(pos, state.cycle(CRProperties.AXIS));
+			if(!worldIn.isClientSide){
+				worldIn.setBlockAndUpdate(pos, state.cycle(CRProperties.AXIS));
+			}
 			return InteractionResult.SUCCESS;
 //		}else if(stack.getItem() == CRItems.omnimeter)){
 //			// Omnimeter performs its function instead
@@ -95,10 +97,10 @@ public class LensFrame extends TEBlock implements IReadable{
 			if(!(te instanceof LensFrameTileEntity)){
 				return InteractionResult.PASS;
 			}
-			LensFrameTileEntity lens = (LensFrameTileEntity)te;
+			LensFrameTileEntity lens = (LensFrameTileEntity) te;
 			ItemStack inLens = lens.getLensItem();
 			if(!inLens.isEmpty()){
-				if(!worldIn.isClientSide) {
+				if(!worldIn.isClientSide){
 					if(!playerIn.getInventory().add(inLens)){
 						ItemEntity dropped = playerIn.drop(inLens, false);
 						if(dropped != null){

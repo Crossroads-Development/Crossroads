@@ -108,7 +108,7 @@ public class SequenceBoxTileEntity extends BlockEntity implements INBTReceiver, 
 
 	@Override
 	public CompoundTag getUpdateTag(){
-		CompoundTag nbt =  super.getUpdateTag();
+		CompoundTag nbt = super.getUpdateTag();
 		nbt.putInt("index", index);
 		for(int i = 0; i < sequenceVal.size(); i++){
 			nbt.putFloat(i + "_val", sequenceVal.get(i));
@@ -129,7 +129,7 @@ public class SequenceBoxTileEntity extends BlockEntity implements INBTReceiver, 
 	@Nonnull
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> T getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+	public <T> T getCapability(@Nonnull Capability<T> cap, @Nullable Direction side){
 		if(cap == RedstoneUtil.REDSTONE_CAPABILITY){
 			return (T) circOpt;
 		}

@@ -73,7 +73,7 @@ public class LightCluster extends Block{
 		ItemStack heldItem = playerIn.getItemInHand(hand);
 		DyeColor col = DyeColor.getColor(heldItem);
 		if(col != null){
-			worldIn.setBlock(pos, state.setValue(CRProperties.COLOR, col),  2);
+			worldIn.setBlock(pos, state.setValue(CRProperties.COLOR, col), 2);
 			return InteractionResult.SUCCESS;
 		}
 		return InteractionResult.PASS;

@@ -118,7 +118,7 @@ public class GatewayControllerRenderer extends EntropyRenderer<GatewayController
 
 		//The outer edge of the render is aligned with the outside of the block frame. The inside is not aligned with anything
 		VertexConsumer builder = buffer.getBuffer(RenderType.cutout());
-		
+
 		//Fixed square ring
 		matrix.pushPose();
 		Quaternionf ringRotation = Axis.ZP.rotationDegrees(90);
@@ -251,7 +251,7 @@ public class GatewayControllerRenderer extends EntropyRenderer<GatewayController
 
 			matrix.popPose();
 		}
-		
+
 		//Rotating octagonal ring
 		matrix.mulPose(Axis.ZP.rotation(dialingWheelAngle));
 
@@ -314,7 +314,7 @@ public class GatewayControllerRenderer extends EntropyRenderer<GatewayController
 
 			//Switch builder to translucent
 			builder = buffer.getBuffer(RenderType.translucentNoCrumbling());
-			
+
 			//Vertices are commented with the number of the vertex on the final octagon
 
 			//Front

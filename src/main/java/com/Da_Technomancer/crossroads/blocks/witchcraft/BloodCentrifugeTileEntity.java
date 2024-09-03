@@ -171,16 +171,16 @@ public class BloodCentrifugeTileEntity extends InventoryTE{
 		itemOpt.invalidate();
 	}
 
-    private final IItemHandler itemOpt = LazyOptional.of(ItemHandler::new);
+	private final IItemHandler itemOpt = LazyOptional.of(ItemHandler::new);
 
 	@SuppressWarnings("unchecked")
 	@Override
-    public <T> T getCapability(Capability<T> capability, @Nullable Direction facing) {
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == ForgeCapabilities.ITEM_HANDLER){
-            return (T) itemOpt;
+			return (T) itemOpt;
 		}
 		if(capability == Capabilities.AXLE_CAPABILITY && facing == Direction.UP){
-            return (T) axleOpt;
+			return (T) axleOpt;
 		}
 
 		return super.getCapability(capability, facing);

@@ -256,7 +256,7 @@ public abstract class AbstractCannonTileEntity extends BlockEntity implements IT
 	@Nonnull
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> T getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+	public <T> T getCapability(@Nonnull Capability<T> cap, @Nullable Direction side){
 		Direction blockFacing = getBlockState().getValue(CRProperties.FACING);
 		if(cap == Capabilities.AXLE_CAPABILITY && blockFacing != side){
 			if(side == null || side == blockFacing.getOpposite()){

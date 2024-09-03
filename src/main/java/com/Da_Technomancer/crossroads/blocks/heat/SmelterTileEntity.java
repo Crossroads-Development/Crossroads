@@ -125,7 +125,7 @@ public class SmelterTileEntity extends InventoryTE{
 	private IItemHandler itemOpt = LazyOptional.of(ItemHandler::new);
 
 	@SuppressWarnings("unchecked")
-	public <T> T getCapability(Capability<T> cap, Direction side) {
+	public <T> T getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.HEAT_CAPABILITY && (side == Direction.UP || side == null)){
 			return (T) heatOpt;
 		}

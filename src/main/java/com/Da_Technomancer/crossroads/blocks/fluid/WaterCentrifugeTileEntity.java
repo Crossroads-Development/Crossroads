@@ -28,10 +28,10 @@ import java.util.Optional;
 public class WaterCentrifugeTileEntity extends InventoryTE{
 
 	public static final BlockEntityType<WaterCentrifugeTileEntity> TYPE = CRTileEntity.createType(WaterCentrifugeTileEntity::new, CRBlocks.waterCentrifuge);
-	
+
 	public static final double TIP_POINT = .5D;
 	public static final int INERTIA = 50;
-//	private static final int BATCH_SIZE = 250;
+	//	private static final int BATCH_SIZE = 250;
 	private boolean neg;
 
 	public WaterCentrifugeTileEntity(BlockPos pos, BlockState state){
@@ -114,7 +114,7 @@ public class WaterCentrifugeTileEntity extends InventoryTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction facing) {
+	public <T> T getCapability(Capability<T> cap, Direction facing){
 		if(cap == ForgeCapabilities.FLUID_HANDLER){
 			return (T) globalFluidOpt;
 		}

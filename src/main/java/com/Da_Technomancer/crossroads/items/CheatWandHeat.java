@@ -27,7 +27,7 @@ public class CheatWandHeat extends Item{
 	@Override
 	public InteractionResult useOn(UseOnContext context){
 		BlockEntity te = context.getLevel().getBlockEntity(context.getClickedPos());
-        IHeatHandler heatOpt;
+		IHeatHandler heatOpt;
 		if(te != null && (heatOpt = te.getCapability(Capabilities.HEAT_CAPABILITY, null)).isPresent()){
 			IHeatHandler cable = heatOpt.orElseThrow(NullPointerException::new);
 			if(context.getPlayer() != null && context.getPlayer().isShiftKeyDown()){

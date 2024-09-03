@@ -144,7 +144,7 @@ public abstract class InventoryTE extends ModuleTE implements IItemContainer, Me
 		}
 		setChanged();
 		ItemStack removed = inventory[index];
-		inventory[index]= ItemStack.EMPTY;
+		inventory[index] = ItemStack.EMPTY;
 		return removed;
 	}
 
@@ -193,7 +193,7 @@ public abstract class InventoryTE extends ModuleTE implements IItemContainer, Me
 		return globalFluidHandler;
 	}
 
-	protected class ItemHandler implements IItemHandlerModifiable {
+	protected class ItemHandler implements IItemHandlerModifiable{
 
 		/**
 		 * A direction that this should act as internally. Does not need to match the side passed to the getCapability call

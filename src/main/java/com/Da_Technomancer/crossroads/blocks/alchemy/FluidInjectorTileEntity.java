@@ -18,7 +18,7 @@ public class FluidInjectorTileEntity extends ReagentHolderTE{
 
 	public static final BlockEntityType<FluidInjectorTileEntity> TYPE = CRTileEntity.createType(FluidInjectorTileEntity::new, CRBlocks.fluidInjectorCrystal, CRBlocks.fluidInjectorGlass);
 
-	private static final Pair<Vector3f, Vector3f>[] RENDER_SHAPE = new Pair[] {Pair.of(new Vector3f(5F/16F, 1F/16F, 5F/16F), new Vector3f(11F/16F, 15F/16F, 11F/16F))};
+	private static final Pair<Vector3f, Vector3f>[] RENDER_SHAPE = new Pair[] {Pair.of(new Vector3f(5F / 16F, 1F / 16F, 5F / 16F), new Vector3f(11F / 16F, 15F / 16F, 11F / 16F))};
 
 	public FluidInjectorTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state);
@@ -43,7 +43,7 @@ public class FluidInjectorTileEntity extends ReagentHolderTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side) {
+	public <T> T getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || side == Direction.DOWN)){
 			return (T) chemOpt;
 		}

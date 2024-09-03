@@ -31,7 +31,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class RedstoneAxis extends BaseEntityBlock implements IWireConnect{
-	
+
 	public RedstoneAxis(){
 		super(CRBlocks.getMetalProperty());
 		String name = "redstone_axis";
@@ -45,7 +45,7 @@ public class RedstoneAxis extends BaseEntityBlock implements IWireConnect{
 		tooltip.add(Component.translatable("tt.crossroads.redstone_axis.power"));
 		tooltip.add(Component.translatable("tt.crossroads.redstone_axis.circuit"));
 	}
-	
+
 	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		if(ConfigUtil.isWrench(playerIn.getItemInHand(hand))){

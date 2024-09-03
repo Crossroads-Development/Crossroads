@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class CrystalMasterAxis extends BaseEntityBlock implements IReadable{
-	
+
 	public CrystalMasterAxis(){
 		super(CRBlocks.getRockProperty());
 		String name = "master_axis_crystal";
@@ -40,7 +40,7 @@ public class CrystalMasterAxis extends BaseEntityBlock implements IReadable{
 	public BlockState getStateForPlacement(BlockPlaceContext context){
 		return defaultBlockState().setValue(CRProperties.FACING, context.getNearestLookingDirection().getOpposite());
 	}
-	
+
 	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		if(ConfigUtil.isWrench(playerIn.getItemInHand(hand))){

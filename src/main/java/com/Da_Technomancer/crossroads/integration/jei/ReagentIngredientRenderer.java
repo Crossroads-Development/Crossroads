@@ -59,7 +59,7 @@ public class ReagentIngredientRenderer implements IIngredientRenderer<ReagIngr>{
 //		RenderSystem.disableAlphaTest();
 		RenderSystem.disableBlend();
 	}
-	
+
 	@Override
 	public List<Component> getTooltip(ReagIngr ingredient, TooltipFlag tooltipFlag){
 		ArrayList<Component> tooltip = new ArrayList<>(3);

@@ -20,25 +20,25 @@ public interface IReagent{
 	default String getName(){
 		return MiscUtil.localize("reagent." + getID());
 	}
-	
+
 	/**
 	 * @return The melting temperature in C. Must be less than boiling temperature. Setting below absolute-zero will disable freezing.
 	 */
 	double getMeltingPoint();
-	
+
 	/**
 	 * @return The boiling temperature in C. Must be greater than or equal to melting temperature. Setting below absolute-zero will disable condensing.
 	 */
 	double getBoilingPoint();
-	
+
 	default boolean requiresCrystal(){
 		return false;
 	}
-	
+
 	default boolean destroysBadContainer(){
 		return false;
 	}
-	
+
 	String getID();
 
 	/**
@@ -69,7 +69,7 @@ public interface IReagent{
 
 	@Nonnull
 	IAlchEffect getEffect();
-	
+
 	/**
 	 * @param reag The reagent
 	 * @return The matching solid ItemStack. ItemStack.EMPTY if there either isn't enough material (or cannot be solidifed for any other reason). 
@@ -77,7 +77,7 @@ public interface IReagent{
 	default ItemStack getStackFromReagent(ReagentStack reag){
 		return ItemStack.EMPTY;
 	}
-	
+
 	default boolean isLockedFlame(){
 		return false;
 	}

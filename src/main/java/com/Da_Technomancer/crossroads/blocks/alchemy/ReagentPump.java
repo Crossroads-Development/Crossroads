@@ -37,8 +37,9 @@ public class ReagentPump extends BaseEntityBlock{
 
 	private static final double SIZE = 6.1D;
 	private static final double CORE_SIZE = 4D;
-	
+
 	protected static final VoxelShape[] SHAPES = new VoxelShape[16];
+
 	static{
 		final double sizeN = 16D - SIZE;
 		//There are 16 (2^4) possible shapes for this block

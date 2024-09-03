@@ -68,7 +68,7 @@ public class ChemicalVentTileEntity extends BlockEntity implements ITickableTile
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side) {
+	public <T> T getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.CHEMICAL_CAPABILITY){
 			return (T) alcOpt;
 		}

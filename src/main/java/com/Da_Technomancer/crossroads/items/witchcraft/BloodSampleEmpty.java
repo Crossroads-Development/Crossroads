@@ -29,7 +29,7 @@ public class BloodSampleEmpty extends Item{
 
 		DefaultDispenseItemBehavior dispenseBehavior = new OptionalDispenseItemBehavior(){
 			@Override
-			protected ItemStack execute(BlockSource world, ItemStack stack) {
+			protected ItemStack execute(BlockSource world, ItemStack stack){
 				ServerLevel level = world.getLevel();
 				BlockPos blockpos = world.getPos().relative(world.getBlockState().getValue(DispenserBlock.FACING));
 				ItemStack drawn;

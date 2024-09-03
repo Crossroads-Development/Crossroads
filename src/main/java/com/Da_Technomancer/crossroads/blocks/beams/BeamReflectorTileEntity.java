@@ -41,7 +41,7 @@ public class BeamReflectorTileEntity extends BeamRenderTE{
 	}
 
 	private int facing = -1;
-	
+
 	@Override
 	protected void doEmit(BeamUnit toEmit){
 		if(getBeamHelpers()[facing].emit(toEmit, level)){

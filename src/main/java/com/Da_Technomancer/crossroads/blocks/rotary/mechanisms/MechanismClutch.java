@@ -31,7 +31,7 @@ import javax.annotation.Nullable;
 import java.awt.*;
 
 public class MechanismClutch extends MechanismAxle{
-	
+
 	private final boolean inverted;
 
 	public MechanismClutch(boolean inverted){
@@ -39,6 +39,7 @@ public class MechanismClutch extends MechanismAxle{
 	}
 
 	private static final VoxelShape[] SHAPES_CLUTCH = new VoxelShape[3];
+
 	static{
 		SHAPES_CLUTCH[0] = Shapes.or(SHAPES[0], Block.box(9, 4.5, 4.5, 16, 11.5, 11.5));
 		SHAPES_CLUTCH[1] = Shapes.or(SHAPES[1], Block.box(4.5, 9, 4.5, 11.5, 16, 11.5));
@@ -91,15 +92,14 @@ public class MechanismClutch extends MechanismAxle{
 		handler.setRotRatio(rotRatioIn);
 		handler.setUpdateKey(key);
 
-		
-		
+
 		for(Direction.AxisDirection direct : Direction.AxisDirection.values()){
 			if(direct == Direction.AxisDirection.POSITIVE && te.redstoneIn == 0 ^ inverted){
 				continue;
 			}
 
 			Direction endDir = Direction.get(direct, axis);
-			
+
 			if(te.members[endDir.get3DDataValue()] != null){
 				//Do internal connection
 				if(te.members[endDir.get3DDataValue()].hasCap(Capabilities.AXLE_CAPABILITY, endDir, te.mats[endDir.get3DDataValue()], endDir, axis, te)){
@@ -153,7 +153,7 @@ public class MechanismClutch extends MechanismAxle{
 			Quaternionf rotation = (axis == Direction.Axis.X ? Axis.ZN : Axis.XP).rotationDegrees(90);
 			matrix.mulPose(rotation);
 		}
-		
+
 		//Clutch mechanism
 		TextureAtlasSprite endSprite = CRRenderUtil.getTextureSprite(CRRenderTypes.CLUTCH_END_TEXTURE);
 		TextureAtlasSprite sideSprite = CRRenderUtil.getTextureSprite(inverted ? CRRenderTypes.CLUTCH_SIDE_INVERTED_TEXTURE : CRRenderTypes.CLUTCH_SIDE_TEXTURE);

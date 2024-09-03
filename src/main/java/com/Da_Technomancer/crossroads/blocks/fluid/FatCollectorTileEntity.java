@@ -84,7 +84,7 @@ public class FatCollectorTileEntity extends InventoryTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing) {
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == ForgeCapabilities.FLUID_HANDLER && facing != Direction.DOWN && facing != Direction.UP){
 			return (T) globalFluidOpt;
 		}

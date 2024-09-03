@@ -99,8 +99,9 @@ public class AlchemyCategory implements IRecipeCategory<AlchemyRec>{
 			}
 		}
 	}
+
 	@Override
-	public List<Component> getTooltipStrings(AlchemyRec recipe, IRecipeSlotsView slots_view, double mouseX, double mouseY) {
+	public List<Component> getTooltipStrings(AlchemyRec recipe, IRecipeSlotsView slots_view, double mouseX, double mouseY){
 		if(mouseX >= 98 && mouseX <= (98 + 16) && mouseY >= 2 && mouseY <= (2 + 16)){
 			switch(recipe.getReactionType()){
 				case PRECISE -> {
@@ -115,7 +116,7 @@ public class AlchemyCategory implements IRecipeCategory<AlchemyRec>{
 			}
 		}
 		if(recipe.charged()){
-			if (mouseX >= 66 && mouseX <= (66 + 16) && mouseY >= 2 && mouseY <= (2 + 16)) {
+			if(mouseX >= 66 && mouseX <= (66 + 16) && mouseY >= 2 && mouseY <= (2 + 16)){
 				return List.of(Component.translatable("crossroads.jei.reagent.needs_charge"));
 			}
 		}
@@ -135,7 +136,7 @@ public class AlchemyCategory implements IRecipeCategory<AlchemyRec>{
 		}
 
 		//Outputs
-		for(int i = 0; i < recipe.getProducts().length; i++ ){
+		for(int i = 0; i < recipe.getProducts().length; i++){
 			builder.addSlot(RecipeIngredientRole.OUTPUT, 106 + i * 20, 21).addIngredient(com.Da_Technomancer.crossroads.integration.jei.ReagIngr.REAG, new com.Da_Technomancer.crossroads.integration.jei.ReagIngr(recipe.getProducts()[i]));
 		}
 

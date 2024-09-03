@@ -152,11 +152,11 @@ public class MechanismToggleGear extends MechanismSmallGear{
 
 		IAxleHandler handler = te.axleHandlers[side.get3DDataValue()];
 		VertexConsumer builder = buffer.getBuffer(RenderType.solid());
-		
+
 		matrix.mulPose(side.getOpposite().getRotation());//Apply orientation
 		float angle = handler.getAngle(partialTicks);
 		matrix.translate(0, -0.4375D, 0);
-		matrix.mulPose(Axis.YP.rotationDegrees(- (float) RotaryUtil.getCCWSign(side) * angle));
+		matrix.mulPose(Axis.YP.rotationDegrees(-(float) RotaryUtil.getCCWSign(side) * angle));
 
 		TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(CRRenderTypes.GEAR_8_TEXTURE);
 		TextureAtlasSprite spriteRim = CRRenderUtil.getTextureSprite(CRRenderTypes.GEAR_8_RIM_TEXTURE);
@@ -165,7 +165,7 @@ public class MechanismToggleGear extends MechanismSmallGear{
 		//If inverted, renders the core as red
 		if(inverted){
 			int[] invertCol = new int[] {255, 0, 0, 255};
-			
+
 			float radius = 2F / 16F;
 			float zFightOffset = 0.001F;//Vertical offset to prevent z-fighting
 			//Texture coords
@@ -174,7 +174,7 @@ public class MechanismToggleGear extends MechanismSmallGear{
 			float uEn = sprite.getU(8 + radiusT);
 			float vSt = sprite.getV(8 - radiusT);
 			float vEn = sprite.getV(8 + radiusT);
-			
+
 			CRRenderUtil.addVertexBlock(builder, matrix, -radius, top + zFightOffset, radius, uSt, vEn, 0, 1, 0, combinedLight, invertCol);
 			CRRenderUtil.addVertexBlock(builder, matrix, radius, top + zFightOffset, radius, uEn, vEn, 0, 1, 0, combinedLight, invertCol);
 			CRRenderUtil.addVertexBlock(builder, matrix, radius, top + zFightOffset, -radius, uEn, vSt, 0, 1, 0, combinedLight, invertCol);

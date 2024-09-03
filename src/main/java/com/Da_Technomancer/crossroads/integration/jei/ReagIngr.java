@@ -13,7 +13,7 @@ public class ReagIngr{
 
 	public static final IIngredientType<ReagIngr> REAG = () -> ReagIngr.class;
 	public static final List<ReagIngr> REAG_TYPES = new ArrayList<>();
-	
+
 	private final String reag;
 	private final int parts;
 
@@ -42,11 +42,11 @@ public class ReagIngr{
 	public String getID(){
 		return reag;
 	}
-	
+
 	public int getParts(){
 		return parts;
 	}
-	
+
 	protected static void populate(){
 		REAG_TYPES.clear();
 		for(IReagent r : ReagentManager.getRegisteredReags()){

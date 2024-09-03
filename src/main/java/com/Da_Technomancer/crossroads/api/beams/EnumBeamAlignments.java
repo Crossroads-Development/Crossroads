@@ -23,7 +23,7 @@ public enum EnumBeamAlignments{
 	EXPANSION(new PlaceEffect(), new Color(0, 255, 255), 72),
 	FUSION(BeamEffect.INSTANCE, new Color(132, 255, 255), 64),
 	LIGHT(new LightEffect(), new Color(255, 255, 255), 128),
-	
+
 	//These MUST be declared last so they have bottom priority.
 	STABILITY(new ExplosionEffect(), new Color(0, 0, 255), 254),
 	POTENTIAL(new GrowEffect(), new Color(0, 255, 0), 254),
@@ -32,7 +32,7 @@ public enum EnumBeamAlignments{
 	//If there are any combinations that result in NO_MATCH, then another element should be made to fill that spot
 	//Exists solely to prevent NullPointerExceptions and should never appear to the player
 	NO_MATCH(BeamEffect.INSTANCE, new Color(255, 255, 255), 255);
-	
+
 	private final BeamEffect effect;
 	private final Color mid;
 	private final int range;
@@ -68,7 +68,7 @@ public enum EnumBeamAlignments{
 				return elem;
 			}
 		}
-		
+
 		return VOID;
 	}
 

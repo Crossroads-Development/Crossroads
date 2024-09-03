@@ -8,5 +8,5 @@ public interface IHeatHandler{
 	public void setTemp(double tempIn);
 
 	public void addHeat(double heat);
-	
+
 }

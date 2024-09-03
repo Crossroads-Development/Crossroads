@@ -201,7 +201,7 @@ public class BeamCannonTileEntity extends AbstractCannonTileEntity{
 	@Nonnull
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> T getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+	public <T> T getCapability(@Nonnull Capability<T> cap, @Nullable Direction side){
 		if(cap == Capabilities.BEAM_CAPABILITY){
 			return (T) beamOpt;
 		}

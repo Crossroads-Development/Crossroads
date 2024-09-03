@@ -49,7 +49,7 @@ public class HeatLimiterRedstoneTileEntity extends HeatLimiterBasicTileEntity{
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> T getCapability(Capability<T> cap, Direction dir) {
+	public <T> T getCapability(Capability<T> cap, Direction dir){
 		if(cap == RedstoneUtil.REDSTONE_CAPABILITY){
 			return (T) redsOpt;
 		}

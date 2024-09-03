@@ -50,7 +50,7 @@ public class LightningRodExtension extends LightningRodBlock{
 				boolean srcRod = srcState.getBlock() == Blocks.LIGHTNING_ROD;
 				Direction srcFacing = srcState.getValue(FACING);
 				Direction facing = state.getValue(FACING);
-				Direction relativeDir = Direction.getNearest((float)(pos.getX() - fromPos.getX()), (float)(pos.getY() - fromPos.getY()), (float)(pos.getZ() - fromPos.getZ()));
+				Direction relativeDir = Direction.getNearest((float) (pos.getX() - fromPos.getX()), (float) (pos.getY() - fromPos.getY()), (float) (pos.getZ() - fromPos.getZ()));
 				if(relativeDir.getAxis() == facing.getAxis() && srcState.getValue(POWERED) && (srcRod && facing.getAxis() == srcFacing.getAxis() || !srcRod && relativeDir == srcFacing.getOpposite())){
 					onLightningStrike(state.setValue(FACING, relativeDir.getOpposite()), worldIn, pos);
 				}

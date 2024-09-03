@@ -67,7 +67,7 @@ public class OreCleanser extends BaseEntityBlock implements IReadable{
 	public RenderShape getRenderShape(BlockState state){
 		return RenderShape.MODEL;
 	}
-	
+
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
 		tooltip.add(Component.translatable("tt.crossroads.ore_cleanser.desc"));

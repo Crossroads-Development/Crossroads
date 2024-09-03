@@ -29,6 +29,7 @@ import java.awt.*;
 public class MechanismSmallGear implements IMechanism<CRMaterialLibrary.GearMaterial>{
 
 	protected static final VoxelShape[] SHAPES = new VoxelShape[6];
+
 	static{
 		SHAPES[0] = Block.box(0, 0, 0, 16, 2, 16);//DOWN
 		SHAPES[1] = Block.box(0, 14, 0, 16, 16, 16);//UP

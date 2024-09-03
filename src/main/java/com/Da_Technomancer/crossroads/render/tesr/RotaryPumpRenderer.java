@@ -29,7 +29,7 @@ public class RotaryPumpRenderer implements BlockEntityRenderer<RotaryPumpTileEnt
 		//Render the screw
 		matrix.pushPose();
 		matrix.translate(0.5D, 0.5D, 0.5D);
-        IAxleHandler opt = te.getCapability(Capabilities.AXLE_CAPABILITY, null);
+		IAxleHandler opt = te.getCapability(Capabilities.AXLE_CAPABILITY, null);
 
 		double screwOffset = 0.1D;
 		float screwScale = 0.45F;
@@ -48,7 +48,7 @@ public class RotaryPumpRenderer implements BlockEntityRenderer<RotaryPumpTileEnt
 
 			VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 
-			Quaternionf rotation = Axis.YP.rotationDegrees(90 * (2F*i - 1F));
+			Quaternionf rotation = Axis.YP.rotationDegrees(90 * (2F * i - 1F));
 			Quaternionf rotationToReverseStupidHardCodedBladeAngle = null;
 			if(i == 1){
 				rotationToReverseStupidHardCodedBladeAngle = Axis.ZP.rotation((float) Math.atan(1F / 3F));

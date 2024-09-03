@@ -24,6 +24,7 @@ import java.util.List;
 public class BeamCannon extends AbstractCannon{
 
 	private static final VoxelShape[] SHAPES = new VoxelShape[6];
+
 	static{
 		SHAPES[0] = Shapes.or(box(0, 7, 0, 16, 16, 16));
 		SHAPES[1] = Shapes.or(box(0, 0, 0, 16, 9, 16));

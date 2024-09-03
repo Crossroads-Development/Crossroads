@@ -54,7 +54,7 @@ public class DynamoTileEntity extends ModuleTE{
 		//Transfer FE
 		Direction facing = getBlockState().getValue(CRProperties.HORIZ_FACING);
 		BlockEntity neighbor = level.getBlockEntity(worldPosition.relative(facing.getOpposite()));
-        IEnergyStorage energyOpt;
+		IEnergyStorage energyOpt;
 		if(neighbor != null && (energyOpt = neighbor.getCapability(ForgeCapabilities.ENERGY, facing)).isPresent()){
 			IEnergyStorage handler = energyOpt.orElseThrow(NullPointerException::new);
 			if(handler.canReceive()){
@@ -93,16 +93,16 @@ public class DynamoTileEntity extends ModuleTE{
 	}
 
 	private final IEnergyStorage energyHandler = new DynamoEnergyHandler();
-    private IEnergyStorage feOpt = LazyOptional.of(() -> energyHandler);
+	private IEnergyStorage feOpt = LazyOptional.of(() -> energyHandler);
 
 	@SuppressWarnings("unchecked")
 	@Override
-    public <T> T getCapability(Capability<T> cap, Direction side) {
+	public <T> T getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.AXLE_CAPABILITY && (side == null || side == getBlockState().getValue(CRProperties.HORIZ_FACING))){
-            return (T) axleOpt;
+			return (T) axleOpt;
 		}
 		if(cap == ForgeCapabilities.ENERGY && (side == null || side == getBlockState().getValue(CRProperties.HORIZ_FACING).getOpposite())){
-            return (T) feOpt;
+			return (T) feOpt;
 		}
 		return super.getCapability(cap, side);
 	}

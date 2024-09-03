@@ -199,7 +199,7 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing) {
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == ForgeCapabilities.FLUID_HANDLER){
 			return facing == null ? (T) globalFluidOpt : facing == Direction.UP ? (T) inputOpt : facing == Direction.DOWN ? (T) outputOpt : LazyOptional.empty();
 		}

@@ -96,7 +96,7 @@ public class Wheezewort extends DoublePlantBlock implements BonemealableBlock{
 	}
 
 	@Override
-	public void setPlacedBy(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+	public void setPlacedBy(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
 		//Add an extra check- we don't add a top half for age 1 (and this should only be called with age 1 in practice)
 		if(state.getValue(CRProperties.AGE_3) != 1 && state.getValue(HALF) == DoubleBlockHalf.LOWER){
 			world.setBlock(pos.above(), state.setValue(HALF, DoubleBlockHalf.UPPER), 3);
@@ -123,7 +123,7 @@ public class Wheezewort extends DoublePlantBlock implements BonemealableBlock{
 		CRSounds.playSoundServer(world, pos, CRSounds.STEAM_RELEASE, SoundSource.BLOCKS, 0.75F, 0.5F + world.random.nextFloat());
 		CRParticles.summonParticlesFromServer(world, new ColorParticleData(CRParticles.COLOR_SOLID, Color.WHITE), 8, pos.getX() + 0.5F, pos.getY() + 0.55F, pos.getZ() + 0.5F, 0.1F, 0, 0.1F, 0, 0.15F, 0, 0.005F, 0.05F, 0.005F, false);
 		BlockEntity te = world.getBlockEntity(pos.above());
-        IHeatHandler heatOpt;
+		IHeatHandler heatOpt;
 		if(te != null && (heatOpt = te.getCapability(Capabilities.HEAT_CAPABILITY)).isPresent()){
 			heatOpt.orElseThrow(NullPointerException::new).addHeat(-COOLING);
 			//Almost certainly drops it to absolute zero for anything normal

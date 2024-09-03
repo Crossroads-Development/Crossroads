@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.api.alchemy;
 import net.minecraft.util.StringRepresentable;
 
 public enum EnumContainerType implements StringRepresentable{
-	
+
 	NONE(),
 	GLASS(),
 	CRYSTAL();

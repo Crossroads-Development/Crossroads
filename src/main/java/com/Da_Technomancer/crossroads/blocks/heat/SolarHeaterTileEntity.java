@@ -72,7 +72,7 @@ public class SolarHeaterTileEntity extends ModuleTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, Direction facing) {
+	public <T> T getCapability(Capability<T> capability, Direction facing){
 		if(capability == Capabilities.HEAT_CAPABILITY && (facing == null || facing.getAxis() == level.getBlockState(worldPosition).getValue(CRProperties.HORIZ_AXIS))){
 			return (T) heatOpt;
 		}

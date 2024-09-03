@@ -42,12 +42,12 @@ public class DensusPlateTileEntity extends BlockEntity implements ITickableTileE
 		}
 		return Direction.DOWN;
 	}
-	
+
 	private boolean isAnti(){
 		BlockState state = getBlockState();
 		return state.getBlock() == CRBlocks.antiDensusPlate;
 	}
-	
+
 	@Override
 	public void serverTick(){
 		Direction dir = getFacing().getOpposite();

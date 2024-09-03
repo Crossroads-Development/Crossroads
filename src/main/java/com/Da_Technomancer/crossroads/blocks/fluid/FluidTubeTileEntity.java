@@ -43,10 +43,10 @@ public class FluidTubeTileEntity extends BlockEntity implements ITickableTileEnt
 
 	//Cache of neighboring optionals
 	@SuppressWarnings("unchecked")
-	private IFluidHandler[] otherOpts = new LazyOptional[]{LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty()};
+	private IFluidHandler[] otherOpts = new LazyOptional[] {LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty()};
 	//The optionals of this tube, in order both, in, out
 	@SuppressWarnings("unchecked")
-	private IFluidHandler[] internalOpts = new LazyOptional[]{LazyOptional.of(mainHandler), LazyOptional.of(inHandler), LazyOptional.of(outHandler), LazyOptional.of(innerHandler)};
+	private IFluidHandler[] internalOpts = new LazyOptional[] {LazyOptional.of(mainHandler), LazyOptional.of(inHandler), LazyOptional.of(outHandler), LazyOptional.of(innerHandler)};
 
 	@Nonnull
 	private FluidStack content = FluidStack.EMPTY;
@@ -63,7 +63,7 @@ public class FluidTubeTileEntity extends BlockEntity implements ITickableTileEnt
 	public void setBlockState(BlockState stateIn){
 		super.setBlockState(stateIn);
 		//Invalidate and regenerate all the optionals
-		for (IFluidHandler internalOpt : internalOpts) {
+		for(IFluidHandler internalOpt : internalOpts){
 			internalOpt.invalidate();
 		}
 		internalOpts[0] = LazyOptional.of(mainHandler);
@@ -336,7 +336,7 @@ public class FluidTubeTileEntity extends BlockEntity implements ITickableTileEnt
 	@Override
 	public void setRemoved(){
 		super.setRemoved();
-		for (? opt : internalOpts) {
+		for(? opt : internalOpts){
 			opt.invalidate();
 		}
 		internalOpts[0].invalidate();
@@ -352,7 +352,7 @@ public class FluidTubeTileEntity extends BlockEntity implements ITickableTileEnt
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction side) {
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction side){
 		if(capability == ForgeCapabilities.FLUID_HANDLER){
 			if(side == null){
 				return (T) internalOpts[3];//Inner handler

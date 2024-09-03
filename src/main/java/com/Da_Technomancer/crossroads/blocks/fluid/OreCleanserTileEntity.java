@@ -122,7 +122,7 @@ public class OreCleanserTileEntity extends InventoryTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing) {
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == ForgeCapabilities.FLUID_HANDLER){
 			return (T) (facing == null ? globalFluidOpt : facing == Direction.UP ? outOpt : inOpt);
 		}

@@ -41,12 +41,12 @@ public class SteamBoilerTileEntity extends InventoryTE{
 		fluidProps[1] = new TankProperty(8_000, false, true, fluid -> true);
 		initFluidManagers();
 	}
-	
+
 	@Override
 	public int fluidTanks(){
 		return 2;//0: Water; 1: Steam
 	}
-	
+
 	@Override
 	public boolean useHeat(){
 		return true;
@@ -62,12 +62,12 @@ public class SteamBoilerTileEntity extends InventoryTE{
 	public void serverTick(){
 		super.serverTick();
 		int tier = HeatUtil.getHeatTier(temp, TIERS);
-		
+
 		if(tier != -1){
 			temp -= (double) CRConfig.steamWorth.get() * (tier + 1) * (double) BATCH_SIZE / 1000D;
 
 			int fluidCap = fluidProps[0].capacity;
-			
+
 			if(fluids[0].getAmount() >= BATCH_SIZE && fluidCap - fluids[1].getAmount() >= BATCH_SIZE && inventory[0].getCount() < 64){
 				boolean salty = !CraftingUtil.tagContains(CRFluids.DISTILLED_WATER, fluids[0].getFluid());
 
@@ -107,7 +107,7 @@ public class SteamBoilerTileEntity extends InventoryTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing) {
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == ForgeCapabilities.FLUID_HANDLER){
 			if(facing == null){
 				return (T) globalFluidOpt;

@@ -83,7 +83,7 @@ public class LiechWrench extends Item{
 	}
 
 	@Override
-	public boolean canPerformAction(ItemStack stack, ItemAbility itemAbility) {
+	public boolean canPerformAction(ItemStack stack, ItemAbility itemAbility){
 		return toolAction == ConfigUtil.WRENCH_ACTION || ItemAbilities.DEFAULT_AXE_ACTIONS.contains(toolAction) || ItemAbilities.HOE_DIG == toolAction || ItemAbilities.DEFAULT_PICKAXE_ACTIONS.contains(toolAction) || ItemAbilities.DEFAULT_SHOVEL_ACTIONS.contains(toolAction);
 	}
 }

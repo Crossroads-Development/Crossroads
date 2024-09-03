@@ -51,7 +51,7 @@ public class MaxwellDemon extends BaseEntityBlock implements ICustomItemBlock{
 	public RenderShape getRenderShape(BlockState state){
 		return RenderShape.MODEL;
 	}
-	
+
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
 		double rate = CRConfig.demonPower.get();

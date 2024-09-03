@@ -44,10 +44,10 @@ public class BeamToolOverlay implements IGuiOverlay{
 			//Makes the UI overlay smaller
 			matrix.scale(0.75F, 0.75F, 1);
 
-			float barUSt = 8F/39F;
-			float barUEn = 32F/39F;
-			float barVSt = 26F/40F;
-			float barVWid = 3F/40F;
+            float barUSt = 8F / 39F;
+            float barUEn = 32F / 39F;
+            float barVSt = 26F / 40F;
+            float barVWid = 3F / 40F;
 
 			if(renderCageOverlay){
 				VertexConsumer builder = buffer.getBuffer(CRRenderTypes.BEAM_INFO_TYPE);

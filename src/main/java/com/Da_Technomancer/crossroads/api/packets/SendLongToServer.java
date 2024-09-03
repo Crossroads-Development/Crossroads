@@ -24,7 +24,7 @@ public class SendLongToServer extends ServerPacket{
 	}
 
 	public SendLongToServer(int id, long val, BlockPos pos){
-		this((byte)id, val, pos);
+		this((byte) id, val, pos);
 	}
 
 	public SendLongToServer(byte id, long val, BlockPos pos){

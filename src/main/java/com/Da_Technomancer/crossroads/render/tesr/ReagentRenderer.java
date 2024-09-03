@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.apache.commons.lang3.tuple.Pair;
 import org.joml.Vector3f;
+
 public class ReagentRenderer<T extends BlockEntity & IReagRenderTE> implements BlockEntityRenderer<T>{
 
 	public ReagentRenderer(BlockEntityRendererProvider.Context dispatcher){
@@ -49,8 +50,8 @@ public class ReagentRenderer<T extends BlockEntity & IReagRenderTE> implements B
 						float yEn = end.y - phaseHeight * phaseIndex;
 						float ySt = yEn - phaseHeight;
 						//Texture uv mapping done to maintain square pixels. Scale of pixels varies widely
-						float uSt = sprite.getU(8 * (i%2));
-						float vSt = sprite.getV(8 * (i/2));
+						float uSt = sprite.getU(8 * (i % 2));
+						float vSt = sprite.getV(8 * (i / 2));
 						float uEn, vEn;
 						float width, height;
 
@@ -58,11 +59,11 @@ public class ReagentRenderer<T extends BlockEntity & IReagRenderTE> implements B
 						width = end.z - start.z;
 						height = yEn - ySt;
 						if(width > height){
-							uEn = sprite.getU(8 * (i%2) + 8);
-							vEn = sprite.getV(8 * (i/2) + (height / width) * 8);
+							uEn = sprite.getU(8 * (i % 2) + 8);
+							vEn = sprite.getV(8 * (i / 2) + (height / width) * 8);
 						}else{
-							uEn = sprite.getU(8 * (i%2) + (width / height) * 8);
-							vEn = sprite.getV(8 * (i/2) + 8);
+							uEn = sprite.getU(8 * (i % 2) + (width / height) * 8);
+							vEn = sprite.getV(8 * (i / 2) + 8);
 						}
 						//-X
 						CRRenderUtil.addVertexBlock(builder, matrix, start.x, ySt, start.z, uSt, vSt, -1, 0, 0, phaseLight, phaseColor);
@@ -79,11 +80,11 @@ public class ReagentRenderer<T extends BlockEntity & IReagRenderTE> implements B
 						width = end.x - start.x;
 						height = yEn - ySt;
 						if(width > height){
-							uEn = sprite.getU(8 * (i%2) + 8);
-							vEn = sprite.getV(8 * (i/2) + (height / width) * 8);
+							uEn = sprite.getU(8 * (i % 2) + 8);
+							vEn = sprite.getV(8 * (i / 2) + (height / width) * 8);
 						}else{
-							uEn = sprite.getU(8 * (i%2) + (width / height) * 8);
-							vEn = sprite.getV(8 * (i/2) + 8);
+							uEn = sprite.getU(8 * (i % 2) + (width / height) * 8);
+							vEn = sprite.getV(8 * (i / 2) + 8);
 						}
 						//-Z
 						CRRenderUtil.addVertexBlock(builder, matrix, start.x, ySt, start.z, uSt, vSt, 0, 0, -1, phaseLight, phaseColor);
@@ -100,11 +101,11 @@ public class ReagentRenderer<T extends BlockEntity & IReagRenderTE> implements B
 						width = end.x - start.x;
 						height = end.z - start.z;
 						if(width > height){
-							uEn = sprite.getU(8 * (i%2) + 8);
-							vEn = sprite.getV(8 * (i/2) + (height / width) * 8);
+							uEn = sprite.getU(8 * (i % 2) + 8);
+							vEn = sprite.getV(8 * (i / 2) + (height / width) * 8);
 						}else{
-							uEn = sprite.getU(8 * (i%2) + (width / height) * 8);
-							vEn = sprite.getV(8 * (i/2) + 8);
+							uEn = sprite.getU(8 * (i % 2) + (width / height) * 8);
+							vEn = sprite.getV(8 * (i / 2) + 8);
 						}
 						//-Y
 						CRRenderUtil.addVertexBlock(builder, matrix, start.x, ySt, start.z, uSt, vSt, 0, -1, 0, phaseLight, phaseColor);

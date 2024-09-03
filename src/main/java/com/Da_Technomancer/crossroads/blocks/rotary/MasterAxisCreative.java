@@ -50,7 +50,11 @@ public class MasterAxisCreative extends BaseEntityBlock implements ICustomItemBl
 			if(ConfigUtil.isWrench(playerIn.getItemInHand(hand))){
 				worldIn.setBlockAndUpdate(pos, state.cycle(CRProperties.FACING));
 			}else if(worldIn.getBlockEntity(pos) instanceof MasterAxisCreativeTileEntity menuTE){
-				NetworkHooks.openScreen((ServerPlayer) playerIn, menuTE, buf -> {buf.writeFloat(menuTE.setting); buf.writeUtf(menuTE.expression); buf.writeBlockPos(pos);});
+				NetworkHooks.openScreen((ServerPlayer) playerIn, menuTE, buf -> {
+					buf.writeFloat(menuTE.setting);
+					buf.writeUtf(menuTE.expression);
+					buf.writeBlockPos(pos);
+				});
 			}
 		}
 		return InteractionResult.SUCCESS;

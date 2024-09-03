@@ -313,7 +313,7 @@ public class ReagentRec implements Recipe<Container>, IReagent{
 			buffer.writeUtf(recipe.flameName);
 		}
 	}
-	
+
 	private static final HashMap<String, ContainRequirements> containTypeMap = new HashMap<>(3);//No register method for this, as it maps to an enum
 	private static final HashMap<String, Function<Integer, Integer>> flameRadiusMap = new HashMap<>(5);
 	private static final HashMap<String, IAlchEffect> effectMap = new HashMap<>(19);

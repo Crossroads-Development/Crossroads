@@ -33,7 +33,7 @@ public abstract class AbstractNutrientEnvironmentTileEntity extends InventoryTE{
 				itemCount++;
 				if(spoilTime > currentTime){
 					totalLifetime += spoilTime - currentTime;
-				};
+				}
 			}
 		}
 		if(itemCount == 0){

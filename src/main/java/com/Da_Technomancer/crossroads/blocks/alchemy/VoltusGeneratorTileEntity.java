@@ -92,7 +92,7 @@ public class VoltusGeneratorTileEntity extends BlockEntity implements ITickableT
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> T getCapability(Capability<T> cap, Direction side) {
+	public <T> T getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.CHEMICAL_CAPABILITY){
 			return (T) chemOpt;
 		}

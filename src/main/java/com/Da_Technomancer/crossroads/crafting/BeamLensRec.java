@@ -32,6 +32,7 @@ public class BeamLensRec implements IOptionalRecipe<Container>{
 	private final ItemStack transmuteResult;
 
 	private final boolean active;
+
 	public BeamLensRec(ResourceLocation location, String name, Ingredient input, BeamMod output, ItemStack transmuteResult, EnumBeamAlignments transmuteAlignment, boolean transmuteVoid, boolean active){
 		id = location;
 		group = name;
@@ -52,7 +53,7 @@ public class BeamLensRec implements IOptionalRecipe<Container>{
 		return active && ingr.test(inv.getItem(0));
 	}
 
-	public boolean canApply(ItemStack stack) {
+	public boolean canApply(ItemStack stack){
 		return active && ingr.test(stack);
 	}
 
@@ -90,7 +91,7 @@ public class BeamLensRec implements IOptionalRecipe<Container>{
 		return nonnulllist;
 	}
 
-	public Ingredient getIngr() {
+	public Ingredient getIngr(){
 		return ingr;
 	}
 

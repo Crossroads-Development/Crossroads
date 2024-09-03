@@ -63,7 +63,7 @@ public class Millstone extends BaseEntityBlock implements IReadable{
 		Containers.dropContents(world, pos, (Container) world.getBlockEntity(pos));
 		super.onRemove(state, world, pos, newState, isMoving);
 	}
-	
+
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
 		tooltip.add(Component.translatable("tt.crossroads.millstone.power", MillstoneTileEntity.POWER_PER_SPEED));

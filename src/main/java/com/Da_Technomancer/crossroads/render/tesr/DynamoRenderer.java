@@ -33,7 +33,7 @@ public class DynamoRenderer implements BlockEntityRenderer<ModuleTE>{
 		}
 
 		Direction facing = dynamo.getBlockState().getValue(CRProperties.HORIZ_FACING);
-        IAxleHandler axle = dynamo.getCapability(Capabilities.AXLE_CAPABILITY, null);
+		IAxleHandler axle = dynamo.getCapability(Capabilities.AXLE_CAPABILITY, null);
 		if(!axle.isPresent()){
 			return;
 		}

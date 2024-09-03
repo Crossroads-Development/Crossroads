@@ -27,6 +27,7 @@ import java.awt.*;
 public class MechanismAxle implements IMechanism<CRMaterialLibrary.GearMaterial>{
 
 	protected static final VoxelShape[] SHAPES = new VoxelShape[3];
+
 	static{
 		SHAPES[0] = Block.box(0, 7, 7, 16, 9, 9);//X
 		SHAPES[1] = Block.box(7, 0, 7, 9, 16, 9);//Y
@@ -74,11 +75,10 @@ public class MechanismAxle implements IMechanism<CRMaterialLibrary.GearMaterial>
 		handler.setRotRatio(rotRatioIn);
 		handler.setUpdateKey(key);
 
-		
-		
+
 		for(Direction.AxisDirection direct : Direction.AxisDirection.values()){
 			Direction endDir = Direction.get(direct, axis);
-			
+
 			if(te.members[endDir.get3DDataValue()] != null){
 				//Do internal connection
 				if(te.members[endDir.get3DDataValue()].hasCap(Capabilities.AXLE_CAPABILITY, endDir, te.mats[endDir.get3DDataValue()], endDir, axis, te)){

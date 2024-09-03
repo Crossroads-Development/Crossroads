@@ -20,6 +20,7 @@ public class CRModels{
 	//In some cases, these are going to be used in place of cos in order to store fewer variables. cos(X) = sin(90 - X), so this is allowed.
 	private static final float[] sin24 = new float[5];
 	private static final float radius_24 = 23F / (7F / 8F * 4F) / 16F;//Radius of ~6.57/16 blocks
+
 	static{
 		final float buffer_24 = 3E-3F;
 		sin24[0] = (float) (Math.sin(Math.toRadians(7.5)) * radius_24) + buffer_24;
@@ -166,16 +167,16 @@ public class CRModels{
 		CRRenderUtil.addVertexBlock(builder, matrix, xRad, -yRad, zRad, uXSt, vXEn, 1, 0, 0, light, col);
 
 		//-Z
-		CRRenderUtil.addVertexBlock(builder, matrix, -xRad, -yRad, -zRad, uZSt, vZEn,  0, 0, -1, light, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, -xRad, yRad, -zRad, uZSt, vZSt,  0, 0, -1, light, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, xRad, yRad, -zRad, uZEn, vZSt,  0, 0, -1, light, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, xRad, -yRad, -zRad, uZEn, vZEn,  0, 0, -1, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, -xRad, -yRad, -zRad, uZSt, vZEn, 0, 0, -1, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, -xRad, yRad, -zRad, uZSt, vZSt, 0, 0, -1, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, xRad, yRad, -zRad, uZEn, vZSt, 0, 0, -1, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, xRad, -yRad, -zRad, uZEn, vZEn, 0, 0, -1, light, col);
 
 		//Z
-		CRRenderUtil.addVertexBlock(builder, matrix, -xRad, -yRad, zRad, uZEn, vZEn,  0, 0, -1, light, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, xRad, -yRad, zRad, uZSt, vZEn,  0, 0, -1, light, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, xRad, yRad, zRad, uZSt, vZSt,  0, 0, -1, light, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, -xRad, yRad, zRad, uZEn, vZSt,  0, 0, -1, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, -xRad, -yRad, zRad, uZEn, vZEn, 0, 0, -1, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, xRad, -yRad, zRad, uZSt, vZEn, 0, 0, -1, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, xRad, yRad, zRad, uZSt, vZSt, 0, 0, -1, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, -xRad, yRad, zRad, uZEn, vZSt, 0, 0, -1, light, col);
 	}
 
 	/**
@@ -477,7 +478,7 @@ public class CRModels{
 		TextureAtlasSprite spriteRim = CRRenderUtil.getTextureSprite(CRRenderTypes.GEAR_8_RIM_TEXTURE);
 		TextureAtlasSprite spriteTooth = CRRenderUtil.getTextureSprite(CRRenderTypes.GEAR_8_TOOTH_TEXTURE);
 		float lHalf = 7F / 16F;//Half the side length of the octagon
-		float radius = 8F /16F;
+		float radius = 8F / 16F;
 
 		matrix.pushPose();
 		//Work in full pixels, rescale everything to lHalf scale

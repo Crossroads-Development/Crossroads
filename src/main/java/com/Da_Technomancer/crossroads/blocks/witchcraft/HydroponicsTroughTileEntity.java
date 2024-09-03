@@ -252,16 +252,16 @@ public class HydroponicsTroughTileEntity extends InventoryTE{
 		itemOpt.invalidate();
 	}
 
-    private final IItemHandler itemOpt = LazyOptional.of(ItemHandler::new);
+	private final IItemHandler itemOpt = LazyOptional.of(ItemHandler::new);
 
 	@SuppressWarnings("unchecked")
 	@Override
-    public <T> T getCapability(Capability<T> capability, @Nullable Direction facing) {
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == ForgeCapabilities.ITEM_HANDLER && facing != Direction.UP){
-            return (T) itemOpt;
+			return (T) itemOpt;
 		}
 		if(capability == ForgeCapabilities.FLUID_HANDLER && facing != Direction.UP){
-            return (T) globalFluidOpt;
+			return (T) globalFluidOpt;
 		}
 
 		return super.getCapability(capability, facing);

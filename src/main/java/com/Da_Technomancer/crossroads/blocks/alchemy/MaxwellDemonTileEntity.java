@@ -124,7 +124,7 @@ public class MaxwellDemonTileEntity extends BlockEntity implements ITickableTile
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side) {
+	public <T> T getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.HEAT_CAPABILITY){
 			if(side == null || side == Direction.UP){
 				return (T) heatOptUp;

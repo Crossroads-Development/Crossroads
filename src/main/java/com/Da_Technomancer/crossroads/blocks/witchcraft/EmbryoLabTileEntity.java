@@ -135,7 +135,8 @@ public class EmbryoLabTileEntity extends InventoryTE implements INBTReceiver{
 			if(potion != Potions.EMPTY){
 				//Add potion effects which can be made permanent and do not already exist on the template
 				boolean foundLegalEffect = false;
-				NextPotionEffect: for(MobEffectInstance potionEffect : potion.getEffects()){
+				NextPotionEffect:
+				for(MobEffectInstance potionEffect : potion.getEffects()){
 					//Special case curative to remove all potion effects
 					if(potionEffect.getEffect() == CRPotions.CURATIVE_EFFECT){
 						foundLegalEffect = true;
@@ -240,7 +241,7 @@ public class EmbryoLabTileEntity extends InventoryTE implements INBTReceiver{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing) {
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == ForgeCapabilities.ITEM_HANDLER){
 			return (T) itemOpt;
 		}

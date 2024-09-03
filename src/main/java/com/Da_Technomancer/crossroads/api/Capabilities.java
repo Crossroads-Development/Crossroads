@@ -13,11 +13,11 @@ public class Capabilities{
 	public static Capability<IHeatHandler> HEAT_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
 
 	public static Capability<IAxleHandler> AXLE_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
-	
+
 	public static Capability<ICogHandler> COG_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
-	
+
 	public static Capability<IBeamHandler> BEAM_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
-	
+
 	public static Capability<IAxisHandler> AXIS_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
 
 	public static Capability<IChemicalHandler> CHEMICAL_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});

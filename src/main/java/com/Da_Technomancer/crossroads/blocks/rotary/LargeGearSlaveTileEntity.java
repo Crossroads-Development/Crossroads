@@ -108,7 +108,7 @@ public class LargeGearSlaveTileEntity extends BlockEntity implements IInfoTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing) {
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == Capabilities.COG_CAPABILITY && isEdge() && getFacing() == facing){
 			return (T) cogOpt;
 		}else{

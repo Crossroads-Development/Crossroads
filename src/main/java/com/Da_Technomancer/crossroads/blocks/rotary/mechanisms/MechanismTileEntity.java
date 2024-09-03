@@ -76,7 +76,7 @@ public class MechanismTileEntity extends BlockEntity implements ITickableTileEnt
 	public final IMechanismProperty[] mats = new IMechanismProperty[7];
 	private final double[] energy = new double[7];
 	private final double[] inertia = new double[7];
-//	private final float[] angle = new float[7];
+	//	private final float[] angle = new float[7];
 //	private final float[] clientW = new float[7];
 	//Public for read-only
 	public final VoxelShape[] boundingBoxes = new VoxelShape[7];
@@ -214,7 +214,8 @@ public class MechanismTileEntity extends BlockEntity implements ITickableTileEnt
 				mats[identifier - 7] = members[identifier - 7].deserializeProperty((int) (message >>> 32L));
 			}
 			axleHandlers[identifier - 7].updateStates(false);
-		}else */if(identifier == 14){
+		}else */
+		if(identifier == 14){
 			axleAxis = message == -1 ? null : Direction.Axis.values()[(int) message];
 			axleHandlers[6].updateStates(false);
 		}else if(identifier == 15){
@@ -270,9 +271,9 @@ public class MechanismTileEntity extends BlockEntity implements ITickableTileEnt
 	protected final SidedAxleHandler[] axleHandlers = {new SidedAxleHandler(0), new SidedAxleHandler(1), new SidedAxleHandler(2), new SidedAxleHandler(3), new SidedAxleHandler(4), new SidedAxleHandler(5), new SidedAxleHandler(6)};
 
 	@SuppressWarnings("unchecked")
-	private final IAxleHandler[] axleOpts = new LazyOptional[]{LazyOptional.of(() -> axleHandlers[0]), LazyOptional.of(() -> axleHandlers[1]), LazyOptional.of(() -> axleHandlers[2]), LazyOptional.of(() -> axleHandlers[3]), LazyOptional.of(() -> axleHandlers[4]), LazyOptional.of(() -> axleHandlers[5]), LazyOptional.of(() -> axleHandlers[6])};
+	private final IAxleHandler[] axleOpts = new LazyOptional[] {LazyOptional.of(() -> axleHandlers[0]), LazyOptional.of(() -> axleHandlers[1]), LazyOptional.of(() -> axleHandlers[2]), LazyOptional.of(() -> axleHandlers[3]), LazyOptional.of(() -> axleHandlers[4]), LazyOptional.of(() -> axleHandlers[5]), LazyOptional.of(() -> axleHandlers[6])};
 	@SuppressWarnings("unchecked")
-	private final ICogHandler[] cogOpts = new LazyOptional[]{LazyOptional.of(() -> new SidedCogHandler(0)), LazyOptional.of(() -> new SidedCogHandler(1)), LazyOptional.of(() -> new SidedCogHandler(2)), LazyOptional.of(() -> new SidedCogHandler(3)), LazyOptional.of(() -> new SidedCogHandler(4)), LazyOptional.of(() -> new SidedCogHandler(5))};
+	private final ICogHandler[] cogOpts = new LazyOptional[] {LazyOptional.of(() -> new SidedCogHandler(0)), LazyOptional.of(() -> new SidedCogHandler(1)), LazyOptional.of(() -> new SidedCogHandler(2)), LazyOptional.of(() -> new SidedCogHandler(3)), LazyOptional.of(() -> new SidedCogHandler(4)), LazyOptional.of(() -> new SidedCogHandler(5))};
 
 	@Override
 	public void setRemoved(){
@@ -286,7 +287,7 @@ public class MechanismTileEntity extends BlockEntity implements ITickableTileEnt
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing) {
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == Capabilities.COG_CAPABILITY && facing != null){
 			if(members[facing.get3DDataValue()] != null && members[facing.get3DDataValue()].hasCap(capability, facing, mats[facing.get3DDataValue()], facing, getAxleAxis(), this)){
 				return (T) cogOpts[facing.get3DDataValue()];

@@ -35,12 +35,12 @@ public class PermeableGlass extends Block{
 	}
 
 	@Override
-	public VoxelShape getVisualShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext selection) {
+	public VoxelShape getVisualShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext selection){
 		return Shapes.empty();
 	}
 
 	@Override
-	public boolean skipRendering(BlockState state, BlockState otherState, Direction dir) {
+	public boolean skipRendering(BlockState state, BlockState otherState, Direction dir){
 		return otherState.getBlock() == this || super.skipRendering(state, otherState, dir);
 	}
 

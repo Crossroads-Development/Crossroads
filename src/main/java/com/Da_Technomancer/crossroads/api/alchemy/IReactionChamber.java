@@ -11,16 +11,16 @@ public interface IReactionChamber{
 
 	@Nonnull
 	ReagentMap getReagents();
-	
+
 	boolean isCharged();
-	
+
 	int getReactionCapacity();
-	
+
 	/**
 	 * Destroys the chamber, and creates an explosion
 	 */
 	void destroyChamber(float strength);
-	
+
 	/**
 	 * Adds temporary particles for visual effect after a reaction. 
 	 * @param particleType The particle type to spawn

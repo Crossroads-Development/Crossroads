@@ -28,7 +28,7 @@ public class ChargeEffect extends BeamEffect{
 				}
 
 				//Attempt to discharge items in inventory
-				final int[] availableFE = new int [] {CRConfig.fePerCharge.get() * power};
+                final int[] availableFE = new int[] {CRConfig.fePerCharge.get() * power};
 				List<Player> players = beamHit.getNearbyEntities(Player.class, BeamHit.WITHIN_BLOCK_RANGE, null);
 				for(Player player : players){
 					CurioHelper.forAllInventoryItems(player, (ItemStack item) -> {
@@ -55,7 +55,7 @@ public class ChargeEffect extends BeamEffect{
 				}
 
 				//Attempt to charge items in inventory
-				final int[] availableFE = new int [] {CRConfig.fePerCharge.get() * power};
+                final int[] availableFE = new int[] {CRConfig.fePerCharge.get() * power};
 				List<Player> players = beamHit.getNearbyEntities(Player.class, BeamHit.WITHIN_BLOCK_RANGE, null);
 				for(Player player : players){
 					CurioHelper.forAllInventoryItems(player, (ItemStack item) -> {

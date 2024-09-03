@@ -76,7 +76,7 @@ public class StampMillTop extends Block{
 			worldIn.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
 		}
 	}
-	
+
 	@Override
 	public PushReaction getPistonPushReaction(BlockState state){
 		return PushReaction.BLOCK;

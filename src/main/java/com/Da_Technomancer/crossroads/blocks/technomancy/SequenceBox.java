@@ -48,7 +48,7 @@ public class SequenceBox extends BaseEntityBlock implements IWireConnect{
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving){
 		super.neighborChanged(state, worldIn, pos, blockIn, fromPos, isMoving);
 		BlockEntity te = worldIn.getBlockEntity(pos);
 		if(!worldIn.isClientSide && te instanceof SequenceBoxTileEntity){
@@ -57,9 +57,9 @@ public class SequenceBox extends BaseEntityBlock implements IWireConnect{
 	}
 
 	@Override
-	public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+	public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack){
 		BlockEntity te = worldIn.getBlockEntity(pos);
-		if (te instanceof SequenceBoxTileEntity) {
+		if(te instanceof SequenceBoxTileEntity){
 			CircuitUtil.updateFromWorld(((SequenceBoxTileEntity) te).circHandler, this);
 		}
 	}

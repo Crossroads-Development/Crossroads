@@ -50,20 +50,19 @@ import net.neoforged.neoforge.registries.RegisterEvent;
 import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 
 
-
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 
 public class EventHandlerClient{
 
-    @EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD, modid = Crossroads.MODID, value = Dist.CLIENT)
+	@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD, modid = Crossroads.MODID, value = Dist.CLIENT)
 	public static class CRModEventsClient{
 
 		@SuppressWarnings("unused")
 		@SubscribeEvent
 		public static void register(RegisterEvent e){
-            e.register(BuiltInRegistries.MENU, helper -> {
+			e.register(BuiltInRegistries.MENU, helper -> {
 				//The other half of this is in EventHandlerServer
 				CRContainers.initClient();
 				EventHandlerCommon.CRModEventsCommon.registerAll(helper, CRContainers.toRegisterMenu);
@@ -134,7 +133,7 @@ public class EventHandlerClient{
 					EntityTemplate template = ((GeneticSpawnEgg) stack.getItem()).getEntityTypeData(stack);
 					EntityType<?> type = template.getEntityType();
 					if(type != null){
-                        SpawnEggItem vanillaEgg = DeferredSpawnEggItem.byId(type);
+						SpawnEggItem vanillaEgg = DeferredSpawnEggItem.byId(type);
 						if(vanillaEgg != null){
 							return vanillaEgg.getColor(tintIndex);
 						}

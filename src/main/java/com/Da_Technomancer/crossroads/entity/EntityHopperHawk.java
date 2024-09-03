@@ -100,7 +100,7 @@ public class EntityHopperHawk extends ShoulderRidingEntity implements FlyingAnim
 	}
 
 	@Override
-	protected void onFlap() {
+	protected void onFlap(){
 		playSound(SoundEvents.PARROT_FLY, 0.15F, 1.0F);
 		nextFlap = this.flyDist + this.flapSpeed / 2.0F;
 	}

@@ -23,16 +23,18 @@ public class ReagentPumpTileEntity extends ReagentHolderTE{
 	public static final BlockEntityType<ReagentPumpTileEntity> TYPE = CRTileEntity.createType(ReagentPumpTileEntity::new, CRBlocks.reagentPumpCrystal, CRBlocks.reagentPumpGlass);
 
 	private static final Pair<Vector3f, Vector3f>[] RENDER_SHAPE_EDGE = new Pair[6];
+
 	static{
-		RENDER_SHAPE_EDGE[0] = Pair.of(new Vector3f(7F/16F, 0, 7F/16F), new Vector3f((16F-7F)/16F, 7F/16F, (16F-7F)/16F));
-		RENDER_SHAPE_EDGE[1] = Pair.of(new Vector3f(7F/16F, (16F-7F)/16F, 7F/16F), new Vector3f((16F-7F)/16F, 1, (16F-7F)/16F));
-		RENDER_SHAPE_EDGE[2] = Pair.of(new Vector3f(7F/16F, 7F/16F, 0), new Vector3f((16F-7F)/16F, (16F-7F)/16F, 7F/16F));
-		RENDER_SHAPE_EDGE[3] = Pair.of(new Vector3f(7F/16F, 7F/16F, (16F-7F)/16), new Vector3f((16F-7F)/16F, (16F-7F)/16F, 1));
-		RENDER_SHAPE_EDGE[4] = Pair.of(new Vector3f(0, 7F/16F, 7F/16F), new Vector3f(7F/16F, (16F-7F)/16F, (16F-7F)/16F));
-		RENDER_SHAPE_EDGE[5] = Pair.of(new Vector3f((16F-7F)/16, 7F/16F, 7F/16F), new Vector3f(1, (16F-7F)/16F, (16F-7F)/16F));
+		RENDER_SHAPE_EDGE[0] = Pair.of(new Vector3f(7F / 16F, 0, 7F / 16F), new Vector3f((16F - 7F) / 16F, 7F / 16F, (16F - 7F) / 16F));
+		RENDER_SHAPE_EDGE[1] = Pair.of(new Vector3f(7F / 16F, (16F - 7F) / 16F, 7F / 16F), new Vector3f((16F - 7F) / 16F, 1, (16F - 7F) / 16F));
+		RENDER_SHAPE_EDGE[2] = Pair.of(new Vector3f(7F / 16F, 7F / 16F, 0), new Vector3f((16F - 7F) / 16F, (16F - 7F) / 16F, 7F / 16F));
+		RENDER_SHAPE_EDGE[3] = Pair.of(new Vector3f(7F / 16F, 7F / 16F, (16F - 7F) / 16), new Vector3f((16F - 7F) / 16F, (16F - 7F) / 16F, 1));
+		RENDER_SHAPE_EDGE[4] = Pair.of(new Vector3f(0, 7F / 16F, 7F / 16F), new Vector3f(7F / 16F, (16F - 7F) / 16F, (16F - 7F) / 16F));
+		RENDER_SHAPE_EDGE[5] = Pair.of(new Vector3f((16F - 7F) / 16, 7F / 16F, 7F / 16F), new Vector3f(1, (16F - 7F) / 16F, (16F - 7F) / 16F));
 	}
+
 	@SuppressWarnings("unchecked")//Darn Java, not being able to verify arrays of parameterized types. Bah Humbug!
-	protected final IChemicalHandler[] neighCache = new LazyOptional[]{LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty()};
+	protected final IChemicalHandler[] neighCache = new LazyOptional[] {LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty()};
 
 	public ReagentPumpTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state);
@@ -49,7 +51,7 @@ public class ReagentPumpTileEntity extends ReagentHolderTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side) {
+	public <T> T getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.CHEMICAL_CAPABILITY){
 			return (T) chemOpt;
 		}

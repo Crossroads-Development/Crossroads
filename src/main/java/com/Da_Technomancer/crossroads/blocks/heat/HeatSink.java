@@ -74,7 +74,7 @@ public class HeatSink extends BaseEntityBlock{
 	public RenderShape getRenderShape(BlockState state){
 		return RenderShape.MODEL;
 	}
-	
+
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
 		tooltip.add(Component.translatable("tt.crossroads.heat_sink.desc"));

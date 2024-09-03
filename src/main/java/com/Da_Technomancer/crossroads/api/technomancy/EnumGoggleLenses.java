@@ -21,7 +21,7 @@ import java.util.Locale;
 import java.util.function.Supplier;
 
 public enum EnumGoggleLenses{
-	
+
 	//Don't reorder these unless you want to rename all the goggle texture files.
 	RUBY(CRItemTags.GEMS_RUBY, "_ruby", new RubyGoggleEffect(), () -> Keys.controlEnergy, true),
 	EMERALD(Tags.Items.GEMS_EMERALD, "_emerald", new EmeraldGoggleEffect(), () -> Keys.controlPotential, true),
@@ -29,7 +29,7 @@ public enum EnumGoggleLenses{
 	QUARTZ(CRItemTags.GEMS_PURE_QUARTZ, "_quartz", new QuartzGoggleEffect(), null, false),
 	AMETHYST(Tags.Items.GEMS_AMETHYST, "", IGoggleEffect.EMPTY, () -> Keys.controlZoom, true),//Empty effect, the actual effect is done through EventHandlerClient::viewZoom
 	VOID(CRItemTags.GEMS_VOID, "", IGoggleEffect.EMPTY, () -> Keys.controlVoid, true);//Empty effect, the actual effect is done through EventHandlers that check for the void lens.
-	
+
 	private final TagKey<Item> item;
 	private final String texturePath;
 	private final IGoggleEffect effect;
@@ -49,7 +49,7 @@ public enum EnumGoggleLenses{
 	public boolean matchesRecipe(ItemStack stack){
 		return CraftingUtil.tagContains(item, stack.getItem());
 	}
-	
+
 	public String getTexturePath(){
 		return texturePath;
 	}
@@ -66,7 +66,7 @@ public enum EnumGoggleLenses{
 	public boolean useKey(){
 		return requireEnable;
 	}
-	
+
 	/**
 	 * Call on the server side ONLY.
 	 */

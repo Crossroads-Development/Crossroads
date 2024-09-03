@@ -41,7 +41,7 @@ public class BeamRenderer<T extends BlockEntity & IBeamRenderTE> implements Bloc
 		final float BEAM_SIDE_U = 0;
 		final float BEAM_END_U = 0.5F;
 		final float BEAM_V_STOP = 0.5F;
-		
+
 		float halfWidth = width / 2F;
 		int[] col = {color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()};
 		float endV = length / 2;//V-coord for the far edge of the sides

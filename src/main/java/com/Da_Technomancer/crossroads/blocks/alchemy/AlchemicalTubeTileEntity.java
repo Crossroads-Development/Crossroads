@@ -26,16 +26,16 @@ public class AlchemicalTubeTileEntity extends ReagentHolderTE implements Conduit
 	protected boolean[] matches = new boolean[6];
 	protected EnumTransferMode[] modes = ConduitBlock.IConduitTE.genModeArray(EnumTransferMode.INPUT);
 
-	private static final Pair<Vector3f, Vector3f> RENDER_SHAPE_CORE = Pair.of(new Vector3f(7F/16F, 7F/16F, 7F/16F), new Vector3f((16F-7F)/16F,(16F-7F)/16F,(16F-7F)/16F));
+	private static final Pair<Vector3f, Vector3f> RENDER_SHAPE_CORE = Pair.of(new Vector3f(7F / 16F, 7F / 16F, 7F / 16F), new Vector3f((16F - 7F) / 16F, (16F - 7F) / 16F, (16F - 7F) / 16F));
 	private static final Pair<Vector3f, Vector3f>[] RENDER_SHAPE_EDGE = new Pair[6];
 
 	static{
-		RENDER_SHAPE_EDGE[0] = Pair.of(new Vector3f(7F/16F, 0, 7F/16F), new Vector3f((16F-7F)/16F, 7F/16F, (16F-7F)/16F));
-		RENDER_SHAPE_EDGE[1] = Pair.of(new Vector3f(7F/16F, (16F-7F)/16F, 7F/16F), new Vector3f((16F-7F)/16F, 1, (16F-7F)/16F));
-		RENDER_SHAPE_EDGE[2] = Pair.of(new Vector3f(7F/16F, 7F/16F, 0), new Vector3f((16F-7F)/16F, (16F-7F)/16F, 7F/16F));
-		RENDER_SHAPE_EDGE[3] = Pair.of(new Vector3f(7F/16F, 7F/16F, (16F-7F)/16), new Vector3f((16F-7F)/16F, (16F-7F)/16F, 1));
-		RENDER_SHAPE_EDGE[4] = Pair.of(new Vector3f(0, 7F/16F, 7F/16F), new Vector3f(7F/16F, (16F-7F)/16F, (16F-7F)/16F));
-		RENDER_SHAPE_EDGE[5] = Pair.of(new Vector3f((16F-7F)/16, 7F/16F, 7F/16F), new Vector3f(1, (16F-7F)/16F, (16F-7F)/16F));
+		RENDER_SHAPE_EDGE[0] = Pair.of(new Vector3f(7F / 16F, 0, 7F / 16F), new Vector3f((16F - 7F) / 16F, 7F / 16F, (16F - 7F) / 16F));
+		RENDER_SHAPE_EDGE[1] = Pair.of(new Vector3f(7F / 16F, (16F - 7F) / 16F, 7F / 16F), new Vector3f((16F - 7F) / 16F, 1, (16F - 7F) / 16F));
+		RENDER_SHAPE_EDGE[2] = Pair.of(new Vector3f(7F / 16F, 7F / 16F, 0), new Vector3f((16F - 7F) / 16F, (16F - 7F) / 16F, 7F / 16F));
+		RENDER_SHAPE_EDGE[3] = Pair.of(new Vector3f(7F / 16F, 7F / 16F, (16F - 7F) / 16), new Vector3f((16F - 7F) / 16F, (16F - 7F) / 16F, 1));
+		RENDER_SHAPE_EDGE[4] = Pair.of(new Vector3f(0, 7F / 16F, 7F / 16F), new Vector3f(7F / 16F, (16F - 7F) / 16F, (16F - 7F) / 16F));
+		RENDER_SHAPE_EDGE[5] = Pair.of(new Vector3f((16F - 7F) / 16, 7F / 16F, 7F / 16F), new Vector3f(1, (16F - 7F) / 16F, (16F - 7F) / 16F));
 	}
 
 	public AlchemicalTubeTileEntity(BlockPos pos, BlockState state){
@@ -150,7 +150,7 @@ public class AlchemicalTubeTileEntity extends ReagentHolderTE implements Conduit
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side) {
+	public <T> T getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.CHEMICAL_CAPABILITY && allowConnect(side)){
 			return (T) chemOpt;
 		}

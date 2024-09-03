@@ -11,5 +11,5 @@ public interface IGoggleEffect{
 	 * Called every tick on the server side while goggles with the correct lens are worn.
 	 */
 	public void armorTick(Level world, Player player);
-	
+
 }

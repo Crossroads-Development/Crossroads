@@ -88,7 +88,7 @@ public abstract class BeamRenderTE extends BlockEntity implements IBeamRenderTE,
 			prevMag[index] = beamer[index].getLastSent();
 		}
 	}
-	
+
 	@Override
 	public int[] getRenderedBeams(){
 		return beamPackets;
@@ -219,7 +219,7 @@ public abstract class BeamRenderTE extends BlockEntity implements IBeamRenderTE,
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction dir) {
+	public <T> T getCapability(Capability<T> cap, Direction dir){
 		if(cap == Capabilities.BEAM_CAPABILITY && (dir == null || inputSides()[dir.get3DDataValue()])){
 			return (T) lazyOptional;
 		}

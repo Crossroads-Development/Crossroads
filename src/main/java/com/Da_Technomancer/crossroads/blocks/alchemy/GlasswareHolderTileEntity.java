@@ -39,11 +39,11 @@ public class GlasswareHolderTileEntity extends ReagentHolderTE{
 	@SuppressWarnings("unchecked")
 	private static final Pair<Vector3f, Vector3f>[] RENDER_SHAPE_EMPTY = new Pair[0];
 	@SuppressWarnings("unchecked")
-	private static final Pair<Vector3f, Vector3f>[] RENDER_SHAPE_PHIAL = new Pair[] {Pair.of(new Vector3f(6/16F+0.01F, 1/16F, 6/16F+0.01F), new Vector3f(10/16F-0.01F, 15/16F, 10/16F-0.01F))};
+	private static final Pair<Vector3f, Vector3f>[] RENDER_SHAPE_PHIAL = new Pair[] {Pair.of(new Vector3f(6 / 16F + 0.01F, 1 / 16F, 6 / 16F + 0.01F), new Vector3f(10 / 16F - 0.01F, 15 / 16F, 10 / 16F - 0.01F))};
 	@SuppressWarnings("unchecked")
-	private static final Pair<Vector3f, Vector3f>[] RENDER_SHAPE_FLORENCE = new Pair[] {Pair.of(new Vector3f(5/16F, 1/16F, 5/16F), new Vector3f(11/16F, 7F/16F, 11/16F))};
+	private static final Pair<Vector3f, Vector3f>[] RENDER_SHAPE_FLORENCE = new Pair[] {Pair.of(new Vector3f(5 / 16F, 1 / 16F, 5 / 16F), new Vector3f(11 / 16F, 7F / 16F, 11 / 16F))};
 	@SuppressWarnings("unchecked")
-	private static final Pair<Vector3f, Vector3f>[] RENDER_SHAPE_SHELL = new Pair[] {Pair.of(new Vector3f(5/16F+0.01F, 6F/16F, 5/16F+0.01F), new Vector3f(11/16F-0.01F, 13/16F, 11/16F-0.01F))};
+	private static final Pair<Vector3f, Vector3f>[] RENDER_SHAPE_SHELL = new Pair[] {Pair.of(new Vector3f(5 / 16F + 0.01F, 6F / 16F, 5 / 16F + 0.01F), new Vector3f(11 / 16F - 0.01F, 13 / 16F, 11 / 16F - 0.01F))};
 
 	public GlasswareHolderTileEntity(BlockPos pos, BlockState state){
 		this(TYPE, pos, state);
@@ -98,10 +98,10 @@ public class GlasswareHolderTileEntity extends ReagentHolderTE{
 				out = crystal ? new ItemStack(CRItems.phialCrystal, 1) : new ItemStack(CRItems.phialGlass, 1);
 				break;
 			case FLORENCE:
-				out =  crystal ? new ItemStack(CRItems.florenceFlaskCrystal, 1) : new ItemStack(CRItems.florenceFlaskGlass, 1);
+				out = crystal ? new ItemStack(CRItems.florenceFlaskCrystal, 1) : new ItemStack(CRItems.florenceFlaskGlass, 1);
 				break;
 			case SHELL:
-				out =  crystal ? new ItemStack(CRItems.shellCrystal, 1) : new ItemStack(CRItems.shellGlass, 1);
+				out = crystal ? new ItemStack(CRItems.shellCrystal, 1) : new ItemStack(CRItems.shellGlass, 1);
 				break;
 			default:
 				return ItemStack.EMPTY;
@@ -248,7 +248,7 @@ public class GlasswareHolderTileEntity extends ReagentHolderTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side) {
+	public <T> T getCapability(Capability<T> cap, Direction side){
 		if(!(this instanceof ChargingStandTileEntity)){
 			//Glassware stand can connect to cables/conduits, subclass charging stand can not
 			if((side == null || side == getTopSide()) && cap == Capabilities.CHEMICAL_CAPABILITY && heldType() != AbstractGlassware.GlasswareTypes.NONE){

@@ -35,6 +35,7 @@ import java.util.List;
 public class LodestoneDynamo extends BaseEntityBlock{
 
 	private static final VoxelShape[] SHAPES = new VoxelShape[2];
+
 	static{
 		SHAPES[0] = Shapes.or(box(0, 0, 5, 16, 8, 11), box(0, 7, 7, 16, 9, 9), box(0, 0, 2, 16, 2, 14));
 		SHAPES[1] = Shapes.or(box(5, 0, 0, 11, 8, 16), box(7, 7, 0, 9, 9, 16), box(2, 0, 0, 14, 2, 16));
@@ -77,7 +78,7 @@ public class LodestoneDynamo extends BaseEntityBlock{
 		}
 		return InteractionResult.PASS;
 	}
-	
+
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
 		int power = CRConfig.lodestoneDynamo.get();

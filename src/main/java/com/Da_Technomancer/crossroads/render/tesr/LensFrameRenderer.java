@@ -14,7 +14,7 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class LensFrameRenderer extends BeamRenderer<LensFrameTileEntity> {
+public class LensFrameRenderer extends BeamRenderer<LensFrameTileEntity>{
 
 	protected LensFrameRenderer(BlockEntityRendererProvider.Context dispatcher){
 		super(dispatcher);

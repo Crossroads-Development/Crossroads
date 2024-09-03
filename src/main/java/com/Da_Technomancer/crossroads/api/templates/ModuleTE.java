@@ -199,9 +199,9 @@ public abstract class ModuleTE extends BlockEntity implements ITickableTileEntit
 	@Nonnull
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> T getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+	public <T> T getCapability(@Nonnull Capability<T> cap, @Nullable Direction side){
 		//Return the global optional for internal-side (null) checks
-		if (cap == Capabilities.FLUID_HANDLER && side == null && globalFluidOpt != null) {
+		if(cap == Capabilities.FLUID_HANDLER && side == null && globalFluidOpt != null){
 			return (T) globalFluidOpt;
 		}
 		if(cap == Capabilities.HEAT_CAPABILITY && side == null && useHeat()){
@@ -377,7 +377,7 @@ public abstract class ModuleTE extends BlockEntity implements ITickableTileEntit
 	 * A version of the FluidHandler which also acts as an IFluidTank- allowing pipes to do bidirectional access and having a stricter contract
 	 * Does not allow accessing multiple internal tanks
 	 */
-	protected class FluidTankHandler extends FluidHandler implements IFluidTank {
+	protected class FluidTankHandler extends FluidHandler implements IFluidTank{
 
 		/**
 		 * @param tank The index of the FluidStack this is allowed to access. Does not allow setting a negative value or accessing more than one tank. Must be less than fluidTanks()

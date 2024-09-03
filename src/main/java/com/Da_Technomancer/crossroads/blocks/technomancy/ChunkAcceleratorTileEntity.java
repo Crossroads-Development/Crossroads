@@ -130,7 +130,7 @@ public class ChunkAcceleratorTileEntity extends IFluxLink.FluxHelper{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side) {
+	public <T> T getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.BEAM_CAPABILITY){
 			return (T) beamOpt;
 		}

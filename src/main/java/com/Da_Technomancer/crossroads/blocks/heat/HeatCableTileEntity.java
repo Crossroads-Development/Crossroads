@@ -34,7 +34,7 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 	public static final BlockEntityType<HeatCableTileEntity> TYPE = CRTileEntity.createType(HeatCableTileEntity::new, CRBlocks.HEAT_CABLES.values().toArray(new HeatCable[0]));
 
 	@SuppressWarnings("unchecked")//Darn Java, not being able to verify arrays of parameterized types. Bah Humbug!
-	protected final IHeatHandler[] neighCache = new LazyOptional[]{LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty()};
+	protected final IHeatHandler[] neighCache = new LazyOptional[] {LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty()};
 	protected HeatInsulators insulator;
 	protected boolean[] matches = new boolean[6];
 	protected EnumTransferMode[] modes = ConduitBlock.IConduitTE.genModeArray(EnumTransferMode.BOTH);
@@ -182,7 +182,7 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing) {
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == Capabilities.HEAT_CAPABILITY && (facing == null || !locked(facing.get3DDataValue()))){
 			return (T) heatOpt;
 		}

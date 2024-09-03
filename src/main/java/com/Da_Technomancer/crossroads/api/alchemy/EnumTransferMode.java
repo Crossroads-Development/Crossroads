@@ -6,7 +6,7 @@ import javax.annotation.Nonnull;
 import java.util.Locale;
 
 public enum EnumTransferMode implements StringRepresentable{
-	
+
 	INPUT(true, false),
 	OUTPUT(false, true),
 	BOTH(true, true),
@@ -14,16 +14,16 @@ public enum EnumTransferMode implements StringRepresentable{
 
 	private final boolean canInput;
 	private final boolean canOutput;
-	
+
 	EnumTransferMode(boolean canInput, boolean canOutput){
 		this.canInput = canInput;
 		this.canOutput = canOutput;
 	}
-	
+
 	public boolean isInput(){
 		return canInput;
 	}
-	
+
 	public boolean isOutput(){
 		return canOutput;
 	}

@@ -34,7 +34,7 @@ public class BlockSalt extends FallingBlock{
 	private static final HashMap<Block, Block> coralMap = new HashMap<>(20);//The field to get the dead version of a coral from the live block is private, and having a big map is better than reflection
 	private static final TagKey<EntityType<?>> SALT_VULNERABLE = CraftingUtil.getTagKey(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "salt_vulnerable"));
 
-	static {
+	static{
 		coralMap.put(Blocks.TUBE_CORAL_BLOCK, Blocks.DEAD_TUBE_CORAL_BLOCK);
 		coralMap.put(Blocks.BRAIN_CORAL_BLOCK, Blocks.DEAD_BRAIN_CORAL_BLOCK);
 		coralMap.put(Blocks.BUBBLE_CORAL_BLOCK, Blocks.DEAD_BUBBLE_CORAL_BLOCK);
@@ -56,7 +56,7 @@ public class BlockSalt extends FallingBlock{
 		coralMap.put(Blocks.FIRE_CORAL_WALL_FAN, Blocks.DEAD_FIRE_CORAL_WALL_FAN);
 		coralMap.put(Blocks.HORN_CORAL_WALL_FAN, Blocks.DEAD_HORN_CORAL_WALL_FAN);
 	}
-	
+
 	protected BlockSalt(){
 		super(Properties.of().mapColor(MapColor.SAND).strength(.5F).sound(SoundType.SAND).randomTicks());//Mine with shovel
 		String name = "block_salt";
@@ -71,7 +71,7 @@ public class BlockSalt extends FallingBlock{
 
 		super.stepOn(worldIn, pos, state, entityIn);
 	}
-	
+
 	public static boolean salinate(Level worldIn, BlockPos pos){
 		BlockState killState = worldIn.getBlockState(pos);
 		Block killBlock = killState.getBlock();
@@ -99,7 +99,7 @@ public class BlockSalt extends FallingBlock{
 			//Destroy leaves without dropping look
 			resultState = Blocks.AIR.defaultBlockState();
 		}
-		
+
 		if(killState != resultState){
 			worldIn.setBlockAndUpdate(pos, resultState);
 			return true;
@@ -113,7 +113,7 @@ public class BlockSalt extends FallingBlock{
 			return;
 		}
 		super.tick(state, worldIn, pos, rand);
-		
+
 		for(int i = 0; i < 10; ++i){
 			BlockPos killPos = pos.offset(rand.nextInt(5) - 2, rand.nextInt(3) - 1, rand.nextInt(5) - 2);
 			salinate(worldIn, killPos);

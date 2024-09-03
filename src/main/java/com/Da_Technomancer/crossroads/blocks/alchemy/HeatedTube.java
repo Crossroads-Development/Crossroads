@@ -39,14 +39,14 @@ public class HeatedTube extends TEBlock implements IReadable{
 
 	static{
 		VoxelShape vertical = box(3, 0, 3, 13, 16, 13);
-		SHAPE_X = Shapes.or(vertical, box(0, 6.1, 6.1, 16, 16-6.1, 16-6.1));
-		SHAPE_Z = Shapes.or(vertical, box(6.1, 6.1, 0, 16-6.1, 16-6.1, 16));
+		SHAPE_X = Shapes.or(vertical, box(0, 6.1, 6.1, 16, 16 - 6.1, 16 - 6.1));
+		SHAPE_Z = Shapes.or(vertical, box(6.1, 6.1, 0, 16 - 6.1, 16 - 6.1, 16));
 	}
 
 	public HeatedTube(boolean crystal){
 		super(CRBlocks.getGlassProperty());
 		this.crystal = crystal;
-		String name = (crystal ? "crystal_"  : "") + "heated_tube";
+		String name = (crystal ? "crystal_" : "") + "heated_tube";
 		CRBlocks.queueForRegister(name, this);
 	}
 

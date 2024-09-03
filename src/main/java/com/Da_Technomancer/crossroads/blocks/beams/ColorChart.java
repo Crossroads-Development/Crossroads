@@ -29,8 +29,10 @@ public class ColorChart extends Block{
 	private static final VoxelShape[] SHAPES = new VoxelShape[6];
 
 	static{
-		SHAPES[0] = box(0, 15, 0, 16, 16, 16);;
-		SHAPES[1] = box(0, 0, 0, 16, 1, 16);;
+		SHAPES[0] = box(0, 15, 0, 16, 16, 16);
+		;
+		SHAPES[1] = box(0, 0, 0, 16, 1, 16);
+		;
 		SHAPES[2] = box(0, 0, 15, 16, 16, 16);
 		SHAPES[3] = box(0, 0, 0, 16, 16, 1);
 		SHAPES[4] = box(15, 0, 0, 16, 16, 16);

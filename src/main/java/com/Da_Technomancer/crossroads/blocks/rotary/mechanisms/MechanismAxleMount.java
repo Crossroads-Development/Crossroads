@@ -33,6 +33,7 @@ public class MechanismAxleMount implements IMechanism<CRMaterialLibrary.GearMate
 
 	private static final VoxelShape[] SHAPES_SIDE = new VoxelShape[6];
 	private static final VoxelShape[] SHAPES_END = new VoxelShape[6];
+
 	static{
 		VoxelShape core = Block.box(6, 6, 6, 10, 10, 10);
 		SHAPES_SIDE[0] = Shapes.or(core, Block.box(6, 0, 6, 10, 3, 10), Block.box(7, 3, 7, 9, 6, 9));//DOWN
@@ -48,6 +49,7 @@ public class MechanismAxleMount implements IMechanism<CRMaterialLibrary.GearMate
 		SHAPES_END[4] = Block.box(0, 6, 6, 2, 10, 10);
 		SHAPES_END[5] = Block.box(14, 6, 6, 16, 10, 10);
 	}
+
 	private static final float OCT_SCALE = (2F + 2F * (float) Math.sqrt(2)) / 16F;
 	private static final float ROD_HEIGHT = (4F - (float) Math.sqrt(2)) / 16F;
 
@@ -126,9 +128,9 @@ public class MechanismAxleMount implements IMechanism<CRMaterialLibrary.GearMate
 			matrix.pushPose();
 			matrix.mulPose(Axis.ZP.rotationDegrees(90));
 			matrix.scale(OCT_SCALE + antiZFightModifier, OCT_SCALE + antiZFightModifier, OCT_SCALE + antiZFightModifier);
-			matrix.translate(0, 1F/16, 0);
+			matrix.translate(0, 1F / 16, 0);
 			CRModels.draw8Core(builder, matrix, matCol, matCol, combinedLight, octSprite, rimSprite);
-			matrix.translate(0, -2F/16, 0);
+			matrix.translate(0, -2F / 16, 0);
 			CRModels.draw8Core(builder, matrix, matCol, matCol, combinedLight, octSprite, rimSprite);
 			matrix.popPose();
 

@@ -36,7 +36,7 @@ public interface IAxisHandler{
 	 * @param key The key the gear is using. 
 	 */
 	void trigger(@Nonnull IAxisHandler masterIn, byte key);
-	
+
 	void requestUpdate();
 
 	void lock();

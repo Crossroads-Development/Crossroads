@@ -35,7 +35,7 @@ public class BloodCentrifugeRenderer implements BlockEntityRenderer<BloodCentrif
 	@Override
 	public void render(BloodCentrifugeTileEntity te, float partialTicks, PoseStack matrix, MultiBufferSource buffer, int combinedLight, int combinedOverlay){
 		BlockState state = te.getBlockState();
-        IAxleHandler axle = te.getCapability(Capabilities.AXLE_CAPABILITY, null);
+		IAxleHandler axle = te.getCapability(Capabilities.AXLE_CAPABILITY, null);
 		if(state.getBlock() != CRBlocks.bloodCentrifuge || !axle.isPresent()){
 			return;
 		}

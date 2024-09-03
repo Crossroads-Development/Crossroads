@@ -37,7 +37,7 @@ public class RenderFlyingMachine extends EntityRenderer<EntityFlyingMachine>{
 		//All of these texture coords were originally specified as literals, and now that I have to port it to the new renderer, I regret this fact
 		//But am also too lazy to fix this for the future
 		//Future me, if you're reading this and need to re-work them again, sucks to be you --Your past self
-		
+
 		//Axle
 		CRRenderUtil.addVertexEntity(builder, matrix, -0.5F, 0.125F, -0.125F, 0, 1, 0, 1, 0, light);
 		CRRenderUtil.addVertexEntity(builder, matrix, -0.5F, 0.125F, 0.125F, 0, 0.9375F, 0, 1, 0, light);
@@ -101,7 +101,7 @@ public class RenderFlyingMachine extends EntityRenderer<EntityFlyingMachine>{
 		CRRenderUtil.addVertexEntity(builder, matrix, -0.35F, 0.2F, -0.35F, 1, 0.90625F, -1, 0, 0, light);
 
 		matrix.popPose();
-		
+
 		//End boxes
 		CRRenderUtil.addVertexEntity(builder, matrix, -0.5F, 0.7F, -0.2F, 0.25F, 0.5F, 1, 0, 0, light);
 		CRRenderUtil.addVertexEntity(builder, matrix, -0.5F, 0.7F, 0.2F, 0, 0.5F, 1, 0, 0, light);

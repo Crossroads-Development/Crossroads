@@ -64,7 +64,7 @@ public class RotaryUtil{
 	 * @return A size 4 array, containing the total energy adjusted for energy loss, total energy change due to loss (0 if !allowLoss), resulting base system speed, and ΣI*R²
 	 */
 	public static double[] getTotalEnergy(List<IAxleHandler> axles, boolean allowLoss){
-		double sumEnergy  = 0;
+		double sumEnergy = 0;
 		double sumInertia = 0;
 		double sumIW = 0;
 		double sumIRot = 0;//I * R^2

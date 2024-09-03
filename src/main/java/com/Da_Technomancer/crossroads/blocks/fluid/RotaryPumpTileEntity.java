@@ -331,7 +331,7 @@ public class RotaryPumpTileEntity extends InventoryTE implements INBTReceiver{
 
 	@Override
 	public CompoundTag getUpdateTag(){
-		CompoundTag nbt =  super.getUpdateTag();
+		CompoundTag nbt = super.getUpdateTag();
 		nbt.putDouble("prog", progress);
 		nbt.putFloat("prog_change", progChange);
 		nbt.put("render_fluid", renderFluid.writeToNBT(new CompoundTag()));
@@ -340,7 +340,7 @@ public class RotaryPumpTileEntity extends InventoryTE implements INBTReceiver{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing) {
+	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
 		if(capability == ForgeCapabilities.FLUID_HANDLER && facing != Direction.DOWN && facing != Direction.UP){
 			return (T) globalFluidOpt;
 		}

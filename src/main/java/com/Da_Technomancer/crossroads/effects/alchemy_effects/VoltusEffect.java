@@ -20,7 +20,7 @@ public class VoltusEffect implements IAlchEffect{
 	private static final Color[] BOLT_COLORS = new Color[] {new Color(255, 255, 0, 220), new Color(255, 228, 34, 220), new Color(255, 194, 62, 220)};
 
 	@Override
-	public void doEffect(Level world, BlockPos pos, int amount, EnumMatterPhase phase, ReagentMap reags) {
+	public void doEffect(Level world, BlockPos pos, int amount, EnumMatterPhase phase, ReagentMap reags){
 		//The odds of spawning a bolt in flame form is decreased due to the much larger number of total calls to this method there will be
 		if(Math.random() > (phase == EnumMatterPhase.FLAME ? 0.92D : phase == EnumMatterPhase.SOLID ? 0 : 0.8D)){
 			List<LivingEntity> ents = world.getEntitiesOfClass(LivingEntity.class, new AABB(pos.getX() - 5, pos.getY() - 5, pos.getZ() - 5, pos.getX() + 5, pos.getY() + 5, pos.getZ() + 5), EntitySelector.ENTITY_STILL_ALIVE);

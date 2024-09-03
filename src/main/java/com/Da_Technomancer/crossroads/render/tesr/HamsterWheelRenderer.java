@@ -60,7 +60,7 @@ public class HamsterWheelRenderer implements BlockEntityRenderer<HamsterWheelTil
 				matrix.pushPose();
 				matrix.translate(j == 0 ? 0 : .4D, i == 0 ? -.065D : .065D, 0);
 				matrix.mulPose(Axis.YP.rotationDegrees(i + j % 2 == 0 ? feetAngle : -feetAngle));
-				
+
 				//Ends
 				CRRenderUtil.addVertexBlock(builder, matrix, -xRad, -yRad, -zRad, sprite.getU0(), sprite.getV0(), 0, -1, 0, combinedLight, col);
 				CRRenderUtil.addVertexBlock(builder, matrix, xRad, -yRad, -zRad, sprite.getU1(), sprite.getV0(), 0, -1, 0, combinedLight, col);
@@ -92,7 +92,7 @@ public class HamsterWheelRenderer implements BlockEntityRenderer<HamsterWheelTil
 				CRRenderUtil.addVertexBlock(builder, matrix, xRad, yRad, zRad, sideUEn, sprite.getV1(), 1, 0, 0, combinedLight, col);
 				CRRenderUtil.addVertexBlock(builder, matrix, xRad, -yRad, zRad, sideUEn, sprite.getV0(), 1, 0, 0, combinedLight, col);
 				CRRenderUtil.addVertexBlock(builder, matrix, xRad, -yRad, -zRad, sprite.getU0(), sprite.getV0(), 1, 0, 0, combinedLight, col);
-				
+
 				matrix.popPose();
 			}
 		}

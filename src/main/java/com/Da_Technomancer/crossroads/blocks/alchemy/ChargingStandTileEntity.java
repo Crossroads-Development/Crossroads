@@ -70,13 +70,13 @@ public class ChargingStandTileEntity extends GlasswareHolderTileEntity{
 		elecOpt.invalidate();
 	}
 
-    private final IEnergyStorage elecOpt = LazyOptional.of(ElecHandler::new);
+	private final IEnergyStorage elecOpt = LazyOptional.of(ElecHandler::new);
 
 	@SuppressWarnings("unchecked")
 	@Override
-    public <T> T getCapability(Capability<T> cap, Direction side) {
+	public <T> T getCapability(Capability<T> cap, Direction side){
 		if(cap == ForgeCapabilities.ENERGY){
-            return (T) elecOpt;
+			return (T) elecOpt;
 		}
 		if(side == Direction.UP && cap == Capabilities.CHEMICAL_CAPABILITY){
 			//The super class (glassware holder) would return the handler for a conduit connection on the top

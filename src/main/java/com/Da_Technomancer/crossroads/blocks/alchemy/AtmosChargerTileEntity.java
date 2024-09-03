@@ -180,7 +180,7 @@ public class AtmosChargerTileEntity extends BlockEntity implements ITickableTile
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> T getCapability(Capability<T> cap, Direction side) {
+	public <T> T getCapability(Capability<T> cap, Direction side){
 		if(cap == ForgeCapabilities.ENERGY && side != Direction.UP){
 			return (T) feOpt;
 		}

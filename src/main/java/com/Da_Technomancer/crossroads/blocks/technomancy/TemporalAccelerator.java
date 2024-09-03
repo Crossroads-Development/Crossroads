@@ -40,6 +40,7 @@ import java.util.Locale;
 public class TemporalAccelerator extends BaseEntityBlock{
 
 	private static final VoxelShape[] SHAPES = new VoxelShape[6];
+
 	static{
 		SHAPES[0] = Shapes.or(box(0, 0, 0, 16, 4, 16), box(4, 4, 4, 12, 8, 12));
 		SHAPES[1] = Shapes.or(box(0, 12, 0, 16, 16, 16), box(4, 8, 4, 12, 12, 12));

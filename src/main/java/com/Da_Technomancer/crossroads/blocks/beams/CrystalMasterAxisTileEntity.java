@@ -124,7 +124,7 @@ public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side) {
+	public <T> T getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.BEAM_CAPABILITY && side != getFacing()){
 			return (T) magicOpt;
 		}

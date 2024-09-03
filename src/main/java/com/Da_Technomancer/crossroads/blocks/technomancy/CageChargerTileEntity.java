@@ -28,13 +28,13 @@ import java.util.ArrayList;
 public class CageChargerTileEntity extends BlockEntity implements IInfoTE{
 
 	public static final BlockEntityType<CageChargerTileEntity> TYPE = CRTileEntity.createType(CageChargerTileEntity::new, CRBlocks.cageCharger);
-	
+
 	private ItemStack cage = ItemStack.EMPTY;
 
 	public CageChargerTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state);
 	}
-	
+
 	@Override
 	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
 		if(!cage.isEmpty()){
@@ -47,16 +47,16 @@ public class CageChargerTileEntity extends BlockEntity implements IInfoTE{
 			chat.add(Component.translatable("tt.crossroads.cage_charger.empty"));
 		}
 	}
-	
+
 	public void setCage(ItemStack cage){
 		this.cage = cage;
 		setChanged();
 	}
-	
+
 	public ItemStack getCage(){
 		return cage;
 	}
-	
+
 	public float getRedstone(){
 		if(cage.isEmpty()){
 			return 0;
@@ -77,7 +77,7 @@ public class CageChargerTileEntity extends BlockEntity implements IInfoTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side) {
+	public <T> T getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.BEAM_CAPABILITY){
 			return (T) beamOpt;
 		}
@@ -158,9 +158,9 @@ public class CageChargerTileEntity extends BlockEntity implements IInfoTE{
 			return slot == 0 && stack.getItem() == CRItems.beamCage;
 		}
 	}
-	
+
 	private class BeamHandler implements IBeamHandler{
-		
+
 		@Override
 		public void setBeam(BeamUnit mag){
 			if(!mag.isEmpty() && !cage.isEmpty()){

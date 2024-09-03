@@ -29,7 +29,7 @@ public class WindTurbineRenderer implements BlockEntityRenderer<WindTurbineTileE
 	@Override
 	public void render(WindTurbineTileEntity te, float partialTicks, PoseStack matrix, MultiBufferSource buffer, int combinedLight, int combinedOverlay){
 		BlockState state = te.getBlockState();
-        IAxleHandler axle = te.getCapability(Capabilities.AXLE_CAPABILITY, null);
+		IAxleHandler axle = te.getCapability(Capabilities.AXLE_CAPABILITY, null);
 
 		if(state.getBlock() != CRBlocks.windTurbine || !axle.isPresent()){
 			return;

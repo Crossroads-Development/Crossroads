@@ -99,7 +99,7 @@ public class CultivatorVatRenderer implements BlockEntityRenderer<CultivatorVatT
 			CRModels.drawBox(matrix, builder, light, col, 0.01F, 0.25F, 0.5F, uTopMin, vTopMin, uTopMax, vTopMax, uBackMin, vFrontMin, uBackMax, vFrontMax, uSideMin, vSideMin, uSideMax, vSideMax);
 
 			//Nose
-			matrix.translate(1/16F, -0.25F, 0);
+			matrix.translate(1 / 16F, -0.25F, 0);
 			float nUTopMin = sprite.getU(2);
 			float nVTopMin = sprite.getV0();
 			float nUTopMax = sprite.getU(3);

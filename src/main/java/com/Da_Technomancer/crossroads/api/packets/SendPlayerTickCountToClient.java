@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.api.packets;
 
 
-
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
 

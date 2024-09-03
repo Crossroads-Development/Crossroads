@@ -13,7 +13,7 @@ import net.neoforged.neoforge.network.IContainerFactory;
 import java.util.HashMap;
 
 public final class CRContainers{
-	
+
 	public static void initServer(){
 		registerContainerType(FireboxContainer.TYPE, "firebox");
 		registerContainerType(IceboxContainer.TYPE, "icebox");
@@ -136,6 +136,6 @@ public final class CRContainers{
 		registerContainerType(contType, id);
 		MenuScreens.register(contType, screenFactory);
 	}
-	
+
 	public static final HashMap<String, MenuType<?>> toRegisterMenu = new HashMap<>();
 }

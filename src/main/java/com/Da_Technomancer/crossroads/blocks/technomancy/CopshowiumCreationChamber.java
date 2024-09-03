@@ -46,7 +46,7 @@ public class CopshowiumCreationChamber extends BaseEntityBlock implements IReada
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> type){
 		return ITickableTileEntity.createTicker(type, CopshowiumCreationChamberTileEntity.TYPE);
 	}
-	
+
 	@Override
 	public RenderShape getRenderShape(BlockState state){
 		return RenderShape.MODEL;
@@ -62,7 +62,7 @@ public class CopshowiumCreationChamber extends BaseEntityBlock implements IReada
 		}
 		return InteractionResult.SUCCESS;
 	}
-	
+
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
 		tooltip.add(Component.translatable("tt.crossroads.ccc.desc"));

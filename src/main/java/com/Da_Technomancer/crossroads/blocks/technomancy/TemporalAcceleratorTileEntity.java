@@ -248,9 +248,9 @@ public class TemporalAcceleratorTileEntity extends IFluxLink.FluxHelper{
 		}
 	}
 
-	public void onLoad() {
+	public void onLoad(){
 		super.onLoad();
-		if(!this.level.isClientSide) {
+		if(!this.level.isClientSide){
 			ACCEL_POSITIONS.add(new Location(worldPosition, level));
 		}
 	}
@@ -259,7 +259,7 @@ public class TemporalAcceleratorTileEntity extends IFluxLink.FluxHelper{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side) {
+	public <T> T getCapability(Capability<T> cap, Direction side){
 		if(cap == Capabilities.BEAM_CAPABILITY && (side == null || side == getFacing().getOpposite())){
 			return (T) beamOpt;
 		}

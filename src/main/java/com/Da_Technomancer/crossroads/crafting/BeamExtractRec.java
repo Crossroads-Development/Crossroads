@@ -28,6 +28,7 @@ public class BeamExtractRec implements IOptionalRecipe<Container>{
 	private final int duration;
 
 	private final boolean active;
+
 	public BeamExtractRec(ResourceLocation location, String name, Ingredient input, BeamUnit output, int duration, boolean active){
 		id = location;
 		group = name;

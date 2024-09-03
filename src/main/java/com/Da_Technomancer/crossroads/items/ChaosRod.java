@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class ChaosRod extends Item{
-	
+
 	protected ChaosRod(){
 		super(new Properties().stacksTo(1));
 		String name = "chaos_rod";

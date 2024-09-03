@@ -13,7 +13,7 @@ import net.minecraft.world.level.chunk.LevelChunk;
 public enum CRReflection implements ReflectionUtil.IReflectionKey{
 
 	CURE_ZOMBIE(ZombieVillager.class, "m_34383_", "startConverting", "Cure zombie villagers with SO2"),
-//	SWING_TIME(LivingEntity.class, "field_184617_aD", "attackStrengthTicker", "Mechanical Arm attacking"),
+	//	SWING_TIME(LivingEntity.class, "field_184617_aD", "attackStrengthTicker", "Mechanical Arm attacking"),
 //	ENTITY_LIST(ServerLevel.class, "field_175741_N", "entitiesByUuid", "Prevent mob spawning with Closure beams, modify explosions with Collapse/Equilibrium beams"),
 	LOADED_CHUNKS(ChunkMap.class, "m_140416_", "getChunks", "Spawn lightning at high atmospheric charge"),
 	LIGHTNING_POS(ServerLevel.class, "m_143288_", "findLightningTargetAround", "Target lightning at high atmospheric charge"),

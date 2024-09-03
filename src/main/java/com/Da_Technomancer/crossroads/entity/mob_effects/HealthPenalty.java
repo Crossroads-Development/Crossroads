@@ -17,13 +17,13 @@ public class HealthPenalty extends MobEffect{
 	}
 
 	@Override
-	public void addAttributeModifiers(LivingEntity entity, AttributeMap manager, int intensity) {
+	public void addAttributeModifiers(LivingEntity entity, AttributeMap manager, int intensity){
 		//The game won't let us reduce max health below 1
 		//We check for the case where, were it not for the limit, that would happen
 		//And deal the last point of damage
 		boolean shouldKill = entity.getMaxHealth() - intensity <= 0;
 		super.addAttributeModifiers(entity, manager, intensity);
-		if(entity.getHealth() > entity.getMaxHealth()) {
+		if(entity.getHealth() > entity.getMaxHealth()){
 			entity.setHealth(entity.getMaxHealth());
 		}
 		if(shouldKill){

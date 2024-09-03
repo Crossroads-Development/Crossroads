@@ -25,14 +25,14 @@ public final class Crossroads{
 	public static final Logger logger = LogManager.getLogger(MODNAME);
 
 	public Crossroads(){
-        final IEventBus bus = ModLoadingContext.get().getModEventBus();
+		final IEventBus bus = ModLoadingContext.get().getModEventBus();
 		bus.addListener(this::commonInit);
 		bus.addListener(this::clientInit);
 		bus.addListener(this::serverInit);
 
 		CRConfig.init();
 
-        NeoForge.EVENT_BUS.register(this);
+		NeoForge.EVENT_BUS.register(this);
 
 		CRConfig.load();
 	}

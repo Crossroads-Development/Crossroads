@@ -162,7 +162,7 @@ public class StampMillTileEntity extends InventoryTE{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side) {
+	public <T> T getCapability(Capability<T> cap, Direction side){
 		if(cap == ForgeCapabilities.ITEM_HANDLER){
 			return (T) itemOpt;
 		}
