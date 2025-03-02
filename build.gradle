@@ -85,9 +85,17 @@ repositories {
 //	maven {url "https://tehnut.info/maven"} //hwyla
 	maven {url "https://maven.theillusivec4.top/"} //Curios
 	maven {
-		//Create, Flywheel, Registrate
-		name = 'tterrag maven'
-		url = 'https://maven.tterrag.com/'
+		//Registrate
+		name "tterrag maven"
+		url "https://maven.tterrag.com/"
+		content {
+			includeGroup "com.tterrag.registrate"
+		}
+	}
+	maven {
+		//Create, Flywheel
+		name "create mod maven"
+		url "https://maven.createmod.net/"
 	}
 	maven {
 		url "https://cursemaven.com"
@@ -102,6 +110,7 @@ dependencies {
 	minecraft("net.minecraftforge:forge:$mc_version-$fg_version")
 
 	assert essentials_dev_variant == 'false' || essentials_dev_variant == 'true'
+	assert test_with_create == 'false' || test_with_create == "true"
 	//Essentials
 	//Can either depend on a file published to Curse or an essentials jar in a folder called "libs", in the same parent folder as "src"
 	if(essentials_dev_variant == 'false'){
@@ -129,7 +138,10 @@ dependencies {
 //	runtimeOnly(fg.deobf("mcp.mobius.waila:Hwyla:$hwyla_version"))
 
 	compileOnly fg.deobf("com.simibubi.create:create-${create_minecraft_version}:${create_version}:slim") { transitive = false }
-	compileOnly fg.deobf("com.jozufozu.flywheel:flywheel-forge-${flywheel_minecraft_version}:${flywheel_version}")
+	if(test_with_create == "true"){
+		runtimeOnly fg.deobf("com.simibubi.create:create-${create_minecraft_version}:${create_version}:all") { transitive = false }
+	}
+	compileOnly fg.deobf("dev.engine-room.flywheel:flywheel-forge-${flywheel_minecraft_version}:${flywheel_version}")
 	compileOnly fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
 
 //	TODO Create skipped MC1.19.4
