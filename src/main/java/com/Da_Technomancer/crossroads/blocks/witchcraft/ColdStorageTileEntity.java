@@ -90,10 +90,10 @@ public class ColdStorageTileEntity extends InventoryTE{
 			//When we reload, we do a single large freeze operation to account for time spent unloaded, plus a small extra as a buffer
 			long gameTime = level.getGameTime();
 
-			if(gameTime > lastTick){
+			if(gameTime > lastTick && lastTick != 0){
 				for(ItemStack stack : inventory){
 					if(stack.getItem() instanceof IPerishable perishable){
-						perishable.freeze(stack, level, temp, gameTime - lastTick + 1);
+						perishable.freeze(stack, level, temp, gameTime - lastTick + 5);
 					}
 				}
 			}
