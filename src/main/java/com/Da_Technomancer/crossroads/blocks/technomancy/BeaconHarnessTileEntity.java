@@ -156,10 +156,13 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, 
 	}
 
 	@Override
-	public void onLoad(){
-		super.onLoad();
-		if(CRConfig.beaconHarnessLoadSafety.get()){
-			loadSafetyTime = LOOP_TIME;
+	public void clearRemoved(){
+		super.clearRemoved();
+		//Server side only
+		if(!level.isClientSide()){
+			if(CRConfig.beaconHarnessLoadSafety.get()){
+				loadSafetyTime = LOOP_TIME;
+			}
 		}
 	}
 
