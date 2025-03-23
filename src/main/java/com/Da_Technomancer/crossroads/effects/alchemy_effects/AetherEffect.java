@@ -15,6 +15,7 @@ import com.Da_Technomancer.essentials.api.ReflectionUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.QuartPos;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -83,7 +84,7 @@ public class AetherEffect implements IAlchEffect{
 			try{
 				ResourceKey<Biome> biomeKey = biome();
 				if(!world.getBiome(pos).is(biomeKey)){
-					setBiomeAtPos(world, pos, getBiomeHolder(biomeKey.location()));
+					setBiomeAtPos(world, pos, getBiomeHolder(world, biomeKey));
 					CRPackets.sendPacketToDimension(world, new SendBiomeUpdateToClient(pos, biomeKey.location()));
 				}
 			}catch(Exception ex){
@@ -148,8 +149,12 @@ public class AetherEffect implements IAlchEffect{
 	}
 
 	@Nullable
-	public static Holder<Biome> getBiomeHolder(ResourceLocation registryID){
-		return ForgeRegistries.BIOMES.getHolder(registryID).orElse(null);
+	public static Holder<Biome> getBiomeHolder(Level world, ResourceKey<Biome> registryID){
+		//TODO this is bugged
+//		ForgeRegistries has got some sort of fake biome registry? It's non-null but empty
+//		return ForgeRegistries.BIOMES.getHolder(registryID).orElse(null);
+		Registry<Biome> biomeRegistry = world.registryAccess().registry(ForgeRegistries.Keys.BIOMES).orElseThrow();
+		return biomeRegistry.getHolder(registryID).orElse(null);
 	}
 
 	/**
@@ -162,6 +167,7 @@ public class AetherEffect implements IAlchEffect{
 	 */
 	public static void setBiomeAtPos(Level world, BlockPos pos, Holder<Biome> biome){
 		if(biome == null){
+			Crossroads.logger.warn("Attempting to set null biome at " + pos.toString());
 			return;
 		}
 

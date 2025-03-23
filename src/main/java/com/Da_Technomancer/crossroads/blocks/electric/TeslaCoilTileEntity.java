@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.blocks.electric;
 import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
+import com.Da_Technomancer.crossroads.api.templates.IInfoTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.items.CRItems;
@@ -14,13 +15,16 @@ import com.Da_Technomancer.essentials.api.packets.SendLongToClient;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Containers;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
@@ -29,8 +33,9 @@ import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 
-public class TeslaCoilTileEntity extends BlockEntity implements ITickableTileEntity, ILongReceiver, IItemStorage{
+public class TeslaCoilTileEntity extends BlockEntity implements ITickableTileEntity, ILongReceiver, IItemStorage, IInfoTE{
 
 	public static final BlockEntityType<TeslaCoilTileEntity> TYPE = CRTileEntity.createType(TeslaCoilTileEntity::new, CRBlocks.teslaCoil);
 
@@ -42,6 +47,18 @@ public class TeslaCoilTileEntity extends BlockEntity implements ITickableTileEnt
 
 	public TeslaCoilTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state);
+	}
+
+	@Override
+	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
+		IEnergyStorage stored = getBatteryHandler();
+		if(stored != null){
+			if(hasJar()){
+				chat.add(Component.translatable("tt.crossroads.tesla_coil.battery_augmented", stored.getEnergyStored(), stored.getMaxEnergyStored()));
+			}else{
+				chat.add(Component.translatable("tt.crossroads.tesla_coil.battery_charging", stored.getEnergyStored(), stored.getMaxEnergyStored()));
+			}
+		}
 	}
 
 	private LazyOptional<IEnergyStorage> stackOpt;
@@ -60,14 +77,15 @@ public class TeslaCoilTileEntity extends BlockEntity implements ITickableTileEnt
 	}
 
 	private boolean hasJar(){
-		return battery.getItem() instanceof LeydenJar;
+		IEnergyStorage energyHandler = getBatteryHandler();
+		return energyHandler != null && energyHandler.canReceive() && energyHandler.canExtract();
 	}
 
 	public int getTotalFE(){
 		if(level.isClientSide){
 			return storedSelf;
 		}
-		if(hasJar()){
+		if(hasJar()){//Note that non-'jar type' batteries don't get their storage merged with the tesla coil
 			return storedSelf + getBatteryHandler().getEnergyStored();
 		}
 		return storedSelf;
@@ -108,18 +126,20 @@ public class TeslaCoilTileEntity extends BlockEntity implements ITickableTileEnt
 			return;
 		}
 		IEnergyStorage handler = getBatteryHandler();
-		if(hasJar() && handler != null){
+		if(handler != null && hasJar()){
 			int handlerFE = handler.getEnergyStored();
 			if(handlerFE > totalFE){
 				handler.extractEnergy(handlerFE - totalFE, false);
 				storedSelf = 0;
 			}else{
-				totalFE -= handlerFE;
-				totalFE -= handler.receiveEnergy(totalFE, false);
-				storedSelf = totalFE;
+//				totalFE -= handlerFE;
+				int selfFE = totalFE - handlerFE;
+				selfFE -= handler.receiveEnergy(selfFE, false);
+				storedSelf = selfFE;
 			}
 		}else if(handler != null && handler.canReceive()){
-			totalFE -= handler.receiveEnergy(totalFE - handler.getEnergyStored(), false);
+			//Note that in this case, totalFE doesn't include FE already stored in the jar
+			totalFE -= handler.receiveEnergy(totalFE, false);
 			storedSelf = totalFE;
 		}else{
 			storedSelf = totalFE;
@@ -204,13 +224,6 @@ public class TeslaCoilTileEntity extends BlockEntity implements ITickableTileEnt
 		redstone = nbt.getBoolean("reds");
 		if(nbt.contains("battery")){
 			battery = ItemStack.of(nbt.getCompound("battery"));
-		}else{
-			//TODO remove: backwards compatibility
-			if(!nbt.getBoolean("from_client") && getBlockState().getValue(CRProperties.ACTIVE)){
-				battery = new ItemStack(CRItems.leydenJar);
-				LeydenJar.setCharge(battery, Math.min(LeydenJar.MAX_CHARGE, storedSelf));
-				storedSelf -= Math.min(LeydenJar.MAX_CHARGE, storedSelf);
-			}
 		}
 	}
 
@@ -219,7 +232,6 @@ public class TeslaCoilTileEntity extends BlockEntity implements ITickableTileEnt
 		CompoundTag nbt = super.getUpdateTag();
 		nbt.putInt("stored", getTotalFE());
 		nbt.putBoolean("reds", redstone);
-		nbt.putBoolean("from_client", true);//TODO remove: backwards compatibility
 		return nbt;
 	}
 

@@ -135,6 +135,12 @@ public interface IMechanism<T extends IMechanismProperty>{
 	default boolean requiresSupport(){
 		return true;
 	}
-	
-	
+
+	/**
+	 * Only called on axle-slot mechanisms. If true, updates circuit readers and comparators reading the signal from this block.
+	 * @return Whether to update circuit reader and comparator values
+	 */
+	default boolean shouldUpdateCircuitReaders(IMechanismProperty mat, Direction.Axis axis, double energy, double speed, MechanismTileEntity te){
+		return false;
+	}
 }

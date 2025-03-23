@@ -54,7 +54,7 @@ public class JEICrossroadsPlugin implements IModPlugin{
 		registry.addRecipeCatalyst(new ItemStack(CRBlocks.waterCentrifuge, 1), CentrifugeCategory.TYPE);
 		registry.addRecipeCatalyst(new ItemStack(CRBlocks.blastFurnace, 1), BlastFurnaceCategory.TYPE);
 		registry.addRecipeCatalyst(new ItemStack(CRBlocks.oreCleanser, 1), OreCleanserCategory.TYPE);
-		registry.addRecipeCatalyst(new ItemStack(CRBlocks.beamExtractor, 1), BeamExtractorCategory.TYPE);
+		registry.addRecipeCatalyst(new ItemStack(CRBlocks.beamExtractor, 1), BeamExtractorCategory.TYPE, BeamTransmuteCategory.TYPE);
 		registry.addRecipeCatalyst(new ItemStack(CRBlocks.beamReflector, 1), BeamTransmuteCategory.TYPE);
 		registry.addRecipeCatalyst(new ItemStack(CRBlocks.detailedCrafter, 1), DetailedCrafterCategory.TYPE);
 		registry.addRecipeCatalyst(new ItemStack(CRBlocks.detailedAutoCrafter, 1), DetailedCrafterCategory.TYPE);

@@ -859,6 +859,8 @@
 	"tt.crossroads.heated_tube.circuit": "Circuits read temperature",
 	"tt.crossroads.gear_facade.desc": "Decorative cover for gears and axles. Sneak-right-click on a block to set the texture.",
 	"tt.crossroads.gear_facade.setting": "Appearance: ",
+	"tt.crossroads.tesla_coil.battery_charging": "Charging battery at %1$d/%2$dFE",
+	"tt.crossroads.tesla_coil.battery_augmented": "Augmented by battery at %1$d/%2$dFE",
 
 	"container.crossroads.boilerplate.temp": "%1$d°C",
 	"container.crossroads.boilerplate.speed": "%1$f rad/s",
