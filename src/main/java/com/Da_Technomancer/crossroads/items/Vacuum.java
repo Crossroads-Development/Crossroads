@@ -21,7 +21,7 @@ import java.util.List;
 
 public class Vacuum extends Item{
 
-	private static final int RANGE = 5;
+	private static final int RANGE = 8;
 	private static final double ANGLE = Math.cos(Math.PI / 4F);//Pre-calc cosine for speed
 
 	protected Vacuum(){
