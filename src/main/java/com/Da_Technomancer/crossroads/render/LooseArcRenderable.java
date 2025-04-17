@@ -133,10 +133,10 @@ public class LooseArcRenderable implements IVisualEffect{
 //				Vec3d vec = offsetVec.add(deltaVec.scale(-deltaVec.dotProduct(offsetVec) / deltaVec.lengthSquared())).crossProduct(deltaVec);
 //				vec = vec.scale(arcWidth / 2F / vec.length());
 //
-//				buf.pos(states[i][node].x - vec.x, states[i][node].y - vec.y, states[i][node].z - vec.z).endVertex();
-//				buf.pos(states[i][node].x + vec.x, states[i][node].y + vec.y, states[i][node].z + vec.z).endVertex();
-//				buf.pos(states[i][node - 1].x + vec.x, states[i][node - 1].y + vec.y, states[i][node - 1].z + vec.z).endVertex();
-//				buf.pos(states[i][node - 1].x - vec.x, states[i][node - 1].y - vec.y, states[i][node - 1].z - vec.z).endVertex();
+//				buf.pos(states[i][node].x - vec.x, states[i][node].y - vec.y, states[i][node].z - vec.z);
+//				buf.pos(states[i][node].x + vec.x, states[i][node].y + vec.y, states[i][node].z + vec.z);
+//				buf.pos(states[i][node - 1].x + vec.x, states[i][node - 1].y + vec.y, states[i][node - 1].z + vec.z);
+//				buf.pos(states[i][node - 1].x - vec.x, states[i][node - 1].y - vec.y, states[i][node - 1].z - vec.z);
 
 				CRRenderUtil.draw3dLine(builder, matrix, states[i][node - 1], states[i][node], arcWidth, col, CRRenderUtil.BRIGHT_LIGHT);
 			}

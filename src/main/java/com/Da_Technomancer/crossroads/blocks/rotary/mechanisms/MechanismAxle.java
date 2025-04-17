@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.rotary.mechanisms;
 
 import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.MathUtil;
 import com.Da_Technomancer.crossroads.api.rotary.*;
 import com.Da_Technomancer.crossroads.items.CRItems;
@@ -18,6 +18,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
+import net.neoforged.neoforge.capabilities.BlockCapability;
 import org.joml.Quaternionf;
 
 import javax.annotation.Nonnull;
@@ -44,8 +45,8 @@ public class MechanismAxle implements IMechanism<CRMaterialLibrary.GearMaterial>
 	}
 
 	@Override
-	public boolean hasCap(Capability<?> cap, Direction capSide, IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis, MechanismTileEntity te){
-		return cap == Capabilities.AXLE_CAPABILITY && side == null && capSide.getAxis() == axis;
+	public boolean hasCap(BlockCapability<?, ?> cap, Direction capSide, IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis, MechanismTileEntity te){
+		return cap == CRCapabilities.AXLE_CAPABILITY && side == null && capSide.getAxis() == axis;
 	}
 
 	@Override
@@ -81,7 +82,7 @@ public class MechanismAxle implements IMechanism<CRMaterialLibrary.GearMaterial>
 
 			if(te.members[endDir.get3DDataValue()] != null){
 				//Do internal connection
-				if(te.members[endDir.get3DDataValue()].hasCap(Capabilities.AXLE_CAPABILITY, endDir, te.mats[endDir.get3DDataValue()], endDir, axis, te)){
+				if(te.members[endDir.get3DDataValue()].hasCap(CRCapabilities.AXLE_CAPABILITY, endDir, te.mats[endDir.get3DDataValue()], endDir, axis, te)){
 					te.axleHandlers[endDir.get3DDataValue()].propagate(masterIn, key, rotRatioIn, 0, handler.renderOffset());
 				}
 			}else{

@@ -2,13 +2,14 @@ package com.Da_Technomancer.crossroads.api.templates;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.beams.*;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import com.Da_Technomancer.essentials.api.packets.ILongReceiver;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
@@ -19,14 +20,17 @@ import net.minecraft.world.phys.AABB;
 
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-public abstract class BeamRenderTE extends BlockEntity implements IBeamRenderTE, ITickableTileEntity, ILongReceiver{
+public abstract class BeamRenderTE extends BlockEntity implements IBeamRenderTE, ITickableTileEntity, ILongReceiver, IBeamCapable{
 
 	protected int[] beamPackets = new int[6];
 	private BeamHelper[] beamer;
 	protected BeamUnitStorage[] queued = {new BeamUnitStorage(), new BeamUnitStorage()};
 	protected long activeCycle;//To prevent tick acceleration and deal with some chunk loading weirdness
 	protected BeamUnit[] prevMag = new BeamUnit[] {BeamUnit.EMPTY, BeamUnit.EMPTY, BeamUnit.EMPTY, BeamUnit.EMPTY, BeamUnit.EMPTY, BeamUnit.EMPTY};//Stores the last non-null beams sent for information readouts
+
+	protected IBeamHandler beamHandler = createBeamHandler();
 
 	public BeamRenderTE(BlockEntityType<?> type, BlockPos pos, BlockState state){
 		super(type, pos, state);
@@ -74,8 +78,7 @@ public abstract class BeamRenderTE extends BlockEntity implements IBeamRenderTE,
 			prevMag[i] = BeamUnit.EMPTY;
 			refreshBeam(i);
 		}
-		lazyOptional.invalidate();
-		lazyOptional = LazyOptional.of(this::createBeamHandler);
+		beamHandler = createBeamHandler();
 	}
 
 	protected void refreshBeam(int index){
@@ -159,8 +162,8 @@ public abstract class BeamRenderTE extends BlockEntity implements IBeamRenderTE,
 	}
 
 	@Override
-	public CompoundTag getUpdateTag(){
-		CompoundTag nbt = super.getUpdateTag();
+	public CompoundTag getUpdateTag(HolderLookup.Provider pRegistries){
+		CompoundTag nbt = super.getUpdateTag(pRegistries);
 		for(int i = 0; i < 6; i++){
 			if(beamPackets[i] != 0){
 				nbt.putInt(i + "_beam_packet", beamPackets[i]);
@@ -170,8 +173,8 @@ public abstract class BeamRenderTE extends BlockEntity implements IBeamRenderTE,
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 
 		queued[0].writeToNBT("queue0", nbt);
 		queued[1].writeToNBT("queue1", nbt);
@@ -185,8 +188,8 @@ public abstract class BeamRenderTE extends BlockEntity implements IBeamRenderTE,
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		queued[0] = BeamUnitStorage.readFromNBT("queue0", nbt);
 		queued[1] = BeamUnitStorage.readFromNBT("queue1", nbt);
 		activeCycle = nbt.getLong("cyc");
@@ -200,30 +203,16 @@ public abstract class BeamRenderTE extends BlockEntity implements IBeamRenderTE,
 		return new BeamHandler();
 	}
 
-	protected IBeamHandler lazyOptional = LazyOptional.of(this::createBeamHandler);
-
-	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		lazyOptional.invalidate();
-//		if(beamer != null && level != null){
-//			for(BeamHelper manager : beamer){
-//				if(manager != null){
-//					manager.emit(BeamUnit.EMPTY, level);
-//				}
-//			}
-//		}
-	}
 
 //	protected final BeamHandler handler = new BeamHandler();
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction dir){
-		if(cap == Capabilities.BEAM_CAPABILITY && (dir == null || inputSides()[dir.get3DDataValue()])){
-			return (T) lazyOptional;
+	@Nullable
+	public IBeamHandler getBeamHandler(Direction dir){
+		if(dir == null || inputSides()[dir.get3DDataValue()]){
+			return beamHandler;
 		}
-		return super.getCapability(cap, dir);
+		return null;
 	}
 
 	protected class BeamHandler implements IBeamHandler{

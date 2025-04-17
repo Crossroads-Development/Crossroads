@@ -1,13 +1,19 @@
 package com.Da_Technomancer.crossroads.blocks.electric;
 
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
+import com.Da_Technomancer.crossroads.blocks.alchemy.AlchemicalTube;
+import com.Da_Technomancer.crossroads.blocks.alchemy.RedsAlchemicalTube;
 import com.Da_Technomancer.essentials.api.ILinkTE;
 import com.Da_Technomancer.essentials.api.LinkHelper;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
@@ -27,6 +33,8 @@ import java.util.Locale;
 
 public class TeslaCoilTop extends BaseEntityBlock{
 
+	public static final MapCodec<TeslaCoilTop> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(Codec.STRING.fieldOf("variant").forGetter(TeslaCoilTop::getVariant)).apply(instance, TeslaCoilTop::new));
+
 	private static final VoxelShape SHAPE = Shapes.or(box(4, 0, 4, 12, 8, 12), box(0, 8, 0, 16, 16, 16));
 	public final TeslaCoilVariants variant;
 
@@ -35,6 +43,15 @@ public class TeslaCoilTop extends BaseEntityBlock{
 		this.variant = variant;
 		String name = "tesla_coil_top_" + variant.toString();
 		CRBlocks.queueForRegister(name, this);
+	}
+
+	//TODO: this is a stupid hack to make the codec work without implementing something custom, come back and fix this later.
+	public TeslaCoilTop(String variantStr){
+		this(TeslaCoilVariants.valueOf(variantStr));
+	}
+
+	private String getVariant(){
+		return variant.toString();
 	}
 
 	@Override
@@ -56,12 +73,17 @@ public class TeslaCoilTop extends BaseEntityBlock{
 	}
 
 	@Override
+	protected MapCodec<? extends BaseEntityBlock> codec(){
+		return CRBlocks.TESLA_COIL_TOP_TYPE.value();
+	}
+
+	@Override
 	public RenderShape getRenderShape(BlockState state){
 		return RenderShape.MODEL;
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
 		tooltip.add(Component.translatable("tt.crossroads.tesla_coil_top.range", variant.range));
 		tooltip.add(Component.translatable("tt.crossroads.tesla_coil_top.fe", variant.joltAmt));
 		tooltip.add(Component.translatable("tt.crossroads.tesla_coil_top.eff", (100 - variant.efficiency)));

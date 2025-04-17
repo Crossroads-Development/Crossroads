@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.api.witchcraft.ICultivatable;
 import com.Da_Technomancer.crossroads.api.witchcraft.IPerishable;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -100,14 +101,14 @@ public abstract class AbstractNutrientEnvironmentTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		lastTick = nbt.getLong("last_tick");
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		nbt.putLong("last_tick", lastTick);
 	}
 }

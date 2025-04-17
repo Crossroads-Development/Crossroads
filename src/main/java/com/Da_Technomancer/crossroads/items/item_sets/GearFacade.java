@@ -52,10 +52,10 @@ public class GearFacade extends Item{
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltips, TooltipFlag flag){
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
 		FacadeBlock facade = getMaterial(stack);
-		tooltips.add(Component.translatable("tt.crossroads.gear_facade.desc"));
-		tooltips.add(Component.translatable("tt.crossroads.gear_facade.setting").append(Component.translatable(facade.getBlockState().getBlock().getDescriptionId())));
+		tooltip.add(Component.translatable("tt.crossroads.gear_facade.desc"));
+		tooltip.add(Component.translatable("tt.crossroads.gear_facade.setting").append(Component.translatable(facade.getBlockState().getBlock().getDescriptionId())));
 	}
 
 	public void setMaterial(ItemStack stack, BlockState state){
@@ -195,7 +195,7 @@ public class GearFacade extends Item{
 				};
 			}
 
-			return create(ResourceLocation.withDefaultNamespace(nbt.getString("blockRegistryName"));
+			return create(ResourceLocation.withDefaultNamespace(nbt.getString("blockRegistryName")));
 		}
 	}
 }

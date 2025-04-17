@@ -13,6 +13,7 @@ import com.Da_Technomancer.essentials.api.BlockUtil;
 import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -35,6 +36,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.apache.commons.lang3.tuple.Triple;
 
@@ -82,6 +84,8 @@ public class HydroponicsTroughTileEntity extends InventoryTE{
 	}
 
 	private int progress = 0;
+
+	private final IItemHandler itemHandler = new ItemHandler();
 
 	public HydroponicsTroughTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state, 5);//Slot 0 is the seed; 1, 2, 3, 4 are output
@@ -235,36 +239,33 @@ public class HydroponicsTroughTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		progress = nbt.getInt("progress");
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		nbt.putInt("progress", progress);
 	}
 
+	@Nullable
 	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		itemOpt.invalidate();
+	public IItemHandler getItemHandler(Direction direction){
+		if(direction != Direction.UP){
+			return itemHandler;
+		}
+		return null;
 	}
 
-	private final IItemHandler itemOpt = LazyOptional.of(ItemHandler::new);
-
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
-		if(capability == ForgeCapabilities.ITEM_HANDLER && facing != Direction.UP){
-			return (T) itemOpt;
+	@Nullable
+	public IFluidHandler getFluidHandler(Direction dir){
+		if(dir != Direction.UP){
+			return globalFluidHandler;
 		}
-		if(capability == ForgeCapabilities.FLUID_HANDLER && facing != Direction.UP){
-			return (T) globalFluidOpt;
-		}
-
-		return super.getCapability(capability, facing);
+		return null;
 	}
 
 	@Override

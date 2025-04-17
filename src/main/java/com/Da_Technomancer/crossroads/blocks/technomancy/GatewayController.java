@@ -9,11 +9,13 @@ import com.Da_Technomancer.essentials.api.ConfigUtil;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import com.Da_Technomancer.essentials.api.redstone.IReadable;
 import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
@@ -54,6 +56,11 @@ public class GatewayController extends BaseEntityBlock implements IReadable{
 	}
 
 	@Override
+	protected MapCodec<? extends BaseEntityBlock> codec(){
+		return CRBlocks.GATEWAY_CONTROLLER_TYPE.value();
+	}
+
+	@Override
 	public RenderShape getRenderShape(BlockState state){
 		//If this is formed into a multiblock, we let the TESR on the top handle all rendering
 		return state.getValue(CRProperties.ACTIVE) ? RenderShape.ENTITYBLOCK_ANIMATED : RenderShape.MODEL;
@@ -91,7 +98,7 @@ public class GatewayController extends BaseEntityBlock implements IReadable{
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag flag){
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
 		tooltip.add(Component.translatable("tt.crossroads.gateway.desc"));
 		tooltip.add(Component.translatable("tt.crossroads.gateway.dial"));
 		tooltip.add(Component.translatable("tt.crossroads.gateway.proc"));

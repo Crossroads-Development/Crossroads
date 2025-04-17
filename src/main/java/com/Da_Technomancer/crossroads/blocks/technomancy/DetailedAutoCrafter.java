@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
@@ -37,7 +38,7 @@ public class DetailedAutoCrafter extends AutoCrafter{
 //	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
 		tooltip.add(Component.translatable("tt.crossroads.detailed_auto_crafter.basic"));
 		tooltip.add(Component.translatable("tt.crossroads.detailed_auto_crafter.sigil"));
 		tooltip.add(Component.translatable("tt.crossroads.detailed_auto_crafter.quip").setStyle(MiscUtil.TT_QUIP));

@@ -80,6 +80,8 @@ public class BoboRod extends Item{
 				}
 			}
 			if(hasOffering){
+				// TODO: This probably demands a BoboRodRec which has extends RecipeInput. Can't find a way to krangle a
+				//  3 item object that will work here.
 				Optional<BoboRec> rec = world.getRecipeManager().getRecipeFor(CRRecipes.BOBO_TYPE, inv, world);
 				if(rec.isPresent()){
 					items.forEach(Entity::kill);
@@ -101,7 +103,7 @@ public class BoboRod extends Item{
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
 		tooltip.add(Component.translatable("tt.crossroads.bobo_rod.desc"));
 		tooltip.add(Component.translatable("tt.crossroads.bobo_rod.use"));
 		tooltip.add(Component.translatable("tt.crossroads.bobo_rod.quip").setStyle(MiscUtil.TT_QUIP));

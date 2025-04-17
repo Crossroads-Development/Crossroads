@@ -1,18 +1,20 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.Capabilities;
 import com.Da_Technomancer.crossroads.api.MathUtil;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.crossroads.api.rotary.IAxisHandler;
+import com.Da_Technomancer.crossroads.api.rotary.IAxleCapable;
 import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.api.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.api.templates.IInfoTE;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import com.Da_Technomancer.essentials.api.packets.ILongReceiver;
+import com.Da_Technomancer.essentials.api.packets.SendLongToTE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -24,6 +26,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
+import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
@@ -31,7 +35,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-public abstract class AbstractCannonTileEntity extends BlockEntity implements ITickableTileEntity, IInfoTE, ILongReceiver{
+public abstract class AbstractCannonTileEntity extends BlockEntity implements ITickableTileEntity, IInfoTE, ILongReceiver, IAxleCapable{
 
 	public static final double INERTIA = 0;
 	protected static final float ROTATION_SPEED = (float) Math.PI / 40F;//Rate of convergence between angle and axle 'speed' in radians/tick. Yes, this terminology is confusing
@@ -42,6 +46,10 @@ public abstract class AbstractCannonTileEntity extends BlockEntity implements IT
 	private final float[] angle = new float[2];//Current angle, used for output. Because it's used for logic, we don't use the master axis angle syncing, which is render-based
 	private final float[] clientAngle = new float[2];//Angle on the client. On the server, acts as a record of value sent to client
 	private final float[] clientW = new float[2];//Speed on the client (post adjustment). On the server, acts as a record of value sent to client
+
+	private final AxleHandler baseAxleHandler = new AxleHandler(0, false);
+	private final AxleHandler sideAxleHandler = new AxleHandler(1, false);
+	private final AxleHandler sideAxleHandlerAlt = new AxleHandler(1, true);
 
 	//Whether the angle of this cannon is locked with a wrench
 	protected boolean locked = false;
@@ -114,9 +122,9 @@ public abstract class AbstractCannonTileEntity extends BlockEntity implements IT
 			clientW[1] = (float) sideAxleHandler.getSpeed();
 		}
 		long packet0 = (Integer.toUnsignedLong(Float.floatToRawIntBits(clientAngle[0])) << 32L) | Integer.toUnsignedLong(Float.floatToRawIntBits(clientW[0]));
-		CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient(0, packet0, worldPosition));
+		CRPackets.sendPacketAround(level, worldPosition, new SendLongToTE(0, packet0, worldPosition));
 		long packet1 = (Integer.toUnsignedLong(Float.floatToRawIntBits(clientAngle[1])) << 32L) | Integer.toUnsignedLong(Float.floatToRawIntBits(clientW[1]));
-		CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient(1, packet1, worldPosition));
+		CRPackets.sendPacketAround(level, worldPosition, new SendLongToTE(1, packet1, worldPosition));
 	}
 
 	private static float calcAngleChange(float target, float current, boolean allowLooping){
@@ -198,8 +206,8 @@ public abstract class AbstractCannonTileEntity extends BlockEntity implements IT
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		for(int i = 0; i < 2; i++){
 			energy[i] = nbt.getDouble("energy_" + i);
 			angle[i] = nbt.getFloat("angle_" + i);
@@ -211,7 +219,7 @@ public abstract class AbstractCannonTileEntity extends BlockEntity implements IT
 
 	@Override
 	protected void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+		super.saveAdditional(nbt, pRegistries);
 		for(int i = 0; i < 2; i++){
 			nbt.putDouble("energy_" + i, energy[i]);
 			nbt.putFloat("angle_" + i, angle[i]);
@@ -221,54 +229,23 @@ public abstract class AbstractCannonTileEntity extends BlockEntity implements IT
 	}
 
 	@Override
-	public CompoundTag getUpdateTag(){
-		CompoundTag nbt = super.getUpdateTag();
+	public @NotNull CompoundTag getUpdateTag(HolderLookup.@NotNull Provider pRegistries){
+		CompoundTag nbt = super.getUpdateTag(pRegistries);
 		saveAdditional(nbt);
 		return nbt;
 	}
 
 	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		baseAxleOpt.invalidate();
-		sideAxleOpt.invalidate();
-		sideAxleAltOpt.invalidate();
-	}
-
-	@Override
-	public void setBlockState(BlockState stateIn){
-		super.setBlockState(stateIn);
-		baseAxleOpt.invalidate();
-		sideAxleOpt.invalidate();
-		sideAxleAltOpt.invalidate();
-		baseAxleOpt = LazyOptional.of(() -> baseAxleHandler);
-		sideAxleOpt = LazyOptional.of(() -> sideAxleHandler);
-		sideAxleAltOpt = LazyOptional.of(() -> sideAxleHandlerAlt);
-	}
-
-	private final AxleHandler baseAxleHandler = new AxleHandler(0, false);
-	private final AxleHandler sideAxleHandler = new AxleHandler(1, false);
-	private final AxleHandler sideAxleHandlerAlt = new AxleHandler(1, true);
-	private IAxleHandler baseAxleOpt = LazyOptional.of(() -> baseAxleHandler);
-	private IAxleHandler sideAxleOpt = LazyOptional.of(() -> sideAxleHandler);
-	private IAxleHandler sideAxleAltOpt = LazyOptional.of(() -> sideAxleHandlerAlt);
-
-	@Nonnull
-	@Override
-	@SuppressWarnings("unchecked")
-	public <T> T getCapability(@Nonnull Capability<T> cap, @Nullable Direction side){
+	@Nullable
+	public IAxleHandler getAxleHandler(Direction dir){
 		Direction blockFacing = getBlockState().getValue(CRProperties.FACING);
-		if(cap == Capabilities.AXLE_CAPABILITY && blockFacing != side){
-			if(side == null || side == blockFacing.getOpposite()){
-				return (T) baseAxleOpt;
-			}else if((blockFacing.getAxis() == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.Y) == side.getAxis()){
-				return (T) sideAxleAltOpt;
-			}else{
-				return (T) sideAxleOpt;
-			}
+		if(dir == null || dir == blockFacing.getOpposite()){
+			return baseAxleHandler;
+		}else if((blockFacing.getAxis() == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.Y) == dir.getAxis()){
+			return sideAxleHandlerAlt;
+		}else{
+			return sideAxleHandler;
 		}
-
-		return super.getCapability(cap, side);
 	}
 
 	private class AxleHandler implements IAxleHandler{

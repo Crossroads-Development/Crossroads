@@ -7,14 +7,14 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
-public abstract class SingleIngrRecipe implements IOptionalRecipe<Container>{
+public abstract class SingleIngrRecipe implements IOptionalRecipe<RecipeInput>{
 
 	protected final Ingredient ingredient;
 	protected final ItemStack result;
@@ -42,11 +42,6 @@ public abstract class SingleIngrRecipe implements IOptionalRecipe<Container>{
 	@Override
 	public RecipeSerializer<?> getSerializer(){
 		return serializer;
-	}
-
-	@Override
-	public ResourceLocation getId(){
-		return id;
 	}
 
 	@Override
@@ -83,7 +78,7 @@ public abstract class SingleIngrRecipe implements IOptionalRecipe<Container>{
 	}
 
 	@Override
-	public boolean matches(Container inv, Level worldIn){
+	public boolean matches(RecipeInput input, Level worldIn){
 		return isEnabled() && ingredient.test(inv.getItem(0));
 	}
 

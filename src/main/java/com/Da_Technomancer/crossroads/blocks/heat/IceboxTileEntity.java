@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.heat;
 
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
@@ -10,14 +10,16 @@ import com.Da_Technomancer.crossroads.crafting.IceboxRec;
 import com.Da_Technomancer.crossroads.gui.container.IceboxContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -35,6 +37,8 @@ public class IceboxTileEntity extends InventoryTE{
 
 	private int burnTime;
 	private int maxBurnTime = 0;
+
+	private IItemHandler itemHandler = new ItemHandler();
 
 	public IceboxTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state, 1);
@@ -63,9 +67,9 @@ public class IceboxTileEntity extends InventoryTE{
 			setChanged();
 		}
 
-		Optional<IceboxRec> rec;
+		Optional<RecipeHolder<IceboxRec>> rec;
 		if(burnTime == 0 && (rec = level.getRecipeManager().getRecipeFor(CRRecipes.COOLING_TYPE, this, level)).isPresent()){
-			burnTime = Math.round(rec.get().getCooling());
+			burnTime = Math.round(rec.get().value().getCooling());
 			maxBurnTime = burnTime;
 			Item item = inventory[0].getItem();
 			inventory[0].shrink(1);
@@ -78,42 +82,37 @@ public class IceboxTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		burnTime = nbt.getInt("burn");
 		maxBurnTime = nbt.getInt("max_burn");
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		nbt.putInt("burn", burnTime);
 		nbt.putInt("max_burn", maxBurnTime);
 	}
 
 	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		itemOpt.invalidate();
+	@Nullable
+	public IHeatHandler getHeatHandler(Direction dir){
+		if(dir == Direction.UP || dir == null){
+			return heatHandler;
+		}
+		return null;
 	}
 
-	private IItemHandler itemOpt = LazyOptional.of(ItemHandler::new);
-
-	@SuppressWarnings("unchecked")
+	@Nullable
 	@Override
-	public <T> T getCapability(Capability<T> capability, Direction facing){
-		if(capability == Capabilities.HEAT_CAPABILITY && (facing == Direction.UP || facing == null)){
-			return (T) heatOpt;
-		}
-		if(capability == ForgeCapabilities.ITEM_HANDLER){
-			return (T) itemOpt;
-		}
-		return super.getCapability(capability, facing);
+	public IItemHandler getItemHandler(Direction direction){
+		return itemHandler;
 	}
 
 	@Override
 	public boolean canPlaceItem(int index, ItemStack stack){
-		return index == 0 && level.getRecipeManager().getRecipeFor(CRRecipes.COOLING_TYPE, new SimpleContainer(stack), level).isPresent();
+		return index == 0 && level.getRecipeManager().getRecipeFor(CRRecipes.COOLING_TYPE, new SingleRecipeInput(stack), level).isPresent();
 	}
 
 	@Override

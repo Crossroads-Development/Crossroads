@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.render.tesr;
 
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.api.rotary.RotaryUtil;
@@ -28,7 +28,7 @@ public class RotaryDrillRenderer implements BlockEntityRenderer<RotaryDrillTileE
 	@Override
 	public void render(RotaryDrillTileEntity te, float partialTicks, PoseStack matrix, MultiBufferSource buffer, int combinedLight, int combinedOverlay){
 		BlockState state = te.getBlockState();
-		IAxleHandler axle = te.getCapability(Capabilities.AXLE_CAPABILITY, null);
+		IAxleHandler axle = te.getCapability(CRCapabilities.AXLE_CAPABILITY, null);
 
 		if(!(state.getBlock() instanceof RotaryDrill) || !axle.isPresent()){
 			return;

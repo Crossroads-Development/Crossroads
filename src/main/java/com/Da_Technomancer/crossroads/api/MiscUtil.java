@@ -251,8 +251,12 @@ public final class MiscUtil{
 		return world.isThundering() ? world.getMaxLocalRawBrightness(pos, 10) : world.getMaxLocalRawBrightness(pos);
 	}
 
+
+	//TODO: not sure what to do with the following; looks like Forge used a collection of registries you could query,
+	// whereas NeoForge is using a strict set of registries (base game and custom) which are accessed via static fields
+	// on the NeoForgeRegistries class. Will need to look into whether these two methods still have a purpose.
 	public static <T> ResourceLocation getRegistryName(T registeredObject, ResourceKey<? extends Registry<T>> registryKey){
-		IForgeRegistry<T> registry = RegistryManager.ACTIVE.getRegistry(registryKey);
+		Registry<T> registry = RegistryManager.ACTIVE.getRegistry(registryKey);
 		if(registry == null){
 			Crossroads.logger.error("Invalid registry: " + registryKey.registry());
 			throw new IllegalArgumentException();
@@ -261,7 +265,7 @@ public final class MiscUtil{
 		return getRegistryName(registeredObject, registry);
 	}
 
-	public static <T> ResourceLocation getRegistryName(T registeredObject, IForgeRegistry<T> registry){
+	public static <T> ResourceLocation getRegistryName(T registeredObject, Registry<T> registry){
 		ResourceLocation result = registry.getKey(registeredObject);
 		if(result == null){
 			IllegalArgumentException ex = new IllegalArgumentException("Attempted to lookup unregistered object: " + registeredObject + "; in registry: " + registry.getRegistryName());

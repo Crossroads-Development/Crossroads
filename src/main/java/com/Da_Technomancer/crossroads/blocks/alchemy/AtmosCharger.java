@@ -9,12 +9,14 @@ import com.Da_Technomancer.essentials.api.ConfigUtil;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import com.Da_Technomancer.essentials.api.redstone.IReadable;
 import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
@@ -71,6 +73,11 @@ public class AtmosCharger extends BaseEntityBlock implements IReadable{
 	}
 
 	@Override
+	protected MapCodec<? extends BaseEntityBlock> codec(){
+		return CRBlocks.ATMOS_CHARGER_TYPE.value();
+	}
+
+	@Override
 	public RenderShape getRenderShape(BlockState state){
 		return RenderShape.MODEL;
 	}
@@ -86,7 +93,7 @@ public class AtmosCharger extends BaseEntityBlock implements IReadable{
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
 		tooltip.add(Component.translatable("tt.crossroads.atmos_charger.desc"));
 		tooltip.add(Component.translatable("tt.crossroads.atmos_charger.safety"));
 		tooltip.add(Component.translatable("tt.crossroads.atmos_charger.structure"));

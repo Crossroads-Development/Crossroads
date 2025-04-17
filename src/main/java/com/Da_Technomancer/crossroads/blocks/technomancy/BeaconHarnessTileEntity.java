@@ -14,6 +14,7 @@ import com.Da_Technomancer.essentials.api.ILinkTE;
 import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -132,24 +133,24 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, 
 	}
 
 	@Override
-	public CompoundTag getUpdateTag(){
-		CompoundTag nbt = super.getUpdateTag();
+	public CompoundTag getUpdateTag(HolderLookup.Provider pRegistries){
+		CompoundTag nbt = super.getUpdateTag(pRegistries);
 //		nbt.putBoolean("run", running);
 		fluxHelper.writeData(nbt);
 		return nbt;
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		nbt.putBoolean("run", running);
 		nbt.putInt("cycle", cycles);
 		fluxHelper.writeData(nbt);
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		running = nbt.getBoolean("run");
 		cycles = nbt.getInt("cycle");
 		fluxHelper.readData(nbt);

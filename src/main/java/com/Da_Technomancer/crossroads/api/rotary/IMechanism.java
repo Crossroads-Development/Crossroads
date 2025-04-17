@@ -9,6 +9,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.capabilities.BlockCapability;
 
 
 import javax.annotation.Nonnull;
@@ -63,7 +64,7 @@ public interface IMechanism<T extends IMechanismProperty>{
 	 * @param te The containing TileEntity
 	 * @return Whether to allow this capability
 	 */
-	boolean hasCap(Capability<?> cap, Direction capSide, IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis, MechanismTileEntity te);
+	boolean hasCap(BlockCapability<?, ?> cap, Direction capSide, IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis, MechanismTileEntity te);
 
 	/**
 	 * Called when performing a rotary propagation. The mechanism is responsible for propagating

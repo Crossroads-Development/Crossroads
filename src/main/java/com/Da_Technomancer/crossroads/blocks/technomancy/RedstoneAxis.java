@@ -12,6 +12,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -40,7 +41,7 @@ public class RedstoneAxis extends BaseEntityBlock implements IWireConnect{
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable BlockGetter reader, List<Component> tooltip, TooltipFlag flag){
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
 		tooltip.add(Component.translatable("tt.crossroads.redstone_axis.desc"));
 		tooltip.add(Component.translatable("tt.crossroads.redstone_axis.power"));
 		tooltip.add(Component.translatable("tt.crossroads.redstone_axis.circuit"));

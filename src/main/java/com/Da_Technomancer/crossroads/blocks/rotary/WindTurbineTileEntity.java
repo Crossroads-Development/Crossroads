@@ -2,14 +2,16 @@ package com.Da_Technomancer.crossroads.blocks.rotary;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
+import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.api.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.entity.CRMobDamage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -107,8 +109,6 @@ public class WindTurbineTileEntity extends ModuleTE{
 	@Override
 	public void setBlockState(BlockState stateIn){
 		super.setBlockState(stateIn);
-		axleOpt.invalidate();
-		axleOpt = LazyOptional.of(() -> axleHandler);
 		newlyPlaced = true;
 		targetBB = null;
 	}
@@ -191,8 +191,8 @@ public class WindTurbineTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		running = nbt.getBoolean("running");
 		for(int i = 0; i < 4; i++){
 			bladeColors[i] = nbt.getByte("blade_col_" + i);
@@ -200,8 +200,8 @@ public class WindTurbineTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		nbt.putBoolean("running", running);
 		for(int i = 0; i < 4; i++){
 			nbt.putByte("blade_col_" + i, (byte) bladeColors[i]);
@@ -209,8 +209,8 @@ public class WindTurbineTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public CompoundTag getUpdateTag(){
-		CompoundTag nbt = super.getUpdateTag();
+	public CompoundTag getUpdateTag(HolderLookup.Provider pRegistries){
+		CompoundTag nbt = super.getUpdateTag(pRegistries);
 		for(int i = 0; i < 4; i++){
 			nbt.putByte("blade_col_" + i, (byte) bladeColors[i]);
 		}
@@ -237,12 +237,12 @@ public class WindTurbineTileEntity extends ModuleTE{
 		return INERTIA;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
-		if(capability == Capabilities.AXLE_CAPABILITY && (facing == null || facing == getFacing().getOpposite())){
-			return (T) axleOpt;
+	@Nullable
+	public IAxleHandler getAxleHandler(Direction dir){
+		if(dir == null || dir == getFacing().getOpposite()){
+			return axleHandler;
 		}
-		return super.getCapability(capability, facing);
+		return null;
 	}
 }

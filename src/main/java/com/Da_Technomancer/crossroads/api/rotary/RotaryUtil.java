@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.api.rotary;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.crossroads.api.packets.SendMasterKeyToClient;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -205,12 +205,12 @@ public class RotaryUtil{
 	 */
 	public static void propagateAxially(@Nullable BlockEntity te, Direction direction, IAxleHandler srcHandler, IAxisHandler master, byte key, boolean shouldRenderOffset){
 		if(te != null){
-			IAxisHandler axisOpt = te.getCapability(Capabilities.AXIS_CAPABILITY, direction);
+			IAxisHandler axisOpt = te.getCapability(CRCapabilities.AXIS_CAPABILITY, direction);
 			if(axisOpt.isPresent()){
 				axisOpt.orElseThrow(NullPointerException::new).trigger(master, key);
 			}
 
-			IAxleHandler axleOpt = te.getCapability(Capabilities.AXLE_CAPABILITY, direction);
+			IAxleHandler axleOpt = te.getCapability(CRCapabilities.AXLE_CAPABILITY, direction);
 			if(axleOpt.isPresent()){
 				axleOpt.orElseThrow(NullPointerException::new).propagate(master, key, srcHandler.getRotationRatio(), 0, shouldRenderOffset);
 			}

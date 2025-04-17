@@ -34,7 +34,7 @@ public class PotionExtension extends Item implements IPerishable{
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag){
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
 		tooltip.add(Component.translatable("tt.crossroads.potion_extension.desc"));
 		int penalty = CRConfig.injectionPermaPenalty.get();
 		if(penalty > 0){

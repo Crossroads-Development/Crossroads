@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.blocks.fluid;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
@@ -24,6 +24,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
@@ -78,11 +79,11 @@ public class FatCongealerTileEntity extends InventoryTE{
 			int hun = 0;
 			int sat = 0;
 
-			if((adjTE = level.getBlockEntity(worldPosition.relative(Direction.UP))) != null && (otherOpt = adjTE.getCapability(Capabilities.AXLE_CAPABILITY, Direction.DOWN)).isPresent()){
+			if((adjTE = level.getBlockEntity(worldPosition.relative(Direction.UP))) != null && (otherOpt = adjTE.getCapability(CRCapabilities.AXLE_CAPABILITY, Direction.DOWN)).isPresent()){
 				topHandler = otherOpt.orElseThrow(NullPointerException::new);
 				hun = (int) Math.min(Math.abs(topHandler.getSpeed()) * HUN_PER_SPD, 20);
 			}
-			if((adjTE = level.getBlockEntity(worldPosition.relative(Direction.DOWN))) != null && (otherOpt = adjTE.getCapability(Capabilities.AXLE_CAPABILITY, Direction.UP)).isPresent()){
+			if((adjTE = level.getBlockEntity(worldPosition.relative(Direction.DOWN))) != null && (otherOpt = adjTE.getCapability(CRCapabilities.AXLE_CAPABILITY, Direction.UP)).isPresent()){
 				bottomHandler = otherOpt.orElseThrow(NullPointerException::new);
 				sat = (int) Math.min(Math.abs(bottomHandler.getSpeed()) * SAT_PER_SPD, 20);
 			}
@@ -117,31 +118,21 @@ public class FatCongealerTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		itemOpt.invalidate();
+	@Nullable
+	public IFluidHandler getFluidHandler(Direction dir){
+		if(dir != Direction.DOWN && dir != Direction.UP && dir != getFacing()){
+			return globalFluidHandler;
+		}
+		return null;
 	}
 
+	@Nullable
 	@Override
-	public void setBlockState(BlockState stateIn){
-		super.setBlockState(stateIn);
-		itemOpt.invalidate();
-		itemOpt = LazyOptional.of(ItemHandler::new);
-	}
-
-	private IItemHandler itemOpt = LazyOptional.of(ItemHandler::new);
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
-		if(capability == ForgeCapabilities.FLUID_HANDLER && facing != Direction.DOWN && facing != Direction.UP && facing != getFacing()){
-			return (T) globalFluidOpt;
+	public IItemHandler getItemHandler(Direction direction){
+		if(direction == null || direction == getFacing()){
+			return itemHandler;
 		}
-		if(capability == ForgeCapabilities.ITEM_HANDLER && (facing == null || facing == getFacing())){
-			return (T) itemOpt;
-		}
-
-		return super.getCapability(capability, facing);
+		return null;
 	}
 
 	@Override

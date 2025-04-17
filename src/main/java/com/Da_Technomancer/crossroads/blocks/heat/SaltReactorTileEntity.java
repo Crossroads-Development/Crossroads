@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.blocks.heat;
 
-import com.Da_Technomancer.crossroads.api.Capabilities;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
+import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
@@ -11,6 +11,7 @@ import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.SaltReactorContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -22,6 +23,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
@@ -35,6 +37,8 @@ public class SaltReactorTileEntity extends InventoryTE{
 	public static final int FUEL_DURATION = 20;
 
 	private int fuelTime = 0;
+
+	private final IItemHandler itemHandler = new ItemHandler();
 
 	public SaltReactorTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state, 1);
@@ -78,41 +82,36 @@ public class SaltReactorTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		fuelTime = nbt.getInt("fuel_time");
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		nbt.putInt("fuel_time", fuelTime);
 	}
 
+	@Nullable
 	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		itemOpt.invalidate();
+	public IItemHandler getItemHandler(Direction direction){
+		return itemHandler;
 	}
 
-	private final IItemHandler itemOpt = LazyOptional.of(ItemHandler::new);
-
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
-		if(capability == ForgeCapabilities.FLUID_HANDLER){
-			return (T) globalFluidOpt;
-		}
+	@Nullable
+	public IFluidHandler getFluidHandler(Direction dir){
+		return globalFluidHandler;
+	}
 
-		if(capability == Capabilities.HEAT_CAPABILITY && facing == Direction.DOWN){
-			return (T) heatOpt;
+	@Override
+	@Nullable
+	public IHeatHandler getHeatHandler(Direction dir){
+		if(dir == Direction.DOWN){
+			return heatHandler;
 		}
-
-		if(capability == ForgeCapabilities.ITEM_HANDLER){
-			return (T) itemOpt;
-		}
-
-		return super.getCapability(capability, facing);
+		return null;
 	}
 
 	@Override

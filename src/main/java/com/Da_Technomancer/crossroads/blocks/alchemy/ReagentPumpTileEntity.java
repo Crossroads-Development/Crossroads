@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.alchemy.EnumMatterPhase;
 import com.Da_Technomancer.crossroads.api.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.api.alchemy.IChemicalHandler;
@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.apache.commons.lang3.tuple.Pair;
 import org.joml.Vector3f;
 
+import javax.annotation.Nullable;
 import java.util.Arrays;
 
 public class ReagentPumpTileEntity extends ReagentHolderTE{
@@ -33,8 +34,6 @@ public class ReagentPumpTileEntity extends ReagentHolderTE{
 		RENDER_SHAPE_EDGE[5] = Pair.of(new Vector3f((16F - 7F) / 16, 7F / 16F, 7F / 16F), new Vector3f(1, (16F - 7F) / 16F, (16F - 7F) / 16F));
 	}
 
-	@SuppressWarnings("unchecked")//Darn Java, not being able to verify arrays of parameterized types. Bah Humbug!
-	protected final IChemicalHandler[] neighCache = new LazyOptional[] {LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty()};
 
 	public ReagentPumpTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state);
@@ -47,15 +46,6 @@ public class ReagentPumpTileEntity extends ReagentHolderTE{
 	@Override
 	protected void performTransfer(){
 		performTransfer(true);
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
-		if(cap == Capabilities.CHEMICAL_CAPABILITY){
-			return (T) chemOpt;
-		}
-		return super.getCapability(cap, side);
 	}
 
 	@Override
@@ -92,5 +82,11 @@ public class ReagentPumpTileEntity extends ReagentHolderTE{
 			}
 		}
 		return new Pair[0];
+	}
+
+	@Override
+	@Nullable
+	public IChemicalHandler getChemicalHandler(Direction dir){
+		return chemHandler;
 	}
 }

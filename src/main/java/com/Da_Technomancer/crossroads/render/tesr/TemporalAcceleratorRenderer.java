@@ -48,35 +48,35 @@ public class TemporalAcceleratorRenderer extends EntropyRenderer<TemporalAcceler
 			matrix.pushPose();
 			matrix.translate(0, radius + 0.5D - 0.001D, 0);
 
-			overlayBuilder.vertex(matrix.last().pose(), -radius, -radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).uv(0, 0).endVertex();
-			overlayBuilder.vertex(matrix.last().pose(), radius, -radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).uv(8, 0).endVertex();
-			overlayBuilder.vertex(matrix.last().pose(), radius, -radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).uv(8, 8).endVertex();
-			overlayBuilder.vertex(matrix.last().pose(), -radius, -radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).uv(0, 8).endVertex();
+			overlayBuilder.addVertex(matrix.last().pose(), -radius, -radius, -radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(0, 0);
+			overlayBuilder.addVertex(matrix.last().pose(), radius, -radius, -radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(8, 0);
+			overlayBuilder.addVertex(matrix.last().pose(), radius, -radius, radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(8, 8);
+			overlayBuilder.addVertex(matrix.last().pose(), -radius, -radius, radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(0, 8);
 
-			overlayBuilder.vertex(matrix.last().pose(), -radius, radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).uv(0, 0).endVertex();
-			overlayBuilder.vertex(matrix.last().pose(), radius, radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).uv(8, 0).endVertex();
-			overlayBuilder.vertex(matrix.last().pose(), radius, radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).uv(8, 8).endVertex();
-			overlayBuilder.vertex(matrix.last().pose(), -radius, radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).uv(0, 8).endVertex();
+			overlayBuilder.addVertex(matrix.last().pose(), -radius, radius, -radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(0, 0);
+			overlayBuilder.addVertex(matrix.last().pose(), radius, radius, -radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(8, 0);
+			overlayBuilder.addVertex(matrix.last().pose(), radius, radius, radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(8, 8);
+			overlayBuilder.addVertex(matrix.last().pose(), -radius, radius, radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(0, 8);
 
-			overlayBuilder.vertex(matrix.last().pose(), radius, -radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).uv(0, 0).endVertex();
-			overlayBuilder.vertex(matrix.last().pose(), radius, radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).uv(8, 0).endVertex();
-			overlayBuilder.vertex(matrix.last().pose(), radius, radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).uv(8, 8).endVertex();
-			overlayBuilder.vertex(matrix.last().pose(), radius, -radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).uv(0, 8).endVertex();
+			overlayBuilder.addVertex(matrix.last().pose(), radius, -radius, -radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(0, 0);
+			overlayBuilder.addVertex(matrix.last().pose(), radius, radius, -radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(8, 0);
+			overlayBuilder.addVertex(matrix.last().pose(), radius, radius, radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(8, 8);
+			overlayBuilder.addVertex(matrix.last().pose(), radius, -radius, radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(0, 8);
 
-			overlayBuilder.vertex(matrix.last().pose(), -radius, -radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).uv(0, 0).endVertex();
-			overlayBuilder.vertex(matrix.last().pose(), -radius, radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).uv(8, 0).endVertex();
-			overlayBuilder.vertex(matrix.last().pose(), -radius, radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).uv(8, 8).endVertex();
-			overlayBuilder.vertex(matrix.last().pose(), -radius, -radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).uv(0, 8).endVertex();
+			overlayBuilder.addVertex(matrix.last().pose(), -radius, -radius, -radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(0, 0);
+			overlayBuilder.addVertex(matrix.last().pose(), -radius, radius, -radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(8, 0);
+			overlayBuilder.addVertex(matrix.last().pose(), -radius, radius, radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(8, 8);
+			overlayBuilder.addVertex(matrix.last().pose(), -radius, -radius, radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(0, 8);
 
-			overlayBuilder.vertex(matrix.last().pose(), -radius, -radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).uv(0, 0).endVertex();
-			overlayBuilder.vertex(matrix.last().pose(), radius, -radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).uv(8, 0).endVertex();
-			overlayBuilder.vertex(matrix.last().pose(), radius, radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).uv(8, 8).endVertex();
-			overlayBuilder.vertex(matrix.last().pose(), -radius, radius, -radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).uv(0, 8).endVertex();
+			overlayBuilder.addVertex(matrix.last().pose(), -radius, -radius, -radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(0, 0);
+			overlayBuilder.addVertex(matrix.last().pose(), radius, -radius, -radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(8, 0);
+			overlayBuilder.addVertex(matrix.last().pose(), radius, radius, -radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(8, 8);
+			overlayBuilder.addVertex(matrix.last().pose(), -radius, radius, -radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(0, 8);
 
-			overlayBuilder.vertex(matrix.last().pose(), -radius, -radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).uv(0, 0).endVertex();
-			overlayBuilder.vertex(matrix.last().pose(), radius, -radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).uv(8, 0).endVertex();
-			overlayBuilder.vertex(matrix.last().pose(), radius, radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).uv(8, 8).endVertex();
-			overlayBuilder.vertex(matrix.last().pose(), -radius, radius, radius).color(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).uv(0, 8).endVertex();
+			overlayBuilder.addVertex(matrix.last().pose(), -radius, -radius, radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(0, 0);
+			overlayBuilder.addVertex(matrix.last().pose(), radius, -radius, radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(8, 0);
+			overlayBuilder.addVertex(matrix.last().pose(), radius, radius, radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(8, 8);
+			overlayBuilder.addVertex(matrix.last().pose(), -radius, radius, radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(0, 8);
 
 			matrix.popPose();
 		}

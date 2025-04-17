@@ -9,6 +9,7 @@ import com.Da_Technomancer.crossroads.gui.container.BeamExtractorCreativeContain
 import com.Da_Technomancer.essentials.api.packets.INBTReceiver;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -48,8 +49,8 @@ public class BeamExtractorCreativeTileEntity extends BeamRenderTE implements Men
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		output.writeToNBT("output", nbt);
 		for(int i = 0; i < 4; i++){
 			nbt.putString("expression_" + i, expression[i]);
@@ -57,8 +58,8 @@ public class BeamExtractorCreativeTileEntity extends BeamRenderTE implements Men
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		output = BeamUnit.readFromNBT("output", nbt);
 		for(int i = 0; i < 4; i++){
 			expression[i] = nbt.getString("expression_" + i);

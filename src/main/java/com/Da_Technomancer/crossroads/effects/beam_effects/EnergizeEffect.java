@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.effects.beam_effects;
 
 import com.Da_Technomancer.crossroads.CRConfig;
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.beams.BeamHit;
 import com.Da_Technomancer.crossroads.api.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
@@ -18,7 +18,7 @@ public class EnergizeEffect extends BeamEffect{
 	@Override
 	public void doBeamEffect(EnumBeamAlignments align, boolean voi, int power, BeamHit beamHit){
 		if(!performTransmute(align, voi, power, beamHit)){
-			IHeatHandler hitHandler = beamHit.getEndCapability(Capabilities.HEAT_CAPABILITY);
+			IHeatHandler hitHandler = beamHit.getEndCapability(CRCapabilities.HEAT_CAPABILITY);
 
 			if(voi){
 				//Cold beam

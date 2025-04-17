@@ -1,17 +1,23 @@
 package com.Da_Technomancer.crossroads.api.templates;
 
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
+import com.Da_Technomancer.crossroads.api.heat.IHeatCapable;
 import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.api.rotary.IAxisHandler;
+import com.Da_Technomancer.crossroads.api.rotary.IAxleCapable;
 import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.api.rotary.RotaryUtil;
+import com.Da_Technomancer.essentials.api.BlockUtil;
+import com.Da_Technomancer.essentials.api.IFluidCapable;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import com.Da_Technomancer.essentials.api.packets.ILongReceiver;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -20,6 +26,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.BlockHitResult;
 
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.IFluidTank;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
@@ -35,7 +42,7 @@ import java.util.function.Predicate;
  * Machines that also use ItemStacks or UIs override the subclass, InventoryTE
  * I'd call this class boilerplate, except its 500+ lines
  */
-public abstract class ModuleTE extends BlockEntity implements ITickableTileEntity, IInfoTE, ILongReceiver{
+public abstract class ModuleTE extends BlockEntity implements ITickableTileEntity, IInfoTE, ILongReceiver, IHeatCapable, IAxleCapable, IFluidCapable{
 
 	//Rotary
 	protected double energy = 0;
@@ -45,6 +52,10 @@ public abstract class ModuleTE extends BlockEntity implements ITickableTileEntit
 	protected double temp;
 	protected final FluidStack[] fluids = new FluidStack[fluidTanks()];
 	protected final TankProperty[] fluidProps = new TankProperty[fluidTanks()];
+
+	protected HeatHandler heatHandler;
+	protected AxleHandler axleHandler;
+	protected IFluidHandler globalFluidHandler;
 
 	/**
 	 * @return Whether to enable the default heat helpers. Should not change at runtime
@@ -87,24 +98,25 @@ public abstract class ModuleTE extends BlockEntity implements ITickableTileEntit
 
 	public ModuleTE(BlockEntityType<?> type, BlockPos pos, BlockState state){
 		super(type, pos, state);
-		if(useHeat()){
-			heatHandler = createHeatHandler();
-			heatOpt = LazyOptional.of(() -> heatHandler);
-		}else{
-			heatHandler = null;
+		if(level instanceof ServerLevel serverLevel){
+			if(useHeat()){
+				heatHandler = createHeatHandler();
+
+			}else{
+				heatHandler = null;
+			}
+			if(useRotary()){
+				axleHandler = createAxleHandler();
+			}else{
+				axleHandler = null;
+			}
+			if(fluids.length != 0){
+				globalFluidHandler = createGlobalFluidHandler();
+			}else{
+				globalFluidHandler = null;
+			}
 		}
-		if(useRotary()){
-			axleHandler = createAxleHandler();
-			axleOpt = LazyOptional.of(() -> axleHandler);
-		}else{
-			axleHandler = null;
-		}
-		if(fluids.length != 0){
-			globalFluidHandler = createGlobalFluidHandler();
-			globalFluidOpt = LazyOptional.of(() -> globalFluidHandler);
-		}else{
-			globalFluidHandler = null;
-		}
+
 
 		Arrays.fill(fluids, FluidStack.EMPTY);
 	}
@@ -136,8 +148,8 @@ public abstract class ModuleTE extends BlockEntity implements ITickableTileEntit
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		nbt.putDouble("mot_1", energy);
 
 		nbt.putBoolean("init_heat", initHeat);
@@ -146,15 +158,15 @@ public abstract class ModuleTE extends BlockEntity implements ITickableTileEntit
 		for(int i = 0; i < fluids.length; i++){
 			if(fluids[i] != null){
 				CompoundTag fluidNBT = new CompoundTag();
-				fluids[i].writeToNBT(fluidNBT);
+				fluidNBT = BlockUtil.stackToNBT(fluids[i], pRegistries);
 				nbt.put("fluid_" + i, fluidNBT);
 			}
 		}
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		energy = nbt.getDouble("mot_1");
 
 		initHeat = nbt.getBoolean("init_heat");
@@ -168,24 +180,10 @@ public abstract class ModuleTE extends BlockEntity implements ITickableTileEntit
 	}
 
 	@Override
-	public CompoundTag getUpdateTag(){
-		CompoundTag nbt = super.getUpdateTag();
+	public CompoundTag getUpdateTag(HolderLookup.Provider pRegistries){
+		CompoundTag nbt = super.getUpdateTag(pRegistries);
 		//Placeholder for future use
 		return nbt;
-	}
-
-	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		if(heatOpt != null){
-			heatOpt.invalidate();
-		}
-		if(axleOpt != null){
-			axleOpt.invalidate();
-		}
-		if(globalFluidOpt != null){
-			globalFluidOpt.invalidate();
-		}
 	}
 
 	@Override
@@ -196,29 +194,32 @@ public abstract class ModuleTE extends BlockEntity implements ITickableTileEntit
 		}
 	}
 
-	@Nonnull
 	@Override
-	@SuppressWarnings("unchecked")
-	public <T> T getCapability(@Nonnull Capability<T> cap, @Nullable Direction side){
-		//Return the global optional for internal-side (null) checks
-		if(cap == Capabilities.FLUID_HANDLER && side == null && globalFluidOpt != null){
-			return (T) globalFluidOpt;
+	@Nullable
+	public IHeatHandler getHeatHandler(Direction dir){
+		if(dir == null && useHeat()){
+			return heatHandler;
 		}
-		if(cap == Capabilities.HEAT_CAPABILITY && side == null && useHeat()){
-			return (T) heatOpt;
-		}
-		if(cap == Capabilities.AXLE_CAPABILITY && side == null && useRotary()){
-			return (T) axleOpt;
-		}
-		return super.getCapability(cap, side);
+		return null;
 	}
 
-	protected HeatHandler heatHandler;
-	protected IHeatHandler heatOpt;
-	protected AxleHandler axleHandler;
-	protected IAxleHandler axleOpt;
-	protected IFluidHandler globalFluidHandler;
-	protected IFluidHandler globalFluidOpt;
+	@Override
+	@Nullable
+	public IAxleHandler getAxleHandler(Direction dir){
+		if(dir == null && useRotary()){
+			return axleHandler;
+		}
+		return null;
+	}
+
+	@Override
+	@Nullable
+	public IFluidHandler getFluidHandler(Direction dir){
+		if(dir == null && globalFluidHandler != null){
+			return globalFluidHandler;
+		}
+		return null;
+	}
 
 	protected class FluidHandler implements IFluidHandler{
 
@@ -236,7 +237,7 @@ public abstract class ModuleTE extends BlockEntity implements ITickableTileEntit
 			if(tank < 0){
 				//Try each tank, stop when reaching the first one that allows this fluid
 				for(int i = 0; i < fluids.length; i++){
-					if(!resource.isEmpty() && isFluidValid(i, resource) && (fluids[i].isEmpty() || fluids[i].isFluidEqual(resource))){
+					if(!resource.isEmpty() && isFluidValid(i, resource) && (fluids[i].isEmpty() || fluids[i].equals(resource))){
 						int change = Math.min(fluidProps[i].capacity - fluids[i].getAmount(), resource.getAmount());
 						if(action == FluidAction.EXECUTE && change > 0){
 							int prevAmount = fluids[i].getAmount();
@@ -248,7 +249,7 @@ public abstract class ModuleTE extends BlockEntity implements ITickableTileEntit
 					}
 				}
 			}else{
-				if(!resource.isEmpty() && isFluidValid(tank, resource) && (fluids[tank].isEmpty() || fluids[tank].isFluidEqual(resource))){
+				if(!resource.isEmpty() && isFluidValid(tank, resource) && (fluids[tank].isEmpty() || FluidStack.isSameFluidSameComponents(fluids[tank], resource))){
 					int change = Math.min(fluidProps[tank].capacity - fluids[tank].getAmount(), resource.getAmount());
 					if(action == FluidAction.EXECUTE && change >= 0){
 						int prevAmount = fluids[tank].getAmount();
@@ -273,7 +274,7 @@ public abstract class ModuleTE extends BlockEntity implements ITickableTileEntit
 			if(tank < 0){
 				//Try each tank, stop when reaching the first one that allows this fluid
 				for(int i = 0; i < fluids.length; i++){
-					if(fluidProps[i].canDrain && resource.isFluidEqual(fluids[i])){
+					if(fluidProps[i].canDrain && FluidStack.isSameFluidSameComponents(resource, fluids[i])){
 						int change = Math.min(fluids[i].getAmount(), resource.getAmount());
 
 						if(action == FluidAction.EXECUTE && change >= 0){
@@ -287,7 +288,7 @@ public abstract class ModuleTE extends BlockEntity implements ITickableTileEntit
 				}
 
 				return FluidStack.EMPTY;
-			}else if(fluidProps[tank].canDrain && resource.isFluidEqual(fluids[tank])){
+			}else if(fluidProps[tank].canDrain && resource.equals(fluids[tank])){
 				int change = Math.min(fluids[tank].getAmount(), resource.getAmount());
 
 				if(action == FluidAction.EXECUTE){

@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -54,9 +55,9 @@ public class ArmorPropellerPack extends TechnomancyArmor implements WindingTable
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
-		super.appendHoverText(stack, worldIn, tooltip, flagIn);
-		appendTooltip(stack, tooltip, flagIn);
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
+		super.appendHoverText(stack, context, tooltip, flag);
+		appendTooltip(stack, tooltip, flag);
 		tooltip.add(Component.translatable("tt.crossroads.propeller_pack.desc"));
 		tooltip.add(Component.translatable("tt.crossroads.propeller_pack.quip").setStyle(MiscUtil.TT_QUIP));
 	}

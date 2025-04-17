@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.api.templates.IInfoTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
@@ -55,16 +56,16 @@ public class GatewayEdgeTileEntity extends BlockEntity implements IInfoTE{
 	//Multiblock management
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 
 		//Generic
 		key = nbt.contains("key") ? BlockPos.of(nbt.getLong("key")) : null;
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 
 		//Generic
 		if(key != null){

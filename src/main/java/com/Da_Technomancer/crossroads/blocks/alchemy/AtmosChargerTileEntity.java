@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.MathUtil;
 import com.Da_Technomancer.crossroads.api.alchemy.AtmosChargeSavedData;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
+import com.Da_Technomancer.crossroads.api.electric.IEnergyCapable;
 import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.api.templates.IInfoTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -13,6 +14,7 @@ import com.Da_Technomancer.crossroads.blocks.electric.TeslaCoilTopTileEntity;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -26,11 +28,13 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-public class AtmosChargerTileEntity extends BlockEntity implements ITickableTileEntity, IInfoTE{
+public class AtmosChargerTileEntity extends BlockEntity implements ITickableTileEntity, IInfoTE, IEnergyCapable{
 
 	public static final BlockEntityType<AtmosChargerTileEntity> TYPE = CRTileEntity.createType(AtmosChargerTileEntity::new, CRBlocks.atmosCharger);
 
@@ -41,6 +45,8 @@ public class AtmosChargerTileEntity extends BlockEntity implements ITickableTile
 	private int fe = 0;
 	private int renderTimer = 0;
 	private Boolean mode = null;
+
+	private IEnergyStorage energyHandler = new ElecHandler();
 
 	public AtmosChargerTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state);
@@ -109,10 +115,10 @@ public class AtmosChargerTileEntity extends BlockEntity implements ITickableTile
 			if(fe > 0){
 				for(int i = 0; i < 4; i++){
 					Direction side = Direction.from2DDataValue(i);
-					BlockEntity te = level.getBlockEntity(worldPosition.relative(side));
+					BlockPos worldPos = worldPosition.relative(side);
 					IEnergyStorage otherCap;
-					if(te != null && (otherCap = te.getCapability(ForgeCapabilities.ENERGY, side.getOpposite())).isPresent()){
-						int moved = otherCap.orElseThrow(NullPointerException::new).receiveEnergy(fe, false);
+					if((otherCap = level.getCapability(Capabilities.EnergyStorage.BLOCK, worldPos, side.getOpposite())) != null){
+						int moved = otherCap.receiveEnergy(fe, false);
 						if(moved > 0){
 							fe -= moved;
 							setChanged();
@@ -159,32 +165,24 @@ public class AtmosChargerTileEntity extends BlockEntity implements ITickableTile
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		fe = nbt.getInt("fe");
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		nbt.putInt("fe", fe);
 	}
 
+	@Nullable
 	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		feOpt.invalidate();
-	}
-
-	private IEnergyStorage feOpt = LazyOptional.of(ElecHandler::new);
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public <T> T getCapability(Capability<T> cap, Direction side){
-		if(cap == ForgeCapabilities.ENERGY && side != Direction.UP){
-			return (T) feOpt;
+	public IEnergyStorage getEnergyHandler(Direction dir){
+		if(dir != Direction.UP){
+			return energyHandler;
 		}
-		return super.getCapability(cap, side);
+		return null;
 	}
 
 	private class ElecHandler implements IEnergyStorage{

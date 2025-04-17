@@ -43,7 +43,7 @@ public class EdibleBlob extends Item{
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
 		if(stack.hasTag()){
 			tooltip.add(Component.translatable("tt.crossroads.edible_blob.food", getHealAmount(stack)));
 			tooltip.add(Component.translatable("tt.crossroads.edible_blob.sat", getTrueSat(stack)));

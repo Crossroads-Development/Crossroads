@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -38,5 +39,10 @@ public class ReactiveSpot extends BaseEntityBlock{
 	@Override
 	public VoxelShape getInteractionShape(BlockState state, BlockGetter worldIn, BlockPos pos){
 		return Shapes.empty();
+	}
+
+	@Override
+	protected MapCodec<? extends BaseEntityBlock> codec(){
+		return CRBlocks.REACTIVE_SPOT_TYPE.value();
 	}
 }

@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -77,6 +78,11 @@ public class GlasswareHolder extends BaseEntityBlock{
 				case SHELL -> SHELL_SHAPE;
 			};
 		}
+	}
+
+	@Override
+	protected MapCodec<? extends BaseEntityBlock> codec(){
+		return CRBlocks.GLASSWARE_HOLDER_TYPE.value();
 	}
 
 	@Override

@@ -5,12 +5,14 @@ import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.api.ConfigUtil;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -59,6 +61,11 @@ public class Dynamo extends BaseEntityBlock{
 	}
 
 	@Override
+	protected MapCodec<? extends BaseEntityBlock> codec(){
+		return CRBlocks.DYNAMO_TYPE.value();
+	}
+
+	@Override
 	public RenderShape getRenderShape(BlockState state){
 		return RenderShape.MODEL;
 	}
@@ -80,7 +87,7 @@ public class Dynamo extends BaseEntityBlock{
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
 		tooltip.add(Component.translatable("tt.crossroads.dynamo.power", CRConfig.electPerJoule.get()));
 		tooltip.add(Component.translatable("tt.crossroads.dynamo.usage", DynamoTileEntity.POWER_MULT));
 		tooltip.add(Component.translatable("tt.crossroads.boilerplate.inertia", DynamoTileEntity.INERTIA));

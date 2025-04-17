@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.api.alchemy;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.api.crafting.FluidIngredient;
@@ -14,9 +14,11 @@ import com.Da_Technomancer.crossroads.api.templates.IInfoTE;
 import com.Da_Technomancer.crossroads.api.templates.IReagRenderTE;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 import com.Da_Technomancer.essentials.api.BlockUtil;
+import com.Da_Technomancer.essentials.api.IFluidCapable;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -51,7 +53,7 @@ import java.util.function.Supplier;
  * Helper implementation for a tile entity that stores reagents, optional support for connecting to conduits and/or heat cables
  * Implementations must override getCapability to connect to anything
  */
-public abstract class ReagentHolderTE extends BlockEntity implements ITickableTileEntity, IInfoTE, IReagRenderTE, IIntArrayReceiver{
+public abstract class ReagentHolderTE extends BlockEntity implements ITickableTileEntity, IInfoTE, IReagRenderTE, IIntArrayReceiver, IChemicalCapable, IFluidCapable{
 
 	protected boolean init = false;
 	protected double cableTemp = 0;
@@ -68,6 +70,18 @@ public abstract class ReagentHolderTE extends BlockEntity implements ITickableTi
 	//Used for syncing reag contents to client for rendering
 	protected int[] colorSentToClient = new int[EnumMatterPhase.values().length];
 	protected int[][] colorDataOnClient = new int[EnumMatterPhase.values().length][];
+
+	private FalseFluidHandler falseFluidHandler;
+
+	/**
+	 * Controls maximum amount of reagent this block can hold before it stops accepting more
+	 * @return Maximum capacity
+	 */
+	protected int transferCapacity(){
+		return 1;
+	}
+
+	protected IChemicalHandler chemHandler = new AlchHandler();
 
 	protected boolean useCableHeat(){
 		return false;
@@ -122,6 +136,16 @@ public abstract class ReagentHolderTE extends BlockEntity implements ITickableTi
 	protected ReagentHolderTE(BlockEntityType<?> type, BlockPos pos, BlockState state, boolean glass){
 		this(type, pos, state);
 		this.glass = glass;
+	}
+
+	@Override
+	@Nullable
+	public IFluidHandler getFluidHandler(Direction direction){
+		// TODO: RegentHolderTE implements an internal fluid buffer that, as far as I can see, is only used by the
+		//  FluidInjectorTileEntity - which is also the only child that allows requests for a FluidHandler. It seems
+		//  like the fluid buffer should be stored on that class instead, and *it* should implement IFluidCapable,
+		//  but I am not addressing that on this pass. Anyway, this returns null as a default.
+		return null;
 	}
 
 	protected void destroyCarrier(float strength){
@@ -221,12 +245,10 @@ public abstract class ReagentHolderTE extends BlockEntity implements ITickableTi
 		for(int i = 0; i < 6; i++){
 			if(modes[i].isOutput()){
 				Direction side = Direction.from3DDataValue(i);
-				BlockEntity te = level.getBlockEntity(worldPosition.relative(side));
-				IChemicalHandler otherOpt;
-				if(contents.getTotalQty() <= 0 || te == null || !(otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())).isPresent()){
+				IChemicalHandler otherHandler;
+				if(contents.getTotalQty() <= 0 || (otherHandler = level.getCapability(CRCapabilities.CHEMICAL_CAPABILITY, worldPosition.relative(side), side.getOpposite())) == null){
 					continue;
 				}
-				IChemicalHandler otherHandler = otherOpt.orElseThrow(NullPointerException::new);
 
 				EnumContainerType otherChannel = otherHandler.getChannel(side.getOpposite());
 				EnumTransferMode otherMode = otherHandler.getMode(side.getOpposite());
@@ -234,7 +256,7 @@ public abstract class ReagentHolderTE extends BlockEntity implements ITickableTi
 					continue;
 				}
 
-				if(otherHandler.insertReagents(contents, side.getOpposite(), handler, ignorePhase)){
+				if(otherHandler.insertReagents(contents, side.getOpposite(), chemHandler, ignorePhase)){
 					lastActTick = worldTick;
 					correctReag();
 					setChanged();
@@ -367,8 +389,8 @@ public abstract class ReagentHolderTE extends BlockEntity implements ITickableTi
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		glass = nbt.getBoolean("glass");
 		contents = ReagentMap.readFromNBT(nbt);
 		cableTemp = nbt.getDouble("temp");
@@ -380,8 +402,8 @@ public abstract class ReagentHolderTE extends BlockEntity implements ITickableTi
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		nbt.putBoolean("glass", glass);
 		contents.write(nbt);
 		nbt.putDouble("temp", cableTemp);
@@ -390,8 +412,8 @@ public abstract class ReagentHolderTE extends BlockEntity implements ITickableTi
 	}
 
 	@Override
-	public CompoundTag getUpdateTag(){
-		CompoundTag nbt = super.getUpdateTag();
+	public CompoundTag getUpdateTag(HolderLookup.Provider pRegistries){
+		CompoundTag nbt = super.getUpdateTag(pRegistries);
 		nbt.putIntArray("color_to_client", colorSentToClient);
 		return nbt;
 	}
@@ -407,22 +429,6 @@ public abstract class ReagentHolderTE extends BlockEntity implements ITickableTi
 	@Nonnull
 	protected abstract EnumTransferMode[] getModes();
 
-	/**
-	 * Controls maximum amount of reagent this block can hold before it stops accepting more
-	 * @return Maximum capacity
-	 */
-	protected int transferCapacity(){
-		return 1;
-	}
-
-	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		chemOpt.invalidate();
-	}
-
-	protected IChemicalHandler handler = new AlchHandler();
-	protected IChemicalHandler chemOpt = LazyOptional.of(() -> handler);
 
 	protected class AlchHandler implements IChemicalHandler{
 
@@ -504,8 +510,6 @@ public abstract class ReagentHolderTE extends BlockEntity implements ITickableTi
 			return contents.getQty(id);
 		}
 	}
-
-	private FalseFluidHandler falseFluidHandler;
 
 	protected IFluidHandler getInternalFluidHandler(){
 		if(falseFluidHandler == null){
@@ -648,7 +652,7 @@ public abstract class ReagentHolderTE extends BlockEntity implements ITickableTi
 		private void updateFakeInv(){
 			Arrays.fill(fakeInventory, ItemStack.EMPTY);
 			int index = 0;
-			double endTemp = handler.getTemp();
+			double endTemp = chemHandler.getTemp();
 			for(IReagent reag : contents.keySetReag()){
 				ReagentStack rStack = contents.getStack(reag);
 				fakeInventory[index] = !rStack.isEmpty() && reag.getPhase(endTemp) == EnumMatterPhase.SOLID ? reag.getStackFromReagent(rStack) : ItemStack.EMPTY;

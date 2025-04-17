@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.blocks.rotary.mechanisms;
 
 import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
 import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.api.rotary.*;
 import com.Da_Technomancer.crossroads.items.CRItems;
@@ -14,6 +14,7 @@ import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -21,6 +22,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.capabilities.BlockCapability;
 
 
 import javax.annotation.Nonnull;
@@ -44,8 +46,8 @@ public class MechanismToggleGear extends MechanismSmallGear{
 	}
 
 	@Override
-	public boolean hasCap(Capability<?> cap, Direction capSide, IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis, MechanismTileEntity te){
-		return ((cap == Capabilities.COG_CAPABILITY && (te.redstoneIn != 0 ^ inverted)) || cap == Capabilities.AXLE_CAPABILITY) && side == capSide;
+	public boolean hasCap(BlockCapability<?, ?> cap, Direction capSide, IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis, MechanismTileEntity te){
+		return ((cap == CRCapabilities.COG_CAPABILITY && (te.redstoneIn != 0 ^ inverted)) || cap == CRCapabilities.AXLE_CAPABILITY) && side == capSide;
 	}
 
 	@Override
@@ -81,7 +83,7 @@ public class MechanismToggleGear extends MechanismSmallGear{
 		if((te.redstoneIn != 0) ^ inverted){
 			//Other internal gears
 			for(int i = 0; i < 6; i++){
-				if(i != side.get3DDataValue() && i != side.getOpposite().get3DDataValue() && te.members[i] != null && te.members[i].hasCap(Capabilities.COG_CAPABILITY, Direction.from3DDataValue(i), te.mats[i], Direction.from3DDataValue(i), te.getAxleAxis(), te)){
+				if(i != side.get3DDataValue() && i != side.getOpposite().get3DDataValue() && te.members[i] != null && te.members[i].hasCap(CRCapabilities.COG_CAPABILITY, Direction.from3DDataValue(i), te.mats[i], Direction.from3DDataValue(i), te.getAxleAxis(), te)){
 					te.axleHandlers[i].propagate(masterIn, key, RotaryUtil.getDirSign(side, Direction.from3DDataValue(i)) * handler.getRotationRatio(), .5D, !handler.renderOffset());
 				}
 			}
@@ -90,26 +92,23 @@ public class MechanismToggleGear extends MechanismSmallGear{
 				if(i != side.get3DDataValue() && i != side.getOpposite().get3DDataValue()){
 					Direction facing = Direction.from3DDataValue(i);
 					// Adjacent gears
-					BlockEntity adjTE = te.getLevel().getBlockEntity(te.getBlockPos().relative(facing));
-					if(adjTE != null){
-						ICogHandler cogOpt;
-						if((cogOpt = adjTE.getCapability(Capabilities.COG_CAPABILITY, side)).isPresent()){
-							cogOpt.orElseThrow(NullPointerException::new).connect(masterIn, key, -handler.getRotationRatio(), .5D, facing.getOpposite(), handler.renderOffset());
-						}else if((cogOpt = adjTE.getCapability(Capabilities.COG_CAPABILITY, facing.getOpposite())).isPresent()){
+					BlockPos adjPos = te.getBlockPos().relative(facing);
+					ICogHandler cogHandler;
+					if((cogHandler = te.getLevel().getCapability(CRCapabilities.COG_CAPABILITY, adjPos, side)) != null){
+						cogHandler.connect(masterIn, key, -handler.getRotationRatio(), .5D, facing.getOpposite(), handler.renderOffset());
+					}else if((cogHandler = te.getLevel().getCapability(CRCapabilities.COG_CAPABILITY, adjPos, facing.getOpposite())) != null){
 							//Check for large gears
-							cogOpt.orElseThrow(NullPointerException::new).connect(masterIn, key, RotaryUtil.getDirSign(side, facing) * handler.getRotationRatio(), .5D, side, handler.renderOffset());
-						}
+						cogHandler.connect(masterIn, key, RotaryUtil.getDirSign(side, facing) * handler.getRotationRatio(), .5D, side, handler.renderOffset());
 					}
 
 					// Diagonal gears
-					BlockEntity diagTE = te.getLevel().getBlockEntity(te.getBlockPos().relative(facing).relative(side));
-					ICogHandler cogOpt;
-					if(diagTE != null && (cogOpt = diagTE.getCapability(Capabilities.COG_CAPABILITY, facing.getOpposite())).isPresent() && RotaryUtil.canConnectThrough(te.getLevel(), te.getBlockPos().relative(facing), facing.getOpposite(), side)){
-						cogOpt.orElseThrow(NullPointerException::new).connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * handler.getRotationRatio(), .5D, side.getOpposite(), handler.renderOffset());
+					BlockPos diagPos = te.getBlockPos().relative(facing).relative(side);
+					if((cogHandler = te.getLevel().getCapability(CRCapabilities.COG_CAPABILITY, diagPos, facing.getOpposite())) != null && RotaryUtil.canConnectThrough(te.getLevel(), te.getBlockPos().relative(facing), facing.getOpposite(), side)){
+						cogHandler.connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * handler.getRotationRatio(), .5D, side.getOpposite(), handler.renderOffset());
 					}
 
-					if(sideTE != null && (cogOpt = sideTE.getCapability(Capabilities.COG_CAPABILITY, facing)).isPresent()){
-						cogOpt.orElseThrow(NullPointerException::new).connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * rotRatioIn, .5D, side.getOpposite(), handler.renderOffset());
+					if((cogHandler = te.getLevel().getCapability(CRCapabilities.COG_CAPABILITY, diagPos, facing)) != null){
+						cogHandler.connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * rotRatioIn, .5D, side.getOpposite(), handler.renderOffset());
 					}
 				}
 			}
@@ -117,18 +116,18 @@ public class MechanismToggleGear extends MechanismSmallGear{
 
 		//Connected block
 		if(sideTE != null){
-			IAxisHandler axisOpt = sideTE.getCapability(Capabilities.AXIS_CAPABILITY, side.getOpposite());
-			if(axisOpt.isPresent()){
-				axisOpt.orElseThrow(NullPointerException::new).trigger(masterIn, key);
+			IAxisHandler axisOpt = te.getLevel().getCapability(CRCapabilities.AXIS_CAPABILITY, sideTE.getBlockPos(), side.getOpposite());
+			if(axisOpt != null){
+				axisOpt.trigger(masterIn, key);
 			}
-			IAxleHandler axleOpt = sideTE.getCapability(Capabilities.AXLE_CAPABILITY, side.getOpposite());
-			if(axleOpt.isPresent()){
-				axleOpt.orElseThrow(NullPointerException::new).propagate(masterIn, key, handler.getRotationRatio(), 0, handler.renderOffset());
+			IAxleHandler axleOpt = te.getLevel().getCapability(CRCapabilities.AXLE_CAPABILITY, sideTE.getBlockPos(), side.getOpposite());
+			if(axleOpt != null){
+				axleOpt.propagate(masterIn, key, handler.getRotationRatio(), 0, handler.renderOffset());
 			}
 		}
 
 		//Axle slot
-		if(te.getAxleAxis() == side.getAxis() && te.members[6] != null && te.members[6].hasCap(Capabilities.AXLE_CAPABILITY, side, te.mats[6], null, te.getAxleAxis(), te)){
+		if(te.getAxleAxis() == side.getAxis() && te.members[6] != null && te.members[6].hasCap(CRCapabilities.AXLE_CAPABILITY, side, te.mats[6], null, te.getAxleAxis(), te)){
 			te.axleHandlers[6].propagate(masterIn, key, handler.getRotationRatio(), 0, handler.renderOffset());
 		}
 	}

@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.heat;
 
-import com.Da_Technomancer.crossroads.api.Capabilities;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
+import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
@@ -9,14 +9,15 @@ import com.Da_Technomancer.crossroads.gui.container.SmelterContainer;
 import com.Da_Technomancer.essentials.api.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -37,6 +38,8 @@ public class SmelterTileEntity extends InventoryTE{
 	public static final int USAGE = 5;
 
 	private int progress = 0;
+
+	private IItemHandler itemHandler = new ItemHandler();
 
 	public SmelterTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state, 2);// 0 = Input, 1 = Output
@@ -105,40 +108,38 @@ public class SmelterTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		progress = nbt.getInt("prog");
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		nbt.putInt("prog", progress);
 	}
 
+	@Nullable
 	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		itemOpt.invalidate();
+	public IItemHandler getItemHandler(Direction direction){
+		if(direction != Direction.UP){
+			return itemHandler;
+		}
+		return null;
 	}
 
-	private IItemHandler itemOpt = LazyOptional.of(ItemHandler::new);
-
-	@SuppressWarnings("unchecked")
-	public <T> T getCapability(Capability<T> cap, Direction side){
-		if(cap == Capabilities.HEAT_CAPABILITY && (side == Direction.UP || side == null)){
-			return (T) heatOpt;
+	@Override
+	@Nullable
+	public IHeatHandler getHeatHandler(Direction dir){
+		if(dir == Direction.UP || dir == null){
+			return heatHandler;
 		}
-		if(cap == ForgeCapabilities.ITEM_HANDLER && side != Direction.UP){
-			return (T) itemOpt;
-		}
-
-		return super.getCapability(cap, side);
+		return null;
 	}
 
 	@Override
 	public boolean canPlaceItem(int index, ItemStack stack){
-		return index == 0 && level.getRecipeManager().getRecipeFor(RecipeType.SMELTING, new SimpleContainer(stack), level).isPresent();
+		return index == 0 && level.getRecipeManager().getRecipeFor(RecipeType.SMELTING, new SingleRecipeInput(stack), level).isPresent();
 	}
 
 	@Override

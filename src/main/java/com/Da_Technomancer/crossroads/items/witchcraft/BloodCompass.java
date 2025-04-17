@@ -88,9 +88,9 @@ public class BloodCompass extends Item{
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltips, TooltipFlag flag){
-		tooltips.add(Component.translatable("tt.crossroads.blood_compass.desc"));
-		tooltips.add(Component.translatable("tt.crossroads.blood_compass.spoil"));
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
+		tooltip.add(Component.translatable("tt.crossroads.blood_compass.desc"));
+		tooltip.add(Component.translatable("tt.crossroads.blood_compass.spoil"));
 	}
 
 	public record EntitySyncRecord(UUID entityUUID, GlobalPos entityPos, long updateTime){

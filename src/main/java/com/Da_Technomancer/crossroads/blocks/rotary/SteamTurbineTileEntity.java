@@ -4,10 +4,11 @@ import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.ambient.particles.CRParticles;
 import com.Da_Technomancer.crossroads.ambient.particles.ColorParticleData;
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.MathUtil;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
+import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
@@ -16,6 +17,7 @@ import com.Da_Technomancer.crossroads.gui.container.SteamTurbineContainer;
 import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -28,6 +30,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 import javax.annotation.Nullable;
 import java.awt.*;
@@ -122,17 +125,13 @@ public class SteamTurbineTileEntity extends InventoryTE{
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
-		if(capability == ForgeCapabilities.FLUID_HANDLER){
-			return (T) globalFluidOpt;
+	@Nullable
+	public IAxleHandler getAxleHandler(Direction dir){
+		if(dir == Direction.UP){
+			return axleHandler;
 		}
-		if(capability == Capabilities.AXLE_CAPABILITY && facing == Direction.UP){
-			return (T) axleOpt;
-		}
-
-		return super.getCapability(capability, facing);
+		return null;
 	}
 
 	@Override
@@ -159,8 +158,8 @@ public class SteamTurbineTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		mode = nbt.getInt("mode");
 		if(!nbt.contains("mode")){
 			//TODO remove: backwards compat
@@ -169,8 +168,8 @@ public class SteamTurbineTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		nbt.putInt("mode", mode);
 	}
 }

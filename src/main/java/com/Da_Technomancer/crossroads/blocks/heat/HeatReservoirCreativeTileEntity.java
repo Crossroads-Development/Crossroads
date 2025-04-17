@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.heat;
 
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
+import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.api.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
@@ -8,6 +9,7 @@ import com.Da_Technomancer.crossroads.gui.container.HeatReservoirCreativeContain
 import com.Da_Technomancer.essentials.api.packets.INBTReceiver;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -43,15 +45,15 @@ public class HeatReservoirCreativeTileEntity extends ModuleTE implements INBTRec
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		nbt.putFloat("setting", setting);
 		nbt.putString("expression", expression);
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		setting = nbt.getFloat("setting");
 		expression = nbt.getString("expression");
 	}
@@ -77,13 +79,10 @@ public class HeatReservoirCreativeTileEntity extends ModuleTE implements INBTRec
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, Direction facing){
-		if(capability == Capabilities.HEAT_CAPABILITY){
-			return (T) heatOpt;
-		}
-		return super.getCapability(capability, facing);
+	@Nullable
+	public IHeatHandler getHeatHandler(Direction dir){
+		return heatHandler;
 	}
 
 	private class FixedTempHeatHandler extends HeatHandler{

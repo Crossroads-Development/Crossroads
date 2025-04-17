@@ -4,11 +4,13 @@ import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
@@ -88,6 +90,11 @@ public class LargeGearSlave extends BaseEntityBlock{
 //	}
 
 	@Override
+	protected MapCodec<? extends BaseEntityBlock> codec(){
+		return CRBlocks.LARGE_GEAR_SLAVE_TYPE.value();
+	}
+
+	@Override
 	public RenderShape getRenderShape(BlockState state){
 		return RenderShape.INVISIBLE;
 	}
@@ -99,7 +106,7 @@ public class LargeGearSlave extends BaseEntityBlock{
 	}
 
 	@Override
-	public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player){
+	public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader world, BlockPos pos, Player player){
 		BlockEntity te = world.getBlockEntity(pos);
 		if(te instanceof LargeGearSlaveTileEntity && ((LargeGearSlaveTileEntity) te).masterPos != null){
 			te = world.getBlockEntity(pos.offset(((LargeGearSlaveTileEntity) te).masterPos));

@@ -175,7 +175,7 @@ public class Syringe extends Item{
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag){
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
 		tooltip.add(Component.translatable("tt.crossroads.syringe.desc", CRConfig.injectionEfficiency.get()));
 		tooltip.add(Component.translatable("tt.crossroads.syringe.use"));
 		tooltip.add(Component.translatable("tt.crossroads.syringe.offhand"));

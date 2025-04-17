@@ -1,7 +1,8 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.CRConfig;
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
+import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.api.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
@@ -48,13 +49,12 @@ public class LodestoneTurbineTileEntity extends ModuleTE{
 		return !level.dimensionType().natural();//See clock item property for reference
 	}
 
-	@Nonnull
 	@Override
-	@SuppressWarnings("unchecked")
-	public <T> T getCapability(@Nonnull Capability<T> cap, @Nullable Direction side){
-		if(cap == Capabilities.AXLE_CAPABILITY && side == Direction.UP){
-			return (T) axleOpt;
+	@Nullable
+	public IAxleHandler getAxleHandler(Direction dir){
+		if(dir == Direction.UP){
+			return axleHandler;
 		}
-		return super.getCapability(cap, side);
+		return null;
 	}
 }

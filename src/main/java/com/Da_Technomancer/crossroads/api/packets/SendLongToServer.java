@@ -10,7 +10,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 
-public class SendLongToServer extends ServerPacket{
+public class SendLongToServer extends ClientPacket{
 
 	//TODO move to Essentials
 

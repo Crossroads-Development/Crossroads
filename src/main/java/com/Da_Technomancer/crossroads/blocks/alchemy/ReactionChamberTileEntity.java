@@ -1,21 +1,22 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 
-import com.Da_Technomancer.crossroads.api.Capabilities;
-import com.Da_Technomancer.crossroads.api.alchemy.EnumTransferMode;
-import com.Da_Technomancer.crossroads.api.alchemy.ReagentHolderTE;
-import com.Da_Technomancer.crossroads.api.alchemy.ReagentManager;
-import com.Da_Technomancer.crossroads.api.alchemy.ReagentMap;
+import com.Da_Technomancer.crossroads.api.alchemy.*;
+import com.Da_Technomancer.crossroads.api.electric.IEnergyCapable;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
+import com.Da_Technomancer.crossroads.api.heat.IHeatCapable;
 import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.blocks.electric.TeslaCoilTopTileEntity;
 import com.Da_Technomancer.crossroads.crafting.AlchemyRec;
+import com.Da_Technomancer.essentials.api.IItemCapable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -25,7 +26,9 @@ import net.neoforged.neoforge.items.IItemHandler;
 import org.apache.commons.lang3.tuple.Pair;
 import org.joml.Vector3f;
 
-public class ReactionChamberTileEntity extends ReagentHolderTE{
+import javax.annotation.Nullable;
+
+public class ReactionChamberTileEntity extends ReagentHolderTE implements IHeatCapable, IItemCapable, IEnergyCapable{
 
 	public static final BlockEntityType<ReactionChamberTileEntity> TYPE = CRTileEntity.createType(ReactionChamberTileEntity::new, CRBlocks.reactionChamberGlass, CRBlocks.reactionChamberCrystal);
 
@@ -36,6 +39,10 @@ public class ReactionChamberTileEntity extends ReagentHolderTE{
 	public static final int CAPACITY = 256;
 
 	private static final Pair<Vector3f, Vector3f>[] RENDER_SHAPE = new Pair[] {Pair.of(new Vector3f(0.02F, 0.02F, 0.02F), new Vector3f(0.98F, 0.98F, 0.98F))};
+
+	private final IHeatHandler heatHandler = new HeatHandler();
+	private final IItemHandler itemHandler = new ItemHandler();
+	private final IEnergyStorage energyHandler = new EnergyHandler();
 
 	public ReactionChamberTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state);
@@ -108,8 +115,8 @@ public class ReactionChamberTileEntity extends ReagentHolderTE{
 
 		super.serverTick();
 
-		for(AlchemyRec react : ReagentManager.getReactions(level)){
-			if(react.performReaction(reactionChamber)){
+		for(RecipeHolder<AlchemyRec> react : ReagentManager.getReactions(level)){
+			if(react.value().performReaction(reactionChamber)){
 				correctReag();
 				break;
 			}
@@ -132,46 +139,43 @@ public class ReactionChamberTileEntity extends ReagentHolderTE{
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		energy = nbt.getInt("ener");
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		nbt.putInt("ener", energy);
 	}
 
+	@Nullable
 	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		heatOpt.invalidate();
-		itemOpt.invalidate();
-		energyOpt.invalidate();
+	public IEnergyStorage getEnergyHandler(Direction dir){
+		if(dir == null || dir.getAxis() != Direction.Axis.Y){
+			return energyHandler;
+		}
+		return null;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
-		if(cap == Capabilities.CHEMICAL_CAPABILITY){
-			return (T) chemOpt;
-		}
-		if(cap == Capabilities.HEAT_CAPABILITY){
-			return (T) heatOpt;
-		}
-		if(cap == ForgeCapabilities.ITEM_HANDLER){
-			return (T) itemOpt;
-		}
-		if(cap == ForgeCapabilities.ENERGY && (side == null || side.getAxis() != Direction.Axis.Y)){
-			return (T) energyOpt;
-		}
-		return super.getCapability(cap, side);
+	@Nullable
+	public IChemicalHandler getChemicalHandler(Direction dir){
+		return chemHandler;
 	}
 
-	private final IHeatHandler heatOpt = LazyOptional.of(HeatHandler::new);
-	private final IItemHandler itemOpt = LazyOptional.of(ItemHandler::new);
-	private final IEnergyStorage energyOpt = LazyOptional.of(EnergyHandler::new);
+	@Override
+	@Nullable
+	public IHeatHandler getHeatHandler(Direction dir){
+		return heatHandler;
+	}
+
+	@Override
+	@Nullable
+	public IItemHandler getItemHandler(Direction direction){
+		return itemHandler;
+	}
 
 	private class EnergyHandler implements IEnergyStorage{
 

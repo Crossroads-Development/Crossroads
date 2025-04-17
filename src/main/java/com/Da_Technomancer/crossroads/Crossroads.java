@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.integration.CRIntegration;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -17,7 +18,7 @@ import org.apache.logging.log4j.Logger;
 import static com.Da_Technomancer.crossroads.Crossroads.MODID;
 
 @Mod(MODID)
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
 public final class Crossroads{
 
 	public static final String MODID = "crossroads";

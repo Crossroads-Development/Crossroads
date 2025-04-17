@@ -8,6 +8,7 @@ import com.Da_Technomancer.crossroads.effects.alchemy_effects.*;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
@@ -19,6 +20,7 @@ import net.minecraft.world.Container;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
@@ -31,7 +33,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.function.Function;
 
-public class ReagentRec implements Recipe<Container>, IReagent{
+public class ReagentRec implements Recipe<RecipeInput>, IReagent{
 
 	private final ResourceLocation location;
 	private final String group;
@@ -72,13 +74,13 @@ public class ReagentRec implements Recipe<Container>, IReagent{
 	}
 
 	@Override
-	public boolean matches(Container inv, Level worldIn){
+	public boolean matches(RecipeInput input, Level worldIn){
 		return true;
 	}
 
 	@Override
-	public ItemStack assemble(Container inv, RegistryAccess access){
-		return getResultItem(access);
+	public ItemStack assemble(RecipeInput input, HolderLookup.Provider provider){
+		return getResultItem(provider);
 	}
 
 	@Override
@@ -87,18 +89,13 @@ public class ReagentRec implements Recipe<Container>, IReagent{
 	}
 
 	@Override
-	public ItemStack getResultItem(RegistryAccess access){
+	public ItemStack getResultItem(HolderLookup.Provider provider){
 		return ItemStack.EMPTY;
 	}
 
 	@Override
 	public ItemStack getToastSymbol(){
 		return new ItemStack(CRItems.phialGlass);
-	}
-
-	@Override
-	public ResourceLocation getId(){
-		return location;//JSON file location
 	}
 
 	@Override

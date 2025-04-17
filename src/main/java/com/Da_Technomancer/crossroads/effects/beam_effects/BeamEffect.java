@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.effects.beam_effects;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.beams.BeamHit;
 import com.Da_Technomancer.crossroads.api.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.api.beams.EnumBeamAlignments;
@@ -13,9 +13,10 @@ import com.Da_Technomancer.crossroads.integration.curios.CurioHelper;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamCage;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
@@ -54,18 +55,20 @@ public class BeamEffect{
 		}
 
 		//Go into a machine
-		IBeamHandler receivingMachine = beamHit.getEndCapability(Capabilities.BEAM_CAPABILITY, false);
+		IBeamHandler receivingMachine = beamHit.getEndCapability(com.Da_Technomancer.crossroads.api.CRCapabilities.BEAM_CAPABILITY, false);
 		if(receivingMachine != null){
 			receivingMachine.setBeam(beamHit.getBeamUnit(), beamHit);
 			return true;
 		}
 
 		//Try converting the block according to a recipe
-		List<BeamTransmuteRec> recipes = beamHit.getWorld().getRecipeManager().getRecipesFor(CRRecipes.BEAM_TRANSMUTE_TYPE, new SimpleContainer(0), beamHit.getWorld());
+		// TODO: Passing a SingleRecipeInput with null ItemStack as a replacement for previous SimpleContainer(0); the matches method of BeamTransmuteRec ignores the
+		//  RecipeInput, so this shouldn't become relevant, but there may be a better way to do this.
+		List<RecipeHolder<BeamTransmuteRec>> recipes = beamHit.getWorld().getRecipeManager().getRecipesFor(CRRecipes.BEAM_TRANSMUTE_TYPE, new SingleRecipeInput(null), beamHit.getWorld());
 		BlockState state = beamHit.getEndState();
-		Optional<BeamTransmuteRec> recipe = recipes.parallelStream().filter(rec -> rec.canApply(align, voi, power, state)).findAny();
+		Optional<RecipeHolder<BeamTransmuteRec>> recipe = recipes.parallelStream().filter(rec -> rec.value().canApply(align, voi, power, state)).findAny();
 		if(recipe.isPresent()){
-			beamHit.getWorld().setBlockAndUpdate(beamHit.getPos(), recipe.get().getOutput().defaultBlockState());
+			beamHit.getWorld().setBlockAndUpdate(beamHit.getPos(), recipe.get().value().getOutput().defaultBlockState());
 			if(CRConfig.beamSounds.get()){
 				//Play a sound
 				CRSounds.playSoundServer(beamHit.getWorld(), beamHit.getPos(), CRSounds.BEAM_TRANSMUTE, SoundSource.BLOCKS, 0.5F, 1F);

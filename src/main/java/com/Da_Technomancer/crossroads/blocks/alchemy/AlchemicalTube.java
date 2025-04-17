@@ -4,10 +4,15 @@ import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.api.templates.ConduitBlock;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
+import com.Da_Technomancer.crossroads.blocks.rotary.RotaryDrill;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -18,6 +23,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import javax.annotation.Nullable;
 
 public class AlchemicalTube extends ConduitBlock<EnumTransferMode>{
+
+	public static final MapCodec<AlchemicalTube> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(Codec.BOOL.fieldOf("crystal").forGetter(AlchemicalTube::isCrystal)).apply(instance, AlchemicalTube::new));
 
 	protected static final double SIZE = 6.1D / 16D;
 	protected static final VoxelShape[] SHAPES = generateShapes(SIZE);
@@ -32,6 +39,10 @@ public class AlchemicalTube extends ConduitBlock<EnumTransferMode>{
 		super(CRBlocks.getGlassProperty());
 		this.crystal = crystal;
 		CRBlocks.queueForRegister(name, this);
+	}
+
+	protected boolean isCrystal(){
+		return crystal;
 	}
 
 	@Override
@@ -127,5 +138,10 @@ public class AlchemicalTube extends ConduitBlock<EnumTransferMode>{
 
 			((AlchemicalTubeTileEntity) neighTE).setData(facing.getOpposite().get3DDataValue(), newVal.isConnection(), otherMode);
 		}
+	}
+
+	@Override
+	protected MapCodec<? extends BaseEntityBlock> codec(){
+		return CRBlocks.ALCHEMICAL_TUBE_TYPE.value();
 	}
 }

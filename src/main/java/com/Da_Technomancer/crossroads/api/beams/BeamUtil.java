@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.api.beams;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.entity.EntityGhostMarker;
 import net.minecraft.core.BlockPos;
@@ -135,8 +135,7 @@ public class BeamUtil{
 //			}
 
 			//Check for collision or machine receiving beams
-			BlockEntity checkTE;
-			if(i == maxRange || solidToBeams(checkState, world, checkPos, dir, beam.getPower(), sensitive) || (checkTE = world.getBlockEntity(checkPos)) != null && checkTE.getCapability(Capabilities.BEAM_CAPABILITY, dir.getOpposite()).isPresent()){
+			if(i == maxRange || solidToBeams(checkState, world, checkPos, dir, beam.getPower(), sensitive) || world.getCapability(CRCapabilities.BEAM_CAPABILITY, checkPos, dir.getOpposite()) != null){
 				return new BeamHit((ServerLevel) world, checkPos, dir.getOpposite(), checkState, beam);
 			}
 		}

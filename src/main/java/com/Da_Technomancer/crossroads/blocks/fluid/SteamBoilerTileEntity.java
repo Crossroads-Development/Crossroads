@@ -1,9 +1,9 @@
 package com.Da_Technomancer.crossroads.blocks.fluid;
 
 import com.Da_Technomancer.crossroads.CRConfig;
-import com.Da_Technomancer.crossroads.api.Capabilities;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
+import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
@@ -34,6 +34,9 @@ public class SteamBoilerTileEntity extends InventoryTE{
 
 	public static final int BATCH_SIZE = 100;
 	public static final int[] TIERS = {100, 200, 300, 400, 500};
+
+	private final IFluidHandler waterHandler = new FluidHandler(0);
+	private final IFluidHandler steamHandler = new FluidHandler(1);
 
 	public SteamBoilerTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state, 1);//Salt
@@ -96,33 +99,24 @@ public class SteamBoilerTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		waterOpt.invalidate();
-		steamOpt.invalidate();
+	@Nullable
+	public IFluidHandler getFluidHandler(Direction dir){
+		if(dir == null){
+			return globalFluidHandler;
+		}
+		if(dir == Direction.UP){
+			return steamHandler;
+		}
+		return waterHandler;
 	}
 
-	private final IFluidHandler waterOpt = LazyOptional.of(() -> new FluidHandler(0));
-	private final IFluidHandler steamOpt = LazyOptional.of(() -> new FluidHandler(1));
-
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
-		if(capability == ForgeCapabilities.FLUID_HANDLER){
-			if(facing == null){
-				return (T) globalFluidOpt;
-			}
-			if(facing == Direction.UP){
-				return (T) steamOpt;
-			}
-			return (T) waterOpt;
+	@Nullable
+	public IHeatHandler getHeatHandler(Direction dir){
+		if(dir == null || dir == Direction.DOWN){
+			return heatHandler;
 		}
-
-		if(capability == Capabilities.HEAT_CAPABILITY && (facing == null || facing == Direction.DOWN)){
-			return (T) heatOpt;
-		}
-
-		return super.getCapability(capability, facing);
+		return null;
 	}
 
 	@Override

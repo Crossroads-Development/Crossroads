@@ -12,6 +12,7 @@ import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import com.Da_Technomancer.essentials.api.LinkHelper;
 import com.Da_Technomancer.essentials.api.packets.ILongReceiver;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -156,20 +157,20 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE, IIntArrayRec
 		}
 
 		@Override
-		public void load(CompoundTag nbt){
-			super.load(nbt);
+		public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+			super.loadAdditional(nbt, registries);
 			readData(nbt);
 		}
 
 		@Override
-		public void saveAdditional(CompoundTag nbt){
-			super.saveAdditional(nbt);
+		protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+			super.saveAdditional(nbt, pRegistries);
 			writeData(nbt);
 		}
 
 		@Override
-		public CompoundTag getUpdateTag(){
-			CompoundTag nbt = super.getUpdateTag();
+		public CompoundTag getUpdateTag(HolderLookup.Provider pRegistries){
+			CompoundTag nbt = super.getUpdateTag(pRegistries);
 			nbt.putIntArray("rendered_arcs", rendered);
 			return nbt;
 		}

@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -43,8 +44,8 @@ public class ReactiveSpotTileEntity extends BlockEntity implements ITickableTile
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		lifespan = nbt.getInt("lif");
 		Block b = BuiltInRegistries.BLOCK.get(ResourceLocation.withDefaultNamespace(nbt.getString("tar")));
 		if(b == null){
@@ -55,8 +56,8 @@ public class ReactiveSpotTileEntity extends BlockEntity implements ITickableTile
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		nbt.putInt("lif", lifespan);
 		if(target != null){
 			nbt.putString("tar", MiscUtil.getRegistryName(target.getBlock(), BuiltInRegistries.BLOCK).toString());

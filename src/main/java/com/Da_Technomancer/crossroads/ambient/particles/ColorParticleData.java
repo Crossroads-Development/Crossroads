@@ -16,7 +16,6 @@ import java.util.Locale;
 public class ColorParticleData implements ParticleOptions{
 
 	protected static final Codec<ColorParticleData> codec = RecordCodecBuilder.create((instance) -> instance.group(Codec.BYTE.fieldOf("type").forGetter(ColorParticleData::getTypeID), Codec.BYTE.fieldOf("r").forGetter((ColorParticleData data) -> (byte) data.getColor().getRed()), Codec.BYTE.fieldOf("g").forGetter((ColorParticleData data) -> (byte) data.getColor().getGreen()), Codec.BYTE.fieldOf("b").forGetter((ColorParticleData data) -> (byte) data.getColor().getBlue()), Codec.BYTE.fieldOf("a").forGetter((ColorParticleData data) -> (byte) data.getColor().getAlpha())).apply(instance, ColorParticleData::new));
-	protected static final Deserializer DESERIALIZER = new Deserializer();
 
 	private final ParticleType<ColorParticleData> type;
 	private final Color col;
@@ -67,34 +66,6 @@ public class ColorParticleData implements ParticleOptions{
 				return CRParticles.COLOR_FLAME;
 			default:
 				return CRParticles.COLOR_SPLASH;
-		}
-	}
-
-	@Override
-	public void writeToNetwork(FriendlyByteBuf buffer){
-		buffer.writeInt(col.getRGB());
-	}
-
-	@Override
-	public String writeToString(){
-		return String.format(Locale.ROOT, "%s %d %d %d %d", MiscUtil.getRegistryName(type, Registries.PARTICLE_TYPE), col.getRed(), col.getGreen(), col.getBlue(), col.getAlpha());
-	}
-
-	private static class Deserializer implements ParticleOptions.Deserializer<ColorParticleData>{
-
-		@Override
-		public ColorParticleData fromCommand(ParticleType<ColorParticleData> type, StringReader reader) throws CommandSyntaxException{
-			int[] col = new int[4];
-			for(int i = 0; i < 4; i++){
-				reader.expect(' ');
-				col[i] = reader.readInt();
-			}
-			return new ColorParticleData(type, new Color(col[0], col[1], col[2], col[3]));
-		}
-
-		@Override
-		public ColorParticleData fromNetwork(ParticleType<ColorParticleData> type, FriendlyByteBuf buffer){
-			return new ColorParticleData(type, new Color(buffer.readInt(), true));
 		}
 	}
 }

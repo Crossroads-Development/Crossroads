@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.essentials.api.BlockUtil;
 import com.Da_Technomancer.essentials.api.TEBlock;
 import com.Da_Technomancer.essentials.api.redstone.IReadable;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
@@ -16,10 +17,12 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.LightningRodBlock;
@@ -41,9 +44,9 @@ public class EmbryoLab extends TEBlock implements IReadable{
 
 		@Override
 		protected ItemStack execute(BlockSource source, ItemStack stack){
-			Level world = source.getLevel();
+			Level world = source.level();
 			if(!world.isClientSide()){
-				BlockPos pos = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
+				BlockPos pos = source.pos().relative(source.state().getValue(DispenserBlock.FACING));
 				BlockEntity te = world.getBlockEntity(pos);
 				if(te instanceof EmbryoLabTileEntity){
 					setSuccess(true);
@@ -109,7 +112,7 @@ public class EmbryoLab extends TEBlock implements IReadable{
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
 		tooltip.add(Component.translatable("tt.crossroads.embryo_lab.desc"));
 		tooltip.add(Component.translatable("tt.crossroads.embryo_lab.ingr"));
 		tooltip.add(Component.translatable("tt.crossroads.embryo_lab.circuit"));
@@ -133,5 +136,10 @@ public class EmbryoLab extends TEBlock implements IReadable{
 				}
 			}
 		}
+	}
+
+	@Override
+	protected MapCodec<? extends BaseEntityBlock> codec(){
+		return CRBlocks.EMBRYO_LAB_TYPE.value();
 	}
 }

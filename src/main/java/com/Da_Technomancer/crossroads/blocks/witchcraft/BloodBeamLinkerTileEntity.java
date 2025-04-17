@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.blocks.witchcraft;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.beams.*;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
@@ -30,12 +30,15 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
-public class BloodBeamLinkerTileEntity extends InventoryTE{
+public class BloodBeamLinkerTileEntity extends InventoryTE implements IBeamCapable{
 
 	public static final BlockEntityType<BloodBeamLinkerTileEntity> TYPE = CRTileEntity.createType(BloodBeamLinkerTileEntity::new, CRBlocks.bloodBeamLinker);
 
 	//Prevents accepting 2 beams in one cycle
 	private long lastActiveBeamCycle = -1;
+
+	private final IItemHandler itemHandler = new ItemHandler();
+	private final IBeamHandler beamHandler = new BeamHandler();
 
 	public BloodBeamLinkerTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state, 1);
@@ -75,27 +78,16 @@ public class BloodBeamLinkerTileEntity extends InventoryTE{
 		}
 	}
 
+	@Nullable
 	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		itemOpt.invalidate();
-		beamOpt.invalidate();
+	public IBeamHandler getBeamHandler(Direction dir){
+		return beamHandler;
 	}
 
-	private final IItemHandler itemOpt = LazyOptional.of(ItemHandler::new);
-	private final IBeamHandler beamOpt = LazyOptional.of(BeamHandler::new);
-
-	@SuppressWarnings("unchecked")
+	@Nullable
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
-		if(capability == Capabilities.BEAM_CAPABILITY){
-			return (T) beamOpt;
-		}
-		if(capability == ForgeCapabilities.ITEM_HANDLER){
-			return (T) itemOpt;
-		}
-
-		return super.getCapability(capability, facing);
+	public IItemHandler getItemHandler(Direction direction){
+		return itemHandler;
 	}
 
 	@Override

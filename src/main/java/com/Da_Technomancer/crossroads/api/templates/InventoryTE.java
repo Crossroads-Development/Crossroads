@@ -1,28 +1,30 @@
 package com.Da_Technomancer.crossroads.api.templates;
 
-import com.Da_Technomancer.essentials.api.BlockUtil;
-import com.Da_Technomancer.essentials.api.FluidSlotManager;
-import com.Da_Technomancer.essentials.api.IFluidSlotTE;
-import com.Da_Technomancer.essentials.api.IItemContainer;
+import com.Da_Technomancer.essentials.api.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 
-public abstract class InventoryTE extends ModuleTE implements IItemContainer, MenuProvider, IFluidSlotTE{
+public abstract class InventoryTE extends ModuleTE implements RecipeInput, IItemContainer, MenuProvider, IFluidSlotTE, IItemCapable{
 
 	protected final ItemStack[] inventory;
 	public final FluidSlotManager[] fluidManagers = new FluidSlotManager[fluidTanks()];
+
+	protected final IItemHandler itemHandler = new ItemHandler();
 
 	public InventoryTE(BlockEntityType<?> type, BlockPos pos, BlockState state, int invSize){
 		super(type, pos, state);
@@ -30,6 +32,11 @@ public abstract class InventoryTE extends ModuleTE implements IItemContainer, Me
 		for(int i = 0; i < invSize; i++){
 			inventory[i] = ItemStack.EMPTY;
 		}
+	}
+
+	@Override
+	public int size(){
+		return inventory.length;
 	}
 
 	/**
@@ -64,12 +71,12 @@ public abstract class InventoryTE extends ModuleTE implements IItemContainer, Me
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		for(int i = 0; i < inventory.length; i++){
 			if(!inventory[i].isEmpty()){
 				CompoundTag stackTag = new CompoundTag();
-				inventory[i].save(stackTag);
+				stackTag = BlockUtil.stackToNBT(inventory[i], pRegistries);
 				nbt.put("inv_" + i, stackTag);
 			}
 		}
@@ -89,8 +96,8 @@ public abstract class InventoryTE extends ModuleTE implements IItemContainer, Me
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		for(int i = 0; i < inventory.length; i++){
 			if(nbt.contains("inv_" + i)){
 				inventory[i] = ItemStack.of(nbt.getCompound("inv_" + i));
@@ -111,6 +118,12 @@ public abstract class InventoryTE extends ModuleTE implements IItemContainer, Me
 	@Override
 	public int getContainerSize(){
 		return inventory.length;
+	}
+
+	@Nullable
+	@Override
+	public IItemHandler getItemHandler(Direction direction){
+		return itemHandler;
 	}
 
 	@Override

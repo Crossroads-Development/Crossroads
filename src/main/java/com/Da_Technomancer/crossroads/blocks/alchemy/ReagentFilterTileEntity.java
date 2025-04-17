@@ -1,15 +1,17 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.alchemy.*;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.ReagentFilterContainer;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
+import com.Da_Technomancer.essentials.api.BlockUtil;
 import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -64,21 +66,19 @@ public class ReagentFilterTileEntity extends ReagentHolderTE implements MenuProv
 	public void setBlockState(BlockState stateIn){
 		super.setBlockState(stateIn);
 		facing = null;
-		chemOpt.invalidate();
-		chemOpt = LazyOptional.of(() -> handler);
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		inventory = nbt.contains("inv") ? ItemStack.of(nbt.getCompound("inv")) : ItemStack.EMPTY;
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		if(!inventory.isEmpty()){
-			nbt.put("inv", inventory.save(new CompoundTag()));
+			nbt.put("inv", BlockUtil.stackToNBT(inventory, pRegistries));
 		}
 	}
 
@@ -123,26 +123,25 @@ public class ReagentFilterTileEntity extends ReagentHolderTE implements MenuProv
 	}
 
 	private boolean transfer(ReagentMap toTrans, Direction side){
-		BlockEntity te = level.getBlockEntity(worldPosition.relative(side));
-		IChemicalHandler chemOpt;
-		if(toTrans.getTotalQty() <= 0 || te == null || !(chemOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())).isPresent()){
+		BlockPos relPos = worldPosition.relative(side);
+		IChemicalHandler otherChemHandler;
+		if(toTrans.getTotalQty() <= 0 || level == null || (otherChemHandler = level.getCapability(CRCapabilities.CHEMICAL_CAPABILITY, relPos, side.getOpposite())) == null){
 			return false;
 		}
-		IChemicalHandler otherHandler = chemOpt.orElseThrow(NullPointerException::new);
-		EnumContainerType otherChannel = otherHandler.getChannel(side.getOpposite());
+		EnumContainerType otherChannel = otherChemHandler.getChannel(side.getOpposite());
 		if(!getChannel().connectsWith(otherChannel)){
 			return false;
 		}
-		return otherHandler.insertReagents(toTrans, side.getOpposite(), handler, true);
+		return otherChemHandler.insertReagents(toTrans, side.getOpposite(), chemHandler, true);
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
-		if(capability == Capabilities.CHEMICAL_CAPABILITY && (facing == getFacing() || facing != null && facing.getAxis() == Direction.Axis.Y)){
-			return (T) chemOpt;
+	@Nullable
+	public IChemicalHandler getChemicalHandler(Direction dir){
+		if((facing == getFacing() || facing != null && facing.getAxis() == Direction.Axis.Y)){
+			return chemHandler;
 		}
-		return super.getCapability(capability, facing);
+		return null;
 	}
 
 	@Nonnull

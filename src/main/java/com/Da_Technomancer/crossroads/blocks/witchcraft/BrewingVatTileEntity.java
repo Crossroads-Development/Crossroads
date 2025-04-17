@@ -4,9 +4,9 @@ import com.Da_Technomancer.crossroads.ambient.particles.CRParticles;
 import com.Da_Technomancer.crossroads.ambient.particles.ColorParticleData;
 import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.Capabilities;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
+import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
@@ -14,6 +14,7 @@ import com.Da_Technomancer.crossroads.gui.container.BrewingVatContainer;
 import com.Da_Technomancer.essentials.api.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
@@ -40,6 +41,8 @@ public class BrewingVatTileEntity extends InventoryTE{
 	public static final int[] HEAT_DRAIN = {1, 2, 2};
 	public static final int REQUIRED = 400;
 	private int progress = 0;
+
+	private final IItemHandler itemHandler = new ItemHandler();
 
 	public BrewingVatTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state, 7);//Index 0: Ingredient; 1-3: Input potions; 4-6: Output potions
@@ -143,21 +146,15 @@ public class BrewingVatTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		progress = nbt.getInt("prog");
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		nbt.putInt("prog", progress);
-	}
-
-	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		itemOpt.invalidate();
 	}
 
 	@Override
@@ -176,20 +173,16 @@ public class BrewingVatTileEntity extends InventoryTE{
 		}
 	}
 
-	private final IItemHandler itemOpt = LazyOptional.of(ItemHandler::new);
-
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
-		if(capability == Capabilities.HEAT_CAPABILITY && facing != Direction.UP){
-			return (T) heatOpt;
-		}
+	@Nullable
+	public IHeatHandler getHeatHandler(Direction dir){
+		return heatHandler;
+	}
 
-		if(capability == ForgeCapabilities.ITEM_HANDLER){
-			return (T) itemOpt;
-		}
-
-		return super.getCapability(capability, facing);
+	@Nullable
+	@Override
+	public IItemHandler getItemHandler(Direction direction){
+		return itemHandler;
 	}
 
 	@Override

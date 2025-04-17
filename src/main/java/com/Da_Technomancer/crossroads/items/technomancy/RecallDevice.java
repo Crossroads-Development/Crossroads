@@ -37,8 +37,8 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
-		appendTooltip(stack, tooltip, flagIn);
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
+		appendTooltip(stack, tooltip, flag);
 		tooltip.add(Component.translatable("tt.crossroads.recall_device.desc"));
 		tooltip.add(Component.translatable("tt.crossroads.recall_device.debuff"));
 		if(CRConfig.recallTimeLimit.get() == 0){
@@ -54,7 +54,9 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 			}
 			CompoundTag nbt = stack.getOrCreateTagElement("recall_data");
 			long timeElapsed;
-			if(nbt.contains("timestamp") && (timeElapsed = worldIn.getGameTime() - nbt.getLong("timestamp")) < limit * 20){
+
+			//TODO: where else to get game time?
+			if(nbt.contains("timestamp") && (timeElapsed = context.getGameTime() - nbt.getLong("timestamp")) < limit * 20){
 				tooltip.add(Component.translatable("tt.crossroads.recall_device.current", (int) (timeElapsed / 20)));
 			}else{
 				tooltip.add(Component.translatable("tt.crossroads.recall_device.current.none"));

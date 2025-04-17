@@ -1,13 +1,16 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.alchemy.EnumContainerType;
 import com.Da_Technomancer.crossroads.api.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.api.alchemy.IChemicalHandler;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.api.ConfigUtil;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -34,6 +37,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import javax.annotation.Nullable;
 
 public class ReagentPump extends BaseEntityBlock{
+
+	public static final MapCodec<ReagentPump> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(Codec.BOOL.fieldOf("crystal").forGetter(ReagentPump::isCrystal)).apply(instance, ReagentPump::new));
 
 	private static final double SIZE = 6.1D;
 	private static final double CORE_SIZE = 4D;
@@ -69,6 +74,10 @@ public class ReagentPump extends BaseEntityBlock{
 		CRBlocks.queueForRegister(name, this);
 	}
 
+	private boolean isCrystal(){
+		return crystal;
+	}
+
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state){
 		return new ReagentPumpTileEntity(pos, state, !crystal);
@@ -89,6 +98,11 @@ public class ReagentPump extends BaseEntityBlock{
 			return InteractionResult.SUCCESS;
 		}
 		return InteractionResult.PASS;
+	}
+
+	@Override
+	protected MapCodec<? extends BaseEntityBlock> codec(){
+		return CRBlocks.REAGENT_PUMP_TYPE.value();
 	}
 
 	@Override
@@ -126,7 +140,7 @@ public class ReagentPump extends BaseEntityBlock{
 			IChemicalHandler otherOpt;
 			IChemicalHandler otherHandler;
 			Direction dir = Direction.from3DDataValue(i).getOpposite();
-			if(te != null && (otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, Direction.from3DDataValue(i).getOpposite())).isPresent() && (otherHandler = otherOpt.orElseThrow(NullPointerException::new)).getChannel(dir).connectsWith(contType) && otherHandler.getMode(dir).connectsWith(EnumTransferMode.INPUT)){
+			if(te != null && (otherOpt = te.getCapability(CRCapabilities.CHEMICAL_CAPABILITY, Direction.from3DDataValue(i).getOpposite())).isPresent() && (otherHandler = otherOpt.orElseThrow(NullPointerException::new)).getChannel(dir).connectsWith(contType) && otherHandler.getMode(dir).connectsWith(EnumTransferMode.INPUT)){
 				connect[i] = true;
 			}
 		}
@@ -140,7 +154,7 @@ public class ReagentPump extends BaseEntityBlock{
 		IChemicalHandler otherOpt;
 		IChemicalHandler otherHandler;
 		Direction dir = facing.getOpposite();
-		boolean connect = thisTE instanceof ReagentPumpTileEntity && te != null && (otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, facing.getOpposite())).isPresent() && (otherHandler = otherOpt.orElseThrow(NullPointerException::new)).getChannel(dir).connectsWith(crystal ? EnumContainerType.CRYSTAL : EnumContainerType.GLASS) && otherHandler.getMode(dir).connectsWith(EnumTransferMode.INPUT);
+		boolean connect = thisTE instanceof ReagentPumpTileEntity && te != null && (otherOpt = te.getCapability(CRCapabilities.CHEMICAL_CAPABILITY, facing.getOpposite())).isPresent() && (otherHandler = otherOpt.orElseThrow(NullPointerException::new)).getChannel(dir).connectsWith(crystal ? EnumContainerType.CRYSTAL : EnumContainerType.GLASS) && otherHandler.getMode(dir).connectsWith(EnumTransferMode.INPUT);
 		if(facing.getAxis() != Direction.Axis.Y){
 			BooleanProperty prop = CRProperties.HAS_MATCH_SIDES[facing.get3DDataValue()];
 			return stateIn.setValue(prop, connect);

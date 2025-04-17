@@ -16,6 +16,7 @@ import com.Da_Technomancer.crossroads.items.witchcraft.BloodSample;
 import com.Da_Technomancer.essentials.api.packets.INBTReceiver;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -43,6 +44,8 @@ public class EmbryoLabTileEntity extends InventoryTE implements INBTReceiver{
 	public static final BlockEntityType<EmbryoLabTileEntity> TYPE = CRTileEntity.createType(EmbryoLabTileEntity::new, CRBlocks.embryoLab);
 
 	public EntityTemplate template = null;//Kept synced to the client
+
+	private final IItemHandler itemHandler = new ItemHandler();
 
 	@Override
 	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
@@ -187,8 +190,8 @@ public class EmbryoLabTileEntity extends InventoryTE implements INBTReceiver{
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		if(nbt.contains("template")){
 			template = new EntityTemplate();
 			template.deserializeNBT(nbt.getCompound("template"));
@@ -198,26 +201,20 @@ public class EmbryoLabTileEntity extends InventoryTE implements INBTReceiver{
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		if(template != null){
 			nbt.put("template", template.serializeNBT());
 		}
 	}
 
 	@Override
-	public CompoundTag getUpdateTag(){
-		CompoundTag nbt = super.getUpdateTag();
+	public CompoundTag getUpdateTag(HolderLookup.Provider pRegistries){
+		CompoundTag nbt = super.getUpdateTag(pRegistries);
 		if(template != null){
 			nbt.put("template", template.serializeNBT());
 		}
 		return nbt;
-	}
-
-	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		itemOpt.invalidate();
 	}
 
 	@Override
@@ -237,15 +234,9 @@ public class EmbryoLabTileEntity extends InventoryTE implements INBTReceiver{
 		return new EmbryoLabContainer(id, playerInventory, createContainerBuf());
 	}
 
-	private final IItemHandler itemOpt = LazyOptional.of(ItemHandler::new);
-
-	@SuppressWarnings("unchecked")
+	@Nullable
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
-		if(capability == ForgeCapabilities.ITEM_HANDLER){
-			return (T) itemOpt;
-		}
-
-		return super.getCapability(capability, facing);
+	public IItemHandler getItemHandler(Direction direction){
+		return itemHandler;
 	}
 }

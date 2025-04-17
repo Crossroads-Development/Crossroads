@@ -4,9 +4,9 @@ import com.Da_Technomancer.crossroads.ambient.particles.CRParticles;
 import com.Da_Technomancer.crossroads.ambient.particles.ColorParticleData;
 import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.Capabilities;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
+import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
@@ -16,6 +16,7 @@ import com.Da_Technomancer.crossroads.gui.container.FormulationVatContainer;
 import com.Da_Technomancer.essentials.api.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
@@ -23,11 +24,13 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
@@ -44,6 +47,8 @@ public class FormulationVatTileEntity extends InventoryTE{
 	public static final int[] HEAT_DRAIN = {0, 2, 4, 8, 8, 8};
 	public static final int REQUIRED = 200;
 	private double progress = 0;
+
+	private final IItemHandler itemHandler = new ItemHandler();
 
 	public FormulationVatTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state, 1);
@@ -83,9 +88,9 @@ public class FormulationVatTileEntity extends InventoryTE{
 		FormulationVatRec rec = null;
 
 		if(!inventory[0].isEmpty() && !fluids[0].isEmpty()){
-			Optional<FormulationVatRec> recOpt = level.getRecipeManager().getRecipeFor(CRRecipes.FORMULATION_VAT_TYPE, this, level);
+			Optional<RecipeHolder<FormulationVatRec>> recOpt = level.getRecipeManager().getRecipeFor(CRRecipes.FORMULATION_VAT_TYPE, this, level);
 			if(recOpt.isPresent()){
-				rec = recOpt.get();
+				rec = recOpt.get().value();
 				if(rec.getInputQty() > fluids[0].getAmount() || (!fluids[1].isEmpty() && !BlockUtil.sameFluid(rec.getOutput(), fluids[1])) || rec.getOutput().getAmount() > fluidProps[1].capacity - fluids[1].getAmount()){
 					//Ensure that there is sufficient fluid to craft, and we can fit the output
 					rec = null;
@@ -158,21 +163,15 @@ public class FormulationVatTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		progress = nbt.getDouble("prog");
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		nbt.putDouble("prog", progress);
-	}
-
-	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		itemOpt.invalidate();
 	}
 
 	@Override
@@ -192,24 +191,31 @@ public class FormulationVatTileEntity extends InventoryTE{
 		}
 	}
 
-	private final IItemHandler itemOpt = LazyOptional.of(ItemHandler::new);
-
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
-		if(capability == ForgeCapabilities.FLUID_HANDLER && facing != Direction.UP){
-			return (T) globalFluidOpt;
+	@Nullable
+	public IFluidHandler getFluidHandler(Direction dir){
+		if(dir != Direction.UP){
+			return globalFluidHandler;
 		}
+		return null;
+	}
 
-		if(capability == Capabilities.HEAT_CAPABILITY && facing != Direction.UP){
-			return (T) heatOpt;
+	@Override
+	@Nullable
+	public IHeatHandler getHeatHandler(Direction dir){
+		if(dir != Direction.UP){
+			return heatHandler;
 		}
+		return null;
+	}
 
-		if(capability == ForgeCapabilities.ITEM_HANDLER && facing != Direction.UP){
-			return (T) itemOpt;
+	@Nullable
+	@Override
+	public IItemHandler getItemHandler(Direction direction){
+		if(direction != Direction.UP){
+			return itemHandler;
 		}
-
-		return super.getCapability(capability, facing);
+		return null;
 	}
 
 	@Override

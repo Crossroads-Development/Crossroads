@@ -5,11 +5,15 @@ import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.api.ConfigUtil;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -34,6 +38,8 @@ public class RotaryDrill extends BaseEntityBlock{
 
 	private static final VoxelShape[] SHAPES = new VoxelShape[6];
 
+	public static final MapCodec<RotaryDrill> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(Codec.BOOL.fieldOf("golden").forGetter(RotaryDrill::isGolden)).apply(instance, RotaryDrill::new));
+
 	static{
 		SHAPES[0] = Shapes.or(box(3, 10, 3, 13, 16, 13), box(5, 4, 5, 11, 10, 11), box(7, 0, 7, 9, 4, 9));
 		SHAPES[1] = Shapes.or(box(3, 0, 3, 13, 6, 13), box(5, 6, 5, 11, 12, 11), box(7, 12, 7, 9, 16, 9));
@@ -50,6 +56,11 @@ public class RotaryDrill extends BaseEntityBlock{
 		this.golden = golden;
 		String name = "rotary_drill" + (golden ? "_gold" : "");
 		CRBlocks.queueForRegister(name, this);
+	}
+
+
+	private boolean isGolden(){
+		return golden;
 	}
 
 	@Override
@@ -96,7 +107,7 @@ public class RotaryDrill extends BaseEntityBlock{
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
 		if(golden){
 			tooltip.add(Component.translatable("tt.crossroads.drill.desc.gold"));
 		}else{
@@ -105,5 +116,14 @@ public class RotaryDrill extends BaseEntityBlock{
 		tooltip.add(Component.translatable("tt.crossroads.drill.power", golden ? RotaryDrillTileEntity.ENERGY_USE_GOLD : RotaryDrillTileEntity.ENERGY_USE_IRON));
 		tooltip.add(Component.translatable("tt.crossroads.boilerplate.inertia", RotaryDrillTileEntity.INERTIA[golden ? 1 : 0]));
 		tooltip.add(Component.translatable("tt.crossroads.drill.quip").setStyle(MiscUtil.TT_QUIP));
+	}
+
+	@Override
+	protected MapCodec<? extends BaseEntityBlock> codec(){
+		if(golden){
+			return CRBlocks.ROTARY_DRILL_GOLD_TYPE.value();
+		}else{
+			return CRBlocks.ROTARY_DRILL_TYPE.value();
+		}
 	}
 }

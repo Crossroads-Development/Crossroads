@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
 import com.Da_Technomancer.crossroads.api.MathUtil;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -42,7 +43,7 @@ public abstract class GearMatItem extends OreProfileItem{
 	protected abstract double shapeFactor();
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag advanced){
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
 		CRMaterialLibrary.GearMaterial mat = getMaterial(stack);
 		if(mat != null){
 			tooltip.add(Component.translatable("tt.crossroads.boilerplate.inertia", MathUtil.preciseRound(mat.getDensity() * shapeFactor(), 3)));

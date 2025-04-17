@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.items;
 
 import com.Da_Technomancer.crossroads.CRConfig;
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.crossroads.api.packets.SendChatToClient;
@@ -20,6 +20,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
@@ -47,11 +48,10 @@ public class OmniMeter extends Item{
 	public static void measure(ArrayList<Component> chat, Player player, Level world, BlockPos pos, Direction facing, BlockHitResult hit){
 		BlockEntity te = world.getBlockEntity(pos);
 		if(te != null){
-			IFluidHandler fluidOpt;
-			if((fluidOpt = te.getCapability(ForgeCapabilities.FLUID_HANDLER, null)).isPresent()){
-				IFluidHandler pipe = fluidOpt.orElseThrow(NullPointerException::new);
+			IFluidHandler pipeFluidHandler;
+			if((pipeFluidHandler = world.getCapability(Capabilities.FluidHandler.BLOCK, te.getBlockPos(), null)) != null){
 
-				int tanks = pipe.getTanks();
+				int tanks = pipeFluidHandler.getTanks();
 				if(tanks == 1){
 					chat.add(Component.translatable("tt.crossroads.meter.fluid_tank.single"));
 				}else{
@@ -62,27 +62,24 @@ public class OmniMeter extends Item{
 					//Hi future me,
 					//If you're (me're?) looking at this, someone wrote a translation lang file for CR and subsequently discovered that the fluid printout isn't localized properly
 					//It's a straightforward fix- send the fluid registry name in the packet and localize on the client- it's just kind of weird
-					chat.add(Component.translatable("tt.crossroads.meter.fluid_tank.info", pipe.getTankCapacity(tank), MiscUtil.getLocalizedFluidName(pipe.getFluidInTank(tank).getTranslationKey()), pipe.getFluidInTank(tank).getAmount()));
+					chat.add(Component.translatable("tt.crossroads.meter.fluid_tank.info", pipeFluidHandler.getTankCapacity(tank), MiscUtil.getLocalizedFluidName(pipeFluidHandler.getFluidInTank(tank).getFluidType().getDescriptionId()), pipeFluidHandler.getFluidInTank(tank).getAmount()));
 				}
 			}
 
-			IAxisHandler axisOpt;
-			if((axisOpt = te.getCapability(Capabilities.AXIS_CAPABILITY, null)).isPresent()){
-				IAxisHandler axisHandler = axisOpt.orElseThrow(NullPointerException::new);
+			IAxisHandler axisHandler;
+			if((axisHandler = world.getCapability(CRCapabilities.AXIS_CAPABILITY, te.getBlockPos(), null)) != null){
 				chat.add(Component.translatable("tt.crossroads.meter.axis.current", CRConfig.formatVal(axisHandler.getTotalEnergy()), CRConfig.formatVal(axisHandler.getBaseSpeed())));
 				chat.add(Component.translatable("tt.crossroads.meter.axis.change", CRConfig.formatVal(axisHandler.getEnergyChange()), CRConfig.formatVal(axisHandler.getEnergyLost())));
 			}
 
-			IEnergyStorage engOpt;
-			if((engOpt = te.getCapability(ForgeCapabilities.ENERGY, null)).isPresent()){
-				IEnergyStorage batt = engOpt.orElseThrow(NullPointerException::new);
-				chat.add(Component.translatable("tt.crossroads.meter.fe", batt.getEnergyStored(), batt.getMaxEnergyStored()));
+			IEnergyStorage battEnergyHandler;
+			if((battEnergyHandler = world.getCapability(Capabilities.EnergyStorage.BLOCK, te.getBlockPos(), null)) != null){
+				chat.add(Component.translatable("tt.crossroads.meter.fe", battEnergyHandler.getEnergyStored(), battEnergyHandler.getMaxEnergyStored()));
 			}
 
 			//Read circuit output
-			IRedstoneHandler redsOpt;
-			if((redsOpt = te.getCapability(RedstoneUtil.REDSTONE_CAPABILITY, null)).isPresent()){
-				IRedstoneHandler redstoneHandler = redsOpt.orElseThrow(NullPointerException::new);
+			IRedstoneHandler redstoneHandler;
+			if((redstoneHandler = world.getCapability(RedstoneUtil.REDSTONE_CAPABILITY, te.getBlockPos(), null)) != null){
 				chat.add(Component.translatable("tt.crossroads.meter.circuit", CRConfig.formatVal(redstoneHandler.getOutput())));
 			}
 

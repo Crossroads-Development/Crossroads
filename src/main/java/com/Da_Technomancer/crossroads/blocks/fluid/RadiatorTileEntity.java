@@ -1,8 +1,9 @@
 package com.Da_Technomancer.crossroads.blocks.fluid;
 
 import com.Da_Technomancer.crossroads.CRConfig;
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
+import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
@@ -11,6 +12,7 @@ import com.Da_Technomancer.crossroads.gui.container.RadiatorContainer;
 import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -23,6 +25,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 import javax.annotation.Nullable;
 
@@ -86,21 +89,22 @@ public class RadiatorTileEntity extends InventoryTE{
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
-
-		if(cap == ForgeCapabilities.FLUID_HANDLER){
-			if(side == null || side.getAxis() == Direction.Axis.Y){
-				return (T) globalFluidOpt;
-			}
+	@Nullable
+	public IFluidHandler getFluidHandler(Direction dir){
+		if(dir == null || dir.getAxis() == Direction.Axis.Y){
+			return globalFluidHandler;
 		}
+		return null;
+	}
 
-		if(cap == Capabilities.HEAT_CAPABILITY && side != Direction.UP && side != Direction.DOWN){
-			return (T) heatOpt;
+	@Override
+	@Nullable
+	public IHeatHandler getHeatHandler(Direction dir){
+		if(dir != Direction.UP && dir != Direction.DOWN){
+			return heatHandler;
 		}
-
-		return super.getCapability(cap, side);
+		return null;
 	}
 
 	@Override
@@ -132,14 +136,14 @@ public class RadiatorTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		mode = nbt.getInt("mode");
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		nbt.putInt("mode", mode);
 	}
 }

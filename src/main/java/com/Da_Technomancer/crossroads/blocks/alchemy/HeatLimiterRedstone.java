@@ -6,12 +6,14 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.api.ConfigUtil;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import com.Da_Technomancer.essentials.api.redstone.IWireConnect;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -48,6 +50,11 @@ public class HeatLimiterRedstone extends BaseEntityBlock implements IWireConnect
 	@Override
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> type){
 		return ITickableTileEntity.createTicker(type, HeatLimiterRedstoneTileEntity.TYPE);
+	}
+
+	@Override
+	protected MapCodec<? extends BaseEntityBlock> codec(){
+		return CRBlocks.HEAT_LIMITER_REDSTONE_TYPE.value();
 	}
 
 	@Override
@@ -89,7 +96,7 @@ public class HeatLimiterRedstone extends BaseEntityBlock implements IWireConnect
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
 		tooltip.add(Component.translatable("tt.crossroads.heat_limiter.desc_cable"));
 		tooltip.add(Component.translatable("tt.crossroads.heat_limiter.desc_purpose"));
 		tooltip.add(Component.translatable("tt.crossroads.heat_limiter.desc_mode"));

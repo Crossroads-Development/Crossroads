@@ -1,12 +1,9 @@
 package com.Da_Technomancer.crossroads.blocks.beams;
 
 import com.Da_Technomancer.crossroads.CRConfig;
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
-import com.Da_Technomancer.crossroads.api.beams.BeamUnit;
-import com.Da_Technomancer.crossroads.api.beams.BeamUtil;
-import com.Da_Technomancer.crossroads.api.beams.EnumBeamAlignments;
-import com.Da_Technomancer.crossroads.api.beams.IBeamHandler;
+import com.Da_Technomancer.crossroads.api.beams.*;
 import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.api.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.api.templates.IInfoTE;
@@ -15,6 +12,7 @@ import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.blocks.rotary.MasterAxisTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
@@ -23,9 +21,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements IInfoTE{
+public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements IInfoTE, IBeamCapable{
 
 	public static final BlockEntityType<CrystalMasterAxisTileEntity> TYPE = CRTileEntity.createType(CrystalMasterAxisTileEntity::new, CRBlocks.crystalMasterAxis);
 
@@ -89,8 +88,8 @@ public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		nbt.putInt("time", time);
 		if(currentElement != null){
 			nbt.putString("elem", currentElement.name());
@@ -98,8 +97,8 @@ public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		time = nbt.getInt("time");
 		currentElement = nbt.contains("elem") ? EnumBeamAlignments.valueOf(nbt.getString("elem")) : null;
 	}
@@ -114,22 +113,15 @@ public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements
 		}
 	}
 
-	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		magicOpt.invalidate();
-	}
+	private final IBeamHandler beamHandler = new BeamHandler();
 
-	private final IBeamHandler magicOpt = LazyOptional.of(BeamHandler::new);
-
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
-		if(cap == Capabilities.BEAM_CAPABILITY && side != getFacing()){
-			return (T) magicOpt;
+	@Nullable
+	public IBeamHandler getBeamHandler(Direction dir){
+		if(dir != getFacing()){
+			return beamHandler;
 		}
-
-		return super.getCapability(cap, side);
+		return null;
 	}
 
 	private class BeamHandler implements IBeamHandler{

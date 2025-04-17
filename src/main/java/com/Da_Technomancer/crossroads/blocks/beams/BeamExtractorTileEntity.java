@@ -11,19 +11,23 @@ import com.Da_Technomancer.crossroads.gui.container.BeamExtractorContainer;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamCage;
 import com.Da_Technomancer.essentials.api.BlockUtil;
+import com.Da_Technomancer.essentials.api.IItemCapable;
 import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.Container;
 import net.minecraft.world.MenuProvider;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeInput;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -33,12 +37,15 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-public class BeamExtractorTileEntity extends BeamRenderTE implements Container, MenuProvider{
+public class BeamExtractorTileEntity extends BeamRenderTE implements RecipeInput, Container, MenuProvider, IItemCapable{
+
 
 	public static final BlockEntityType<BeamExtractorTileEntity> TYPE = CRTileEntity.createType(BeamExtractorTileEntity::new, CRBlocks.beamExtractor);
 
 	private ItemStack inv = ItemStack.EMPTY;
 	private Direction facing = null;
+
+	private IItemHandler itemHandler = new ItemHandler();
 
 	//Used for multi-cycle output
 	//Will always be EMPTY and 0 for single cycle fuels
@@ -72,10 +79,10 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements Container, 
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		if(!inv.isEmpty()){
-			nbt.put("inv", inv.save(new CompoundTag()));
+			nbt.put("inv", BlockUtil.stackToNBT(inv, pRegistries));
 		}
 		output.writeToNBT("output", nbt);
 		nbt.putInt("remain", timeRemaining);
@@ -84,8 +91,8 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements Container, 
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		inv = nbt.contains("inv") ? ItemStack.of(nbt.getCompound("inv")) : ItemStack.EMPTY;
 		output = BeamUnit.readFromNBT("output", nbt);
 		timeRemaining = nbt.getInt("remain");
@@ -93,29 +100,18 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements Container, 
 	}
 
 	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		itemOpt.invalidate();
-	}
-
-	@Override
 	public void setBlockState(BlockState stateIn){
 		super.setBlockState(stateIn);
 		facing = null;
-		itemOpt.invalidate();
-		itemOpt = LazyOptional.of(ItemHandler::new);
 	}
 
-	private IItemHandler itemOpt = LazyOptional.of(ItemHandler::new);
-
-	@SuppressWarnings("unchecked")
+	@Nullable
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
-		if(capability == ForgeCapabilities.ITEM_HANDLER && facing != getFacing()){
-			return (T) itemOpt;
+	public IItemHandler getItemHandler(Direction direction){
+		if(facing != getFacing()){
+			return itemHandler;
 		}
-
-		return super.getCapability(capability, facing);
+		return null;
 	}
 
 	@Override
@@ -131,6 +127,12 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements Container, 
 	@Override
 	public ItemStack getItem(int index){
 		return index == 0 ? inv : ItemStack.EMPTY;
+	}
+
+	@Override
+	public int size(){
+		// just the one internal slot
+		return 1;
 	}
 
 	@Override
@@ -168,7 +170,7 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements Container, 
 
 	@Override
 	public boolean canPlaceItem(int index, ItemStack stack){
-		return index == 0 && (level.getRecipeManager().getRecipeFor(CRRecipes.BEAM_EXTRACT_TYPE, new SimpleContainer(stack), level).isPresent() || stack.getItem() == CRItems.beamCage);
+		return index == 0 && (level.getRecipeManager().getRecipeFor(CRRecipes.BEAM_EXTRACT_TYPE, new SingleRecipeInput(stack), level).isPresent() || stack.getItem() == CRItems.beamCage);
 	}
 
 	@Override
@@ -212,9 +214,9 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements Container, 
 
 	private void consumeFuel(){
 		if(!inv.isEmpty() && !level.hasNeighborSignal(worldPosition)){//Consume fuel; Can be disabled with a redstone signal
-			Optional<BeamExtractRec> recOpt = level.getRecipeManager().getRecipeFor(CRRecipes.BEAM_EXTRACT_TYPE, this, level);
+			Optional<RecipeHolder<BeamExtractRec>> recOpt = level.getRecipeManager().getRecipeFor(CRRecipes.BEAM_EXTRACT_TYPE, this, level);
 			if(recOpt.isPresent()){
-				BeamExtractRec rec = recOpt.get();
+				BeamExtractRec rec = recOpt.get().value();
 				output = rec.getOutput();
 				inv.shrink(1);
 				timeLimit = rec.getDuration();

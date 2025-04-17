@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.items;
 
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
@@ -28,7 +28,7 @@ public class CheatWandHeat extends Item{
 	public InteractionResult useOn(UseOnContext context){
 		BlockEntity te = context.getLevel().getBlockEntity(context.getClickedPos());
 		IHeatHandler heatOpt;
-		if(te != null && (heatOpt = te.getCapability(Capabilities.HEAT_CAPABILITY, null)).isPresent()){
+		if(te != null && (heatOpt = te.getCapability(CRCapabilities.HEAT_CAPABILITY, null)).isPresent()){
 			IHeatHandler cable = heatOpt.orElseThrow(NullPointerException::new);
 			if(context.getPlayer() != null && context.getPlayer().isShiftKeyDown()){
 				cable.addHeat(-RATE);
@@ -42,7 +42,7 @@ public class CheatWandHeat extends Item{
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
 		tooltip.add(Component.translatable("tt.crossroads.boilerplate.creative"));
 		tooltip.add(Component.translatable("tt.crossroads.cheat_heat.desc", RATE));
 		tooltip.add(Component.translatable("tt.crossroads.cheat_heat.cold", RATE));

@@ -1,14 +1,11 @@
 package com.Da_Technomancer.crossroads.blocks.rotary;
 
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.Capabilities;
 import com.Da_Technomancer.crossroads.api.MathUtil;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
-import com.Da_Technomancer.crossroads.api.rotary.IAxisHandler;
-import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
-import com.Da_Technomancer.crossroads.api.rotary.ICogHandler;
-import com.Da_Technomancer.crossroads.api.rotary.RotaryUtil;
+import com.Da_Technomancer.crossroads.api.rotary.*;
 import com.Da_Technomancer.crossroads.api.templates.IInfoTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
@@ -18,8 +15,10 @@ import com.Da_Technomancer.essentials.api.packets.ILongReceiver;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -29,12 +28,13 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
+import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-public class LargeGearMasterTileEntity extends BlockEntity implements ILongReceiver, ITickableTileEntity, IInfoTE{
+public class LargeGearMasterTileEntity extends BlockEntity implements ILongReceiver, ITickableTileEntity, IInfoTE, IAxleCapable{
 
 	public static final BlockEntityType<LargeGearMasterTileEntity> TYPE = CRTileEntity.createType(LargeGearMasterTileEntity::new, CRBlocks.largeGearMaster);
 
@@ -49,6 +49,9 @@ public class LargeGearMasterTileEntity extends BlockEntity implements ILongRecei
 	 */
 	private final float[] angleW = new float[2];
 	private Direction facing = null;
+
+
+	private final IAxleHandler axleHandler = new AxleHandler();
 
 	public LargeGearMasterTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state);
@@ -128,8 +131,8 @@ public class LargeGearMasterTileEntity extends BlockEntity implements ILongRecei
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 
 		energy = nbt.getDouble("[1]mot");
 		// member
@@ -142,8 +145,8 @@ public class LargeGearMasterTileEntity extends BlockEntity implements ILongRecei
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 
 		// motionData
 		nbt.putDouble("[1]mot", energy);
@@ -159,8 +162,8 @@ public class LargeGearMasterTileEntity extends BlockEntity implements ILongRecei
 	}
 
 	@Override
-	public CompoundTag getUpdateTag(){
-		CompoundTag nbt = super.getUpdateTag();
+	public CompoundTag getUpdateTag(HolderLookup.Provider pRegistries){
+		CompoundTag nbt = super.getUpdateTag(pRegistries);
 		if(type != null){
 			nbt.putString("type", type.getId());
 		}
@@ -184,21 +187,12 @@ public class LargeGearMasterTileEntity extends BlockEntity implements ILongRecei
 	}
 
 	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		mainOpt.invalidate();
-	}
-
-	private final IAxleHandler axleHandler = new AxleHandler();
-	private final IAxleHandler mainOpt = LazyOptional.of(() -> axleHandler);
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
-		if(capability == Capabilities.AXLE_CAPABILITY && (facing == null || facing.getAxis() == getFacing().getAxis())){
-			return (T) mainOpt;
+	@Nullable
+	public IAxleHandler getAxleHandler(Direction dir){
+		if(dir == null || dir.getAxis() == getFacing().getAxis()){
+			return axleHandler;
 		}
-		return super.getCapability(capability, facing);
+		return null;
 	}
 
 	private class AxleHandler implements IAxleHandler{
@@ -259,45 +253,40 @@ public class LargeGearMasterTileEntity extends BlockEntity implements ILongRecei
 				if(i != side.get3DDataValue() && i != side.getOpposite().get3DDataValue()){
 					Direction facing = Direction.from3DDataValue(i);
 					// Adjacent gears
-					BlockEntity adjTE = level.getBlockEntity(worldPosition.relative(facing, 2));
-					if(adjTE != null){
-						ICogHandler cogOpt;
-						if((cogOpt = adjTE.getCapability(Capabilities.COG_CAPABILITY, side)).isPresent()){
-							cogOpt.orElseThrow(NullPointerException::new).connect(masterIn, key, -rotRatio, 1.5D, facing.getOpposite(), renderOffset);
-						}else if((cogOpt = adjTE.getCapability(Capabilities.COG_CAPABILITY, facing.getOpposite())).isPresent()){
-							//Check for large gears
-							cogOpt.orElseThrow(NullPointerException::new).connect(masterIn, key, RotaryUtil.getDirSign(side, facing) * rotRatio, 1.5D, side, renderOffset);
-						}
+					BlockPos adjPos = worldPosition.relative(facing, 2);
+					ICogHandler cogHandler;
+					if((cogHandler = level.getCapability(CRCapabilities.COG_CAPABILITY, adjPos, side)) != null){
+						cogHandler.connect(masterIn, key, -rotRatio, 1.5D, facing.getOpposite(), renderOffset);
+					}else if((cogHandler = level.getCapability(CRCapabilities.COG_CAPABILITY, adjPos, side.getOpposite())) != null){
+						//Check for large gears
+						cogHandler.connect(masterIn, key, RotaryUtil.getDirSign(side, facing) * rotRatio, 1.5D, side, renderOffset);
 					}
 
 					// Diagonal gears
-					BlockEntity diagTE = level.getBlockEntity(worldPosition.relative(facing, 2).relative(side));
-					ICogHandler cogOpt;
-					if(diagTE != null && (cogOpt = diagTE.getCapability(Capabilities.COG_CAPABILITY, facing.getOpposite())).isPresent() && RotaryUtil.canConnectThrough(level, worldPosition.relative(facing, 2), facing.getOpposite(), side)){
-						cogOpt.orElseThrow(NullPointerException::new).connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * rotRatio, 1.5D, side.getOpposite(), renderOffset);
+					BlockPos diagPos = worldPosition.relative(facing, 2).relative(side);
+					if((cogHandler = level.getCapability(CRCapabilities.COG_CAPABILITY, diagPos, facing.getOpposite())) != null && RotaryUtil.canConnectThrough(level, worldPosition.relative(facing, 2), facing.getOpposite(), side)){
+						cogHandler.connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * rotRatio, 1.5D, side.getOpposite(), renderOffset);
 					}
 
 					//Underside gears
-					BlockEntity undersideTE = level.getBlockEntity(worldPosition.relative(facing, 1).relative(side));
-					if(undersideTE != null && (cogOpt = undersideTE.getCapability(Capabilities.COG_CAPABILITY, facing)).isPresent()){
-						cogOpt.orElseThrow(NullPointerException::new).connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * rotRatioIn, 1.5D, side.getOpposite(), renderOffset);
+					BlockPos undersidePos = worldPosition.relative(facing, 1).relative(side);
+					if((cogHandler = level.getCapability(CRCapabilities.COG_CAPABILITY, undersidePos, facing)) != null){
+						cogHandler.connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * rotRatioIn, 1.5D, side.getOpposite(), renderOffset);
 					}
 				}
 			}
 
 			for(Direction.AxisDirection dir : Direction.AxisDirection.values()){
 				Direction axleDir = dir == Direction.AxisDirection.POSITIVE ? getFacing() : getFacing().getOpposite();
-				BlockEntity connectTE = level.getBlockEntity(worldPosition.relative(axleDir));
+				BlockPos connectPos = worldPosition.relative(axleDir);
 
-				if(connectTE != null){
-					IAxisHandler axisOpt;
-					if((axisOpt = connectTE.getCapability(Capabilities.AXIS_CAPABILITY, axleDir.getOpposite())).isPresent()){
-						axisOpt.orElseThrow(NullPointerException::new).trigger(masterIn, key);
+				IAxisHandler axisHandler;
+				if((axisHandler = level.getCapability(CRCapabilities.AXIS_CAPABILITY, connectPos, axleDir.getOpposite())) != null){
+					axisHandler.trigger(masterIn, key);
 					}
-					IAxleHandler axleOpt;
-					if((axleOpt = connectTE.getCapability(Capabilities.AXLE_CAPABILITY, axleDir.getOpposite())).isPresent()){
-						axleOpt.orElseThrow(NullPointerException::new).propagate(masterIn, key, rotRatio, 0, renderOffset);
-					}
+				IAxleHandler axleHandler;
+				if((axleHandler = level.getCapability(CRCapabilities.AXLE_CAPABILITY, connectPos, axleDir.getOpposite())) != null){
+					axleHandler.propagate(masterIn, key, rotRatio, 0, renderOffset);
 				}
 			}
 		}

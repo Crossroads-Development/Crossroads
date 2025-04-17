@@ -8,16 +8,20 @@ import com.Da_Technomancer.crossroads.api.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.api.templates.BeamRenderTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
+import com.Da_Technomancer.essentials.api.redstone.IRedstoneCapable;
 import com.Da_Technomancer.essentials.api.redstone.IRedstoneHandler;
 import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
+import javax.annotation.Nullable;
 
-public class BeamSiphonTileEntity extends BeamRenderTE{
+
+public class BeamSiphonTileEntity extends BeamRenderTE implements IRedstoneCapable{
 
 	public static final BlockEntityType<BeamSiphonTileEntity> TYPE = CRTileEntity.createType(BeamSiphonTileEntity::new, CRBlocks.beamSiphon);
 
@@ -45,14 +49,14 @@ public class BeamSiphonTileEntity extends BeamRenderTE{
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		redsHandler.write(nbt);
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		redsHandler.read(nbt);
 	}
 
@@ -134,12 +138,6 @@ public class BeamSiphonTileEntity extends BeamRenderTE{
 		return output;
 	}
 
-	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		redsOpt.invalidate();
-	}
-
 	private void updateSignalState(){
 		setChanged();
 		BlockState state = getBlockState();
@@ -154,14 +152,11 @@ public class BeamSiphonTileEntity extends BeamRenderTE{
 	}
 
 	public final CircuitUtil.InputCircHandler redsHandler = new CircuitUtil.InputCircHandler();
-	private final IRedstoneHandler redsOpt = CircuitUtil.makeBaseCircuitOptional(this, redsHandler, 0, this::updateSignalState);
+	private final IRedstoneHandler redstoneHandler = CircuitUtil.makeBaseCircuitOptional(this, redsHandler, 0, this::updateSignalState);
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public <T> T getCapability(Capability<T> cap, Direction dir){
-		if(cap == RedstoneUtil.REDSTONE_CAPABILITY){
-			return (T) redsOpt;
-		}
-		return super.getCapability(cap, dir);
+	@Nullable
+	public IRedstoneHandler getRedstoneHandler(Direction direction){
+		return redstoneHandler;
 	}
-} 
+}

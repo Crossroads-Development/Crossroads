@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.rotary.mechanisms;
 
 import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.MathUtil;
 import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.api.rotary.*;
@@ -20,6 +20,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.capabilities.BlockCapability;
 
 
 import javax.annotation.Nonnull;
@@ -51,8 +52,8 @@ public class MechanismSmallGear implements IMechanism<CRMaterialLibrary.GearMate
 	}
 
 	@Override
-	public boolean hasCap(Capability<?> cap, Direction capSide, IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis, MechanismTileEntity te){
-		return (cap == Capabilities.COG_CAPABILITY || cap == Capabilities.AXLE_CAPABILITY) && side == capSide;
+	public boolean hasCap(BlockCapability<?, ?> cap, Direction capSide, IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis, MechanismTileEntity te){
+		return (cap == CRCapabilities.COG_CAPABILITY || cap == CRCapabilities.AXLE_CAPABILITY) && side == capSide;
 	}
 
 	@Override
@@ -84,7 +85,7 @@ public class MechanismSmallGear implements IMechanism<CRMaterialLibrary.GearMate
 
 		//Other internal gears
 		for(int i = 0; i < 6; i++){
-			if(i != side.get3DDataValue() && i != side.getOpposite().get3DDataValue() && te.members[i] != null && te.members[i].hasCap(Capabilities.COG_CAPABILITY, Direction.from3DDataValue(i), te.mats[i], Direction.from3DDataValue(i), te.getAxleAxis(), te)){
+			if(i != side.get3DDataValue() && i != side.getOpposite().get3DDataValue() && te.members[i] != null && te.members[i].hasCap(CRCapabilities.COG_CAPABILITY, Direction.from3DDataValue(i), te.mats[i], Direction.from3DDataValue(i), te.getAxleAxis(), te)){
 				te.axleHandlers[i].propagate(masterIn, key, RotaryUtil.getDirSign(side, Direction.from3DDataValue(i)) * handler.getRotationRatio(), .5D, !handler.renderOffset());
 			}
 		}
@@ -97,9 +98,9 @@ public class MechanismSmallGear implements IMechanism<CRMaterialLibrary.GearMate
 				BlockEntity adjTE = te.getLevel().getBlockEntity(te.getBlockPos().relative(facing));
 				if(adjTE != null){
 					ICogHandler cogOpt;
-					if((cogOpt = adjTE.getCapability(Capabilities.COG_CAPABILITY, side)).isPresent()){
+					if((cogOpt = adjTE.getCapability(CRCapabilities.COG_CAPABILITY, side)).isPresent()){
 						cogOpt.orElseThrow(NullPointerException::new).connect(masterIn, key, -handler.getRotationRatio(), .5D, facing.getOpposite(), handler.renderOffset());
-					}else if((cogOpt = adjTE.getCapability(Capabilities.COG_CAPABILITY, facing.getOpposite())).isPresent()){
+					}else if((cogOpt = adjTE.getCapability(CRCapabilities.COG_CAPABILITY, facing.getOpposite())).isPresent()){
 						//Check for large gears
 						cogOpt.orElseThrow(NullPointerException::new).connect(masterIn, key, RotaryUtil.getDirSign(side, facing) * handler.getRotationRatio(), .5D, side, handler.renderOffset());
 					}
@@ -108,11 +109,11 @@ public class MechanismSmallGear implements IMechanism<CRMaterialLibrary.GearMate
 				// Diagonal gears
 				BlockEntity diagTE = te.getLevel().getBlockEntity(te.getBlockPos().relative(facing).relative(side));
 				ICogHandler cogOpt;
-				if(diagTE != null && (cogOpt = diagTE.getCapability(Capabilities.COG_CAPABILITY, facing.getOpposite())).isPresent() && RotaryUtil.canConnectThrough(te.getLevel(), te.getBlockPos().relative(facing), facing.getOpposite(), side)){
+				if(diagTE != null && (cogOpt = diagTE.getCapability(CRCapabilities.COG_CAPABILITY, facing.getOpposite())).isPresent() && RotaryUtil.canConnectThrough(te.getLevel(), te.getBlockPos().relative(facing), facing.getOpposite(), side)){
 					cogOpt.orElseThrow(NullPointerException::new).connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * handler.getRotationRatio(), .5D, side.getOpposite(), handler.renderOffset());
 				}
 
-				if(sideTE != null && (cogOpt = sideTE.getCapability(Capabilities.COG_CAPABILITY, facing)).isPresent()){
+				if(sideTE != null && (cogOpt = sideTE.getCapability(CRCapabilities.COG_CAPABILITY, facing)).isPresent()){
 					cogOpt.orElseThrow(NullPointerException::new).connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * rotRatioIn, .5D, side.getOpposite(), handler.renderOffset());
 				}
 			}
@@ -132,7 +133,7 @@ public class MechanismSmallGear implements IMechanism<CRMaterialLibrary.GearMate
 //		}
 
 		//Axle slot
-		if(te.getAxleAxis() == side.getAxis() && te.members[6] != null && te.members[6].hasCap(Capabilities.AXLE_CAPABILITY, side, te.mats[6], null, te.getAxleAxis(), te)){
+		if(te.getAxleAxis() == side.getAxis() && te.members[6] != null && te.members[6].hasCap(CRCapabilities.AXLE_CAPABILITY, side, te.mats[6], null, te.getAxleAxis(), te)){
 			te.axleHandlers[6].propagate(masterIn, key, handler.getRotationRatio(), 0, handler.renderOffset());
 		}
 	}

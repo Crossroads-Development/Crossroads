@@ -2,8 +2,10 @@ package com.Da_Technomancer.crossroads.blocks.rotary;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
+import com.Da_Technomancer.crossroads.api.rotary.IAxleCapable;
+import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
@@ -14,21 +16,24 @@ import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.essentials.api.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
@@ -112,13 +117,13 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 			return;
 		}
 
-		Optional<BlastFurnaceRec> recOpt = level.getRecipeManager().getRecipeFor(CRRecipes.BLAST_FURNACE_TYPE, this, level);
+		Optional<RecipeHolder<BlastFurnaceRec>> recOpt = level.getRecipeManager().getRecipeFor(CRRecipes.BLAST_FURNACE_TYPE, this, level);
 		if(!recOpt.isPresent()){
 			progress = 0;
 			updateWorldState(false);
 			return;
 		}
-		BlastFurnaceRec recipe = recOpt.get();
+		BlastFurnaceRec recipe = recOpt.get().value();
 		if(carbon < recipe.getSlag() || inventory[2].getCount() + recipe.getSlag() > CRItems.slag.getMaxStackSize(inventory[2]) || (!fluids[0].isEmpty() && (!BlockUtil.sameFluid(recipe.getOutput(), fluids[0]) || fluidProps[0].capacity < fluids[0].getAmount() + recipe.getOutput().getAmount()))){
 			//The fluid and slag outputs need to fit, and we need enough carbon
 			progress = 0;
@@ -164,19 +169,19 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 
 	@Override
 	public boolean canPlaceItem(int index, ItemStack stack){
-		return (index == 0 && level.getRecipeManager().getRecipeFor(CRRecipes.BLAST_FURNACE_TYPE, new SimpleContainer(stack), level).isPresent()) || (index == 1 && getCarbonValue(stack) != 0);
+		return (index == 0 && level.getRecipeManager().getRecipeFor(CRRecipes.BLAST_FURNACE_TYPE, new SingleRecipeInput(stack), level).isPresent()) || (index == 1 && getCarbonValue(stack) != 0);
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		nbt.putInt("prog", progress);
 		nbt.putInt("carbon", carbon);
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		progress = nbt.getInt("prog");
 		carbon = nbt.getInt("carbon");
 	}
@@ -186,27 +191,18 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 		return Component.translatable("container.ind_blast_furnace");
 	}
 
-	private final IItemHandler itemOpt = LazyOptional.of(ItemHandler::new);
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
-		if(cap == ForgeCapabilities.ITEM_HANDLER){
-			return (T) itemOpt;
-		}
-		if(cap == Capabilities.AXLE_CAPABILITY && (side == Direction.UP || side == null)){
-			return (T) axleOpt;
-		}
-		if(cap == ForgeCapabilities.FLUID_HANDLER){
-			return (T) globalFluidOpt;
-		}
-
-		return super.getCapability(cap, side);
-	}
-
 	@Nullable
 	@Override
 	public AbstractContainerMenu createMenu(int id, Inventory playerInv, Player player){
 		return new BlastFurnaceContainer(id, playerInv, createContainerBuf());
+	}
+
+	@Override
+	@Nullable
+	public IAxleHandler getAxleHandler(Direction dir){
+		if(dir == Direction.UP || dir == null){
+			return axleHandler;
+		}
+		return null;
 	}
 }

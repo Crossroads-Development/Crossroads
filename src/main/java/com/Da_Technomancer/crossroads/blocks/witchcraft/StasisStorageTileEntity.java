@@ -1,10 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.witchcraft;
 
-import com.Da_Technomancer.crossroads.api.Capabilities;
-import com.Da_Technomancer.crossroads.api.beams.BeamUnit;
-import com.Da_Technomancer.crossroads.api.beams.BeamUtil;
-import com.Da_Technomancer.crossroads.api.beams.EnumBeamAlignments;
-import com.Da_Technomancer.crossroads.api.beams.IBeamHandler;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
+import com.Da_Technomancer.crossroads.api.beams.*;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.api.witchcraft.IPerishable;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -12,6 +9,7 @@ import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.StasisStorageContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -25,11 +23,14 @@ import net.neoforged.neoforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 
-public class StasisStorageTileEntity extends InventoryTE{
+public class StasisStorageTileEntity extends InventoryTE implements IBeamCapable{
 
 	public static final BlockEntityType<StasisStorageTileEntity> TYPE = CRTileEntity.createType(StasisStorageTileEntity::new, CRBlocks.stasisStorage);
 
 	private long lastTick;
+
+	private final IItemHandler itemHandler = new ItemHandler();
+	private final IBeamHandler beamHandler = new BeamHandler();
 
 	public StasisStorageTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state, 1);
@@ -78,39 +79,27 @@ public class StasisStorageTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		lastTick = nbt.getLong("last_tick");
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		nbt.putLong("last_tick", lastTick);
 	}
 
+	@Nullable
 	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		itemOpt.invalidate();
-		beamOpt.invalidate();
+	public IItemHandler getItemHandler(Direction direction){
+		return itemHandler;
 	}
 
-	private final IItemHandler itemOpt = LazyOptional.of(ItemHandler::new);
-	private final IBeamHandler beamOpt = LazyOptional.of(BeamHandler::new);
-
-	@SuppressWarnings("unchecked")
+	@Nullable
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
-		if(capability == Capabilities.BEAM_CAPABILITY){
-			return (T) beamOpt;
-		}
-
-		if(capability == ForgeCapabilities.ITEM_HANDLER){
-			return (T) itemOpt;
-		}
-
-		return super.getCapability(capability, facing);
+	public IBeamHandler getBeamHandler(Direction dir){
+		return beamHandler;
 	}
 
 	@Override

@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.alchemy.*;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -8,15 +8,17 @@ import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 
+import javax.annotation.Nullable;
 import java.util.HashSet;
 
-public class ChemicalVentTileEntity extends BlockEntity implements ITickableTileEntity{
+public class ChemicalVentTileEntity extends BlockEntity implements ITickableTileEntity, IChemicalCapable{
 
 	public static final BlockEntityType<ChemicalVentTileEntity> TYPE = CRTileEntity.createType(ChemicalVentTileEntity::new, CRBlocks.chemicalVent);
 
@@ -32,6 +34,8 @@ public class ChemicalVentTileEntity extends BlockEntity implements ITickableTile
 	private ReagentMap reags = new ReagentMap();
 	private static final int CYCLES = 10;//The number of cycles of input to combine
 
+	private final IChemicalHandler chemicalHandler = new AlchHandler();
+
 	public ChemicalVentTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state);
 	}
@@ -45,34 +49,23 @@ public class ChemicalVentTileEntity extends BlockEntity implements ITickableTile
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		lastInputTime = nbt.getLong("last_input");
 		reags = ReagentMap.readFromNBT(nbt);
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		nbt.putLong("last_input", lastInputTime);
 		reags.write(nbt);
 	}
 
 	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		alcOpt.invalidate();
-	}
-
-	private final IChemicalHandler alcOpt = LazyOptional.of(AlchHandler::new);
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
-		if(cap == Capabilities.CHEMICAL_CAPABILITY){
-			return (T) alcOpt;
-		}
-		return super.getCapability(cap, side);
+	@Nullable
+	public IChemicalHandler getChemicalHandler(Direction dir){
+		return chemicalHandler;
 	}
 
 	private class AlchHandler implements IChemicalHandler{

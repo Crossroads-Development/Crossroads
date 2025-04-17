@@ -104,9 +104,9 @@ public class EventHandlerClient{
 
 		@SuppressWarnings("unused")
 		@SubscribeEvent
-		public static void registerOverlays(RegisterGuiOverlaysEvent e){
-			e.registerAboveAll("crossroad_beam_tool_overlay", new BeamToolOverlay());
-			e.registerBelow(ResourceLocation.withDefaultNamespace("record_overlay"), "crossroad_multi_line_overlay", new MultiLineMessageOverlay());
+		public static void registerOverlays(RegisterGuiLayersEvent e){
+			e.registerAboveAll(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "beam_tool_overlay"), new BeamToolOverlay());
+			e.registerBelow(ResourceLocation.withDefaultNamespace("record_overlay"), ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "multi_line_overlay"), new MultiLineMessageOverlay());
 		}
 
 		@SuppressWarnings("unused")
@@ -265,14 +265,14 @@ public class EventHandlerClient{
 ////					Tesselator tes = Tesselator.getInstance();
 ////					BufferBuilder buf = tes.getBuilder();
 ////					buf.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-//					builder.vertex(matrix.last().pose(), 0, 120, -3).uv(0, 0.5F).endVertex();
-//					builder.vertex(matrix.last().pose(), 117, 120, -3).uv(1, 0.5F).endVertex();
-//					builder.vertex(matrix.last().pose(), 117, 60, -3).uv(1, 0).endVertex();
-//					builder.vertex(matrix.last().pose(), 0, 60, -3).uv(0, 0).endVertex();
-////					buf.vertex(0, 120, -3).uv(0, 1).endVertex();
-////					buf.vertex(117, 120, -3).uv(1, 1).endVertex();
-////					buf.vertex(117, 60, -3).uv(1, 0).endVertex();
-////					buf.vertex(0, 60, -3).uv(0, 0).endVertex();
+//					builder.addVertex(matrix.last().pose(), 0, 120, -3).setUv(0, 0.5F);
+//					builder.addVertex(matrix.last().pose(), 117, 120, -3).setUv(1, 0.5F);
+//					builder.addVertex(matrix.last().pose(), 117, 60, -3).setUv(1, 0);
+//					builder.addVertex(matrix.last().pose(), 0, 60, -3).setUv(0, 0);
+////					buf.addVertex(0, 120, -3).setUv(0, 1);
+////					buf.addVertex(117, 120, -3).setUv(1, 1);
+////					buf.addVertex(117, 60, -3).setUv(1, 0);
+////					buf.addVertex(0, 60, -3).setUv(0, 0);
 ////					tes.end();
 //
 ////					RenderSystem.setShaderTexture(0, COLOR_SHEET);
@@ -280,26 +280,26 @@ public class EventHandlerClient{
 //					for(int i = 0; i < 4; i++){
 //						float fullness = (float) stored.getValues()[i] / BeamCage.CAPACITY;
 //						int extension = (int) (72 * fullness);
-//						builder.vertex(matrix.last().pose(), 24, 84 + (9 * i), -2).uv(barUSt, barVSt + barVWid * (i + 1)).endVertex();
-//						builder.vertex(matrix.last().pose(), 24 + extension, 84 + (9 * i), -2).uv(barUSt + (barUEn - barUSt) * fullness, barVSt + barVWid * (i + 1)).endVertex();
-//						builder.vertex(matrix.last().pose(), 24 + extension, 78 + (9 * i), -2).uv(barUSt + (barUEn - barUSt) * fullness, barVSt + barVWid * i).endVertex();
-//						builder.vertex(matrix.last().pose(), 24, 78 + (9 * i), -2).uv(barUSt, barVSt + barVWid * i).endVertex();
+//						builder.addVertex(matrix.last().pose(), 24, 84 + (9 * i), -2).setUv(barUSt, barVSt + barVWid * (i + 1));
+//						builder.addVertex(matrix.last().pose(), 24 + extension, 84 + (9 * i), -2).setUv(barUSt + (barUEn - barUSt) * fullness, barVSt + barVWid * (i + 1));
+//						builder.addVertex(matrix.last().pose(), 24 + extension, 78 + (9 * i), -2).setUv(barUSt + (barUEn - barUSt) * fullness, barVSt + barVWid * i);
+//						builder.addVertex(matrix.last().pose(), 24, 78 + (9 * i), -2).setUv(barUSt, barVSt + barVWid * i);
 ////						int[] col = new int[4];
 ////						col[3] = 255;
 ////						col[i] = 255;//For void, overrides the alpha. Conveniently not an issue
-////						buf.vertex(24, 84 + (9 * i), -2).color(col[0], col[1], col[2], col[3]).uv(.25F + (((float) i) * .0625F), .0625F).endVertex();
-////						buf.vertex(24 + extension, 84 + (9 * i), -2).color(col[0], col[1], col[2], col[3]).uv(.3125F + (((float) i) * .0625F), .0625F).endVertex();
-////						buf.vertex(24 + extension, 78 + (9 * i), -2).color(col[0], col[1], col[2], col[3]).uv(.3125F + (((float) i) * .0625F), 0).endVertex();
-////						buf.vertex(24, 78 + (9 * i), -2).color(col[0], col[1], col[2], col[3]).uv(.25F + (((float) i) * .0625F), 0).endVertex();
+////						buf.addVertex(24, 84 + (9 * i), -2).setColor(col[0], col[1], col[2], col[3]).setUv(.25F + (((float) i) * .0625F), .0625F);
+////						buf.addVertex(24 + extension, 84 + (9 * i), -2).setColor(col[0], col[1], col[2], col[3]).setUv(.3125F + (((float) i) * .0625F), .0625F);
+////						buf.addVertex(24 + extension, 78 + (9 * i), -2).setColor(col[0], col[1], col[2], col[3]).setUv(.3125F + (((float) i) * .0625F), 0);
+////						buf.addVertex(24, 78 + (9 * i), -2).setColor(col[0], col[1], col[2], col[3]).setUv(.25F + (((float) i) * .0625F), 0);
 //					}
 ////					tes.end();
 //
 ////					RenderSystem.setShaderTexture(0, MAGIC_BAR_FOREGROUND);
 ////					buf.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-////					buf.vertex(0, 120, -1).uv(0, 1).endVertex();
-////					buf.vertex(117, 120, -1).uv(1, 1).endVertex();
-////					buf.vertex(117, 60, -1).uv(1, 0).endVertex();
-////					buf.vertex(0, 60, -1).uv(0, 0).endVertex();
+////					buf.addVertex(0, 120, -1).setUv(0, 1);
+////					buf.addVertex(117, 120, -1).setUv(1, 1);
+////					buf.addVertex(117, 60, -1).setUv(1, 0);
+////					buf.addVertex(0, 60, -1).setUv(0, 0);
 ////					tes.end();
 //
 //					//As this is an unbatched environment, we need to manually force the buffer to render before drawing fonts
@@ -323,15 +323,15 @@ public class EventHandlerClient{
 ////					RenderSystem.setShaderTexture(0, MAGIC_BAR_BACKGROUND);
 ////					Tesselator tes = Tesselator.getInstance();
 ////					BufferBuilder buf = tes.getBuilder();
-//					builder.vertex(matrix.last().pose(), 0, 60, -3).uv(0, 0.5F).endVertex();
-//					builder.vertex(matrix.last().pose(), 117, 60, -3).uv(1, 0.5F).endVertex();
-//					builder.vertex(matrix.last().pose(), 117, 0, -3).uv(1, 0).endVertex();
-//					builder.vertex(matrix.last().pose(), 0, 0, -3).uv(0, 0).endVertex();
+//					builder.addVertex(matrix.last().pose(), 0, 60, -3).setUv(0, 0.5F);
+//					builder.addVertex(matrix.last().pose(), 117, 60, -3).setUv(1, 0.5F);
+//					builder.addVertex(matrix.last().pose(), 117, 0, -3).setUv(1, 0);
+//					builder.addVertex(matrix.last().pose(), 0, 0, -3).setUv(0, 0);
 ////					buf.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-////					buf.vertex(0, 60, -3).uv(0, 1).endVertex();
-////					buf.vertex(117, 60, -3).uv(1, 1).endVertex();
-////					buf.vertex(117, 0, -3).uv(1, 0).endVertex();
-////					buf.vertex(0, 0, -3).uv(0, 0).endVertex();
+////					buf.addVertex(0, 60, -3).setUv(0, 1);
+////					buf.addVertex(117, 60, -3).setUv(1, 1);
+////					buf.addVertex(117, 0, -3).setUv(1, 0);
+////					buf.addVertex(0, 0, -3).setUv(0, 0);
 ////					tes.end();
 //
 ////					RenderSystem.setShaderTexture(0, COLOR_SHEET);
@@ -340,27 +340,27 @@ public class EventHandlerClient{
 //					for(int i = 0; i < 4; i++){
 //						float fullness = (float) settings[i] / 8;
 //						int extension = (int) (72 * fullness);
-//						builder.vertex(matrix.last().pose(), 24, 24 + (9 * i), -2).uv(barUSt, barVSt + barVWid * (i + 1)).endVertex();
-//						builder.vertex(matrix.last().pose(), 24 + extension, 24 + (9 * i), -2).uv(barUSt + (barUEn - barUSt) * fullness, barVSt + barVWid * (i + 1)).endVertex();
-//						builder.vertex(matrix.last().pose(), 24 + extension, 18 + (9 * i), -2).uv(barUSt + (barUEn - barUSt) * fullness, barVSt + barVWid * i).endVertex();
-//						builder.vertex(matrix.last().pose(), 24, 18 + (9 * i), -2).uv(barUSt, barVSt + barVWid * i).endVertex();
+//						builder.addVertex(matrix.last().pose(), 24, 24 + (9 * i), -2).setUv(barUSt, barVSt + barVWid * (i + 1));
+//						builder.addVertex(matrix.last().pose(), 24 + extension, 24 + (9 * i), -2).setUv(barUSt + (barUEn - barUSt) * fullness, barVSt + barVWid * (i + 1));
+//						builder.addVertex(matrix.last().pose(), 24 + extension, 18 + (9 * i), -2).setUv(barUSt + (barUEn - barUSt) * fullness, barVSt + barVWid * i);
+//						builder.addVertex(matrix.last().pose(), 24, 18 + (9 * i), -2).setUv(barUSt, barVSt + barVWid * i);
 ////						int[] col = new int[4];
 ////						col[3] = 255;
 ////						col[i] = 255;//For void, overrides the alpha. Conveniently not an issue
 ////						int extension = 9 * settings[i];
-////						buf.vertex(24, 24 + (9 * i), -2).color(col[0], col[1], col[2], col[3]).uv(.25F + (((float) i) * .0625F), .0625F).endVertex();
-////						buf.vertex(24 + extension, 24 + (9 * i), -2).color(col[0], col[1], col[2], col[3]).uv(.3125F + (((float) i) * .0625F), .0625F).endVertex();
-////						buf.vertex(24 + extension, 18 + (9 * i), -2).color(col[0], col[1], col[2], col[3]).uv(.3125F + (((float) i) * .0625F), 0).endVertex();
-////						buf.vertex(24, 18 + (9 * i), -2).color(col[0], col[1], col[2], col[3]).uv(.25F + (((float) i) * .0625F), 0).endVertex();
+////						buf.addVertex(24, 24 + (9 * i), -2).setColor(col[0], col[1], col[2], col[3]).setUv(.25F + (((float) i) * .0625F), .0625F);
+////						buf.addVertex(24 + extension, 24 + (9 * i), -2).setColor(col[0], col[1], col[2], col[3]).setUv(.3125F + (((float) i) * .0625F), .0625F);
+////						buf.addVertex(24 + extension, 18 + (9 * i), -2).setColor(col[0], col[1], col[2], col[3]).setUv(.3125F + (((float) i) * .0625F), 0);
+////						buf.addVertex(24, 18 + (9 * i), -2).setColor(col[0], col[1], col[2], col[3]).setUv(.25F + (((float) i) * .0625F), 0);
 //					}
 ////					tes.end();
 //
 ////					RenderSystem.setShaderTexture(0, MAGIC_BAR_FOREGROUND);
 ////					buf.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-////					buf.vertex(0, 60, -1).uv(0, 1).endVertex();
-////					buf.vertex(117, 60, -1).uv(1, 1).endVertex();
-////					buf.vertex(117, 0, -1).uv(1, 0).endVertex();
-////					buf.vertex(0, 0, -1).uv(0, 0).endVertex();
+////					buf.addVertex(0, 60, -1).setUv(0, 1);
+////					buf.addVertex(117, 60, -1).setUv(1, 1);
+////					buf.addVertex(117, 0, -1).setUv(1, 0);
+////					buf.addVertex(0, 0, -1).setUv(0, 0);
 ////					tes.end();
 //
 //					//As this is an unbatched environment, we need to manually force the buffer to render before drawing fonts
@@ -380,7 +380,7 @@ public class EventHandlerClient{
 
 	@SubscribeEvent
 	@SuppressWarnings("unused")
-	public void dilatePlayerTime(TickEvent.ClientTickEvent e){
+	public void dilatePlayerTime(ClientTickEvent e){
 		if(e.phase == TickEvent.Phase.END){
 			Player player = Minecraft.getInstance().player;
 			if(player == null){

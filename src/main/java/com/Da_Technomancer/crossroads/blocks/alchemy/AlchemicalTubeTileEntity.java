@@ -1,25 +1,29 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.alchemy.*;
 import com.Da_Technomancer.crossroads.api.templates.ConduitBlock;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 import org.apache.commons.lang3.tuple.Pair;
+
+
 import org.joml.Vector3f;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Arrays;
 
-public class AlchemicalTubeTileEntity extends ReagentHolderTE implements ConduitBlock.IConduitTE<EnumTransferMode>{
+public class AlchemicalTubeTileEntity extends ReagentHolderTE implements ConduitBlock.IConduitTE<EnumTransferMode>, IChemicalCapable{
 
 	public static final BlockEntityType<AlchemicalTubeTileEntity> TYPE = CRTileEntity.createType(AlchemicalTubeTileEntity::new, CRBlocks.alchemicalTubeGlass, CRBlocks.alchemicalTubeCrystal);
 
@@ -55,14 +59,6 @@ public class AlchemicalTubeTileEntity extends ReagentHolderTE implements Conduit
 	}
 
 	@Override
-	public void setBlockState(BlockState state){
-		super.setBlockState(state);
-		//When adjusting a side to lock, we need to invalidate the optional in case a side was disconnected
-		chemOpt.invalidate();
-		chemOpt = LazyOptional.of(() -> handler);
-	}
-
-	@Override
 	public EnumTransferMode[] getModes(){
 		return modes;
 	}
@@ -79,9 +75,9 @@ public class AlchemicalTubeTileEntity extends ReagentHolderTE implements Conduit
 		Direction opposite = face.getOpposite();
 		BlockEntity neighTE = level.getBlockEntity(worldPosition.relative(face));
 		//Check for a neighbor w/ an alchemy reagent handler of a compatible channel
-		IChemicalHandler otherOpt;
-		IChemicalHandler otherHandler;
-		return neighTE != null && (otherOpt = neighTE.getCapability(Capabilities.CHEMICAL_CAPABILITY, face.getOpposite())).isPresent() && (otherHandler = otherOpt.orElseThrow(NoSuchFieldError::new)).getChannel(opposite).connectsWith(getChannel()) && otherHandler.getMode(opposite).connectsWith(mode);
+		IChemicalHandler otherChemHandler;
+
+		return neighTE != null && (otherChemHandler = level.getCapability(CRCapabilities.CHEMICAL_CAPABILITY, neighTE.getBlockPos(), face.getOpposite())) != null && otherChemHandler.getChannel(opposite).connectsWith(getChannel()) && otherChemHandler.getMode(opposite).connectsWith(mode);
 	}
 
 	@Nonnull
@@ -103,17 +99,16 @@ public class AlchemicalTubeTileEntity extends ReagentHolderTE implements Conduit
 		for(int i = 0; i < 6; i++){
 			if(modes[i].isConnection()){
 				Direction side = Direction.from3DDataValue(i);
-				BlockEntity te = level.getBlockEntity(worldPosition.relative(side));
-				IChemicalHandler otherOpt;
-				if(te == null || !(otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())).isPresent()){
+				BlockPos worldPos = worldPosition.relative(side);
+				IChemicalHandler otherChemHandler;
+				if((otherChemHandler = level.getCapability(CRCapabilities.CHEMICAL_CAPABILITY, worldPos, side.getOpposite())) == null){
 					setData(i, false, modes[i]);
 					continue;
 				}
 
-				IChemicalHandler otherHandler = otherOpt.orElseThrow(NullPointerException::new);
 
-				EnumContainerType otherChannel = otherHandler.getChannel(side.getOpposite());
-				EnumTransferMode otherMode = otherHandler.getMode(side.getOpposite());
+				EnumContainerType otherChannel = otherChemHandler.getChannel(side.getOpposite());
+				EnumTransferMode otherMode = otherChemHandler.getMode(side.getOpposite());
 				if(!channel.connectsWith(otherChannel) || !modes[i].connectsWith(otherMode)){
 					setData(i, false, modes[i]);
 					continue;
@@ -122,7 +117,7 @@ public class AlchemicalTubeTileEntity extends ReagentHolderTE implements Conduit
 				if(contents.getTotalQty() == 0 || !modes[i].isOutput()){
 					continue;
 				}
-				if(otherHandler.insertReagents(contents, side.getOpposite(), handler, ignorePhase)){
+				if(otherChemHandler.insertReagents(contents, side.getOpposite(), chemHandler, ignorePhase)){
 					lastActTick = worldTick;
 					correctReag();
 					setChanged();
@@ -137,24 +132,15 @@ public class AlchemicalTubeTileEntity extends ReagentHolderTE implements Conduit
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		ConduitBlock.IConduitTE.writeConduitNBT(nbt, this);
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		ConduitBlock.IConduitTE.readConduitNBT(nbt, this);
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
-		if(cap == Capabilities.CHEMICAL_CAPABILITY && allowConnect(side)){
-			return (T) chemOpt;
-		}
-		return super.getCapability(cap, side);
 	}
 
 	@Override
@@ -178,5 +164,14 @@ public class AlchemicalTubeTileEntity extends ReagentHolderTE implements Conduit
 			}
 		}
 		return new Pair[0];
+	}
+
+	@Override
+	@Nullable
+	public IChemicalHandler getChemicalHandler(Direction dir){
+		if(allowConnect(dir)){
+			return chemHandler;
+		}
+		return null;
 	}
 }

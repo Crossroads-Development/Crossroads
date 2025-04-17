@@ -12,6 +12,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -25,6 +26,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
+import net.neoforged.neoforge.common.util.TriState;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -48,8 +50,13 @@ public class PetrolCactus extends CactusBlock implements ICustomItemBlock{
 	}
 
 	@Override
-	public boolean canSustainPlant(BlockState state, BlockGetter world, BlockPos pos, Direction facing, net.minecraftforge.common.IPlantable plantable){
-		return plantable == this && (state.is(this) || state.is(Blocks.SAND) || state.is(Blocks.RED_SAND));
+	public TriState canSustainPlant(BlockState state, BlockGetter level, BlockPos soilPosition, Direction facing, BlockState plant){
+		// TODO: Should this ever use TriState.DEFAULT?
+		if(plant.is(this) && (state.is(this) || state.is(Blocks.SAND) || state.is(Blocks.RED_SAND))){
+			return TriState.TRUE;
+		}else{
+			return TriState.FALSE;
+		}
 	}
 
 	@Override
@@ -96,7 +103,7 @@ public class PetrolCactus extends CactusBlock implements ICustomItemBlock{
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
 		tooltip.add(Component.translatable("tt.crossroads.petrol_cactus.desc"));
 		tooltip.add(Component.translatable("tt.crossroads.petrol_cactus.quip").setStyle(MiscUtil.TT_QUIP));
 	}

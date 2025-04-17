@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.rotary;
 
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
+import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
@@ -10,13 +11,15 @@ import com.Da_Technomancer.crossroads.gui.container.MillstoneContainer;
 import com.Da_Technomancer.essentials.api.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -129,7 +132,7 @@ public class MillstoneTileEntity extends InventoryTE{
 		if(inventory[0].isEmpty()){
 			progress = 0;
 		}else{
-			Optional<MillRec> recOpt = level.getRecipeManager().getRecipeFor(CRRecipes.MILL_TYPE, this, level);
+			Optional<RecipeHolder<MillRec>> recOpt = level.getRecipeManager().getRecipeFor(CRRecipes.MILL_TYPE, this, level);
 			if(recOpt.isPresent()){
 				double used = POWER_PER_SPEED * Math.abs(axleHandler.getSpeed());
 				used = Math.min(Math.abs(axleHandler.getEnergy()), Math.min(REQUIRED - progress, used));
@@ -137,7 +140,7 @@ public class MillstoneTileEntity extends InventoryTE{
 				axleHandler.addEnergy(-used, false);
 
 				if(progress >= REQUIRED){
-					createOutput(recOpt.get().getOutputs());
+					createOutput(recOpt.get().value().getOutputs());
 				}
 			}else{
 				progress = 0;
@@ -145,25 +148,13 @@ public class MillstoneTileEntity extends InventoryTE{
 		}
 	}
 
-	private final IItemHandler itemOpt = LazyOptional.of(ItemHandler::new);
-
 	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		itemOpt.invalidate();
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
-		if(cap == ForgeCapabilities.ITEM_HANDLER){
-			return (T) itemOpt;
+	@Nullable
+	public IAxleHandler getAxleHandler(Direction dir){
+		if(dir == Direction.UP){
+			return axleHandler;
 		}
-		if(cap == Capabilities.AXLE_CAPABILITY && side == Direction.UP){
-			return (T) axleOpt;
-		}
-
-		return super.getCapability(cap, side);
+		return null;
 	}
 
 	@Override
@@ -173,7 +164,7 @@ public class MillstoneTileEntity extends InventoryTE{
 
 	@Override
 	public boolean canPlaceItem(int index, ItemStack stack){
-		return index == 0 && level.getRecipeManager().getRecipeFor(CRRecipes.MILL_TYPE, new SimpleContainer(stack), level).isPresent();
+		return index == 0 && level.getRecipeManager().getRecipeFor(CRRecipes.MILL_TYPE, new SingleRecipeInput(stack), level).isPresent();
 	}
 
 	@Override
@@ -182,14 +173,14 @@ public class MillstoneTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		nbt.putDouble("prog", progress);
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		progress = nbt.getDouble("prog");
 	}
 

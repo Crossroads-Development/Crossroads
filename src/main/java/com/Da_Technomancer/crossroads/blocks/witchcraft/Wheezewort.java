@@ -4,7 +4,7 @@ import com.Da_Technomancer.crossroads.ambient.particles.CRParticles;
 import com.Da_Technomancer.crossroads.ambient.particles.ColorParticleData;
 import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -14,6 +14,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
@@ -59,8 +60,8 @@ public class Wheezewort extends DoublePlantBlock implements BonemealableBlock{
 	}
 
 	@Override
-	public boolean isValidBonemealTarget(LevelReader world, BlockPos pos, BlockState state, boolean p_176473_4_){
-		return state.getValue(CRProperties.AGE_3) != 3;
+	public boolean isValidBonemealTarget(LevelReader levelReader, BlockPos blockPos, BlockState blockState){
+		return blockState.getValue(CRProperties.AGE_3) != 3;
 	}
 
 	@Override
@@ -124,8 +125,8 @@ public class Wheezewort extends DoublePlantBlock implements BonemealableBlock{
 		CRParticles.summonParticlesFromServer(world, new ColorParticleData(CRParticles.COLOR_SOLID, Color.WHITE), 8, pos.getX() + 0.5F, pos.getY() + 0.55F, pos.getZ() + 0.5F, 0.1F, 0, 0.1F, 0, 0.15F, 0, 0.005F, 0.05F, 0.005F, false);
 		BlockEntity te = world.getBlockEntity(pos.above());
 		IHeatHandler heatOpt;
-		if(te != null && (heatOpt = te.getCapability(Capabilities.HEAT_CAPABILITY)).isPresent()){
-			heatOpt.orElseThrow(NullPointerException::new).addHeat(-COOLING);
+		if((heatOpt = world.getCapability(CRCapabilities.HEAT_CAPABILITY, pos.above(), null)) != null){
+			heatOpt.addHeat(-COOLING);
 			//Almost certainly drops it to absolute zero for anything normal
 			//Drops by 500C for a heat reservoir
 		}
@@ -149,10 +150,10 @@ public class Wheezewort extends DoublePlantBlock implements BonemealableBlock{
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltips, TooltipFlag context){
-		tooltips.add(Component.translatable("tt.crossroads.wheezewort.purpose", COOLING));
-		tooltips.add(Component.translatable("tt.crossroads.wheezewort.age"));
-		tooltips.add(Component.translatable("tt.crossroads.wheezewort.dispense"));
-		tooltips.add(Component.translatable("tt.crossroads.wheezewort.quip").setStyle(MiscUtil.TT_QUIP));
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
+		tooltip.add(Component.translatable("tt.crossroads.wheezewort.purpose", COOLING));
+		tooltip.add(Component.translatable("tt.crossroads.wheezewort.age"));
+		tooltip.add(Component.translatable("tt.crossroads.wheezewort.dispense"));
+		tooltip.add(Component.translatable("tt.crossroads.wheezewort.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 }

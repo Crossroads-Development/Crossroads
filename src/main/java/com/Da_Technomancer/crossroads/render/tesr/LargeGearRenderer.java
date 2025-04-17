@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.render.tesr;
 
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.rotary.LargeGearMasterTileEntity;
@@ -25,7 +25,7 @@ public class LargeGearRenderer implements BlockEntityRenderer<LargeGearMasterTil
 
 		matrix.translate(0.5D, 0.5D, 0.5D);
 		Direction facing = gear.getFacing();
-		IAxleHandler handler = gear.getCapability(Capabilities.AXLE_CAPABILITY, facing);
+		IAxleHandler handler = gear.getCapability(CRCapabilities.AXLE_CAPABILITY, facing);
 		float dirMult = facing.getAxisDirection() == Direction.AxisDirection.POSITIVE ? -1 : 1;
 
 		matrix.mulPose(facing.getOpposite().getRotation());

@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.CRProperties;
+import com.Da_Technomancer.crossroads.api.electric.IEnergyCapable;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.crossroads.api.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.api.technomancy.IFluxLink;
@@ -9,6 +10,7 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -19,12 +21,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-public class ChronoHarnessTileEntity extends IFluxLink.FluxHelper{
+public class ChronoHarnessTileEntity extends IFluxLink.FluxHelper implements IEnergyCapable{
 
 	public static final BlockEntityType<ChronoHarnessTileEntity> TYPE = CRTileEntity.createType(ChronoHarnessTileEntity::new, CRBlocks.chronoHarness);
 
@@ -35,6 +38,8 @@ public class ChronoHarnessTileEntity extends IFluxLink.FluxHelper{
 	private int curPower = 0;//Current power generation (fe/t); used for readouts
 	private int clientCurPower = 0;//Current power gen on the client; used for rendering. On the server side, tracks last sent value
 	private float angle = 0;//Used for rendering. Client side only
+
+	private final IEnergyStorage energyHandler = new EnergyHandler();
 
 	public ChronoHarnessTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state, null, Behaviour.SOURCE);
@@ -95,21 +100,18 @@ public class ChronoHarnessTileEntity extends IFluxLink.FluxHelper{
 
 		if(fe != 0){
 			//Transfer FE to a machine above
-			BlockEntity neighbor = level.getBlockEntity(worldPosition.relative(Direction.UP));
-			IEnergyStorage otherOpt;
-			if(neighbor != null && (otherOpt = neighbor.getCapability(ForgeCapabilities.ENERGY, Direction.DOWN)).isPresent()){
-				IEnergyStorage storage = otherOpt.orElseThrow(NullPointerException::new);
-				if(storage.canReceive()){
-					fe -= storage.receiveEnergy(fe, false);
+			IEnergyStorage otherEnergyHandler;
+			if((otherEnergyHandler = level.getCapability(Capabilities.EnergyStorage.BLOCK, worldPosition.relative(Direction.UP), Direction.DOWN)) != null){
+				if(otherEnergyHandler.canReceive()){
+					fe -= otherEnergyHandler.receiveEnergy(fe, false);
 					setChanged();
 				}
 			}
 			//Transfer FE to a machine below
-			neighbor = level.getBlockEntity(worldPosition.relative(Direction.DOWN));
-			if(neighbor != null && (otherOpt = neighbor.getCapability(ForgeCapabilities.ENERGY, Direction.UP)).isPresent()){
-				IEnergyStorage storage = otherOpt.orElseThrow(NullPointerException::new);
-				if(storage.canReceive()){
-					fe -= storage.receiveEnergy(fe, false);
+
+			if((otherEnergyHandler = level.getCapability(Capabilities.EnergyStorage.BLOCK, worldPosition.relative(Direction.DOWN), Direction.UP)) != null){
+				if(otherEnergyHandler.canReceive()){
+					fe -= otherEnergyHandler.receiveEnergy(fe, false);
 					setChanged();
 				}
 			}
@@ -117,23 +119,23 @@ public class ChronoHarnessTileEntity extends IFluxLink.FluxHelper{
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		fe = nbt.getInt("fe");
 		curPower = nbt.getInt("pow");
 		clientCurPower = curPower;
 	}
 
 	@Override
-	public CompoundTag getUpdateTag(){
-		CompoundTag nbt = super.getUpdateTag();
+	public CompoundTag getUpdateTag(HolderLookup.Provider pRegistries){
+		CompoundTag nbt = super.getUpdateTag(pRegistries);
 		nbt.putInt("pow", curPower);
 		return nbt;
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		nbt.putInt("fe", fe);
 		nbt.putInt("pow", curPower);
 
@@ -147,22 +149,10 @@ public class ChronoHarnessTileEntity extends IFluxLink.FluxHelper{
 		super.receiveLong(identifier, message, sendingPlayer);
 	}
 
+	@Nullable
 	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		energyOpt.invalidate();
-	}
-
-	private final IEnergyStorage energyOpt = LazyOptional.of(EnergyHandler::new);
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
-		if(cap == ForgeCapabilities.ENERGY){
-			return (T) energyOpt;
-		}
-
-		return super.getCapability(cap, side);
+	public IEnergyStorage getEnergyHandler(Direction dir){
+		return energyHandler;
 	}
 
 	private class EnergyHandler implements IEnergyStorage{

@@ -346,9 +346,9 @@ public class CircuitUtil extends RedstoneUtil{
 				sources.clear();
 
 				for(Direction checkDir : Direction.values()){
-					BlockEntity checkTE = world.getBlockEntity(pos.relative(checkDir));
+					BlockPos checkPos = pos.relative(checkDir);
 					IRedstoneHandler otherHandler;
-					if(checkTE != null && (otherHandler = BlockUtil.get(checkTE.getCapability(RedstoneUtil.REDSTONE_CAPABILITY, checkDir.getOpposite()))) != null){
+					if((otherHandler = world.getCapability(RedstoneUtil.REDSTONE_CAPABILITY, checkPos, checkDir.getOpposite())) != null){
 						otherHandler.requestSrc(redsRef, 0, checkDir.getOpposite(), checkDir);
 					}
 				}

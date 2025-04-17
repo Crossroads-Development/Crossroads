@@ -39,18 +39,18 @@ public class ReagentIngredientRenderer implements IIngredientRenderer<ReagIngr>{
 		RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
 		RenderSystem.setShaderTexture(0, PHIAL_TEXTURE);
 		buf.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
-		buf.vertex(matrix.last().pose(), 0, 16, 100).color(255, 255, 255, 255).uv(0, 1).endVertex();
-		buf.vertex(matrix.last().pose(), 16, 16, 100).color(255, 255, 255, 255).uv(1, 1).endVertex();
-		buf.vertex(matrix.last().pose(), 16, 0, 100).color(255, 255, 255, 255).uv(1, 0).endVertex();
-		buf.vertex(matrix.last().pose(), 0, 0, 100).color(255, 255, 255, 255).uv(0, 0).endVertex();
+		buf.addVertex(matrix.last().pose(), 0, 16, 100).setColor(255, 255, 255, 255).setUv(0, 1);
+		buf.addVertex(matrix.last().pose(), 16, 16, 100).setColor(255, 255, 255, 255).setUv(1, 1);
+		buf.addVertex(matrix.last().pose(), 16, 0, 100).setColor(255, 255, 255, 255).setUv(1, 0);
+		buf.addVertex(matrix.last().pose(), 0, 0, 100).setColor(255, 255, 255, 255).setUv(0, 0);
 		Tesselator.getInstance().end();
 
 		RenderSystem.setShaderTexture(0, INNER_TEXTURE);
 		buf.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
-		buf.vertex(matrix.last().pose(), 0, 16, 200).color(col[0], col[1], col[2], col[3]).uv(0, 1).endVertex();
-		buf.vertex(matrix.last().pose(), 16, 16, 200).color(col[0], col[1], col[2], col[3]).uv(1, 1).endVertex();
-		buf.vertex(matrix.last().pose(), 16, 0, 200).color(col[0], col[1], col[2], col[3]).uv(1, 0).endVertex();
-		buf.vertex(matrix.last().pose(), 0, 0, 200).color(col[0], col[1], col[2], col[3]).uv(0, 0).endVertex();
+		buf.addVertex(matrix.last().pose(), 0, 16, 200).setColor(col[0], col[1], col[2], col[3]).setUv(0, 1);
+		buf.addVertex(matrix.last().pose(), 16, 16, 200).setColor(col[0], col[1], col[2], col[3]).setUv(1, 1);
+		buf.addVertex(matrix.last().pose(), 16, 0, 200).setColor(col[0], col[1], col[2], col[3]).setUv(1, 0);
+		buf.addVertex(matrix.last().pose(), 0, 0, 200).setColor(col[0], col[1], col[2], col[3]).setUv(0, 0);
 		Tesselator.getInstance().end();
 
 		matrix.popPose();

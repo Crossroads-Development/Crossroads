@@ -1,15 +1,19 @@
 package com.Da_Technomancer.crossroads.api.crafting;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeInput;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
-public interface IOptionalRecipe<T extends Container> extends Recipe<T>{
+public interface IOptionalRecipe<T extends RecipeInput> extends Recipe<T>{
 
+	// TODO: Determine if changed inherited param "level" should remain unused
 	@Override
-	default ItemStack assemble(T container, RegistryAccess access){
-		return assemble(container);
+	default @NotNull ItemStack assemble(T recipeInput, HolderLookup.Provider var2){
+		return assemble(recipeInput);
 	}
 
 	/**
@@ -17,7 +21,7 @@ public interface IOptionalRecipe<T extends Container> extends Recipe<T>{
 	 * Safe to modify.
 	 * Some recipes may return different items for assemble vs getResultItem- trust assemble
 	 */
-	default ItemStack assemble(T inv){
+	default ItemStack assemble(T recipeInput){
 		ItemStack result = getResultItem();
 		if(result.isEmpty()){
 			return result;
@@ -26,8 +30,9 @@ public interface IOptionalRecipe<T extends Container> extends Recipe<T>{
 		}
 	}
 
+	// TODO: Determine if changed inherited param "provider" should remain unused
 	@Override
-	default ItemStack getResultItem(RegistryAccess access){
+	default @NotNull ItemStack getResultItem(@NotNull HolderLookup.Provider provider){
 		return getResultItem();
 	}
 

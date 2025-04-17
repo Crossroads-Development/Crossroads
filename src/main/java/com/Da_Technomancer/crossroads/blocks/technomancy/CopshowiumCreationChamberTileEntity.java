@@ -1,9 +1,9 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.CRConfig;
-import com.Da_Technomancer.crossroads.api.Capabilities;
 import com.Da_Technomancer.crossroads.api.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.api.beams.EnumBeamAlignments;
+import com.Da_Technomancer.crossroads.api.beams.IBeamCapable;
 import com.Da_Technomancer.crossroads.api.beams.IBeamHandler;
 import com.Da_Technomancer.crossroads.api.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.api.technomancy.IFluxLink;
@@ -17,6 +17,7 @@ import com.Da_Technomancer.crossroads.gui.container.CopshowiumMakerContainer;
 import com.Da_Technomancer.essentials.api.ILinkTE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -24,6 +25,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -38,7 +40,7 @@ import java.util.Optional;
 import java.util.Set;
 
 
-public class CopshowiumCreationChamberTileEntity extends InventoryTE implements IFluxLink{
+public class CopshowiumCreationChamberTileEntity extends InventoryTE implements IFluxLink, IBeamCapable{
 
 	public static final BlockEntityType<CopshowiumCreationChamberTileEntity> TYPE = CRTileEntity.createType(CopshowiumCreationChamberTileEntity::new, CRBlocks.copshowiumCreationChamber);
 
@@ -46,6 +48,11 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 	public static final int FLUX_PER_INGOT = 4;
 
 	private final FluxHelper fluxHelper;
+
+	//Make the top handler an IFluidTank to allow pipes to do bi-directional stuff
+	private final IFluidHandler inputFluidHandler = new FluidHandler(0);
+	private final IFluidHandler outputFluidHandler = new FluidHandler(1);
+	private final IBeamHandler beamHandler = new BeamHandler();
 
 	public CopshowiumCreationChamberTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state, 0);
@@ -94,20 +101,20 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		fluxHelper.writeData(nbt);
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		fluxHelper.readData(nbt);
 	}
 
 	@Override
-	public CompoundTag getUpdateTag(){
-		CompoundTag nbt = super.getUpdateTag();
+	public CompoundTag getUpdateTag(HolderLookup.Provider pRegistries){
+		CompoundTag nbt = super.getUpdateTag(pRegistries);
 		fluxHelper.writeData(nbt);
 		return nbt;
 	}
@@ -185,30 +192,18 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 	}
 
 	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		inputOpt.invalidate();
-		outputOpt.invalidate();
-		beamOpt.invalidate();
+	@Nullable
+	public IFluidHandler getFluidHandler(Direction dir){
+		return dir == null ? globalFluidHandler : dir == Direction.UP ? inputFluidHandler : dir == Direction.DOWN ? outputFluidHandler : null;
 	}
 
-	//Make the top handler an IFluidTank to allow pipes to do bi-directional stuff
-	private final IFluidHandler inputOpt = LazyOptional.of(() -> new FluidTankHandler(0));
-	private final IFluidHandler outputOpt = LazyOptional.of(() -> new FluidHandler(1));
-	private final IBeamHandler beamOpt = LazyOptional.of(BeamHandler::new);
-
-	@SuppressWarnings("unchecked")
+	@Nullable
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
-		if(capability == ForgeCapabilities.FLUID_HANDLER){
-			return facing == null ? (T) globalFluidOpt : facing == Direction.UP ? (T) inputOpt : facing == Direction.DOWN ? (T) outputOpt : LazyOptional.empty();
+	public IBeamHandler getBeamHandler(Direction dir){
+		if(dir == null || dir.getAxis() != Direction.Axis.Y){
+			return beamHandler;
 		}
-
-		if(capability == Capabilities.BEAM_CAPABILITY && (facing == null || facing.getAxis() != Direction.Axis.Y)){
-			return (T) beamOpt;
-		}
-
-		return super.getCapability(capability, facing);
+		return null;
 	}
 
 	@Override
@@ -236,9 +231,9 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 				fluids[1] = FluidStack.EMPTY;
 				setChanged();
 			}else if((!CRConfig.cccRequireTime.get() || align == EnumBeamAlignments.TIME) && !fluids[0].isEmpty()){
-				Optional<CopshowiumRec> recOpt = level.getRecipeManager().getRecipeFor(CRRecipes.COPSHOWIUM_TYPE, CopshowiumCreationChamberTileEntity.this, level);
+				Optional<RecipeHolder<CopshowiumRec>> recOpt = level.getRecipeManager().getRecipeFor(CRRecipes.COPSHOWIUM_TYPE, CopshowiumCreationChamberTileEntity.this, level);
 				if(recOpt.isPresent()){
-					CopshowiumRec rec = recOpt.get();
+					CopshowiumRec rec = recOpt.get().value();
 					int created = (int) (fluids[0].getAmount() * rec.getMult());
 					if(fluids[1].isEmpty()){
 						fluids[1] = new FluidStack(CRFluids.moltenCopshowium.getStill(), created);

@@ -50,36 +50,36 @@ public class BeamRenderer<T extends BlockEntity & IBeamRenderTE> implements Bloc
 
 		//Sides
 		//-X
-		builder.vertex(lastMatrix, -halfWidth, 0, -halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_SIDE_U, 0).endVertex();
-		builder.vertex(lastMatrix, -halfWidth, length, -halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_SIDE_U, endV).endVertex();
-		builder.vertex(lastMatrix, -halfWidth, length, halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_END_U, endV).endVertex();
-		builder.vertex(lastMatrix, -halfWidth, 0, halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_END_U, 0).endVertex();
+		builder.addVertex(lastMatrix, -halfWidth, 0, -halfWidth).setColor(col[0], col[1], col[2], col[3]).setUv(BEAM_SIDE_U, 0);
+		builder.addVertex(lastMatrix, -halfWidth, length, -halfWidth).setColor(col[0], col[1], col[2], col[3]).setUv(BEAM_SIDE_U, endV);
+		builder.addVertex(lastMatrix, -halfWidth, length, halfWidth).setColor(col[0], col[1], col[2], col[3]).setUv(BEAM_END_U, endV);
+		builder.addVertex(lastMatrix, -halfWidth, 0, halfWidth).setColor(col[0], col[1], col[2], col[3]).setUv(BEAM_END_U, 0);
 		//+X
-		builder.vertex(lastMatrix, halfWidth, 0, -halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_SIDE_U, 0).endVertex();
-		builder.vertex(lastMatrix, halfWidth, length, -halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_SIDE_U, endV).endVertex();
-		builder.vertex(lastMatrix, halfWidth, length, halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_END_U, endV).endVertex();
-		builder.vertex(lastMatrix, halfWidth, 0, halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_END_U, 0).endVertex();
+		builder.addVertex(lastMatrix, halfWidth, 0, -halfWidth).setColor(col[0], col[1], col[2], col[3]).setUv(BEAM_SIDE_U, 0);
+		builder.addVertex(lastMatrix, halfWidth, length, -halfWidth).setColor(col[0], col[1], col[2], col[3]).setUv(BEAM_SIDE_U, endV);
+		builder.addVertex(lastMatrix, halfWidth, length, halfWidth).setColor(col[0], col[1], col[2], col[3]).setUv(BEAM_END_U, endV);
+		builder.addVertex(lastMatrix, halfWidth, 0, halfWidth).setColor(col[0], col[1], col[2], col[3]).setUv(BEAM_END_U, 0);
 		//-Z
-		builder.vertex(lastMatrix, -halfWidth, 0, -halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_SIDE_U, 0).endVertex();
-		builder.vertex(lastMatrix, -halfWidth, length, -halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_SIDE_U, endV).endVertex();
-		builder.vertex(lastMatrix, halfWidth, length, -halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_END_U, endV).endVertex();
-		builder.vertex(lastMatrix, halfWidth, 0, -halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_END_U, 0).endVertex();
+		builder.addVertex(lastMatrix, -halfWidth, 0, -halfWidth).setColor(col[0], col[1], col[2], col[3]).setUv(BEAM_SIDE_U, 0);
+		builder.addVertex(lastMatrix, -halfWidth, length, -halfWidth).setColor(col[0], col[1], col[2], col[3]).setUv(BEAM_SIDE_U, endV);
+		builder.addVertex(lastMatrix, halfWidth, length, -halfWidth).setColor(col[0], col[1], col[2], col[3]).setUv(BEAM_END_U, endV);
+		builder.addVertex(lastMatrix, halfWidth, 0, -halfWidth).setColor(col[0], col[1], col[2], col[3]).setUv(BEAM_END_U, 0);
 		//+Z
-		builder.vertex(lastMatrix, -halfWidth, 0, halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_SIDE_U, 0).endVertex();
-		builder.vertex(lastMatrix, -halfWidth, length, halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_SIDE_U, endV).endVertex();
-		builder.vertex(lastMatrix, halfWidth, length, halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_END_U, endV).endVertex();
-		builder.vertex(lastMatrix, halfWidth, 0, halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_END_U, 0).endVertex();
+		builder.addVertex(lastMatrix, -halfWidth, 0, halfWidth).setColor(col[0], col[1], col[2], col[3]).setUv(BEAM_SIDE_U, 0);
+		builder.addVertex(lastMatrix, -halfWidth, length, halfWidth).setColor(col[0], col[1], col[2], col[3]).setUv(BEAM_SIDE_U, endV);
+		builder.addVertex(lastMatrix, halfWidth, length, halfWidth).setColor(col[0], col[1], col[2], col[3]).setUv(BEAM_END_U, endV);
+		builder.addVertex(lastMatrix, halfWidth, 0, halfWidth).setColor(col[0], col[1], col[2], col[3]).setUv(BEAM_END_U, 0);
 
 		//Near end
-		builder.vertex(lastMatrix, -halfWidth, 0, -halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_END_U, 0).endVertex();
-		builder.vertex(lastMatrix, -halfWidth, 0, halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_END_U, BEAM_V_STOP).endVertex();
-		builder.vertex(lastMatrix, halfWidth, 0, halfWidth).color(col[0], col[1], col[2], col[3]).uv(1, BEAM_V_STOP).endVertex();
-		builder.vertex(lastMatrix, halfWidth, 0, -halfWidth).color(col[0], col[1], col[2], col[3]).uv(1, 0).endVertex();
+		builder.addVertex(lastMatrix, -halfWidth, 0, -halfWidth).setColor(col[0], col[1], col[2], col[3]).setUv(BEAM_END_U, 0);
+		builder.addVertex(lastMatrix, -halfWidth, 0, halfWidth).setColor(col[0], col[1], col[2], col[3]).setUv(BEAM_END_U, BEAM_V_STOP);
+		builder.addVertex(lastMatrix, halfWidth, 0, halfWidth).setColor(col[0], col[1], col[2], col[3]).setUv(1, BEAM_V_STOP);
+		builder.addVertex(lastMatrix, halfWidth, 0, -halfWidth).setColor(col[0], col[1], col[2], col[3]).setUv(1, 0);
 		//Far end
-		builder.vertex(lastMatrix, -halfWidth, length, -halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_END_U, 0).endVertex();
-		builder.vertex(lastMatrix, -halfWidth, length, halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_END_U, BEAM_V_STOP).endVertex();
-		builder.vertex(lastMatrix, halfWidth, length, halfWidth).color(col[0], col[1], col[2], col[3]).uv(1, BEAM_V_STOP).endVertex();
-		builder.vertex(lastMatrix, halfWidth, length, -halfWidth).color(col[0], col[1], col[2], col[3]).uv(1, 0).endVertex();
+		builder.addVertex(lastMatrix, -halfWidth, length, -halfWidth).setColor(col[0], col[1], col[2], col[3]).setUv(BEAM_END_U, 0);
+		builder.addVertex(lastMatrix, -halfWidth, length, halfWidth).setColor(col[0], col[1], col[2], col[3]).setUv(BEAM_END_U, BEAM_V_STOP);
+		builder.addVertex(lastMatrix, halfWidth, length, halfWidth).setColor(col[0], col[1], col[2], col[3]).setUv(1, BEAM_V_STOP);
+		builder.addVertex(lastMatrix, halfWidth, length, -halfWidth).setColor(col[0], col[1], col[2], col[3]).setUv(1, 0);
 	}
 
 	@Override

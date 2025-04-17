@@ -70,7 +70,7 @@ public abstract class TechnomancyArmor extends ArmorItem implements ICreativeTab
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
 		if(isReinforced(stack)){
 			tooltip.add(Component.translatable("tt.crossroads.technomancy_armor.reinforced").setStyle(Style.EMPTY.applyFormat(ChatFormatting.DARK_RED)));
 		}

@@ -242,7 +242,7 @@ public final class CRItems{
 		gemRuby = queueForRegister("gem_ruby", new Item(baseItemProperties()));
 		ingotCopshowium = queueForRegister("ingot_copshowium", new Item(baseItemProperties()){
 			@Override
-			public void appendHoverText(ItemStack stack, @Nullable net.minecraft.world.level.Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
+			public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
 				tooltip.add(Component.translatable("tt.crossroads.copshowium.quip").setStyle(MiscUtil.TT_QUIP));
 			}
 		});
@@ -265,30 +265,30 @@ public final class CRItems{
 		axleMount = new AxleMount();
 		gearFacadeStoneBrick = queueForRegister("gear_facade_stone_brick", new Item(CRItems.baseItemProperties()){
 			@Override
-			public void appendHoverText(ItemStack p_41421_, @Nullable net.minecraft.world.level.Level p_41422_, List<Component> tt, TooltipFlag p_41424_){
-				tt.add(Component.literal("THIS ITEM IS BEING REMOVED"));
-				tt.add(Component.literal("CRAFT IT INTO THE NEW VERSION"));
+			public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
+				tooltip.add(Component.literal("THIS ITEM IS BEING REMOVED"));
+				tooltip.add(Component.literal("CRAFT IT INTO THE NEW VERSION"));
 			}
 		}, null);
 		gearFacadeCobble = queueForRegister("gear_facade_cobble", new Item(CRItems.baseItemProperties()){
 			@Override
-			public void appendHoverText(ItemStack p_41421_, @Nullable net.minecraft.world.level.Level p_41422_, List<Component> tt, TooltipFlag p_41424_){
-				tt.add(Component.literal("THIS ITEM IS BEING REMOVED"));
-				tt.add(Component.literal("CRAFT IT INTO THE NEW VERSION"));
+			public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
+				tooltip.add(Component.literal("THIS ITEM IS BEING REMOVED"));
+				tooltip.add(Component.literal("CRAFT IT INTO THE NEW VERSION"));
 			}
 		}, null);
 		gearFacadeIron = queueForRegister("gear_facade_iron", new Item(CRItems.baseItemProperties()){
 			@Override
-			public void appendHoverText(ItemStack p_41421_, @Nullable net.minecraft.world.level.Level p_41422_, List<Component> tt, TooltipFlag p_41424_){
-				tt.add(Component.literal("THIS ITEM IS BEING REMOVED"));
-				tt.add(Component.literal("CRAFT IT INTO THE NEW VERSION"));
+			public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
+				tooltip.add(Component.literal("THIS ITEM IS BEING REMOVED"));
+				tooltip.add(Component.literal("CRAFT IT INTO THE NEW VERSION"));
 			}
 		}, null);
 		gearFacadeGlass = queueForRegister("gear_facade_glass", new Item(CRItems.baseItemProperties()){
 			@Override
-			public void appendHoverText(ItemStack p_41421_, @Nullable net.minecraft.world.level.Level p_41422_, List<Component> tt, TooltipFlag p_41424_){
-				tt.add(Component.literal("THIS ITEM IS BEING REMOVED"));
-				tt.add(Component.literal("CRAFT IT INTO THE NEW VERSION"));
+			public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
+				tooltip.add(Component.literal("THIS ITEM IS BEING REMOVED"));
+				tooltip.add(Component.literal("CRAFT IT INTO THE NEW VERSION"));
 			}
 		}, null);
 		gearFacade = new GearFacade();
@@ -299,7 +299,7 @@ public final class CRItems{
 		omnimeter = new OmniMeter();
 		mainspring = queueForRegister("mainspring", new Item(baseItemProperties()){
 			@Override
-			public void appendHoverText(ItemStack stack, @Nullable net.minecraft.world.level.Level world, List<Component> tooltip, TooltipFlag flag){
+			public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
 				tooltip.add(Component.translatable("tt.crossroads.mainspring"));
 			}
 		});

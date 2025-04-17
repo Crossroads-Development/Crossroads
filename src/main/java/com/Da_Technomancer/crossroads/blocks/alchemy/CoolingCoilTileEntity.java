@@ -1,7 +1,9 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
+import com.Da_Technomancer.crossroads.api.alchemy.IChemicalCapable;
+import com.Da_Technomancer.crossroads.api.alchemy.IChemicalHandler;
 import com.Da_Technomancer.crossroads.api.alchemy.ReagentHolderTE;
 import com.Da_Technomancer.crossroads.api.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -12,7 +14,11 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 import org.apache.commons.lang3.tuple.Pair;
+
+
 import org.joml.Vector3f;
+
+import javax.annotation.Nullable;
 
 public class CoolingCoilTileEntity extends ReagentHolderTE{
 
@@ -35,17 +41,18 @@ public class CoolingCoilTileEntity extends ReagentHolderTE{
 	}
 
 	public void rotate(){
-		chemOpt.invalidate();
-		chemOpt = LazyOptional.of(() -> handler);
+		if(level != null){
+			level.invalidateCapabilities(getBlockPos());
+		}
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
-		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || side.getAxis() == getBlockState().getValue(CRProperties.HORIZ_FACING).getAxis())){
-			return (T) chemOpt;
+	@Nullable
+	public IChemicalHandler getChemicalHandler(Direction dir){
+		if(dir == null || dir.getAxis() == getBlockState().getValue(CRProperties.HORIZ_FACING).getAxis()){
+			return chemHandler;
 		}
-		return super.getCapability(cap, side);
+		return null;
 	}
 
 	@Override

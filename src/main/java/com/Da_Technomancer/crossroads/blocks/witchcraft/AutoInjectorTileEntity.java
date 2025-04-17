@@ -9,6 +9,8 @@ import com.Da_Technomancer.crossroads.gui.container.AutoInjectorContainer;
 import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffect;
@@ -47,6 +49,9 @@ public class AutoInjectorTileEntity extends InventoryTE{
 	private MobEffect storedEffect = null;
 	private int intensity = 0;//There's an offset of 1 on this- 0 is intensity 1, 1 is intensity 2, etc
 	private int duration = 0;//In ticks
+
+	private final IItemHandler itemOpt = new ItemHandler();
+
 
 	public AutoInjectorTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state, 2);//Index 0: Input; Index 1: Output bottles
@@ -157,47 +162,35 @@ public class AutoInjectorTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		int effectID = nbt.getInt("effect_id");
 		if(effectID <= 0){
 			storedEffect = null;
 		}else{
-			storedEffect = MobEffect.byId(effectID - 1);
+			storedEffect = BuiltInRegistries.MOB_EFFECT.byId(effectID - 1);
 		}
 		intensity = nbt.getInt("intensity");
 		duration = nbt.getInt("duration");
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		if(storedEffect == null){
 			nbt.putInt("effect_id", 0);
 		}else{
 			//We offset the id by one in the NBT, so we can use 0 for null
-			nbt.putInt("effect_id", MobEffect.getId(storedEffect) + 1);
+			nbt.putInt("effect_id", BuiltInRegistries.MOB_EFFECT.getId(storedEffect) + 1);
 		}
 		nbt.putInt("intensity", intensity);
 		nbt.putInt("duration", duration);
 	}
 
+	@Nullable
 	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		itemOpt.invalidate();
-	}
-
-	private final IItemHandler itemOpt = LazyOptional.of(ItemHandler::new);
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
-		if(capability == ForgeCapabilities.ITEM_HANDLER){
-			return (T) itemOpt;
-		}
-
-		return super.getCapability(capability, facing);
+	public IItemHandler getItemHandler(Direction direction){
+		return itemOpt;
 	}
 
 	@Override

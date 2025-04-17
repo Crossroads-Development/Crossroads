@@ -147,7 +147,7 @@ public class CRRenderUtil extends RenderUtil{
 	 */
 	@OnlyIn(Dist.CLIENT)
 	public static void addVertexBlock(VertexConsumer builder, PoseStack matrix, float x, float y, float z, float u, float v, float normalX, float normalY, float normalZ, int light, int[] col){
-		builder.vertex(matrix.last().pose(), x, y, z).color(col[0], col[1], col[2], col[3]).uv(u, v).uv2(light).normal(matrix.last().normal(), normalX, normalY, normalZ).endVertex();
+		builder.addVertex(matrix.last().pose(), x, y, z).setColor(col[0], col[1], col[2], col[3]).setUv(u, v).setLight(light).setNormal(matrix.last(), normalX, normalY, normalZ);
 	}
 
 	/**
@@ -167,7 +167,7 @@ public class CRRenderUtil extends RenderUtil{
 	 */
 	@OnlyIn(Dist.CLIENT)
 	public static void addVertexEntity(VertexConsumer builder, PoseStack matrix, float x, float y, float z, float u, float v, float normalX, float normalY, float normalZ, int light, int[] col){
-		builder.vertex(matrix.last().pose(), x, y, z).color(col[0], col[1], col[2], col[3]).uv(u, v).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(matrix.last().normal(), normalX, normalY, normalZ).endVertex();
+		builder.addVertex(matrix.last().pose(), x, y, z).setColor(col[0], col[1], col[2], col[3]).setUv(u, v).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal(matrix.last(), normalX, normalY, normalZ);
 	}
 
 	/**
@@ -202,7 +202,7 @@ public class CRRenderUtil extends RenderUtil{
 	 */
 	@OnlyIn(Dist.CLIENT)
 	public static void addVertexPosColTex(VertexConsumer builder, PoseStack matrix, float x, float y, float z, float u, float v, int[] col){
-		builder.vertex(matrix.last().pose(), x, y, z).color(col[0], col[1], col[2], col[3]).uv(u, v).endVertex();
+		builder.addVertex(matrix.last().pose(), x, y, z).setColor(col[0], col[1], col[2], col[3]).setUv(u, v);
 	}
 
 	/**
@@ -317,10 +317,10 @@ public class CRRenderUtil extends RenderUtil{
 		for(int i = 0; i < 3; i++){
 			Vec3 offsetPrev = perpVec[i];
 			Vec3 offsetNext = perpVec[(i + 1) % perpVec.length];
-			builder.vertex(matrix.last().pose(), (float) (start.x() + offsetPrev.x()), (float) (start.y() + offsetPrev.y()), (float) (start.z() + offsetPrev.z())).color(col[0], col[1], col[2], col[3]).uv2(light).endVertex();
-			builder.vertex(matrix.last().pose(), (float) (end.x() + offsetPrev.x()), (float) (end.y() + offsetPrev.y()), (float) (end.z() + offsetPrev.z())).color(col[0], col[1], col[2], col[3]).uv2(light).endVertex();
-			builder.vertex(matrix.last().pose(), (float) (end.x() + offsetNext.x()), (float) (end.y() + offsetNext.y()), (float) (end.z() + offsetNext.z())).color(col[0], col[1], col[2], col[3]).uv2(light).endVertex();
-			builder.vertex(matrix.last().pose(), (float) (start.x() + offsetNext.x()), (float) (start.y() + offsetNext.y()), (float) (start.z() + offsetNext.z())).color(col[0], col[1], col[2], col[3]).uv2(light).endVertex();
+			builder.addVertex(matrix.last().pose(), (float) (start.x() + offsetPrev.x()), (float) (start.y() + offsetPrev.y()), (float) (start.z() + offsetPrev.z())).setColor(col[0], col[1], col[2], col[3]).setLight(light);
+			builder.addVertex(matrix.last().pose(), (float) (end.x() + offsetPrev.x()), (float) (end.y() + offsetPrev.y()), (float) (end.z() + offsetPrev.z())).setColor(col[0], col[1], col[2], col[3]).setLight(light);
+			builder.addVertex(matrix.last().pose(), (float) (end.x() + offsetNext.x()), (float) (end.y() + offsetNext.y()), (float) (end.z() + offsetNext.z())).setColor(col[0], col[1], col[2], col[3]).setLight(light);
+			builder.addVertex(matrix.last().pose(), (float) (start.x() + offsetNext.x()), (float) (start.y() + offsetNext.y()), (float) (start.z() + offsetNext.z())).setColor(col[0], col[1], col[2], col[3]).setLight(light);
 		}
 	}
 }

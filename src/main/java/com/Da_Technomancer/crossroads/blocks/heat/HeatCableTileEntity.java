@@ -3,7 +3,7 @@ package com.Da_Technomancer.crossroads.blocks.heat;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.ambient.particles.CRParticles;
 import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
@@ -13,6 +13,7 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -33,11 +34,11 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 
 	public static final BlockEntityType<HeatCableTileEntity> TYPE = CRTileEntity.createType(HeatCableTileEntity::new, CRBlocks.HEAT_CABLES.values().toArray(new HeatCable[0]));
 
-	@SuppressWarnings("unchecked")//Darn Java, not being able to verify arrays of parameterized types. Bah Humbug!
-	protected final IHeatHandler[] neighCache = new LazyOptional[] {LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty()};
+	protected final IHeatHandler[] neighCache = new IHeatHandler[] {null, null, null, null, null, null};
 	protected HeatInsulators insulator;
 	protected boolean[] matches = new boolean[6];
 	protected EnumTransferMode[] modes = ConduitBlock.IConduitTE.genModeArray(EnumTransferMode.BOTH);
+	private HolderLookup.Provider registries;
 
 	public HeatCableTileEntity(BlockPos pos, BlockState state){
 		this(pos, state, state.getBlock() instanceof HeatCable hc ? hc.insulator : HeatInsulators.WOOL);
@@ -60,14 +61,6 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 			biomeTempCache = HeatUtil.convertBiomeTemp(level, worldPosition);
 		}
 		return biomeTempCache;
-	}
-
-	@Override
-	public void setBlockState(BlockState stateIn){
-		super.setBlockState(stateIn);
-		//When adjusting a side to lock, we need to invalidate the optional in case a side was disconnected
-		heatOpt.invalidate();
-		heatOpt = LazyOptional.of(this::createHeatHandler);
 	}
 
 	@Override
@@ -96,20 +89,17 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 			if(locked(side.get3DDataValue())){
 				continue;
 			}
-			IHeatHandler otherOpt = neighCache[side.get3DDataValue()];
-			if(!neighCache[side.get3DDataValue()].isPresent()){
-				BlockEntity te = level.getBlockEntity(worldPosition.relative(side));
-				if(te != null){
-					otherOpt = te.getCapability(Capabilities.HEAT_CAPABILITY, side.getOpposite());
-					neighCache[side.get3DDataValue()] = otherOpt;
-				}
+			IHeatHandler otherHeatHandler = neighCache[side.get3DDataValue()];
+			if(neighCache[side.get3DDataValue()] == null){
+				BlockPos relPos = worldPosition.relative(side);
+				otherHeatHandler = level.getCapability(CRCapabilities.HEAT_CAPABILITY, relPos, side.getOpposite());
+				neighCache[side.get3DDataValue()] = otherHeatHandler;
 			}
 
-			if(otherOpt.isPresent()){
-				IHeatHandler handler = otherOpt.orElseThrow(NullPointerException::new);
-				temp += handler.getTemp();
+			if(otherHeatHandler != null){
+				temp += otherHeatHandler.getTemp();
 //				handler.addHeat(-handler.getTemp());
-				heatHandlers.add(handler);
+				heatHandlers.add(otherHeatHandler);
 				setData(side.get3DDataValue(), true, modes[side.get3DDataValue()]);
 			}else{
 				setData(side.get3DDataValue(), false, modes[side.get3DDataValue()]);
@@ -160,33 +150,34 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		this.registries = registries;
+		super.loadAdditional(nbt, registries);
 		ConduitBlock.IConduitTE.readConduitNBT(nbt, this);
 		insulator = nbt.contains("insul") ? HeatInsulators.valueOf(nbt.getString("insul")) : HeatInsulators.WOOL;
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		ConduitBlock.IConduitTE.writeConduitNBT(nbt, this);
 		nbt.putString("insul", insulator.name());
 	}
 
 	@Override
-	public CompoundTag getUpdateTag(){
-		CompoundTag nbt = super.getUpdateTag();
-		saveAdditional(nbt);
+	public CompoundTag getUpdateTag(HolderLookup.Provider pRegistries){
+		CompoundTag nbt = super.getUpdateTag(pRegistries);
+		saveAdditional(nbt, pRegistries);
 		return nbt;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
-		if(capability == Capabilities.HEAT_CAPABILITY && (facing == null || !locked(facing.get3DDataValue()))){
-			return (T) heatOpt;
+	@Nullable
+	public IHeatHandler getHeatHandler(Direction dir){
+		if(dir == null || !locked(dir.get3DDataValue())){
+			return heatHandler;
 		}
-		return super.getCapability(capability, facing);
+		return null;
 	}
 
 	@Nonnull
@@ -210,8 +201,7 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 	@Override
 	public boolean hasMatch(int side, EnumTransferMode mode){
 		Direction face = Direction.from3DDataValue(side);
-		BlockEntity neighTE = level.getBlockEntity(worldPosition.relative(face));
-		return neighTE != null && neighTE.getCapability(Capabilities.HEAT_CAPABILITY, face.getOpposite()).isPresent();
+		return level.getCapability(CRCapabilities.HEAT_CAPABILITY, worldPosition.relative(face), face.getOpposite()) != null;
 	}
 
 	private class CableHeatHandler extends HeatHandler{

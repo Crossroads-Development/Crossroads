@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.CircuitUtil;
 import com.Da_Technomancer.crossroads.api.rotary.AxisTypes;
 import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
@@ -9,19 +9,26 @@ import com.Da_Technomancer.crossroads.api.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.blocks.rotary.MasterAxisTileEntity;
+import com.Da_Technomancer.essentials.api.redstone.IRedstoneCapable;
 import com.Da_Technomancer.essentials.api.redstone.IRedstoneHandler;
 import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
+import javax.annotation.Nullable;
 
-public class RedstoneAxisTileEntity extends MasterAxisTileEntity{
+
+public class RedstoneAxisTileEntity extends MasterAxisTileEntity implements IRedstoneCapable{
 
 	public static final BlockEntityType<RedstoneAxisTileEntity> TYPE = CRTileEntity.createType(RedstoneAxisTileEntity::new, CRBlocks.redstoneAxis);
+
+	public final CircuitUtil.InputCircHandler redsHandler = new CircuitUtil.InputCircHandler();
+	private IRedstoneHandler redsOpt = CircuitUtil.makeBaseCircuitOptional(this, redsHandler, 0);
 
 	public RedstoneAxisTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state);
@@ -51,7 +58,7 @@ public class RedstoneAxisTileEntity extends MasterAxisTileEntity{
 
 		double cost = sumIRot * Math.pow(targetBaseSpeed, 2) / 2D;//Total energy required to hold the output at the requested base speed
 		BlockEntity backTE = level.getBlockEntity(worldPosition.relative(facing.getOpposite()));
-		IAxleHandler backOpt = backTE == null ? LazyOptional.empty() : backTE.getCapability(Capabilities.AXLE_CAPABILITY, facing);
+		IAxleHandler backOpt = backTE == null ? LazyOptional.empty() : backTE.getCapability(CRCapabilities.AXLE_CAPABILITY, facing);
 		IAxleHandler sourceAxle = backOpt.isPresent() ? backOpt.orElseThrow(NullPointerException::new) : null;
 		double availableEnergy = Math.abs(energyCalcResults[0]);
 		//Add energy from the gear on the back. Don't double count if it's in this gear network
@@ -103,32 +110,20 @@ public class RedstoneAxisTileEntity extends MasterAxisTileEntity{
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		redsHandler.write(nbt);
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		redsHandler.read(nbt);
 	}
 
+	@Nullable
 	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		redsOpt.invalidate();
-	}
-
-	public final CircuitUtil.InputCircHandler redsHandler = new CircuitUtil.InputCircHandler();
-	private IRedstoneHandler redsOpt = CircuitUtil.makeBaseCircuitOptional(this, redsHandler, 0);
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public <T> T getCapability(Capability<T> cap, Direction dir){
-		if(cap == RedstoneUtil.REDSTONE_CAPABILITY){
-			return (T) redsOpt;
-		}
-		return super.getCapability(cap, dir);
+	public IRedstoneHandler getRedstoneHandler(Direction direction){
+		return redsOpt;
 	}
 }

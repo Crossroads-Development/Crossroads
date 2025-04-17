@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.rotary.mechanisms;
 
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.rotary.*;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.item_sets.GearFacade;
@@ -20,6 +20,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.client.model.data.ModelData;
 
 
@@ -45,9 +46,9 @@ public class MechanismFacade implements IMechanism<GearFacade.FacadeBlock>{
 	}
 
 	@Override
-	public boolean hasCap(Capability<?> cap, Direction capSide, IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis, MechanismTileEntity te){
+	public boolean hasCap(BlockCapability<?, ?> cap, Direction capSide, IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis, MechanismTileEntity te){
 		//Delegate to the axle, if there is one
-		return side != null && side == capSide && cap == Capabilities.AXLE_CAPABILITY;
+		return side != null && side == capSide && cap == CRCapabilities.AXLE_CAPABILITY;
 	}
 
 	@Override
@@ -82,18 +83,18 @@ public class MechanismFacade implements IMechanism<GearFacade.FacadeBlock>{
 
 		//Connected block
 		if(sideTE != null){
-			IAxisHandler axisOpt = sideTE.getCapability(Capabilities.AXIS_CAPABILITY, side.getOpposite());
+			IAxisHandler axisOpt = sideTE.getCapability(CRCapabilities.AXIS_CAPABILITY, side.getOpposite());
 			if(axisOpt.isPresent()){
 				axisOpt.orElseThrow(NullPointerException::new).trigger(masterIn, key);
 			}
-			IAxleHandler axleOpt = sideTE.getCapability(Capabilities.AXLE_CAPABILITY, side.getOpposite());
+			IAxleHandler axleOpt = sideTE.getCapability(CRCapabilities.AXLE_CAPABILITY, side.getOpposite());
 			if(axleOpt.isPresent()){
 				axleOpt.orElseThrow(NullPointerException::new).propagate(masterIn, key, rotRatioIn, 0, handler.renderOffset());
 			}
 		}
 
 		//Axle slot
-		if(te.getAxleAxis() == side.getAxis() && te.members[6] != null && te.members[6].hasCap(Capabilities.AXLE_CAPABILITY, side, te.mats[6], null, te.getAxleAxis(), te)){
+		if(te.getAxleAxis() == side.getAxis() && te.members[6] != null && te.members[6].hasCap(CRCapabilities.AXLE_CAPABILITY, side, te.mats[6], null, te.getAxleAxis(), te)){
 			te.axleHandlers[6].propagate(masterIn, key, rotRatioIn, 0, handler.renderOffset());
 		}
 	}

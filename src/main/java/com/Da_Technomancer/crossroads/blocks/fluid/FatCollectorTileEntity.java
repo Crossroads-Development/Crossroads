@@ -1,8 +1,9 @@
 package com.Da_Technomancer.crossroads.blocks.fluid;
 
 import com.Da_Technomancer.crossroads.CRConfig;
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
+import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
@@ -21,6 +22,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
@@ -32,6 +34,8 @@ public class FatCollectorTileEntity extends InventoryTE{
 	public static final int[] TIERS = {100, 120, 140, 160, 180, 200};
 	public static final double[] EFFICIENCY = {0.8D, 1D, 1.2D, 1D, 0.8D, 0};
 	private static final double USE_PER_VALUE = 2D;
+	private final IItemHandler itemOpt = new ItemHandler();
+
 
 	public FatCollectorTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state, 1);
@@ -58,7 +62,7 @@ public class FatCollectorTileEntity extends InventoryTE{
 		FoodProperties food;
 		if(tier != -1 && !inventory[0].isEmpty() && (food = inventory[0].getItem().getFoodProperties()) != null){
 			//I don't know why vanilla multiplies saturation by 2, but it does
-			int liqAm = Math.min(food.getNutrition() + (int) (food.getNutrition() * food.getSaturationModifier() * 2F), fluidProps[0].capacity);
+			int liqAm = Math.min(food.nutrition() + (int) (food.nutrition() * food.saturation() * 2F), fluidProps[0].capacity);
 			double heatUse = ((double) liqAm) * USE_PER_VALUE;
 			liqAm *= CRConfig.fatPerValue.get();
 			liqAm *= EFFICIENCY[tier];
@@ -75,28 +79,23 @@ public class FatCollectorTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		itemOpt.invalidate();
+	@Nullable
+	public IFluidHandler getFluidHandler(Direction dir){
+		if(dir != Direction.DOWN && dir != Direction.UP){
+			return globalFluidHandler;
+		}
+		return null;
 	}
 
-	private final IItemHandler itemOpt = LazyOptional.of(ItemHandler::new);
-
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
-		if(capability == ForgeCapabilities.FLUID_HANDLER && facing != Direction.DOWN && facing != Direction.UP){
-			return (T) globalFluidOpt;
+	@Nullable
+	public IHeatHandler getHeatHandler(Direction dir){
+		if(dir == null || dir == Direction.DOWN){
+			return heatHandler;
 		}
-		if(capability == Capabilities.HEAT_CAPABILITY && (facing == null || facing == Direction.DOWN)){
-			return (T) heatOpt;
-		}
-		if(capability == ForgeCapabilities.ITEM_HANDLER){
-			return (T) itemOpt;
-		}
-
-		return super.getCapability(capability, facing);
+		return null;
 	}
+
 
 	@Override
 	public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction){

@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -62,14 +63,14 @@ public class FireDetectorTileEntity extends BlockEntity implements ITickableTile
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		redstone = nbt.getInt("reds");
 	}
 
 	@Override
 	protected void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+		super.saveAdditional(nbt, pRegistries);
 		nbt.putInt("reds", redstone);
 	}
 }

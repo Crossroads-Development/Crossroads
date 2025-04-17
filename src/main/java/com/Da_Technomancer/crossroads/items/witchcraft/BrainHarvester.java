@@ -40,7 +40,7 @@ public class BrainHarvester extends Item{
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag){
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
 		tooltip.add(Component.translatable("tt.crossroads.brain_harvester.desc"));
 		tooltip.add(Component.translatable("tt.crossroads.brain_harvester.quip").setStyle(MiscUtil.TT_QUIP));
 	}

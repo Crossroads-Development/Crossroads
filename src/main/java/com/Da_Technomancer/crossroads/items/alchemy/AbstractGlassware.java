@@ -121,7 +121,7 @@ public abstract class AbstractGlassware extends Item{
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
 		tooltip.add(Component.translatable("tt.crossroads.boilerplate.alchemy_capacity", getCapacity()));
 		if(!stack.hasTag()){
 			return;
@@ -139,14 +139,14 @@ public abstract class AbstractGlassware extends Item{
 				int qty = stored.getQty(type);
 				if(qty > 0){
 					total++;
-					if(total <= 4 || flagIn != TooltipFlag.Default.NORMAL){
+					if(total <= 4 || flag != TooltipFlag.Default.NORMAL){
 						tooltip.add(Component.translatable("tt.crossroads.boilerplate.alchemy_content", type.getName(), qty));
 					}else{
 						break;
 					}
 				}
 			}
-			if(total > 4 && flagIn == TooltipFlag.Default.NORMAL){
+			if(total > 4 && flag == TooltipFlag.Default.NORMAL){
 				tooltip.add(Component.translatable("tt.crossroads.boilerplate.alchemy_excess", total - 4));
 			}
 		}

@@ -2,12 +2,13 @@ package com.Da_Technomancer.crossroads.api.packets;
 
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
 
-public class SendIntArrayToClient extends ClientPacket{
+public class SendIntArrayToClient extends CustomPacketPayload{
 
 	public byte id;
 	public int[] message;

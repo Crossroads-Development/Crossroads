@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 
-public class SendGoggleConfigureToServer extends ServerPacket{
+public class SendGoggleConfigureToServer extends ClientPacket{
 
 	public String lensName;
 	public boolean newSetting;

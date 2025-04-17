@@ -32,7 +32,7 @@ public class PathSigil extends Item{
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
 		tooltip.add(Component.translatable("tt.crossroads.path_sigil.desc"));
 		if(CRConfig.forgetPaths.get()){
 			tooltip.add(Component.translatable("tt.crossroads.path_sigil.desc.forget"));

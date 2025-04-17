@@ -2,8 +2,9 @@ package com.Da_Technomancer.crossroads.blocks.rotary;
 
 import com.Da_Technomancer.crossroads.ambient.particles.CRParticles;
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.api.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
@@ -25,6 +26,7 @@ import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class RotaryDrillTileEntity extends ModuleTE{
@@ -65,13 +67,6 @@ public class RotaryDrillTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void setBlockState(BlockState stateIn){
-		super.setBlockState(stateIn);
-		axleOpt.invalidate();
-		axleOpt = LazyOptional.of(() -> axleHandler);
-	}
-
-	@Override
 	public void serverTick(){
 		super.serverTick();
 
@@ -105,12 +100,12 @@ public class RotaryDrillTileEntity extends ModuleTE{
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
-		if(cap == Capabilities.AXLE_CAPABILITY && (side == null || side == getFacing().getOpposite())){
-			return (T) axleOpt;
+	@Nullable
+	public IAxleHandler getAxleHandler(Direction dir){
+		if(dir == null || dir == getFacing().getOpposite()){
+			return axleHandler;
 		}
-		return super.getCapability(cap, side);
+		return null;
 	}
 }

@@ -12,6 +12,7 @@ import com.Da_Technomancer.essentials.api.BlockUtil;
 import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -22,6 +23,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
@@ -47,6 +49,8 @@ public class CultivatorVatTileEntity extends AbstractNutrientEnvironmentTileEnti
 	 * When the target item is replaced, we need to manually wipe the cache
 	 */
 	private ICultivatable.CultivationTrade targetTrade = null;
+
+	private final IItemHandler itemHandler = new ItemHandler();
 
 	public CultivatorVatTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state, 4, new int[] {0}, 0);
@@ -203,37 +207,27 @@ public class CultivatorVatTileEntity extends AbstractNutrientEnvironmentTileEnti
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		progress = nbt.getInt("prog");
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		nbt.putInt("prog", progress);
 	}
 
+	@Nullable
 	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		itemOpt.invalidate();
+	public IItemHandler getItemHandler(Direction direction){
+		return itemHandler;
 	}
 
-	private final IItemHandler itemOpt = LazyOptional.of(ItemHandler::new);
-
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
-		if(capability == ForgeCapabilities.FLUID_HANDLER){
-			return (T) globalFluidOpt;
-		}
-
-		if(capability == ForgeCapabilities.ITEM_HANDLER){
-			return (T) itemOpt;
-		}
-
-		return super.getCapability(capability, facing);
+	@Nullable
+	public IFluidHandler getFluidHandler(Direction dir){
+		return globalFluidHandler;
 	}
 
 	@Override

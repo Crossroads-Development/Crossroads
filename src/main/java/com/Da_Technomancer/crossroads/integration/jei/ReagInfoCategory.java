@@ -71,7 +71,7 @@ public class ReagInfoCategory implements IRecipeCategory<IReagent>{
 			graphics.drawString(fontRenderer, MiscUtil.localize("crossroads.jei.reagent.crystal"), 2, 82, 0x404040, false);
 		}
 
-		//GlStateManager.color(1, 1, 1);
+		//GlStateManager.setColor(1, 1, 1);
 		graphics.pose().translate(2, 2, 0);
 		ReagentIngredientRenderer.RENDERER.render(graphics, new ReagIngr(recipe, 1));
 	}

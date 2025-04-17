@@ -9,16 +9,21 @@ import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.crafting.BeamLensRec;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.essentials.api.BlockUtil;
+import com.Da_Technomancer.essentials.api.IItemCapable;
 import com.Da_Technomancer.essentials.api.packets.INBTReceiver;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerListener;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeInput;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -28,7 +33,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-public class LensFrameTileEntity extends BeamRenderTE implements INBTReceiver, ContainerListener{
+public class LensFrameTileEntity extends BeamRenderTE implements INBTReceiver, ContainerListener, IItemCapable{
 
 	public static final BlockEntityType<LensFrameTileEntity> TYPE = CRTileEntity.createType(LensFrameTileEntity::new, CRBlocks.lensFrame);
 
@@ -37,6 +42,9 @@ public class LensFrameTileEntity extends BeamRenderTE implements INBTReceiver, C
 	private BeamLensRec currRec;
 	private boolean recipeCheck;
 	private int lastRedstone;
+
+	private final IItemHandler lensItemHandler = new LensHandler();
+
 
 	/*
 	 * The way this block handles beams is abnormal
@@ -100,8 +108,8 @@ public class LensFrameTileEntity extends BeamRenderTE implements INBTReceiver, C
 	@Nullable
 	public BeamLensRec getCurrRec(){
 		if(!recipeCheck){
-			Optional<BeamLensRec> rec = level.getRecipeManager().getRecipeFor(CRRecipes.BEAM_LENS_TYPE, inventoryWrapper, level);
-			currRec = rec.orElse(null);
+			Optional<RecipeHolder<BeamLensRec>> rec = level.getRecipeManager().getRecipeFor(CRRecipes.BEAM_LENS_TYPE, inventoryWrapper, level);
+			currRec = rec.orElse(null) == null ? null : rec.get().value();
 			recipeCheck = true;
 		}
 		return currRec;
@@ -112,28 +120,28 @@ public class LensFrameTileEntity extends BeamRenderTE implements INBTReceiver, C
 	}
 
 	@Override
-	public CompoundTag getUpdateTag(){
-		CompoundTag nbt = super.getUpdateTag();
+	public CompoundTag getUpdateTag(HolderLookup.Provider pRegistries){
+		CompoundTag nbt = super.getUpdateTag(pRegistries);
 		ItemStack lensItem = getLensItem();
 		if(!lensItem.isEmpty()){
-			nbt.put("inv", lensItem.save(new CompoundTag()));
+			nbt.put("inv", BlockUtil.stackToNBT(lensItem, pRegistries));
 		}
 		return nbt;
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		nbt.putInt("reds", lastRedstone);
 		ItemStack lensItem = getLensItem();
 		if(!lensItem.isEmpty()){
-			nbt.put("inv", lensItem.save(new CompoundTag()));
+			nbt.put("inv", BlockUtil.stackToNBT(lensItem, pRegistries));
 		}
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		lastRedstone = nbt.getInt("reds");
 		if(nbt.contains("inv")){
 			setLensItem(ItemStack.of(nbt.getCompound("inv")));
@@ -142,22 +150,10 @@ public class LensFrameTileEntity extends BeamRenderTE implements INBTReceiver, C
 		}
 	}
 
+	@Nullable
 	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		lensOpt.invalidate();
-	}
-
-	private final IItemHandler lensOpt = LazyOptional.of(LensHandler::new);
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
-		if(cap == ForgeCapabilities.ITEM_HANDLER){
-			return (T) lensOpt;
-		}
-
-		return super.getCapability(cap, side);
+	public IItemHandler getItemHandler(Direction direction){
+		return lensItemHandler;
 	}
 
 	@Override
@@ -351,7 +347,7 @@ public class LensFrameTileEntity extends BeamRenderTE implements INBTReceiver, C
 
 		@Override
 		public boolean isItemValid(int slot, @Nonnull ItemStack stack){
-			return slot == 0 && getLevel().getRecipeManager().getRecipeFor(CRRecipes.BEAM_LENS_TYPE, new SimpleContainer(stack), level).isPresent();
+			return slot == 0 && getLevel().getRecipeManager().getRecipeFor(CRRecipes.BEAM_LENS_TYPE, new SingleRecipeInput(stack), level).isPresent();
 		}
 	}
 }

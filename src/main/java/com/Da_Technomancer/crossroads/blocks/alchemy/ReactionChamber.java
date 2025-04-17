@@ -8,12 +8,16 @@ import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import com.Da_Technomancer.essentials.api.redstone.IReadable;
 import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import com.google.common.collect.Lists;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
@@ -33,6 +37,9 @@ import java.util.List;
 
 public class ReactionChamber extends BaseEntityBlock implements IReadable{
 
+	public static final MapCodec<ReactionChamber> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(Codec.BOOL.fieldOf("crystal").forGetter(ReactionChamber::isCrystal)).apply(instance, ReactionChamber::new));
+
+
 	private final boolean crystal;
 
 	public ReactionChamber(boolean crystal){
@@ -40,6 +47,10 @@ public class ReactionChamber extends BaseEntityBlock implements IReadable{
 		this.crystal = crystal;
 		String name = (crystal ? "crystal_" : "") + "reaction_chamber";
 		CRBlocks.queueForRegister(name, this);
+	}
+
+	private boolean isCrystal(){
+		return crystal;
 	}
 
 	@Override
@@ -73,6 +84,11 @@ public class ReactionChamber extends BaseEntityBlock implements IReadable{
 	}
 
 	@Override
+	protected MapCodec<? extends BaseEntityBlock> codec(){
+		return CRBlocks.REACTION_CHAMBER_TYPE.value();
+	}
+
+	@Override
 	public RenderShape getRenderShape(BlockState state){
 		return RenderShape.MODEL;
 	}
@@ -95,7 +111,7 @@ public class ReactionChamber extends BaseEntityBlock implements IReadable{
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
 		ReagentMap stored = ReagentTank.getReagents(stack);
 
 		double temp = stored.getTempC();
@@ -109,14 +125,14 @@ public class ReactionChamber extends BaseEntityBlock implements IReadable{
 				int qty = stored.getQty(type);
 				if(qty > 0){
 					total++;
-					if(total <= 4 || flagIn != TooltipFlag.Default.NORMAL){
+					if(total <= 4 || flag != TooltipFlag.Default.NORMAL){
 						tooltip.add(Component.translatable("tt.crossroads.boilerplate.alchemy_content", type.getName(), qty));
 					}else{
 						break;
 					}
 				}
 			}
-			if(total > 4 && flagIn == TooltipFlag.Default.NORMAL){
+			if(total > 4 && flag == TooltipFlag.Default.NORMAL){
 				tooltip.add(Component.translatable("tt.crossroads.boilerplate.alchemy_excess", total - 4));
 			}
 		}

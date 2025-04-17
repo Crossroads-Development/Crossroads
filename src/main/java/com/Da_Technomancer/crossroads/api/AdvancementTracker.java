@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.api;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientAdvancements;
@@ -39,7 +40,7 @@ public class AdvancementTracker{
 	 */
 	public static boolean hasAdvancement(Player ent, String advancement){
 		if(ent instanceof ServerPlayer){
-			return ((ServerPlayer) ent).getAdvancements().getOrStartProgress(ent.level().getServer().getAdvancements().getAdvancement(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, advancement))).isDone();
+			return ((ServerPlayer) ent).getAdvancements().getOrStartProgress(ent.level().getServer().getAdvancements().get(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, advancement))).isDone();
 		}else if(ent instanceof LocalPlayer){
 			return progressMap.getOrDefault(advancement, false);
 		}else{
@@ -56,20 +57,19 @@ public class AdvancementTracker{
 	 */
 	public static void unlockAdvancement(ServerPlayer ent, String advancement, boolean enabled){
 		PlayerAdvancements playAdv = ent.getAdvancements();
-		Advancement adv = ent.level().getServer().getAdvancements().getAdvancement(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, advancement));
-		if(adv == null){
+		AdvancementHolder advHolder = ent.level().getServer().getAdvancements().get(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, advancement));
+		if(advHolder == null){
 			return;//No advancement with this name exists
 		}
-
-		AdvancementProgress prog = playAdv.getOrStartProgress(adv);
+		AdvancementProgress prog = playAdv.getOrStartProgress(advHolder);
 
 		if(enabled){
 			for(String s : prog.getRemainingCriteria()){
-				playAdv.award(adv, s);
+				playAdv.award(advHolder, s);
 			}
 		}else{
 			for(String s : prog.getCompletedCriteria()){
-				playAdv.revoke(adv, s);
+				playAdv.revoke(advHolder, s);
 			}
 		}
 	}

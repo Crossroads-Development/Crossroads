@@ -19,6 +19,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -48,8 +49,8 @@ public class ArmorEnviroBoots extends TechnomancyArmor{
 	//Soul speed: Done via onArmorTick()
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
-		super.appendHoverText(stack, worldIn, tooltip, flagIn);
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
+		super.appendHoverText(stack, context, tooltip, flag);
 		tooltip.add(Component.translatable("tt.crossroads.enviro_boots.desc"));
 		tooltip.add(Component.translatable("tt.crossroads.enviro_boots.frost"));
 		tooltip.add(Component.translatable("tt.crossroads.enviro_boots.quip").setStyle(MiscUtil.TT_QUIP));

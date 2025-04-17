@@ -10,6 +10,7 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
@@ -76,7 +77,7 @@ public class CRPackets{
 		registeredTypes.add(clazz);
 	}
 
-	public static void sendPacketAround(Level world, BlockPos pos, ClientPacket packet){
+	public static void sendPacketAround(Level world, BlockPos pos, CustomPacketPayload packet){
 		if(world.isClientSide){
 			throw new IllegalStateException("Packet to client sent from client!");
 		}
@@ -94,25 +95,25 @@ public class CRPackets{
 		messageChannel.send(PacketDistributor.NEAR.with(PacketDistributor.TargetPoint.p(pos.getX(), pos.getY(), pos.getZ(), CRConfig.effectPacketDistance.get(), world.dimension())), packet);
 	}
 
-	public static void sendPacketToPlayer(ServerPlayer player, ClientPacket packet){
+	public static void sendPacketToPlayer(ServerPlayer player, CustomPacketPayload packet){
 		//Check if this packet is registered with CR. If not, send it via the Essentials packet channel; this is done to make this method correct for all CR usage
 		SimpleChannel messageChannel = registeredTypes.contains(packet.getClass()) ? channel : EssentialsPackets.channel;
 		messageChannel.send(PacketDistributor.PLAYER.with(() -> player), packet);
 	}
 
-	public static void sendPacketToServer(ServerPacket packet){
+	public static void sendPacketToServer(CustomPacketPayload packet){
 		//Check if this packet is registered with CR. If not, send it via the Essentials packet channel; this is done to make this method correct for all CR usage
 		SimpleChannel messageChannel = registeredTypes.contains(packet.getClass()) ? channel : EssentialsPackets.channel;
 		messageChannel.sendToServer(packet);
 	}
 
-	public static void sendPacketToAll(ClientPacket packet){
+	public static void sendPacketToAll(CustomPacketPayload packet){
 		//Check if this packet is registered with CR. If not, send it via the Essentials packet channel; this is done to make this method correct for all CR usage
 		SimpleChannel messageChannel = registeredTypes.contains(packet.getClass()) ? channel : EssentialsPackets.channel;
 		messageChannel.send(PacketDistributor.ALL.noArg(), packet);
 	}
 
-	public static void sendPacketToDimension(Level world, ClientPacket packet){
+	public static void sendPacketToDimension(Level world, CustomPacketPayload packet){
 		//Check if this packet is registered with CR. If not, send it via the Essentials packet channel; this is done to make this method correct for all CR usage
 		SimpleChannel messageChannel = registeredTypes.contains(packet.getClass()) ? channel : EssentialsPackets.channel;
 		messageChannel.send(PacketDistributor.DIMENSION.with(world::dimension), packet);

@@ -2,7 +2,9 @@ package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
+import com.Da_Technomancer.crossroads.api.electric.IEnergyCapable;
+import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.api.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.api.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -10,13 +12,16 @@ import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.blocks.electric.DynamoTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 import net.neoforged.neoforge.energy.IEnergyStorage;
 
-public class LodestoneDynamoTileEntity extends ModuleTE{
+import javax.annotation.Nullable;
+
+public class LodestoneDynamoTileEntity extends ModuleTE implements IEnergyCapable{
 
 	public static final BlockEntityType<LodestoneDynamoTileEntity> TYPE = CRTileEntity.createType(LodestoneDynamoTileEntity::new, CRBlocks.lodestoneDynamo);
 
@@ -24,6 +29,8 @@ public class LodestoneDynamoTileEntity extends ModuleTE{
 	private static final int CHARGE_CAPACITY = 8_000;
 
 	private int fe = 0;
+
+	private IEnergyStorage energyHandler = new LodestoneDynamoEnergyHandler();
 
 	public LodestoneDynamoTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state);
@@ -53,45 +60,34 @@ public class LodestoneDynamoTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void setBlockState(BlockState stateIn){
-		super.setBlockState(stateIn);
-		axleOpt.invalidate();
-		axleOpt = LazyOptional.of(this::createAxleHandler);
-		feOpt.invalidate();
-		feOpt = LazyOptional.of(LodestoneDynamoEnergyHandler::new);
-	}
-
-	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		fe = nbt.getInt("charge");
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		nbt.putInt("charge", fe);
 
 	}
 
 	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		feOpt.invalidate();
+	@Nullable
+	public IAxleHandler getAxleHandler(Direction dir){
+		if(dir == null || dir == getBlockState().getValue(CRProperties.HORIZ_FACING)){
+			return axleHandler;
+		}
+		return null;
 	}
 
-	private IEnergyStorage feOpt = LazyOptional.of(LodestoneDynamoEnergyHandler::new);
-
-	@SuppressWarnings("unchecked")
+	@Nullable
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
-		if(cap == Capabilities.AXLE_CAPABILITY && (side == null || side == getBlockState().getValue(CRProperties.HORIZ_FACING))){
-			return (T) axleOpt;
+	public IEnergyStorage getEnergyHandler(Direction dir){
+		if(dir == null || dir == getBlockState().getValue(CRProperties.HORIZ_FACING).getOpposite()){
+			return energyHandler;
 		}
-		if(cap == ForgeCapabilities.ENERGY && (side == null || side == getBlockState().getValue(CRProperties.HORIZ_FACING).getOpposite())){
-			return (T) feOpt;
-		}
-		return super.getCapability(cap, side);
+		return null;
 	}
 
 	private class LodestoneDynamoEnergyHandler implements IEnergyStorage{

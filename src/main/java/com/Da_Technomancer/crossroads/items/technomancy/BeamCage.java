@@ -54,7 +54,7 @@ public class BeamCage extends Item implements ICreativeTabPopulatingItem{
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag advanced){
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
 		BeamUnit stored = getStored(stack);
 		tooltip.add(Component.translatable("tt.crossroads.beam_cage.energy", stored.getEnergy(), CAPACITY));
 		tooltip.add(Component.translatable("tt.crossroads.beam_cage.potential", stored.getPotential(), CAPACITY));

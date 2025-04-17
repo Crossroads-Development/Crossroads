@@ -2,30 +2,31 @@ package com.Da_Technomancer.crossroads.blocks.rotary;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.crossroads.api.packets.ITaylorReceiver;
 import com.Da_Technomancer.crossroads.api.packets.SendTaylorToClient;
-import com.Da_Technomancer.crossroads.api.rotary.AxisTypes;
-import com.Da_Technomancer.crossroads.api.rotary.IAxisHandler;
-import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
-import com.Da_Technomancer.crossroads.api.rotary.RotaryUtil;
+import com.Da_Technomancer.crossroads.api.rotary.*;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class MasterAxisTileEntity extends BlockEntity implements ITickableTileEntity, ITaylorReceiver{
+public class MasterAxisTileEntity extends BlockEntity implements ITickableTileEntity, ITaylorReceiver, IAxisCapable{
 
 	public static final BlockEntityType<MasterAxisTileEntity> TYPE = CRTileEntity.createType(MasterAxisTileEntity::new, CRBlocks.masterAxis);
 
@@ -78,6 +79,19 @@ public class MasterAxisTileEntity extends BlockEntity implements ITickableTileEn
 	//	private static final float ANGLE_MARGIN = CRConfig.speedPrecision.get().floatValue();
 	protected static final int UPDATE_TIME = CRConfig.gearResetTime.get();
 
+
+	protected final IAxisHandler axisHandler = new AxisHandler();
+
+
+	/**
+	 * Describes the behaviour of this master axis into broad categories.
+	 * Currently unused
+	 * @return The type of this axis
+	 */
+	protected AxisTypes getAxisType(){
+		return AxisTypes.NORMAL;
+	}
+
 	public MasterAxisTileEntity(BlockPos pos, BlockState state){
 		this(TYPE, pos, state);
 	}
@@ -104,16 +118,12 @@ public class MasterAxisTileEntity extends BlockEntity implements ITickableTileEn
 		super.setRemoved();
 		//It is important that disconnect is called when this TE is destroyed/removed/invalidated on both the server and client to both prevent memory leaks, and clear up minor rendering abnormalities
 		disconnect();
-		axisOpt.invalidate();
-//		axisOpt = LazyOptional.of(() -> handler);
 	}
 
 	@Override
 	public void setBlockState(BlockState stateIn){
 		super.setBlockState(stateIn);
 		disconnect();
-		axisOpt.invalidate();
-		axisOpt = LazyOptional.of(() -> handler);
 	}
 
 	public void disconnect(){
@@ -278,7 +288,7 @@ public class MasterAxisTileEntity extends BlockEntity implements ITickableTileEn
 		setChanged();
 
 		if(ticksExisted % UPDATE_TIME == 20 || forceUpdate || rotaryMembers.isEmpty()){
-			handler.requestUpdate();
+			axisHandler.requestUpdate();
 		}
 
 		forceUpdate = RotaryUtil.getMasterKey() != lastKey;
@@ -294,8 +304,8 @@ public class MasterAxisTileEntity extends BlockEntity implements ITickableTileEn
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		ticksExisted = nbt.getLong("life");
 		for(int i = 0; i < 4; i++){
 			prevAngles[i] = nbt.getFloat("prev_" + i);
@@ -317,8 +327,8 @@ public class MasterAxisTileEntity extends BlockEntity implements ITickableTileEn
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		nbt.putLong("life", ticksExisted);
 		for(int i = 0; i < 4; i++){
 			nbt.putFloat("prev_" + i, prevAngles[i]);
@@ -336,31 +346,20 @@ public class MasterAxisTileEntity extends BlockEntity implements ITickableTileEn
 	}
 
 	@Override
-	public CompoundTag getUpdateTag(){
-		CompoundTag nbt = super.getUpdateTag();
-		saveAdditional(nbt);
+	public CompoundTag getUpdateTag(HolderLookup.Provider pRegistries){
+		CompoundTag nbt = super.getUpdateTag(pRegistries);
+		saveAdditional(nbt, pRegistries);
 		return nbt;
 	}
 
-	/**
-	 * Describes the behaviour of this master axis into broad categories.
-	 * Currently unused
-	 * @return The type of this axis
-	 */
-	protected AxisTypes getAxisType(){
-		return AxisTypes.NORMAL;
-	}
 
-	protected final IAxisHandler handler = new AxisHandler();
-	protected IAxisHandler axisOpt = LazyOptional.of(() -> handler);
-
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
-		if(cap == Capabilities.AXIS_CAPABILITY && (side == null || side == getFacing())){
-			return (T) axisOpt;
+	@Nullable
+	public IAxisHandler getAxisHandler(Direction dir){
+		if(dir == null || dir == getFacing()){
+			return axisHandler;
 		}
-		return super.getCapability(cap, side);
+		return null;
 	}
 
 	protected class AxisHandler implements IAxisHandler{
@@ -380,15 +379,16 @@ public class MasterAxisTileEntity extends BlockEntity implements ITickableTileEn
 			rotaryMembers.clear();
 			locked = false;
 			Direction dir = getFacing();
-			BlockEntity te = level.getBlockEntity(worldPosition.relative(dir));
+
+			BlockPos blockPos = worldPosition.relative(dir);
 			IAxleHandler axleOpt;
-			if(te != null && (axleOpt = te.getCapability(Capabilities.AXLE_CAPABILITY, dir.getOpposite())).isPresent()){
+			if((axleOpt = level.getCapability(CRCapabilities.AXLE_CAPABILITY, blockPos, dir.getOpposite())) != null){
 				byte keyNew;
 				do{
 					keyNew = (byte) (RAND.nextInt(100) + 1);
 				}while(key == keyNew);
 				key = keyNew;
-				axleOpt.orElseThrow(NullPointerException::new).propagate(this, key, 1, 0, false);
+				axleOpt.propagate(this, key, 1, 0, false);
 			}
 
 			memberCopy.removeAll(rotaryMembers);

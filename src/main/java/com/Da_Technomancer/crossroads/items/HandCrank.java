@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.items;
 
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.api.rotary.RotaryUtil;
 import net.minecraft.core.Direction;
@@ -37,7 +37,7 @@ public class HandCrank extends Item{
 		BlockEntity te = context.getLevel().getBlockEntity(context.getClickedPos());
 		IAxleHandler axleOpt;
 		Direction side = context.getClickedFace().getOpposite();
-		if(te != null && (axleOpt = te.getCapability(Capabilities.AXLE_CAPABILITY, side)).isPresent()){
+		if(te != null && (axleOpt = te.getCapability(CRCapabilities.AXLE_CAPABILITY, side)).isPresent()){
 			double signMult = -1;
 			if(context.getPlayer() != null && context.getPlayer().isShiftKeyDown()){
 				signMult *= -1;
@@ -51,7 +51,7 @@ public class HandCrank extends Item{
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
 		tooltip.add(Component.translatable("tt.crossroads.crank.desc", getRate()));
 		tooltip.add(Component.translatable("tt.crossroads.crank.back", getRate()));
 	}

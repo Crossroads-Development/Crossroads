@@ -77,10 +77,10 @@ public class EntropyRenderer<T extends BlockEntity & IFluxLink> extends LinkLine
 					float sideRad = ((i + j + k) % 3) * 0.007F + 0.005F;
 					float pieceLen = 0.3F + ((i + j * 3 + k * 2) % 4) * 0.05F;
 					int[] color = ((i + j * 2 + k) % 7) == 0 ? new int[] {255, 255, 255, 64} : new int[] {0, 0, 0, 255};
-					entropyBuilder.vertex(matrix.last().pose(), radius, k * unitLen + lenOffset, -sideRad).color(color[0], color[1], color[2], color[3]).uv(0, 0).endVertex();
-					entropyBuilder.vertex(matrix.last().pose(), radius, k * unitLen + lenOffset, sideRad).color(color[0], color[1], color[2], color[3]).uv(0, 1).endVertex();
-					entropyBuilder.vertex(matrix.last().pose(), radius, k * unitLen + pieceLen + lenOffset, sideRad).color(color[0], color[1], color[2], color[3]).uv(1, 1).endVertex();
-					entropyBuilder.vertex(matrix.last().pose(), radius, k * unitLen + pieceLen + lenOffset, -sideRad).color(color[0], color[1], color[2], color[3]).uv(1, 0).endVertex();
+					entropyBuilder.addVertex(matrix.last().pose(), radius, k * unitLen + lenOffset, -sideRad).setColor(color[0], color[1], color[2], color[3]).setUv(0, 0);
+					entropyBuilder.addVertex(matrix.last().pose(), radius, k * unitLen + lenOffset, sideRad).setColor(color[0], color[1], color[2], color[3]).setUv(0, 1);
+					entropyBuilder.addVertex(matrix.last().pose(), radius, k * unitLen + pieceLen + lenOffset, sideRad).setColor(color[0], color[1], color[2], color[3]).setUv(1, 1);
+					entropyBuilder.addVertex(matrix.last().pose(), radius, k * unitLen + pieceLen + lenOffset, -sideRad).setColor(color[0], color[1], color[2], color[3]).setUv(1, 0);
 				}
 				matrix.popPose();
 			}

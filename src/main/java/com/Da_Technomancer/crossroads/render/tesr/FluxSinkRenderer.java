@@ -65,10 +65,10 @@ public class FluxSinkRenderer extends EntropyRenderer<FluxSinkTileEntity>{
 			float yOffset = 0.4F * (float) Math.sin(runtime / 100 + i * 5);
 			float textVSt = ((i + (int) (runtime / 8)) % 4) * 0.25F;//Animated texture
 
-			builder.vertex(matrix.last().pose(), len, yOffset - plateScale, -plateScale).color(255, 255, 255, 255).uv(0.75F, textVSt).uv2(medLight).endVertex();
-			builder.vertex(matrix.last().pose(), len, yOffset + plateScale, -plateScale).color(255, 255, 255, 255).uv(0.75F, textVSt + 0.25F).uv2(medLight).endVertex();
-			builder.vertex(matrix.last().pose(), len, yOffset + plateScale, plateScale).color(255, 255, 255, 255).uv(1, textVSt + 0.25F).uv2(medLight).endVertex();
-			builder.vertex(matrix.last().pose(), len, yOffset - plateScale, plateScale).color(255, 255, 255, 255).uv(1, textVSt).uv2(medLight).endVertex();
+			builder.addVertex(matrix.last().pose(), len, yOffset - plateScale, -plateScale).setColor(255, 255, 255, 255).setUv(0.75F, textVSt).setLight(medLight);
+			builder.addVertex(matrix.last().pose(), len, yOffset + plateScale, -plateScale).setColor(255, 255, 255, 255).setUv(0.75F, textVSt + 0.25F).setLight(medLight);
+			builder.addVertex(matrix.last().pose(), len, yOffset + plateScale, plateScale).setColor(255, 255, 255, 255).setUv(1, textVSt + 0.25F).setLight(medLight);
+			builder.addVertex(matrix.last().pose(), len, yOffset - plateScale, plateScale).setColor(255, 255, 255, 255).setUv(1, textVSt).setLight(medLight);
 
 			matrix.mulPose(Axis.YP.rotationDegrees(360F / 8F));
 		}
@@ -113,15 +113,15 @@ public class FluxSinkRenderer extends EntropyRenderer<FluxSinkTileEntity>{
 				//We want triangles, but are in QUADS mode
 				//We double one of the vertices
 
-				builder.vertex(matrix.last().pose(), 0, largeLen, smallLen).color(col[0], col[1], col[2], col[3]).uv(cornerU, cornerV).uv2(light).endVertex();
-				builder.vertex(matrix.last().pose(), 0, largeLen, -smallLen).color(col[0], col[1], col[2], col[3]).uv(uEn, vSt).uv2(light).endVertex();
-				builder.vertex(matrix.last().pose(), largeLen, smallLen, 0).color(col[0], col[1], col[2], col[3]).uv(uSt, vEn).uv2(light).endVertex();
-				builder.vertex(matrix.last().pose(), largeLen, smallLen, 0).color(col[0], col[1], col[2], col[3]).uv(uSt, vEn).uv2(light).endVertex();//Repeat for triangle
+				builder.addVertex(matrix.last().pose(), 0, largeLen, smallLen).setColor(col[0], col[1], col[2], col[3]).setUv(cornerU, cornerV).setLight(light);
+				builder.addVertex(matrix.last().pose(), 0, largeLen, -smallLen).setColor(col[0], col[1], col[2], col[3]).setUv(uEn, vSt).setLight(light);
+				builder.addVertex(matrix.last().pose(), largeLen, smallLen, 0).setColor(col[0], col[1], col[2], col[3]).setUv(uSt, vEn).setLight(light);
+				builder.addVertex(matrix.last().pose(), largeLen, smallLen, 0).setColor(col[0], col[1], col[2], col[3]).setUv(uSt, vEn).setLight(light);//Repeat for triangle
 
-				builder.vertex(matrix.last().pose(), 0, largeLen, smallLen).color(col[0], col[1], col[2], col[3]).uv(cornerU, cornerV).uv2(light).endVertex();
-				builder.vertex(matrix.last().pose(), 0, largeLen, -smallLen).color(col[0], col[1], col[2], col[3]).uv(uEn, vSt).uv2(light).endVertex();
-				builder.vertex(matrix.last().pose(), -largeLen, smallLen, 0).color(col[0], col[1], col[2], col[3]).uv(uSt, vEn).uv2(light).endVertex();
-				builder.vertex(matrix.last().pose(), -largeLen, smallLen, 0).color(col[0], col[1], col[2], col[3]).uv(uSt, vEn).uv2(light).endVertex();//Repeat for triangle
+				builder.addVertex(matrix.last().pose(), 0, largeLen, smallLen).setColor(col[0], col[1], col[2], col[3]).setUv(cornerU, cornerV).setLight(light);
+				builder.addVertex(matrix.last().pose(), 0, largeLen, -smallLen).setColor(col[0], col[1], col[2], col[3]).setUv(uEn, vSt).setLight(light);
+				builder.addVertex(matrix.last().pose(), -largeLen, smallLen, 0).setColor(col[0], col[1], col[2], col[3]).setUv(uSt, vEn).setLight(light);
+				builder.addVertex(matrix.last().pose(), -largeLen, smallLen, 0).setColor(col[0], col[1], col[2], col[3]).setUv(uSt, vEn).setLight(light);//Repeat for triangle
 
 				matrix.mulPose(axis72);
 			}

@@ -1,16 +1,24 @@
 package com.Da_Technomancer.crossroads.ambient.particles;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.particles.ParticleType;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 
 public class ColorParticleType extends ParticleType<ColorParticleData>{
 
 	public ColorParticleType(boolean alwaysShow){
-		super(alwaysShow, ColorParticleData.DESERIALIZER);
+		super(alwaysShow);
 	}
 
 	@Override
-	public Codec<ColorParticleData> codec(){
+	public MapCodec<ColorParticleData> codec(){
 		return ColorParticleData.codec;
 	}
+
+	@Override
+	public StreamCodec<? super RegistryFriendlyByteBuf, ColorParticleData> streamCodec(){
+		return null;
+	}
+
 }

@@ -3,13 +3,14 @@ package com.Da_Technomancer.crossroads.blocks.technomancy;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.beams.*;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -28,7 +29,7 @@ import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class BeamCannonTileEntity extends AbstractCannonTileEntity{
+public class BeamCannonTileEntity extends AbstractCannonTileEntity implements IBeamCapable{
 
 	public static final BlockEntityType<BeamCannonTileEntity> TYPE = CRTileEntity.createType(BeamCannonTileEntity::new, CRBlocks.beamCannon);
 
@@ -161,8 +162,8 @@ public class BeamCannonTileEntity extends AbstractCannonTileEntity{
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		activeCycle = nbt.getLong("cycle");
 		queued[0] = BeamUnitStorage.readFromNBT("storage_0", nbt);
 		queued[1] = BeamUnitStorage.readFromNBT("storage_1", nbt);
@@ -172,8 +173,8 @@ public class BeamCannonTileEntity extends AbstractCannonTileEntity{
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		nbt.putLong("cycle", activeCycle);
 		queued[0].writeToNBT("storage_0", nbt);
 		queued[1].writeToNBT("storage_1", nbt);
@@ -182,31 +183,12 @@ public class BeamCannonTileEntity extends AbstractCannonTileEntity{
 		nbt.putInt("beam_length", beamLength);
 	}
 
-	@Override
-	public void setBlockState(BlockState stateIn){
-		super.setBlockState(stateIn);
-		beamOpt.invalidate();
-		beamOpt = LazyOptional.of(() -> beamHandler);
-	}
-
-	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		beamOpt.invalidate();
-	}
-
 	private final BeamHandler beamHandler = new BeamHandler();
-	private IBeamHandler beamOpt = LazyOptional.of(() -> beamHandler);
 
-	@Nonnull
+	@Nullable
 	@Override
-	@SuppressWarnings("unchecked")
-	public <T> T getCapability(@Nonnull Capability<T> cap, @Nullable Direction side){
-		if(cap == Capabilities.BEAM_CAPABILITY){
-			return (T) beamOpt;
-		}
-
-		return super.getCapability(cap, side);
+	public IBeamHandler getBeamHandler(Direction dir){
+		return beamHandler;
 	}
 
 	private class BeamHandler implements IBeamHandler{

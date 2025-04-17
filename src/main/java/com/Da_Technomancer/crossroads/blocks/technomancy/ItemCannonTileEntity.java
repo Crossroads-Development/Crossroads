@@ -8,10 +8,12 @@ import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.entity.EntityShell;
 import com.Da_Technomancer.crossroads.items.alchemy.Shell;
 import com.Da_Technomancer.essentials.api.BlockUtil;
+import com.Da_Technomancer.essentials.api.IItemCapable;
+import com.Da_Technomancer.essentials.api.redstone.IRedstoneCapable;
 import com.Da_Technomancer.essentials.api.redstone.IRedstoneHandler;
-import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
@@ -30,12 +32,16 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-public class ItemCannonTileEntity extends AbstractCannonTileEntity{
+public class ItemCannonTileEntity extends AbstractCannonTileEntity implements IItemCapable, IRedstoneCapable{
 
 	public static final BlockEntityType<ItemCannonTileEntity> TYPE = CRTileEntity.createType(ItemCannonTileEntity::new, CRBlocks.itemCannon);
 
 	public ItemStack inventory = ItemStack.EMPTY;
 	private static final float MAX_LAUNCH_POWER = 4;
+
+	private final IItemHandler itemHandler = new InventoryHandler();
+	public final CircuitUtil.InputCircHandler redsHandler = new CircuitUtil.InputCircHandler();
+	private final IRedstoneHandler redsOpt = CircuitUtil.makeBaseCircuitOptional(this, redsHandler, 0);
 
 	public ItemCannonTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state);
@@ -92,8 +98,8 @@ public class ItemCannonTileEntity extends AbstractCannonTileEntity{
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		redsHandler.read(nbt);
 		if(nbt.contains("inv")){
 			inventory = ItemStack.of(nbt.getCompound("inv"));
@@ -101,8 +107,8 @@ public class ItemCannonTileEntity extends AbstractCannonTileEntity{
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		redsHandler.write(nbt);
 		if(!inventory.isEmpty()){
 			CompoundTag stackTag = new CompoundTag();
@@ -111,29 +117,16 @@ public class ItemCannonTileEntity extends AbstractCannonTileEntity{
 		}
 	}
 
+	@Nullable
 	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		itemOpt.invalidate();
-		redsOpt.invalidate();
+	public IItemHandler getItemHandler(Direction direction){
+		return itemHandler;
 	}
 
-	private final IItemHandler itemOpt = LazyOptional.of(InventoryHandler::new);
-	public final CircuitUtil.InputCircHandler redsHandler = new CircuitUtil.InputCircHandler();
-	private final IRedstoneHandler redsOpt = CircuitUtil.makeBaseCircuitOptional(this, redsHandler, 0);
-
-	@Nonnull
+	@Nullable
 	@Override
-	@SuppressWarnings("unchecked")
-	public <T> T getCapability(@Nonnull Capability<T> cap, @Nullable Direction side){
-		if(cap == ForgeCapabilities.ITEM_HANDLER){
-			return (T) itemOpt;
-		}
-		if(cap == RedstoneUtil.REDSTONE_CAPABILITY){
-			return (T) redsOpt;
-		}
-
-		return super.getCapability(cap, side);
+	public IRedstoneHandler getRedstoneHandler(Direction direction){
+		return redsOpt;
 	}
 
 	private class InventoryHandler implements IItemHandler{

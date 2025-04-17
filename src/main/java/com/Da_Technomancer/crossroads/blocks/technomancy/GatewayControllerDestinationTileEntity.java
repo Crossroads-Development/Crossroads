@@ -14,6 +14,7 @@ import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import com.Da_Technomancer.essentials.api.packets.ILongReceiver;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -434,8 +435,8 @@ public class GatewayControllerDestinationTileEntity extends BlockEntity implemen
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		//Active only
 		address = nbt.contains("address") ? GatewayAddress.deserialize(nbt.getInt("address")) : null;
 		EnumBeamAlignments[] lastDialedChev = new EnumBeamAlignments[4];
@@ -450,8 +451,8 @@ public class GatewayControllerDestinationTileEntity extends BlockEntity implemen
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		//Active only
 		if(address != null){
 			nbt.putInt("address", address.serialize());
@@ -474,8 +475,8 @@ public class GatewayControllerDestinationTileEntity extends BlockEntity implemen
 	}
 
 	@Override
-	public CompoundTag getUpdateTag(){
-		CompoundTag nbt = super.getUpdateTag();
+	public CompoundTag getUpdateTag(HolderLookup.Provider pRegistries){
+		CompoundTag nbt = super.getUpdateTag(pRegistries);
 		for(int i = 0; i < 4; i++){
 			if(chevrons[i] != null){
 				nbt.putInt("chev_" + i, chevrons[i].ordinal());

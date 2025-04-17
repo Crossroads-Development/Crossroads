@@ -9,15 +9,15 @@ import com.google.gson.JsonObject;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 
-public class CopshowiumRec implements IOptionalRecipe<Container>{
+public class CopshowiumRec implements IOptionalRecipe<RecipeInput>{
 
 	private final ResourceLocation id;
 	private final String group;
@@ -54,7 +54,7 @@ public class CopshowiumRec implements IOptionalRecipe<Container>{
 	}
 
 	@Override
-	public boolean matches(Container inv, Level worldIn){
+	public boolean matches(RecipeInput input, Level worldIn){
 		return active && inv instanceof CopshowiumCreationChamberTileEntity && input.test(((CopshowiumCreationChamberTileEntity) inv).getInputFluid());
 	}
 
@@ -71,11 +71,6 @@ public class CopshowiumRec implements IOptionalRecipe<Container>{
 	@Override
 	public ItemStack getToastSymbol(){
 		return new ItemStack(CRBlocks.copshowiumCreationChamber);
-	}
-
-	@Override
-	public ResourceLocation getId(){
-		return id;
 	}
 
 	@Override

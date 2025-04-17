@@ -141,7 +141,7 @@ public class HeatCable extends ConduitBlock<EnumTransferMode>{
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
 		tooltip.add(Component.translatable("tt.crossroads.heat_cable.loss", insulator.getRate()));
 		tooltip.add(Component.translatable("tt.crossroads.heat_cable.melt", insulator.getLimit()));
 	}

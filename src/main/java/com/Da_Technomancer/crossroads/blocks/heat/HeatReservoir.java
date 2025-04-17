@@ -1,17 +1,19 @@
 package com.Da_Technomancer.crossroads.blocks.heat;
 
 import com.Da_Technomancer.crossroads.CRConfig;
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import com.Da_Technomancer.essentials.api.redstone.IReadable;
 import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import com.google.common.collect.Lists;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
@@ -48,12 +50,17 @@ public class HeatReservoir extends BaseEntityBlock implements IReadable{
 	}
 
 	@Override
+	protected MapCodec<? extends BaseEntityBlock> codec(){
+		return CRBlocks.HEAT_RESERVOIR_TYPE.value();
+	}
+
+	@Override
 	public RenderShape getRenderShape(BlockState state){
 		return RenderShape.MODEL;
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
 		tooltip.add(Component.translatable("tt.crossroads.heat_battery.info"));
 		tooltip.add(Component.translatable("tt.crossroads.heat_battery.reds"));
 		CompoundTag nbt = stack.getTag();
@@ -78,9 +85,9 @@ public class HeatReservoir extends BaseEntityBlock implements IReadable{
 		BlockEntity te;
 		CompoundTag nbt;
 		if((nbt = stack.getTag()) != null && (te = world.getBlockEntity(pos)) instanceof HeatReservoirTileEntity){
-			IHeatHandler heatOpt = te.getCapability(Capabilities.HEAT_CAPABILITY, null);
-			if(heatOpt.isPresent()){
-				heatOpt.orElseThrow(NullPointerException::new).setTemp(nbt.getDouble("temp"));
+			IHeatHandler otherHeatHandler = world.getCapability(CRCapabilities.HEAT_CAPABILITY, te.getBlockPos(), null);
+			if(otherHeatHandler != null){
+				otherHeatHandler.setTemp(nbt.getDouble("temp"));
 			}
 		}
 	}
@@ -99,8 +106,8 @@ public class HeatReservoir extends BaseEntityBlock implements IReadable{
 	public float read(Level world, BlockPos pos, BlockState state){
 		BlockEntity te = world.getBlockEntity(pos);
 		IHeatHandler heatOpt;
-		if(te != null && (heatOpt = te.getCapability(Capabilities.HEAT_CAPABILITY, null)).isPresent()){
-			return (float) heatOpt.orElseThrow(NullPointerException::new).getTemp();
+		if((heatOpt = world.getCapability(CRCapabilities.HEAT_CAPABILITY, pos, null)) != null){
+			return (float) heatOpt.getTemp();
 		}
 		return 0;
 	}

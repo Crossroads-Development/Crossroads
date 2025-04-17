@@ -2,6 +2,9 @@ package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -11,12 +14,15 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
 
 public class FluidInjector extends BaseEntityBlock{
+
+	public static final MapCodec<FluidInjector> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(Codec.BOOL.fieldOf("crystal").forGetter(FluidInjector::isCrystal)).apply(instance, FluidInjector::new));
 
 	private static final VoxelShape SHAPE = box(4, 0, 4, 12, 16, 12);
 
@@ -29,6 +35,10 @@ public class FluidInjector extends BaseEntityBlock{
 		CRBlocks.queueForRegister(name, this);
 	}
 
+	protected boolean isCrystal(){
+		return crystal;
+	}
+
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state){
 		return new FluidInjectorTileEntity(pos, state, !crystal);
@@ -38,6 +48,11 @@ public class FluidInjector extends BaseEntityBlock{
 	@Override
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> type){
 		return ITickableTileEntity.createTicker(type, FluidInjectorTileEntity.TYPE);
+	}
+
+	@Override
+	protected MapCodec<? extends BaseEntityBlock> codec(){
+		return CRBlocks.FLUID_INJECTOR_TYPE.value();
 	}
 
 	@Override

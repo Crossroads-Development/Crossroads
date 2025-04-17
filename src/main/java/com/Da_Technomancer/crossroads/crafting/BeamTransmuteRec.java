@@ -12,8 +12,8 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
@@ -24,7 +24,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import javax.annotation.Nullable;
 import java.util.Locale;
 
-public class BeamTransmuteRec implements IOptionalRecipe<Container>{
+public class BeamTransmuteRec implements IOptionalRecipe<RecipeInput>{
 
 	private final ResourceLocation id;
 	private final String group;
@@ -67,7 +67,7 @@ public class BeamTransmuteRec implements IOptionalRecipe<Container>{
 	}
 
 	@Override
-	public boolean matches(Container inv, Level worldIn){
+	public boolean matches(RecipeInput input, Level worldIn){
 		return active;//The entire condition of this recipe is based on block type and power, which can't be determined here
 	}
 
@@ -96,11 +96,6 @@ public class BeamTransmuteRec implements IOptionalRecipe<Container>{
 	@Override
 	public ItemStack getToastSymbol(){
 		return new ItemStack(CRBlocks.beamReflector);
-	}
-
-	@Override
-	public ResourceLocation getId(){
-		return id;
 	}
 
 	@Override

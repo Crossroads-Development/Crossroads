@@ -2,16 +2,20 @@ package com.Da_Technomancer.crossroads.blocks.heat;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
+import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.api.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+
+import javax.annotation.Nullable;
 
 
 public class SolarHeaterTileEntity extends ModuleTE{
@@ -59,23 +63,23 @@ public class SolarHeaterTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		running = nbt.getBoolean("running");
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		nbt.putBoolean("running", running);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, Direction facing){
-		if(capability == Capabilities.HEAT_CAPABILITY && (facing == null || facing.getAxis() == level.getBlockState(worldPosition).getValue(CRProperties.HORIZ_AXIS))){
-			return (T) heatOpt;
+	@Nullable
+	public IHeatHandler getHeatHandler(Direction dir){
+		if(dir == null || dir.getAxis() == level.getBlockState(worldPosition).getValue(CRProperties.HORIZ_AXIS)){
+			return heatHandler;
 		}
-		return super.getCapability(capability, facing);
+		return null;
 	}
 }

@@ -2,14 +2,15 @@ package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.Capabilities;
 import com.Da_Technomancer.crossroads.api.MathUtil;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.api.beams.EnumBeamAlignments;
+import com.Da_Technomancer.crossroads.api.beams.IBeamCapable;
 import com.Da_Technomancer.crossroads.api.beams.IBeamHandler;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.crossroads.api.rotary.IAxisHandler;
+import com.Da_Technomancer.crossroads.api.rotary.IAxleCapable;
 import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.api.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.api.technomancy.*;
@@ -17,6 +18,7 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -43,7 +45,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements IGateway{
+public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements IGateway, IBeamCapable, IAxleCapable{
 
 	public static final BlockEntityType<GatewayControllerTileEntity> TYPE = CRTileEntity.createType(GatewayControllerTileEntity::new, CRBlocks.gatewayController);
 	public static final int INERTIA = 0;//Moment of inertia
@@ -63,8 +65,7 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 	private boolean origin = false;//Whether this gateway started the connection in dialed (determines which side has flux)
 
 	private IAxleHandler axleHandler = null;
-	private IAxleHandler axleOpt = null;
-	private IBeamHandler beamOpt = null;
+	private IBeamHandler beamHandler = null;
 
 	private int size = 0;//Diameter of the multiblock, from top center to bottom center
 	private Direction.Axis plane = null;//Legal values are null (unformed), x (for structure in x-y plane), and z (for structure in y-z plane). This should never by y
@@ -102,7 +103,7 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 				}
 			}
 			chat.add(Component.translatable("tt.crossroads.gateway.chevron.dialed", names[0], names[1], names[2], names[3]));
-			genOptionals();
+			resetHandlers();
 			RotaryUtil.addRotaryInfo(chat, axleHandler, true);
 			FluxUtil.addFluxInfo(chat, this, chevrons[3] != null && origin ? FLUX_PER_CYCLE : 0);
 			super.addInfo(chat, player, hit);
@@ -271,8 +272,8 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 			}
 			size = 0;
 			plane = null;
-			axleOpt = null;
-			beamOpt = null;
+			axleHandler = null;
+			beamHandler = null;
 			address = null;
 			origin = false;
 			setChanged();
@@ -366,9 +367,9 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 			MiscUtil.displayMessage(player, Component.translatable("tt.crossroads.gateway.address_taken"));
 			return false;
 		}
-		//Resetting the optionals to null forces the optional cache to regenerate
-		axleOpt = null;
-		beamOpt = null;
+		//Resetting the handlers to null forces the cache to regenerate
+		axleHandler = null;
+		beamHandler = null;
 
 		//Second pass is to actually assemble the structure
 		mutPos.set(worldPosition).move(horiz, -size / 2);
@@ -420,7 +421,7 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 	public void serverTick(){
 		//This TE only ticks if it is active
 		if(isActive()){
-			genOptionals();
+			resetHandlers();
 
 			//Perform angle movement on the server
 			float angleTarget = (float) axleHandler.getSpeed() - referenceSpeed;
@@ -500,8 +501,8 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		//Active only
 		address = nbt.contains("address") ? GatewayAddress.deserialize(nbt.getInt("address")) : null;
 		clientW = nbt.getFloat("client_speed");
@@ -520,8 +521,8 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		//Active only
 		if(address != null){
 			nbt.putInt("address", address.serialize());
@@ -546,8 +547,8 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 	}
 
 	@Override
-	public CompoundTag getUpdateTag(){
-		CompoundTag nbt = super.getUpdateTag();
+	public CompoundTag getUpdateTag(HolderLookup.Provider pRegistries){
+		CompoundTag nbt = super.getUpdateTag(pRegistries);
 		for(int i = 0; i < 4; i++){
 			if(chevrons[i] != null){
 				nbt.putInt("chev_" + i, chevrons[i].ordinal());
@@ -565,7 +566,7 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 	}
 
 	private void resyncToClient(){
-		genOptionals();
+		resetHandlers();
 		clientAngle = angle;
 		clientW = (float) axleHandler.getSpeed() - referenceSpeed;
 		long packet = (Integer.toUnsignedLong(Float.floatToRawIntBits(clientAngle)) << 32L) | Integer.toUnsignedLong(Float.floatToRawIntBits(clientW));
@@ -574,44 +575,31 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 
 	//Capabilities
 
-	private void genOptionals(){
-		if(axleOpt == null){
+	private void resetHandlers(){
+		if(axleHandler == null){
 			if(isActive()){
 				axleHandler = new AxleHandler();
-				axleOpt = LazyOptional.of(() -> axleHandler);
-				beamOpt = LazyOptional.of(BeamHandler::new);
+				beamHandler = new BeamHandler();
 			}else{
-				axleOpt = LazyOptional.empty();
-				beamOpt = LazyOptional.empty();
+				axleHandler = null;
+				beamHandler = null;
 			}
 		}
 	}
 
+	@Nullable
 	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		if(axleOpt != null){
-			axleOpt.invalidate();
+	public IAxleHandler getAxleHandler(Direction dir){
+		if(dir == null || dir == Direction.UP){
+			return axleHandler;
 		}
-		if(beamOpt != null){
-			beamOpt.invalidate();
-		}
+		return null;
 	}
 
-	@Nonnull
+	@Nullable
 	@Override
-	@SuppressWarnings("unchecked")
-	public <T> T getCapability(@Nonnull Capability<T> cap, @Nullable Direction side){
-		if(isActive()){
-			genOptionals();
-			if(cap == Capabilities.AXLE_CAPABILITY && (side == null || side == Direction.UP)){
-				return (T) axleOpt;
-			}
-			if(cap == Capabilities.BEAM_CAPABILITY){
-				return (T) beamOpt;
-			}
-		}
-		return super.getCapability(cap, side);
+	public IBeamHandler getBeamHandler(Direction dir){
+		return beamHandler;
 	}
 
 	@Override

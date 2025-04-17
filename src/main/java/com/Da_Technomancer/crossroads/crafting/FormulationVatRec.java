@@ -10,9 +10,9 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
@@ -21,7 +21,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
 
-public class FormulationVatRec implements IOptionalRecipe<Container>{
+public class FormulationVatRec implements IOptionalRecipe<RecipeInput>{
 
 	private final ResourceLocation id;
 	private final String group;
@@ -71,7 +71,7 @@ public class FormulationVatRec implements IOptionalRecipe<Container>{
 	}
 
 	@Override
-	public boolean matches(Container inv, Level worldIn){
+	public boolean matches(RecipeInput input, Level worldIn){
 		if(active && inv instanceof FormulationVatTileEntity){
 			FormulationVatTileEntity te = (FormulationVatTileEntity) inv;
 			return itemInput.test(te.getItem(0)) && input.test(te.getInputFluid());
@@ -92,11 +92,6 @@ public class FormulationVatRec implements IOptionalRecipe<Container>{
 	@Override
 	public ItemStack getToastSymbol(){
 		return new ItemStack(CRBlocks.formulationVat);
-	}
-
-	@Override
-	public ResourceLocation getId(){
-		return id;
 	}
 
 	@Override

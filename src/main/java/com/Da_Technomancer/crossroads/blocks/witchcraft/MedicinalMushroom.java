@@ -8,6 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
@@ -24,7 +25,7 @@ import java.util.List;
 public class MedicinalMushroom extends MushroomBlock{
 
 	public MedicinalMushroom(){
-		super(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GREEN).noCollission().randomTicks().instabreak().lightLevel(state -> 1).sound(SoundType.GRASS), CRWorldGen.EMPTY_KEY);
+		super(CRWorldGen.EMPTY_KEY, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GREEN).noCollission().randomTicks().instabreak().lightLevel(state -> 1).sound(SoundType.GRASS));
 		String name = "medicinal_mushroom";
 		CRBlocks.queueForRegister(name, this);
 	}
@@ -35,7 +36,7 @@ public class MedicinalMushroom extends MushroomBlock{
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
 		tooltip.add(Component.translatable("tt.crossroads.medicinal_mushroom.desc"));
 		tooltip.add(Component.translatable("tt.crossroads.medicinal_mushroom.spread"));
 		tooltip.add(Component.translatable("tt.crossroads.medicinal_mushroom.quip").setStyle(MiscUtil.TT_QUIP));

@@ -5,11 +5,13 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.SequenceBoxContainer;
 import com.Da_Technomancer.essentials.api.packets.INBTReceiver;
+import com.Da_Technomancer.essentials.api.redstone.IRedstoneCapable;
 import com.Da_Technomancer.essentials.api.redstone.IRedstoneHandler;
 import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -28,7 +30,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-public class SequenceBoxTileEntity extends BlockEntity implements INBTReceiver, MenuProvider{
+public class SequenceBoxTileEntity extends BlockEntity implements INBTReceiver, MenuProvider, IRedstoneCapable{
 
 	public static final int MAX_VALUES = 99;
 
@@ -80,8 +82,8 @@ public class SequenceBoxTileEntity extends BlockEntity implements INBTReceiver, 
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		nbt.putBoolean("redstone", hadRedstoneSignal);
 		nbt.putInt("index", index);
 		for(int i = 0; i < sequenceVal.size(); i++){
@@ -91,8 +93,8 @@ public class SequenceBoxTileEntity extends BlockEntity implements INBTReceiver, 
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		hadRedstoneSignal = nbt.getBoolean("redstone");
 		index = nbt.getInt("index");
 		sequenceVal.clear();
@@ -107,8 +109,8 @@ public class SequenceBoxTileEntity extends BlockEntity implements INBTReceiver, 
 	}
 
 	@Override
-	public CompoundTag getUpdateTag(){
-		CompoundTag nbt = super.getUpdateTag();
+	public CompoundTag getUpdateTag(HolderLookup.Provider pRegistries){
+		CompoundTag nbt = super.getUpdateTag(pRegistries);
 		nbt.putInt("index", index);
 		for(int i = 0; i < sequenceVal.size(); i++){
 			nbt.putFloat(i + "_val", sequenceVal.get(i));
@@ -117,23 +119,13 @@ public class SequenceBoxTileEntity extends BlockEntity implements INBTReceiver, 
 		return nbt;
 	}
 
-	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		circOpt.invalidate();
-	}
-
 	public final CircuitUtil.OutputCircHandler circHandler = new CircuitUtil.OutputCircHandler();
 	private final IRedstoneHandler circOpt = CircuitUtil.makeBaseCircuitOptional(this, circHandler, () -> index < sequenceVal.size() ? sequenceVal.get(index) : 0F);
 
-	@Nonnull
+	@Nullable
 	@Override
-	@SuppressWarnings("unchecked")
-	public <T> T getCapability(@Nonnull Capability<T> cap, @Nullable Direction side){
-		if(cap == RedstoneUtil.REDSTONE_CAPABILITY){
-			return (T) circOpt;
-		}
-		return super.getCapability(cap, side);
+	public IRedstoneHandler getRedstoneHandler(Direction direction){
+		return circOpt;
 	}
 
 	//UI stuff below

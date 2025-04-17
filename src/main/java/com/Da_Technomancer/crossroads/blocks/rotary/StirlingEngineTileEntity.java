@@ -2,14 +2,16 @@ package com.Da_Technomancer.crossroads.blocks.rotary;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
+import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.api.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
@@ -38,6 +40,10 @@ public class StirlingEngineTileEntity extends ModuleTE{
 	private double lastPower = 0;
 	private double lastHeatIn = 0;
 	private double lastHeatOut = 0;
+
+
+	private final IHeatHandler sideHeatHandler = new SideHeatHandler();
+	private final IHeatHandler bottomHeatHandler = new BottomHeatHandler();
 
 	public StirlingEngineTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state);
@@ -134,16 +140,16 @@ public class StirlingEngineTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 
 		tempSide = nbt.getDouble("temp_side");
 		tempBottom = nbt.getDouble("temp_bottom");
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 
 		nbt.putDouble("temp_side", tempSide);
 		nbt.putDouble("temp_bottom", tempBottom);
@@ -151,26 +157,21 @@ public class StirlingEngineTileEntity extends ModuleTE{
 	}
 
 	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		sideHeatOpt.invalidate();
-		bottomHeatOpt.invalidate();
+	@Nullable
+	public IAxleHandler getAxleHandler(Direction dir){
+		if(dir == null || dir == Direction.UP){
+			return axleHandler;
+		}
+		return null;
 	}
 
-	private final IHeatHandler sideHeatOpt = LazyOptional.of(SideHeatHandler::new);
-	private final IHeatHandler bottomHeatOpt = LazyOptional.of(BottomHeatHandler::new);
-
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
-		if(capability == Capabilities.AXLE_CAPABILITY && (facing == null || facing == Direction.UP)){
-			return (T) axleOpt;
+	@Nullable
+	public IHeatHandler getHeatHandler(Direction dir){
+		if(dir != Direction.UP){
+			return dir == Direction.DOWN ? bottomHeatHandler : sideHeatHandler;
 		}
-		if(capability == Capabilities.HEAT_CAPABILITY && facing != Direction.UP){
-			return facing == Direction.DOWN ? (T) bottomHeatOpt : (T) sideHeatOpt;
-		}
-
-		return super.getCapability(capability, facing);
+		return null;
 	}
 
 	private void init(){

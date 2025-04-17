@@ -69,7 +69,7 @@ public class Nitroglycerin extends Item{
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
 		tooltip.add(Component.translatable("tt.crossroads.nitroglycerin.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 

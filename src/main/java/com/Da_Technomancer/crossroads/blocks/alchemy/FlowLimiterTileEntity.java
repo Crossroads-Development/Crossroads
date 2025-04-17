@@ -1,22 +1,26 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.alchemy.*;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 import org.apache.commons.lang3.tuple.Pair;
+
+
 import org.joml.Vector3f;
+
+import javax.annotation.Nullable;
 
 public class FlowLimiterTileEntity extends ReagentHolderTE{
 
@@ -75,15 +79,14 @@ public class FlowLimiterTileEntity extends ReagentHolderTE{
 		for(int i = 0; i < 6; i++){
 			if(modes[i].isOutput()){
 				Direction side = Direction.from3DDataValue(i);
-				BlockEntity te = level.getBlockEntity(worldPosition.relative(side));
-				IChemicalHandler otherOpt;
-				if(contents.getTotalQty() <= 0 || te == null || !(otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())).isPresent()){
+				BlockPos adj = worldPosition.relative(side);
+				IChemicalHandler otherChemHandler;
+				if(contents.getTotalQty() <= 0 || (otherChemHandler = level.getCapability(CRCapabilities.CHEMICAL_CAPABILITY, adj, side.getOpposite())) == null){
 					continue;
 				}
-				IChemicalHandler otherHandler = otherOpt.orElseThrow(NullPointerException::new);
 
-				EnumContainerType otherChannel = otherHandler.getChannel(side.getOpposite());
-				EnumTransferMode otherMode = otherHandler.getMode(side.getOpposite());
+				EnumContainerType otherChannel = otherChemHandler.getChannel(side.getOpposite());
+				EnumTransferMode otherMode = otherChemHandler.getMode(side.getOpposite());
 				if(!channel.connectsWith(otherChannel) || !modes[i].connectsWith(otherMode)){
 					continue;
 				}
@@ -92,13 +95,13 @@ public class FlowLimiterTileEntity extends ReagentHolderTE{
 				ReagentMap transferReag = new ReagentMap();
 				for(IReagent type : contents.keySetReag()){
 					int qty = contents.getQty(type);
-					int specificLimit = Math.min(qty, limit - otherHandler.getContent(type));
+					int specificLimit = Math.min(qty, limit - otherChemHandler.getContent(type));
 					if(specificLimit > 0){
 						transferReag.transferReagent(type, specificLimit, contents);
 					}
 				}
 
-				boolean changed = otherHandler.insertReagents(transferReag, side.getOpposite(), handler);
+				boolean changed = otherChemHandler.insertReagents(transferReag, side.getOpposite(), chemHandler);
 				for(IReagent type : transferReag.keySetReag()){
 					contents.transferReagent(type, transferReag.getQty(type), transferReag);
 				}
@@ -122,24 +125,24 @@ public class FlowLimiterTileEntity extends ReagentHolderTE{
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		limitIndex = Math.min(nbt.getInt("limit"), LIMITS.length - 1);
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		nbt.putInt("limit", limitIndex);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
-		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || side.getAxis() == getBlockState().getValue(CRProperties.FACING).getAxis())){
-			return (T) chemOpt;
+	@Nullable
+	public IChemicalHandler getChemicalHandler(Direction dir){
+		if(dir == null || dir.getAxis() == getBlockState().getValue(CRProperties.FACING).getAxis()){
+			return chemHandler;
 		}
-		return super.getCapability(cap, side);
+		return null;
 	}
 
 	@Override

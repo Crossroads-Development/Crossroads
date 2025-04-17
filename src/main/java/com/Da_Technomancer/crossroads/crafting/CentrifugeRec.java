@@ -10,8 +10,8 @@ import com.google.gson.JsonObject;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class CentrifugeRec implements IOptionalRecipe<Container>{
+public class CentrifugeRec implements IOptionalRecipe<RecipeInput>{
 
 	private static final Random RAND = new Random();
 
@@ -53,7 +53,7 @@ public class CentrifugeRec implements IOptionalRecipe<Container>{
 	}
 
 	@Override
-	public boolean matches(Container inv, Level worldIn){
+	public boolean matches(RecipeInput inv, Level worldIn){
 		FluidStack teInput;
 		return active && inv instanceof WaterCentrifugeTileEntity && BlockUtil.sameFluid(teInput = ((WaterCentrifugeTileEntity) inv).getInputFluid(), input) && teInput.getAmount() >= input.getAmount();
 	}
@@ -90,11 +90,6 @@ public class CentrifugeRec implements IOptionalRecipe<Container>{
 	@Override
 	public ItemStack getToastSymbol(){
 		return new ItemStack(CRBlocks.waterCentrifuge);
-	}
-
-	@Override
-	public ResourceLocation getId(){
-		return id;
 	}
 
 	@Override

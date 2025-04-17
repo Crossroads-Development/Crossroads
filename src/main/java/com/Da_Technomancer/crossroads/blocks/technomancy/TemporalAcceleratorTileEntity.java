@@ -2,9 +2,9 @@ package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.Capabilities;
 import com.Da_Technomancer.crossroads.api.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.api.beams.EnumBeamAlignments;
+import com.Da_Technomancer.crossroads.api.beams.IBeamCapable;
 import com.Da_Technomancer.crossroads.api.beams.IBeamHandler;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.crossroads.api.packets.SendPlayerTickCountToClient;
@@ -16,6 +16,7 @@ import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.effects.beam_effects.TimeEffect;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -29,11 +30,12 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-public class TemporalAcceleratorTileEntity extends IFluxLink.FluxHelper{
+public class TemporalAcceleratorTileEntity extends IFluxLink.FluxHelper implements IBeamCapable{
 
 	public static final BlockEntityType<TemporalAcceleratorTileEntity> TYPE = CRTileEntity.createType(TemporalAcceleratorTileEntity::new, CRBlocks.temporalAccelerator);
 
@@ -51,6 +53,8 @@ public class TemporalAcceleratorTileEntity extends IFluxLink.FluxHelper{
 	//BlockState cache
 	private Direction facing;
 	private TemporalAccelerator.Mode mode;
+
+	private IBeamHandler beamHandler = new BeamHandler();
 
 	public TemporalAcceleratorTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state, null, Behaviour.SOURCE);
@@ -230,24 +234,6 @@ public class TemporalAcceleratorTileEntity extends IFluxLink.FluxHelper{
 		}
 	}
 
-	@Override
-	public void setBlockState(BlockState stateIn){
-		super.setBlockState(stateIn);
-		facing = null;
-		mode = null;
-		beamOpt.invalidate();
-		beamOpt = LazyOptional.of(BeamHandler::new);
-	}
-
-	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		beamOpt.invalidate();
-		if(!level.isClientSide){
-			ACCEL_POSITIONS.remove(new Location(worldPosition, level));
-		}
-	}
-
 	public void onLoad(){
 		super.onLoad();
 		if(!this.level.isClientSide){
@@ -255,28 +241,25 @@ public class TemporalAcceleratorTileEntity extends IFluxLink.FluxHelper{
 		}
 	}
 
-	private IBeamHandler beamOpt = LazyOptional.of(BeamHandler::new);
-
-	@SuppressWarnings("unchecked")
+	@Nullable
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
-		if(cap == Capabilities.BEAM_CAPABILITY && (side == null || side == getFacing().getOpposite())){
-			return (T) beamOpt;
+	public IBeamHandler getBeamHandler(Direction dir){
+		if(dir == null || dir == getFacing().getOpposite()){
+			return beamHandler;
 		}
-
-		return super.getCapability(cap, side);
+		return null;
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		nbt.putInt("intensity", intensity);
 		nbt.putLong("last_run", lastRunTick);
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		intensity = nbt.getInt("intensity");
 		lastRunTick = nbt.getLong("last_run");
 	}

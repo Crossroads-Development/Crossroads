@@ -19,6 +19,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
@@ -26,7 +27,7 @@ import net.minecraft.world.level.Level;
 import javax.annotation.Nullable;
 import java.util.Locale;
 
-public class AlchemyRec implements IOptionalRecipe<Container>{
+public class AlchemyRec implements IOptionalRecipe<RecipeInput>{
 
 	private static final float MAX_BLAST = 8;
 
@@ -208,7 +209,7 @@ public class AlchemyRec implements IOptionalRecipe<Container>{
 	}
 
 	@Override
-	public boolean matches(Container inv, Level worldIn){
+	public boolean matches(RecipeInput inv, Level worldIn){
 		return true;//Irrelevant
 	}
 
@@ -225,11 +226,6 @@ public class AlchemyRec implements IOptionalRecipe<Container>{
 	@Override
 	public ItemStack getToastSymbol(){
 		return new ItemStack(CRItems.florenceFlaskCrystal);
-	}
-
-	@Override
-	public ResourceLocation getId(){
-		return id;
 	}
 
 	@Override

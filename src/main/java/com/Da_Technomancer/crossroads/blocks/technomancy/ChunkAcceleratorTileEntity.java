@@ -1,9 +1,9 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.CRConfig;
-import com.Da_Technomancer.crossroads.api.Capabilities;
 import com.Da_Technomancer.crossroads.api.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.api.beams.EnumBeamAlignments;
+import com.Da_Technomancer.crossroads.api.beams.IBeamCapable;
 import com.Da_Technomancer.crossroads.api.beams.IBeamHandler;
 import com.Da_Technomancer.crossroads.api.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.api.technomancy.IFluxLink;
@@ -12,6 +12,7 @@ import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.effects.beam_effects.TimeEffect;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
@@ -22,10 +23,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class ChunkAcceleratorTileEntity extends IFluxLink.FluxHelper{
+public class ChunkAcceleratorTileEntity extends IFluxLink.FluxHelper implements IBeamCapable{
 
 	public static final BlockEntityType<ChunkAcceleratorTileEntity> TYPE = CRTileEntity.createType(ChunkAcceleratorTileEntity::new, CRBlocks.chunkAccelerator);
 
@@ -35,15 +37,10 @@ public class ChunkAcceleratorTileEntity extends IFluxLink.FluxHelper{
 	private int infoIntensity = 0;
 	private long lastRunTick;//Used to prevent accelerators affecting each other
 
+	private IBeamHandler beamHandler = new BeamHandler();
+
 	public ChunkAcceleratorTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state, null, Behaviour.SOURCE);
-	}
-
-	@Override
-	public void setBlockState(BlockState stateIn){
-		super.setBlockState(stateIn);
-		beamOpt.invalidate();
-		beamOpt = LazyOptional.of(BeamHandler::new);
 	}
 
 	@Override
@@ -107,35 +104,23 @@ public class ChunkAcceleratorTileEntity extends IFluxLink.FluxHelper{
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		nbt.putInt("intensity", intensity);
 		nbt.putLong("last_run", lastRunTick);
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		intensity = nbt.getInt("intensity");
 		lastRunTick = nbt.getLong("last_run");
 	}
 
+	@Nullable
 	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		beamOpt.invalidate();
-	}
-
-	private IBeamHandler beamOpt = LazyOptional.of(BeamHandler::new);
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
-		if(cap == Capabilities.BEAM_CAPABILITY){
-			return (T) beamOpt;
-		}
-
-		return super.getCapability(cap, side);
+	public IBeamHandler getBeamHandler(Direction dir){
+		return beamHandler;
 	}
 
 	private class BeamHandler implements IBeamHandler{

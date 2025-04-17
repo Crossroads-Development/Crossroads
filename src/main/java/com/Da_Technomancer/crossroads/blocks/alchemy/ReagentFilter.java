@@ -5,6 +5,9 @@ import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.api.ConfigUtil;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -13,6 +16,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -35,6 +39,9 @@ import java.util.List;
 
 public class ReagentFilter extends BaseEntityBlock{
 
+	public static final MapCodec<ReagentFilter> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(Codec.BOOL.fieldOf("crystal").forGetter(ReagentFilter::isCrystal)).apply(instance, ReagentFilter::new));
+
+
 	private static final VoxelShape SHAPE = box(2, 0, 2, 14, 16, 14);
 	private final boolean crystal;
 
@@ -43,6 +50,10 @@ public class ReagentFilter extends BaseEntityBlock{
 		this.crystal = crystal;
 		String name = (crystal ? "crystal_" : "") + "reagent_filter";
 		CRBlocks.queueForRegister(name, this);
+	}
+
+	private boolean isCrystal(){
+		return crystal;
 	}
 
 	@Override
@@ -73,7 +84,7 @@ public class ReagentFilter extends BaseEntityBlock{
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
 		tooltip.add(Component.translatable("tt.crossroads.reagent_filter.desc"));
 		tooltip.add(Component.translatable("tt.crossroads.reagent_filter.filter"));
 		tooltip.add(Component.translatable("tt.crossroads.reagent_filter.quip").setStyle(MiscUtil.TT_QUIP));
@@ -106,6 +117,11 @@ public class ReagentFilter extends BaseEntityBlock{
 			Containers.dropContents(worldIn, pos, (ReagentFilterTileEntity) te);
 		}
 		super.onRemove(state, worldIn, pos, newState, isMoving);
+	}
+
+	@Override
+	protected MapCodec<? extends BaseEntityBlock> codec(){
+		return CRBlocks.REAGENT_FILTER_TYPE.value();
 	}
 
 	@Override

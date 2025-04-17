@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.render.tesr;
 
 import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.blocks.fluid.RotaryPumpTileEntity;
@@ -29,7 +29,7 @@ public class RotaryPumpRenderer implements BlockEntityRenderer<RotaryPumpTileEnt
 		//Render the screw
 		matrix.pushPose();
 		matrix.translate(0.5D, 0.5D, 0.5D);
-		IAxleHandler opt = te.getCapability(Capabilities.AXLE_CAPABILITY, null);
+		IAxleHandler opt = te.getCapability(CRCapabilities.AXLE_CAPABILITY, null);
 
 		double screwOffset = 0.1D;
 		float screwScale = 0.45F;

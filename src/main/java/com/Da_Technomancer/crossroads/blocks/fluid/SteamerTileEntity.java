@@ -9,14 +9,15 @@ import com.Da_Technomancer.crossroads.gui.container.SteamerContainer;
 import com.Da_Technomancer.essentials.api.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.item.crafting.SmokingRecipe;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -34,6 +35,9 @@ public class SteamerTileEntity extends InventoryTE{
 
 	public static final int FLUID_USE = 200;//Steam per tick
 	public static final int REQUIRED = 50;//Number of processing ticks
+
+	private final IFluidHandler steamHandler = new FluidHandler(0);
+	private final IFluidHandler waterHandler = new FluidHandler(1);
 
 	private int progress = 0;
 
@@ -93,20 +97,20 @@ public class SteamerTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		progress = nbt.getInt("progress");
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		nbt.putInt("progress", progress);
 	}
 
 	@Override
 	public boolean canPlaceItem(int index, ItemStack stack){
-		return index == 0 && !stack.isEmpty() && level.getRecipeManager().getRecipeFor(RecipeType.SMOKING, new SimpleContainer(stack), level).isPresent();
+		return index == 0 && !stack.isEmpty() && level.getRecipeManager().getRecipeFor(RecipeType.SMOKING, new SingleRecipeInput(stack), level).isPresent();
 	}
 
 	@Override
@@ -115,27 +119,13 @@ public class SteamerTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		steamOpt.invalidate();
-		waterOpt.invalidate();
-	}
-
-	private final IFluidHandler steamOpt = LazyOptional.of(() -> new FluidHandler(0));
-	private final IFluidHandler waterOpt = LazyOptional.of(() -> new FluidHandler(1));
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
-		if(cap == ForgeCapabilities.FLUID_HANDLER){
-			if(side == Direction.UP || side == Direction.DOWN){
-				return (T) waterOpt;
-			}else if(side != null){
-				return (T) steamOpt;
-			}
+	@Nullable
+	public IFluidHandler getFluidHandler(Direction dir){
+		if(dir == Direction.UP || dir == Direction.DOWN){
+			return waterHandler;
+		}else if(dir != null){
+			return steamHandler;
 		}
-
-		return super.getCapability(cap, side);
 	}
 
 	@Override

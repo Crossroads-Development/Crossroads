@@ -121,14 +121,10 @@ public class FatFeederTileEntity extends InventoryTE{
 		return new FluidTankHandler(0);//Allow pipes to go in both directions
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
-		if(capability == ForgeCapabilities.FLUID_HANDLER){
-			return (T) globalFluidOpt;
-		}
-
-		return super.getCapability(capability, facing);
+	@Nullable
+	public IFluidHandler getFluidHandler(Direction dir){
+		return globalFluidHandler;
 	}
 
 	@Override

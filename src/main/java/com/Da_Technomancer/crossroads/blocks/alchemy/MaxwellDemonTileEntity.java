@@ -1,8 +1,9 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 import com.Da_Technomancer.crossroads.CRConfig;
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
+import com.Da_Technomancer.crossroads.api.heat.IHeatCapable;
 import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.api.templates.IInfoTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -10,6 +11,7 @@ import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
@@ -19,10 +21,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 //We can't use ModuleTE because this has 2 internal temperatures
-public class MaxwellDemonTileEntity extends BlockEntity implements ITickableTileEntity, IInfoTE{
+public class MaxwellDemonTileEntity extends BlockEntity implements ITickableTileEntity, IInfoTE, IHeatCapable{
 
 	public static final BlockEntityType<MaxwellDemonTileEntity> TYPE = CRTileEntity.createType(MaxwellDemonTileEntity::new, CRBlocks.maxwellDemon);
 
@@ -34,10 +37,9 @@ public class MaxwellDemonTileEntity extends BlockEntity implements ITickableTile
 	private boolean init = false;
 	private double rate = -1;//Not saved/loaded to NBT, as we want this to regenerate on reload with the config
 
-	public MaxwellDemonTileEntity(BlockPos pos, BlockState state){
-		super(TYPE, pos, state);
+	public MaxwellDemonTileEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState){
+		super(blockEntityType, blockPos, blockState);
 	}
-
 	@Override
 	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
 		chat.add(Component.translatable("tt.crossroads.maxwell_demon.read_top", CRConfig.formatVal(tempUp)));
@@ -72,9 +74,9 @@ public class MaxwellDemonTileEntity extends BlockEntity implements ITickableTile
 		for(int i = 0; i < 2; i++){
 			Direction dir = Direction.from3DDataValue(i);
 
-			BlockEntity te = level.getBlockEntity(worldPosition.relative(dir));
-			IHeatHandler heatOpt;
-			if(te != null && (heatOpt = te.getCapability(Capabilities.HEAT_CAPABILITY, dir.getOpposite())).isPresent()){
+			BlockPos relPos = worldPosition.relative(dir);
+			IHeatHandler heatHandler;
+			if((heatHandler = level.getCapability(CRCapabilities.HEAT_CAPABILITY, relPos, dir.getOpposite())) != null){
 				double reservePool = i == 0 ? tempDown : tempUp;
 				if(i == 0){
 					tempDown -= reservePool;
@@ -82,58 +84,49 @@ public class MaxwellDemonTileEntity extends BlockEntity implements ITickableTile
 					tempUp -= reservePool;
 				}
 
-				IHeatHandler handler = heatOpt.orElseThrow(NullPointerException::new);
-				reservePool += handler.getTemp();
-				handler.addHeat(-handler.getTemp());
+				reservePool += heatHandler.getTemp();
+				heatHandler.addHeat(-heatHandler.getTemp());
 				reservePool /= 2;
 				if(i == 0){
 					tempDown += reservePool;
 				}else{
 					tempUp += reservePool;
 				}
-				handler.addHeat(reservePool);
+				heatHandler.addHeat(reservePool);
 			}
 		}
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		nbt.putBoolean("init_heat", init);
 		nbt.putDouble("temp_u", tempUp);
 		nbt.putDouble("temp_d", tempDown);
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		init = nbt.getBoolean("init_heat");
 		tempUp = nbt.getDouble("temp_u");
 		tempDown = nbt.getDouble("temp_d");
 	}
 
-	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		heatOptUp.invalidate();
-		heatOptDown.invalidate();
-	}
+	private final IHeatHandler heatHandlerUp = new HeatHandler(true);
+	private final IHeatHandler heatHandlerDown = new HeatHandler(false);
 
-	private final IHeatHandler heatOptUp = LazyOptional.of(() -> new HeatHandler(true));
-	private final IHeatHandler heatOptDown = LazyOptional.of(() -> new HeatHandler(false));
-
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
-		if(cap == Capabilities.HEAT_CAPABILITY){
-			if(side == null || side == Direction.UP){
-				return (T) heatOptUp;
-			}else if(side == Direction.DOWN){
-				return (T) heatOptDown;
-			}
+	@Nullable
+	public IHeatHandler getHeatHandler(Direction dir){
+		if(dir == null || dir == Direction.UP){
+			return heatHandlerUp;
+		}else if(dir == Direction.DOWN){
+			return heatHandlerDown;
 		}
-		return super.getCapability(cap, side);
+		return null;
 	}
+
 
 	private class HeatHandler implements IHeatHandler{
 

@@ -2,13 +2,14 @@ package com.Da_Technomancer.crossroads.blocks.heat;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.FireboxContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -18,6 +19,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.event.EventHooks;
+import net.neoforged.neoforge.items.IItemHandler;
 
 
 import javax.annotation.Nullable;
@@ -57,7 +60,7 @@ public class FireboxTileEntity extends InventoryTE{
 		}
 
 		int fuelBurn;
-		if(burnTime == 0 && (fuelBurn = ForgeHooks.getBurnTime(inventory[0], null)) != 0){
+		if(burnTime == 0 && (fuelBurn = inventory[0].getBurnTime(null)) != 0){
 			fuelBurn *= CRConfig.fireboxFuelMult.get();
 			int configLimit = CRConfig.fireboxCap.get();
 			if(configLimit >= 0){
@@ -76,15 +79,15 @@ public class FireboxTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		burnTime = nbt.getInt("burn");
 		maxBurnTime = nbt.getInt("max_burn");
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		nbt.putInt("burn", burnTime);
 		nbt.putInt("max_burn", maxBurnTime);
 	}
@@ -92,26 +95,23 @@ public class FireboxTileEntity extends InventoryTE{
 	private ItemHandler itemHandler = new ItemHandler();
 
 	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		itemHandler.invalidate();
+	@Nullable
+	public IHeatHandler getHeatHandler(Direction dir){
+		if(dir == Direction.UP || dir == null){
+			return heatHandler;
+		}
+		return null;
 	}
 
-	@SuppressWarnings("unchecked")
+	@Nullable
 	@Override
-	public <T> T getCapability(Capability<T> capability, Direction facing){
-		if(capability == Capabilities.HEAT_CAPABILITY && (facing == Direction.UP || facing == null)){
-			return (T) heatOpt;
-		}
-		if(capability == ForgeCapabilities.ITEM_HANDLER){
-			return (T) itemHandler;
-		}
-		return super.getCapability(capability, facing);
+	public IItemHandler getItemHandler(Direction direction){
+		return itemHandler;
 	}
 
 	@Override
 	public boolean canPlaceItem(int index, ItemStack stack){
-		return index == 0 && ForgeHooks.getBurnTime(stack, null) != 0;
+		return index == 0 && stack.getBurnTime(null) != 0;
 	}
 
 	@Override

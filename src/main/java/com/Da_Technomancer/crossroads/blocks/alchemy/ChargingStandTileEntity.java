@@ -1,13 +1,16 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.alchemy.EnumTransferMode;
+import com.Da_Technomancer.crossroads.api.alchemy.IChemicalHandler;
+import com.Da_Technomancer.crossroads.api.electric.IEnergyCapable;
 import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.blocks.electric.TeslaCoilTopTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -15,7 +18,9 @@ import net.minecraft.world.phys.Vec3;
 
 import net.neoforged.neoforge.energy.IEnergyStorage;
 
-public class ChargingStandTileEntity extends GlasswareHolderTileEntity{
+import javax.annotation.Nullable;
+
+public class ChargingStandTileEntity extends GlasswareHolderTileEntity implements IEnergyCapable{
 
 	public static final BlockEntityType<ChargingStandTileEntity> TYPE = CRTileEntity.createType(ChargingStandTileEntity::new, CRBlocks.chargingStand);
 
@@ -23,6 +28,8 @@ public class ChargingStandTileEntity extends GlasswareHolderTileEntity{
 	public static final int DRAIN = 10;
 
 	private int fe = 0;
+
+	private final IEnergyStorage energyHandler = new ElecHandler();
 
 	public ChargingStandTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state);
@@ -47,14 +54,14 @@ public class ChargingStandTileEntity extends GlasswareHolderTileEntity{
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		fe = nbt.getInt("fe");
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		nbt.putInt("fe", fe);
 	}
 
@@ -64,26 +71,18 @@ public class ChargingStandTileEntity extends GlasswareHolderTileEntity{
 		return new EnumTransferMode[] {EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE, EnumTransferMode.NONE};
 	}
 
+	@Nullable
 	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		elecOpt.invalidate();
+	public IEnergyStorage getEnergyHandler(Direction dir){
+		return energyHandler;
 	}
 
-	private final IEnergyStorage elecOpt = LazyOptional.of(ElecHandler::new);
-
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
-		if(cap == ForgeCapabilities.ENERGY){
-			return (T) elecOpt;
+	public IChemicalHandler getChemicalHandler(Direction dir){
+		if(dir == Direction.UP){
+			return null;
 		}
-		if(side == Direction.UP && cap == Capabilities.CHEMICAL_CAPABILITY){
-			//The super class (glassware holder) would return the handler for a conduit connection on the top
-			//The charging stand does not allow that connection
-			return LazyOptional.empty();
-		}
-		return super.getCapability(cap, side);
+		return super.getChemicalHandler(dir);
 	}
 
 	private class ElecHandler implements IEnergyStorage{

@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.alchemy.*;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
@@ -16,6 +16,7 @@ import net.neoforged.neoforge.items.IItemHandler;
 import org.apache.commons.lang3.tuple.Pair;
 import org.joml.Vector3f;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 public class ReagentTankTileEntity extends ReagentHolderTE{
@@ -68,26 +69,6 @@ public class ReagentTankTileEntity extends ReagentHolderTE{
 	}
 
 	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		itemOpt.invalidate();
-	}
-
-	private final IItemHandler itemOpt = LazyOptional.of(ItemHandler::new);
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
-		if(cap == Capabilities.CHEMICAL_CAPABILITY){
-			return (T) chemOpt;
-		}
-		if(cap == ForgeCapabilities.ITEM_HANDLER){
-			return (T) itemOpt;
-		}
-		return super.getCapability(cap, side);
-	}
-
-	@Override
 	public void correctReag(){
 		super.correctReag();
 		correctTemp();
@@ -127,5 +108,11 @@ public class ReagentTankTileEntity extends ReagentHolderTE{
 			level.playSound(null, worldPosition, sound.getBreakSound(), SoundSource.BLOCKS, sound.getVolume(), sound.getPitch());
 			AlchemyUtil.releaseChemical(level, worldPosition, contents);
 		}
+	}
+
+	@Override
+	@Nullable
+	public IChemicalHandler getChemicalHandler(Direction dir){
+		return chemHandler;
 	}
 }

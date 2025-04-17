@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.fluid;
 
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
@@ -10,12 +10,14 @@ import com.Da_Technomancer.crossroads.gui.container.WaterCentrifugeContainer;
 import com.Da_Technomancer.essentials.api.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -66,15 +68,15 @@ public class WaterCentrifugeTileEntity extends InventoryTE{
 			neg = !neg;
 			//Handle direction switching regardless of whether crafting occurred
 
-			Optional<CentrifugeRec> recOpt = level.getRecipeManager().getRecipeFor(CRRecipes.CENTRIFUGE_TYPE, this, level);
+			Optional<RecipeHolder<CentrifugeRec>> recOpt = level.getRecipeManager().getRecipeFor(CRRecipes.CENTRIFUGE_TYPE, this, level);
 			if(recOpt.isPresent() && !fluids[0].isEmpty()){
-				CentrifugeRec rec = recOpt.get();
+				RecipeHolder<CentrifugeRec> rec = recOpt.get();
 				//The recipe matches() method checks inputs- those being valid is a given
 
-				FluidStack fluidOut = rec.getFluidOutput();
-				ItemStack itemOut = rec.getResultItem();
+				FluidStack fluidOut = rec.value().getFluidOutput();
+				ItemStack itemOut = rec.value().getResultItem();
 
-				fluids[0].shrink(rec.getInput().getAmount());
+				fluids[0].shrink(rec.value().getInput().getAmount());
 				if(fluids[1].isEmpty()){
 					fluids[1] = fluidOut.copy();
 				}else if(BlockUtil.sameFluid(fluids[1], fluidOut)){
@@ -92,40 +94,25 @@ public class WaterCentrifugeTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		nbt.putBoolean("neg", neg);
 
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		neg = nbt.getBoolean("neg");
 	}
 
 	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		saltOpt.invalidate();
-	}
-
-	private final IItemHandler saltOpt = LazyOptional.of(ItemHandler::new);
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T> T getCapability(Capability<T> cap, Direction facing){
-		if(cap == ForgeCapabilities.FLUID_HANDLER){
-			return (T) globalFluidOpt;
+	@Nullable
+	public IAxleHandler getAxleHandler(Direction dir){
+		if(dir == Direction.UP){
+			return axleHandler;
 		}
-		if(cap == ForgeCapabilities.ITEM_HANDLER){
-			return (T) saltOpt;
-		}
-		if(cap == Capabilities.AXLE_CAPABILITY && facing == Direction.UP){
-			return (T) axleOpt;
-		}
-
-		return super.getCapability(cap, facing);
+		return null;
 	}
 
 	@Override

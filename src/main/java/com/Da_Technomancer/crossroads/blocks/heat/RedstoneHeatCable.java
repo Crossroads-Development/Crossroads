@@ -15,6 +15,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -115,8 +116,8 @@ public class RedstoneHeatCable extends HeatCable implements IReadable{
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
-		super.appendHoverText(stack, world, tooltip, advanced);
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
+		super.appendHoverText(stack, context, tooltip, flag);
 		tooltip.add(Component.translatable("tt.crossroads.redstone_heat_cable.control"));
 		tooltip.add(Component.translatable("tt.crossroads.redstone_heat_cable.reader"));
 	}

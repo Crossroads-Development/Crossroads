@@ -1,16 +1,19 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.Capabilities;
 import com.Da_Technomancer.crossroads.api.beams.BeamUnit;
+import com.Da_Technomancer.crossroads.api.beams.IBeamCapable;
 import com.Da_Technomancer.crossroads.api.beams.IBeamHandler;
 import com.Da_Technomancer.crossroads.api.templates.IInfoTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamCage;
+import com.Da_Technomancer.essentials.api.BlockUtil;
+import com.Da_Technomancer.essentials.api.IItemCapable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
@@ -23,13 +26,17 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-public class CageChargerTileEntity extends BlockEntity implements IInfoTE{
+public class CageChargerTileEntity extends BlockEntity implements IInfoTE, IBeamCapable, IItemCapable{
 
 	public static final BlockEntityType<CageChargerTileEntity> TYPE = CRTileEntity.createType(CageChargerTileEntity::new, CRBlocks.cageCharger);
 
 	private ItemStack cage = ItemStack.EMPTY;
+
+	private final IBeamHandler beamHandler = new BeamHandler();
+	private final IItemHandler itemHandler = new ItemHandler();
 
 	public CageChargerTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state);
@@ -65,40 +72,29 @@ public class CageChargerTileEntity extends BlockEntity implements IInfoTE{
 		}
 	}
 
+	@Nullable
 	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		beamOpt.invalidate();
-		itemOpt.invalidate();
+	public IBeamHandler getBeamHandler(Direction dir){
+		return beamHandler;
 	}
 
-	private final IBeamHandler beamOpt = LazyOptional.of(BeamHandler::new);
-	private final IItemHandler itemOpt = LazyOptional.of(ItemHandler::new);
-
-	@SuppressWarnings("unchecked")
+	@Nullable
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
-		if(cap == Capabilities.BEAM_CAPABILITY){
-			return (T) beamOpt;
-		}
-		if(cap == ForgeCapabilities.ITEM_HANDLER){
-			return (T) itemOpt;
-		}
-
-		return super.getCapability(cap, side);
+	public IItemHandler getItemHandler(Direction direction){
+		return itemHandler;
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		if(!cage.isEmpty()){
-			nbt.put("inv", cage.save(new CompoundTag()));
+			nbt.put("inv", BlockUtil.stackToNBT(cage, pRegistries));
 		}
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		cage = ItemStack.of(nbt.getCompound("inv"));
 	}
 

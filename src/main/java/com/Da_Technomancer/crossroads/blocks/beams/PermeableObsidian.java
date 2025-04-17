@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.blocks.beams;
 
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
@@ -20,7 +21,7 @@ public class PermeableObsidian extends Block{
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable BlockGetter player, List<Component> tooltip, TooltipFlag advanced){
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
 		tooltip.add(Component.translatable("tt.crossroads.boilerplate.beam_permeable"));
 		tooltip.add(Component.translatable("tt.crossroads.boilerplate.blast_resist"));
 		tooltip.add(Component.translatable("tt.crossroads.boilerplate.decor"));

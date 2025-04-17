@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.crafting.AlchemyRec;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.ReagentRec;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
@@ -50,7 +51,7 @@ public final class ReagentManager{
 		return foundResult.map(Map.Entry::getKey).orElse(null);
 	}
 
-	public static List<AlchemyRec> getReactions(Level world){
+	public static List<RecipeHolder<AlchemyRec>> getReactions(Level world){
 		return world.getRecipeManager().getAllRecipesFor(CRRecipes.ALCHEMY_TYPE);
 	}
 
@@ -90,6 +91,6 @@ public final class ReagentManager{
 		//Called on client side when new recipe sets are received from the server
 		//This is necessary, because the client can have data packs change while running when connecting to different worlds or servers
 		//This removes any no-longer registered reagents (the recipe manager handles overwriting and adding new ones)
-		trimReagents(recManager.getAllRecipesFor(CRRecipes.REAGENT_TYPE).stream().map(ReagentRec::getID).collect(Collectors.toList()));
+		trimReagents(recManager.getAllRecipesFor(CRRecipes.REAGENT_TYPE).stream().map(recHolder -> recHolder.value().getID()).collect(Collectors.toList()));
 	}
 }

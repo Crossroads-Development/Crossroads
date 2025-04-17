@@ -91,7 +91,7 @@ public class VillagerBrain extends Item implements ICultivatable{
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag){
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
 		MerchantOffer offer = getCurrentOffer(stack);
 		if(offer == null){
 			//No trades

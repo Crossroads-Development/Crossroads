@@ -2,9 +2,10 @@ package com.Da_Technomancer.crossroads.blocks.fluid;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.MathUtil;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
+import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
@@ -13,6 +14,7 @@ import com.Da_Technomancer.essentials.api.BlockUtil;
 import com.Da_Technomancer.essentials.api.packets.INBTReceiver;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -35,6 +37,7 @@ import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.common.SoundActions;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 import javax.annotation.Nullable;
 import java.awt.*;
@@ -232,7 +235,7 @@ public class RotaryPumpTileEntity extends InventoryTE implements INBTReceiver{
 			return state;
 		}else if(block == Blocks.LAVA_CAULDRON){
 			return Blocks.CAULDRON.defaultBlockState();
-		}else if(block instanceof LiquidBlock lblock && lblock.getFluid().isSource(world.getFluidState(targetPos))){
+		}else if(block instanceof LiquidBlock lblock && lblock.fluid.isSource(world.getFluidState(targetPos))){
 			//Normal fluids
 			return Blocks.AIR.defaultBlockState();
 		}else if(block instanceof SimpleWaterloggedBlock && state.hasProperty(BlockStateProperties.WATERLOGGED) && state.getValue(BlockStateProperties.WATERLOGGED)){
@@ -250,9 +253,9 @@ public class RotaryPumpTileEntity extends InventoryTE implements INBTReceiver{
 			return new FluidStack(Fluids.WATER, 1000);
 		}else if(block == Blocks.LAVA_CAULDRON){
 			return new FluidStack(Fluids.LAVA, 1000);
-		}else if(block instanceof LiquidBlock lblock && lblock.getFluid().isSource(world.getFluidState(targetPos))){
+		}else if(block instanceof LiquidBlock lblock && lblock.fluid.isSource(world.getFluidState(targetPos))){
 			//Normal fluids
-			Fluid fluid = lblock.getFluid().getSource();
+			Fluid fluid = lblock.fluid.getSource();
 			return new FluidStack(fluid, 1000);
 		}else if(block instanceof SimpleWaterloggedBlock && state.hasProperty(BlockStateProperties.WATERLOGGED) && state.getValue(BlockStateProperties.WATERLOGGED)){
 			//Waterlogged blocks
@@ -314,41 +317,45 @@ public class RotaryPumpTileEntity extends InventoryTE implements INBTReceiver{
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		progress = nbt.getDouble("prog");
 		progChange = nbt.getFloat("prog_change");
 		renderFluid = FluidStack.loadFluidStackFromNBT(nbt.getCompound("render_fluid"));
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		nbt.putDouble("prog", progress);
 		nbt.putFloat("prog_change", progChange);
-		nbt.put("render_fluid", renderFluid.writeToNBT(new CompoundTag()));
+		nbt.put("render_fluid", BlockUtil.stackToNBT(renderFluid, pRegistries));
 	}
 
 	@Override
-	public CompoundTag getUpdateTag(){
-		CompoundTag nbt = super.getUpdateTag();
+	public CompoundTag getUpdateTag(HolderLookup.Provider pRegistries){
+		CompoundTag nbt = super.getUpdateTag(pRegistries);
 		nbt.putDouble("prog", progress);
 		nbt.putFloat("prog_change", progChange);
-		nbt.put("render_fluid", renderFluid.writeToNBT(new CompoundTag()));
+		nbt.put("render_fluid", BlockUtil.stackToNBT(renderFluid, pRegistries));
 		return nbt;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
-		if(capability == ForgeCapabilities.FLUID_HANDLER && facing != Direction.DOWN && facing != Direction.UP){
-			return (T) globalFluidOpt;
+	@Nullable
+	public IFluidHandler getFluidHandler(Direction dir){
+		if(dir != Direction.DOWN && dir != Direction.UP){
+			return globalFluidHandler;
 		}
-		if(capability == Capabilities.AXLE_CAPABILITY && (facing == Direction.UP || facing == null)){
-			return (T) axleOpt;
-		}
+		return null;
+	}
 
-		return super.getCapability(capability, facing);
+	@Override
+	public @org.jetbrains.annotations.Nullable IAxleHandler getAxleHandler(Direction dir){
+		if(dir == Direction.UP || dir == null){
+			return axleHandler;
+		}
+		return null;
 	}
 
 	@Override

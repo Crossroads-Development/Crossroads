@@ -2,20 +2,26 @@ package com.Da_Technomancer.crossroads.blocks.electric;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
+import com.Da_Technomancer.crossroads.api.electric.IEnergyCapable;
+import com.Da_Technomancer.crossroads.api.rotary.IAxleCapable;
+import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.api.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 
-public class DynamoTileEntity extends ModuleTE{
+import javax.annotation.Nullable;
+
+public class DynamoTileEntity extends ModuleTE implements IEnergyCapable, IAxleCapable{
 
 	public static final BlockEntityType<DynamoTileEntity> TYPE = CRTileEntity.createType(DynamoTileEntity::new, CRBlocks.dynamo);
 
@@ -53,58 +59,46 @@ public class DynamoTileEntity extends ModuleTE{
 
 		//Transfer FE
 		Direction facing = getBlockState().getValue(CRProperties.HORIZ_FACING);
-		BlockEntity neighbor = level.getBlockEntity(worldPosition.relative(facing.getOpposite()));
-		IEnergyStorage energyOpt;
-		if(neighbor != null && (energyOpt = neighbor.getCapability(ForgeCapabilities.ENERGY, facing)).isPresent()){
-			IEnergyStorage handler = energyOpt.orElseThrow(NullPointerException::new);
-			if(handler.canReceive()){
-				fe -= handler.receiveEnergy(fe, false);
+
+		BlockPos neighborPos = worldPosition.relative(facing.getOpposite());
+		IEnergyStorage energyHandler;
+		if((energyHandler = level.getCapability(Capabilities.EnergyStorage.BLOCK, neighborPos, facing)) != null){
+			if(energyHandler.canReceive()){
+				fe -= energyHandler.receiveEnergy(fe, false);
 				setChanged();
 			}
 		}
 	}
 
 	@Override
-	public void setBlockState(BlockState stateIn){
-		super.setBlockState(stateIn);
-		axleOpt.invalidate();
-		axleOpt = LazyOptional.of(() -> axleHandler);
-		feOpt.invalidate();
-		feOpt = LazyOptional.of(() -> energyHandler);
-	}
-
-	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		fe = nbt.getInt("charge");
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		nbt.putInt("charge", fe);
 
 	}
 
+	private final IEnergyStorage energyHandler = new DynamoEnergyHandler();
+
 	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		feOpt.invalidate();
+	@Nullable
+	public IAxleHandler getAxleHandler(Direction dir){
+		if(dir == null || dir == getBlockState().getValue(CRProperties.HORIZ_FACING)){
+			return axleHandler;
+		}
+		return null;
 	}
 
-	private final IEnergyStorage energyHandler = new DynamoEnergyHandler();
-	private IEnergyStorage feOpt = LazyOptional.of(() -> energyHandler);
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
-		if(cap == Capabilities.AXLE_CAPABILITY && (side == null || side == getBlockState().getValue(CRProperties.HORIZ_FACING))){
-			return (T) axleOpt;
+	public @Nullable IEnergyStorage getEnergyHandler(Direction dir){
+		if(dir == null || dir == getBlockState().getValue(CRProperties.HORIZ_FACING).getOpposite()){
+			return energyHandler;
 		}
-		if(cap == ForgeCapabilities.ENERGY && (side == null || side == getBlockState().getValue(CRProperties.HORIZ_FACING).getOpposite())){
-			return (T) feOpt;
-		}
-		return super.getCapability(cap, side);
+		return null;
 	}
 
 	private class DynamoEnergyHandler implements IEnergyStorage{

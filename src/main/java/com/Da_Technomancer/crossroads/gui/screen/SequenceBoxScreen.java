@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.api.templates.WidgetUtil;
 import com.Da_Technomancer.crossroads.blocks.technomancy.SequenceBoxTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.SequenceBoxContainer;
 import com.Da_Technomancer.essentials.Essentials;
+import com.Da_Technomancer.essentials.api.packets.SendNBTToTE;
 import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
@@ -210,6 +211,6 @@ public class SequenceBoxScreen extends AbstractContainerScreen<SequenceBoxContai
 			nbt.putFloat(i + "_val", RedstoneUtil.interpretFormulaString(menu.inputs.get(i)));
 			nbt.putString(i + "_str", menu.inputs.get(i));
 		}
-		CRPackets.sendPacketToServer(new SendNBTToServer(nbt, menu.pos));
+		CRPackets.sendPacketToServer(new SendNBTToTE(nbt, menu.pos));
 	}
 }

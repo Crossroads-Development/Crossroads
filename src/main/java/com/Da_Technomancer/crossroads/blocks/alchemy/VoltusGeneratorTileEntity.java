@@ -1,8 +1,9 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 import com.Da_Technomancer.crossroads.CRConfig;
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.alchemy.*;
+import com.Da_Technomancer.crossroads.api.electric.IEnergyCapable;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.api.templates.IInfoTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -10,6 +11,7 @@ import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
@@ -18,11 +20,13 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-public class VoltusGeneratorTileEntity extends BlockEntity implements ITickableTileEntity, IInfoTE{
+public class VoltusGeneratorTileEntity extends BlockEntity implements ITickableTileEntity, IInfoTE, IChemicalCapable, IEnergyCapable{
 
 	public static final BlockEntityType<VoltusGeneratorTileEntity> TYPE = CRTileEntity.createType(VoltusGeneratorTileEntity::new, CRBlocks.voltusGenerator);
 
@@ -30,6 +34,9 @@ public class VoltusGeneratorTileEntity extends BlockEntity implements ITickableT
 	private static final int FE_CAPACITY = 100_000;
 	private int voltusAmount = 0;
 	private int fe = 0;
+
+	private IChemicalHandler chemicalHandler = new AlchHandler();
+	private ElecHandler energyHandler = new ElecHandler();
 
 	public VoltusGeneratorTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state);
@@ -53,11 +60,10 @@ public class VoltusGeneratorTileEntity extends BlockEntity implements ITickableT
 		}
 
 		for(Direction dir : Direction.values()){
-			BlockEntity te = level.getBlockEntity(worldPosition.relative(dir));
-			IEnergyStorage energyOpt;
-			if(te != null && (energyOpt = te.getCapability(ForgeCapabilities.ENERGY, dir.getOpposite())).isPresent()){
-				IEnergyStorage storage = energyOpt.orElseThrow(NullPointerException::new);
-				int moved = storage.receiveEnergy(fe, false);
+			BlockPos relPos = worldPosition.relative(dir);
+			IEnergyStorage energyHandler;
+			if((energyHandler = level.getCapability(Capabilities.EnergyStorage.BLOCK, relPos, dir.getOpposite())) != null){
+				int moved = energyHandler.receiveEnergy(fe, false);
 				if(moved > 0){
 					fe -= moved;
 					setChanged();
@@ -67,39 +73,29 @@ public class VoltusGeneratorTileEntity extends BlockEntity implements ITickableT
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		voltusAmount = nbt.getInt("voltus");
 		fe = nbt.getInt("fe");
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		nbt.putInt("voltus", voltusAmount);
 		nbt.putInt("fe", fe);
 	}
 
 	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		chemOpt.invalidate();
-		feOpt.invalidate();
+	@Nullable
+	public IChemicalHandler getChemicalHandler(Direction dir){
+		return chemicalHandler;
 	}
 
-	private IChemicalHandler chemOpt = LazyOptional.of(AlchHandler::new);
-	private ElecHandler feOpt = LazyOptional.of(ElecHandler::new);
-
+	@Nullable
 	@Override
-	@SuppressWarnings("unchecked")
-	public <T> T getCapability(Capability<T> cap, Direction side){
-		if(cap == Capabilities.CHEMICAL_CAPABILITY){
-			return (T) chemOpt;
-		}
-		if(cap == ForgeCapabilities.ENERGY){
-			return (T) feOpt;
-		}
-		return super.getCapability(cap, side);
+	public IEnergyStorage getEnergyHandler(Direction dir){
+		return energyHandler;
 	}
 
 	private class ElecHandler implements IEnergyStorage{

@@ -11,7 +11,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 
-public class SendElytraBoostToServer extends ServerPacket{
+public class SendElytraBoostToServer extends ClientPacket{
 
 	public SendElytraBoostToServer(){
 

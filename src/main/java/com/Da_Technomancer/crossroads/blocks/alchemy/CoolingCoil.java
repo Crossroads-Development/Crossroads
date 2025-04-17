@@ -4,12 +4,16 @@ import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.api.ConfigUtil;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -32,6 +36,8 @@ import java.util.List;
 
 public class CoolingCoil extends BaseEntityBlock{
 
+	public static final MapCodec<CoolingCoil> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(Codec.BOOL.fieldOf("crystal").forGetter(CoolingCoil::isCrystal)).apply(instance, CoolingCoil::new));
+
 	private static final VoxelShape SHAPE_X = box(0, 4, 4, 16, 12, 12);
 	private static final VoxelShape SHAPE_Z = box(4, 4, 0, 12, 12, 16);
 
@@ -49,10 +55,19 @@ public class CoolingCoil extends BaseEntityBlock{
 		return new CoolingCoilTileEntity(pos, state, !crystal);
 	}
 
+	private boolean isCrystal(){
+		return crystal;
+	}
+
 	@Nullable
 	@Override
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> type){
 		return ITickableTileEntity.createTicker(type, CoolingCoilTileEntity.TYPE);
+	}
+
+	@Override
+	protected MapCodec<? extends BaseEntityBlock> codec(){
+		return CRBlocks.COOLING_COIL_TYPE.value();
 	}
 
 	@Override
@@ -98,8 +113,8 @@ public class CoolingCoil extends BaseEntityBlock{
 	}
 
 	@Override
-	public void appendHoverText(ItemStack p_49816_, @Nullable BlockGetter p_49817_, List<Component> tooltips, TooltipFlag p_49819_){
-		tooltips.add(Component.literal("DO NOT USE! This block is being removed; switch to thermal conduit instead."));
-		super.appendHoverText(p_49816_, p_49817_, tooltips, p_49819_);
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
+		tooltip.add(Component.literal("DO NOT USE! This block is being removed; switch to thermal conduit instead."));
+		super.appendHoverText(stack, context, tooltip, flag);
 	}
 }

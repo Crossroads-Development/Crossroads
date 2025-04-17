@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.rotary.mechanisms;
 
 import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.api.rotary.*;
 import com.Da_Technomancer.crossroads.items.CRItems;
@@ -24,6 +24,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
+import net.neoforged.neoforge.capabilities.BlockCapability;
 import org.joml.Quaternionf;
 
 import javax.annotation.Nonnull;
@@ -60,8 +61,8 @@ public class MechanismClutch extends MechanismAxle{
 	}
 
 	@Override
-	public boolean hasCap(Capability<?> cap, Direction capSide, IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis, MechanismTileEntity te){
-		return cap == Capabilities.AXLE_CAPABILITY && side == null && capSide.getAxis() == axis && (te.redstoneIn != 0 ^ inverted || capSide.getAxisDirection() == Direction.AxisDirection.NEGATIVE);
+	public boolean hasCap(BlockCapability<?, ?> cap, Direction capSide, IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis, MechanismTileEntity te){
+		return cap == CRCapabilities.AXLE_CAPABILITY && side == null && capSide.getAxis() == axis && (te.redstoneIn != 0 ^ inverted || capSide.getAxisDirection() == Direction.AxisDirection.NEGATIVE);
 	}
 
 	@Override
@@ -102,7 +103,7 @@ public class MechanismClutch extends MechanismAxle{
 
 			if(te.members[endDir.get3DDataValue()] != null){
 				//Do internal connection
-				if(te.members[endDir.get3DDataValue()].hasCap(Capabilities.AXLE_CAPABILITY, endDir, te.mats[endDir.get3DDataValue()], endDir, axis, te)){
+				if(te.members[endDir.get3DDataValue()].hasCap(CRCapabilities.AXLE_CAPABILITY, endDir, te.mats[endDir.get3DDataValue()], endDir, axis, te)){
 					te.axleHandlers[endDir.get3DDataValue()].propagate(masterIn, key, rotRatioIn, 0, handler.renderOffset());
 				}
 			}else{
@@ -110,12 +111,12 @@ public class MechanismClutch extends MechanismAxle{
 				BlockEntity endTE = te.getLevel().getBlockEntity(te.getBlockPos().relative(endDir));
 				Direction oEndDir = endDir.getOpposite();
 				if(endTE != null){
-					IAxisHandler axisOpt = endTE.getCapability(Capabilities.AXIS_CAPABILITY, oEndDir);
+					IAxisHandler axisOpt = endTE.getCapability(CRCapabilities.AXIS_CAPABILITY, oEndDir);
 					if(axisOpt.isPresent()){
 						axisOpt.orElseThrow(NullPointerException::new).trigger(masterIn, key);
 					}
 
-					IAxleHandler axleOpt = endTE.getCapability(Capabilities.AXLE_CAPABILITY, oEndDir);
+					IAxleHandler axleOpt = endTE.getCapability(CRCapabilities.AXLE_CAPABILITY, oEndDir);
 					if(axleOpt.isPresent()){
 						axleOpt.orElseThrow(NullPointerException::new).propagate(masterIn, key, handler.getRotationRatio(), 0, handler.renderOffset());
 					}

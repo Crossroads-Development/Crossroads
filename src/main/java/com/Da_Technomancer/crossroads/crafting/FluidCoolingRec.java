@@ -9,8 +9,8 @@ import com.google.gson.JsonObject;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
@@ -19,7 +19,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
 
-public class FluidCoolingRec implements IOptionalRecipe<Container>{
+public class FluidCoolingRec implements IOptionalRecipe<RecipeInput>{
 
 	private final ResourceLocation id;
 	private final String group;
@@ -72,7 +72,7 @@ public class FluidCoolingRec implements IOptionalRecipe<Container>{
 	}
 
 	@Override
-	public boolean matches(Container inv, Level worldIn){
+	public boolean matches(RecipeInput inv, Level worldIn){
 		return active && inv instanceof FluidCoolingChamberTileEntity && input.test(((FluidCoolingChamberTileEntity) inv).getFluid());
 	}
 
@@ -89,11 +89,6 @@ public class FluidCoolingRec implements IOptionalRecipe<Container>{
 	@Override
 	public ItemStack getToastSymbol(){
 		return new ItemStack(CRBlocks.fluidCoolingChamber);
-	}
-
-	@Override
-	public ResourceLocation getId(){
-		return id;
 	}
 
 	@Override
@@ -155,6 +150,19 @@ public class FluidCoolingRec implements IOptionalRecipe<Container>{
 				buffer.writeFloat(recipe.getMaxTemp());
 				buffer.writeFloat(recipe.getAddedHeat());
 			}
+		}
+	}
+
+	public class FluidCoolingRecInput implements RecipeInput{
+
+		@Override
+		public ItemStack getItem(int i){
+			return null;
+		}
+
+		@Override
+		public int size(){
+			return 0;
 		}
 	}
 }

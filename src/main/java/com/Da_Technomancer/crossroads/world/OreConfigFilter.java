@@ -8,6 +8,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.placement.PlacementContext;
 import net.minecraft.world.level.levelgen.placement.PlacementFilter;
 import net.minecraft.world.level.levelgen.placement.PlacementModifierType;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.HashMap;
 
@@ -17,19 +18,19 @@ import java.util.HashMap;
  */
 public class OreConfigFilter extends PlacementFilter{
 
-	private static final HashMap<String, ForgeConfigSpec.BooleanValue> configMap = new HashMap<>(3);
+	private static final HashMap<String, ModConfigSpec.BooleanValue> configMap = new HashMap<>(3);
 
 	protected static final Codec<OreConfigFilter> CODEC = RecordCodecBuilder.create((builder) ->
 			builder.group(Codec.STRING.fieldOf("config").forGetter(configFilter -> configFilter.configName))
 					.apply(builder, OreConfigFilter::new));
 
 
-	public static void registerConfig(String configName, ForgeConfigSpec.BooleanValue controllingConfig){
+	public static void registerConfig(String configName, ModConfigSpec.BooleanValue controllingConfig){
 		configMap.put(configName, controllingConfig);
 	}
 
 	private final String configName;
-	private final ForgeConfigSpec.BooleanValue config;//cache
+	private final ModConfigSpec.BooleanValue config;//cache
 
 	private OreConfigFilter(String configName){
 		this.configName = configName;

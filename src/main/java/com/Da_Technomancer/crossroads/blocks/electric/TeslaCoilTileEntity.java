@@ -2,16 +2,20 @@ package com.Da_Technomancer.crossroads.blocks.electric;
 
 import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.api.electric.IEnergyCapable;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.LeydenJar;
+import com.Da_Technomancer.essentials.api.BlockUtil;
+import com.Da_Technomancer.essentials.api.IItemCapable;
 import com.Da_Technomancer.essentials.api.IItemStorage;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import com.Da_Technomancer.essentials.api.packets.ILongReceiver;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Containers;
@@ -21,13 +25,14 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
-public class TeslaCoilTileEntity extends BlockEntity implements ITickableTileEntity, ILongReceiver, IItemStorage{
+public class TeslaCoilTileEntity extends BlockEntity implements ITickableTileEntity, ILongReceiver, IItemStorage, IEnergyCapable, IItemCapable{
 
 	public static final BlockEntityType<TeslaCoilTileEntity> TYPE = CRTileEntity.createType(TeslaCoilTileEntity::new, CRBlocks.teslaCoil);
 
@@ -37,24 +42,25 @@ public class TeslaCoilTileEntity extends BlockEntity implements ITickableTileEnt
 	public boolean redstone = false;
 	private ItemStack battery = ItemStack.EMPTY;
 
+	private IEnergyStorage energyHandlerIn = new EnergyHandlerIn();
+	private IEnergyStorage energyHandlerOut = new EnergyHandlerOut();
+	private IItemHandler itemHandler = new ItemHandler();
+
 	public TeslaCoilTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state);
 	}
 
-	private IEnergyStorage stackOpt;
+	private IEnergyStorage stackEnergyHandler;
 
 	@Nullable
 	private IEnergyStorage getBatteryHandler(){
 		if(battery.isEmpty()){
 			return null;
 		}
-		if(stackOpt == null || !stackOpt.isPresent()){
-			stackOpt = battery.getCapability(ForgeCapabilities.ENERGY, Direction.UP);
+		if(stackEnergyHandler == null){
+			stackEnergyHandler = battery.getCapability(Capabilities.EnergyStorage.ITEM);
 		}
-		if(stackOpt.isPresent()){
-			return stackOpt.orElseThrow(NullPointerException::new);
-		}
-		return null;
+		return stackEnergyHandler;
 	}
 
 	private boolean hasJar(){
@@ -75,7 +81,7 @@ public class TeslaCoilTileEntity extends BlockEntity implements ITickableTileEnt
 		if(!battery.isEmpty()){
 			ItemStack result = battery;
 			battery = ItemStack.EMPTY;
-			stackOpt = null;
+			stackEnergyHandler = null;
 			setChanged();
 			level.setBlock(worldPosition, getBlockState().setValue(CRProperties.ACTIVE, false), MiscUtil.BLOCK_FLAGS_NORMAL);
 			return result;
@@ -84,9 +90,9 @@ public class TeslaCoilTileEntity extends BlockEntity implements ITickableTileEnt
 	}
 
 	protected ItemStack addBattery(ItemStack newBattery){
-		if(battery.isEmpty() && newBattery.getCapability(ForgeCapabilities.ENERGY).isPresent()){
+		if(battery.isEmpty() && newBattery.getCapability(Capabilities.EnergyStorage.ITEM) != null){
 			battery = newBattery.split(1);
-			stackOpt = null;
+			stackEnergyHandler = null;
 			setTotalFE(getTotalFE());
 			setChanged();
 			level.setBlock(worldPosition, getBlockState().setValue(CRProperties.ACTIVE, true), MiscUtil.BLOCK_FLAGS_NORMAL);
@@ -173,11 +179,10 @@ public class TeslaCoilTileEntity extends BlockEntity implements ITickableTileEnt
 		int totalFE;
 		if(!redstone && (totalFE = getTotalFE()) > 0){
 			Direction facing = getBlockState().getValue(CRProperties.HORIZ_FACING);
-			BlockEntity te = level.getBlockEntity(worldPosition.relative(facing));
-			IEnergyStorage energyOpt;
-			if(te != null && (energyOpt = te.getCapability(ForgeCapabilities.ENERGY, facing.getOpposite())).isPresent()){
-				IEnergyStorage storage = energyOpt.orElseThrow(NullPointerException::new);
-				int moved = storage.receiveEnergy(totalFE, false);
+			BlockPos relPos = worldPosition.relative(facing);
+			IEnergyStorage energyHandler;
+			if((energyHandler = level.getCapability(Capabilities.EnergyStorage.BLOCK, relPos, facing.getOpposite())) != null){
+				int moved = energyHandler.receiveEnergy(totalFE, false);
 				if(moved > 0){
 					setTotalFE(totalFE - moved);
 				}
@@ -186,18 +191,18 @@ public class TeslaCoilTileEntity extends BlockEntity implements ITickableTileEnt
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		nbt.putInt("stored", storedSelf);
 		if(!battery.isEmpty()){
-			nbt.put("battery", battery.save(new CompoundTag()));
+			nbt.put("battery", BlockUtil.stackToNBT(battery, pRegistries));
 		}
 		nbt.putBoolean("reds", redstone);
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		storedSelf = nbt.getInt("stored");
 		redstone = nbt.getBoolean("reds");
 		if(nbt.contains("battery")){
@@ -213,8 +218,8 @@ public class TeslaCoilTileEntity extends BlockEntity implements ITickableTileEnt
 	}
 
 	@Override
-	public CompoundTag getUpdateTag(){
-		CompoundTag nbt = super.getUpdateTag();
+	public CompoundTag getUpdateTag(HolderLookup.Provider pRegistries){
+		CompoundTag nbt = super.getUpdateTag(pRegistries);
 		nbt.putInt("stored", getTotalFE());
 		nbt.putBoolean("reds", redstone);
 		nbt.putBoolean("from_client", true);//TODO remove: backwards compatibility
@@ -222,10 +227,9 @@ public class TeslaCoilTileEntity extends BlockEntity implements ITickableTileEnt
 	}
 
 	public void rotate(){
-		optIn.invalidate();
-		optIn = LazyOptional.of(EnergyHandlerIn::new);
-		optOut.invalidate();
-		optOut = LazyOptional.of(EnergyHandlerOut::new);
+		if(level != null){
+			level.invalidateCapabilities(getBlockPos());
+		}
 	}
 
 	@Override
@@ -233,27 +237,16 @@ public class TeslaCoilTileEntity extends BlockEntity implements ITickableTileEnt
 		Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), battery);
 	}
 
+	@Nullable
 	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		optIn.invalidate();
-		optOut.invalidate();
-		itemOpt.invalidate();
+	public IItemHandler getItemHandler(Direction direction){
+		return itemHandler;
 	}
 
-	private IEnergyStorage optIn = LazyOptional.of(EnergyHandlerIn::new);
-	private IEnergyStorage optOut = LazyOptional.of(EnergyHandlerOut::new);
-	private IItemHandler itemOpt = LazyOptional.of(ItemHandler::new);
-
-	@SuppressWarnings("unchecked")
-	public <T> T getCapability(Capability<T> cap, Direction side){
-		if(cap == ForgeCapabilities.ENERGY){
-			return (T) (side == getBlockState().getValue(CRProperties.HORIZ_FACING) ? optOut : optIn);
-		}
-		if(cap == ForgeCapabilities.ITEM_HANDLER){
-			return (T) itemOpt;
-		}
-		return super.getCapability(cap, side);
+	@Override
+	@Nullable
+	public IEnergyStorage getEnergyHandler(Direction dir){
+		return (dir == getBlockState().getValue(CRProperties.HORIZ_FACING) ? energyHandlerOut : energyHandlerIn);
 	}
 
 	protected class ItemHandler implements IItemHandler{
@@ -299,7 +292,7 @@ public class TeslaCoilTileEntity extends BlockEntity implements ITickableTileEnt
 
 		@Override
 		public boolean isItemValid(int slot, @NotNull ItemStack stack){
-			return slot == 0 && stack.getCapability(ForgeCapabilities.ENERGY, Direction.UP).isPresent();
+			return slot == 0 && stack.getCapability(Capabilities.EnergyStorage.ITEM) != null;
 		}
 	}
 

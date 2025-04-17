@@ -2,8 +2,8 @@ package com.Da_Technomancer.crossroads.blocks.witchcraft;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.Capabilities;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.api.witchcraft.EntityTemplate;
 import com.Da_Technomancer.crossroads.api.witchcraft.IPerishable;
@@ -14,6 +14,7 @@ import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.witchcraft.BloodSample;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -40,6 +41,9 @@ public class BloodCentrifugeTileEntity extends InventoryTE{
 
 	private int progress = 0;
 	private int deviation = 0;
+
+	private final IItemHandler itemHandler = new ItemHandler();
+
 
 	public BloodCentrifugeTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state, 4);//Input: 0, 1; Output: 2, 3
@@ -107,22 +111,22 @@ public class BloodCentrifugeTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		nbt.putInt("progress", progress);
 		nbt.putInt("deviation", deviation);
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		progress = nbt.getInt("progress");
 		deviation = nbt.getInt("deviation");
 	}
 
 	@Override
-	public CompoundTag getUpdateTag(){
-		CompoundTag nbt = super.getUpdateTag();
+	public CompoundTag getUpdateTag(HolderLookup.Provider pRegistries){
+		CompoundTag nbt = super.getUpdateTag(pRegistries);
 		nbt.putInt("progress", progress);
 		return nbt;
 	}
@@ -165,24 +169,18 @@ public class BloodCentrifugeTileEntity extends InventoryTE{
 		return new BloodCentrifugeContainer(id, playerInventory, createContainerBuf());
 	}
 
+	@Nullable
 	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		itemOpt.invalidate();
+	public IItemHandler getItemHandler(Direction direction){
+		return itemHandler;
 	}
 
-	private final IItemHandler itemOpt = LazyOptional.of(ItemHandler::new);
-
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
-		if(capability == ForgeCapabilities.ITEM_HANDLER){
-			return (T) itemOpt;
+	@Nullable
+	public IAxleHandler getAxleHandler(Direction dir){
+		if(dir == Direction.UP){
+			return axleHandler;
 		}
-		if(capability == Capabilities.AXLE_CAPABILITY && facing == Direction.UP){
-			return (T) axleOpt;
-		}
-
-		return super.getCapability(capability, facing);
+		return null;
 	}
 }

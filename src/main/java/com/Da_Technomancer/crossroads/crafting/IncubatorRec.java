@@ -14,13 +14,14 @@ import net.minecraft.util.GsonHelper;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 
-public class IncubatorRec implements IOptionalRecipe<Container>{
+public class IncubatorRec implements IOptionalRecipe<RecipeInput>{
 
 	private final ResourceLocation id;
 	private final String group;
@@ -49,11 +50,12 @@ public class IncubatorRec implements IOptionalRecipe<Container>{
 	}
 
 	@Override
-	public boolean matches(Container inv, Level worldIn){
-		return active && inv instanceof IncubatorTileEntity incubator && mainInput.test(incubator.getItem(0)) && secondaryInput.test(incubator.getItem(1));
+	public boolean matches(RecipeInput input, Level worldIn){
+		return active && input instanceof IncubatorTileEntity incubator && mainInput.test(incubator.getItem(0)) && secondaryInput.test(incubator.getItem(1));
 	}
 
 	/**
+	 * TODO: what the hell is this? And should it be using RecipeInput instead of Container now
 	 * Use this instead of getResultItem
 	 * It is safe to modify the returned itemstack
 	 * @param inv Container with the ingredient item in slot 0
@@ -89,11 +91,6 @@ public class IncubatorRec implements IOptionalRecipe<Container>{
 	@Override
 	public ItemStack getToastSymbol(){
 		return new ItemStack(CRBlocks.embryoLab);
-	}
-
-	@Override
-	public ResourceLocation getId(){
-		return id;
 	}
 
 	@Override

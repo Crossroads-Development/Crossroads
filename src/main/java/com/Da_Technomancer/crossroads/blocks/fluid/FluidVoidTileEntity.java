@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.blocks.fluid;
 
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
+import com.Da_Technomancer.essentials.api.IFluidCapable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -14,7 +15,7 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class FluidVoidTileEntity extends BlockEntity{
+public class FluidVoidTileEntity extends BlockEntity implements IFluidCapable{
 
 	public static final BlockEntityType<FluidVoidTileEntity> TYPE = CRTileEntity.createType(FluidVoidTileEntity::new, CRBlocks.fluidVoid);
 
@@ -22,23 +23,15 @@ public class FluidVoidTileEntity extends BlockEntity{
 		super(TYPE, pos, state);
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
-		if(capability == ForgeCapabilities.FLUID_HANDLER){
-			return (T) mainOpt;
-		}
+	private final IFluidHandler mainOpt = new VoidHandler();
 
-		return super.getCapability(capability, facing);
-	}
 
 	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		mainOpt.invalidate();
+	@Nullable
+	public IFluidHandler getFluidHandler(Direction direction){
+		return mainOpt;
 	}
 
-	private final IFluidHandler mainOpt = LazyOptional.of(VoidHandler::new);
 
 	private static class VoidHandler implements IFluidHandler{
 

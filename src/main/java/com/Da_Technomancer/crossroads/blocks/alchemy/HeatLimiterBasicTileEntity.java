@@ -1,8 +1,9 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
+import com.Da_Technomancer.crossroads.api.heat.IHeatCapable;
 import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.api.templates.IInfoTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -12,6 +13,7 @@ import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import com.Da_Technomancer.essentials.api.packets.INBTReceiver;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -28,7 +30,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-public class HeatLimiterBasicTileEntity extends BlockEntity implements ITickableTileEntity, IInfoTE, MenuProvider, INBTReceiver{
+public class HeatLimiterBasicTileEntity extends BlockEntity implements ITickableTileEntity, IInfoTE, MenuProvider, INBTReceiver, IHeatCapable{
 
 	public static final BlockEntityType<HeatLimiterBasicTileEntity> TYPE = CRTileEntity.createType(HeatLimiterBasicTileEntity::new, CRBlocks.heatLimiterBasic);
 
@@ -38,6 +40,9 @@ public class HeatLimiterBasicTileEntity extends BlockEntity implements ITickable
 
 	public float setting = 0;
 	public String expression = "0";
+
+	private IHeatHandler heatHandlerIn = new HeatHandler(true);
+	private IHeatHandler heatHandlerOut = new HeatHandler(false);
 
 	public HeatLimiterBasicTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state);
@@ -106,8 +111,8 @@ public class HeatLimiterBasicTileEntity extends BlockEntity implements ITickable
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		nbt.putBoolean("init_heat", init);
 		nbt.putDouble("heat_in", heatIn);
 		nbt.putDouble("heat_out", heatOut);
@@ -116,8 +121,8 @@ public class HeatLimiterBasicTileEntity extends BlockEntity implements ITickable
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		init = nbt.getBoolean("init_heat");
 		heatIn = nbt.getDouble("heat_in");
 		heatOut = nbt.getDouble("heat_out");
@@ -128,35 +133,21 @@ public class HeatLimiterBasicTileEntity extends BlockEntity implements ITickable
 	@Override
 	public void setBlockState(BlockState stateIn){
 		super.setBlockState(stateIn);
-		heatInOpt.invalidate();
-		heatOutOpt.invalidate();
-		heatInOpt = LazyOptional.of(() -> new HeatHandler(true));
-		heatOutOpt = LazyOptional.of(() -> new HeatHandler(false));
+		heatHandlerIn = new HeatHandler(true);
+		heatHandlerOut = new HeatHandler(false);
 	}
 
 	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		heatInOpt.invalidate();
-		heatOutOpt.invalidate();
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
+	@Nullable
+	public IHeatHandler getHeatHandler(Direction dir){
 		Direction facing = getBlockState().getValue(CRProperties.FACING);
-		if(cap == Capabilities.HEAT_CAPABILITY){
-			if(side == null || side == facing.getOpposite()){
-				return (T) heatInOpt;
-			}else if(side == facing){
-				return (T) heatOutOpt;
-			}
+		if(dir == null || dir == facing.getOpposite()){
+			return heatHandlerIn;
+		}else if(dir == facing){
+			return heatHandlerOut;
 		}
-		return super.getCapability(cap, side);
+		return null;
 	}
-
-	private IHeatHandler heatInOpt = LazyOptional.of(() -> new HeatHandler(true));
-	private IHeatHandler heatOutOpt = LazyOptional.of(() -> new HeatHandler(false));
 
 	@Override
 	public Component getDisplayName(){

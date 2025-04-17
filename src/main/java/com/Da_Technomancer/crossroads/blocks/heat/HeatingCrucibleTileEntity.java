@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.blocks.heat;
 
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.Capabilities;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
+import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -14,20 +14,23 @@ import com.Da_Technomancer.essentials.api.BlockUtil;
 import com.Da_Technomancer.essentials.api.packets.INBTReceiver;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
@@ -53,6 +56,8 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements INBTReceiv
 	@Nullable
 	private ResourceLocation activeText = null;
 	private Integer col = null;//Color applied to the liquid texture
+
+	private final IItemHandler itemHandler = new ItemHandler();
 
 	public HeatingCrucibleTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state, 1);
@@ -130,9 +135,9 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements INBTReceiv
 			}else{
 				progress = Math.min(REQUIRED, progress + USAGE * (tier + 1));
 				if(progress >= REQUIRED){
-					Optional<CrucibleRec> recOpt = level.getRecipeManager().getRecipeFor(CRRecipes.CRUCIBLE_TYPE, this, level);
+					Optional<RecipeHolder<CrucibleRec>> recOpt = level.getRecipeManager().getRecipeFor(CRRecipes.CRUCIBLE_TYPE, this, level);
 					if(recOpt.isPresent()){
-						FluidStack created = recOpt.get().getOutput();
+						FluidStack created = recOpt.get().value().getOutput();
 						if(fluidProps[0].capacity - fluids[0].getAmount() >= created.getAmount() && (fluids[0].isEmpty() || BlockUtil.sameFluid(fluids[0], created))){
 							progress = 0;
 							if(fluids[0].isEmpty()){
@@ -154,8 +159,8 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements INBTReceiv
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		renderFluid = FluidStack.loadFluidStackFromNBT(nbt.getCompound("render_fluid"));
 		if(nbt.getBoolean("is_client")){
 			updateRendering();
@@ -164,44 +169,42 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements INBTReceiv
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
-		nbt.put("render_fluid", renderFluid.writeToNBT(new CompoundTag()));
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
+		nbt.put("render_fluid", BlockUtil.stackToNBT(renderFluid, pRegistries));
 		nbt.putBoolean("is_client", true);
 		nbt.putInt("prog", progress);
 	}
 
 	@Override
-	public CompoundTag getUpdateTag(){
-		CompoundTag nbt = super.getUpdateTag();
-		nbt.put("render_fluid", renderFluid.writeToNBT(new CompoundTag()));
+	public CompoundTag getUpdateTag(HolderLookup.Provider pRegistries){
+		CompoundTag nbt = super.getUpdateTag(pRegistries);
+		nbt.put("render_fluid", BlockUtil.stackToNBT(renderFluid, pRegistries));
 		return nbt;
 	}
 
+	@Nullable
 	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		itemOpt.invalidate();
+	public IItemHandler getItemHandler(Direction direction){
+		return itemHandler;
 	}
 
-	private final IItemHandler itemOpt = LazyOptional.of(ItemHandler::new);
-
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
-		if(capability == ForgeCapabilities.FLUID_HANDLER && facing != Direction.UP){
-			return (T) globalFluidOpt;
+	@Nullable
+	public IFluidHandler getFluidHandler(Direction dir){
+		if(dir != Direction.UP){
+			return globalFluidHandler;
 		}
+		return null;
+	}
 
-		if(capability == Capabilities.HEAT_CAPABILITY && facing != Direction.UP){
-			return (T) heatOpt;
+	@Override
+	@Nullable
+	public IHeatHandler getHeatHandler(Direction dir){
+		if(dir != Direction.UP){
+			return heatHandler;
 		}
-
-		if(capability == ForgeCapabilities.ITEM_HANDLER){
-			return (T) itemOpt;
-		}
-
-		return super.getCapability(capability, facing);
+		return null;
 	}
 
 	@Override
@@ -211,7 +214,7 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements INBTReceiv
 
 	@Override
 	public boolean canPlaceItem(int index, ItemStack stack){
-		return index == 0 && level.getRecipeManager().getRecipeFor(CRRecipes.CRUCIBLE_TYPE, new SimpleContainer(stack), level).isPresent();
+		return index == 0 && level.getRecipeManager().getRecipeFor(CRRecipes.CRUCIBLE_TYPE, new SingleRecipeInput(stack), level).isPresent();
 	}
 
 	@Override

@@ -1,8 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.witchcraft;
 
 import com.Da_Technomancer.crossroads.CRConfig;
-import com.Da_Technomancer.crossroads.api.Capabilities;
-import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.api.witchcraft.IPerishable;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -13,12 +12,14 @@ import com.Da_Technomancer.crossroads.gui.container.IncubatorContainer;
 import com.Da_Technomancer.essentials.api.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -42,6 +43,8 @@ public class IncubatorTileEntity extends InventoryTE{
 	private int targetTemp = 0;//Target temperature will be between (MIN_TEMP + MARGIN) and (MAX_TEMP - MARGIN), inclusive, once initialized
 
 	public static final BlockEntityType<IncubatorTileEntity> TYPE = CRTileEntity.createType(IncubatorTileEntity::new, CRBlocks.incubator);
+
+	private IItemHandler itemHandler = new ItemHandler();
 
 	public IncubatorTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state, 3);
@@ -96,9 +99,9 @@ public class IncubatorTileEntity extends InventoryTE{
 			}
 		}
 
-		Optional<IncubatorRec> recipeOpt = level.getRecipeManager().getRecipeFor(CRRecipes.INCUBATOR_TYPE, this, level);
+		Optional<RecipeHolder<IncubatorRec>> recipeOpt = level.getRecipeManager().getRecipeFor(CRRecipes.INCUBATOR_TYPE, this, level);
 		if(recipeOpt.isPresent()){
-			ItemStack toCreate = recipeOpt.get().getCreatedItem(this, level);
+			ItemStack toCreate = recipeOpt.get().value().getCreatedItem(this, level);
 			//Check that we have the other ingredient, and that there is space for the output
 			if((inventory[2].isEmpty() || BlockUtil.sameItem(inventory[2], toCreate) && toCreate.getCount() + inventory[2].getCount() <= toCreate.getMaxStackSize())){
 				validRecipe = true;
@@ -133,15 +136,15 @@ public class IncubatorTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		targetTemp = nbt.getInt("target");
 		progress = nbt.getDouble("progress");
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		nbt.putInt("target", targetTemp);
 		nbt.putDouble("progress", progress);
 	}
@@ -176,22 +179,14 @@ public class IncubatorTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		itemOpt.invalidate();
+	@Nullable
+	public IHeatHandler getHeatHandler(Direction dir){
+		return heatHandler;
 	}
 
-	private IItemHandler itemOpt = LazyOptional.of(ItemHandler::new);
-
-	@SuppressWarnings("unchecked")
+	@Nullable
 	@Override
-	public <T> T getCapability(Capability<T> capability, Direction facing){
-		if(capability == Capabilities.HEAT_CAPABILITY){
-			return (T) heatOpt;
-		}
-		if(capability == ForgeCapabilities.ITEM_HANDLER){
-			return (T) itemOpt;
-		}
-		return super.getCapability(capability, facing);
+	public IItemHandler getItemHandler(Direction direction){
+		return itemHandler;
 	}
 }

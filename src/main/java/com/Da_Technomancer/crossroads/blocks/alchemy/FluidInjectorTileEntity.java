@@ -1,7 +1,8 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.alchemy.EnumTransferMode;
+import com.Da_Technomancer.crossroads.api.alchemy.IChemicalHandler;
 import com.Da_Technomancer.crossroads.api.alchemy.ReagentHolderTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
@@ -13,6 +14,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.apache.commons.lang3.tuple.Pair;
 import org.joml.Vector3f;
+
+import javax.annotation.Nullable;
 
 public class FluidInjectorTileEntity extends ReagentHolderTE{
 
@@ -34,25 +37,21 @@ public class FluidInjectorTileEntity extends ReagentHolderTE{
 	}
 
 	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		fluidOpt.invalidate();
+	@Nullable
+	public IChemicalHandler getChemicalHandler(Direction dir){
+		if(dir == null || dir == Direction.DOWN){
+			return chemHandler;
+		}
+		return null;
 	}
 
-	private final IFluidHandler fluidOpt = LazyOptional.of(this::getInternalFluidHandler);
-
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
-		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || side == Direction.DOWN)){
-			return (T) chemOpt;
+	@Nullable
+	public IFluidHandler getFluidHandler(Direction dir){
+		if(dir == null || dir == Direction.UP){
+			return getInternalFluidHandler();
 		}
-		if(cap == ForgeCapabilities.FLUID_HANDLER){
-			if(side == null || side == Direction.UP){
-				return (T) fluidOpt;
-			}
-		}
-		return super.getCapability(cap, side);
+		return null;
 	}
 
 	@Override

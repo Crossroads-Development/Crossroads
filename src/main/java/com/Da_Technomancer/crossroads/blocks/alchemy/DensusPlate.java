@@ -4,6 +4,9 @@ import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.api.ConfigUtil;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -28,7 +31,11 @@ import javax.annotation.Nullable;
 
 public class DensusPlate extends BaseEntityBlock{
 
+	public static final MapCodec<DensusPlate> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(Codec.BOOL.fieldOf("anti").forGetter(DensusPlate::isAntiDensus)).apply(instance, DensusPlate::new));
+
 	private static final VoxelShape[][] SHAPES = new VoxelShape[4][6];
+
+	private boolean antiDensus;
 
 	static{
 		for(int i = 0; i < 4; i++){
@@ -46,7 +53,12 @@ public class DensusPlate extends BaseEntityBlock{
 		super(CRBlocks.getRockProperty());
 		String name = anti ? "anti_densus_plate" : "densus_plate";
 		CRBlocks.queueForRegister(name, this);
+		antiDensus = anti;
 		registerDefaultState(defaultBlockState().setValue(CRProperties.LAYERS, 1));
+	}
+
+	public boolean isAntiDensus(){
+		return antiDensus;
 	}
 
 	@Override
@@ -87,6 +99,11 @@ public class DensusPlate extends BaseEntityBlock{
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder){
 		builder.add(CRProperties.FACING, CRProperties.LAYERS);
+	}
+
+	@Override
+	protected MapCodec<? extends BaseEntityBlock> codec(){
+		return CRBlocks.DENSUS_PLATE_TYPE.value();
 	}
 
 	@Override

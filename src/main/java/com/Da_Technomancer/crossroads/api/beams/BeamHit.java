@@ -9,6 +9,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.capabilities.BlockCapability;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -180,25 +181,27 @@ public class BeamHit{
 	}
 
 	@Nullable
-	public <T> T getEndCapability(Capability<T> capability){
+	public <T, C> T getEndCapability(BlockCapability<T, C> capability){
+		//TODO: should probably accept `C context` as a param here - though this method presumes the context is
+		// a direction. Which isn't unfair... if this isn't used outside this class, it should be private and specify
+		// C instanceof Direction
 		return getEndCapability(capability, true);
 	}
 
 	@Nullable
-	public <T> T getEndCapability(Capability<T> capability, boolean allowNull){
-		BlockEntity te = getEndBlockEntity();
-		if(te == null){
-			return null;
-		}
+	public <T, C> T getEndCapability(BlockCapability<T, C> capability, boolean allowNull){
+		BlockPos blockPos = getPos();
+
+
 		//Try hit face first
-		T opt = te.getCapability(capability, getDirection());
-		if(opt.isPresent()){
-			return opt.orElseThrow(NullPointerException::new);
+		T handler = world.getCapability(capability, blockPos, (C) getDirection());
+		if(handler != null){
+			return handler;
 		}else if(allowNull){
 			//Try the null side as a fallback
-			opt = te.getCapability(capability, null);
-			if(opt.isPresent()){
-				return opt.orElseThrow(NullPointerException::new);
+			handler = world.getCapability(capability, blockPos, null);
+			if(handler != null){
+				return handler;
 			}
 		}
 		return null;

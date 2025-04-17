@@ -8,7 +8,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 
-public class SendBeamItemToServer extends ServerPacket{
+public class SendBeamItemToServer extends ClientPacket{
 
 	public byte[] newSetting;
 

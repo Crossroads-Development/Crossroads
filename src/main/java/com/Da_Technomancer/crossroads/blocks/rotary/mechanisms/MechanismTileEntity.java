@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.rotary.mechanisms;
 
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.crossroads.api.rotary.*;
 import com.Da_Technomancer.crossroads.api.templates.IInfoTE;
@@ -13,6 +13,7 @@ import com.Da_Technomancer.essentials.api.packets.INBTReceiver;
 import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
@@ -29,7 +30,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-public class MechanismTileEntity extends BlockEntity implements ITickableTileEntity, ILongReceiver, INBTReceiver, IInfoTE{
+public class MechanismTileEntity extends BlockEntity implements ITickableTileEntity, ILongReceiver, INBTReceiver, IInfoTE, IAxleCapable, ICogCapable{
 
 	public static final BlockEntityType<MechanismTileEntity> TYPE = CRTileEntity.createType(MechanismTileEntity::new, CRBlocks.mechanism);
 
@@ -114,8 +115,8 @@ public class MechanismTileEntity extends BlockEntity implements ITickableTileEnt
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 
 		// members
 		for(int i = 0; i < 7; i++){
@@ -138,8 +139,8 @@ public class MechanismTileEntity extends BlockEntity implements ITickableTileEnt
 	}
 
 	@Override
-	public CompoundTag getUpdateTag(){
-		CompoundTag nbt = super.getUpdateTag();
+	public CompoundTag getUpdateTag(HolderLookup.Provider pRegistries){
+		CompoundTag nbt = super.getUpdateTag(pRegistries);
 		for(int i = 0; i < 7; i++){
 			if(members[i] != null && mats[i] != null){//Sanity check. mats[i] should never be null if members[i] isn't
 				nbt.putInt("[" + i + "]memb", MECHANISMS.indexOf(members[i]));
@@ -162,8 +163,8 @@ public class MechanismTileEntity extends BlockEntity implements ITickableTileEnt
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 
 		if(nbt.contains("[6]memb") && nbt.contains("[6]mat")){
 			axleAxis = Direction.Axis.values()[nbt.getInt("axis")];
@@ -271,41 +272,34 @@ public class MechanismTileEntity extends BlockEntity implements ITickableTileEnt
 	protected final SidedAxleHandler[] axleHandlers = {new SidedAxleHandler(0), new SidedAxleHandler(1), new SidedAxleHandler(2), new SidedAxleHandler(3), new SidedAxleHandler(4), new SidedAxleHandler(5), new SidedAxleHandler(6)};
 
 	@SuppressWarnings("unchecked")
-	private final IAxleHandler[] axleOpts = new LazyOptional[] {LazyOptional.of(() -> axleHandlers[0]), LazyOptional.of(() -> axleHandlers[1]), LazyOptional.of(() -> axleHandlers[2]), LazyOptional.of(() -> axleHandlers[3]), LazyOptional.of(() -> axleHandlers[4]), LazyOptional.of(() -> axleHandlers[5]), LazyOptional.of(() -> axleHandlers[6])};
-	@SuppressWarnings("unchecked")
-	private final ICogHandler[] cogOpts = new LazyOptional[] {LazyOptional.of(() -> new SidedCogHandler(0)), LazyOptional.of(() -> new SidedCogHandler(1)), LazyOptional.of(() -> new SidedCogHandler(2)), LazyOptional.of(() -> new SidedCogHandler(3)), LazyOptional.of(() -> new SidedCogHandler(4)), LazyOptional.of(() -> new SidedCogHandler(5))};
+	private final ICogHandler[] cogHandlers = new ICogHandler[] {new SidedCogHandler(0), new SidedCogHandler(1), new SidedCogHandler(2), new SidedCogHandler(3), new SidedCogHandler(4), new SidedCogHandler(5)};
 
+	@Nullable
 	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		for(int i = 0; i < 6; i++){
-			cogOpts[i].invalidate();
-			axleOpts[i].invalidate();
+	public ICogHandler getCogHandler(Direction dir){
+		if(dir != null){
+			if(members[dir.get3DDataValue()] != null && members[dir.get3DDataValue()].hasCap(CRCapabilities.COG_CAPABILITY, dir, mats[dir.get3DDataValue()], dir, getAxleAxis(), this)){
+				return cogHandlers[dir.get3DDataValue()];
+			}else{
+				return null;
+			}
 		}
-		axleOpts[6].invalidate();//cogOpts is length 6, axleOpts is length 7
+		return null;
 	}
 
-	@SuppressWarnings("unchecked")
+	@Nullable
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
-		if(capability == Capabilities.COG_CAPABILITY && facing != null){
-			if(members[facing.get3DDataValue()] != null && members[facing.get3DDataValue()].hasCap(capability, facing, mats[facing.get3DDataValue()], facing, getAxleAxis(), this)){
-				return (T) cogOpts[facing.get3DDataValue()];
-			}else{
-				return LazyOptional.empty();
-			}
-		}
-		if(capability == Capabilities.AXLE_CAPABILITY && facing != null){
-			if(members[facing.get3DDataValue()] == null && getAxleAxis() == facing.getAxis() && members[6] != null){
+	public IAxleHandler getAxleHandler(Direction dir){
+		if(dir != null){
+			if(members[dir.get3DDataValue()] == null && getAxleAxis() == dir.getAxis() && members[6] != null){
 				//Connect to axle
-				return members[6].hasCap(capability, facing, mats[6], null, getAxleAxis(), this) ? (T) axleOpts[6] : LazyOptional.empty();
+				return members[6].hasCap(CRCapabilities.AXLE_CAPABILITY, dir, mats[6], null, getAxleAxis(), this) ? axleHandlers[6] : null;
 			}else{
 				//Connect to gear on that side
-				return members[facing.get3DDataValue()] != null && members[facing.get3DDataValue()].hasCap(capability, facing, mats[facing.get3DDataValue()], facing, getAxleAxis(), this) ? (T) axleOpts[facing.get3DDataValue()] : LazyOptional.empty();
+				return members[dir.get3DDataValue()] != null && members[dir.get3DDataValue()].hasCap(CRCapabilities.AXLE_CAPABILITY, dir, mats[dir.get3DDataValue()], dir, getAxleAxis(), this) ? axleHandlers[dir.get3DDataValue()] : null;
 			}
 		}
-
-		return super.getCapability(capability, facing);
+		return null;
 	}
 
 	public Direction.Axis getAxleAxis(){

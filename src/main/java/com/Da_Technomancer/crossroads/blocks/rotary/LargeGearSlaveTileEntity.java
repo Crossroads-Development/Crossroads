@@ -1,18 +1,17 @@
 package com.Da_Technomancer.crossroads.blocks.rotary;
 
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.Capabilities;
-import com.Da_Technomancer.crossroads.api.rotary.IAxisHandler;
-import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
-import com.Da_Technomancer.crossroads.api.rotary.ICogHandler;
-import com.Da_Technomancer.crossroads.api.rotary.RotaryUtil;
+import com.Da_Technomancer.crossroads.api.rotary.*;
 import com.Da_Technomancer.crossroads.api.templates.IInfoTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -23,7 +22,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-public class LargeGearSlaveTileEntity extends BlockEntity implements IInfoTE{
+public class LargeGearSlaveTileEntity extends BlockEntity implements IInfoTE, ICogCapable{
 
 	public static final BlockEntityType<LargeGearSlaveTileEntity> TYPE = CRTileEntity.createType(LargeGearSlaveTileEntity::new, CRBlocks.largeGearSlave);
 
@@ -33,6 +32,8 @@ public class LargeGearSlaveTileEntity extends BlockEntity implements IInfoTE{
 
 	public BlockPos masterPos;//Defined relative to this block's position
 	private Direction facing = null;
+
+	private final ICogHandler cogHandler = new CogHandler();
 
 	protected Direction getFacing(){
 		if(facing == null){
@@ -49,7 +50,7 @@ public class LargeGearSlaveTileEntity extends BlockEntity implements IInfoTE{
 
 	@Override
 	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
-		IAxleHandler axle = handler.getAxle();
+		IAxleHandler axle = cogHandler.getAxle();
 		if(axle == null){
 			return;
 		}
@@ -75,8 +76,8 @@ public class LargeGearSlaveTileEntity extends BlockEntity implements IInfoTE{
 	}
 
 	@Override
-	public CompoundTag getUpdateTag(){
-		CompoundTag nbt = super.getUpdateTag();
+	public CompoundTag getUpdateTag(HolderLookup.Provider pRegistries){
+		CompoundTag nbt = super.getUpdateTag(pRegistries);
 		if(masterPos != null){
 			nbt.putLong("mast", masterPos.asLong());
 		}
@@ -84,36 +85,26 @@ public class LargeGearSlaveTileEntity extends BlockEntity implements IInfoTE{
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		this.masterPos = BlockPos.of(nbt.getLong("mast"));
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		if(masterPos != null){
 			nbt.putLong("mast", masterPos.asLong());
 		}
 	}
 
 	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		cogOpt.invalidate();
-	}
-
-	private final ICogHandler handler = new CogHandler();
-	private final ICogHandler cogOpt = LazyOptional.of(() -> handler);
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
-		if(capability == Capabilities.COG_CAPABILITY && isEdge() && getFacing() == facing){
-			return (T) cogOpt;
-		}else{
-			return super.getCapability(capability, facing);
+	@Nullable
+	public ICogHandler getCogHandler(Direction dir){
+		if(isEdge() && getFacing() == dir){
+			return cogHandler;
 		}
+		return null;
 	}
 
 	private class CogHandler implements ICogHandler{
@@ -130,13 +121,13 @@ public class LargeGearSlaveTileEntity extends BlockEntity implements IInfoTE{
 
 		@Override
 		public IAxleHandler getAxle(){
-			if(masterPos == null){
+			if(masterPos == null || level == null){
 				return null;
 			}
 			BlockEntity te = level.getBlockEntity(worldPosition.offset(masterPos));
 			if(te instanceof LargeGearMasterTileEntity){
-				IAxleHandler axleOpt = te.getCapability(Capabilities.AXLE_CAPABILITY, getFacing());
-				return axleOpt.isPresent() ? axleOpt.orElseThrow(NullPointerException::new) : null;
+				return level.getCapability(CRCapabilities.AXLE_CAPABILITY, te.getBlockPos(), te.getBlockState(), te, getFacing());
+
 			}
 			return null;
 		}

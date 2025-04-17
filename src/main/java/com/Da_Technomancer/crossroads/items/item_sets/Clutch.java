@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.items.item_sets;
 import com.Da_Technomancer.crossroads.api.rotary.IMechanism;
 import com.Da_Technomancer.crossroads.blocks.rotary.mechanisms.MechanismTileEntity;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -20,8 +21,8 @@ public class Clutch extends Axle{
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag advanced){
-		super.appendHoverText(stack, world, tooltip, advanced);
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
+		super.appendHoverText(stack, context, tooltip, flag);
 		tooltip.add(Component.translatable("tt.crossroads.clutch.redstone"));
 	}
 

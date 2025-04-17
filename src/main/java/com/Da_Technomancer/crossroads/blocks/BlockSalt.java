@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.entity.CRMobDamage;
 import com.Da_Technomancer.essentials.blocks.FertileSoil;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -15,6 +16,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
@@ -108,6 +110,11 @@ public class BlockSalt extends FallingBlock{
 	}
 
 	@Override
+	protected MapCodec<? extends FallingBlock> codec(){
+		return CRBlocks.BLOCK_SALT_TYPE.value();
+	}
+
+	@Override
 	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, RandomSource rand){
 		if(worldIn.isClientSide){
 			return;
@@ -126,7 +133,7 @@ public class BlockSalt extends FallingBlock{
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag advanced){
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
 		tooltip.add(Component.translatable("tt.crossroads.salt_block"));
 		tooltip.add(Component.translatable("tt.crossroads.salt_block.quip").setStyle(MiscUtil.TT_QUIP));
 	}

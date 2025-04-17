@@ -1,7 +1,8 @@
 package com.Da_Technomancer.crossroads.blocks.heat;
 
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
+import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.api.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
@@ -10,6 +11,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+
+import javax.annotation.Nullable;
 
 
 public class HeatReservoirTileEntity extends ModuleTE{
@@ -37,13 +40,10 @@ public class HeatReservoirTileEntity extends ModuleTE{
 		return nbt;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, Direction facing){
-		if(capability == Capabilities.HEAT_CAPABILITY){
-			return (T) heatOpt;
-		}
-		return super.getCapability(capability, facing);
+	@Nullable
+	public IHeatHandler getHeatHandler(Direction dir){
+		return heatHandler;
 	}
 
 	private class MassiveHeatHandler extends HeatHandler{

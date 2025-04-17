@@ -2,8 +2,9 @@ package com.Da_Technomancer.crossroads.blocks.rotary;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.rotary.IAxisHandler;
+import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.api.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -13,21 +14,24 @@ import com.Da_Technomancer.crossroads.crafting.StampMillRec;
 import com.Da_Technomancer.crossroads.gui.container.StampMillContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 
 import net.neoforged.neoforge.items.IItemHandler;
+import org.apache.logging.log4j.core.jmx.Server;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -43,6 +47,8 @@ public class StampMillTileEntity extends InventoryTE{
 	public static final double PROGRESS_PER_RADIAN = 20D;//Energy to consume per radian the internal gear turns
 	private double progress = 0;
 	private int timer = 0;
+	private final IItemHandler itemHandler = new ItemHandler();
+
 
 	public StampMillTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state, 2);
@@ -112,10 +118,10 @@ public class StampMillTileEntity extends InventoryTE{
 		progress = 0;
 		timer = 0;
 		level.playLocalSound(worldPosition.getX() + 0.5, worldPosition.getY() + 1, worldPosition.getZ() + 0.5, SoundEvents.ANVIL_PLACE, SoundSource.BLOCKS, 1, level.random.nextFloat(), true);
-		Optional<StampMillRec> recOpt = level.getRecipeManager().getRecipeFor(CRRecipes.STAMP_MILL_TYPE, this, level);
+		Optional<RecipeHolder<StampMillRec>> recOpt = level.getRecipeManager().getRecipeFor(CRRecipes.STAMP_MILL_TYPE, this, level);
 		ItemStack produced;
 		if(recOpt.isPresent()){
-			produced = recOpt.get().getResultItem();
+			produced = recOpt.get().value().getResultItem();
 			produced = produced.copy();
 		}else{
 			produced = inventory[0].copy();
@@ -132,47 +138,31 @@ public class StampMillTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt){
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
+		super.saveAdditional(nbt, pRegistries);
 		nbt.putDouble("prog", progress);
 		nbt.putInt("timer", timer);
 	}
 
 	@Override
-	public void load(CompoundTag nbt){
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
+		super.loadAdditional(nbt, registries);
 		progress = nbt.getDouble("prog");
 		timer = nbt.getInt("timer");
 	}
 
 	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		itemOpt.invalidate();
-	}
-
-	@Override
 	public void setBlockState(BlockState stateIn){
 		super.setBlockState(stateIn);
-		axleOpt.invalidate();
-		axleOpt = LazyOptional.of(() -> axleHandler);
 	}
 
-	private final IItemHandler itemOpt = LazyOptional.of(ItemHandler::new);
-
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
-		if(cap == ForgeCapabilities.ITEM_HANDLER){
-			return (T) itemOpt;
+	@Nullable
+	public IAxleHandler getAxleHandler(Direction dir){
+		if(dir == null || dir.getAxis() == getBlockState().getValue(CRProperties.HORIZ_AXIS)){
+			return axleHandler;
 		}
-
-		BlockState state = getBlockState();
-		if(state.getBlock() == CRBlocks.stampMill && cap == Capabilities.AXLE_CAPABILITY && (side == null || side.getAxis() == state.getValue(CRProperties.HORIZ_AXIS))){
-			return (T) axleOpt;
-		}
-
-		return super.getCapability(cap, side);
+		return null;
 	}
 
 	@Nullable
@@ -213,7 +203,7 @@ public class StampMillTileEntity extends InventoryTE{
 
 	@Override
 	public boolean canPlaceItem(int index, ItemStack stack){
-		return index == 0 && level.getRecipeManager().getRecipeFor(CRRecipes.STAMP_MILL_TYPE, new SimpleContainer(stack), level).isPresent();
+		return index == 0 && level.getRecipeManager().getRecipeFor(CRRecipes.STAMP_MILL_TYPE, new SingleRecipeInput(stack), level).isPresent();
 	}
 
 	@Override

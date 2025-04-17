@@ -4,6 +4,9 @@ import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.api.ConfigUtil;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -28,6 +31,8 @@ import javax.annotation.Nullable;
 
 public class FlowLimiter extends BaseEntityBlock{
 
+	public static final MapCodec<FlowLimiter> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(Codec.BOOL.fieldOf("crystal").forGetter(FlowLimiter::isCrystal)).apply(instance, FlowLimiter::new));
+
 	private static final VoxelShape[] SHAPES = new VoxelShape[3];
 
 	static{
@@ -45,6 +50,10 @@ public class FlowLimiter extends BaseEntityBlock{
 		CRBlocks.queueForRegister(name, this);
 	}
 
+	protected boolean isCrystal(){
+		return crystal;
+	}
+
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state){
 		return new FlowLimiterTileEntity(pos, state, !crystal);
@@ -54,6 +63,11 @@ public class FlowLimiter extends BaseEntityBlock{
 	@Override
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> type){
 		return ITickableTileEntity.createTicker(type, FlowLimiterTileEntity.TYPE);
+	}
+
+	@Override
+	protected MapCodec<? extends BaseEntityBlock> codec(){
+		return CRBlocks.FLOW_LIMITER_TYPE.value();
 	}
 
 	@Override

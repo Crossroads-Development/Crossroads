@@ -36,7 +36,7 @@ public class LeydenJar extends Item implements ICreativeTabPopulatingItem{
 	}
 
 	public static void setCharge(ItemStack stack, int chargeIn){
-		CompoundTag nbt = stack.getTag();
+		CompoundTag nbt = stack.getTags();
 		if(nbt != null){
 			nbt.putInt("charge", Math.min(chargeIn, MAX_CHARGE));
 		}else{
@@ -47,7 +47,7 @@ public class LeydenJar extends Item implements ICreativeTabPopulatingItem{
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
 		tooltip.add(Component.translatable("tt.crossroads.leyden_jar.desc"));
 		tooltip.add(Component.translatable("tt.crossroads.leyden_jar.stats", getCharge(stack), MAX_CHARGE));
 		tooltip.add(Component.translatable("tt.crossroads.leyden_jar.quip").setStyle(MiscUtil.TT_QUIP));

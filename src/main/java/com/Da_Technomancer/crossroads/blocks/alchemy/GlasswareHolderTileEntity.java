@@ -2,9 +2,10 @@ package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.alchemy.*;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
+import com.Da_Technomancer.crossroads.api.heat.IHeatCapable;
 import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
@@ -19,6 +20,7 @@ import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -28,8 +30,9 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.joml.Vector3f;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-public class GlasswareHolderTileEntity extends ReagentHolderTE{
+public class GlasswareHolderTileEntity extends ReagentHolderTE implements IHeatCapable{
 
 	public static final BlockEntityType<GlasswareHolderTileEntity> TYPE = CRTileEntity.createType(GlasswareHolderTileEntity::new, CRBlocks.glasswareHolder);
 
@@ -44,6 +47,8 @@ public class GlasswareHolderTileEntity extends ReagentHolderTE{
 	private static final Pair<Vector3f, Vector3f>[] RENDER_SHAPE_FLORENCE = new Pair[] {Pair.of(new Vector3f(5 / 16F, 1 / 16F, 5 / 16F), new Vector3f(11 / 16F, 7F / 16F, 11 / 16F))};
 	@SuppressWarnings("unchecked")
 	private static final Pair<Vector3f, Vector3f>[] RENDER_SHAPE_SHELL = new Pair[] {Pair.of(new Vector3f(5 / 16F + 0.01F, 6F / 16F, 5 / 16F + 0.01F), new Vector3f(11 / 16F - 0.01F, 13 / 16F, 11 / 16F - 0.01F))};
+
+	private IHeatHandler heatHandler = new HeatHandler();
 
 	public GlasswareHolderTileEntity(BlockPos pos, BlockState state){
 		this(TYPE, pos, state);
@@ -116,8 +121,7 @@ public class GlasswareHolderTileEntity extends ReagentHolderTE{
 		level.setBlockAndUpdate(worldPosition, getBlockState().setValue(CRProperties.CRYSTAL, false).setValue(CRProperties.CONTAINER_TYPE, AbstractGlassware.GlasswareTypes.NONE));
 		level.playSound(null, worldPosition, SoundType.GLASS.getBreakSound(), SoundSource.BLOCKS, SoundType.GLASS.getVolume(), SoundType.GLASS.getPitch());
 		//Invalidate the heat capability, as if we went from florence -> non florence, we stopped allowing cable connections
-		heatOpt.invalidate();
-		heatOpt = LazyOptional.of(HeatHandler::new);
+		heatHandler = new HeatHandler();
 		glassType = null;
 		dirtyReag = true;
 		AlchemyUtil.releaseChemical(level, worldPosition, contents);
@@ -144,8 +148,7 @@ public class GlasswareHolderTileEntity extends ReagentHolderTE{
 			level.setBlockAndUpdate(worldPosition, getBlockState().setValue(CRProperties.CRYSTAL, false).setValue(CRProperties.CONTAINER_TYPE, AbstractGlassware.GlasswareTypes.NONE));
 		}
 		//Invalidate the heat capability, as if we went from florence -> non florence, we stopped allowing cable connections
-		heatOpt.invalidate();
-		heatOpt = LazyOptional.of(HeatHandler::new);
+		heatHandler = new HeatHandler();
 		return out;
 	}
 
@@ -182,8 +185,7 @@ public class GlasswareHolderTileEntity extends ReagentHolderTE{
 		if(ConfigUtil.isWrench(stack)){
 			//Flip the holder
 			level.setBlockAndUpdate(worldPosition, getBlockState().setValue(CRProperties.INVERTED, !getBlockState().getValue(CRProperties.INVERTED)));
-			heatOpt.invalidate();
-			heatOpt = LazyOptional.of(HeatHandler::new);
+			heatHandler = new HeatHandler();
 			return stack;
 		}
 
@@ -212,8 +214,8 @@ public class GlasswareHolderTileEntity extends ReagentHolderTE{
 			//Only florence flasks have reactions occur
 			//Phials and shells are meant to be single-purpose
 			if(reactionChamber != null){
-				for(AlchemyRec react : ReagentManager.getReactions(level)){
-					if(react.performReaction(reactionChamber)){
+				for(RecipeHolder<AlchemyRec> react : ReagentManager.getReactions(level)){
+					if(react.value().performReaction(reactionChamber)){
 						correctReag();
 						break;
 					}
@@ -234,31 +236,26 @@ public class GlasswareHolderTileEntity extends ReagentHolderTE{
 		return modes;
 	}
 
-	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		heatOpt.invalidate();
-	}
-
 	private Direction getTopSide(){
 		return getBlockState().getOptionalValue(CRProperties.INVERTED).orElseGet(() -> false) ? Direction.DOWN : Direction.UP;
 	}
 
-	private IHeatHandler heatOpt = LazyOptional.of(HeatHandler::new);
-
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
-		if(!(this instanceof ChargingStandTileEntity)){
-			//Glassware stand can connect to cables/conduits, subclass charging stand can not
-			if((side == null || side == getTopSide()) && cap == Capabilities.CHEMICAL_CAPABILITY && heldType() != AbstractGlassware.GlasswareTypes.NONE){
-				return (T) chemOpt;
-			}
-			if((side == null || side == getTopSide().getOpposite()) && cap == Capabilities.HEAT_CAPABILITY && heldType().connectToCable){
-				return (T) heatOpt;
-			}
+	@Nullable
+	public IChemicalHandler getChemicalHandler(Direction dir){
+		if((dir == null || dir == getTopSide()) && heldType() != AbstractGlassware.GlasswareTypes.NONE){
+			return chemHandler;
 		}
-		return super.getCapability(cap, side);
+		return null;
+	}
+
+	@Override
+	@Nullable
+	public IHeatHandler getHeatHandler(Direction dir){
+		if((dir == null || dir == getTopSide().getOpposite()) && heldType().connectToCable){
+			return heatHandler;
+		}
+		return null;
 	}
 
 	private class HeatHandler implements IHeatHandler{

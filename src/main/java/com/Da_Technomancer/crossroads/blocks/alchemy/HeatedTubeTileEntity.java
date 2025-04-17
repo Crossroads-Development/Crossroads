@@ -1,10 +1,12 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
+import com.Da_Technomancer.crossroads.api.alchemy.IChemicalHandler;
 import com.Da_Technomancer.crossroads.api.alchemy.ReagentHolderTE;
 import com.Da_Technomancer.crossroads.api.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
+import com.Da_Technomancer.crossroads.api.heat.IHeatCapable;
 import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
@@ -16,12 +18,15 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.apache.commons.lang3.tuple.Pair;
 import org.joml.Vector3f;
 
-public class HeatedTubeTileEntity extends ReagentHolderTE{
+import javax.annotation.Nullable;
+
+public class HeatedTubeTileEntity extends ReagentHolderTE implements IHeatCapable{
 
 	public static final BlockEntityType<HeatedTubeTileEntity> TYPE = CRTileEntity.createType(HeatedTubeTileEntity::new, CRBlocks.heatedTubeGlass, CRBlocks.heatedTubeCrystal);
 
 	private static final Pair<Vector3f, Vector3f>[] RENDER_SHAPE_X = new Pair[] {Pair.of(new Vector3f(0, 7 / 16F, 7 / 16F), new Vector3f(1, 1F - 7 / 16F, 1F - 7 / 16F))};
 	private static final Pair<Vector3f, Vector3f>[] RENDER_SHAPE_Z = new Pair[] {Pair.of(new Vector3f(7 / 16F, 7 / 16F, 0), new Vector3f(1F - 7 / 16F, 1F - 7 / 16F, 1))};
+	private final IHeatHandler heatHandler = new HeatHandler();
 
 	public HeatedTubeTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state);
@@ -58,23 +63,21 @@ public class HeatedTubeTileEntity extends ReagentHolderTE{
 	}
 
 	@Override
-	public void setRemoved(){
-		super.setRemoved();
-		heatOpt.invalidate();
+	@Nullable
+	public IChemicalHandler getChemicalHandler(Direction dir){
+		if((dir == null || dir.getAxis() == getBlockState().getValue(CRProperties.HORIZ_FACING).getAxis())){
+			return chemHandler;
+		}
+		return null;
 	}
 
-	private final IHeatHandler heatOpt = LazyOptional.of(HeatHandler::new);
-
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> cap, Direction side){
-		if(cap == Capabilities.CHEMICAL_CAPABILITY && (side == null || side.getAxis() == getBlockState().getValue(CRProperties.HORIZ_FACING).getAxis())){
-			return (T) chemOpt;
+	@Nullable
+	public IHeatHandler getHeatHandler(Direction dir){
+		if((dir == null || dir.getAxis() == Direction.Axis.Y)){
+			return heatHandler;
 		}
-		if(cap == Capabilities.HEAT_CAPABILITY && (side == null || side.getAxis() == Direction.Axis.Y)){
-			return (T) heatOpt;
-		}
-		return super.getCapability(cap, side);
+		return null;
 	}
 
 	private class HeatHandler implements IHeatHandler{

@@ -57,14 +57,10 @@ public class FluidTankTileEntity extends InventoryTE{
 		return fluids[0];
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable Direction facing){
-		if(capability == ForgeCapabilities.FLUID_HANDLER){
-			return (T) globalFluidOpt;
-		}
-
-		return super.getCapability(capability, facing);
+	@Nullable
+	public IFluidHandler getFluidHandler(Direction dir){
+		return globalFluidHandler;
 	}
 
 	@Override
