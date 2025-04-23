@@ -1,46 +1,41 @@
 package com.Da_Technomancer.crossroads.api.packets;
 
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.effects.alchemy_effects.AetherEffect;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-import javax.annotation.Nonnull;
-import java.lang.reflect.Field;
+public record SendBiomeUpdateToClient(BlockPos pos, String newBiome) implements CustomPacketPayload{
 
-public class SendBiomeUpdateToClient extends ClientPacket{
+	public static final CustomPacketPayload.Type<SendBiomeUpdateToClient> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "send_biome_update_client"));
 
-	public BlockPos pos;
-	public String newBiome;
+	public static final StreamCodec<ByteBuf, SendBiomeUpdateToClient> STREAM_CODEC = StreamCodec.composite(
+			BlockPos.STREAM_CODEC, SendBiomeUpdateToClient::pos,
+			ByteBufCodecs.STRING_UTF8, SendBiomeUpdateToClient::newBiome,
+			SendBiomeUpdateToClient::new
+	);
 
-	private static final Field[] FIELDS = fetchFields(SendBiomeUpdateToClient.class, "pos", "newBiome");
-
-	@SuppressWarnings("unused")
-	public SendBiomeUpdateToClient(){
+	public static void handlePacketClient(final SendBiomeUpdateToClient packet, final IPayloadContext context){
+		context.enqueueWork(() -> {
+			Level world;
+			if((world = SafeCallable.getClientWorld()) != null){
+				AetherEffect.setBiomeAtPos(world, packet.pos, AetherEffect.getBiomeHolder(ResourceLocation.withDefaultNamespace(packet.newBiome)));
+			}
+		});
 
 	}
 
-	/**
-	 * When a biome is changed on the server side, the change isn't sent to clients (visible in f3 menu) until the render dimension switches/rejoins. This packet forces the render to recognize a new biome.
-	 * @param pos The position that changed
-	 * @param newBiome The registry name of the new biome
-	 */
-	public SendBiomeUpdateToClient(BlockPos pos, ResourceLocation newBiome){
-		this.pos = pos;
-		this.newBiome = newBiome.toString();
-	}
-
-	@Nonnull
-	@Override
-	protected Field[] getFields(){
-		return FIELDS;
-	}
+	// TODO: This should be client side only. Remove this message before final commit.
 
 	@Override
-	protected void run(){
-		//The .getClientWorld() call is needed to defer class loading and prevent this crashing on dedicated servers
-		Level world = SafeCallable.getClientWorld();
-		AetherEffect.setBiomeAtPos(world, pos, AetherEffect.getBiomeHolder(ResourceLocation.withDefaultNamespace(newBiome)));
+	public Type<? extends CustomPacketPayload> type(){
+		return TYPE;
 	}
 }

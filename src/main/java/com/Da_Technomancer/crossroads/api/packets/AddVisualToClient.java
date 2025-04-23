@@ -1,42 +1,45 @@
 package com.Da_Technomancer.crossroads.api.packets;
 
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.api.render.IVisualEffect;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-import javax.annotation.Nonnull;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 
-public class AddVisualToClient extends ClientPacket{
+public record AddVisualToClient(CompoundTag nbt) implements CustomPacketPayload{
+
+	public static final CustomPacketPayload.Type<AddVisualToClient> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "add_visual_to_client"));
+
+	public static final StreamCodec<ByteBuf, AddVisualToClient> STREAM_CODEC = StreamCodec.composite(
+			ByteBufCodecs.COMPOUND_TAG,
+			AddVisualToClient::nbt,
+			AddVisualToClient::new
+	);
 
 	public static final ArrayList<IVisualEffect> effectsToRender = new ArrayList<>();//Correct on client side only
 
-	public CompoundTag nbt;
-
-	private static final Field[] FIELDS = fetchFields(AddVisualToClient.class, "nbt");
-
-	@SuppressWarnings("unused")
-	public AddVisualToClient(){
-
+	public static void handlePacketClient(final AddVisualToClient packet, final IPayloadContext context){
+		context.enqueueWork(() -> {
+			Level world;
+			if((world = SafeCallable.getClientWorld()) != null){
+				effectsToRender.add(CRRenderUtil.visualFactories[packet.nbt.getInt("id")].apply(world, packet.nbt));
+			}
+		});
 	}
 
-	public AddVisualToClient(CompoundTag nbt){
-		this.nbt = nbt;
-	}
+	// TODO: This should be client side only. Remove this message before final commit.
 
-	@Nonnull
-	@Override
-	protected Field[] getFields(){
-		return FIELDS;
-	}
 
 	@Override
-	protected void run(){
-		Level world = SafeCallable.getClientWorld();
-		if(world != null){
-			effectsToRender.add(CRRenderUtil.visualFactories[nbt.getInt("id")].apply(SafeCallable.getClientWorld(), nbt));
-		}
+	public Type<? extends CustomPacketPayload> type(){
+		return TYPE;
 	}
 }

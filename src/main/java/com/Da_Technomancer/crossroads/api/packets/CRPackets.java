@@ -1,128 +1,79 @@
 package com.Da_Technomancer.crossroads.api.packets;
 
-import com.Da_Technomancer.crossroads.CRConfig;
-import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.api.MiscUtil;
-import com.Da_Technomancer.essentials.api.packets.*;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.GlobalPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
-
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.UUID;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 public class CRPackets{
 
-	public static SimpleChannel channel;
-	private static int index = 0;
-	private static final HashSet<Class<? extends Packet>> registeredTypes = new HashSet<>(20);
+	private static final double NEAR_RADIUS = 512.0D;
 
-	public static void init(){
-		channel = NetworkRegistry.newSimpleChannel(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "channel"), () -> "1.0.0", (s) -> s.equals("1.0.0"), (s) -> s.equals("1.0.0"));
-		//Create codecs for additional data types
-		PacketManager.addCodec(int[].class, (val, buf) -> buf.writeVarIntArray((int[]) val), FriendlyByteBuf::readVarIntArray);
-		PacketManager.addCodec(ParticleOptions.class,
-				(Object val, FriendlyByteBuf buf) -> {
-					ParticleOptions data = (ParticleOptions) val;
-					buf.writeResourceLocation(Objects.requireNonNull(MiscUtil.getRegistryName(data.getType(), BuiltInRegistries.PARTICLE_TYPE)));
-					data.writeToNetwork(buf);
-				},
-				(FriendlyByteBuf buf) -> readParticleData(BuiltInRegistries.PARTICLE_TYPE.get(buf.readResourceLocation()), buf)
-		);
-		PacketManager.addCodec(ResourceLocation.class, (val, buf) -> buf.writeResourceLocation((ResourceLocation) val), FriendlyByteBuf::readResourceLocation);
-		PacketManager.addCodec(GlobalPos.class, (val, buf) -> buf.writeGlobalPos((GlobalPos) val), FriendlyByteBuf::readGlobalPos);
-		PacketManager.addCodec(UUID.class, (val, buf) -> buf.writeUUID((UUID) val), FriendlyByteBuf::readUUID);
+	@SubscribeEvent
+	public static void registerPayloads(final RegisterPayloadHandlersEvent event){
+		final PayloadRegistrar registrar = event.registrar("1");
 
-//		registerPacket(SendIntToClient.class);
-//		registerPacket(SendStringToClient.class);
-//		registerPacket(SendDoubleToClient.class);
-//		registerPacket(StoreNBTToClient.class);
-		registerPacket(SendChatToClient.class);
-		registerPacket(SendBeamItemToServer.class);
-//		registerPacket(SendDimLoadToClient.class);
-//		registerPacket(SendDoubleToServer.class);
-//		registerPacket(SendIntToServer.class);
-//		registerPacket(SendLogToClient.class);
-//		registerPacket(SendStringToServer.class);
-//		registerPacket(SendNBTToClient.class);
-		registerPacket(SendPlayerTickCountToClient.class);
-//		registerPacket(SendDoubleArrayToServer.class);
-//		registerPacket(SendDoubleArrayToClient.class);
-//		registerPacket(SendSpinToClient.class);
-		registerPacket(AddVisualToClient.class);
-		registerPacket(NbtToEntityClient.class);
-//		registerPacket(NbtToEntityServer.class);
-		registerPacket(SendBiomeUpdateToClient.class);
-		registerPacket(SendGoggleConfigureToServer.class);
-//		registerPacket(SendLongToClient.class); moved to Essentials
-		registerPacket(SendTaylorToClient.class);
-		registerPacket(SendMasterKeyToClient.class);
-		registerPacket(SendElytraBoostToServer.class);
-		registerPacket(SendIntArrayToClient.class);
-		registerPacket(CreateParticlesOnClient.class);
-		registerPacket(SendCompassTargetToClient.class);
-		registerPacket(SendLongToServer.class);
+		registrar.playToClient(SendChatToClient.TYPE, SendChatToClient.STREAM_CODEC, SendChatToClient::handlePacketClient);
+		registrar.playToServer(SendBeamItemToServer.TYPE, SendBeamItemToServer.STREAM_CODEC, SendBeamItemToServer::handlePacketServer);
+		registrar.playToClient(SendPlayerTickCountToClient.TYPE, SendPlayerTickCountToClient.STREAM_CODEC, SendPlayerTickCountToClient::handlePacketClient);
+		registrar.playToClient(AddVisualToClient.TYPE, AddVisualToClient.STREAM_CODEC, AddVisualToClient::handlePacketClient);
+		registrar.playToClient(NbtToEntityClient.TYPE, NbtToEntityClient.STREAM_CODEC, NbtToEntityClient::handlePacketClient);
+		registrar.playToClient(SendBiomeUpdateToClient.TYPE, SendBiomeUpdateToClient.STREAM_CODEC, SendBiomeUpdateToClient::handlePacketClient);
+		registrar.playToServer(SendGoggleConfigureToServer.TYPE, SendGoggleConfigureToServer.STREAM_CODEC, SendGoggleConfigureToServer::handlePacketServer);
+		registrar.playToClient(SendTaylorToClient.TYPE, SendTaylorToClient.STREAM_CODEC, SendTaylorToClient::handlePacketClient);
+		registrar.playToClient(SendMasterKeyToClient.TYPE, SendMasterKeyToClient.STREAM_CODEC, SendMasterKeyToClient::handlePacketClient);
+		registrar.playToServer(SendElytraBoostToServer.TYPE, SendElytraBoostToServer.STREAM_CODEC, SendElytraBoostToServer::handlePacketServer);
+		registrar.playToClient(SendIntArrayToClient.TYPE, SendIntArrayToClient.STREAM_CODEC, SendIntArrayToClient::handlePacketClient);
+		registrar.playToClient(CreateParticlesOnClient.TYPE, CreateParticlesOnClient.STREAM_CODEC, CreateParticlesOnClient::handlePacketClient);
+		registrar.playToClient(SendCompassTargetToClient.TYPE, SendCompassTargetToClient.STREAM_CODEC, SendCompassTargetToClient::handlePacketClient);
 	}
 
-	private static <T extends Packet> void registerPacket(Class<T> clazz){
-		channel.registerMessage(index++, clazz, PacketManager::encode, (buf) -> PacketManager.decode(buf, clazz), PacketManager::activate);
-		registeredTypes.add(clazz);
+	public static void sendPacketAround(Level world, BlockPos pos, CustomPacketPayload payload){
+		// Previously there was an overload that took an AddVisualToClient payload, and allowed custom radius; I have
+		// instead made that an optional param any payload may provide. Defaults same.
+		sendPacketAround(world, pos, payload, NEAR_RADIUS);
 	}
 
-	public static void sendPacketAround(Level world, BlockPos pos, CustomPacketPayload packet){
-		if(world.isClientSide){
+	public static void sendPacketAround(Level world, BlockPos pos, CustomPacketPayload payload, double radius){
+		if(!(world instanceof ServerLevel serverLevel)){
 			throw new IllegalStateException("Packet to client sent from client!");
 		}
-		//Check if this packet is registered with CR. If not, send it via the Essentials packet channel; this is done to make this method correct for all CR usage
-		SimpleChannel messageChannel = registeredTypes.contains(packet.getClass()) ? channel : EssentialsPackets.channel;
-		messageChannel.send(PacketDistributor.NEAR.with(PacketDistributor.TargetPoint.p(pos.getX(), pos.getY(), pos.getZ(), 512.0D, world.dimension())), packet);
+
+		PacketDistributor.sendToPlayersNear(serverLevel, null, pos.getX(), pos.getY(), pos.getZ(), radius, payload);
 	}
 
-	public static void sendEffectPacketAround(Level world, BlockPos pos, AddVisualToClient packet){
-		if(world.isClientSide){
-			throw new IllegalStateException("Packet to client sent from client!");
+	public static void sendPacketToPlayer(ServerPlayer player, CustomPacketPayload payload){
+		PacketDistributor.sendToPlayer(player, payload);
+	}
+
+	public static void sendPacketToServer(CustomPacketPayload payload){
+		PacketDistributor.sendToServer(payload);
+	}
+
+	public static void sendPacketToAll(CustomPacketPayload payload){
+		PacketDistributor.sendToAllPlayers(payload);
+	}
+
+	public static void sendPacketToDimension(Level world, CustomPacketPayload payload){
+		if(!(world instanceof ServerLevel serverLevel)){
+			throw new IllegalStateException("Packet to clients sent from client!");
 		}
-		//Check if this packet is registered with CR. If not, send it via the Essentials packet channel; this is done to make this method correct for all CR usage
-		SimpleChannel messageChannel = registeredTypes.contains(packet.getClass()) ? channel : EssentialsPackets.channel;
-		messageChannel.send(PacketDistributor.NEAR.with(PacketDistributor.TargetPoint.p(pos.getX(), pos.getY(), pos.getZ(), CRConfig.effectPacketDistance.get(), world.dimension())), packet);
+
+		PacketDistributor.sendToPlayersInDimension(serverLevel, payload);
 	}
 
-	public static void sendPacketToPlayer(ServerPlayer player, CustomPacketPayload packet){
-		//Check if this packet is registered with CR. If not, send it via the Essentials packet channel; this is done to make this method correct for all CR usage
-		SimpleChannel messageChannel = registeredTypes.contains(packet.getClass()) ? channel : EssentialsPackets.channel;
-		messageChannel.send(PacketDistributor.PLAYER.with(() -> player), packet);
-	}
-
-	public static void sendPacketToServer(CustomPacketPayload packet){
-		//Check if this packet is registered with CR. If not, send it via the Essentials packet channel; this is done to make this method correct for all CR usage
-		SimpleChannel messageChannel = registeredTypes.contains(packet.getClass()) ? channel : EssentialsPackets.channel;
-		messageChannel.sendToServer(packet);
-	}
-
-	public static void sendPacketToAll(CustomPacketPayload packet){
-		//Check if this packet is registered with CR. If not, send it via the Essentials packet channel; this is done to make this method correct for all CR usage
-		SimpleChannel messageChannel = registeredTypes.contains(packet.getClass()) ? channel : EssentialsPackets.channel;
-		messageChannel.send(PacketDistributor.ALL.noArg(), packet);
-	}
-
-	public static void sendPacketToDimension(Level world, CustomPacketPayload packet){
-		//Check if this packet is registered with CR. If not, send it via the Essentials packet channel; this is done to make this method correct for all CR usage
-		SimpleChannel messageChannel = registeredTypes.contains(packet.getClass()) ? channel : EssentialsPackets.channel;
-		messageChannel.send(PacketDistributor.DIMENSION.with(world::dimension), packet);
-	}
-
-	private static <T extends ParticleOptions> T readParticleData(ParticleType<T> type, FriendlyByteBuf buf){
+	private static <T extends ParticleOptions> T readParticleData(ParticleType<T> type, RegistryFriendlyByteBuf buf){
 		if(type == null){
 			return null;
 		}
-		return type.getDeserializer().fromNetwork(type, buf);
+		return type.streamCodec().decode(buf);
 	}
 }

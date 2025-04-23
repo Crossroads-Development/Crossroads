@@ -5,11 +5,11 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.api.MathUtil;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
-import com.Da_Technomancer.crossroads.api.packets.SendLongToServer;
 import com.Da_Technomancer.crossroads.api.templates.MachineScreen;
 import com.Da_Technomancer.crossroads.api.templates.WidgetUtil;
 import com.Da_Technomancer.crossroads.blocks.rotary.SteamTurbineTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.SteamTurbineContainer;
+import com.Da_Technomancer.essentials.api.packets.SendLongToTE;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -48,7 +48,7 @@ public class SteamTurbineScreen extends MachineScreen<SteamTurbineContainer, Ste
 		menu.mode.set(newMode);
 		listener.updateButtons(newMode);
 		if(te != null){
-			CRPackets.channel.sendToServer(new SendLongToServer(5, newMode, te.getBlockPos()));
+			CRPackets.channel.sendToServer(new SendLongToTE(5, newMode, te.getBlockPos()));
 		}
 	}
 

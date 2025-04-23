@@ -1,66 +1,106 @@
 package com.Da_Technomancer.crossroads.api.packets;
 
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.ambient.particles.CRParticles;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-import javax.annotation.Nonnull;
-import java.lang.reflect.Field;
+public record CreateParticlesOnClient(ParticleOptions particle, double x, double y, double z, float xDeviation,
+									  float yDeviation, float zDeviation, float xVel, float yVel, float zVel,
+									  float xVelDeviation, float yVelDeviation, float zVelDeviation, int count,
+									  boolean gaussian) implements CustomPacketPayload{
 
-public class CreateParticlesOnClient extends ClientPacket{
+	public static final CustomPacketPayload.Type<CreateParticlesOnClient> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "create_particles_te"));
 
-	public ParticleOptions particle;
-	public double x;
-	public double y;
-	public double z;
-	public float xDeviation;
-	public float yDeviation;
-	public float zDeviation;
-	public float xVel;
-	public float yVel;
-	public float zVel;
-	public float xVelDeviation;
-	public float yVelDeviation;
-	public float zVelDeviation;
-	public int count;
-	public boolean gaussian;
 
-	private static final Field[] FIELDS = fetchFields(CreateParticlesOnClient.class, "particle", "x", "y", "z", "xDeviation", "yDeviation", "zDeviation", "xVel", "yVel", "zVel", "xVelDeviation", "yVelDeviation", "zVelDeviation", "count", "gaussian");
+	public static final StreamCodec<RegistryFriendlyByteBuf, CreateParticlesOnClient> STREAM_CODEC = StreamCodec.ofMember(CreateParticlesOnClient::encode, CreateParticlesOnClient::new);
 
-	@SuppressWarnings("unused")
-	public CreateParticlesOnClient(){
-
+	public CreateParticlesOnClient(ByteBuf buffer){
+		this(
+				// TODO: there's no way this cast is valid
+				ParticleTypes.STREAM_CODEC.decode((RegistryFriendlyByteBuf) buffer),
+				// position
+				buffer.readDouble(),
+				buffer.readDouble(),
+				buffer.readDouble(),
+				// deviation
+				buffer.readFloat(),
+				buffer.readFloat(),
+				buffer.readFloat(),
+				// velocity
+				buffer.readFloat(),
+				buffer.readFloat(),
+				buffer.readFloat(),
+				// velocity deviation
+				buffer.readFloat(),
+				buffer.readFloat(),
+				buffer.readFloat(),
+				// remainder
+				buffer.readInt(),
+				buffer.readBoolean()
+		);
 	}
 
-	public CreateParticlesOnClient(ParticleOptions particle, double x, double y, double z, float xDeviation, float yDeviation, float zDeviation, float xVel, float yVel, float zVel, float xVelDeviation, float yVelDeviation, float zVelDeviation, int count, boolean gaussian){
-		this.particle = particle;
-		this.x = x;
-		this.y = y;
-		this.z = z;
-		this.xDeviation = xDeviation;
-		this.yDeviation = yDeviation;
-		this.zDeviation = zDeviation;
-		this.xVel = xVel;
-		this.yVel = yVel;
-		this.zVel = zVel;
-		this.xVelDeviation = xVelDeviation;
-		this.yVelDeviation = yVelDeviation;
-		this.zVelDeviation = zVelDeviation;
-		this.count = count;
-		this.gaussian = gaussian;
+	private void encode(ByteBuf buffer){
+		// particle
+		// TODO: there's no way this cast is valid
+		ParticleTypes.STREAM_CODEC.encode((RegistryFriendlyByteBuf) buffer, particle);
+		// position
+		buffer.writeDouble(x);
+		buffer.writeDouble(y);
+		buffer.writeDouble(z);
+		//deviation
+		buffer.writeFloat(xDeviation);
+		buffer.writeFloat(yDeviation);
+		buffer.writeFloat(zDeviation);
+		//velocity
+		buffer.writeFloat(xVel);
+		buffer.writeFloat(yVel);
+		buffer.writeFloat(zVel);
+		//velocity deviation
+		buffer.writeFloat(xVelDeviation);
+		buffer.writeFloat(yVelDeviation);
+		buffer.writeFloat(zVelDeviation);
+		//remaining params
+		buffer.writeInt(count);
+		buffer.writeBoolean(gaussian);
 	}
 
-	@Nonnull
 	@Override
-	protected Field[] getFields(){
-		return FIELDS;
+	public Type<? extends CustomPacketPayload> type(){
+		return TYPE;
 	}
 
-	@Override
-	protected void run(){
-		Level world = SafeCallable.getClientWorld();
-		if(world != null){
-			CRParticles.summonParticlesFromClient(world, particle, count, x, y, z, xDeviation, yDeviation, zDeviation, xVel, yVel, zVel, xVelDeviation, yVelDeviation, zVelDeviation, gaussian);
-		}
+	static void handlePacketClient(final CreateParticlesOnClient packet, final IPayloadContext context){
+		context.enqueueWork(() -> {
+			Level world;
+			if((world = SafeCallable.getClientWorld()) != null){
+				CRParticles.summonParticlesFromClient(world,
+						packet.particle,
+						packet.count,
+						packet.x,
+						packet.y,
+						packet.z,
+						packet.xDeviation,
+						packet.yDeviation,
+						packet.zDeviation,
+						packet.xVel,
+						packet.yVel,
+						packet.zVel,
+						packet.xVelDeviation,
+						packet.yVelDeviation,
+						packet.zVelDeviation,
+						packet.gaussian);
+			}
+		});
 	}
+
+	// TODO: This should be client side only. Remove this message before final commit.
 }

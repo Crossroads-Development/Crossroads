@@ -1,34 +1,39 @@
 package com.Da_Technomancer.crossroads.api.packets;
 
 
-import javax.annotation.Nonnull;
-import java.lang.reflect.Field;
+import com.Da_Technomancer.crossroads.Crossroads;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public class SendPlayerTickCountToClient extends ClientPacket{
+
+public record SendPlayerTickCountToClient(int tickCount) implements CustomPacketPayload{
+
+	public static CustomPacketPayload.Type<SendPlayerTickCountToClient> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "send_player_tick_count_client"));
+
+	public static StreamCodec<ByteBuf, SendPlayerTickCountToClient> STREAM_CODEC = StreamCodec.composite(
+			ByteBufCodecs.INT, SendPlayerTickCountToClient::tickCount,
+			SendPlayerTickCountToClient::new
+	);
 
 	public static int playerTickCount = 0;//Only correct on the client side
 
-	public int tickCount;
 
-	private static final Field[] FIELDS = fetchFields(SendPlayerTickCountToClient.class, "tickCount");
+	public static void handlePacketClient(final SendPlayerTickCountToClient packet, final IPayloadContext context){
+		context.enqueueWork(() -> {
+					playerTickCount += packet.tickCount;
 
-	@SuppressWarnings("unused")
-	public SendPlayerTickCountToClient(){
-
+				}
+		);
 	}
 
-	public SendPlayerTickCountToClient(int tickCount){
-		this.tickCount = tickCount;
-	}
-
-	@Nonnull
-	@Override
-	protected Field[] getFields(){
-		return FIELDS;
-	}
+	// TODO: This should be client side only. Remove this message before final commit.
 
 	@Override
-	protected void run(){
-		playerTickCount += tickCount;
+	public Type<? extends CustomPacketPayload> type(){
+		return TYPE;
 	}
 }

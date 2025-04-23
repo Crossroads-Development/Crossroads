@@ -1,13 +1,19 @@
 package com.Da_Technomancer.crossroads.api.packets;
 
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.api.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.gui.container.DetailedCrafterContainer;
 import com.Da_Technomancer.crossroads.items.CRItems;
 
+import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -15,47 +21,41 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 
-public class SendGoggleConfigureToServer extends ClientPacket{
+public record SendGoggleConfigureToServer(String lensName, boolean newSetting) implements CustomPacketPayload{
+	public static final CustomPacketPayload.Type<SendGoggleConfigureToServer> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "send_goggle_configure_server"));
 
-	public String lensName;
-	public boolean newSetting;
+	public static final StreamCodec<ByteBuf, SendGoggleConfigureToServer> STREAM_CODEC = StreamCodec.composite(
+			ByteBufCodecs.STRING_UTF8, SendGoggleConfigureToServer::lensName,
+			ByteBufCodecs.BOOL, SendGoggleConfigureToServer::newSetting,
+			SendGoggleConfigureToServer::new
+	);
 
-	private static final Field[] FIELDS = fetchFields(SendGoggleConfigureToServer.class, "lensName", "newSetting");
+	static void handlePacketServer(final SendGoggleConfigureToServer packet, final IPayloadContext context){
+		context.enqueueWork(() -> {
+			if(context.player() instanceof ServerPlayer player){
+				ItemStack stack = player.getItemBySlot(EquipmentSlot.HEAD);
+				CompoundTag nbt = stack.getTag();
+				if(stack.getItem() == CRItems.armorGoggles && nbt != null && nbt.contains(packet.lensName)){
+					nbt.putBoolean(packet.lensName, packet.newSetting);
 
-	public SendGoggleConfigureToServer(){
-
-	}
-
-	public SendGoggleConfigureToServer(EnumGoggleLenses lens, boolean setting){
-		this.lensName = lens.toString();
-		this.newSetting = setting;
-	}
-
-	@Nonnull
-	@Override
-	protected Field[] getFields(){
-		return FIELDS;
-	}
-
-	@Override
-	protected void run(@Nullable ServerPlayer player){
-		if(player != null){
-			ItemStack stack = player.getItemBySlot(EquipmentSlot.HEAD);
-			CompoundTag nbt = stack.getTag();
-			if(stack.getItem() == CRItems.armorGoggles && nbt != null && nbt.contains(lensName)){
-				nbt.putBoolean(lensName, newSetting);
-
-				if(EnumGoggleLenses.DIAMOND.toString().equals(lensName)){
+					if(EnumGoggleLenses.DIAMOND.toString().equals(packet.lensName)){
 //					StoreNBTToClient.syncNBTToClient(player);//Sync player path data to client
-					NetworkHooks.openScreen(player, GoggleProvider.INSTANCE, buf -> buf.writeBoolean(true));
+						NetworkHooks.openScreen(player, GoggleProvider.INSTANCE, buf -> buf.writeBoolean(true));
+					}
 				}
 			}
-		}
+		});
+	}
+
+	@Override
+	public Type<? extends CustomPacketPayload> type(){
+		return TYPE;
 	}
 
 	private static class GoggleProvider implements MenuProvider{

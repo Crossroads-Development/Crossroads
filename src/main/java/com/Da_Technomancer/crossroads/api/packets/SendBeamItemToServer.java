@@ -1,45 +1,47 @@
 package com.Da_Technomancer.crossroads.api.packets;
 
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamUsingItem;
-import net.minecraft.server.level.ServerPlayer;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.lang.reflect.Field;
+public record SendBeamItemToServer(byte[] newSetting) implements CustomPacketPayload{
+	public static final CustomPacketPayload.Type<SendBeamItemToServer> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "send_beam_item_server"));
 
-public class SendBeamItemToServer extends ClientPacket{
+	public static final StreamCodec<ByteBuf, SendBeamItemToServer> STREAM_CODEC = StreamCodec.composite(
+			ByteBufCodecs.BYTE_ARRAY, SendBeamItemToServer::newSetting,
+			SendBeamItemToServer::new
+	);
 
-	public byte[] newSetting;
 
-	private static final Field[] FIELDS = fetchFields(SendBeamItemToServer.class, "newSetting");
+	// TODO: This should be server side only. Remove this message before final commit.
 
-	@SuppressWarnings("unused")
-	public SendBeamItemToServer(){
-
-	}
-
-	public SendBeamItemToServer(byte[] newSetting){
-		this.newSetting = newSetting;
-	}
-
-	@Nonnull
-	@Override
-	protected Field[] getFields(){
-		return FIELDS;
-	}
-
-	@Override
-	protected void run(@Nullable ServerPlayer player){
-		if(player != null){
-			ItemStack stack;
-			stack = player.getMainHandItem();
-			if(!(stack.getItem() instanceof BeamUsingItem)){
-				stack = player.getOffhandItem();
+	public static void handlePacketServer(final SendBeamItemToServer packet, final IPayloadContext context){
+		// TODO: this used to be a ServerPlayer, supplied as param, but I cannot see how to get one through context.
+		//  Not sure if it matters tho
+		context.enqueueWork(() -> {
+			Player player;
+			if((player = context.player()) != null){
+				ItemStack stack;
+				stack = player.getMainHandItem();
+				if(!(stack.getItem() instanceof BeamUsingItem)){
+					stack = player.getOffhandItem();
+				}
+				if(stack.getItem() instanceof BeamUsingItem){
+					BeamUsingItem.setSetting(stack, packet.newSetting);
+				}
 			}
-			if(stack.getItem() instanceof BeamUsingItem){
-				BeamUsingItem.setSetting(stack, newSetting);
-			}
-		}
+		});
+	}
+
+	@Override
+	public Type<? extends CustomPacketPayload> type(){
+		return TYPE;
 	}
 }
