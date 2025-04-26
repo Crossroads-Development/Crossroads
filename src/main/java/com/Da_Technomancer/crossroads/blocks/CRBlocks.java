@@ -391,9 +391,9 @@ public class CRBlocks{
 	}
 
 	public static void init(){
-		for(HeatInsulators insul : HeatInsulators.values()){
-			HEAT_CABLES.put(insul, new HeatCable(insul));
-			REDSTONE_HEAT_CABLES.put(insul, new RedstoneHeatCable(insul));
+		for(HeatInsulators insulator : HeatInsulators.values()){
+			HEAT_CABLES.put(insulator, new HeatCable(insulator));
+			REDSTONE_HEAT_CABLES.put(insulator, new RedstoneHeatCable(insulator));
 		}
 
 		//Ores

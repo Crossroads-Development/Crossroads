@@ -30,9 +30,9 @@ public abstract class AbstractGlassware extends Item{
 
 		@Override
 		protected ItemStack execute(BlockSource source, ItemStack stack){
-			Direction dir = source.getBlockState().getValue(DispenserBlock.FACING);
-			Level world = source.getLevel();
-			if(world.getBlockEntity(source.getPos().relative(dir)) instanceof GlasswareHolderTileEntity glasswareTE){
+			Direction dir = source.state().getValue(DispenserBlock.FACING);
+			Level world = source.level();
+			if(world.getBlockEntity(source.pos().relative(dir)) instanceof GlasswareHolderTileEntity glasswareTE){
 				ItemStack result = glasswareTE.placeGlassware(stack);
 				setSuccess(true);//Success if there is a valid target, even if we didn't place the glassware
 				return result;
@@ -101,7 +101,7 @@ public abstract class AbstractGlassware extends Item{
 	 */
 	@Nonnull
 	public ReagentMap getReagants(ItemStack stack){
-		return stack.hasTag() ? ReagentMap.readFromNBT(stack.getTag().getCompound(TAG_NAME)) : new ReagentMap();
+		return stack.hasTag() ? ReagentMap.readFromNBT(stack.get.getCompound(TAG_NAME)) : new ReagentMap();
 	}
 
 	/**

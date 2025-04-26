@@ -3,13 +3,14 @@ package com.Da_Technomancer.crossroads;
 import com.Da_Technomancer.crossroads.gui.container.CRContainers;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.neoforged.neoforge.registries.RegisterEvent;
 
 public class EventHandlerServer{
 
-	@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, modid = Crossroads.MODID, value = Dist.DEDICATED_SERVER)
+	@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD, modid = Crossroads.MODID, value = Dist.DEDICATED_SERVER)
 	public static class CRModEventsServer{
 
 		@SuppressWarnings("unused")

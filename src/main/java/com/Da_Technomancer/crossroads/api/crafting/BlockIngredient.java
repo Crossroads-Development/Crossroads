@@ -176,7 +176,7 @@ public class BlockIngredient implements Predicate<BlockState>{
 
 		@Override
 		public Collection<Block> getMatched(){
-			return CraftingUtil.getTagManagerForKey(tag).getTag(tag).stream().collect(Collectors.toUnmodifiableSet());
+			return CraftingUtil.getRegistryForKey(tag).getTag(tag).stream().collect(Collectors.toUnmodifiableSet());
 		}
 	}
 

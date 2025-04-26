@@ -7,6 +7,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
@@ -25,6 +27,7 @@ import java.awt.*;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Optional;
 
 public class CraftingUtil{
 
@@ -201,9 +204,10 @@ public class CraftingUtil{
 	 */
 	@Nullable
 	public static <T> T getTagEntry(TagKey<T> tag){
-		ITagManager<T> manager = getTagManagerForKey(tag);
+		Registry<T> manager = getRegistryForKey(tag);
 		Comparator<T> comparator = RegNameComparator.getComparator(tag.registry());
-		return manager.getTag(tag).stream().min(comparator).orElse(null);
+		//TODO pretty sure this is a safe cast but if it fails maybe look a bit closer.
+		return manager.getTag(tag).stream().map((named) -> (T) named.key().registry()).min(comparator).orElse(null);
 	}
 
 	public static <T> T getPreferredEntry(Collection<T> entries, ResourceKey<? extends Registry<T>> registry){
@@ -217,12 +221,21 @@ public class CraftingUtil{
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T> ITagManager<T> getTagManagerForKey(TagKey<T> tagKey){
-		return (ITagManager<T>) RegistryManager.ACTIVE.getRegistry(tagKey.registry().location()).tags();
+	public static <T> Registry<T> getRegistryForKey(TagKey<T> tagKey){
+		return (Registry<T>) BuiltInRegistries.REGISTRY.get(tagKey.registry().location());
 	}
 
 	public static <T> boolean tagContains(TagKey<T> tagKey, T thing){
-		return getTagManagerForKey(tagKey).getTag(tagKey).contains(thing);
+		Optional<HolderSet.Named<T>> tagHolderSet;
+		if((tagHolderSet = getRegistryForKey(tagKey).getTag(tagKey)).isPresent()){
+			//TODO don't actually know what Holder.direct() is doing but it seems like something vaguely appropriate
+			// to inline here.
+			return tagHolderSet.get().contains(Holder.direct(thing));
+		}else{
+			throw new IllegalArgumentException(
+					"tagContains() called using generic type that does not possess an associated registry"
+			);
+		}
 	}
 
 	/**
