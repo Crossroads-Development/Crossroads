@@ -653,7 +653,7 @@
 	"tt.crossroads.ccc.desc": "Makes Molten Copshowium from liquids when hit by a TIME beam",
 	"tt.crossroads.ccc.mult": "1mB of liquid will become %1$fmB of Molten Copshowium",
 	"tt.crossroads.ccc.flux": "Produces %1$dTEn per ingot produced if using cheaper liquids",
-	"tt.crossroads.ccc.limit": "Destroyed if overflowed with Molten Copshowium",
+	"tt.crossroads.ccc.limit": "Destroyed if overflowed with Molten Copshowium. Makes as much as possible",
 	"tt.crossroads.ccc.io": "Copshowium is piped out the bottom. Ingredient liquids can be input AND output the top",
 	"tt.crossroads.beacon_harness.desc": "Produces massive color-changing beams when supplied with the alignment of the missing color",
 	"tt.crossroads.beacon_harness.buffer": "Ignores the input beam for 2 seconds after changing needed color",
