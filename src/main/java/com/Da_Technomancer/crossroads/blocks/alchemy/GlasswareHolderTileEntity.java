@@ -69,6 +69,12 @@ public class GlasswareHolderTileEntity extends ReagentHolderTE{
 	}
 
 	@Override
+	public void setBlockState(BlockState stateIn){
+		super.setBlockState(stateIn);
+		glassType = null;
+	}
+
+	@Override
 	protected boolean useCableHeat(){
 		return true;
 	}
