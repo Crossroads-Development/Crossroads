@@ -1,7 +1,7 @@
 {
 	"type": "crossroads:alchemy",
 	"category": "elemental",
-	"data": "fusion",
+	"beam_element": "fusion",
 	"catalyst": "practitioner",
 	"charged": true,
 	"reagents": [

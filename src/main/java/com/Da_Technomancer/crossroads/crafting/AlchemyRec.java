@@ -138,7 +138,7 @@ public class AlchemyRec implements IOptionalRecipe<Container>{
 		int content = reags.getTotalQty();
 
 		//Elemental reactions have special handling
-		if(type == Type.ELEMENTAL){
+		if(type == Type.ELEMENTAL || type == Type.ELEMENTAL_DESTRUCTIVE){
 			if(alignment == EnumBeamAlignments.getAlignment(new BeamUnit(reags.getQty(EnumReagents.PHELOSTOGEN.id()), reags.getQty(EnumReagents.AETHER.id()), reags.getQty(EnumReagents.ADAMANT.id()), 0))){
 				int created = 0;
 				created += reags.getQty(EnumReagents.PHELOSTOGEN.id());
@@ -150,6 +150,11 @@ public class AlchemyRec implements IOptionalRecipe<Container>{
 
 				for(ReagentStack reag : getProducts()){
 					reags.addReagent(reag.getType(), created * reag.getAmount(), reags.getTempC());
+				}
+
+				if(created > 0 && type == Type.ELEMENTAL_DESTRUCTIVE){
+					chamb.destroyChamber(Math.min(MAX_BLAST, data * created));
+					chamb.addVisualEffect(ParticleTypes.SMOKE, 0, 0, 0);
 				}
 
 				return created > 0;
@@ -316,10 +321,23 @@ public class AlchemyRec implements IOptionalRecipe<Container>{
 
 				float data = 0;
 				EnumBeamAlignments alignment = EnumBeamAlignments.NO_MATCH;
-				if(type == Type.DESTRUCTIVE){
+				if(type == Type.DESTRUCTIVE || type == Type.ELEMENTAL_DESTRUCTIVE){
 					data = GsonHelper.getAsFloat(json, "data", 0);
-				}else if(type == Type.ELEMENTAL){
-					alignment = EnumBeamAlignments.valueOf(GsonHelper.getAsString(json, "data", "no_match").toUpperCase(Locale.US));
+				}
+				if(type == Type.ELEMENTAL || type == Type.ELEMENTAL_DESTRUCTIVE){
+					try{
+						alignment = EnumBeamAlignments.valueOf(GsonHelper.getAsString(json, "beam_element", "no_match").toUpperCase(Locale.US));
+					}catch(IllegalArgumentException ignored){
+
+					}
+					if(alignment == EnumBeamAlignments.NO_MATCH){
+						//TODO remove; backwards compat for the tag being "data"
+						try{
+							alignment = EnumBeamAlignments.valueOf(GsonHelper.getAsString(json, "data", "no_match").toUpperCase(Locale.US));
+						}catch(IllegalArgumentException ignored){
+
+						}
+					}
 				}
 
 				JsonArray jsonR;
@@ -426,7 +444,8 @@ public class AlchemyRec implements IOptionalRecipe<Container>{
 		NORMAL(),
 		PRECISE(),//Destroys the chamber if proportions aren't exact
 		DESTRUCTIVE(),//Destroys the chamber
-		ELEMENTAL();//Practitioner stone tier elemental reagent
+		ELEMENTAL(),//Practitioner stone tier elemental reagent
+		ELEMENTAL_DESTRUCTIVE;//Practitioner stone tier elemental reagent, but just destroys it
 
 		public static Type getType(String s){
 			s = s.toUpperCase(Locale.ENGLISH);

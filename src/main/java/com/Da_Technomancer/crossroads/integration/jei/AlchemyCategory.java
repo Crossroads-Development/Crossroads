@@ -39,6 +39,7 @@ public class AlchemyCategory implements IRecipeCategory<AlchemyRec>{
 	private final IDrawable blast;
 	private final IDrawable preciseWarning;
 	private final IDrawable elemental;
+	private final IDrawable elementalBlast;
 
 	protected AlchemyCategory(IGuiHelper guiHelper){
 		back = guiHelper.createBlankDrawable(180, 100);
@@ -49,7 +50,7 @@ public class AlchemyCategory implements IRecipeCategory<AlchemyRec>{
 		blast = guiHelper.createDrawable(AlchemyCategory.ICONS, 64, 0, 16, 16);
 		preciseWarning = guiHelper.createDrawable(AlchemyCategory.ICONS, 64, 16, 16, 16);
 		elemental = guiHelper.createDrawable(AlchemyCategory.ICONS, 64, 32, 16, 16);
-
+		elementalBlast = guiHelper.createDrawable(AlchemyCategory.ICONS, 64, 48, 16, 16);
 	}
 
 	@Override
@@ -97,6 +98,9 @@ public class AlchemyCategory implements IRecipeCategory<AlchemyRec>{
 			case ELEMENTAL -> {
 				elemental.draw(matrix, 98, 2);
 			}
+			case ELEMENTAL_DESTRUCTIVE -> {
+				elementalBlast.draw(matrix, 98, 2);
+			}
 		}
 	}
 	@Override
@@ -111,6 +115,9 @@ public class AlchemyCategory implements IRecipeCategory<AlchemyRec>{
 				}
 				case ELEMENTAL -> {
 					return List.of(Component.translatable("crossroads.jei.reagent.elemental"));
+				}
+				case ELEMENTAL_DESTRUCTIVE -> {
+					return List.of(Component.translatable("crossroads.jei.reagent.elemental_destructive"));
 				}
 			}
 		}
@@ -129,14 +136,27 @@ public class AlchemyCategory implements IRecipeCategory<AlchemyRec>{
 
 	@Override
 	public void setRecipe(IRecipeLayoutBuilder builder, AlchemyRec recipe, IFocusGroup focuses){
-		//Inputs
-		for(int i = 0; i < recipe.getReagents().length; i++){
-			builder.addSlot(RecipeIngredientRole.INPUT, 61 - i * 20, 21).addIngredient(com.Da_Technomancer.crossroads.integration.jei.ReagIngr.REAG, new com.Da_Technomancer.crossroads.integration.jei.ReagIngr(recipe.getReagents()[i]));
-		}
+		if(recipe.getReactionType() == AlchemyRec.Type.ELEMENTAL || recipe.getReactionType() == AlchemyRec.Type.ELEMENTAL_DESTRUCTIVE){
+			//Hide the quantity for elemental type reactions
+			//Inputs
+			for(int i = 0; i < recipe.getReagents().length; i++){
+				builder.addSlot(RecipeIngredientRole.INPUT, 61 - i * 20, 21).addIngredient(com.Da_Technomancer.crossroads.integration.jei.ReagIngr.REAG, new com.Da_Technomancer.crossroads.integration.jei.ReagIngr(recipe.getReagents()[i].getType(), 0));
+			}
 
-		//Outputs
-		for(int i = 0; i < recipe.getProducts().length; i++ ){
-			builder.addSlot(RecipeIngredientRole.OUTPUT, 106 + i * 20, 21).addIngredient(com.Da_Technomancer.crossroads.integration.jei.ReagIngr.REAG, new com.Da_Technomancer.crossroads.integration.jei.ReagIngr(recipe.getProducts()[i]));
+			//Outputs
+			for(int i = 0; i < recipe.getProducts().length; i++ ){
+				builder.addSlot(RecipeIngredientRole.OUTPUT, 106 + i * 20, 21).addIngredient(com.Da_Technomancer.crossroads.integration.jei.ReagIngr.REAG, new com.Da_Technomancer.crossroads.integration.jei.ReagIngr(recipe.getProducts()[i].getType(), 0));
+			}
+		}else{
+			//Inputs
+			for(int i = 0; i < recipe.getReagents().length; i++){
+				builder.addSlot(RecipeIngredientRole.INPUT, 61 - i * 20, 21).addIngredient(com.Da_Technomancer.crossroads.integration.jei.ReagIngr.REAG, new com.Da_Technomancer.crossroads.integration.jei.ReagIngr(recipe.getReagents()[i]));
+			}
+
+			//Outputs
+			for(int i = 0; i < recipe.getProducts().length; i++ ){
+				builder.addSlot(RecipeIngredientRole.OUTPUT, 106 + i * 20, 21).addIngredient(com.Da_Technomancer.crossroads.integration.jei.ReagIngr.REAG, new com.Da_Technomancer.crossroads.integration.jei.ReagIngr(recipe.getProducts()[i]));
+			}
 		}
 
 		//Catalyst

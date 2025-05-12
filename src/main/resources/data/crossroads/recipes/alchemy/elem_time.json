@@ -1,7 +1,8 @@
 {
 	"type": "crossroads:alchemy",
-	"category": "elemental",
-	"beam_element": "expansion",
+	"category": "elemental_destructive",
+	"beam_element": "time",
+	"data": 0.2,
 	"catalyst": "practitioner",
 	"charged": true,
 	"reagents": [
@@ -17,7 +18,7 @@
 	],
 	"products": [
 		{
-			"type": "elem_expansion",
+			"type": "copper",
 			"qty": 1
 		}
 	]

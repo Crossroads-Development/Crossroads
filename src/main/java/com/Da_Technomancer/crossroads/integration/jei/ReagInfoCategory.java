@@ -72,8 +72,8 @@ public class ReagInfoCategory implements IRecipeCategory<IReagent>{
 		}
 
 		//GlStateManager.color(1, 1, 1);
-		graphics.pose().translate(2, 2, 0);
-		ReagentIngredientRenderer.RENDERER.render(graphics, new ReagIngr(recipe, 1));
+//		graphics.pose().translate(2, 2, 0);
+//		ReagentIngredientRenderer.RENDERER.render(graphics, new ReagIngr(recipe, 1));
 	}
 
 	@Override
@@ -90,14 +90,14 @@ public class ReagInfoCategory implements IRecipeCategory<IReagent>{
 	public void setRecipe(IRecipeLayoutBuilder builder, IReagent recipe, IFocusGroup focuses){
 		ReagIngr reagIngr = new ReagIngr(recipe, 1);
 		//We add as both input and output to enable the lookup in both directions
-		builder.addSlot(RecipeIngredientRole.INPUT, 3, 3).addIngredient(ReagIngr.REAG, reagIngr);
+		builder.addSlot(RecipeIngredientRole.INPUT, 1, 1).addIngredient(ReagIngr.REAG, reagIngr);
 		builder.addInvisibleIngredients(RecipeIngredientRole.OUTPUT).addIngredient(ReagIngr.REAG, reagIngr);
 		//In the event that items fail to load into JEI because the tag hasn't been initialized yet, the try-catch lets the recipe load without the item form
 		try{
 			TagKey<Item> jeiSolids = recipe.getJEISolids();
 			Ingredient itemForm = Ingredient.of(jeiSolids);
 			if(!itemForm.isEmpty()){
-				builder.addSlot(RecipeIngredientRole.INPUT, 21, 3).addIngredients(itemForm);
+				builder.addSlot(RecipeIngredientRole.INPUT, 19, 1).addIngredients(itemForm);
 				builder.addInvisibleIngredients(RecipeIngredientRole.OUTPUT).addIngredients(itemForm);
 			}
 		}catch(Exception e){

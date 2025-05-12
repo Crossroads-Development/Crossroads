@@ -1,7 +1,7 @@
 {
 	"type": "crossroads:alchemy",
 	"category": "elemental",
-	"data": "equilibrium",
+	"beam_element": "equilibrium",
 	"catalyst": "practitioner",
 	"charged": true,
 	"reagents": [
