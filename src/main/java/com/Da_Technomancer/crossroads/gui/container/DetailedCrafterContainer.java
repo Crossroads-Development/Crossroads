@@ -38,7 +38,6 @@ import static net.neoforged.neoforge.common.CommonHooks.setCraftingPlayer;
 
 public class DetailedCrafterContainer extends RecipeBookMenu<CraftingContainer>{
 
-	protected static final MenuType<DetailedCrafterContainer> TYPE = CRContainers.createConType(DetailedCrafterContainer::new);
 
 	@SuppressWarnings("unchecked")
 	private static final TagKey<Item>[] unlockKeys = new TagKey[3];
@@ -60,7 +59,7 @@ public class DetailedCrafterContainer extends RecipeBookMenu<CraftingContainer>{
 	private final BlockPos pos;//Null if fake, nonnull otherwise- used for canInteractWith
 
 	public DetailedCrafterContainer(int id, Inventory playerInv, FriendlyByteBuf buf){
-		super(TYPE, id);
+		super(CRContainers.DETAILED_CRAFTER_CONTAINER.get(), id);
 		player = playerInv.player;
 		world = player.level();
 

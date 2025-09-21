@@ -122,6 +122,8 @@ public class EntityFlameCore extends Entity{
 	public void tick(){
 		super.tick();
 
+		//TODO change flame clouds to expand fast (linear velocity) initially but slow down as they grow, and also become less opaque as they reach the limit of their range
+
 		if(level().isClientSide || reags == null){
 			return;
 		}

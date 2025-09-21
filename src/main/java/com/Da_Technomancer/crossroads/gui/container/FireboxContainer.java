@@ -9,12 +9,11 @@ import net.minecraft.world.inventory.MenuType;
 
 public class FireboxContainer extends MachineContainer<FireboxTileEntity>{
 
-	protected static final MenuType<FireboxContainer> TYPE = CRContainers.createConType(FireboxContainer::new);
 
 	public IntDeferredRef burnProg;
 
 	public FireboxContainer(int id, Inventory playerInv, FriendlyByteBuf data){
-		super(TYPE, id, playerInv, data);
+		super(CRContainers.FIREBOX_CONTAINER.get(), id, playerInv, data);
 		burnProg = new IntDeferredRef(te::getBurnProg, te.getLevel().isClientSide);
 		addDataSlot(burnProg);
 	}

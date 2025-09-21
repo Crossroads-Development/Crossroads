@@ -22,11 +22,11 @@ public class WheezewortSeeds extends ItemNameBlockItem{
 		@Override
 		public ItemStack execute(BlockSource source, ItemStack stack){
 			//Can be planted by dispenser
-			BlockState dispenserState = source.getBlockState();
+			BlockState dispenserState = source.state();
 			if(dispenserState.hasProperty(DispenserBlock.FACING)){
-				BlockPos plantPos = source.getPos().relative(dispenserState.getValue(DispenserBlock.FACING));
+				BlockPos plantPos = source.pos().relative(dispenserState.getValue(DispenserBlock.FACING));
 				BlockPos groundPos = plantPos.below();
-				Level world = source.getLevel();
+				Level world = source.level();
 				if(world.getBlockState(plantPos).isAir() && CRBlocks.wheezewort.canSustainPlant(world.getBlockState(groundPos), world, groundPos, Direction.UP, CRBlocks.wheezewort.defaultBlockState()) == TriState.TRUE){
 					world.setBlockAndUpdate(plantPos, CRBlocks.wheezewort.defaultBlockState());
 					stack.shrink(1);

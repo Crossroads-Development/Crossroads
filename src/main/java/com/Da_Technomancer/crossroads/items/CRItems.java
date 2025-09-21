@@ -14,6 +14,7 @@ import com.Da_Technomancer.crossroads.items.item_sets.*;
 import com.Da_Technomancer.crossroads.items.technomancy.*;
 import com.Da_Technomancer.crossroads.items.witchcraft.*;
 import com.Da_Technomancer.essentials.api.ReflectionUtil;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.item.CompassItemPropertyFunction;
 import net.minecraft.client.renderer.item.ItemProperties;
@@ -21,13 +22,18 @@ import net.minecraft.client.renderer.item.ItemPropertyFunction;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.*;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.common.DeferredSpawnEggItem;
+import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.RegisterEvent;
 import org.apache.logging.log4j.Level;
 
@@ -231,7 +237,7 @@ public final class CRItems{
 	public static Item gearFacadeGlass;
 	public static GearFacade gearFacade;
 
-	public static void init(){
+	public static void registerItems(){
 		//Ores
 		ingotTin = queueForRegister("ingot_tin", new Item(baseItemProperties()));
 		nuggetTin = queueForRegister("nugget_tin", new Item(baseItemProperties()));
@@ -394,13 +400,17 @@ public final class CRItems{
 		poisonVodka = new PoisonVodka();
 		villagerBrain = new VillagerBrain();
 		brainHarvester = new BrainHarvester();
-		hopperHawkSpawnEgg = queueForRegister("hopper_hawk_spawn_egg", new ForgeSpawnEggItem(() -> EntityHopperHawk.type, 0x555555, 0x999999, (baseItemProperties())));
+		hopperHawkSpawnEgg = queueForRegister("hopper_hawk_spawn_egg", new DeferredSpawnEggItem(() -> EntityHopperHawk.type, 0x555555, 0x999999, (baseItemProperties())));
 
 		registerDispenserOverrides();
 	}
 
 	public static void registerItems(RegisterEvent.RegisterHelper<Item> helper){
 		EventHandlerCommon.CRModEventsCommon.registerAll(helper, toRegister);
+	}
+
+	public static void init(IEventBus modBus){
+		//TODO data components
 	}
 
 	@OnlyIn(Dist.CLIENT)

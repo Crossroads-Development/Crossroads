@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.api.CRReflection;
 import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.alchemy.AtmosChargeSavedData;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
+import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.crossroads.api.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.api.technomancy.RespawnInventorySavedData;
 import com.Da_Technomancer.crossroads.api.witchcraft.EntityTemplate;
@@ -79,6 +80,7 @@ import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.level.ExplosionEvent;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.neoforged.neoforge.registries.RegisterEvent;
 
@@ -104,14 +106,14 @@ public class EventHandlerCommon{
 		@SubscribeEvent
 		public static void register(RegisterEvent e){
 			e.register(Registries.BLOCK, helper -> {
-				CRBlocks.init();
+				CRBlocks.registerBlocks();
 				CRMaterialLibrary.loadConfig();
 				CRFluids.init();
 				CRBlocks.registerBlocks(helper);
 			});
 
 			e.register(Registries.ITEM, helper -> {
-				CRItems.init();
+				CRItems.registerItems();
 				CRFluids.init();
 				CRItems.registerItems(helper);
 			});
@@ -235,6 +237,12 @@ public class EventHandlerCommon{
 		@SubscribeEvent
 		public static void registerEntityAttributes(EntityAttributeCreationEvent e){
 			e.put(EntityHopperHawk.type, EntityHopperHawk.createAttributes());
+		}
+
+		@SuppressWarnings("unused")
+		@SubscribeEvent
+		public static void register(RegisterPayloadHandlersEvent e){
+			CRPackets.registerPayloads(e);
 		}
 	}
 

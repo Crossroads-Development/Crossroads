@@ -12,6 +12,8 @@ import net.minecraft.world.level.chunk.LevelChunk;
 
 public enum CRReflection implements ReflectionUtil.IReflectionKey{
 
+	//TODO check
+
 	CURE_ZOMBIE(ZombieVillager.class, "m_34383_", "startConverting", "Cure zombie villagers with SO2"),
 	//	SWING_TIME(LivingEntity.class, "field_184617_aD", "attackStrengthTicker", "Mechanical Arm attacking"),
 //	ENTITY_LIST(ServerLevel.class, "field_175741_N", "entitiesByUuid", "Prevent mob spawning with Closure beams, modify explosions with Collapse/Equilibrium beams"),

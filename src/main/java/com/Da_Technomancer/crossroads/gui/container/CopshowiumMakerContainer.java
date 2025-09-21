@@ -11,10 +11,9 @@ import org.apache.commons.lang3.tuple.Pair;
 
 public class CopshowiumMakerContainer extends MachineContainer<CopshowiumCreationChamberTileEntity>{
 
-	protected static final MenuType<CopshowiumMakerContainer> TYPE = CRContainers.createConType(CopshowiumMakerContainer::new);
 
 	public CopshowiumMakerContainer(int windowId, Inventory playerInv, FriendlyByteBuf data){
-		super(TYPE, windowId, playerInv, data);
+		super(CRContainers.COPSHOWIUM_MAKER_CONTAINER.get(), windowId, playerInv, data);
 	}
 
 	@Override

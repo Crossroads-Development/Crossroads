@@ -8,7 +8,6 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
-import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
@@ -17,7 +16,6 @@ public class CRPackets{
 
 	private static final double NEAR_RADIUS = 512.0D;
 
-	@SubscribeEvent
 	public static void registerPayloads(final RegisterPayloadHandlersEvent event){
 		final PayloadRegistrar registrar = event.registrar("1");
 

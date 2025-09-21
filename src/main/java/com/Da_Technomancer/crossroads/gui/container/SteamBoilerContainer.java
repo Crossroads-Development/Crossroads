@@ -11,10 +11,9 @@ import org.apache.commons.lang3.tuple.Pair;
 
 public class SteamBoilerContainer extends MachineContainer<SteamBoilerTileEntity>{
 
-	protected static final MenuType<SteamBoilerContainer> TYPE = CRContainers.createConType(SteamBoilerContainer::new);
 
 	public SteamBoilerContainer(int id, Inventory playerInv, FriendlyByteBuf buf){
-		super(TYPE, id, playerInv, buf);
+		super(CRContainers.STEAM_BOILER_CONTAINER.get(), id, playerInv, buf);
 	}
 
 	@Override

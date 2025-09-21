@@ -14,14 +14,13 @@ public class HeatReservoirCreativeContainer extends AbstractContainerMenu{
 	public String conf;
 	public BlockPos pos;
 
-	protected static final MenuType<HeatReservoirCreativeContainer> TYPE = CRContainers.createConType(HeatReservoirCreativeContainer::new);
 
 	public HeatReservoirCreativeContainer(int id, Inventory playerInventory, FriendlyByteBuf data){
 		this(id, playerInventory, data == null ? 0 : data.readFloat(), data == null ? null : data.readUtf(), data == null ? null : data.readBlockPos());
 	}
 
 	public HeatReservoirCreativeContainer(int id, Inventory playerInventory, float output, String settingStr, BlockPos pos){
-		super(TYPE, id);
+		super(CRContainers.HEAT_RESERVOIR_CREATIVE_CONTAINER.get(), id);
 		this.output = output;
 		this.conf = settingStr;
 		this.pos = pos;

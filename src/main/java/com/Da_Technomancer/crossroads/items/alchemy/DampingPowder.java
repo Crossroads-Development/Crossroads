@@ -41,11 +41,11 @@ public class DampingPowder extends Item{
 		@Override
 		public ItemStack execute(BlockSource source, ItemStack stack){
 			stack.shrink(1);
-			Vec3 partPos = Vec3.atCenterOf(source.getPos());
-			if(source.getBlockState().hasProperty(DispenserBlock.FACING)){
-				partPos = partPos.add(Vec3.atLowerCornerOf(source.getBlockState().getValue(DispenserBlock.FACING).getNormal()));
+			Vec3 partPos = Vec3.atCenterOf(source.pos());
+			if(source.state().hasProperty(DispenserBlock.FACING)){
+				partPos = partPos.add(Vec3.atLowerCornerOf(source.state().getValue(DispenserBlock.FACING).getNormal()));
 			}
-			performDamping(source.getLevel(), MiscUtil.blockPos(partPos), true);
+			performDamping(source.level(), MiscUtil.blockPos(partPos), true);
 			return stack;
 		}
 
@@ -54,7 +54,7 @@ public class DampingPowder extends Item{
 		 */
 		@Override
 		protected void playSound(BlockSource source){
-			source.getLevel().levelEvent(1000, source.getPos(), 0);
+			source.level().levelEvent(1000, source.pos(), 0);
 		}
 	};
 

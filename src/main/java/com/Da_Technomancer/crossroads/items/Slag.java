@@ -17,8 +17,8 @@ public class Slag extends Item{
 	private static final DispenseItemBehavior SLAG_DISPENSER_BEHAVIOR = new OptionalDispenseItemBehavior(){
 		@Override
 		protected ItemStack execute(BlockSource source, ItemStack stack){
-			Level world = source.getLevel();
-			BlockPos blockpos = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
+			Level world = source.level();
+			BlockPos blockpos = source.pos().relative(source.state().getValue(DispenserBlock.FACING));
 
 			//We currently use the deprecated method because this is what vanilla dispensers currently use
 			if(BoneMealItem.growCrop(stack, world, blockpos)){

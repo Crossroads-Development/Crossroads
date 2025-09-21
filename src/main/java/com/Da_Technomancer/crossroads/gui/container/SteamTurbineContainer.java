@@ -12,12 +12,11 @@ import org.apache.commons.lang3.tuple.Pair;
 
 public class SteamTurbineContainer extends MachineContainer<SteamTurbineTileEntity>{
 
-	protected static final MenuType<SteamTurbineContainer> TYPE = CRContainers.createConType(SteamTurbineContainer::new);
 
 	public final IntDeferredRef mode;
 
 	public SteamTurbineContainer(int id, Inventory playerInv, FriendlyByteBuf buf){
-		super(TYPE, id, playerInv, buf);
+		super(CRContainers.STEAM_TURBINE_CONTAINER.get(), id, playerInv, buf);
 		mode = new IntDeferredRef(te::getMode, te.getLevel().isClientSide);
 		addDataSlot(mode);
 		if(te.getLevel().isClientSide){

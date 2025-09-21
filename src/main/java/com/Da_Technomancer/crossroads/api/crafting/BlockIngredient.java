@@ -46,24 +46,23 @@ public class BlockIngredient implements Predicate<BlockState>{
 
 		keys = new ArrayList<>(matched.length);
 		for(Object key : matched){
-			if(key instanceof IBlockList){
-				keys.add((IBlockList) key);
-			}else if(key instanceof TagKey){
-				try{
-					TagKey<Block> tag = (TagKey<Block>) key;
-					keys.add(new TagList(tag));
-				}catch(ClassCastException e){
-					Crossroads.logger.error("An illegal tag type was added to a BlockIngredient. Report to mod author!", e);
+			switch(key){
+				case IBlockList iBlockList -> keys.add(iBlockList);
+				case TagKey tagKey -> {
+					try{
+						keys.add(new TagList((TagKey<Block>) key));
+					}catch(ClassCastException e){
+						Crossroads.logger.error("An illegal tag type was added to a BlockIngredient. Report to mod author!", e);
+						throw e;
+					}
+				}
+				case Block block -> keys.add(new SingleList(block));
+				case BlockState blockState -> keys.add(new SingleList(blockState.getBlock()));
+				case null, default -> {
+					JsonParseException e = new JsonParseException("Illegal type added to BlockIngredient; Type: " + key.getClass() + "; Value: " + key.toString());
+					Crossroads.logger.error("An illegal value was added to a BlockIngredient. Report to mod author!", e);
 					throw e;
 				}
-			}else if(key instanceof Block){
-				keys.add(new SingleList((Block) key));
-			}else if(key instanceof BlockState){
-				keys.add(new SingleList(((BlockState) key).getBlock()));
-			}else{
-				JsonParseException e = new JsonParseException("Illegal type added to BlockIngredient; Type: " + key.getClass() + "; Value: " + key.toString());
-				Crossroads.logger.error("An illegal value was added to a BlockIngredient. Report to mod author!", e);
-				throw e;
 			}
 		}
 	}
@@ -127,9 +126,9 @@ public class BlockIngredient implements Predicate<BlockState>{
 
 	private static IBlockList readIngr(JsonObject o){
 		if(o.has("tag")){
-			return new TagList(CraftingUtil.getTagKey(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(GsonHelper.getAsString(o, "tag"))));
+			return new TagList(CraftingUtil.getTagKey(Registries.BLOCK, ResourceLocation.parse(GsonHelper.getAsString(o, "tag"))));
 		}else if(o.has("block")){
-			return new SingleList(BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath(GsonHelper.getAsString(o, "block"))));
+			return new SingleList(BuiltInRegistries.BLOCK.get(ResourceLocation.parse(GsonHelper.getAsString(o, "block"))));
 		}else{
 			throw new JsonParseException("No value defined in BlockIngredient");
 		}
@@ -176,7 +175,7 @@ public class BlockIngredient implements Predicate<BlockState>{
 
 		@Override
 		public Collection<Block> getMatched(){
-			return CraftingUtil.getRegistryForKey(tag).getTag(tag).stream().collect(Collectors.toUnmodifiableSet());
+			return CraftingUtil.getTagContents(tag);
 		}
 	}
 

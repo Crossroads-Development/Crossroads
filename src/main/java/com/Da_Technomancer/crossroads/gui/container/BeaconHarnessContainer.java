@@ -14,13 +14,12 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class BeaconHarnessContainer extends AbstractContainerMenu{
 
-	protected static final MenuType<BeaconHarnessContainer> TYPE = CRContainers.createConType(BeaconHarnessContainer::new);
 
 	public final IntDeferredRef cycleRef;
 	public final BeaconHarnessTileEntity te;
 
 	public BeaconHarnessContainer(int id, Inventory playerInv, FriendlyByteBuf data){
-		super(TYPE, id);
+		super(CRContainers.BEACON_HARNESS_CONTAINER.get(), id);
 
 		BlockPos pos = data.readBlockPos();
 		BlockEntity rawTE = playerInv.player.level().getBlockEntity(pos);

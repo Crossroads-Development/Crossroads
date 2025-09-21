@@ -8,6 +8,7 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
@@ -60,7 +61,12 @@ public class EdibleBlob extends Item{
 		int hun = getHealAmount(stack);
 		int sat = getTrueSat(stack);
 		float sat_mod = (float) sat / (float) hun;
-		return new FoodProperties.Builder().nutrition(hun).saturationMod(sat_mod).meat().build();
+		return new FoodProperties.Builder().nutrition(hun).saturationModifier(sat_mod).meat().build();
+	}
+
+	@Override
+	public UseAnim getUseAnimation(ItemStack pStack){
+		return UseAnim.EAT;
 	}
 
 	@Override

@@ -6,19 +6,17 @@ import com.Da_Technomancer.essentials.api.FluidSlotManager;
 import com.Da_Technomancer.essentials.api.IntDeferredRef;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class BlastFurnaceContainer extends MachineContainer<BlastFurnaceTileEntity>{
 
-	protected static final MenuType<BlastFurnaceContainer> TYPE = CRContainers.createConType(BlastFurnaceContainer::new);
 
 	public final IntDeferredRef carbRef;
 	public final IntDeferredRef progRef;
 
 	public BlastFurnaceContainer(int id, Inventory playerInv, FriendlyByteBuf buf){
-		super(TYPE, id, playerInv, buf);
+		super(CRContainers.IND_BLAST_FURNACE_CONTAINER.get(), id, playerInv, buf);
 		carbRef = new IntDeferredRef(te::getCarbon, te.getLevel().isClientSide);
 		addDataSlot(carbRef);
 		progRef = new IntDeferredRef(te::getProgress, te.getLevel().isClientSide);

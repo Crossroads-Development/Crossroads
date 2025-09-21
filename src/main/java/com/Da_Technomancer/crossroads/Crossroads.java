@@ -1,12 +1,11 @@
 package com.Da_Technomancer.crossroads;
 
-import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
+import com.Da_Technomancer.crossroads.gui.container.CRContainers;
 import com.Da_Technomancer.crossroads.integration.CRIntegration;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.ModLoadingContext;
-import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -18,42 +17,36 @@ import org.apache.logging.log4j.Logger;
 import static com.Da_Technomancer.crossroads.Crossroads.MODID;
 
 @Mod(MODID)
-@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
 public final class Crossroads{
 
 	public static final String MODID = "crossroads";
 	public static final String MODNAME = "Crossroads";
 	public static final Logger logger = LogManager.getLogger(MODNAME);
 
-	public Crossroads(){
-		final IEventBus bus = ModLoadingContext.get().getModEventBus();
+	public Crossroads(IEventBus bus, ModContainer modContainer){
 		bus.addListener(this::commonInit);
 		bus.addListener(this::clientInit);
 		bus.addListener(this::serverInit);
 
-		CRConfig.init();
-
-		NeoForge.EVENT_BUS.register(this);
-
-		CRConfig.load();
+		CRBlocks.init(bus);
+		CRItems.init(bus);
+		CRContainers.init(bus);
+		CRConfig.init(modContainer);
 	}
 
 	private void commonInit(@SuppressWarnings("unused") FMLCommonSetupEvent e){
-		//Pre
-		CRPackets.init();
-		//Main
-		MinecraftForge.EVENT_BUS.register(new EventHandlerCommon());
+		NeoForge.EVENT_BUS.register(new EventHandlerCommon());
 
 		CRIntegration.init();
 	}
 
 	private void clientInit(@SuppressWarnings("unused") FMLClientSetupEvent e){
-		MinecraftForge.EVENT_BUS.register(new EventHandlerClient());
+		NeoForge.EVENT_BUS.register(new EventHandlerClient());
 		CRBlocks.clientInit();
 		CRItems.clientInit();
 	}
 
 	private void serverInit(FMLDedicatedServerSetupEvent e){
-		MinecraftForge.EVENT_BUS.register(new EventHandlerServer());
+		NeoForge.EVENT_BUS.register(new EventHandlerServer());
 	}
 }

@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.world;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.placement.PlacementContext;
@@ -20,10 +20,7 @@ public class OreConfigFilter extends PlacementFilter{
 
 	private static final HashMap<String, ModConfigSpec.BooleanValue> configMap = new HashMap<>(3);
 
-	protected static final Codec<OreConfigFilter> CODEC = RecordCodecBuilder.create((builder) ->
-			builder.group(Codec.STRING.fieldOf("config").forGetter(configFilter -> configFilter.configName))
-					.apply(builder, OreConfigFilter::new));
-
+	protected static final MapCodec<OreConfigFilter> CODEC = Codec.STRING.fieldOf("config").xmap(OreConfigFilter::new, OreConfigFilter::getConfigName);
 
 	public static void registerConfig(String configName, ModConfigSpec.BooleanValue controllingConfig){
 		configMap.put(configName, controllingConfig);
@@ -45,8 +42,12 @@ public class OreConfigFilter extends PlacementFilter{
 		return config == null || config.get();
 	}
 
+	private String getConfigName(){
+		return configName;
+	}
+
 	@Override
 	public PlacementModifierType<?> type(){
-		return null;//TODO
+		return CRWorldGen.oreConfigPlacementModifierType;
 	}
 }

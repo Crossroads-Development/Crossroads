@@ -6,8 +6,8 @@ import com.Da_Technomancer.crossroads.integration.curios.CurioHelper;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamCage;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamUsingItem;
+import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
@@ -41,8 +41,8 @@ public class BeamToolOverlay implements LayeredDraw.Layer{
 			PoseStack matrix = graphics.pose();
 			//Use the batched renderer instead of the Tesselator
 
-			//TODO: begin() takes 2 arguments which its predecessor didn't, not sure what to use.
-			MultiBufferSource.BufferSource buffer = MultiBufferSource.immediate(Tesselator.getInstance().begin());
+			//1536 copied from other uses in vanilla code
+			MultiBufferSource.BufferSource buffer = MultiBufferSource.immediate(new ByteBufferBuilder(1536));
 //			PoseStack matrix = e.getMatrixStack();
 			matrix.pushPose();
 			//Makes the UI overlay smaller

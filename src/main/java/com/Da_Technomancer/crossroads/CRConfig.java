@@ -12,6 +12,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.loading.FMLPaths;
@@ -139,7 +140,7 @@ public class CRConfig{
 	private static final String CAT_ALCHEMY = "Alchemy";
 	private static final String CAT_WITCHCRAFT = "Witchcraft";
 
-	protected static void init(){
+	protected static void init(ModContainer modContainer){
 		//Client config
 		ModConfigSpec.Builder clientBuilder = new ModConfigSpec.Builder();
 		rotateBeam = clientBuilder.comment("Should beams visually rotate?").define("rotate_beam", true);
@@ -270,6 +271,14 @@ public class CRConfig{
 
 		serverSpec = serverBuilder.build();
 		ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, serverSpec);
+
+		CommentedFileConfig clientConfig = CommentedFileConfig.builder(FMLPaths.CONFIGDIR.get().resolve(Crossroads.MODID + "-client.toml")).sync().autosave().writingMode(WritingMode.REPLACE).build();
+		clientConfig.load();
+		clientSpec.setConfig(clientConfig);
+
+		CommentedFileConfig serverConfig = CommentedFileConfig.builder(FMLPaths.CONFIGDIR.get().resolve(Crossroads.MODID + "-server.toml")).sync().autosave().writingMode(WritingMode.REPLACE).build();
+		serverConfig.load();
+		serverSpec.setConfig(serverConfig);
 	}
 
 	@SafeVarargs
@@ -292,16 +301,6 @@ public class CRConfig{
 	 */
 	public static boolean isProtected(Level world, BlockPos pos, BlockState state){
 		return CraftingUtil.tagContains(destroyBlacklist, state.getBlock()) || state.getBlock().defaultDestroyTime() < 0;
-	}
-
-	protected static void load(){
-		CommentedFileConfig clientConfig = CommentedFileConfig.builder(FMLPaths.CONFIGDIR.get().resolve(Crossroads.MODID + "-client.toml")).sync().autosave().writingMode(WritingMode.REPLACE).build();
-		clientConfig.load();
-		clientSpec.setConfig(clientConfig);
-
-		CommentedFileConfig serverConfig = CommentedFileConfig.builder(FMLPaths.CONFIGDIR.get().resolve(Crossroads.MODID + "-server.toml")).sync().autosave().writingMode(WritingMode.REPLACE).build();
-		serverConfig.load();
-		serverSpec.setConfig(serverConfig);
 	}
 
 	public static String formatVal(double d){

@@ -11,10 +11,9 @@ import javax.annotation.Nullable;
 
 public class ColorChartContainer extends AbstractContainerMenu{
 
-	protected static final MenuType<ColorChartContainer> TYPE = CRContainers.createConType(ColorChartContainer::new);
 
 	public ColorChartContainer(int id, Inventory playerInv, @Nullable FriendlyByteBuf buf){
-		super(TYPE, id);
+		super(CRContainers.COLOR_CHART_CONTAINER.get(), id);
 	}
 
 	@Override

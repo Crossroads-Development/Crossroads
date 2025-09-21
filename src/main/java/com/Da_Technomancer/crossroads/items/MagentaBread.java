@@ -7,11 +7,8 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
 
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -22,14 +19,9 @@ public class MagentaBread extends Item{
 	private static final Supplier<MobEffectInstance> nauseaSupplier = () -> new MobEffectInstance(MobEffects.CONFUSION, 3600, 10);
 
 	protected MagentaBread(){
-		super(new Properties().food(new FoodProperties.Builder().alwaysEat().nutrition(20).saturationMod(0.5F).effect(speedSupplier, 1).effect(jumpBoostSupplier, 1).effect(nauseaSupplier, 1).build()));
+		super(new Properties().rarity(CRItems.BOBO_RARITY).food(new FoodProperties.Builder().alwaysEdible().nutrition(20).saturationModifier(0.5F).effect(speedSupplier, 1).effect(jumpBoostSupplier, 1).effect(nauseaSupplier, 1).build()));
 		String name = "magenta_bread";
 		CRItems.queueForRegister(name, this);
-	}
-
-	@Override
-	public Rarity getRarity(ItemStack stack){
-		return CRItems.BOBO_RARITY;
 	}
 
 	@Override

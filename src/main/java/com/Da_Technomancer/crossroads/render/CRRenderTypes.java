@@ -4,9 +4,15 @@ import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormatElement;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceProvider;
+import net.neoforged.neoforge.client.event.RegisterShadersEvent;
+
+import java.io.IOException;
 
 //Stores all the stitched textures and render types
 public class CRRenderTypes extends RenderType{
@@ -61,16 +67,32 @@ public class CRRenderTypes extends RenderType{
 	//Stitched to the flame core atlas
 	public static final ResourceLocation FLAME_CORE_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/entities/flame.png");
 
+	//Vertex format
+	public static final VertexFormat POSITION_COLOR_TEX = VertexFormat.builder().add("Position", VertexFormatElement.POSITION).add("Color", VertexFormatElement.COLOR).add("UV0", VertexFormatElement.UV0).build();
+
+	//Shader
+	private static ShaderInstance positionColorTexShaderInstance;
+	private static final ShaderStateShard POSITION_COLOR_TEX_SHADER = new ShaderStateShard(() -> positionColorTexShaderInstance);
 
 	//Types
-	public static final RenderType BEAM_TYPE = RenderType.create("cr_beam", DefaultVertexFormat.POSITION_COLOR_TEX, VertexFormat.Mode.QUADS, 256, false, true, RenderType.CompositeState.builder().setShaderState(RenderStateShard.POSITION_COLOR_TEX_SHADER).setCullState(RenderStateShard.NO_CULL).setTextureState(new RenderStateShard.TextureStateShard(BEAM_TEXTURE, false, false)).setTransparencyState(CRConfig.beamTransparent.get() ? TransparencyStateShard.ADDITIVE_TRANSPARENCY : TransparencyStateShard.NO_TRANSPARENCY).createCompositeState(false));
+	public static final RenderType BEAM_TYPE = RenderType.create("cr_beam", POSITION_COLOR_TEX, VertexFormat.Mode.QUADS, 256, false, true, RenderType.CompositeState.builder().setShaderState(POSITION_COLOR_TEX_SHADER).setCullState(RenderStateShard.NO_CULL).setTextureState(new RenderStateShard.TextureStateShard(BEAM_TEXTURE, false, false)).setTransparencyState(CRConfig.beamTransparent.get() ? TransparencyStateShard.ADDITIVE_TRANSPARENCY : TransparencyStateShard.NO_TRANSPARENCY).createCompositeState(false));
 	public static final RenderType FLUX_SINK_TYPE = RenderType.create("cr_flux_sink", DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP, VertexFormat.Mode.QUADS, 256, false, true, RenderType.CompositeState.builder().setShaderState(RenderStateShard.POSITION_COLOR_TEX_LIGHTMAP_SHADER).setCullState(RenderStateShard.NO_CULL).setTextureState(new RenderStateShard.TextureStateShard(FLUX_SINK_TEXTURE, false, false)).setLightmapState(RenderStateShard.LIGHTMAP).setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY).createCompositeState(false));
-	public static final RenderType AREA_OVERLAY_TYPE = RenderType.create("cr_area_overlay", DefaultVertexFormat.POSITION_COLOR_TEX, VertexFormat.Mode.QUADS, 256, false, true, RenderType.CompositeState.builder().setShaderState(RenderStateShard.POSITION_COLOR_TEX_SHADER).setCullState(RenderStateShard.NO_CULL).setTextureState(new RenderStateShard.TextureStateShard(AREA_OVERLAY_TEXTURE, false, false)).setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY).createCompositeState(false));
+	public static final RenderType AREA_OVERLAY_TYPE = RenderType.create("cr_area_overlay", POSITION_COLOR_TEX, VertexFormat.Mode.QUADS, 256, false, true, RenderType.CompositeState.builder().setShaderState(POSITION_COLOR_TEX_SHADER).setCullState(RenderStateShard.NO_CULL).setTextureState(new RenderStateShard.TextureStateShard(AREA_OVERLAY_TEXTURE, false, false)).setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY).createCompositeState(false));
 	public static final RenderType ELECTRIC_ARC_TYPE = RenderType.create("cr_electric_arc", DefaultVertexFormat.POSITION_COLOR_LIGHTMAP, VertexFormat.Mode.QUADS, 256, false, true, RenderType.CompositeState.builder().setShaderState(RenderStateShard.POSITION_COLOR_LIGHTMAP_SHADER).setCullState(RenderStateShard.NO_CULL).setLightmapState(RenderStateShard.LIGHTMAP).createCompositeState(false));
-	public static final RenderType FLUX_TRANSFER_TYPE = RenderType.create("cr_flux_extrusion", DefaultVertexFormat.POSITION_COLOR_TEX, VertexFormat.Mode.QUADS, 256, false, true, RenderType.CompositeState.builder().setShaderState(RenderStateShard.POSITION_COLOR_TEX_SHADER).setCullState(RenderStateShard.NO_CULL).setTextureState(new RenderStateShard.TextureStateShard(FLUX_EXTRUSION_TEXTURE, false, false)).setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY).createCompositeState(false));
+	public static final RenderType FLUX_TRANSFER_TYPE = RenderType.create("cr_flux_extrusion", POSITION_COLOR_TEX, VertexFormat.Mode.QUADS, 256, false, true, RenderType.CompositeState.builder().setShaderState(POSITION_COLOR_TEX_SHADER).setCullState(RenderStateShard.NO_CULL).setTextureState(new RenderStateShard.TextureStateShard(FLUX_EXTRUSION_TEXTURE, false, false)).setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY).createCompositeState(false));
 	public static final RenderType BEAM_INFO_TYPE = RenderType.create("cr_beam_info", DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS, 256, false, true, RenderType.CompositeState.builder().setShaderState(RenderStateShard.POSITION_TEX_SHADER).setCullState(RenderStateShard.NO_CULL).setTextureState(new RenderStateShard.TextureStateShard(BEAM_INFO_TEXTURE, false, false)).createCompositeState(false));
-	public static final RenderType FLAME_CORE_TYPE = RenderType.create("cr_flame_core", DefaultVertexFormat.POSITION_COLOR_TEX, VertexFormat.Mode.QUADS, 256, false, true, RenderType.CompositeState.builder().setShaderState(RenderStateShard.POSITION_COLOR_TEX_SHADER).setCullState(RenderStateShard.NO_CULL).setTextureState(new RenderStateShard.TextureStateShard(FLAME_CORE_TEXTURE, false, false)).setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY).createCompositeState(false));
-	public static final RenderType STABLE_TRANSLUCENT_TYPE = RenderType.create("cr_stable_translucent", DefaultVertexFormat.BLOCK, VertexFormat.Mode.QUADS, 262144, false, true, RenderType.CompositeState.builder().setLightmapState(RenderStateShard.LIGHTMAP).setShaderState(RenderType.RENDERTYPE_TRANSLUCENT_NO_CRUMBLING_SHADER).setTextureState(RenderStateShard.BLOCK_SHEET_MIPPED).setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY).setOutputState(RenderStateShard.TRANSLUCENT_TARGET).createCompositeState(true));
+	public static final RenderType FLAME_CORE_TYPE = RenderType.create("cr_flame_core", POSITION_COLOR_TEX, VertexFormat.Mode.QUADS, 256, false, true, RenderType.CompositeState.builder().setShaderState(POSITION_COLOR_TEX_SHADER).setCullState(RenderStateShard.NO_CULL).setTextureState(new RenderStateShard.TextureStateShard(FLAME_CORE_TEXTURE, false, false)).setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY).createCompositeState(false));
+	public static final RenderType STABLE_TRANSLUCENT_TYPE = RenderType.create("cr_stable_translucent", DefaultVertexFormat.BLOCK, VertexFormat.Mode.QUADS, 262144, false, true, RenderType.CompositeState.builder().setLightmapState(RenderStateShard.LIGHTMAP).setShaderState(RenderType.RENDERTYPE_TRANSLUCENT_SHADER).setTextureState(RenderStateShard.BLOCK_SHEET_MIPPED).setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY).setOutputState(RenderStateShard.TRANSLUCENT_TARGET).createCompositeState(true));
+
+	public static void registerShaders(RegisterShadersEvent e){
+		ResourceProvider rp = e.getResourceProvider();
+		try{
+			//Re-using the vanilla shader files, because I just don't want to have to update all my renderers for their arbitrary change in the ordering of vertex details
+			e.registerShader(new ShaderInstance(rp, "position_tex_color", POSITION_COLOR_TEX), shader -> positionColorTexShaderInstance = shader);
+		}catch(IOException ex){
+			throw new RuntimeException(ex);
+		}
+	}
 
 	//This is a dummy constructor- we need to be in a subclass to access the protected fields
 	//This constructor should never be called- everything is done statically

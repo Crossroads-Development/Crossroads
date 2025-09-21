@@ -8,8 +8,6 @@ import com.Da_Technomancer.crossroads.api.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.api.rotary.ICogHandler;
 import com.Da_Technomancer.crossroads.integration.CRIntegration;
-import com.Da_Technomancer.essentials.api.IFluidCapable;
-import com.Da_Technomancer.essentials.api.IItemCapable;
 import com.Da_Technomancer.essentials.api.redstone.IRedstoneCapable;
 import com.Da_Technomancer.essentials.api.redstone.IRedstoneHandler;
 import com.Da_Technomancer.essentials.blocks.ESBlocks;

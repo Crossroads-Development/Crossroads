@@ -5,11 +5,9 @@ import com.Da_Technomancer.crossroads.blocks.witchcraft.AutoInjectorTileEntity;
 import com.Da_Technomancer.essentials.api.IntDeferredRef;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.MenuType;
 
 public class AutoInjectorContainer extends MachineContainer<AutoInjectorTileEntity>{
 
-	protected static final MenuType<AutoInjectorContainer> TYPE = CRContainers.createConType(AutoInjectorContainer::new);
 
 	public final IntDeferredRef effectRef;
 	public final IntDeferredRef intensityRef;
@@ -17,7 +15,7 @@ public class AutoInjectorContainer extends MachineContainer<AutoInjectorTileEnti
 	public final IntDeferredRef doseRef;
 
 	public AutoInjectorContainer(int id, Inventory playerInv, FriendlyByteBuf buf){
-		super(TYPE, id, playerInv, buf);
+		super(CRContainers.AUTO_INJECTOR_CONTAINER.get(), id, playerInv, buf);
 
 		effectRef = new IntDeferredRef(te::getStoredEffectIndex, te.getLevel().isClientSide);
 		intensityRef = new IntDeferredRef(te::getIntensity, te.getLevel().isClientSide);

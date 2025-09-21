@@ -12,6 +12,7 @@ public class CRItemTags{
 	private static final String FORGE = "forge";
 	private static final String CR = Crossroads.MODID;
 
+	//TODO review
 
 	public static final TagKey<Item> INGOTS_COPPER = CraftingUtil.getTagKey(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(FORGE, "ingots/copper"));
 	public static final TagKey<Item> INGOTS_BRONZE = CraftingUtil.getTagKey(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(FORGE, "ingots/bronze"));

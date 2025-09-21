@@ -45,7 +45,7 @@ public class VanillaInventoryProxy implements IInventoryProxy{
 		for(int i = 0; i < inv.getContainerSize(); i++){
 			ItemStack srcStack = inv.getItem(i);
 			ItemStack resStack = stackModifier.apply(srcStack);
-			if(!srcStack.equals(resStack, false)){
+			if(!srcStack.equals(resStack)){
 				inv.setItem(i, resStack);
 			}
 		}

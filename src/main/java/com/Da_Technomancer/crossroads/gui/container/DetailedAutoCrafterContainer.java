@@ -13,7 +13,6 @@ import net.minecraft.world.item.ItemStack;
 //TODO: Probably outmoded, see DetailedAutoCrafter
 public class DetailedAutoCrafterContainer extends AutoCrafterContainer{
 
-	protected static final MenuType<DetailedAutoCrafterContainer> TYPE = CRContainers.createConType(DetailedAutoCrafterContainer::new);
 
 	public DetailedAutoCrafterContainer(int id, Inventory playerInventory, FriendlyByteBuf data){
 		this(id, playerInventory, new SimpleContainer(20), data.readBlockPos());

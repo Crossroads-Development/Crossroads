@@ -14,14 +14,13 @@ public class MasterAxisCreativeContainer extends AbstractContainerMenu{
 	public String conf;
 	public BlockPos pos;
 
-	protected static final MenuType<MasterAxisCreativeContainer> TYPE = CRContainers.createConType(MasterAxisCreativeContainer::new);
 
 	public MasterAxisCreativeContainer(int id, Inventory playerInventory, FriendlyByteBuf data){
 		this(id, playerInventory, data == null ? 0 : data.readFloat(), data == null ? null : data.readUtf(), data == null ? null : data.readBlockPos());
 	}
 
 	public MasterAxisCreativeContainer(int id, Inventory playerInventory, float output, String settingStr, BlockPos pos){
-		super(TYPE, id);
+		super(CRContainers.MASTER_AXIS_CREATIVE_CONTAINER.get(), id);
 		this.output = output;
 		this.conf = settingStr;
 		this.pos = pos;

@@ -5,16 +5,14 @@ import com.Da_Technomancer.crossroads.blocks.fluid.RotaryPumpTileEntity;
 import com.Da_Technomancer.essentials.api.FluidSlotManager;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class RotaryPumpContainer extends MachineContainer<RotaryPumpTileEntity>{
 
-	protected static final MenuType<RotaryPumpContainer> TYPE = CRContainers.createConType(RotaryPumpContainer::new);
 
 	public RotaryPumpContainer(int id, Inventory inv, FriendlyByteBuf data){
-		super(TYPE, id, inv, data);
+		super(CRContainers.ROTARY_PUMP_CONTAINER.get(), id, inv, data);
 	}
 
 	@Override

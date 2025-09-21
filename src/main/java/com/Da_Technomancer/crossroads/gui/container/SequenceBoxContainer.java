@@ -5,21 +5,19 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 
 public class SequenceBoxContainer extends AbstractContainerMenu{
 
-	protected static final MenuType<SequenceBoxContainer> TYPE = CRContainers.createConType(SequenceBoxContainer::new);
 
 	public final BlockPos pos;
 	public final ArrayList<String> inputs;
 	public int outputIndex;
 
 	public SequenceBoxContainer(int id, Inventory playerInventory, FriendlyByteBuf data){
-		super(TYPE, id);
+		super(CRContainers.SEQUENCE_BOX_CONTAINER.get(), id);
 		if(data == null){
 			pos = null;
 			outputIndex = 0;

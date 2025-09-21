@@ -10,12 +10,11 @@ import net.minecraft.world.inventory.MenuType;
 
 public class MillstoneContainer extends MachineContainer<MillstoneTileEntity>{
 
-	protected static final MenuType<MillstoneContainer> TYPE = CRContainers.createConType(MillstoneContainer::new);
 
 	public DataSlot progRef;
 
 	public MillstoneContainer(int id, Inventory playerInv, FriendlyByteBuf buf){
-		super(TYPE, id, playerInv, buf);
+		super(CRContainers.MILLSTONE_CONTAINER.get(), id, playerInv, buf);
 		progRef = new IntDeferredRef(te::getProgress, te.getLevel().isClientSide);
 		addDataSlot(progRef);
 	}

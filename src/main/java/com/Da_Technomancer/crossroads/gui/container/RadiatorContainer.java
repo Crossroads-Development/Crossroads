@@ -12,12 +12,11 @@ import org.apache.commons.lang3.tuple.Pair;
 
 public class RadiatorContainer extends MachineContainer<RadiatorTileEntity>{
 
-	protected static final MenuType<RadiatorContainer> TYPE = CRContainers.createConType(RadiatorContainer::new);
 
 	public final IntDeferredRef mode;
 
 	public RadiatorContainer(int id, Inventory playerInv, FriendlyByteBuf buf){
-		super(TYPE, id, playerInv, buf);
+		super(CRContainers.RADIATOR_CONTAINER.get(), id, playerInv, buf);
 		mode = new IntDeferredRef(te::getMode, te.getLevel().isClientSide);
 		addDataSlot(mode);
 		if(te.getLevel().isClientSide){

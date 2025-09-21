@@ -34,8 +34,6 @@ public class FatCollectorTileEntity extends InventoryTE{
 	public static final int[] TIERS = {100, 120, 140, 160, 180, 200};
 	public static final double[] EFFICIENCY = {0.8D, 1D, 1.2D, 1D, 0.8D, 0};
 	private static final double USE_PER_VALUE = 2D;
-	private final IItemHandler itemOpt = new ItemHandler();
-
 
 	public FatCollectorTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state, 1);
@@ -60,7 +58,7 @@ public class FatCollectorTileEntity extends InventoryTE{
 		int tier = HeatUtil.getHeatTier(temp, TIERS);
 
 		FoodProperties food;
-		if(tier != -1 && !inventory[0].isEmpty() && (food = inventory[0].getItem().getFoodProperties()) != null){
+		if(tier != -1 && !inventory[0].isEmpty() && (food = inventory[0].getFoodProperties(null)) != null){
 			//I don't know why vanilla multiplies saturation by 2, but it does
 			int liqAm = Math.min(food.nutrition() + (int) (food.nutrition() * food.saturation() * 2F), fluidProps[0].capacity);
 			double heatUse = ((double) liqAm) * USE_PER_VALUE;
@@ -104,7 +102,7 @@ public class FatCollectorTileEntity extends InventoryTE{
 
 	@Override
 	public boolean canPlaceItem(int index, ItemStack stack){
-		return stack.getItem().isEdible() && stack.getItem() != CRItems.edibleBlob;
+		return stack.getFoodProperties(null) != null && stack.getItem() != CRItems.edibleBlob;
 	}
 
 	@Override

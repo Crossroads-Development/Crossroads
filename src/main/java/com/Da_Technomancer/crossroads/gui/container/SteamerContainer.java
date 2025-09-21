@@ -12,12 +12,11 @@ import org.apache.commons.lang3.tuple.Pair;
 
 public class SteamerContainer extends MachineContainer<SteamerTileEntity>{
 
-	protected static final MenuType<SteamerContainer> TYPE = CRContainers.createConType(SteamerContainer::new);
 
 	public final IntDeferredRef cookProg;
 
 	public SteamerContainer(int id, Inventory playerInv, FriendlyByteBuf data){
-		super(TYPE, id, playerInv, data);
+		super(CRContainers.STEAMER_CONTAINER.get(), id, playerInv, data);
 		cookProg = new IntDeferredRef(te::getProgress, te.getLevel().isClientSide);
 		addDataSlot(cookProg);
 	}

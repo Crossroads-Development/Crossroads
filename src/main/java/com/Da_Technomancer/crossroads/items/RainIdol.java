@@ -9,12 +9,10 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ServerLevelData;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class RainIdol extends Item{
@@ -23,14 +21,9 @@ public class RainIdol extends Item{
 	private static final String NBT_KEY_TIME = "rain_idol_time";
 
 	protected RainIdol(){
-		super(new Properties().stacksTo(1));
+		super(new Properties().stacksTo(1).rarity(CRItems.BOBO_RARITY));
 		String name = "rain_idol";
 		CRItems.queueForRegister(name, this);
-	}
-
-	@Override
-	public Rarity getRarity(ItemStack stack){
-		return CRItems.BOBO_RARITY;
 	}
 
 	@Override

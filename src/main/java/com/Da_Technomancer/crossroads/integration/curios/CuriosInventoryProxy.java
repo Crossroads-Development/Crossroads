@@ -48,7 +48,7 @@ public class CuriosInventoryProxy implements IInventoryProxy{
 		}
 
 		//Check curios, if applicable
-		ICuriosItemHandler curioOpt = CuriosApi.getCuriosInventory(player);
+		Optional<ICuriosItemHandler> curioOpt = CuriosApi.getCuriosInventory(player);
 		if(curioOpt.isPresent()){
 			Optional<SlotResult> resultOpt = curioOpt.orElseThrow(NullPointerException::new).findFirstCurio(itemFilter);
 			if(resultOpt.isPresent()){
@@ -68,13 +68,13 @@ public class CuriosInventoryProxy implements IInventoryProxy{
 	@Override
 	public void forAllInventoryItems(Player player, Function<ItemStack, ItemStack> stackModifier){
 
-		ICuriosItemHandler curioOpt = CuriosApi.getCuriosInventory(player);
+		Optional<ICuriosItemHandler> curioOpt = CuriosApi.getCuriosInventory(player);
 		if(curioOpt.isPresent()){
 			IItemHandlerModifiable curioCont = curioOpt.orElseThrow(NullPointerException::new).getEquippedCurios();
 			for(int i = 0; i < curioCont.getSlots(); i++){
 				ItemStack srcStack = curioCont.getStackInSlot(i);
 				ItemStack resStack = stackModifier.apply(srcStack);
-				if(!srcStack.equals(resStack, false)){
+				if(!srcStack.equals(resStack)){
 					curioCont.setStackInSlot(i, resStack);
 				}
 			}
@@ -84,7 +84,7 @@ public class CuriosInventoryProxy implements IInventoryProxy{
 		for(int i = 0; i < inv.getContainerSize(); i++){
 			ItemStack srcStack = inv.getItem(i);
 			ItemStack resStack = stackModifier.apply(srcStack);
-			if(!srcStack.equals(resStack, false)){
+			if(!srcStack.equals(resStack)){
 				inv.setItem(i, resStack);
 			}
 		}

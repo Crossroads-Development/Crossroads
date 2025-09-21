@@ -11,10 +11,9 @@ import org.apache.commons.lang3.tuple.Pair;
 
 public class FluidTankContainer extends MachineContainer<FluidTankTileEntity>{
 
-	protected static final MenuType<FluidTankContainer> TYPE = CRContainers.createConType(FluidTankContainer::new);
 
 	public FluidTankContainer(int id, Inventory playerInv, FriendlyByteBuf buf){
-		super(TYPE, id, playerInv, buf);
+		super(CRContainers.FLUID_TANK_CONTAINER.get(), id, playerInv, buf);
 	}
 
 	@Override

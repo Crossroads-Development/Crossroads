@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.api.technomancy;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.api.beams.EnumBeamAlignments;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
@@ -127,7 +128,7 @@ public class GatewaySavedData extends SavedData{
 		}else{
 			storage = world.getServer().overworld().getDataStorage();//MCP note: getOverworld
 		}
-		return storage.computeIfAbsent(GatewaySavedData::load, GatewaySavedData::new, ID);
+		return storage.computeIfAbsent(new Factory<>(GatewaySavedData::new, GatewaySavedData::load), ID);
 	}
 
 	public static final String ID = Crossroads.MODID + "_gateways";
@@ -138,7 +139,7 @@ public class GatewaySavedData extends SavedData{
 		super();
 	}
 
-	public static GatewaySavedData load(CompoundTag nbt){
+	public static GatewaySavedData load(CompoundTag nbt, HolderLookup.Provider provider){
 		GatewaySavedData data = new GatewaySavedData();
 		data.addressBook.clear();
 		int i = 0;
@@ -153,7 +154,7 @@ public class GatewaySavedData extends SavedData{
 	}
 
 	@Override
-	public CompoundTag save(CompoundTag nbt){
+	public CompoundTag save(CompoundTag nbt, HolderLookup.Provider provider){
 		int i = 0;
 		for(Map.Entry<GatewayAddress, Location> entry : addressBook.entrySet()){
 			nbt.putInt("key_" + i, entry.getKey().serialize());

@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.items;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
+import com.Da_Technomancer.crossroads.api.crafting.FixedRecipeInput;
 import com.Da_Technomancer.crossroads.crafting.BoboRec;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import net.minecraft.core.BlockPos;
@@ -18,15 +19,14 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.phys.AABB;
@@ -43,7 +43,7 @@ public class BoboRod extends Item{
 		@Override
 		public ItemStack execute(BlockSource source, ItemStack stack){
 			//Able to do bobo crafting via dispenser
-			act(source.getLevel(), source.getPos(), new Vec3(source.x(), source.y(), source.z()), null);
+			act(source.level(), source.pos(), source.center(), null);
 			return stack;
 		}
 	};
@@ -52,7 +52,7 @@ public class BoboRod extends Item{
 	private static final TagKey<Item> offering = CraftingUtil.getTagKey(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "bobo_unlock_key"));
 
 	protected BoboRod(){
-		super(new Properties().stacksTo(1));
+		super(new Properties().stacksTo(1).rarity(CRItems.BOBO_RARITY));
 		String name = "bobo_rod";
 		CRItems.queueForRegister(name, this);
 		DispenserBlock.registerBehavior(this, BOBO_DISPENSER_BEHAVIOR);
@@ -66,7 +66,8 @@ public class BoboRod extends Item{
 	private static boolean act(Level world, BlockPos pos, Vec3 hitVec, @Nullable Player player){
 		List<ItemEntity> items = world.getEntitiesOfClass(ItemEntity.class, new AABB(hitVec.add(-1, -1, -1), hitVec.add(1, 1, 1)), Entity::isAlive);
 		if(items.size() == 4){
-			SimpleContainer inv = new SimpleContainer(3);
+			ItemStack[] recipeItems = new ItemStack[3];
+			int i = 0;
 			boolean hasOffering = false;
 			for(ItemEntity ent : items){
 				if(ent.getItem().getCount() != 1){
@@ -76,16 +77,15 @@ public class BoboRod extends Item{
 				if(!hasOffering && CraftingUtil.tagContains(offering, ent.getItem().getItem())){
 					hasOffering = true;
 				}else{
-					inv.addItem(ent.getItem());
+					recipeItems[i] = ent.getItem();
+					i++;
 				}
 			}
-			if(hasOffering){
-				// TODO: This probably demands a BoboRodRec which has extends RecipeInput. Can't find a way to krangle a
-				//  3 item object that will work here.
-				Optional<BoboRec> rec = world.getRecipeManager().getRecipeFor(CRRecipes.BOBO_TYPE, inv, world);
+			if(hasOffering && i == 3){
+				Optional<RecipeHolder<BoboRec>> rec = world.getRecipeManager().getRecipeFor(CRRecipes.BOBO_TYPE, new FixedRecipeInput(null, recipeItems), world);
 				if(rec.isPresent()){
 					items.forEach(Entity::kill);
-					Containers.dropItemStack(world, hitVec.x, hitVec.y, hitVec.z, rec.get().assemble(inv));
+					Containers.dropItemStack(world, hitVec.x, hitVec.y, hitVec.z, rec.get().value().getResultItem().copy());
 
 					//Spawn some particles and sound
 					world.addParticle(ParticleTypes.POOF, hitVec.x, hitVec.y, hitVec.z, Math.random() * 0.02, Math.random() * 0.02, Math.random() * 0.02);
@@ -95,11 +95,6 @@ public class BoboRod extends Item{
 			}
 		}
 		return false;
-	}
-
-	@Override
-	public Rarity getRarity(ItemStack stack){
-		return CRItems.BOBO_RARITY;
 	}
 
 	@Override

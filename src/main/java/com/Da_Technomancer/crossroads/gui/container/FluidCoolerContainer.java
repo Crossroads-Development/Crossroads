@@ -7,16 +7,13 @@ import com.Da_Technomancer.essentials.api.IntDeferredRef;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.DataSlot;
-import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class FluidCoolerContainer extends MachineContainer<FluidCoolingChamberTileEntity>{
 
-	protected static final MenuType<FluidCoolerContainer> TYPE = CRContainers.createConType(FluidCoolerContainer::new);
-
 	public FluidCoolerContainer(int id, Inventory playerInv, FriendlyByteBuf buf){
-		super(TYPE, id, playerInv, buf);
+		super(CRContainers.FLUID_COOLER_CONTAINER.get(), id, playerInv, buf);
 	}
 
 	public DataSlot totalHeatRef;

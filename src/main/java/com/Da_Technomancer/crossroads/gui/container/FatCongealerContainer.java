@@ -11,10 +11,9 @@ import org.apache.commons.lang3.tuple.Pair;
 
 public class FatCongealerContainer extends MachineContainer<FatCongealerTileEntity>{
 
-	protected static final MenuType<FatCongealerContainer> TYPE = CRContainers.createConType(FatCongealerContainer::new);
 
 	public FatCongealerContainer(int id, Inventory inv, FriendlyByteBuf data){
-		super(TYPE, id, inv, data);
+		super(CRContainers.FAT_CONGEALER_CONTAINER.get(), id, inv, data);
 	}
 
 	@Override

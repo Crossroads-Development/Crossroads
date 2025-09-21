@@ -32,8 +32,8 @@ public class Shell extends AbstractGlassware{
 			}
 			ReagentMap contents = CRItems.shellGlass.getReagants(stack);
 			if(contents.getTotalQty() != 0){
-				Direction dir = source.getBlockState().getValue(DispenserBlock.FACING);
-				Level world = source.getLevel();
+				Direction dir = source.state().getValue(DispenserBlock.FACING);
+				Level world = source.level();
 				EntityShell shellEnt = new EntityShell(world, contents, stack.copy());
 				shellEnt.setPos(source.x() + dir.getStepX() + 0.5D, source.y() + dir.getStepY() + 0.5D, source.z() + dir.getStepZ() + 0.5D);
 				shellEnt.shoot(dir.getStepX(), dir.getStepY(), dir.getStepZ(), 0.8F, 1.0F);

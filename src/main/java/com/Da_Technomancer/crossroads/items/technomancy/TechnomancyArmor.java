@@ -8,18 +8,19 @@ import com.google.common.collect.Multimap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.Level;
 
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,20 +29,20 @@ public abstract class TechnomancyArmor extends ArmorItem implements ICreativeTab
 	private static final ArmorMaterial TECHNOMANCY_MAT = new TechnoMat();
 	private static final ArmorMaterial TECHNOMANCY_REINFORCED_MAT = new TechnoMatReinforced();
 	//Duplicate of the private field in ArmorItem
-	protected static final UUID[] ARMOR_MODIFIERS = new UUID[] {UUID.fromString("845DB27C-C624-495F-8C9F-6020A9A58B6B"), UUID.fromString("D8499B04-0E66-4726-AB29-64469D734E0D"), UUID.fromString("9F3D476D-C118-4544-8365-64846904B48E"), UUID.fromString("2AD3F246-FEE1-4E67-B886-69FD380BB150")};
-	protected final Multimap<Attribute, AttributeModifier> reinforcedProperties;
+	protected final ItemAttributeModifiers reinforcedProperties;
 	protected final ArmorItem.Type armorType;
 
 	public TechnomancyArmor(ArmorItem.Type type){
 		super(TECHNOMANCY_MAT, type, new Properties().stacksTo(1).fireResistant());
 		this.armorType = type;
+		EquipmentSlotGroup slotGroup = EquipmentSlotGroup.bySlot(type.getSlot());
 		//Prepare reinforced properties map
-		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-		UUID uuid = ARMOR_MODIFIERS[type.getSlot().getIndex()];
-		builder.put(Attributes.ARMOR, new AttributeModifier(uuid, "Armor modifier", TECHNOMANCY_REINFORCED_MAT.getDefenseForType(type), AttributeModifier.Operation.ADDITION));
-		builder.put(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(uuid, "Armor toughness", TECHNOMANCY_REINFORCED_MAT.getToughness(), AttributeModifier.Operation.ADDITION));
-		if(TECHNOMANCY_REINFORCED_MAT.getKnockbackResistance() > 0){
-			builder.put(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(uuid, "Armor knockback resistance", TECHNOMANCY_REINFORCED_MAT.getKnockbackResistance(), AttributeModifier.Operation.ADDITION));
+		ResourceLocation modifierLocation = ResourceLocation.withDefaultNamespace("armor." + armorType.getName());
+		ItemAttributeModifiers.Builder builder = ItemAttributeModifiers.builder();
+		builder.add(Attributes.ARMOR, new AttributeModifier(modifierLocation, TECHNOMANCY_REINFORCED_MAT.getDefense(type), AttributeModifier.Operation.ADD_VALUE), slotGroup);
+		builder.add(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(modifierLocation, TECHNOMANCY_REINFORCED_MAT.toughness(), AttributeModifier.Operation.ADD_VALUE), slotGroup);
+		if(TECHNOMANCY_REINFORCED_MAT.knockbackResistance() > 0){
+			builder.add(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(modifierLocation, TECHNOMANCY_REINFORCED_MAT.knockbackResistance(), AttributeModifier.Operation.ADD_VALUE), slotGroup);
 		}
 		reinforcedProperties = builder.build();
 	}
@@ -93,9 +94,9 @@ public abstract class TechnomancyArmor extends ArmorItem implements ICreativeTab
 	@Override
 	public boolean isValidRepairItem(ItemStack stack, ItemStack repairStack){
 		if(isReinforced(stack)){
-			return TECHNOMANCY_REINFORCED_MAT.getRepairIngredient().test(repairStack);
+			return TECHNOMANCY_REINFORCED_MAT.repairIngredient().get().test(repairStack);
 		}else{
-			return TECHNOMANCY_MAT.getRepairIngredient().test(repairStack);
+			return TECHNOMANCY_MAT.repairIngredient().get().test(repairStack);
 		}
 	}
 

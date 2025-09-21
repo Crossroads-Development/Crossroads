@@ -12,12 +12,11 @@ import org.apache.commons.lang3.tuple.Pair;
 
 public class HydroponicsTroughContainer extends MachineContainer<HydroponicsTroughTileEntity>{
 
-	protected static final MenuType<HydroponicsTroughContainer> TYPE = CRContainers.createConType(HydroponicsTroughContainer::new);
 
 	public final IntDeferredRef progRef;
 
 	public HydroponicsTroughContainer(int id, Inventory playerInv, FriendlyByteBuf buf){
-		super(TYPE, id, playerInv, buf);
+		super(CRContainers.HYDROPONICS_TROUGH_CONTAINER.get(), id, playerInv, buf);
 		progRef = new IntDeferredRef(te::getProgressBar, te.getLevel().isClientSide);
 		addDataSlot(progRef);
 	}

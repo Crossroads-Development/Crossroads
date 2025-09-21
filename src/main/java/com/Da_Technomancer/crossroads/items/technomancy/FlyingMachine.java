@@ -26,8 +26,8 @@ public class FlyingMachine extends Item{
 
 		@Override
 		public ItemStack execute(BlockSource source, ItemStack stack){
-			ServerLevel world = source.getLevel();
-			EntityFlyingMachine.type.spawn(world, stack, null, source.getPos(), MobSpawnType.SPAWN_EGG, true, false);
+			ServerLevel world = source.level();
+			EntityFlyingMachine.type.spawn(world, stack, null, source.pos(), MobSpawnType.SPAWN_EGG, true, false);
 			stack.shrink(1);
 			return stack;
 		}

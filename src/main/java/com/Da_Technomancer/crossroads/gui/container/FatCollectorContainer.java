@@ -5,16 +5,14 @@ import com.Da_Technomancer.crossroads.blocks.fluid.FatCollectorTileEntity;
 import com.Da_Technomancer.essentials.api.FluidSlotManager;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class FatCollectorContainer extends MachineContainer<FatCollectorTileEntity>{
 
-	protected static final MenuType<FatCollectorContainer> TYPE = CRContainers.createConType(FatCollectorContainer::new);
 
 	public FatCollectorContainer(int id, Inventory inv, FriendlyByteBuf data){
-		super(TYPE, id, inv, data);
+		super(CRContainers.FAT_COLLECTOR_CONTAINER.get(), id, inv, data);
 	}
 
 	@Override

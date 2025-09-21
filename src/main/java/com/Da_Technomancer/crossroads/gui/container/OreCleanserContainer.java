@@ -6,18 +6,16 @@ import com.Da_Technomancer.essentials.api.FluidSlotManager;
 import com.Da_Technomancer.essentials.api.IntDeferredRef;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class OreCleanserContainer extends MachineContainer<OreCleanserTileEntity>{
 
-	protected static final MenuType<OreCleanserContainer> TYPE = CRContainers.createConType(OreCleanserContainer::new);
 
 	public final IntDeferredRef progRef;
 
 	public OreCleanserContainer(int id, Inventory playerInv, FriendlyByteBuf data){
-		super(TYPE, id, playerInv, data);
+		super(CRContainers.ORE_CLEANSER_CONTAINER.get(), id, playerInv, data);
 		progRef = new IntDeferredRef(te::getProgress, te.getLevel().isClientSide);
 		addDataSlot(progRef);
 	}

@@ -6,18 +6,15 @@ import com.Da_Technomancer.essentials.api.FluidSlotManager;
 import com.Da_Technomancer.essentials.api.IntDeferredRef;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class CrucibleContainer extends MachineContainer<HeatingCrucibleTileEntity>{
 
-	protected static final MenuType<CrucibleContainer> TYPE = CRContainers.createConType(CrucibleContainer::new);
-
 	public final IntDeferredRef meltProgress;
 
 	public CrucibleContainer(int id, Inventory playerInv, FriendlyByteBuf buf){
-		super(TYPE, id, playerInv, buf);
+		super(CRContainers.CRUCIBLE_CONTAINER.get(), id, playerInv, buf);
 		meltProgress = new IntDeferredRef(te::getProgress, te.getLevel().isClientSide);
 		addDataSlot(meltProgress);
 	}

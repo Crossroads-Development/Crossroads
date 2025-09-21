@@ -4,14 +4,11 @@ import com.Da_Technomancer.crossroads.api.templates.MachineContainer;
 import com.Da_Technomancer.crossroads.blocks.witchcraft.ColdStorageTileEntity;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.MenuType;
 
 public class ColdStorageContainer extends MachineContainer<ColdStorageTileEntity>{
 
-	protected static final MenuType<ColdStorageContainer> TYPE = CRContainers.createConType(ColdStorageContainer::new);
-
 	public ColdStorageContainer(int id, Inventory playerInv, FriendlyByteBuf data){
-		super(TYPE, id, playerInv, data);
+		super(CRContainers.COLD_STORAGE_CONTAINER.get(), id, playerInv, data);
 	}
 
 	@Override

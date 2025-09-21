@@ -11,10 +11,9 @@ import org.apache.commons.lang3.tuple.Pair;
 
 public class SaltReactorContainer extends MachineContainer<SaltReactorTileEntity>{
 
-	protected static final MenuType<SaltReactorContainer> TYPE = CRContainers.createConType(SaltReactorContainer::new);
 
 	public SaltReactorContainer(int id, Inventory playerInv, FriendlyByteBuf buf){
-		super(TYPE, id, playerInv, buf);
+		super(CRContainers.SALT_REACTOR_CONTAINER.get(), id, playerInv, buf);
 	}
 
 	@Override

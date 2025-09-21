@@ -1,22 +1,16 @@
 package com.Da_Technomancer.crossroads.ambient.particles;
 
-import com.Da_Technomancer.crossroads.api.MiscUtil;
-import com.mojang.brigadier.StringReader;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.network.FriendlyByteBuf;
 
 import java.awt.*;
-import java.util.Locale;
 
 public class ColorParticleData implements ParticleOptions{
 
-	//TODO: this needs a MapCodec now. See error in ColorParticleType
-	protected static final Codec<ColorParticleData> codec = RecordCodecBuilder.create((instance) -> instance.group(Codec.BYTE.fieldOf("type").forGetter(ColorParticleData::getTypeID), Codec.BYTE.fieldOf("r").forGetter((ColorParticleData data) -> (byte) data.getColor().getRed()), Codec.BYTE.fieldOf("g").forGetter((ColorParticleData data) -> (byte) data.getColor().getGreen()), Codec.BYTE.fieldOf("b").forGetter((ColorParticleData data) -> (byte) data.getColor().getBlue()), Codec.BYTE.fieldOf("a").forGetter((ColorParticleData data) -> (byte) data.getColor().getAlpha())).apply(instance, ColorParticleData::new));
+	protected static final MapCodec<ColorParticleData> codec = RecordCodecBuilder.mapCodec((instance) -> instance.group(Codec.BYTE.fieldOf("type").forGetter(ColorParticleData::getTypeID), Codec.BYTE.fieldOf("r").forGetter((ColorParticleData data) -> (byte) data.getColor().getRed()), Codec.BYTE.fieldOf("g").forGetter((ColorParticleData data) -> (byte) data.getColor().getGreen()), Codec.BYTE.fieldOf("b").forGetter((ColorParticleData data) -> (byte) data.getColor().getBlue()), Codec.BYTE.fieldOf("a").forGetter((ColorParticleData data) -> (byte) data.getColor().getAlpha())).apply(instance, ColorParticleData::new));
 
 	private final ParticleType<ColorParticleData> type;
 	private final Color col;

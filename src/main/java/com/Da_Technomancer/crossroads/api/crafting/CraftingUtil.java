@@ -24,10 +24,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
 import java.awt.*;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Optional;
+import java.util.*;
 
 public class CraftingUtil{
 
@@ -195,19 +192,26 @@ public class CraftingUtil{
 
 	/**
 	 * Returns an entry from the Tag
-	 * If the Tag is set to preserve order, it will reliably return the first entry.
-	 * Otherwise, any entry could be returned- but which entry will remain consistent between calls.
-	 * If the tag is unordered, this method will prioritize CR items, then essentials items, then vanilla items, then all other items, prioritized by alphabetical order of the registry name
+	 * If there are multiple entries in the tag, this method will prioritize CR things, then essentials things, then vanilla things, then all other items, prioritized by alphabetical order of the registry name
 	 * @param tag The Tag to return an entry from
 	 * @param <T> The type of the tag. Normally Block or Item
 	 * @return An entry in the tag, or null if the tag is empty.
 	 */
 	@Nullable
 	public static <T> T getTagEntry(TagKey<T> tag){
-		Registry<T> manager = getRegistryForKey(tag);
+		HashSet<T> contents = getTagContents(tag);
 		Comparator<T> comparator = RegNameComparator.getComparator(tag.registry());
-		//TODO pretty sure this is a safe cast but if it fails maybe look a bit closer.
-		return manager.getTag(tag).stream().map((named) -> (T) named.key().registry()).min(comparator).orElse(null);
+		return contents.stream().min(comparator).orElse(null);
+	}
+
+	public static <T> HashSet<T> getTagContents(TagKey<T> tag){
+		HashSet<T> entries = new HashSet<>();
+		getTagContents(tag, getRegistryForKey(tag), entries);
+		return entries;
+	}
+
+	private static <T> void getTagContents(TagKey<T> tag, Registry<T> manager, HashSet<T> entries){
+		manager.getTag(tag).ifPresent(named -> named.unwrap().ifLeft(innerTagKey -> getTagContents(innerTagKey, manager, entries)).ifRight(holderList -> holderList.stream().map(Holder::value).forEach(entries::add)));
 	}
 
 	public static <T> T getPreferredEntry(Collection<T> entries, ResourceKey<? extends Registry<T>> registry){

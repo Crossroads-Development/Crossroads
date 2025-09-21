@@ -206,7 +206,7 @@ public class FluidIngredient implements Predicate<FluidStack>{
 
 		@Override
 		public Collection<Fluid> getMatched(){
-			return CraftingUtil.getRegistryForKey(tag).getTag(tag).stream().collect(Collectors.toUnmodifiableSet());
+			return CraftingUtil.getTagContents(tag);
 		}
 
 		@Override

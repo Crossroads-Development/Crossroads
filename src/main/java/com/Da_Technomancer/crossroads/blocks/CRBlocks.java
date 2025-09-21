@@ -36,6 +36,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.RegisterEvent;
@@ -390,7 +391,7 @@ public class CRBlocks{
 		return block;
 	}
 
-	public static void init(){
+	public static void registerBlocks(){
 		for(HeatInsulators insulator : HeatInsulators.values()){
 			HEAT_CABLES.put(insulator, new HeatCable(insulator));
 			REDSTONE_HEAT_CABLES.put(insulator, new RedstoneHeatCable(insulator));
@@ -582,6 +583,10 @@ public class CRBlocks{
 		hamsterWheel = new HamsterWheel();
 		maxwellDemon = new MaxwellDemon();
 		fluidVoid = new FluidVoid();
+	}
+
+	public static void init(IEventBus modBus){
+		BLOCK_TYPES.register(modBus);
 	}
 
 	public static void registerBlocks(RegisterEvent.RegisterHelper<Block> helper){

@@ -12,12 +12,11 @@ import org.apache.commons.lang3.tuple.Pair;
 
 public class CultivatorVatContainer extends MachineContainer<CultivatorVatTileEntity>{
 
-	protected static final MenuType<CultivatorVatContainer> TYPE = CRContainers.createConType(CultivatorVatContainer::new);
 
 	public final IntDeferredRef progressRef;
 
 	public CultivatorVatContainer(int id, Inventory playerInv, FriendlyByteBuf buf){
-		super(TYPE, id, playerInv, buf);
+		super(CRContainers.CULTIVATOR_VAT_CONTAINER.get(), id, playerInv, buf);
 		progressRef = new IntDeferredRef(te::getProgress, te.getLevel().isClientSide);
 		addDataSlot(progressRef);
 	}

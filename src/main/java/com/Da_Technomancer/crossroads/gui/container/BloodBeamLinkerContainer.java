@@ -4,14 +4,12 @@ import com.Da_Technomancer.crossroads.blocks.witchcraft.BloodBeamLinkerTileEntit
 import com.Da_Technomancer.essentials.api.BlockMenuContainer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.MenuType;
 
 public class BloodBeamLinkerContainer extends BlockMenuContainer<BloodBeamLinkerTileEntity>{
 
-	protected static final MenuType<BloodBeamLinkerContainer> TYPE = CRContainers.createConType(BloodBeamLinkerContainer::new);
 
 	public BloodBeamLinkerContainer(int id, Inventory playerInv, FriendlyByteBuf buf){
-		super(TYPE, id, playerInv, buf);
+		super(CRContainers.BLOOD_BEAM_LINKER_CONTAINER.get(), id, playerInv, buf);
 	}
 
 	@Override

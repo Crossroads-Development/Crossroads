@@ -42,19 +42,19 @@ public class AtmosChargeSavedData extends SavedData{
 		}else{
 			storage = world.getServer().overworld().getDataStorage();
 		}
-		return storage.computeIfAbsent(AtmosChargeSavedData::load, AtmosChargeSavedData::new, ID);
+		return storage.computeIfAbsent(new Factory<>(AtmosChargeSavedData::new, AtmosChargeSavedData::load), ID);
 	}
 
 	private int atmosCharge;
 
-	public static AtmosChargeSavedData load(CompoundTag nbt){
+	public static AtmosChargeSavedData load(CompoundTag nbt, HolderLookup.Provider provider){
 		AtmosChargeSavedData data = new AtmosChargeSavedData();
 		data.atmosCharge = nbt.getInt("atmos_charge");
 		return data;
 	}
 
 	@Override
-	public CompoundTag save(CompoundTag nbt){
+	public CompoundTag save(CompoundTag nbt, HolderLookup.Provider provider){
 		nbt.putInt("atmos_charge", atmosCharge);
 		return nbt;
 	}

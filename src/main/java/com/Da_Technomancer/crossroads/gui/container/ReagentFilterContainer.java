@@ -8,10 +8,9 @@ import net.minecraft.world.inventory.MenuType;
 
 public class ReagentFilterContainer extends BlockMenuContainer<ReagentFilterTileEntity>{
 
-	protected static final MenuType<ReagentFilterContainer> TYPE = CRContainers.createConType(ReagentFilterContainer::new);
 
 	public ReagentFilterContainer(int id, Inventory playerInv, FriendlyByteBuf buf){
-		super(TYPE, id, playerInv, buf);
+		super(CRContainers.REAGENT_FILTER_CONTAINER.get(), id, playerInv, buf);
 	}
 
 	@Override

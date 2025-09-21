@@ -9,12 +9,11 @@ import net.minecraft.world.inventory.MenuType;
 
 public class BeamExtractorContainer extends BlockMenuContainer<BeamExtractorTileEntity>{
 
-	protected static final MenuType<BeamExtractorContainer> TYPE = CRContainers.createConType(BeamExtractorContainer::new);
 
 	public final IntDeferredRef progRef;
 
 	public BeamExtractorContainer(int id, Inventory playerInv, FriendlyByteBuf buf){
-		super(TYPE, id, playerInv, buf);
+		super(CRContainers.BEAM_EXTRACTOR_CONTAINER.get(), id, playerInv, buf);
 
 		progRef = new IntDeferredRef(te::getProgress, te.getLevel().isClientSide);
 		addDataSlot(progRef);

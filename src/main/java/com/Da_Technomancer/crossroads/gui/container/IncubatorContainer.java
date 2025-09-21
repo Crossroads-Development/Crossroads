@@ -9,13 +9,12 @@ import net.minecraft.world.inventory.MenuType;
 
 public class IncubatorContainer extends MachineContainer<IncubatorTileEntity>{
 
-	protected static final MenuType<IncubatorContainer> TYPE = CRContainers.createConType(IncubatorContainer::new);
 
 	public final IntDeferredRef progressRef;
 	public final IntDeferredRef targetRef;
 
 	public IncubatorContainer(int id, Inventory playerInv, FriendlyByteBuf buf){
-		super(TYPE, id, playerInv, buf);
+		super(CRContainers.INCUBATOR_CONTAINER.get(), id, playerInv, buf);
 		progressRef = new IntDeferredRef(te::getProgress, te.getLevel().isClientSide);
 		addDataSlot(progressRef);
 		targetRef = new IntDeferredRef(te::getTargetTemp, te.getLevel().isClientSide);

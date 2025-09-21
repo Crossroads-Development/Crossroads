@@ -10,12 +10,11 @@ import net.minecraft.world.inventory.MenuType;
 
 public class BloodCentrifugeContainer extends MachineContainer<BloodCentrifugeTileEntity>{
 
-	protected static final MenuType<BloodCentrifugeContainer> TYPE = CRContainers.createConType(BloodCentrifugeContainer::new);
 
 	public DataSlot progRef;
 
 	public BloodCentrifugeContainer(int id, Inventory playerInv, FriendlyByteBuf buf){
-		super(TYPE, id, playerInv, buf);
+		super(CRContainers.BLOOD_CENTRIFUGE_CONTAINER.get(), id, playerInv, buf);
 		progRef = new IntDeferredRef(te::getProgress, te.getLevel().isClientSide);
 		addDataSlot(progRef);
 	}

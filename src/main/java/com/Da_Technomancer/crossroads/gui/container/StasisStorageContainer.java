@@ -8,10 +8,9 @@ import net.minecraft.world.inventory.MenuType;
 
 public class StasisStorageContainer extends MachineContainer<StasisStorageTileEntity>{
 
-	protected static final MenuType<StasisStorageContainer> TYPE = CRContainers.createConType(StasisStorageContainer::new);
 
 	public StasisStorageContainer(int id, Inventory playerInv, FriendlyByteBuf data){
-		super(TYPE, id, playerInv, data);
+		super(CRContainers.STASIS_STORAGE_CONTAINER.get(), id, playerInv, data);
 	}
 
 	@Override

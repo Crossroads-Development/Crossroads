@@ -19,6 +19,7 @@ import com.Da_Technomancer.crossroads.items.technomancy.ArmorPropellerPack;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamUsingItem;
 import com.Da_Technomancer.crossroads.items.witchcraft.GeneticSpawnEgg;
 import com.Da_Technomancer.crossroads.render.BeamToolOverlay;
+import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.crossroads.render.MultiLineMessageOverlay;
 import com.Da_Technomancer.crossroads.render.tesr.CRRendererRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -46,9 +47,7 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.*;
-import net.neoforged.neoforge.registries.RegisterEvent;
 import net.neoforged.neoforge.common.DeferredSpawnEggItem;
-
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -59,14 +58,10 @@ public class EventHandlerClient{
 	@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD, modid = Crossroads.MODID, value = Dist.CLIENT)
 	public static class CRModEventsClient{
 
-		@SuppressWarnings("unused")
 		@SubscribeEvent
-		public static void register(RegisterEvent e){
-			e.register(BuiltInRegistries.MENU, helper -> {
-				//The other half of this is in EventHandlerServer
-				CRContainers.initClient();
-				EventHandlerCommon.CRModEventsCommon.registerAll(helper, CRContainers.toRegisterMenu);
-			});
+		@SuppressWarnings("unused")
+		public static void registerScreens(RegisterMenuScreensEvent e){
+			CRContainers.initClient(e);
 		}
 
 		@SuppressWarnings("unused")
@@ -74,6 +69,12 @@ public class EventHandlerClient{
 		public static void registerRenderers(EntityRenderersEvent.RegisterRenderers e){
 			CRRendererRegistry.registerBlockRenderer(e);
 			CREntities.clientInit(e);
+		}
+
+		@SuppressWarnings("unused")
+		@SubscribeEvent
+		public static void registerShaders(RegisterShadersEvent e){
+			CRRenderTypes.registerShaders(e);
 		}
 
 		@SuppressWarnings("unused")
@@ -176,7 +177,7 @@ public class EventHandlerClient{
 			ArrayList<IVisualEffect> toRemove = new ArrayList<>();
 			MultiBufferSource.BufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
 			long worldTime = game.level.getGameTime();
-			float partialTicks = e.getPartialTick();
+			float partialTicks = e.getPartialTick().getGameTimeDeltaTicks();
 
 			for(IVisualEffect effect : AddVisualToClient.effectsToRender){
 				matrix.pushPose();
@@ -205,7 +206,7 @@ public class EventHandlerClient{
 			for(Entity ent : game.level.entitiesForRendering()){
 				CompoundTag entNBT = ent.getPersistentData();
 				if(entNBT == null){
-					Crossroads.logger.info("Found entity with null persistent data! Report to the mod author of the mod that added the entity: %s", MiscUtil.getRegistryName(ent.getType(), Registries.ENTITY_TYPE).toString());
+					Crossroads.logger.info("Found entity with null persistent data! Report to the mod author of the mod that added the entity: %s", MiscUtil.getRegistryName(ent.getType(), BuiltInRegistries.ENTITY_TYPE).toString());
 					continue;//Should never be null, but some mods override the entNBT method to return null for some reason
 				}
 

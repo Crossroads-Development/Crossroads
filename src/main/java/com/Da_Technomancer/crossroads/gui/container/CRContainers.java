@@ -1,141 +1,121 @@
 package com.Da_Technomancer.crossroads.gui.container;
 
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.gui.screen.*;
-import net.minecraft.client.gui.screens.MenuScreens;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.network.IContainerFactory;
-
-import java.util.HashMap;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 public final class CRContainers{
 
-	public static void initServer(){
-		registerContainerType(FireboxContainer.TYPE, "firebox");
-		registerContainerType(IceboxContainer.TYPE, "icebox");
-		registerContainerType(FluidCoolerContainer.TYPE, "fluid_cooler");
-		registerContainerType(CrucibleContainer.TYPE, "crucible");
-		registerContainerType(SaltReactorContainer.TYPE, "salt_reactor");
-		registerContainerType(SmelterContainer.TYPE, "smelter");
-		registerContainerType(BlastFurnaceContainer.TYPE, "ind_blast_furnace");
-		registerContainerType(MillstoneContainer.TYPE, "millstone");
-		registerContainerType(StampMillContainer.TYPE, "stamp_mill");
-		registerContainerType(FatCollectorContainer.TYPE, "fat_collector");
-		registerContainerType(FatCongealerContainer.TYPE, "fat_congealer");
-		registerContainerType(FatFeederContainer.TYPE, "fat_feeder");
-		registerContainerType(FluidTankContainer.TYPE, "fluid_tank");
-		registerContainerType(OreCleanserContainer.TYPE, "ore_cleanser");
-		registerContainerType(RadiatorContainer.TYPE, "radiator");
-		registerContainerType(SteamBoilerContainer.TYPE, "steam_boiler");
-		registerContainerType(WaterCentrifugeContainer.TYPE, "water_centrifuge");
-		registerContainerType(ColorChartContainer.TYPE, "color_chart");
-		registerContainerType(BeamExtractorContainer.TYPE, "beam_extractor");
-		registerContainerType(HeatLimiterContainer.TYPE, "heat_limiter");
-		registerContainerType(RotaryPumpContainer.TYPE, "rotary_pump");
-		registerContainerType(DetailedCrafterContainer.TYPE, "detailed_crafter");
-		registerContainerType(ReagentFilterContainer.TYPE, "reagent_filter");
-		registerContainerType(CopshowiumMakerContainer.TYPE, "copshowium_maker");
-		registerContainerType(SteamerContainer.TYPE, "steamer");
-		registerContainerType(WindingTableContainer.TYPE, "winding_table");
-		registerContainerType(DetailedAutoCrafterContainer.TYPE, "detailed_auto_crafter");
-		registerContainerType(SequenceBoxContainer.TYPE, "sequence_box");
-		registerContainerType(SteamTurbineContainer.TYPE, "steam_turbine");
-		registerContainerType(BeaconHarnessContainer.TYPE, "beacon_harness");
-		registerContainerType(FormulationVatContainer.TYPE, "formulation_vat");
-		registerContainerType(BrewingVatContainer.TYPE, "brewing_vat");
-		registerContainerType(AutoInjectorContainer.TYPE, "auto_injector");
-		registerContainerType(ColdStorageContainer.TYPE, "cold_storage");
-		registerContainerType(HydroponicsTroughContainer.TYPE, "hydroponics_trough");
-		registerContainerType(StasisStorageContainer.TYPE, "stasis_storage");
-		registerContainerType(CultivatorVatContainer.TYPE, "cultivator_vat");
-		registerContainerType(IncubatorContainer.TYPE, "incubator");
-		registerContainerType(BloodCentrifugeContainer.TYPE, "blood_centrifuge");
-		registerContainerType(EmbryoLabContainer.TYPE, "embryo_lab");
-		registerContainerType(HeatReservoirCreativeContainer.TYPE, "heat_reservoir_creative");
-		registerContainerType(MasterAxisCreativeContainer.TYPE, "master_axis_creative");
-		registerContainerType(BeamExtractorCreativeContainer.TYPE, "beam_extractor_creative");
-		registerContainerType(BloodBeamLinkerContainer.TYPE, "blood_beam_linker");
-	}
+	public static final DeferredRegister<MenuType<?>> CONTAINERS = DeferredRegister.create(BuiltInRegistries.MENU, Crossroads.MODID);
 
-	@OnlyIn(Dist.CLIENT)
-	public static void initClient(){
-		registerConClient(FireboxContainer.TYPE, FireboxScreen::new, "firebox");
-		registerConClient(IceboxContainer.TYPE, IceboxScreen::new, "icebox");
-		registerConClient(FluidCoolerContainer.TYPE, FluidCoolerScreen::new, "fluid_cooler");
-		registerConClient(CrucibleContainer.TYPE, CrucibleScreen::new, "crucible");
-		registerConClient(SaltReactorContainer.TYPE, SaltReactorScreen::new, "salt_reactor");
-		registerConClient(SmelterContainer.TYPE, SmelterScreen::new, "smelter");
-		registerConClient(BlastFurnaceContainer.TYPE, BlastFurnaceScreen::new, "ind_blast_furnace");
-		registerConClient(MillstoneContainer.TYPE, MillstoneScreen::new, "millstone");
-		registerConClient(StampMillContainer.TYPE, StampMillScreen::new, "stamp_mill");
-		registerConClient(FatCollectorContainer.TYPE, FatCollectorScreen::new, "fat_collector");
-		registerConClient(FatCongealerContainer.TYPE, FatCongealerScreen::new, "fat_congealer");
-		registerConClient(FatFeederContainer.TYPE, FatFeederScreen::new, "fat_feeder");
-		registerConClient(FluidTankContainer.TYPE, FluidTankScreen::new, "fluid_tank");
-		registerConClient(OreCleanserContainer.TYPE, OreCleanserScreen::new, "ore_cleanser");
-		registerConClient(RadiatorContainer.TYPE, RadiatorScreen::new, "radiator");
-		registerConClient(SteamBoilerContainer.TYPE, SteamBoilerScreen::new, "steam_boiler");
-		registerConClient(WaterCentrifugeContainer.TYPE, WaterCentrifugeScreen::new, "water_centrifuge");
-		registerConClient(ColorChartContainer.TYPE, ColorChartScreen::new, "color_chart");
-		registerConClient(BeamExtractorContainer.TYPE, BeamExtractorScreen::new, "beam_extractor");
-		registerConClient(HeatLimiterContainer.TYPE, HeatLimiterScreen::new, "heat_limiter");
-		registerConClient(RotaryPumpContainer.TYPE, RotaryPumpScreen::new, "rotary_pump");
-		registerConClient(DetailedCrafterContainer.TYPE, DetailedCrafterScreen::new, "detailed_crafter");
-		registerConClient(ReagentFilterContainer.TYPE, ReagentFilterScreen::new, "reagent_filter");
-		registerConClient(CopshowiumMakerContainer.TYPE, CopshowiumMakerScreen::new, "copshowium_maker");
-		registerConClient(SteamerContainer.TYPE, SteamerScreen::new, "steamer");
-		registerConClient(WindingTableContainer.TYPE, WindingTableScreen::new, "winding_table");
-		registerConClient(DetailedAutoCrafterContainer.TYPE, DetailedAutoCrafterScreen::new, "detailed_auto_crafter");
-		registerConClient(SequenceBoxContainer.TYPE, SequenceBoxScreen::new, "sequence_box");
-		registerConClient(SteamTurbineContainer.TYPE, SteamTurbineScreen::new, "steam_turbine");
-		registerConClient(BeaconHarnessContainer.TYPE, BeaconHarnessScreen::new, "beacon_harness");
-		registerConClient(FormulationVatContainer.TYPE, FormulationVatScreen::new, "formulation_vat");
-		registerConClient(BrewingVatContainer.TYPE, BrewingVatScreen::new, "brewing_vat");
-		registerConClient(AutoInjectorContainer.TYPE, AutoInjectorScreen::new, "auto_injector");
-		registerConClient(ColdStorageContainer.TYPE, ColdStorageScreen::new, "cold_storage");
-		registerConClient(HydroponicsTroughContainer.TYPE, HydroponicsTroughScreen::new, "hydroponics_trough");
-		registerConClient(StasisStorageContainer.TYPE, StasisStorageScreen::new, "stasis_storage");
-		registerConClient(CultivatorVatContainer.TYPE, CultivatorVatScreen::new, "cultivator_vat");
-		registerConClient(IncubatorContainer.TYPE, IncubatorScreen::new, "incubator");
-		registerConClient(BloodCentrifugeContainer.TYPE, BloodCentrifugeScreen::new, "blood_centrifuge");
-		registerConClient(EmbryoLabContainer.TYPE, EmbryoLabScreen::new, "embryo_lab");
-		registerConClient(HeatReservoirCreativeContainer.TYPE, HeatReservoirCreativeScreen::new, "heat_reservoir_creative");
-		registerConClient(MasterAxisCreativeContainer.TYPE, MasterAxisCreativeScreen::new, "master_axis_creative");
-		registerConClient(BeamExtractorCreativeContainer.TYPE, BeamExtractorCreativeScreen::new, "beam_extractor_creative");
-		registerConClient(BloodBeamLinkerContainer.TYPE, BloodBeamLinkerScreen::new, "blood_beam_linker");
-	}
+	public static final DeferredHolder<MenuType<?>, MenuType<FireboxContainer>> FIREBOX_CONTAINER = CONTAINERS.register("firebox", () -> conType(FireboxContainer::new));
+	public static final DeferredHolder<MenuType<?>, MenuType<IceboxContainer>> ICEBOX_CONTAINER = CONTAINERS.register("icebox", () -> conType(IceboxContainer::new));
+	public static final DeferredHolder<MenuType<?>, MenuType<FluidCoolerContainer>> FLUID_COOLER_CONTAINER = CONTAINERS.register("fluid_cooler", () -> conType(FluidCoolerContainer::new));
+	public static final DeferredHolder<MenuType<?>, MenuType<CrucibleContainer>> CRUCIBLE_CONTAINER = CONTAINERS.register("crucible", () -> conType(CrucibleContainer::new));
+	public static final DeferredHolder<MenuType<?>, MenuType<SaltReactorContainer>> SALT_REACTOR_CONTAINER = CONTAINERS.register("salt_reactor", () -> conType(SaltReactorContainer::new));
+	public static final DeferredHolder<MenuType<?>, MenuType<SmelterContainer>> SMELTER_CONTAINER = CONTAINERS.register("smelter", () -> conType(SmelterContainer::new));
+	public static final DeferredHolder<MenuType<?>, MenuType<BlastFurnaceContainer>> IND_BLAST_FURNACE_CONTAINER = CONTAINERS.register("ind_blast_furnace", () -> conType(BlastFurnaceContainer::new));
+	public static final DeferredHolder<MenuType<?>, MenuType<MillstoneContainer>> MILLSTONE_CONTAINER = CONTAINERS.register("millstone", () -> conType(MillstoneContainer::new));
+	public static final DeferredHolder<MenuType<?>, MenuType<StampMillContainer>> STAMP_MILL_CONTAINER = CONTAINERS.register("stamp_mill", () -> conType(StampMillContainer::new));
+	public static final DeferredHolder<MenuType<?>, MenuType<FatCollectorContainer>> FAT_COLLECTOR_CONTAINER = CONTAINERS.register("fat_collector", () -> conType(FatCollectorContainer::new));
+	public static final DeferredHolder<MenuType<?>, MenuType<FatCongealerContainer>> FAT_CONGEALER_CONTAINER = CONTAINERS.register("fat_congealer", () -> conType(FatCongealerContainer::new));
+	public static final DeferredHolder<MenuType<?>, MenuType<FatFeederContainer>> FAT_FEEDER_CONTAINER = CONTAINERS.register("fat_feeder", () -> conType(FatFeederContainer::new));
+	public static final DeferredHolder<MenuType<?>, MenuType<FluidTankContainer>> FLUID_TANK_CONTAINER = CONTAINERS.register("fluid_tank", () -> conType(FluidTankContainer::new));
+	public static final DeferredHolder<MenuType<?>, MenuType<OreCleanserContainer>> ORE_CLEANSER_CONTAINER = CONTAINERS.register("ore_cleanser", () -> conType(OreCleanserContainer::new));
+	public static final DeferredHolder<MenuType<?>, MenuType<RadiatorContainer>> RADIATOR_CONTAINER = CONTAINERS.register("radiator", () -> conType(RadiatorContainer::new));
+	public static final DeferredHolder<MenuType<?>, MenuType<SteamBoilerContainer>> STEAM_BOILER_CONTAINER = CONTAINERS.register("steam_boiler", () -> conType(SteamBoilerContainer::new));
+	public static final DeferredHolder<MenuType<?>, MenuType<WaterCentrifugeContainer>> WATER_CENTRIFUGE_CONTAINER = CONTAINERS.register("water_centrifuge", () -> conType(WaterCentrifugeContainer::new));
+	public static final DeferredHolder<MenuType<?>, MenuType<ColorChartContainer>> COLOR_CHART_CONTAINER = CONTAINERS.register("color_chart", () -> conType(ColorChartContainer::new));
+	public static final DeferredHolder<MenuType<?>, MenuType<BeamExtractorContainer>> BEAM_EXTRACTOR_CONTAINER = CONTAINERS.register("beam_extractor", () -> conType(BeamExtractorContainer::new));
+	public static final DeferredHolder<MenuType<?>, MenuType<HeatLimiterContainer>> HEAT_LIMITER_CONTAINER = CONTAINERS.register("heat_limiter", () -> conType(HeatLimiterContainer::new));
+	public static final DeferredHolder<MenuType<?>, MenuType<RotaryPumpContainer>> ROTARY_PUMP_CONTAINER = CONTAINERS.register("rotary_pump", () -> conType(RotaryPumpContainer::new));
+	public static final DeferredHolder<MenuType<?>, MenuType<DetailedCrafterContainer>> DETAILED_CRAFTER_CONTAINER = CONTAINERS.register("detailed_crafter", () -> conType(DetailedCrafterContainer::new));
+	public static final DeferredHolder<MenuType<?>, MenuType<ReagentFilterContainer>> REAGENT_FILTER_CONTAINER = CONTAINERS.register("reagent_filter", () -> conType(ReagentFilterContainer::new));
+	public static final DeferredHolder<MenuType<?>, MenuType<CopshowiumMakerContainer>> COPSHOWIUM_MAKER_CONTAINER = CONTAINERS.register("copshowium_maker", () -> conType(CopshowiumMakerContainer::new));
+	public static final DeferredHolder<MenuType<?>, MenuType<SteamerContainer>> STEAMER_CONTAINER = CONTAINERS.register("steamer", () -> conType(SteamerContainer::new));
+	public static final DeferredHolder<MenuType<?>, MenuType<WindingTableContainer>> WINDING_TABLE_CONTAINER = CONTAINERS.register("winding_table", () -> conType(WindingTableContainer::new));
+	public static final DeferredHolder<MenuType<?>, MenuType<DetailedAutoCrafterContainer>> DETAILED_AUTO_CRAFTER_CONTAINER = CONTAINERS.register("detailed_auto_crafter", () -> conType(DetailedAutoCrafterContainer::new));
+	public static final DeferredHolder<MenuType<?>, MenuType<SequenceBoxContainer>> SEQUENCE_BOX_CONTAINER = CONTAINERS.register("sequence_box", () -> conType(SequenceBoxContainer::new));
+	public static final DeferredHolder<MenuType<?>, MenuType<SteamTurbineContainer>> STEAM_TURBINE_CONTAINER = CONTAINERS.register("steam_turbine", () -> conType(SteamTurbineContainer::new));
+	public static final DeferredHolder<MenuType<?>, MenuType<BeaconHarnessContainer>> BEACON_HARNESS_CONTAINER = CONTAINERS.register("beacon_harness", () -> conType(BeaconHarnessContainer::new));
+	public static final DeferredHolder<MenuType<?>, MenuType<FormulationVatContainer>> FORMULATION_VAT_CONTAINER = CONTAINERS.register("formulation_vat", () -> conType(FormulationVatContainer::new));
+	public static final DeferredHolder<MenuType<?>, MenuType<BrewingVatContainer>> BREWING_VAT_CONTAINER = CONTAINERS.register("brewing_vat", () -> conType(BrewingVatContainer::new));
+	public static final DeferredHolder<MenuType<?>, MenuType<AutoInjectorContainer>> AUTO_INJECTOR_CONTAINER = CONTAINERS.register("auto_injector", () -> conType(AutoInjectorContainer::new));
+	public static final DeferredHolder<MenuType<?>, MenuType<ColdStorageContainer>> COLD_STORAGE_CONTAINER = CONTAINERS.register("cold_storage", () -> conType(ColdStorageContainer::new));
+	public static final DeferredHolder<MenuType<?>, MenuType<HydroponicsTroughContainer>> HYDROPONICS_TROUGH_CONTAINER = CONTAINERS.register("hydroponics_trough", () -> conType(HydroponicsTroughContainer::new));
+	public static final DeferredHolder<MenuType<?>, MenuType<StasisStorageContainer>> STASIS_STORAGE_CONTAINER = CONTAINERS.register("stasis_storage", () -> conType(StasisStorageContainer::new));
+	public static final DeferredHolder<MenuType<?>, MenuType<CultivatorVatContainer>> CULTIVATOR_VAT_CONTAINER = CONTAINERS.register("cultivator_vat", () -> conType(CultivatorVatContainer::new));
+	public static final DeferredHolder<MenuType<?>, MenuType<IncubatorContainer>> INCUBATOR_CONTAINER = CONTAINERS.register("incubator", () -> conType(IncubatorContainer::new));
+	public static final DeferredHolder<MenuType<?>, MenuType<BloodCentrifugeContainer>> BLOOD_CENTRIFUGE_CONTAINER = CONTAINERS.register("blood_centrifuge", () -> conType(BloodCentrifugeContainer::new));
+	public static final DeferredHolder<MenuType<?>, MenuType<EmbryoLabContainer>> EMBRYO_LAB_CONTAINER = CONTAINERS.register("embryo_lab", () -> conType(EmbryoLabContainer::new));
+	public static final DeferredHolder<MenuType<?>, MenuType<HeatReservoirCreativeContainer>> HEAT_RESERVOIR_CREATIVE_CONTAINER = CONTAINERS.register("heat_reservoir_creative", () -> conType(HeatReservoirCreativeContainer::new));
+	public static final DeferredHolder<MenuType<?>, MenuType<MasterAxisCreativeContainer>> MASTER_AXIS_CREATIVE_CONTAINER = CONTAINERS.register("master_axis_creative", () -> conType(MasterAxisCreativeContainer::new));
+	public static final DeferredHolder<MenuType<?>, MenuType<BeamExtractorCreativeContainer>> BEAM_EXTRACTOR_CREATIVE_CONTAINER = CONTAINERS.register("beam_extractor_creative", () -> conType(BeamExtractorCreativeContainer::new));
+	public static final DeferredHolder<MenuType<?>, MenuType<BloodBeamLinkerContainer>> BLOOD_BEAM_LINKER_CONTAINER = CONTAINERS.register("blood_beam_linker", () -> conType(BloodBeamLinkerContainer::new));
 
-	public static <T extends AbstractContainerMenu> MenuType<T> createConType(IContainerFactory<T> cons){
+	private static <T extends AbstractContainerMenu> MenuType<T> conType(IContainerFactory<T> cons){
 		return new MenuType<>(cons, FeatureFlags.VANILLA_SET);
 	}
 
-	/**
-	 * Queues a container type for register
-	 * @param id The ID to use
-	 * @param contType The container type to register   
-	 * @param <T> Container subclass
-	 */
-	private static <T extends AbstractContainerMenu> void registerContainerType(MenuType<T> contType, String id){
-		toRegisterMenu.put(id, contType);
-	}
-
-	/**
-	 * Performs necessary menu pre-registration on the client
-	 * @param contType The container type to register
-	 * @param screenFactory The screen factory to be linked to the type
-	 * @param id The ID to use
-	 * @param <T> Container subclass for the menu type
-	 * @param <U> Container subclass for the screen factory (usually the same as T)
-	 */
 	@OnlyIn(Dist.CLIENT)
-	private static <T extends U, U extends AbstractContainerMenu> void registerConClient(MenuType<T> contType, MenuScreens.ScreenConstructor<U, AbstractContainerScreen<U>> screenFactory, String id){
-		registerContainerType(contType, id);
-		MenuScreens.register(contType, screenFactory);
+	public static void initClient(RegisterMenuScreensEvent e){
+		e.register(FIREBOX_CONTAINER.get(), FireboxScreen::new);
+		e.register(ICEBOX_CONTAINER.get(), IceboxScreen::new);
+		e.register(FLUID_COOLER_CONTAINER.get(), FluidCoolerScreen::new);
+		e.register(CRUCIBLE_CONTAINER.get(), CrucibleScreen::new);
+		e.register(SALT_REACTOR_CONTAINER.get(), SaltReactorScreen::new);
+		e.register(SMELTER_CONTAINER.get(), SmelterScreen::new);
+		e.register(IND_BLAST_FURNACE_CONTAINER.get(), BlastFurnaceScreen::new);
+		e.register(MILLSTONE_CONTAINER.get(), MillstoneScreen::new);
+		e.register(STAMP_MILL_CONTAINER.get(), StampMillScreen::new);
+		e.register(FAT_COLLECTOR_CONTAINER.get(), FatCollectorScreen::new);
+		e.register(FAT_CONGEALER_CONTAINER.get(), FatCongealerScreen::new);
+		e.register(FAT_FEEDER_CONTAINER.get(), FatFeederScreen::new);
+		e.register(FLUID_TANK_CONTAINER.get(), FluidTankScreen::new);
+		e.register(ORE_CLEANSER_CONTAINER.get(), OreCleanserScreen::new);
+		e.register(RADIATOR_CONTAINER.get(), RadiatorScreen::new);
+		e.register(STEAM_BOILER_CONTAINER.get(), SteamBoilerScreen::new);
+		e.register(WATER_CENTRIFUGE_CONTAINER.get(), WaterCentrifugeScreen::new);
+		e.register(COLOR_CHART_CONTAINER.get(), ColorChartScreen::new);
+		e.register(BEAM_EXTRACTOR_CONTAINER.get(), BeamExtractorScreen::new);
+		e.register(HEAT_LIMITER_CONTAINER.get(), HeatLimiterScreen::new);
+		e.register(ROTARY_PUMP_CONTAINER.get(), RotaryPumpScreen::new);
+		e.register(DETAILED_CRAFTER_CONTAINER.get(), DetailedCrafterScreen::new);
+		e.register(REAGENT_FILTER_CONTAINER.get(), ReagentFilterScreen::new);
+		e.register(COPSHOWIUM_MAKER_CONTAINER.get(), CopshowiumMakerScreen::new);
+		e.register(STEAMER_CONTAINER.get(), SteamerScreen::new);
+		e.register(WINDING_TABLE_CONTAINER.get(), WindingTableScreen::new);
+		e.register(DETAILED_AUTO_CRAFTER_CONTAINER.get(), DetailedAutoCrafterScreen::new);
+		e.register(SEQUENCE_BOX_CONTAINER.get(), SequenceBoxScreen::new);
+		e.register(STEAM_TURBINE_CONTAINER.get(), SteamTurbineScreen::new);
+		e.register(BEACON_HARNESS_CONTAINER.get(), BeaconHarnessScreen::new);
+		e.register(FORMULATION_VAT_CONTAINER.get(), FormulationVatScreen::new);
+		e.register(BREWING_VAT_CONTAINER.get(), BrewingVatScreen::new);
+		e.register(AUTO_INJECTOR_CONTAINER.get(), AutoInjectorScreen::new);
+		e.register(COLD_STORAGE_CONTAINER.get(), ColdStorageScreen::new);
+		e.register(HYDROPONICS_TROUGH_CONTAINER.get(), HydroponicsTroughScreen::new);
+		e.register(STASIS_STORAGE_CONTAINER.get(), StasisStorageScreen::new);
+		e.register(CULTIVATOR_VAT_CONTAINER.get(), CultivatorVatScreen::new);
+		e.register(INCUBATOR_CONTAINER.get(), IncubatorScreen::new);
+		e.register(BLOOD_CENTRIFUGE_CONTAINER.get(), BloodCentrifugeScreen::new);
+		e.register(EMBRYO_LAB_CONTAINER.get(), EmbryoLabScreen::new);
+		e.register(HEAT_RESERVOIR_CREATIVE_CONTAINER.get(), HeatReservoirCreativeScreen::new);
+		e.register(MASTER_AXIS_CREATIVE_CONTAINER.get(), MasterAxisCreativeScreen::new);
+		e.register(BEAM_EXTRACTOR_CREATIVE_CONTAINER.get(), BeamExtractorCreativeScreen::new);
+		e.register(BLOOD_BEAM_LINKER_CONTAINER.get(), BloodBeamLinkerScreen::new);
 	}
 
-	public static final HashMap<String, MenuType<?>> toRegisterMenu = new HashMap<>();
+	public static void init(IEventBus modBus){
+		CONTAINERS.register(modBus);
+	}
 }

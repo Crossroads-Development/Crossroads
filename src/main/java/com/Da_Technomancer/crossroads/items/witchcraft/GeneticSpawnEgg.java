@@ -43,8 +43,8 @@ public class GeneticSpawnEgg extends Item{
 
 		DefaultDispenseItemBehavior dispenseBehavior = new DefaultDispenseItemBehavior(){
 			public ItemStack execute(BlockSource source, ItemStack stack){
-				Direction direction = source.getBlockState().getValue(DispenserBlock.FACING);
-				spawnMob(stack, null, source.getLevel(), source.getPos().relative(direction), MobSpawnType.DISPENSER, direction != Direction.UP, false);
+				Direction direction = source.state().getValue(DispenserBlock.FACING);
+				spawnMob(stack, null, source.level(), source.pos().relative(direction), MobSpawnType.DISPENSER, direction != Direction.UP, false);
 				stack.shrink(1);
 				return stack;
 			}

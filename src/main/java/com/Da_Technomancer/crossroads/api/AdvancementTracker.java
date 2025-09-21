@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.api;
 
 import com.Da_Technomancer.crossroads.Crossroads;
-import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
+import net.minecraft.advancements.AdvancementNode;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientAdvancements;
@@ -80,41 +80,41 @@ public class AdvancementTracker{
 		private static final Listener INSTANCE = new Listener();
 
 		@Override
-		public void onUpdateAdvancementProgress(Advancement advancementIn, AdvancementProgress progress){
-			ResourceLocation id = advancementIn.getId();
-			if(id.getNamespace().equals(Crossroads.MODID)){
-				progressMap.put(id.getPath(), progress.isDone());
-			}
-		}
-
-		@Override
-		public void onSelectedTabChanged(@Nullable Advancement advancementIn){
+		public void onAddAdvancementRoot(AdvancementNode advancementNode){
 
 		}
 
 		@Override
-		public void onAddAdvancementRoot(Advancement advancementIn){
+		public void onRemoveAdvancementRoot(AdvancementNode advancementNode){
 
 		}
 
 		@Override
-		public void onRemoveAdvancementRoot(Advancement advancementIn){
+		public void onAddAdvancementTask(AdvancementNode advancementNode){
 
 		}
 
 		@Override
-		public void onAddAdvancementTask(Advancement advancementIn){
-
-		}
-
-		@Override
-		public void onRemoveAdvancementTask(Advancement advancementIn){
+		public void onRemoveAdvancementTask(AdvancementNode advancementNode){
 
 		}
 
 		@Override
 		public void onAdvancementsCleared(){
 			progressMap.clear();
+		}
+
+		@Override
+		public void onUpdateAdvancementProgress(AdvancementNode advancementNode, AdvancementProgress progress){
+			ResourceLocation id = advancementNode.holder().id();
+			if(id.getNamespace().equals(Crossroads.MODID)){
+				progressMap.put(id.getPath(), progress.isDone());
+			}
+		}
+
+		@Override
+		public void onSelectedTabChanged(@Nullable AdvancementHolder advancementHolder){
+
 		}
 	}
 }

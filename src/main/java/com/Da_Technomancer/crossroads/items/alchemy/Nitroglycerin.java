@@ -33,8 +33,8 @@ public class Nitroglycerin extends Item{
 		 */
 		@Override
 		public ItemStack execute(BlockSource source, ItemStack stack){
-			Direction dir = source.getBlockState().getValue(DispenserBlock.FACING);
-			Level world = source.getLevel();
+			Direction dir = source.state().getValue(DispenserBlock.FACING);
+			Level world = source.level();
 			EntityNitro nitro = EntityNitro.type.create(world);
 			nitro.setPos(source.x() + dir.getStepX() + 0.5D, source.y() + dir.getStepY() + 0.5D, source.z() + dir.getStepZ() + 0.5D);
 			nitro.shoot(dir.getStepX(), dir.getStepY() + 0.1F, dir.getStepZ(), 1.5F, 1.0F);

@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.essentials.api.ConfigUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -251,12 +252,14 @@ public final class MiscUtil{
 		return world.isThundering() ? world.getMaxLocalRawBrightness(pos, 10) : world.getMaxLocalRawBrightness(pos);
 	}
 
-
-	//TODO: not sure what to do with the following; looks like Forge used a collection of registries you could query,
-	// whereas NeoForge is using a strict set of registries (base game and custom) which are accessed via static fields
-	// on the NeoForgeRegistries class. Will need to look into whether these two methods still have a purpose.
+	/**
+	 * @param registeredObject The object to lookup (ex. dirt block)
+	 * @param registryKey The key of the registry itself (not the object in the registry) (ex. Registries.BLOCK)
+	 * @return The resourcelocation for the registeredObject in the registry specified by registryKey (ex. minecraft:dirt)
+	 * @param <T> The type of the registeredObject (ex. Block)
+	 */
 	public static <T> ResourceLocation getRegistryName(T registeredObject, ResourceKey<? extends Registry<T>> registryKey){
-		Registry<T> registry = RegistryManager.ACTIVE.getRegistry(registryKey);
+		Registry<T> registry = (Registry<T>) BuiltInRegistries.REGISTRY.get(registryKey.location());
 		if(registry == null){
 			Crossroads.logger.error("Invalid registry: " + registryKey.registry());
 			throw new IllegalArgumentException();
@@ -265,10 +268,16 @@ public final class MiscUtil{
 		return getRegistryName(registeredObject, registry);
 	}
 
+	/**
+	 * @param registeredObject The object to lookup (ex. dirt block)
+	 * @param registry The registry it is in (ex. BuiltInRegistries.BLOCK)
+	 * @return The resourcelocation for the registeredObject in the registry specified (ex. minecraft:dirt)
+	 * @param <T> The type of the registeredObject (ex. Block)
+	 */
 	public static <T> ResourceLocation getRegistryName(T registeredObject, Registry<T> registry){
 		ResourceLocation result = registry.getKey(registeredObject);
 		if(result == null){
-			IllegalArgumentException ex = new IllegalArgumentException("Attempted to lookup unregistered object: " + registeredObject + "; in registry: " + registry.getRegistryName());
+			IllegalArgumentException ex = new IllegalArgumentException("Attempted to lookup unregistered object: " + registeredObject + "; in registry: " + registry.key());
 			Crossroads.logger.throwing(ex);
 			throw ex;
 		}

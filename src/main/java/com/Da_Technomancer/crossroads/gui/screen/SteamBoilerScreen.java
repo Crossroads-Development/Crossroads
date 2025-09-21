@@ -4,7 +4,6 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.api.templates.MachineScreen;
 import com.Da_Technomancer.crossroads.blocks.fluid.SteamBoilerTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.SteamBoilerContainer;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;

@@ -8,10 +8,9 @@ import net.minecraft.world.inventory.MenuType;
 
 public class EmbryoLabContainer extends MachineContainer<EmbryoLabTileEntity>{
 
-	protected static final MenuType<EmbryoLabContainer> TYPE = CRContainers.createConType(EmbryoLabContainer::new);
 
 	public EmbryoLabContainer(int id, Inventory playerInv, FriendlyByteBuf buf){
-		super(TYPE, id, playerInv, buf);
+		super(CRContainers.EMBRYO_LAB_CONTAINER.get(), id, playerInv, buf);
 	}
 
 	@Override

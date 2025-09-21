@@ -5,16 +5,14 @@ import com.Da_Technomancer.crossroads.blocks.witchcraft.BrewingVatTileEntity;
 import com.Da_Technomancer.essentials.api.IntDeferredRef;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.MenuType;
 
 public class BrewingVatContainer extends MachineContainer<BrewingVatTileEntity>{
 
-	protected static final MenuType<BrewingVatContainer> TYPE = CRContainers.createConType(BrewingVatContainer::new);
 
 	public final IntDeferredRef craftProgress;
 
 	public BrewingVatContainer(int id, Inventory playerInv, FriendlyByteBuf buf){
-		super(TYPE, id, playerInv, buf);
+		super(CRContainers.BREWING_VAT_CONTAINER.get(), id, playerInv, buf);
 		craftProgress = new IntDeferredRef(te::getProgess, te.getLevel().isClientSide);
 		addDataSlot(craftProgress);
 	}

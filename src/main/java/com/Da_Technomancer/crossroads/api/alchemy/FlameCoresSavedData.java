@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.api.alchemy;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.entity.EntityFlameCore;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -56,12 +57,12 @@ public class FlameCoresSavedData extends SavedData{
 		//Data is per-dimension
 		DimensionDataStorage storage;
 		storage = world.getDataStorage();
-		return storage.computeIfAbsent(FlameCoresSavedData::load, FlameCoresSavedData::new, ID);
+		return storage.computeIfAbsent(new Factory<>(FlameCoresSavedData::new, FlameCoresSavedData::load), ID);
 	}
 
 	private final ArrayList<UUID> flameCoreIDs = new ArrayList<>();
 
-	public static FlameCoresSavedData load(CompoundTag nbt){
+	public static FlameCoresSavedData load(CompoundTag nbt, HolderLookup.Provider provider){
 		FlameCoresSavedData data = new FlameCoresSavedData();
 		int i = 0;
 		while(nbt.contains("id_" + i)){
@@ -72,7 +73,7 @@ public class FlameCoresSavedData extends SavedData{
 	}
 
 	@Override
-	public CompoundTag save(CompoundTag nbt){
+	public CompoundTag save(CompoundTag nbt, HolderLookup.Provider provider){
 		for(int i = 0; i < flameCoreIDs.size(); i++){
 			nbt.putUUID("id_" + i, flameCoreIDs.get(i));
 		}

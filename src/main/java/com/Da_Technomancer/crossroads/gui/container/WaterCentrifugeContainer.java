@@ -11,10 +11,9 @@ import org.apache.commons.lang3.tuple.Pair;
 
 public class WaterCentrifugeContainer extends MachineContainer<WaterCentrifugeTileEntity>{
 
-	protected static final MenuType<WaterCentrifugeContainer> TYPE = CRContainers.createConType(WaterCentrifugeContainer::new);
 
 	public WaterCentrifugeContainer(int id, Inventory playerInv, FriendlyByteBuf data){
-		super(TYPE, id, playerInv, data);
+		super(CRContainers.WATER_CENTRIFUGE_CONTAINER.get(), id, playerInv, data);
 	}
 
 	@Override
