@@ -6,7 +6,13 @@ import com.Da_Technomancer.crossroads.api.crafting.IOptionalRecipe;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.heat.FluidCoolingChamberTileEntity;
 import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
@@ -17,11 +23,11 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.apache.commons.lang3.tuple.Pair;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class FluidCoolingRec implements IOptionalRecipe<RecipeInput>{
 
-	private final ResourceLocation id;
 	private final String group;
 
 	private final FluidIngredient input;
@@ -31,8 +37,7 @@ public class FluidCoolingRec implements IOptionalRecipe<RecipeInput>{
 	private final float addedHeat;
 	private final boolean active;
 
-	public FluidCoolingRec(ResourceLocation location, String name, FluidIngredient input, int inputQty, ItemStack output, float maxTemp, float addedHeat, boolean active){
-		id = location;
+	public FluidCoolingRec(String name, FluidIngredient input, int inputQty, ItemStack output, float maxTemp, float addedHeat, boolean active){
 		group = name;
 		this.input = input;
 		this.inputQty = inputQty;
@@ -96,6 +101,7 @@ public class FluidCoolingRec implements IOptionalRecipe<RecipeInput>{
 		return CRRecipes.FLUID_COOLING_SERIAL;
 	}
 
+	@Nonnull
 	@Override
 	public String getGroup(){
 		return group;
@@ -107,62 +113,38 @@ public class FluidCoolingRec implements IOptionalRecipe<RecipeInput>{
 	}
 
 	public static class Serializer implements RecipeSerializer<FluidCoolingRec>{
+		// String name, FluidIngredient input, int inputQty, ItemStack output, float maxTemp, float addedHeat, boolean active
+		private static final MapCodec<FluidCoolingRec> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+				Codec.STRING.optionalFieldOf("group", "").forGetter(FluidCoolingRec::getGroup),
+				FluidIngredient.CODEC.fieldOf("tag").forGetter(FluidCoolingRec::getInput),
+				Codec.INT.fieldOf("fluid_amount").forGetter(FluidCoolingRec::getInputQty),
+				ItemStack.CODEC.fieldOf("output").forGetter(FluidCoolingRec::getResultItem),
+				Codec.FLOAT.fieldOf("max_temp").forGetter(FluidCoolingRec::getMaxTemp),
+				Codec.FLOAT.fieldOf("temp_change").forGetter(FluidCoolingRec::getAddedHeat),
+				Codec.BOOL.optionalFieldOf("active", true).forGetter(FluidCoolingRec::isEnabled)
+		).apply(instance, FluidCoolingRec::new));
 
+		private static final StreamCodec<RegistryFriendlyByteBuf, FluidCoolingRec> STREAM_CODEC = StreamCodec.composite(
+				ByteBufCodecs.STRING_UTF8, FluidCoolingRec::getGroup,
+				FluidIngredient.STREAM_CODEC, FluidCoolingRec::getInput,
+				ByteBufCodecs.INT, FluidCoolingRec::getInputQty,
+				ItemStack.STREAM_CODEC, FluidCoolingRec::getResultItem,
+				ByteBufCodecs.FLOAT, FluidCoolingRec::getMaxTemp,
+				ByteBufCodecs.FLOAT, FluidCoolingRec::getAddedHeat,
+				ByteBufCodecs.BOOL, FluidCoolingRec::isEnabled,
+				FluidCoolingRec::new
+		);
+
+		@Nonnull
 		@Override
-		public FluidCoolingRec fromJson(ResourceLocation recipeId, JsonObject json){
-			//Normal specification of recipe group and ingredient
-			String s = GsonHelper.getAsString(json, "group", "");
-
-			if(!CraftingUtil.isActiveJSON(json)){
-				return new FluidCoolingRec(recipeId, s, FluidIngredient.EMPTY, 0, ItemStack.EMPTY, 0, 0, false);
-			}
-
-			Pair<FluidIngredient, Integer> input = CraftingUtil.getFluidIngredientAndQuantity(json, "input", true, -1);
-			ItemStack output = CraftingUtil.getItemStack(json, "output", true, false);
-			float maxTemp = GsonHelper.getAsFloat(json, "max_temp");
-			float tempChange = GsonHelper.getAsFloat(json, "temp_change", 0);
-			return new FluidCoolingRec(recipeId, s, input.getLeft(), input.getRight(), output, maxTemp, tempChange, true);
+		public MapCodec<FluidCoolingRec> codec(){
+			return CODEC;
 		}
 
-		@Nullable
+		@Nonnull
 		@Override
-		public FluidCoolingRec fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer){
-			String s = buffer.readUtf(Short.MAX_VALUE);
-			if(!buffer.readBoolean()){//active
-				return new FluidCoolingRec(recipeId, s, FluidIngredient.EMPTY, 0, ItemStack.EMPTY, 0, 0, false);
-			}
-			FluidIngredient input = FluidIngredient.readFromBuffer(buffer);
-			int qty = buffer.readVarInt();
-			ItemStack output = buffer.readItem();
-			float maxTemp = buffer.readFloat();
-			float tempChange = buffer.readFloat();
-			return new FluidCoolingRec(recipeId, s, input, qty, output, maxTemp, tempChange, true);
-		}
-
-		@Override
-		public void toNetwork(FriendlyByteBuf buffer, FluidCoolingRec recipe){
-			buffer.writeUtf(recipe.getGroup());
-			buffer.writeBoolean(recipe.active);
-			if(recipe.active){
-				recipe.getInput().writeToBuffer(buffer);
-				buffer.writeVarInt(recipe.getInputQty());
-				buffer.writeItem(recipe.getResultItem());
-				buffer.writeFloat(recipe.getMaxTemp());
-				buffer.writeFloat(recipe.getAddedHeat());
-			}
-		}
-	}
-
-	public class FluidCoolingRecInput implements RecipeInput{
-
-		@Override
-		public ItemStack getItem(int i){
-			return null;
-		}
-
-		@Override
-		public int size(){
-			return 0;
+		public StreamCodec<RegistryFriendlyByteBuf, FluidCoolingRec> streamCodec(){
+			return STREAM_CODEC;
 		}
 	}
 }

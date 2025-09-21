@@ -1,14 +1,16 @@
 package com.Da_Technomancer.crossroads.crafting;
 
-import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.api.crafting.FluidIngredient;
 import com.Da_Technomancer.crossroads.api.crafting.IOptionalRecipe;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.technomancy.CopshowiumCreationChamberTileEntity;
-import com.google.gson.JsonObject;
-import net.minecraft.network.FriendlyByteBuf;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -54,8 +56,8 @@ public class CopshowiumRec implements IOptionalRecipe<RecipeInput>{
 	}
 
 	@Override
-	public boolean matches(RecipeInput input, Level worldIn){
-		return active && inv instanceof CopshowiumCreationChamberTileEntity && input.test(((CopshowiumCreationChamberTileEntity) inv).getInputFluid());
+	public boolean matches(RecipeInput recipeInput, Level worldIn){
+		return active && recipeInput instanceof CopshowiumCreationChamberTileEntity && input.test(((CopshowiumCreationChamberTileEntity) recipeInput).getInputFluid());
 	}
 
 	@Override
@@ -90,46 +92,34 @@ public class CopshowiumRec implements IOptionalRecipe<RecipeInput>{
 
 	public static class Serializer implements RecipeSerializer<CopshowiumRec>{
 
+		//ResourceLocation location, String name, FluidIngredient input, float expandFactor, boolean flux, boolean active
+		private static final MapCodec<CopshowiumRec> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+				ResourceLocation.CODEC.fieldOf("id").forGetter((CopshowiumRec copshowiumRec) -> copshowiumRec.id),
+				Codec.STRING.optionalFieldOf("group", "").forGetter(CopshowiumRec::getGroup),
+				FluidIngredient.CODEC.fieldOf("input").forGetter(CopshowiumRec::getInput),
+				Codec.FLOAT.optionalFieldOf("mult", 1f).forGetter(CopshowiumRec::getMult),
+				Codec.BOOL.optionalFieldOf("entropy", false).forGetter(CopshowiumRec::isFlux),
+				Codec.BOOL.optionalFieldOf("active", true).forGetter(CopshowiumRec::isEnabled)
+		).apply(instance, CopshowiumRec::new));
+
+		private static final StreamCodec<RegistryFriendlyByteBuf, CopshowiumRec> STREAM_CODEC = StreamCodec.composite(
+				ResourceLocation.STREAM_CODEC, (CopshowiumRec copshowiumRec) -> copshowiumRec.id,
+				ByteBufCodecs.STRING_UTF8, CopshowiumRec::getGroup,
+				FluidIngredient.STREAM_CODEC, CopshowiumRec::getInput,
+				ByteBufCodecs.FLOAT, CopshowiumRec::getMult,
+				ByteBufCodecs.BOOL, CopshowiumRec::isFlux,
+				ByteBufCodecs.BOOL, CopshowiumRec::isEnabled,
+				CopshowiumRec::new
+		);
+
 		@Override
-		public CopshowiumRec fromJson(ResourceLocation recipeId, JsonObject json){
-			//Normal specification of recipe group and ingredient
-			String s = GsonHelper.getAsString(json, "group", "");
-
-			if(!CraftingUtil.isActiveJSON(json)){
-				return new CopshowiumRec(recipeId, s, FluidIngredient.EMPTY, 0, false, false);
-			}
-
-			//Specify the fluid input as an ingredient
-			FluidIngredient input = CraftingUtil.getFluidIngredient(json, "input", true);
-			//How much to expand the fluid by when crafting
-			float mult = GsonHelper.getAsFloat(json, "mult", 1);
-			//Whether this recipe generates temporal entropy
-			boolean flux = GsonHelper.getAsBoolean(json, "entropy", false);
-			return new CopshowiumRec(recipeId, s, input, mult, flux, true);
-		}
-
-		@Nullable
-		@Override
-		public CopshowiumRec fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer){
-			String s = buffer.readUtf(Short.MAX_VALUE);
-			if(!buffer.readBoolean()){
-				return new CopshowiumRec(recipeId, s, FluidIngredient.EMPTY, 0, false, false);
-			}
-			FluidIngredient input = FluidIngredient.readFromBuffer(buffer);
-			float mult = buffer.readFloat();
-			boolean flux = buffer.readBoolean();
-			return new CopshowiumRec(recipeId, s, input, mult, flux, true);
+		public MapCodec<CopshowiumRec> codec(){
+			return CODEC;
 		}
 
 		@Override
-		public void toNetwork(FriendlyByteBuf buffer, CopshowiumRec recipe){
-			buffer.writeUtf(recipe.getGroup());
-			buffer.writeBoolean(recipe.active);
-			if(recipe.active){
-				recipe.getInput().writeToBuffer(buffer);
-				buffer.writeFloat(recipe.mult);
-				buffer.writeBoolean(recipe.flux);
-			}
+		public StreamCodec<RegistryFriendlyByteBuf, CopshowiumRec> streamCodec(){
+			return STREAM_CODEC;
 		}
 	}
 }

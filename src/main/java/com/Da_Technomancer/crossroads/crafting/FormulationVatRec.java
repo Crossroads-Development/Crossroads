@@ -6,8 +6,14 @@ import com.Da_Technomancer.crossroads.api.crafting.IOptionalRecipe;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.witchcraft.FormulationVatTileEntity;
 import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
@@ -23,7 +29,6 @@ import javax.annotation.Nullable;
 
 public class FormulationVatRec implements IOptionalRecipe<RecipeInput>{
 
-	private final ResourceLocation id;
 	private final String group;
 
 	private final FluidIngredient input;
@@ -32,8 +37,7 @@ public class FormulationVatRec implements IOptionalRecipe<RecipeInput>{
 	private final FluidStack output;
 	private final boolean active;
 
-	public FormulationVatRec(ResourceLocation location, String name, FluidIngredient input, int inputQty, Ingredient itemInput, FluidStack output, boolean active){
-		id = location;
+	public FormulationVatRec(String name, FluidIngredient input, int inputQty, Ingredient itemInput, FluidStack output, boolean active){
 		group = name;
 		this.input = input;
 		this.inputQty = inputQty;
@@ -72,9 +76,9 @@ public class FormulationVatRec implements IOptionalRecipe<RecipeInput>{
 
 	@Override
 	public boolean matches(RecipeInput input, Level worldIn){
-		if(active && inv instanceof FormulationVatTileEntity){
-			FormulationVatTileEntity te = (FormulationVatTileEntity) inv;
-			return itemInput.test(te.getItem(0)) && input.test(te.getInputFluid());
+		if(active && input instanceof FormulationVatTileEntity){
+			FormulationVatTileEntity te = (FormulationVatTileEntity) input;
+			return itemInput.test(te.getItem(0)) && this.input.test(te.getInputFluid());
 		}
 		return false;
 	}
@@ -110,45 +114,34 @@ public class FormulationVatRec implements IOptionalRecipe<RecipeInput>{
 	}
 
 	public static class Serializer implements RecipeSerializer<FormulationVatRec>{
+		//String name, FluidIngredient input, int inputQty, Ingredient itemInput, FluidStack output, boolean active
+		private static final MapCodec<FormulationVatRec> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+				Codec.STRING.optionalFieldOf("group", "").forGetter(FormulationVatRec::getGroup),
+				FluidIngredient.CODEC.fieldOf("input_fluid").forGetter(FormulationVatRec::getInput),
+				Codec.INT.fieldOf("fluid_amount").forGetter(FormulationVatRec::getInputQty),
+				Ingredient.CODEC.fieldOf("input_item").forGetter(FormulationVatRec::getIngredient),
+				FluidStack.CODEC.fieldOf("output").forGetter(FormulationVatRec::getOutput),
+				Codec.BOOL.optionalFieldOf("active", true).forGetter(FormulationVatRec::isEnabled)
+		).apply(instance, FormulationVatRec::new));
+
+		private static final StreamCodec<RegistryFriendlyByteBuf, FormulationVatRec> STREAM_CODEC = StreamCodec.composite(
+				ByteBufCodecs.STRING_UTF8, FormulationVatRec::getGroup,
+				FluidIngredient.STREAM_CODEC, FormulationVatRec::getInput,
+				ByteBufCodecs.INT, FormulationVatRec::getInputQty,
+				Ingredient.CONTENTS_STREAM_CODEC, FormulationVatRec::getIngredient,
+				FluidStack.STREAM_CODEC, FormulationVatRec::getOutput,
+				ByteBufCodecs.BOOL, FormulationVatRec::isEnabled,
+				FormulationVatRec::new
+		);
 
 		@Override
-		public FormulationVatRec fromJson(ResourceLocation recipeId, JsonObject json){
-			//Normal specification of recipe group and ingredient
-			String s = GsonHelper.getAsString(json, "group", "");
-
-			if(!CraftingUtil.isActiveJSON(json)){
-				return new FormulationVatRec(recipeId, s, FluidIngredient.EMPTY, 0, Ingredient.EMPTY, FluidStack.EMPTY, false);
-			}
-
-			Pair<FluidIngredient, Integer> input = CraftingUtil.getFluidIngredientAndQuantity(json, "input_fluid", false, -1);
-			Ingredient inputItem = CraftingUtil.getIngredient(json, "input_item", true);
-			FluidStack output = CraftingUtil.getFluidStack(json, "output");
-			return new FormulationVatRec(recipeId, s, input.getLeft(), input.getRight(), inputItem, output, true);
-		}
-
-		@Nullable
-		@Override
-		public FormulationVatRec fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer){
-			String s = buffer.readUtf(Short.MAX_VALUE);
-			if(!buffer.readBoolean()){//active
-				return new FormulationVatRec(recipeId, s, FluidIngredient.EMPTY, 0, Ingredient.EMPTY, FluidStack.EMPTY, false);
-			}
-			FluidIngredient input = FluidIngredient.readFromBuffer(buffer);
-			int fluidQty = buffer.readVarInt();
-			Ingredient inputItem = Ingredient.fromNetwork(buffer);
-			FluidStack output = FluidStack.readFromPacket(buffer);
-			return new FormulationVatRec(recipeId, s, input, fluidQty, inputItem, output, true);
+		public MapCodec<FormulationVatRec> codec(){
+			return CODEC;
 		}
 
 		@Override
-		public void toNetwork(FriendlyByteBuf buffer, FormulationVatRec recipe){
-			buffer.writeUtf(recipe.getGroup());
-			buffer.writeBoolean(recipe.active);
-
-			recipe.input.writeToBuffer(buffer);
-			buffer.writeVarInt(recipe.inputQty);
-			recipe.itemInput.toNetwork(buffer);
-			recipe.output.writeToPacket(buffer);
+		public StreamCodec<RegistryFriendlyByteBuf, FormulationVatRec> streamCodec(){
+			return STREAM_CODEC;
 		}
 	}
 }

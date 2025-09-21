@@ -5,8 +5,15 @@ import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.api.crafting.IOptionalRecipe;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
@@ -20,7 +27,6 @@ import javax.annotation.Nullable;
 
 public class BeamExtractRec implements IOptionalRecipe<RecipeInput>{
 
-	private final ResourceLocation id;
 	private final String group;
 	private final Ingredient ingr;
 	private final BeamUnit output;
@@ -29,8 +35,7 @@ public class BeamExtractRec implements IOptionalRecipe<RecipeInput>{
 
 	private final boolean active;
 
-	public BeamExtractRec(ResourceLocation location, String name, Ingredient input, BeamUnit output, int duration, boolean active){
-		id = location;
+	public BeamExtractRec(String name, Ingredient input, BeamUnit output, int duration, boolean active){
 		group = name;
 		ingr = input;
 		this.output = output;
@@ -103,69 +108,32 @@ public class BeamExtractRec implements IOptionalRecipe<RecipeInput>{
 
 	public static class Serializer implements RecipeSerializer<BeamExtractRec>{
 
+		//ResourceLocation location, String name, Ingredient input, BeamUnit output, int duration, boolean active
+		public static MapCodec<BeamExtractRec> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+				Codec.STRING.fieldOf("name").forGetter(BeamExtractRec::getGroup),
+				Ingredient.CODEC.fieldOf("input").forGetter(BeamExtractRec::getIngredient),
+				BeamUnit.CODEC.fieldOf("output").forGetter(BeamExtractRec::getOutput),
+				Codec.INT.fieldOf("duration").forGetter(BeamExtractRec::getDuration),
+				Codec.BOOL.fieldOf("active").forGetter(BeamExtractRec::isActive)
+		).apply(instance, BeamExtractRec::new));
+
+		public static StreamCodec<RegistryFriendlyByteBuf, BeamExtractRec> STREAM_CODEC = StreamCodec.composite(
+				ByteBufCodecs.STRING_UTF8, BeamExtractRec::getGroup,
+				Ingredient.CONTENTS_STREAM_CODEC, BeamExtractRec::getIngredient,
+				BeamUnit.STREAM_CODEC, BeamExtractRec::getOutput,
+				ByteBufCodecs.INT, BeamExtractRec::getDuration,
+				ByteBufCodecs.BOOL, BeamExtractRec::isActive,
+				BeamExtractRec::new
+		);
+
 		@Override
-		public BeamExtractRec fromJson(ResourceLocation recipeId, JsonObject json){
-			//Normal specification of recipe group and ingredient
-			String s = GsonHelper.getAsString(json, "group", "");
-			Ingredient ingredient = Ingredient.EMPTY;
-			boolean active = CraftingUtil.isActiveJSON(json);
-			if(active){
-				ingredient = CraftingUtil.getIngredient(json, "input", true);
-
-				//Output specified as 4 integer tags, all of which are optional and default to zero
-				int[] units = new int[4];
-				if(GsonHelper.isValidNode(json, "energy")){
-					units[0] = GsonHelper.getAsInt(json, "energy");
-				}
-				if(GsonHelper.isValidNode(json, "potential")){
-					units[1] = GsonHelper.getAsInt(json, "potential");
-				}
-				if(GsonHelper.isValidNode(json, "stability")){
-					units[2] = GsonHelper.getAsInt(json, "stability");
-				}
-				if(GsonHelper.isValidNode(json, "void")){
-					units[3] = GsonHelper.getAsInt(json, "void");
-				}
-
-				//Optional duration tag, for number of cycles an output lasts
-				int dur = GsonHelper.getAsInt(json, "duration", 1);
-				return new BeamExtractRec(recipeId, s, ingredient, new BeamUnit(units), dur, true);
-			}
-			return new BeamExtractRec(recipeId, s, ingredient, BeamUnit.EMPTY, 0, false);
-		}
-
-		@Nullable
-		@Override
-		public BeamExtractRec fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer){
-			String s = buffer.readUtf(Short.MAX_VALUE);
-			boolean active = buffer.readBoolean();
-
-			if(active){
-				Ingredient ingredient = Ingredient.fromNetwork(buffer);
-				int duration = buffer.readVarInt();
-
-				int[] units = new int[4];
-				for(int i = 0; i < 4; i++){
-					units[i] = buffer.readVarInt();
-				}
-				return new BeamExtractRec(recipeId, s, ingredient, new BeamUnit(units), duration, true);
-			}else{
-				return new BeamExtractRec(recipeId, s, Ingredient.EMPTY, BeamUnit.EMPTY, 0, false);
-			}
+		public MapCodec<BeamExtractRec> codec(){
+			return CODEC;
 		}
 
 		@Override
-		public void toNetwork(FriendlyByteBuf buffer, BeamExtractRec recipe){
-			buffer.writeUtf(recipe.getGroup());
-			buffer.writeBoolean(recipe.active);
-			if(recipe.active){
-				recipe.ingr.toNetwork(buffer);
-				buffer.writeVarInt(recipe.duration);
-				buffer.writeVarInt(recipe.output.getEnergy());
-				buffer.writeVarInt(recipe.output.getPotential());
-				buffer.writeVarInt(recipe.output.getStability());
-				buffer.writeVarInt(recipe.output.getVoid());
-			}
+		public StreamCodec<RegistryFriendlyByteBuf, BeamExtractRec> streamCodec(){
+			return STREAM_CODEC;
 		}
 	}
 }

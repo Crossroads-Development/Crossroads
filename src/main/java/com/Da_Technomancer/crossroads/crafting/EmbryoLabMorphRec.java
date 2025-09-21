@@ -4,7 +4,13 @@ import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.api.crafting.IOptionalRecipe;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
@@ -18,15 +24,13 @@ import javax.annotation.Nullable;
 
 public class EmbryoLabMorphRec implements IOptionalRecipe<RecipeInput>{
 
-	private final ResourceLocation id;
 	private final String group;
 	private final ResourceLocation inputMob;
 	private final ResourceLocation outputMob;
 	private final Ingredient ingr;
 	private final boolean active;
 
-	public EmbryoLabMorphRec(ResourceLocation id, String group, ResourceLocation inputMob, ResourceLocation outputMob, Ingredient ingr, boolean active){
-		this.id = id;
+	public EmbryoLabMorphRec(String group, ResourceLocation inputMob, ResourceLocation outputMob, Ingredient ingr, boolean active){
 		this.group = group;
 		this.inputMob = inputMob;
 		this.outputMob = outputMob;
@@ -87,52 +91,32 @@ public class EmbryoLabMorphRec implements IOptionalRecipe<RecipeInput>{
 	}
 
 	public static class Serializer implements RecipeSerializer<EmbryoLabMorphRec>{
+		//String group, ResourceLocation inputMob, ResourceLocation outputMob, Ingredient ingr, boolean active
+		public static final MapCodec<EmbryoLabMorphRec> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+				Codec.STRING.optionalFieldOf("group", "").forGetter(EmbryoLabMorphRec::getGroup),
+				ResourceLocation.CODEC.fieldOf("input_mob").forGetter(EmbryoLabMorphRec::getInputMob),
+				ResourceLocation.CODEC.fieldOf("output_mob").forGetter(EmbryoLabMorphRec::getOutputMob),
+				Ingredient.CODEC.fieldOf("input").forGetter(EmbryoLabMorphRec::getIngr),
+				Codec.BOOL.optionalFieldOf("active", true).forGetter(EmbryoLabMorphRec::isEnabled)
+		).apply(instance, EmbryoLabMorphRec::new));
+
+		public static final StreamCodec<RegistryFriendlyByteBuf, EmbryoLabMorphRec> STREAM_CODEC = StreamCodec.composite(
+				ByteBufCodecs.STRING_UTF8, EmbryoLabMorphRec::getGroup,
+				ResourceLocation.STREAM_CODEC, EmbryoLabMorphRec::getInputMob,
+				ResourceLocation.STREAM_CODEC, EmbryoLabMorphRec::getOutputMob,
+				Ingredient.CONTENTS_STREAM_CODEC, EmbryoLabMorphRec::getIngr,
+				ByteBufCodecs.BOOL, EmbryoLabMorphRec::isEnabled,
+				EmbryoLabMorphRec::new
+		);
 
 		@Override
-		public EmbryoLabMorphRec fromJson(ResourceLocation recipeId, JsonObject json){
-			//Normal specification of recipe group and ingredient
-			String s = GsonHelper.getAsString(json, "group", "");
-
-			if(!CraftingUtil.isActiveJSON(json)){
-				return new EmbryoLabMorphRec(recipeId, s, ResourceLocation.withDefaultNamespace("none"), ResourceLocation.withDefaultNamespace("none"), Ingredient.EMPTY, false);
-			}
-
-			//Input mob as a string registry name
-			String inputName = GsonHelper.getAsString(json, "input_mob");
-			ResourceLocation inputMob = ResourceLocation.withDefaultNamespace(inputName);
-			//Output mob as a string registry name
-			String outputName = GsonHelper.getAsString(json, "output_mob");
-			ResourceLocation ouputMob = ResourceLocation.withDefaultNamespace(outputName);
-
-			Ingredient inputIngr = CraftingUtil.getIngredient(json, "input", true);
-
-			return new EmbryoLabMorphRec(recipeId, s, inputMob, ouputMob, inputIngr, true);
-		}
-
-		@Nullable
-		@Override
-		public EmbryoLabMorphRec fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer){
-			String s = buffer.readUtf(Short.MAX_VALUE);
-			boolean active = buffer.readBoolean();
-			if(active){
-				ResourceLocation inputMob = ResourceLocation.withDefaultNamespace(buffer.readUtf());
-				ResourceLocation outputMob = ResourceLocation.withDefaultNamespace(buffer.readUtf());
-				Ingredient input = Ingredient.fromNetwork(buffer);
-				return new EmbryoLabMorphRec(recipeId, s, inputMob, outputMob, input, true);
-			}else{
-				return new EmbryoLabMorphRec(recipeId, s, ResourceLocation.withDefaultNamespace("none"), ResourceLocation.withDefaultNamespace("none"), Ingredient.EMPTY, false);
-			}
+		public MapCodec<EmbryoLabMorphRec> codec(){
+			return CODEC;
 		}
 
 		@Override
-		public void toNetwork(FriendlyByteBuf buffer, EmbryoLabMorphRec recipe){
-			buffer.writeUtf(recipe.getGroup());
-			buffer.writeBoolean(recipe.active);
-			if(recipe.active){
-				buffer.writeUtf(recipe.inputMob.toString());
-				buffer.writeUtf(recipe.outputMob.toString());
-				recipe.ingr.toNetwork(buffer);
-			}
+		public StreamCodec<RegistryFriendlyByteBuf, EmbryoLabMorphRec> streamCodec(){
+			return STREAM_CODEC;
 		}
 	}
 }

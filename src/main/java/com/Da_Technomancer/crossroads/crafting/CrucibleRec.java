@@ -4,8 +4,14 @@ import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.api.crafting.IOptionalRecipe;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.Container;
@@ -21,15 +27,13 @@ import javax.annotation.Nullable;
 
 public class CrucibleRec implements IOptionalRecipe<RecipeInput>{
 
-	private final ResourceLocation id;
 	private final String group;
 
 	private final Ingredient input;
 	private final FluidStack output;
 	private final boolean active;
 
-	public CrucibleRec(ResourceLocation location, String name, Ingredient input, FluidStack output, boolean active){
-		id = location;
+	public CrucibleRec(String name, Ingredient input, FluidStack output, boolean active){
 		group = name;
 		this.input = input;
 		this.output = output;
@@ -92,41 +96,30 @@ public class CrucibleRec implements IOptionalRecipe<RecipeInput>{
 	}
 
 	public static class Serializer implements RecipeSerializer<CrucibleRec>{
+		// String name, Ingredient input, FluidStack output, boolean active
+		private static final MapCodec<CrucibleRec> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+				Codec.STRING.optionalFieldOf("group", "").forGetter(CrucibleRec::getGroup),
+				Ingredient.CODEC.fieldOf("input").forGetter(CrucibleRec::getIngredient),
+				FluidStack.CODEC.fieldOf("output").forGetter(CrucibleRec::getOutput),
+				Codec.BOOL.optionalFieldOf("active", true).forGetter(CrucibleRec::isEnabled)
+		).apply(instance, CrucibleRec::new));
+
+		private static final StreamCodec<RegistryFriendlyByteBuf, CrucibleRec> STREAM_CODEC = StreamCodec.composite(
+				ByteBufCodecs.STRING_UTF8, CrucibleRec::getGroup,
+				Ingredient.CONTENTS_STREAM_CODEC, CrucibleRec::getIngredient,
+				FluidStack.STREAM_CODEC, CrucibleRec::getOutput,
+				ByteBufCodecs.BOOL, CrucibleRec::isEnabled,
+				CrucibleRec::new
+		);
 
 		@Override
-		public CrucibleRec fromJson(ResourceLocation recipeId, JsonObject json){
-			//Normal specification of recipe group and ingredient
-			String s = GsonHelper.getAsString(json, "group", "");
-
-			if(!CraftingUtil.isActiveJSON(json)){
-				return new CrucibleRec(recipeId, s, Ingredient.EMPTY, FluidStack.EMPTY, false);
-			}
-
-			Ingredient in = CraftingUtil.getIngredient(json, "input", true);
-			FluidStack out = CraftingUtil.getFluidStack(json, "output");
-			return new CrucibleRec(recipeId, s, in, out, true);
-		}
-
-		@Nullable
-		@Override
-		public CrucibleRec fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer){
-			String s = buffer.readUtf(Short.MAX_VALUE);
-			if(!buffer.readBoolean()){
-				return new CrucibleRec(recipeId, s, Ingredient.EMPTY, FluidStack.EMPTY, false);
-			}
-			Ingredient input = Ingredient.fromNetwork(buffer);
-			FluidStack output = FluidStack.readFromPacket(buffer);
-			return new CrucibleRec(recipeId, s, input, output, true);
+		public MapCodec<CrucibleRec> codec(){
+			return CODEC;
 		}
 
 		@Override
-		public void toNetwork(FriendlyByteBuf buffer, CrucibleRec recipe){
-			buffer.writeUtf(recipe.getGroup());
-			buffer.writeBoolean(recipe.active);
-			if(recipe.active){
-				recipe.input.toNetwork(buffer);
-				recipe.output.writeToPacket(buffer);
-			}
+		public StreamCodec<RegistryFriendlyByteBuf, CrucibleRec> streamCodec(){
+			return STREAM_CODEC;
 		}
 	}
 }

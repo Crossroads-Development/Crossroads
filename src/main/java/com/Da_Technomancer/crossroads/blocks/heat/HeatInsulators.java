@@ -5,10 +5,11 @@ import com.Da_Technomancer.crossroads.effects.overheat_effects.DirtEffect;
 import com.Da_Technomancer.crossroads.effects.overheat_effects.IceEffect;
 import com.Da_Technomancer.crossroads.effects.overheat_effects.SlimeEffect;
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 
-public enum HeatInsulators{
+public enum HeatInsulators implements StringRepresentable{
 
 	WOOL(.1D, 500D, new BlockEffect(Blocks.FIRE.defaultBlockState())),
 	SLIME(.05D, 300D, new SlimeEffect()),
@@ -17,6 +18,7 @@ public enum HeatInsulators{
 	OBSIDIAN(.2D, 2_000D, new BlockEffect(Blocks.LAVA.defaultBlockState())),
 	CERAMIC(.25D, 3_000D, new BlockEffect(Blocks.LAVA.defaultBlockState())),
 	DENSUS(0, 10_000D, new BlockEffect(Blocks.LAVA.defaultBlockState()));
+
 
 	private final double rate;
 	private final double limit;
@@ -63,8 +65,12 @@ public enum HeatInsulators{
 		return name;
 	}
 
-	public interface IOverheatEffect{
+	@Override
+	public String getSerializedName(){
+		return name().toLowerCase();
+	}
 
+	public interface IOverheatEffect{
 		/**
 		 * @param worldIn The world of the effect
 		 * @param pos The position of the effect

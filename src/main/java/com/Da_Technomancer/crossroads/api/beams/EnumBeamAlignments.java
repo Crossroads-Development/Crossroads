@@ -3,15 +3,19 @@ package com.Da_Technomancer.crossroads.api.beams;
 import com.Da_Technomancer.crossroads.api.AdvancementTracker;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.effects.beam_effects.*;
+import com.mojang.serialization.Codec;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.player.Player;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.Locale;
 
-public enum EnumBeamAlignments{
-
+public enum EnumBeamAlignments implements StringRepresentable{
 	//Alignments that overlap defer to the one with the lower ordinal
 	//i.e. the highest priority alignments are defined first
 
@@ -36,6 +40,11 @@ public enum EnumBeamAlignments{
 	private final BeamEffect effect;
 	private final Color mid;
 	private final int range;
+
+	public static Codec<EnumBeamAlignments> CODEC = StringRepresentable.fromEnum(EnumBeamAlignments::values);
+	
+	public static StreamCodec<RegistryFriendlyByteBuf, EnumBeamAlignments> STREAM_CODEC
+			= ByteBufCodecs.fromCodecWithRegistries(StringRepresentable.fromEnum(EnumBeamAlignments::values));
 
 	EnumBeamAlignments(BeamEffect eff, Color cent, int range){
 		this.effect = eff;
@@ -128,5 +137,10 @@ public enum EnumBeamAlignments{
 //				MiscUtil.chatMessage(player, new TranslationTextComponent("tt.crossroads.element_discover.undo", getLocalName(false)).applyTextStyle(TextFormatting.BOLD));
 //			}
 //		}
+	}
+
+	@Override
+	public String getSerializedName(){
+		return name().toLowerCase();
 	}
 }

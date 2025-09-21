@@ -1,7 +1,12 @@
 package com.Da_Technomancer.crossroads.api.beams;
 
 import com.Da_Technomancer.crossroads.api.MathUtil;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -12,6 +17,21 @@ import java.util.Arrays;
  * For a mutable version, see BeamUnitStorage
  */
 public class BeamUnit{
+
+	public static Codec<BeamUnit> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+			Codec.INT.fieldOf("energy").forGetter(BeamUnit::getEnergy),
+			Codec.INT.fieldOf("potential").forGetter(BeamUnit::getPotential),
+			Codec.INT.fieldOf("stability").forGetter(BeamUnit::getStability),
+			Codec.INT.fieldOf("voi").forGetter(BeamUnit::getVoid)
+	).apply(instance, BeamUnit::new));
+
+	public static StreamCodec<ByteBuf, BeamUnit> STREAM_CODEC = StreamCodec.composite(
+			ByteBufCodecs.VAR_INT, BeamUnit::getEnergy,
+			ByteBufCodecs.VAR_INT, BeamUnit::getPotential,
+			ByteBufCodecs.VAR_INT, BeamUnit::getStability,
+			ByteBufCodecs.VAR_INT, BeamUnit::getVoid,
+			BeamUnit::new
+	);
 
 	public static final BeamUnit EMPTY = new BeamUnit(0, 0, 0, 0);
 

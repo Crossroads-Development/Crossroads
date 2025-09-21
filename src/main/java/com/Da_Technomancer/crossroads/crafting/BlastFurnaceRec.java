@@ -5,8 +5,14 @@ import com.Da_Technomancer.crossroads.api.crafting.IOptionalRecipe;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
@@ -21,7 +27,6 @@ import javax.annotation.Nullable;
 
 public class BlastFurnaceRec implements IOptionalRecipe<RecipeInput>{
 
-	private final ResourceLocation id;
 	private final String group;
 	private final Ingredient ingr;
 
@@ -30,8 +35,7 @@ public class BlastFurnaceRec implements IOptionalRecipe<RecipeInput>{
 
 	private final boolean active;
 
-	public BlastFurnaceRec(ResourceLocation location, String name, Ingredient input, FluidStack output, int slag, boolean active){
-		id = location;
+	public BlastFurnaceRec(String name, Ingredient input, FluidStack output, int slag, boolean active){
 		group = name;
 		ingr = input;
 		this.output = output;
@@ -49,7 +53,7 @@ public class BlastFurnaceRec implements IOptionalRecipe<RecipeInput>{
 
 	@Override
 	public boolean matches(RecipeInput input, Level worldIn){
-		return isEnabled() && ingr.test(inv.getItem(0));
+		return isEnabled() && ingr.test(input.getItem(0));
 	}
 
 	@Override
@@ -100,43 +104,33 @@ public class BlastFurnaceRec implements IOptionalRecipe<RecipeInput>{
 
 	public static class Serializer implements RecipeSerializer<BlastFurnaceRec>{
 
-		@Override
-		public BlastFurnaceRec fromJson(ResourceLocation recipeId, JsonObject json){
-			//Normal specification of recipe group and ingredient
-			String s = GsonHelper.getAsString(json, "group", "");
-			if(!CraftingUtil.isActiveJSON(json)){
-				return new BlastFurnaceRec(recipeId, s, Ingredient.EMPTY, FluidStack.EMPTY, 0, false);
-			}
-			Ingredient ingredient = CraftingUtil.getIngredient(json, "ingredient", false);
-			//Output specified as fluid- see CraftingUtil
-			FluidStack fluid = CraftingUtil.getFluidStack(json, "output");
-			//Slag specified as 1 int tag (default 0)
-			int slag = GsonHelper.getAsInt(json, "slag", 0);
-			return new BlastFurnaceRec(recipeId, s, ingredient, fluid, slag, true);
-		}
+		//ResourceLocation location, o String name, Ingredient input, FluidStack output, o int slag, boolean active
+		public static final MapCodec<BlastFurnaceRec> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+				Codec.STRING.fieldOf("group").forGetter(BlastFurnaceRec::getGroup),
+				Ingredient.CODEC.fieldOf("ingredient").forGetter(BlastFurnaceRec::getIngredient),
+				FluidStack.CODEC.fieldOf("output").forGetter(BlastFurnaceRec::getOutput),
+				Codec.INT.optionalFieldOf("slag", 0).forGetter(BlastFurnaceRec::getSlag),
+				Codec.BOOL.optionalFieldOf("active", true).forGetter(BlastFurnaceRec::isEnabled)
+		).apply(instance, BlastFurnaceRec::new));
 
-		@Nullable
+
+		public static final StreamCodec<RegistryFriendlyByteBuf, BlastFurnaceRec> STREAM_CODEC = StreamCodec.composite(
+				ByteBufCodecs.STRING_UTF8, (BlastFurnaceRec blastFurnaceRec) -> blastFurnaceRec.getGroup(),
+				Ingredient.CONTENTS_STREAM_CODEC, BlastFurnaceRec::getIngredient,
+				FluidStack.STREAM_CODEC, BlastFurnaceRec::getOutput,
+				ByteBufCodecs.VAR_INT, BlastFurnaceRec::getSlag,
+				ByteBufCodecs.BOOL, (BlastFurnaceRec blastFurnaceRec) -> blastFurnaceRec.isEnabled(),
+				BlastFurnaceRec::new
+		);
+
 		@Override
-		public BlastFurnaceRec fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer){
-			String s = buffer.readUtf(Short.MAX_VALUE);
-			if(buffer.readBoolean()){
-				Ingredient ingredient = Ingredient.fromNetwork(buffer);
-				FluidStack fluid = FluidStack.readFromPacket(buffer);
-				int slag = buffer.readVarInt();
-				return new BlastFurnaceRec(recipeId, s, ingredient, fluid, slag, true);
-			}
-			return new BlastFurnaceRec(recipeId, s, Ingredient.EMPTY, FluidStack.EMPTY, 0, false);
+		public MapCodec<BlastFurnaceRec> codec(){
+			return CODEC;
 		}
 
 		@Override
-		public void toNetwork(FriendlyByteBuf buffer, BlastFurnaceRec recipe){
-			buffer.writeUtf(recipe.getGroup());
-			buffer.writeBoolean(recipe.active);
-			if(recipe.active){
-				recipe.ingr.toNetwork(buffer);
-				recipe.output.writeToPacket(buffer);
-				buffer.writeVarInt(recipe.slag);
-			}
+		public StreamCodec<RegistryFriendlyByteBuf, BlastFurnaceRec> streamCodec(){
+			return STREAM_CODEC;
 		}
 	}
 }

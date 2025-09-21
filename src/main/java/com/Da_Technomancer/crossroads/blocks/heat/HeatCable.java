@@ -8,6 +8,8 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -19,8 +21,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -37,6 +39,12 @@ import java.util.List;
 
 public class HeatCable extends ConduitBlock<EnumTransferMode>{
 
+	public static final MapCodec<HeatCable> CODEC = RecordCodecBuilder.mapCodec(instance ->
+			instance.group(
+					StringRepresentable.fromEnum(HeatInsulators::values).fieldOf("insulator").forGetter(HeatCable::getInsulator)
+			).apply(instance, HeatCable::new)
+	);
+
 	private static final double SIZE = 0.25D;
 	protected static final VoxelShape[] SHAPES = generateShapes(SIZE);
 
@@ -51,6 +59,10 @@ public class HeatCable extends ConduitBlock<EnumTransferMode>{
 		this.insulator = insulator;
 		CRBlocks.queueForRegister(name, this, true, CRItems.HEAT_CABLE_CREATIVE_TAB_ID);
 		registerDefaultState(defaultBlockState().setValue(CRProperties.CONDUCTOR, Conductors.COPPER));
+	}
+
+	public HeatInsulators getInsulator(){
+		return insulator;
 	}
 
 	@Override
@@ -144,6 +156,11 @@ public class HeatCable extends ConduitBlock<EnumTransferMode>{
 	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
 		tooltip.add(Component.translatable("tt.crossroads.heat_cable.loss", insulator.getRate()));
 		tooltip.add(Component.translatable("tt.crossroads.heat_cable.melt", insulator.getLimit()));
+	}
+
+	@Override
+	protected MapCodec<? extends BaseEntityBlock> codec(){
+		return HeatCable.CODEC;
 	}
 
 	public enum Conductors implements StringRepresentable{

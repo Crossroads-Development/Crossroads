@@ -8,7 +8,13 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.witchcraft.IncubatorTileEntity;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.Container;
@@ -23,7 +29,6 @@ import javax.annotation.Nullable;
 
 public class IncubatorRec implements IOptionalRecipe<RecipeInput>{
 
-	private final ResourceLocation id;
 	private final String group;
 	private final Ingredient mainInput;
 	private final Ingredient secondaryInput;
@@ -31,8 +36,7 @@ public class IncubatorRec implements IOptionalRecipe<RecipeInput>{
 	private final boolean datacopy;
 	private final boolean active;
 
-	public IncubatorRec(ResourceLocation id, String group, Ingredient mainInput, Ingredient secondaryInput, ItemStack product, boolean datacopy, boolean active){
-		this.id = id;
+	public IncubatorRec(String group, Ingredient mainInput, Ingredient secondaryInput, ItemStack product, boolean datacopy, boolean active){
 		this.group = group;
 		this.mainInput = mainInput;
 		this.secondaryInput = secondaryInput;
@@ -68,7 +72,7 @@ public class IncubatorRec implements IOptionalRecipe<RecipeInput>{
 			try{
 				CRItems.geneticSpawnEgg.withEntityTypeData(created, CRItems.embryo.getEntityTypeData(inv.getItem(0)));
 			}catch(Exception e){
-				Crossroads.logger.error("Invalid item types for datacopy in incubator recipe: " + getId().toString(), e);
+				Crossroads.logger.error("Invalid item types for datacopy in incubator recipe", e); // TODO: figure out something other than ID that'll identify this recipe
 			}
 			return created;
 		}
@@ -114,49 +118,34 @@ public class IncubatorRec implements IOptionalRecipe<RecipeInput>{
 	}
 
 	public static class Serializer implements RecipeSerializer<IncubatorRec>{
+		//String group, Ingredient mainInput, Ingredient secondaryInput, ItemStack product, boolean datacopy, boolean active
+		private static final MapCodec<IncubatorRec> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+				Codec.STRING.optionalFieldOf("group", "").forGetter(IncubatorRec::getGroup),
+				Ingredient.CODEC.fieldOf("main_input").forGetter(IncubatorRec::getMainInput),
+				Ingredient.CODEC.fieldOf("secondary_input").forGetter(IncubatorRec::getSecondaryInput),
+				ItemStack.CODEC.fieldOf("output").forGetter(IncubatorRec::getResultItem),
+				Codec.BOOL.optionalFieldOf("datacopy", false).forGetter((IncubatorRec incubatorRec) -> incubatorRec.datacopy),
+				Codec.BOOL.optionalFieldOf("active", true).forGetter(IncubatorRec::isEnabled)
+		).apply(instance, IncubatorRec::new));
+
+		private static final StreamCodec<RegistryFriendlyByteBuf, IncubatorRec> STREAM_CODEC = StreamCodec.composite(
+				ByteBufCodecs.STRING_UTF8, IncubatorRec::getGroup,
+				Ingredient.CONTENTS_STREAM_CODEC, IncubatorRec::getMainInput,
+				Ingredient.CONTENTS_STREAM_CODEC, IncubatorRec::getSecondaryInput,
+				ItemStack.STREAM_CODEC, IncubatorRec::getResultItem,
+				ByteBufCodecs.BOOL, (IncubatorRec incubatorRec) -> incubatorRec.datacopy,
+				ByteBufCodecs.BOOL, IncubatorRec::isEnabled,
+				IncubatorRec::new
+		);
 
 		@Override
-		public IncubatorRec fromJson(ResourceLocation recipeId, JsonObject json){
-			//Normal specification of recipe group and ingredient
-			String s = GsonHelper.getAsString(json, "group", "");
-
-			if(!CraftingUtil.isActiveJSON(json)){
-				return new IncubatorRec(recipeId, s, Ingredient.EMPTY, Ingredient.EMPTY, ItemStack.EMPTY, false, false);
-			}
-
-			Ingredient mainIngr = CraftingUtil.getIngredient(json, "main_input", false);
-			Ingredient secondIngr = CraftingUtil.getIngredient(json, "secondary_input", false);
-			boolean datacopy = GsonHelper.getAsBoolean(json, "datacopy", false);
-			ItemStack itemstack = CraftingUtil.getItemStack(json, "output", false, true);
-			return new IncubatorRec(recipeId, s, mainIngr, secondIngr, itemstack, datacopy, true);
-		}
-
-		@Nullable
-		@Override
-		public IncubatorRec fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer){
-			String s = buffer.readUtf(Short.MAX_VALUE);
-			boolean active = buffer.readBoolean();
-			if(active){
-				Ingredient ingredientMain = Ingredient.fromNetwork(buffer);
-				Ingredient ingredientSecond = Ingredient.fromNetwork(buffer);
-				ItemStack itemstack = buffer.readItem();
-				boolean datacopy = buffer.readBoolean();
-				return new IncubatorRec(recipeId, s, ingredientMain, ingredientSecond, itemstack, datacopy, true);
-			}else{
-				return new IncubatorRec(recipeId, s, Ingredient.EMPTY, Ingredient.EMPTY, ItemStack.EMPTY, false, false);
-			}
+		public MapCodec<IncubatorRec> codec(){
+			return CODEC;
 		}
 
 		@Override
-		public void toNetwork(FriendlyByteBuf buffer, IncubatorRec recipe){
-			buffer.writeUtf(recipe.getGroup());
-			buffer.writeBoolean(recipe.active);
-			if(recipe.active){
-				recipe.mainInput.toNetwork(buffer);
-				recipe.secondaryInput.toNetwork(buffer);
-				buffer.writeItem(recipe.product);
-				buffer.writeBoolean(recipe.datacopy);
-			}
+		public StreamCodec<RegistryFriendlyByteBuf, IncubatorRec> streamCodec(){
+			return STREAM_CODEC;
 		}
 	}
 }

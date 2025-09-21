@@ -4,8 +4,14 @@ import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.api.crafting.IOptionalRecipe;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
@@ -16,19 +22,19 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BoboRec implements IOptionalRecipe<RecipeInput>{
 
-	private final ResourceLocation id;
 	private final String group;
 	private final Ingredient[] ingr;
 	private final ItemStack output;
 	private final boolean active;
 
-	public BoboRec(ResourceLocation location, String name, Ingredient[] input, ItemStack output, boolean active){
-		id = location;
+	public BoboRec(String name, List<Ingredient> input, ItemStack output, boolean active){
 		group = name;
-		ingr = input;
+		ingr = input.toArray(new Ingredient[] {});
 		this.output = output;
 		this.active = active;
 	}
@@ -100,52 +106,30 @@ public class BoboRec implements IOptionalRecipe<RecipeInput>{
 	}
 
 	public static class Serializer implements RecipeSerializer<BoboRec>{
+		//ResourceLocation location, String name, List<Ingredient> input, ItemStack output, boolean active
+		public static final MapCodec<BoboRec> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+				Codec.STRING.optionalFieldOf("group", "").forGetter(BoboRec::getGroup),
+				Codec.list(Ingredient.CODEC).fieldOf("input").forGetter(BoboRec::getIngredients), //TODO: change the file format to actually match this description.
+				ItemStack.CODEC.fieldOf("output").forGetter(BoboRec::getResultItem),
+				Codec.BOOL.optionalFieldOf("active", true).forGetter(BoboRec::isEnabled)
+		).apply(instance, BoboRec::new));
+
+		public static final StreamCodec<RegistryFriendlyByteBuf, BoboRec> STREAM_CODEC = StreamCodec.composite(
+				ByteBufCodecs.STRING_UTF8, BoboRec::getGroup,
+				ByteBufCodecs.collection(ArrayList::new, Ingredient.CONTENTS_STREAM_CODEC), BoboRec::getIngredients,
+				ItemStack.STREAM_CODEC, BoboRec::getResultItem,
+				ByteBufCodecs.BOOL, BoboRec::isEnabled,
+				BoboRec::new
+		);
 
 		@Override
-		public BoboRec fromJson(ResourceLocation recipeId, JsonObject json){
-			//Normal specification of recipe group and ingredient
-			String s = GsonHelper.getAsString(json, "group", "");
-
-			if(!CraftingUtil.isActiveJSON(json)){
-				return new BoboRec(recipeId, s, new Ingredient[] {Ingredient.EMPTY, Ingredient.EMPTY, Ingredient.EMPTY}, ItemStack.EMPTY, false);
-			}
-			//3 inputs, named input_a, input_b, and input_c
-			Ingredient[] ingr = new Ingredient[3];
-			ingr[0] = CraftingUtil.getIngredient(json, "input_a", false);
-			ingr[1] = CraftingUtil.getIngredient(json, "input_b", false);
-			ingr[2] = CraftingUtil.getIngredient(json, "input_c", false);
-
-			//Specify output
-			ItemStack output = CraftingUtil.getItemStack(json, "output", false, true);
-			return new BoboRec(recipeId, s, ingr, output, true);
-		}
-
-		@Nullable
-		@Override
-		public BoboRec fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer){
-			String s = buffer.readUtf(Short.MAX_VALUE);
-			if(buffer.readBoolean()){
-				Ingredient[] inputs = new Ingredient[3];
-				for(int i = 0; i < 3; i++){
-					inputs[i] = Ingredient.fromNetwork(buffer);
-				}
-				ItemStack output = buffer.readItem();
-				return new BoboRec(recipeId, s, inputs, output, true);
-			}else{
-				return new BoboRec(recipeId, s, new Ingredient[] {Ingredient.EMPTY, Ingredient.EMPTY, Ingredient.EMPTY}, ItemStack.EMPTY, false);
-			}
+		public MapCodec<BoboRec> codec(){
+			return CODEC;
 		}
 
 		@Override
-		public void toNetwork(FriendlyByteBuf buffer, BoboRec recipe){
-			buffer.writeUtf(recipe.getGroup());
-			buffer.writeBoolean(recipe.active);
-			if(recipe.active){
-				for(Ingredient ingr : recipe.ingr){
-					ingr.toNetwork(buffer);
-				}
-				buffer.writeItem(recipe.output);
-			}
+		public StreamCodec<RegistryFriendlyByteBuf, BoboRec> streamCodec(){
+			return STREAM_CODEC;
 		}
 	}
 }

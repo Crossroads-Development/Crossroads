@@ -1,7 +1,12 @@
 package com.Da_Technomancer.crossroads.api.beams;
 
 import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
@@ -10,6 +15,23 @@ import java.util.Arrays;
  * An immutable class that represents a modification to be performed to incoming beam units
  */
 public class BeamMod{
+
+	public static Codec<BeamMod> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+			Codec.FLOAT.optionalFieldOf("energy", 1f).forGetter(BeamMod::getEnergyMult),
+			Codec.FLOAT.optionalFieldOf("potential", 1f).forGetter(BeamMod::getPotentialMult),
+			Codec.FLOAT.optionalFieldOf("stability", 1f).forGetter(BeamMod::getStabilityMult),
+			Codec.FLOAT.optionalFieldOf("voi", 1f).forGetter(BeamMod::getVoidMult),
+			Codec.FLOAT.optionalFieldOf("voiConv", 0f).forGetter(BeamMod::getVoidConvert)
+	).apply(instance, BeamMod::new));
+
+	public static StreamCodec<ByteBuf, BeamMod> STREAM_CODEC = StreamCodec.composite(
+			ByteBufCodecs.FLOAT, BeamMod::getEnergyMult,
+			ByteBufCodecs.FLOAT, BeamMod::getPotentialMult,
+			ByteBufCodecs.FLOAT, BeamMod::getStabilityMult,
+			ByteBufCodecs.FLOAT, BeamMod::getVoidMult,
+			ByteBufCodecs.FLOAT, BeamMod::getVoidConvert,
+			BeamMod::new
+	);
 
 	public static final BeamMod IDENTITY = new BeamMod(1, 1, 1, 1, 0);
 

@@ -4,8 +4,14 @@ import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.api.crafting.IOptionalRecipe;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
@@ -19,17 +25,15 @@ import javax.annotation.Nullable;
 
 public class IceboxRec implements IOptionalRecipe<RecipeInput>{
 
-	private final ResourceLocation id;
 	private final String group;
 	private final Ingredient ingr;
 	private final float cooling;
 	private final boolean active;
 
-	public IceboxRec(ResourceLocation location, String name, Ingredient input, double cooling, boolean active){
-		id = location;
+	public IceboxRec(String name, Ingredient input, float cooling, boolean active){
 		group = name;
 		ingr = input;
-		this.cooling = (float) cooling;
+		this.cooling = cooling;
 		this.active = active;
 	}
 
@@ -89,42 +93,30 @@ public class IceboxRec implements IOptionalRecipe<RecipeInput>{
 	}
 
 	public static class Serializer implements RecipeSerializer<IceboxRec>{
+		//String name, Ingredient input, double cooling, boolean active
+		private static final MapCodec<IceboxRec> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+				Codec.STRING.optionalFieldOf("group", "").forGetter(IceboxRec::getGroup),
+				Ingredient.CODEC.fieldOf("fuel").forGetter(IceboxRec::getIngredient),
+				Codec.FLOAT.fieldOf("cooling").forGetter(IceboxRec::getCooling),
+				Codec.BOOL.fieldOf("active").forGetter(IceboxRec::isEnabled)
+		).apply(instance, IceboxRec::new));
+
+		private static final StreamCodec<RegistryFriendlyByteBuf, IceboxRec> STREAM_CODEC = StreamCodec.composite(
+				ByteBufCodecs.STRING_UTF8, IceboxRec::getGroup,
+				Ingredient.CONTENTS_STREAM_CODEC, IceboxRec::getIngredient,
+				ByteBufCodecs.FLOAT, IceboxRec::getCooling,
+				ByteBufCodecs.BOOL, IceboxRec::isEnabled,
+				IceboxRec::new
+		);
 
 		@Override
-		public IceboxRec fromJson(ResourceLocation recipeId, JsonObject json){
-			//Normal specification of recipe group and ingredient
-			String s = GsonHelper.getAsString(json, "group", "");
-			if(!CraftingUtil.isActiveJSON(json)){
-				return new IceboxRec(recipeId, s, Ingredient.EMPTY, 0, false);
-			}
-
-			Ingredient ingredient = CraftingUtil.getIngredient(json, "fuel", false);
-
-			//Output specified as 1 float tag
-			double cooling = GsonHelper.getAsFloat(json, "cooling");
-			return new IceboxRec(recipeId, s, ingredient, cooling, true);
-		}
-
-		@Nullable
-		@Override
-		public IceboxRec fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer){
-			String s = buffer.readUtf(Short.MAX_VALUE);
-			if(!buffer.readBoolean()){
-				return new IceboxRec(recipeId, s, Ingredient.EMPTY, 0, false);
-			}
-			Ingredient ingredient = Ingredient.fromNetwork(buffer);
-			float cooling = buffer.readFloat();
-			return new IceboxRec(recipeId, s, ingredient, cooling, true);
+		public MapCodec<IceboxRec> codec(){
+			return CODEC;
 		}
 
 		@Override
-		public void toNetwork(FriendlyByteBuf buffer, IceboxRec recipe){
-			buffer.writeUtf(recipe.getGroup());
-			buffer.writeBoolean(recipe.active);
-			if(recipe.active){
-				recipe.ingr.toNetwork(buffer);
-				buffer.writeFloat(recipe.cooling);
-			}
+		public StreamCodec<RegistryFriendlyByteBuf, IceboxRec> streamCodec(){
+			return STREAM_CODEC;
 		}
 	}
 }
