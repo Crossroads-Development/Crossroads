@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.items;
 
 import com.Da_Technomancer.crossroads.api.MiscUtil;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.food.FoodProperties;
@@ -9,7 +8,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.UseAnim;
-import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -22,17 +20,8 @@ public class EdibleBlob extends Item{
 		CRItems.queueForRegister(name, this, null);
 	}
 
-	public static CompoundTag createNBT(@Nullable CompoundTag base, int hunger, int sat){
-		if(base == null){
-			base = new CompoundTag();
-		}
-		base.putInt("food", hunger);
-		base.putInt("sat", sat);
-		return base;
-	}
-
 	public static int getHealAmount(ItemStack stack){
-		return Math.max(stack.hasTag() ? stack.getTag().getInt("food") : 0, 1);
+		return Math.max(stack.getOrDefault(CRItems.HUNGER_RESTORED_DATA, 0), 1);
 	}
 
 	/**
@@ -40,12 +29,12 @@ public class EdibleBlob extends Item{
 	 * @return The actual saturation restored
 	 */
 	public static int getTrueSat(ItemStack stack){
-		return stack.hasTag() ? stack.getTag().getInt("sat") : 0;
+		return stack.getOrDefault(CRItems.SATURATION_RESTORED_DATA, 0);
 	}
 
 	@Override
 	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
-		if(stack.hasTag()){
+		if(stack.has(CRItems.SATURATION_RESTORED_DATA)){
 			tooltip.add(Component.translatable("tt.crossroads.edible_blob.food", getHealAmount(stack)));
 			tooltip.add(Component.translatable("tt.crossroads.edible_blob.sat", getTrueSat(stack)));
 			tooltip.add(Component.translatable("tt.crossroads.edible_blob.quip").setStyle(MiscUtil.TT_QUIP));
@@ -61,16 +50,11 @@ public class EdibleBlob extends Item{
 		int hun = getHealAmount(stack);
 		int sat = getTrueSat(stack);
 		float sat_mod = (float) sat / (float) hun;
-		return new FoodProperties.Builder().nutrition(hun).saturationModifier(sat_mod).meat().build();
+		return new FoodProperties.Builder().nutrition(hun).saturationModifier(sat_mod).build();
 	}
 
 	@Override
 	public UseAnim getUseAnimation(ItemStack pStack){
 		return UseAnim.EAT;
-	}
-
-	@Override
-	public boolean isEdible(){
-		return true;
 	}
 }

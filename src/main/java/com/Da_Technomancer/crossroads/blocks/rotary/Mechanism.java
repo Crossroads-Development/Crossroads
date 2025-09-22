@@ -12,8 +12,9 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -36,7 +37,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.neoforge.common.NeoForgeMod;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -216,11 +216,11 @@ public class Mechanism extends BaseEntityBlock implements IReadable{
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit){
+	public ItemInteractionResult useItemOn(ItemStack held, BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit){
 		if(ConfigUtil.isWrench(player.getItemInHand(hand))){
 			BlockEntity te = worldIn.getBlockEntity(pos);
 			if(te instanceof MechanismTileEntity gear){
-				double reDist = player.getAttribute(NeoForgeMod.BLOCK_REACH.get()).getValue();//Player reach distance
+				double reDist = player.getAttribute(Attributes.BLOCK_INTERACTION_RANGE).getValue();//Player reach distance
 				Vec3 start = new Vec3(player.xo, player.yo + (double) player.getEyeHeight(), player.zo).subtract(pos.getX(), pos.getY(), pos.getZ());
 				Vec3 end = start.add(player.getViewVector(0F).x * reDist, player.getViewVector(0F).y * reDist, player.getViewVector(0F).z * reDist);
 
@@ -228,7 +228,7 @@ public class Mechanism extends BaseEntityBlock implements IReadable{
 
 				if(out == -1){
 					//Didn't actually hit
-					return InteractionResult.FAIL;
+					return ItemInteractionResult.FAIL;
 				}
 
 				if(!worldIn.isClientSide){
@@ -248,7 +248,7 @@ public class Mechanism extends BaseEntityBlock implements IReadable{
 					}
 				}
 				RotaryUtil.increaseMasterKey(!worldIn.isClientSide);
-				return InteractionResult.SUCCESS;
+				return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
 			}
 
 
@@ -264,7 +264,7 @@ public class Mechanism extends BaseEntityBlock implements IReadable{
 //				}
 //			}
 		}
-		return InteractionResult.PASS;
+		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 	}
 
 	@Override

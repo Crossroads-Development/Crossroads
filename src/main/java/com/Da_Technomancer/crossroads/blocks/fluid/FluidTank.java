@@ -9,14 +9,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.RenderShape;
@@ -28,7 +27,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidUtil;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class FluidTank extends BaseEntityBlock implements IReadable{
@@ -62,9 +60,9 @@ public class FluidTank extends BaseEntityBlock implements IReadable{
 	@Override
 	public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder){
 		BlockEntity te = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
-		if(te instanceof FluidTankTileEntity){
+		if(te instanceof FluidTankTileEntity ftte){
 			ItemStack drop = new ItemStack(this.asItem(), 1);
-			((FluidTankTileEntity) te).getContent().writeToNBT(drop.getOrCreateTag());
+			ftte.getContent().writeToNBT(drop.getOrCreateTag());
 			return Lists.newArrayList(drop);
 		}
 		return super.getDrops(state, builder);
@@ -87,17 +85,17 @@ public class FluidTank extends BaseEntityBlock implements IReadable{
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
+	public ItemInteractionResult useItemOn(ItemStack held, BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		if(!worldIn.isClientSide){
 			BlockEntity te;
 			if(FluidUtil.getFluidHandler(playerIn.getItemInHand(InteractionHand.MAIN_HAND)).isPresent()){
 				//Tanks be clicked on with buckets/equivalent
-				return FluidUtil.interactWithFluidHandler(playerIn, hand, worldIn, pos, null) ? InteractionResult.SUCCESS : InteractionResult.FAIL;
+				return FluidUtil.interactWithFluidHandler(playerIn, hand, worldIn, pos, null) ? ItemInteractionResult.sidedSuccess(worldIn.isClientSide) : ItemInteractionResult.FAIL;
 			}else if((te = worldIn.getBlockEntity(pos)) instanceof MenuProvider){
-				NetworkHooks.openScreen((ServerPlayer) playerIn, (MenuProvider) te, pos);
+				((ServerPlayer) playerIn).openMenu((MenuProvider) te, pos);
 			}
 		}
-		return InteractionResult.SUCCESS;
+		return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
 	}
 
 	@Override

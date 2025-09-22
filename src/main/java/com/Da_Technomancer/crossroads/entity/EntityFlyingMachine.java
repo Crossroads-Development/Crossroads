@@ -164,7 +164,7 @@ public class EntityFlyingMachine extends Entity{
 			if(!level().isClientSide){
 				player.startRiding(this);
 			}
-			return InteractionResult.SUCCESS;
+			return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
 		}
 		return InteractionResult.PASS;
 	}

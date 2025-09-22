@@ -11,10 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class HandCrank extends Item{
@@ -34,16 +31,15 @@ public class HandCrank extends Item{
 
 	@Override
 	public InteractionResult useOn(UseOnContext context){
-		BlockEntity te = context.getLevel().getBlockEntity(context.getClickedPos());
-		IAxleHandler axleOpt;
+		IAxleHandler axle;
 		Direction side = context.getClickedFace().getOpposite();
-		if(te != null && (axleOpt = te.getCapability(CRCapabilities.AXLE_CAPABILITY, side)).isPresent()){
+		if((axle = context.getLevel().getCapability(CRCapabilities.AXLE_CAPABILITY, context.getClickedPos(), side)) != null){
 			double signMult = -1;
 			if(context.getPlayer() != null && context.getPlayer().isShiftKeyDown()){
 				signMult *= -1;
 			}
 			signMult *= RotaryUtil.getCCWSign(side);
-			axleOpt.orElseThrow(NullPointerException::new).addEnergy(getRate() * signMult, true);
+			axle.addEnergy(getRate() * signMult, true);
 			context.getPlayer().getCooldowns().addCooldown(this, 4);
 			return InteractionResult.SUCCESS;
 		}

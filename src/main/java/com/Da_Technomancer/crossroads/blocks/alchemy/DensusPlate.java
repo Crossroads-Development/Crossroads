@@ -9,7 +9,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -35,7 +35,7 @@ public class DensusPlate extends BaseEntityBlock{
 
 	private static final VoxelShape[][] SHAPES = new VoxelShape[4][6];
 
-	private boolean antiDensus;
+	private final boolean antiDensus;
 
 	static{
 		for(int i = 0; i < 4; i++){
@@ -62,13 +62,13 @@ public class DensusPlate extends BaseEntityBlock{
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
+	public ItemInteractionResult useItemOn(ItemStack held, BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		ItemStack stack = playerIn.getItemInHand(hand);
 		if(ConfigUtil.isWrench(stack)){
 			if(!worldIn.isClientSide){
 				worldIn.setBlockAndUpdate(pos, state.cycle(CRProperties.FACING));
 			}
-			return InteractionResult.SUCCESS;
+			return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
 		}
 		if(stack.getItem() == this.asItem()){
 			int layers = state.getValue(CRProperties.LAYERS);
@@ -79,10 +79,10 @@ public class DensusPlate extends BaseEntityBlock{
 						stack.shrink(1);
 					}
 				}
-				return InteractionResult.SUCCESS;
+				return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
 			}
 		}
-		return InteractionResult.PASS;
+		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 	}
 
 	@Nullable

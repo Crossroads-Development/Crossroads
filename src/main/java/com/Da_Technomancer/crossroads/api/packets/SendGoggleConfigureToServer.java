@@ -46,7 +46,7 @@ public record SendGoggleConfigureToServer(String lensName, boolean newSetting) i
 
 					if(EnumGoggleLenses.DIAMOND.toString().equals(packet.lensName)){
 //					StoreNBTToClient.syncNBTToClient(player);//Sync player path data to client
-						NetworkHooks.openScreen(player, GoggleProvider.INSTANCE, buf -> buf.writeBoolean(true));
+						player.openMenu(GoggleProvider.INSTANCE, buf -> buf.writeBoolean(true));
 					}
 				}
 			}

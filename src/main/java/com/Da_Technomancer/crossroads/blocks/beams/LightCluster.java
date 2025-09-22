@@ -5,7 +5,7 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
@@ -24,7 +24,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class LightCluster extends Block{
@@ -70,13 +69,13 @@ public class LightCluster extends Block{
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
+	public ItemInteractionResult useItemOn(ItemStack held, BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		ItemStack heldItem = playerIn.getItemInHand(hand);
 		DyeColor col = DyeColor.getColor(heldItem);
 		if(col != null){
 			worldIn.setBlock(pos, state.setValue(CRProperties.COLOR, col), 2);
-			return InteractionResult.SUCCESS;
+			return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
 		}
-		return InteractionResult.PASS;
+		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 	}
 }

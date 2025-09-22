@@ -60,7 +60,7 @@ public class StampMill extends BaseEntityBlock implements IReadable{
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
+	public ItemInteractionResult useItemOn(ItemStack held, BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		BlockEntity te;
 		if(ConfigUtil.isWrench(playerIn.getItemInHand(hand))){
 			if(!worldIn.isClientSide){
@@ -71,9 +71,9 @@ public class StampMill extends BaseEntityBlock implements IReadable{
 				}
 			}
 		}else if(!worldIn.isClientSide && (te = worldIn.getBlockEntity(pos)) instanceof MenuProvider){
-			NetworkHooks.openScreen((ServerPlayer) playerIn, (MenuProvider) te, pos);
+			((ServerPlayer) playerIn).openMenu((MenuProvider) te, pos);
 		}
-		return InteractionResult.SUCCESS;
+		return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
 	}
 
 	@Override

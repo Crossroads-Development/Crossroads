@@ -20,19 +20,12 @@ import com.Da_Technomancer.crossroads.items.CRItems;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -43,7 +36,6 @@ import net.neoforged.neoforge.registries.RegisterEvent;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
-import java.util.List;
 
 import static com.Da_Technomancer.essentials.blocks.ESBlocks.singletonBlockType;
 
@@ -53,8 +45,9 @@ public class CRBlocks{
 
 
 	public static final HashMap<HeatInsulators, HeatCable> HEAT_CABLES = new HashMap<>();
+	public static final DeferredHolder<MapCodec<? extends Block>, MapCodec<HeatCable>> HEAT_CABLE_TYPE = BLOCK_TYPES.register("heat_cable", () -> HeatCable.CODEC);
 	public static final HashMap<HeatInsulators, RedstoneHeatCable> REDSTONE_HEAT_CABLES = new HashMap<>();
-
+	public static final DeferredHolder<MapCodec<? extends Block>, MapCodec<RedstoneHeatCable>> REDSTONE_HEAT_CABLE_TYPE = BLOCK_TYPES.register("redstone_heat_cable", () -> RedstoneHeatCable.CODEC);
 	public static final DeferredHolder<MapCodec<? extends Block>, MapCodec<Mechanism>> MECHANISM_TYPE = BLOCK_TYPES.register("mechanism", singletonBlockType(Mechanism::new));
 	public static Mechanism mechanism;
 	public static final DeferredHolder<MapCodec<? extends Block>, MapCodec<MasterAxis>> MASTER_AXIS_TYPE = BLOCK_TYPES.register("master_axis", singletonBlockType(MasterAxis::new));
@@ -207,8 +200,8 @@ public class CRBlocks{
 	public static final DeferredHolder<MapCodec<? extends Block>, MapCodec<DensusPlate>> DENSUS_PLATE_TYPE = BLOCK_TYPES.register("densus_plate", () -> DensusPlate.CODEC);
 	public static DensusPlate densusPlate;
 	public static DensusPlate antiDensusPlate;
-	//	public static final DeferredHolder<MapCodec<? extends Block>, MapCodec<BasicBlock>> CAVORITE_TYPE = BLOCK_TYPES.register("cavorite", singletonBlockType(BasicBlock::new));
-	public static BasicBlock cavorite;
+	public static final DeferredHolder<MapCodec<? extends Block>, MapCodec<Cavorite>> CAVORITE_TYPE = BLOCK_TYPES.register("cavorite", singletonBlockType(Cavorite::new));
+	public static Cavorite cavorite;
 	public static final DeferredHolder<MapCodec<? extends Block>, MapCodec<ChargingStand>> CHARGING_STAND_TYPE = BLOCK_TYPES.register("charging_stand", singletonBlockType(ChargingStand::new));
 	public static ChargingStand chargingStand;
 	public static final DeferredHolder<MapCodec<? extends Block>, MapCodec<AtmosCharger>> ATMOS_CHARGER_TYPE = BLOCK_TYPES.register("atmos_charger", singletonBlockType(AtmosCharger::new));
@@ -258,7 +251,8 @@ public class CRBlocks{
 	public static final DeferredHolder<MapCodec<? extends Block>, MapCodec<WindingTable>> WINDING_TABLE_TYPE = BLOCK_TYPES.register("winding_table", singletonBlockType(WindingTable::new));
 	public static WindingTable windingTable;
 	//	public static final DeferredHolder<MapCodec<? extends Block>, MapCodec<BasicBlock>> BASIC_BLOCK_TYPE = BLOCK_TYPES.register("redstone_crystal", singletonBlockType(BasicBlock::new));
-	public static BasicBlock redstoneCrystal;
+	public static final DeferredHolder<MapCodec<? extends Block>, MapCodec<RedstoneCrystal>> REDSTONE_CRYSTAL_TYPE = BLOCK_TYPES.register("redstone_crystal", singletonBlockType(RedstoneCrystal::new));
+	public static RedstoneCrystal redstoneCrystal;
 	public static final DeferredHolder<MapCodec<? extends Block>, MapCodec<DetailedAutoCrafter>> DETAILED_AUTO_CRAFTER_TYPE = BLOCK_TYPES.register("detailed_auto_crafter", singletonBlockType(DetailedAutoCrafter::new));
 	public static DetailedAutoCrafter detailedAutoCrafter;
 	public static final DeferredHolder<MapCodec<? extends Block>, MapCodec<LodestoneTurbine>> LODESTONE_TURBINE_TYPE = BLOCK_TYPES.register("lodestone_turbine", singletonBlockType(LodestoneTurbine::new));
@@ -456,23 +450,7 @@ public class CRBlocks{
 		permeableGlass = new PermeableGlass();
 		permeableQuartz = new PermeableQuartz();
 		permeableObsidian = new PermeableObsidian();
-		redstoneCrystal = new BasicBlock("redstone_crystal", getGlassProperty().strength(0.3F)){
-			@Override
-			public boolean isSignalSource(BlockState state){
-				return true;
-			}
-
-			@Override
-			public int getSignal(BlockState state, BlockGetter world, BlockPos pos, Direction side){
-				return 15;
-			}
-
-			@Override
-			public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
-				tooltip.add(Component.translatable("tt.crossroads.redstone_crystal.drops"));
-				tooltip.add(Component.translatable("tt.crossroads.redstone_crystal.power"));
-			}
-		};
+		redstoneCrystal = new RedstoneCrystal();
 		beamExtractor = new BeamExtractor();
 		beamExtractorCreative = new BeamExtractorCreative();
 		quartzStabilizer = new QuartzStabilizer();
@@ -550,13 +528,7 @@ public class CRBlocks{
 		glasswareHolder = new GlasswareHolder();
 		densusPlate = new DensusPlate(false);
 		antiDensusPlate = new DensusPlate(true);
-		cavorite = new BasicBlock("block_cavorite", getRockProperty()){
-			@Override
-			public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
-				tooltip.add(Component.translatable("tt.crossroads.cavorite"));
-				tooltip.add(Component.translatable("tt.crossroads.decoration"));
-			}
-		};
+		cavorite = new Cavorite();
 		chargingStand = new ChargingStand();
 		atmosCharger = new AtmosCharger();
 		voltusGenerator = new VoltusGenerator();

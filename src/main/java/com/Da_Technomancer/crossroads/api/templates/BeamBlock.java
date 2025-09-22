@@ -25,12 +25,12 @@ public abstract class BeamBlock extends TEBlock{
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
+	public ItemInteractionResult useItemOn(ItemStack held, BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		if(ConfigUtil.isWrench(playerIn.getItemInHand(hand))){
 			if(!worldIn.isClientSide){
 				worldIn.setBlockAndUpdate(pos, state.cycle(CRProperties.FACING));
 			}
-			return InteractionResult.SUCCESS;
+			return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
 		}
 		return InteractionResult.PASS;
 	}

@@ -24,7 +24,7 @@ public class Phial extends AbstractGlassware{
 					setReagents(context.getItemInHand(), new ReagentMap());
 				}
 			}
-			return InteractionResult.SUCCESS;
+			return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
 		}
 
 		return InteractionResult.PASS;

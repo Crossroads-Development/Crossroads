@@ -12,6 +12,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -77,16 +78,16 @@ public class SteamTurbine extends BaseEntityBlock{
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
+	public ItemInteractionResult useItemOn(ItemStack held, BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		if(!worldIn.isClientSide && worldIn.getBlockEntity(pos) instanceof SteamTurbineTileEntity rte){
 			if(ConfigUtil.isWrench(playerIn.getItemInHand(hand))){
 				int mode = rte.cycleMode();
 				MiscUtil.displayMessage(playerIn, Component.translatable("tt.crossroads.steam_turbine.setting", SteamTurbineTileEntity.TIERS[mode]));
 			}else{
-				NetworkHooks.openScreen((ServerPlayer) playerIn, rte, rte::encodeBuf);
+				((ServerPlayer) playerIn).openMenu(rte, rte::encodeBuf);
 			}
 		}
-		return InteractionResult.SUCCESS;
+		return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
 	}
 
 //	@Override

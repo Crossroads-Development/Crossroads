@@ -25,13 +25,13 @@ public class PoisonVodka extends Item{
 	private static final int BASE_DAMAGE = 8;
 
 	public PoisonVodka(){
-		super(new Properties());
+		super(new Properties().rarity(CRItems.BOBO_RARITY));
 		String name = "poison_vodka";
 		CRItems.queueForRegister(name, this);
 	}
 
 	@Override
-	public int getUseDuration(ItemStack stack){
+	public int getUseDuration(ItemStack stack, LivingEntity entity){
 		return 32;
 	}
 
@@ -87,11 +87,6 @@ public class PoisonVodka extends Item{
 	@Override
 	public int getBurnTime(ItemStack itemStack, @Nullable RecipeType<?> recipeType){
 		return 72000;
-	}
-
-	@Override
-	public Rarity getRarity(ItemStack stack){
-		return CRItems.BOBO_RARITY;
 	}
 
 	@Override

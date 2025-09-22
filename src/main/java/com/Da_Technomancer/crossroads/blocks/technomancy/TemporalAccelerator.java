@@ -14,7 +14,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -77,11 +76,10 @@ public class TemporalAccelerator extends BaseEntityBlock{
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
-		ItemStack held = playerIn.getItemInHand(hand);
+	protected ItemInteractionResult useItemOn(ItemStack held, BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		//Linking with a linking tool
-		if(FluxUtil.handleFluxLinking(worldIn, pos, held, playerIn).shouldSwing()){
-			return InteractionResult.SUCCESS;
+		if(FluxUtil.handleFluxLinking(worldIn, pos, held, playerIn).indicateItemUse()){
+			return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
 		}else if(ConfigUtil.isWrench(held)){
 			if(playerIn.isShiftKeyDown()){
 				//Sneak clicking- change mode
@@ -98,9 +96,9 @@ public class TemporalAccelerator extends BaseEntityBlock{
 				//Rotate this machine
 				worldIn.setBlockAndUpdate(pos, state.cycle(CRProperties.FACING));
 			}
-			return InteractionResult.SUCCESS;
+			return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
 		}
-		return InteractionResult.PASS;
+		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 	}
 
 	@Override

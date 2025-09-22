@@ -14,25 +14,31 @@ import com.Da_Technomancer.crossroads.items.item_sets.*;
 import com.Da_Technomancer.crossroads.items.technomancy.*;
 import com.Da_Technomancer.crossroads.items.witchcraft.*;
 import com.Da_Technomancer.essentials.api.ReflectionUtil;
-import com.mojang.serialization.MapCodec;
+import net.minecraft.Util;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.item.CompassItemPropertyFunction;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.item.ItemPropertyFunction;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.*;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.DeferredSpawnEggItem;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.RegisterEvent;
 import org.apache.logging.log4j.Level;
@@ -40,10 +46,7 @@ import org.apache.logging.log4j.Level;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Supplier;
 
 public final class CRItems{
@@ -227,15 +230,37 @@ public final class CRItems{
 	public static ToggleGear invToggleGear;
 	public static LargeGear largeGear;
 	public static AxleMount axleMount;
-	@Deprecated
-	public static Item gearFacadeStoneBrick;
-	@Deprecated
-	public static Item gearFacadeCobble;
-	@Deprecated
-	public static Item gearFacadeIron;
-	@Deprecated
-	public static Item gearFacadeGlass;
+//	@Deprecated
+//	public static Item gearFacadeStoneBrick;
+//	@Deprecated
+//	public static Item gearFacadeCobble;
+//	@Deprecated
+//	public static Item gearFacadeIron;
+//	@Deprecated
+//	public static Item gearFacadeGlass;
 	public static GearFacade gearFacade;
+
+	public static final DeferredRegister.DataComponents DATA_COMPONENTS = DeferredRegister.DataComponents.createDataComponents(Crossroads.MODID);
+	public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> HUNGER_RESTORED_DATA = DATA_COMPONENTS.registerComponentType("food", builder -> builder.persistent(ExtraCodecs.NON_NEGATIVE_INT).networkSynchronized(ByteBufCodecs.VAR_INT));
+	public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> SATURATION_RESTORED_DATA = DATA_COMPONENTS.registerComponentType("sat", builder -> builder.persistent(ExtraCodecs.NON_NEGATIVE_INT).networkSynchronized(ByteBufCodecs.VAR_INT));
+	public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> ELECTRIC_CHARGE_DATA = DATA_COMPONENTS.registerComponentType("charge", builder -> builder.persistent(ExtraCodecs.NON_NEGATIVE_INT).networkSynchronized(ByteBufCodecs.VAR_INT));
+
+	public static final DeferredRegister<ArmorMaterial> ARMOR_MATERIALS = DeferredRegister.create(BuiltInRegistries.ARMOR_MATERIAL, Crossroads.MODID);
+	public static final Holder<ArmorMaterial> BOBO_ARMOR_MATERIAL = ARMOR_MATERIALS.register("bobo", () -> new ArmorMaterial(
+					Util.make(new EnumMap<>(ArmorItem.Type.class), map -> {
+						map.put(ArmorItem.Type.HELMET, 0);
+						map.put(ArmorItem.Type.CHESTPLATE, 0);
+						map.put(ArmorItem.Type.LEGGINGS, 0);
+						map.put(ArmorItem.Type.BOOTS, 0);
+					}),
+					0,
+					Holder.direct(SoundEvents.HORSE_DEATH), //I am not a benevolent overlord. RIP the ears of anyone who uses headphones
+					() -> Ingredient.EMPTY,
+					List.of(new ArmorMaterial.Layer(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "bobo"))), //TODO: I have no idea what to pass here
+					0,
+					0
+			)
+	);
 
 	public static void registerItems(){
 		//Ores
@@ -269,34 +294,34 @@ public final class CRItems{
 		invToggleGear = new ToggleGear(true);
 		largeGear = new LargeGear();
 		axleMount = new AxleMount();
-		gearFacadeStoneBrick = queueForRegister("gear_facade_stone_brick", new Item(CRItems.baseItemProperties()){
-			@Override
-			public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
-				tooltip.add(Component.literal("THIS ITEM IS BEING REMOVED"));
-				tooltip.add(Component.literal("CRAFT IT INTO THE NEW VERSION"));
-			}
-		}, null);
-		gearFacadeCobble = queueForRegister("gear_facade_cobble", new Item(CRItems.baseItemProperties()){
-			@Override
-			public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
-				tooltip.add(Component.literal("THIS ITEM IS BEING REMOVED"));
-				tooltip.add(Component.literal("CRAFT IT INTO THE NEW VERSION"));
-			}
-		}, null);
-		gearFacadeIron = queueForRegister("gear_facade_iron", new Item(CRItems.baseItemProperties()){
-			@Override
-			public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
-				tooltip.add(Component.literal("THIS ITEM IS BEING REMOVED"));
-				tooltip.add(Component.literal("CRAFT IT INTO THE NEW VERSION"));
-			}
-		}, null);
-		gearFacadeGlass = queueForRegister("gear_facade_glass", new Item(CRItems.baseItemProperties()){
-			@Override
-			public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
-				tooltip.add(Component.literal("THIS ITEM IS BEING REMOVED"));
-				tooltip.add(Component.literal("CRAFT IT INTO THE NEW VERSION"));
-			}
-		}, null);
+//		gearFacadeStoneBrick = queueForRegister("gear_facade_stone_brick", new Item(CRItems.baseItemProperties()){
+//			@Override
+//			public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
+//				tooltip.add(Component.literal("THIS ITEM IS BEING REMOVED"));
+//				tooltip.add(Component.literal("CRAFT IT INTO THE NEW VERSION"));
+//			}
+//		}, null);
+//		gearFacadeCobble = queueForRegister("gear_facade_cobble", new Item(CRItems.baseItemProperties()){
+//			@Override
+//			public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
+//				tooltip.add(Component.literal("THIS ITEM IS BEING REMOVED"));
+//				tooltip.add(Component.literal("CRAFT IT INTO THE NEW VERSION"));
+//			}
+//		}, null);
+//		gearFacadeIron = queueForRegister("gear_facade_iron", new Item(CRItems.baseItemProperties()){
+//			@Override
+//			public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
+//				tooltip.add(Component.literal("THIS ITEM IS BEING REMOVED"));
+//				tooltip.add(Component.literal("CRAFT IT INTO THE NEW VERSION"));
+//			}
+//		}, null);
+//		gearFacadeGlass = queueForRegister("gear_facade_glass", new Item(CRItems.baseItemProperties()){
+//			@Override
+//			public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
+//				tooltip.add(Component.literal("THIS ITEM IS BEING REMOVED"));
+//				tooltip.add(Component.literal("CRAFT IT INTO THE NEW VERSION"));
+//			}
+//		}, null);
 		gearFacade = new GearFacade();
 		handCrank = new HandCrank();
 		debugGearWriter = new CheatWandRotary();

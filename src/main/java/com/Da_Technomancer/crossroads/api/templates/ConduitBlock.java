@@ -6,7 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -190,17 +190,16 @@ public abstract class ConduitBlock<T extends Comparable<T>> extends BaseEntityBl
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
+	public ItemInteractionResult useItemOn(ItemStack held, BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		//Handle wrenching
-		if(playerIn != null && hand != null && !playerIn.isCrouching()){
-			ItemStack held = playerIn.getItemInHand(hand);
+		if(playerIn != null && !playerIn.isCrouching()){
 			if(held.isEmpty()){
-				return InteractionResult.PASS;
+				return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 			}
 			BlockEntity te = worldIn.getBlockEntity(pos);
 			if(ConfigUtil.isWrench(held) && te instanceof IConduitTE){
 				if(worldIn.isClientSide){
-					return InteractionResult.SUCCESS;
+					return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
 				}
 
 				final double SIZE = getSize();
@@ -228,10 +227,10 @@ public abstract class ConduitBlock<T extends Comparable<T>> extends BaseEntityBl
 				T newVal = cycleMode(cte.getModes()[face]);
 				cte.setData(face, cte.hasMatch(face, newVal), newVal);
 				onAdjusted(worldIn, pos, state, Direction.from3DDataValue(face), newVal, cte);
-				return InteractionResult.SUCCESS;
+				return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
 			}
 		}
-		return InteractionResult.PASS;
+		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 	}
 
 	protected void onAdjusted(Level world, BlockPos pos, BlockState newState, Direction facing, T newVal, @Nullable IConduitTE<T> te){

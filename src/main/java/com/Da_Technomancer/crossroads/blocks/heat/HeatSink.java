@@ -56,7 +56,7 @@ public class HeatSink extends BaseEntityBlock{
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
+	public ItemInteractionResult useItemOn(ItemStack held, BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		if(ConfigUtil.isWrench(playerIn.getItemInHand(hand))){
 			if(!worldIn.isClientSide){
 				BlockEntity te = worldIn.getBlockEntity(pos);
@@ -65,7 +65,7 @@ public class HeatSink extends BaseEntityBlock{
 					MiscUtil.displayMessage(playerIn, Component.translatable("tt.crossroads.heat_sink.loss", HeatSinkTileEntity.MODES[mode]));
 				}
 			}
-			return InteractionResult.SUCCESS;
+			return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
 		}
 
 		return InteractionResult.PASS;

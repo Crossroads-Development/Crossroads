@@ -20,7 +20,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
-
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
@@ -37,9 +36,10 @@ public class MaxwellDemonTileEntity extends BlockEntity implements ITickableTile
 	private boolean init = false;
 	private double rate = -1;//Not saved/loaded to NBT, as we want this to regenerate on reload with the config
 
-	public MaxwellDemonTileEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState){
-		super(blockEntityType, blockPos, blockState);
+	public MaxwellDemonTileEntity(BlockPos blockPos, BlockState blockState){
+		super(TYPE, blockPos, blockState);
 	}
+
 	@Override
 	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
 		chat.add(Component.translatable("tt.crossroads.maxwell_demon.read_top", CRConfig.formatVal(tempUp)));

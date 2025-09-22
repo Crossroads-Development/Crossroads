@@ -36,7 +36,7 @@ public class Nitroglycerin extends Item{
 			Direction dir = source.state().getValue(DispenserBlock.FACING);
 			Level world = source.level();
 			EntityNitro nitro = EntityNitro.type.create(world);
-			nitro.setPos(source.x() + dir.getStepX() + 0.5D, source.y() + dir.getStepY() + 0.5D, source.z() + dir.getStepZ() + 0.5D);
+			nitro.setPos(source.pos().relative(dir).getCenter());
 			nitro.shoot(dir.getStepX(), dir.getStepY() + 0.1F, dir.getStepZ(), 1.5F, 1.0F);
 			world.addFreshEntity(nitro);
 			stack.shrink(1);
@@ -45,7 +45,7 @@ public class Nitroglycerin extends Item{
 	};
 
 	public Nitroglycerin(){
-		super(new Properties());
+		super(new Properties().rarity(CRItems.BOBO_RARITY));
 		String name = "nitroglycerin";
 		CRItems.queueForRegister(name, this);
 		DispenserBlock.registerBehavior(this, NITRO_DISPENSER_BEHAVIOR);
@@ -71,10 +71,5 @@ public class Nitroglycerin extends Item{
 	@Override
 	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
 		tooltip.add(Component.translatable("tt.crossroads.nitroglycerin.quip").setStyle(MiscUtil.TT_QUIP));
-	}
-
-	@Override
-	public Rarity getRarity(ItemStack stack){
-		return CRItems.BOBO_RARITY;
 	}
 }

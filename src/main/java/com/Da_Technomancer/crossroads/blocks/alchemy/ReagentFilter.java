@@ -13,7 +13,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -96,18 +96,18 @@ public class ReagentFilter extends BaseEntityBlock{
 //	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
+	public ItemInteractionResult useItemOn(ItemStack held, BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		if(!worldIn.isClientSide){
 			BlockEntity te = worldIn.getBlockEntity(pos);
 			if(ConfigUtil.isWrench(playerIn.getItemInHand(hand))){
 				worldIn.setBlockAndUpdate(pos, state.cycle(CRProperties.HORIZ_FACING));
 			}else{
 				if(te instanceof MenuProvider){
-					NetworkHooks.openScreen((ServerPlayer) playerIn, (MenuProvider) te, pos);
+					((ServerPlayer) playerIn).openMenu((MenuProvider) te, pos);
 				}
 			}
 		}
-		return InteractionResult.SUCCESS;
+		return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
 	}
 
 	@Override

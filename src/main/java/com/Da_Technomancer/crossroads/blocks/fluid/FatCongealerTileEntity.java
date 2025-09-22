@@ -108,7 +108,8 @@ public class FatCongealerTileEntity extends InventoryTE{
 
 				if(inventory[0].isEmpty()){
 					inventory[0] = new ItemStack(CRItems.edibleBlob, 1);
-					inventory[0].setTag(EdibleBlob.createNBT(null, hun, sat));
+					inventory[0].set(CRItems.HUNGER_RESTORED_DATA, hun);
+					inventory[0].set(CRItems.SATURATION_RESTORED_DATA, sat);
 				}else{
 					inventory[0].grow(1);
 				}

@@ -7,12 +7,15 @@ import com.Da_Technomancer.crossroads.api.alchemy.EnumTransferMode;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import com.Da_Technomancer.essentials.api.redstone.IReadable;
 import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -21,6 +24,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -35,6 +39,8 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class RedstoneHeatCable extends HeatCable implements IReadable{
+
+	public static final MapCodec<RedstoneHeatCable> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(StringRepresentable.fromEnum(HeatInsulators::values).fieldOf("insulator").forGetter(HeatCable::getInsulator)).apply(instance, RedstoneHeatCable::new));
 
 	public RedstoneHeatCable(HeatInsulators insulator){
 		super(insulator, "redstone_heat_cable_" + insulator.toString().toLowerCase());
@@ -51,7 +57,12 @@ public class RedstoneHeatCable extends HeatCable implements IReadable{
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
+	protected MapCodec<? extends BaseEntityBlock> codec(){
+		return CODEC;
+	}
+
+	@Override
+	public ItemInteractionResult useItemOn(ItemStack held, BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		//Invert when sneak-wrenching
 		if(playerIn != null && hand != null && playerIn.isCrouching()){
 			BlockEntity te = worldIn.getBlockEntity(pos);
@@ -65,9 +76,9 @@ public class RedstoneHeatCable extends HeatCable implements IReadable{
 				}
 				neighborChanged(state, worldIn, pos, this, pos, false);
 			}
-			return InteractionResult.SUCCESS;
+			return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
 		}
-		return super.use(state, worldIn, pos, playerIn, hand, hit);
+		return super.useItemOn(held, state, worldIn, pos, playerIn, hand, hit);
 	}
 
 	@Override

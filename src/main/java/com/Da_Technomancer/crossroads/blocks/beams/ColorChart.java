@@ -7,11 +7,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -46,9 +47,9 @@ public class ColorChart extends Block{
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
+	public ItemInteractionResult useItemOn(ItemStack held, BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		if(!worldIn.isClientSide){
-			NetworkHooks.openScreen((ServerPlayer) playerIn, new MenuProvider(){
+			((ServerPlayer) playerIn).openMenu(new MenuProvider(){
 				@Override
 				public Component getDisplayName(){
 					return Component.translatable("container.color_chart");
@@ -60,7 +61,7 @@ public class ColorChart extends Block{
 				}
 			});
 		}
-		return InteractionResult.SUCCESS;
+		return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
 	}
 
 	@Nullable

@@ -3,7 +3,6 @@ package com.Da_Technomancer.crossroads.blocks.alchemy;
 import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.blocks.rotary.RotaryDrill;
 import com.Da_Technomancer.essentials.api.ConfigUtil;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import com.mojang.serialization.Codec;
@@ -11,8 +10,9 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
@@ -47,11 +47,11 @@ public class RedsAlchemicalTube extends AlchemicalTube{
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
+	public ItemInteractionResult useItemOn(ItemStack held, BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		if(state.getValue(CRProperties.REDSTONE_BOOL) && ConfigUtil.isWrench(playerIn.getItemInHand(hand))){
-			return super.use(state, worldIn, pos, playerIn, hand, hit);
+			return super.useItemOn(held, state, worldIn, pos, playerIn, hand, hit);
 		}
-		return InteractionResult.PASS;
+		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 	}
 
 	@Override

@@ -8,10 +8,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class CheatWandHeat extends Item{
@@ -26,10 +23,8 @@ public class CheatWandHeat extends Item{
 
 	@Override
 	public InteractionResult useOn(UseOnContext context){
-		BlockEntity te = context.getLevel().getBlockEntity(context.getClickedPos());
-		IHeatHandler heatOpt;
-		if(te != null && (heatOpt = te.getCapability(CRCapabilities.HEAT_CAPABILITY, null)).isPresent()){
-			IHeatHandler cable = heatOpt.orElseThrow(NullPointerException::new);
+		IHeatHandler cable = context.getLevel().getCapability(CRCapabilities.HEAT_CAPABILITY, context.getClickedPos(), null);
+		if(cable != null){
 			if(context.getPlayer() != null && context.getPlayer().isShiftKeyDown()){
 				cable.addHeat(-RATE);
 			}else{

@@ -9,7 +9,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -75,17 +75,16 @@ public class BeaconHarness extends BaseEntityBlock{
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
-		ItemStack heldItem = playerIn.getItemInHand(hand);
-		if(FluxUtil.handleFluxLinking(worldIn, pos, playerIn.getItemInHand(hand), playerIn).shouldSwing()){
-			return InteractionResult.SUCCESS;
+	public ItemInteractionResult useItemOn(ItemStack held, BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
+		if(FluxUtil.handleFluxLinking(worldIn, pos, playerIn.getItemInHand(hand), playerIn).indicateItemUse()){
+			return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
 		}else if(!worldIn.isClientSide){
 			BlockEntity te = worldIn.getBlockEntity(pos);
 			if(te instanceof MenuProvider){
-				NetworkHooks.openScreen((ServerPlayer) playerIn, (MenuProvider) te, pos);
+				((ServerPlayer) playerIn).openMenu((MenuProvider) te, pos);
 			}
 		}
-		return InteractionResult.PASS;
+		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 	}
 
 	@Override

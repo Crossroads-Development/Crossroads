@@ -15,6 +15,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -87,7 +88,7 @@ public class EmbryoLab extends TEBlock implements IReadable{
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
+	public ItemInteractionResult useItemOn(ItemStack useOnItem, BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		BlockEntity te;
 		if(!worldIn.isClientSide && (te = worldIn.getBlockEntity(pos)) instanceof EmbryoLabTileEntity){
 			//Attempt to add the item in the offhand if there is a syringe in the main hand
@@ -101,14 +102,14 @@ public class EmbryoLab extends TEBlock implements IReadable{
 				//If the stack changed, assume we did something and shouldn't open the UI
 				if(!held.isEmpty() && (!BlockUtil.sameItem(result, heldCopy) || result.getCount() != heldCopy.getCount())){
 					playerIn.setItemInHand(hand, result);
-					return InteractionResult.SUCCESS;
+					return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
 				}
 			}
 
 			//Didn't add an item. Open the UI
-			NetworkHooks.openScreen((ServerPlayer) playerIn, (MenuProvider) te, pos);
+			((ServerPlayer) playerIn).openMenu((MenuProvider) te, pos);
 		}
-		return InteractionResult.SUCCESS;
+		return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
 	}
 
 	@Override

@@ -2,22 +2,19 @@ package com.Da_Technomancer.crossroads.items;
 
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.templates.ICreativeTabPopulatingItem;
-import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
-
+import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class LeydenJar extends Item implements ICreativeTabPopulatingItem{
 
 	public static final int MAX_CHARGE = 100_000;
+	public static final ICapabilityProvider<ItemStack, Void, IEnergyStorage> ENERGY_STORAGE_PROVIDER = (stack, emptyContext) -> new ItemEnergyHandler(stack);
 
 	protected LeydenJar(){
 		super(new Properties().stacksTo(1));
@@ -27,23 +24,15 @@ public class LeydenJar extends Item implements ICreativeTabPopulatingItem{
 	}
 
 	public static int getCharge(ItemStack stack){
-		CompoundTag nbt = stack.getTag();
-		if(stack.getItem() == CRItems.leydenJar && nbt != null){
-			return nbt.getInt("charge");
+		if(stack.getItem() == CRItems.leydenJar){
+			return stack.getOrDefault(CRItems.ELECTRIC_CHARGE_DATA, 0);
 		}else{
 			return 0;
 		}
 	}
 
 	public static void setCharge(ItemStack stack, int chargeIn){
-		CompoundTag nbt = stack.getTags();
-		if(nbt != null){
-			nbt.putInt("charge", Math.min(chargeIn, MAX_CHARGE));
-		}else{
-			nbt = new CompoundTag();
-			nbt.putInt("charge", Math.min(chargeIn, MAX_CHARGE));
-			stack.setTag(nbt);
-		}
+		stack.set(CRItems.ELECTRIC_CHARGE_DATA, chargeIn);
 	}
 
 	@Override
@@ -60,29 +49,12 @@ public class LeydenJar extends Item implements ICreativeTabPopulatingItem{
 		return new ItemStack[] {new ItemStack(this, 1), chargedStack};
 	}
 
-	@Override
-	@Nullable
-	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt){
-		return new ItemEnergyHandler(stack);
-	}
-
-	private static class ItemEnergyHandler implements IEnergyStorage, ICapabilityProvider{
-
-		private final IEnergyStorage holder = LazyOptional.of(() -> this);
+	private static class ItemEnergyHandler implements IEnergyStorage{
 
 		private final ItemStack stack;
 
 		public ItemEnergyHandler(ItemStack jarStack){
 			this.stack = jarStack;
-		}
-
-		@Override
-		@SuppressWarnings("unchecked")
-		public <T> T getCapability(Capability<T> cap, Direction dir){
-			if(cap == ForgeCapabilities.ENERGY){
-				return (T) holder;
-			}
-			return LazyOptional.empty();
 		}
 
 		@Override

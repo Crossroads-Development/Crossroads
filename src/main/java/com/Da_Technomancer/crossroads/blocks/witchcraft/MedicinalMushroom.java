@@ -11,7 +11,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.MushroomBlock;
 import net.minecraft.world.level.block.SoundType;
@@ -19,7 +18,6 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class MedicinalMushroom extends MushroomBlock{
@@ -31,7 +29,7 @@ public class MedicinalMushroom extends MushroomBlock{
 	}
 
 	@Override
-	public boolean isValidBonemealTarget(LevelReader p_176473_1_, BlockPos p_176473_2_, BlockState p_176473_3_, boolean p_176473_4_){
+	public boolean isValidBonemealTarget(LevelReader p_176473_1_, BlockPos p_176473_2_, BlockState p_176473_3_){
 		return false;
 	}
 

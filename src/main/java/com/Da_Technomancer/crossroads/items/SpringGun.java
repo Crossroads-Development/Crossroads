@@ -8,8 +8,10 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 
@@ -43,7 +45,7 @@ public class SpringGun extends ProjectileWeaponItem implements WindingTableTileE
 		if(wind > MIN_SPEED && !ammo.isEmpty() && ammo.getItem() instanceof ArrowItem){
 			if(!worldIn.isClientSide){
 				//Shoot
-				AbstractArrow arrow = ((ArrowItem) ammo.getItem()).createArrow(worldIn, ammo, playerIn);
+				AbstractArrow arrow = ((ArrowItem) ammo.getItem()).createArrow(worldIn, ammo, playerIn, held);
 				float speed = (float) wind * 0.5F;
 				arrow.shootFromRotation(playerIn, playerIn.getXRot(), playerIn.getYRot(), 0.0F, speed, 0.2F);
 				//Despite the method being named setDamage, it actually sets a damage multiplier
@@ -52,7 +54,7 @@ public class SpringGun extends ProjectileWeaponItem implements WindingTableTileE
 				arrow.setBaseDamage(damageMult);
 				//Don't set critical, as that changes the damage dealt
 				arrow.setSoundEvent(SoundEvents.CROSSBOW_HIT);
-				arrow.setShotFromCrossbow(true);
+//				arrow.setShotFromCrossbow(true);
 				if(playerIn.isCreative()){
 					arrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
 				}
@@ -100,6 +102,11 @@ public class SpringGun extends ProjectileWeaponItem implements WindingTableTileE
 	@Override
 	public int getDefaultProjectileRange(){
 		return 15;//Don't actually know what this does- looks mob AI related?
+	}
+
+	@Override
+	protected void shootProjectile(LivingEntity pShooter, Projectile pProjectile, int pIndex, float pVelocity, float pInaccuracy, float pAngle, @Nullable LivingEntity pTarget) {
+		// Unused
 	}
 
 	@Override

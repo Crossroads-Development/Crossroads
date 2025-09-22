@@ -3,8 +3,8 @@ package com.Da_Technomancer.crossroads.blocks.witchcraft;
 import com.Da_Technomancer.crossroads.ambient.particles.CRParticles;
 import com.Da_Technomancer.crossroads.ambient.particles.ColorParticleData;
 import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
-import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.CRCapabilities;
+import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -33,7 +33,6 @@ import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.List;
 

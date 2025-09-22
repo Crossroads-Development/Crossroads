@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
-import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.CRCapabilities;
+import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.alchemy.EnumContainerType;
 import com.Da_Technomancer.crossroads.api.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.api.alchemy.IChemicalHandler;
@@ -14,8 +14,9 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -90,14 +91,14 @@ public class ReagentPump extends BaseEntityBlock{
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
+	public ItemInteractionResult useItemOn(ItemStack held, BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		if(ConfigUtil.isWrench(playerIn.getItemInHand(hand))){
 			if(!worldIn.isClientSide){
 				worldIn.setBlockAndUpdate(pos, state.cycle(CRProperties.ACTIVE));
 			}
-			return InteractionResult.SUCCESS;
+			return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
 		}
-		return InteractionResult.PASS;
+		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 	}
 
 	@Override
@@ -136,11 +137,9 @@ public class ReagentPump extends BaseEntityBlock{
 		boolean[] connect = new boolean[6];
 		EnumContainerType contType = crystal ? EnumContainerType.CRYSTAL : EnumContainerType.GLASS;
 		for(int i = 2; i < 6; i++){
-			BlockEntity te = context.getLevel().getBlockEntity(context.getClickedPos().relative(Direction.from3DDataValue(i)));
-			IChemicalHandler otherOpt;
 			IChemicalHandler otherHandler;
 			Direction dir = Direction.from3DDataValue(i).getOpposite();
-			if(te != null && (otherOpt = te.getCapability(CRCapabilities.CHEMICAL_CAPABILITY, Direction.from3DDataValue(i).getOpposite())).isPresent() && (otherHandler = otherOpt.orElseThrow(NullPointerException::new)).getChannel(dir).connectsWith(contType) && otherHandler.getMode(dir).connectsWith(EnumTransferMode.INPUT)){
+			if((otherHandler = context.getLevel().getCapability(CRCapabilities.CHEMICAL_CAPABILITY, context.getClickedPos().relative(Direction.from3DDataValue(i)), Direction.from3DDataValue(i).getOpposite())) != null && otherHandler.getChannel(dir).connectsWith(contType) && otherHandler.getMode(dir).connectsWith(EnumTransferMode.INPUT)){
 				connect[i] = true;
 			}
 		}
@@ -149,12 +148,10 @@ public class ReagentPump extends BaseEntityBlock{
 
 	@Override
 	public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos pos, BlockPos facingPos){
-		BlockEntity te = worldIn.getBlockEntity(facingPos);
 		BlockEntity thisTE = worldIn.getBlockEntity(pos);
-		IChemicalHandler otherOpt;
 		IChemicalHandler otherHandler;
 		Direction dir = facing.getOpposite();
-		boolean connect = thisTE instanceof ReagentPumpTileEntity && te != null && (otherOpt = te.getCapability(CRCapabilities.CHEMICAL_CAPABILITY, facing.getOpposite())).isPresent() && (otherHandler = otherOpt.orElseThrow(NullPointerException::new)).getChannel(dir).connectsWith(crystal ? EnumContainerType.CRYSTAL : EnumContainerType.GLASS) && otherHandler.getMode(dir).connectsWith(EnumTransferMode.INPUT);
+		boolean connect = thisTE instanceof ReagentPumpTileEntity && (otherHandler = thisTE.getLevel().getCapability(CRCapabilities.CHEMICAL_CAPABILITY, facingPos, facing.getOpposite())) != null && otherHandler.getChannel(dir).connectsWith(crystal ? EnumContainerType.CRYSTAL : EnumContainerType.GLASS) && otherHandler.getMode(dir).connectsWith(EnumTransferMode.INPUT);
 		if(facing.getAxis() != Direction.Axis.Y){
 			BooleanProperty prop = CRProperties.HAS_MATCH_SIDES[facing.get3DDataValue()];
 			return stateIn.setValue(prop, connect);

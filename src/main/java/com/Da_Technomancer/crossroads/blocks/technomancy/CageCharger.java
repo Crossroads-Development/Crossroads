@@ -11,7 +11,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -29,7 +29,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class CageCharger extends BaseEntityBlock implements IReadable{
@@ -82,20 +81,19 @@ public class CageCharger extends BaseEntityBlock implements IReadable{
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
-		BlockEntity te;
-		if(!worldIn.isClientSide && (te = worldIn.getBlockEntity(pos)) != null){
+	public ItemInteractionResult useItemOn(ItemStack held, BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
+		if(!worldIn.isClientSide && (worldIn.getBlockEntity(pos)) instanceof CageChargerTileEntity bte){
 			if(state.getValue(CRProperties.ACTIVE)){
-				playerIn.getInventory().add(((CageChargerTileEntity) te).getCage());
-				((CageChargerTileEntity) te).setCage(ItemStack.EMPTY);
+				playerIn.getInventory().add(bte.getCage());
+				bte.setCage(ItemStack.EMPTY);
 				worldIn.setBlockAndUpdate(pos, defaultBlockState().setValue(CRProperties.ACTIVE, false));
-			}else if(!playerIn.getItemInHand(hand).isEmpty() && playerIn.getItemInHand(hand).getItem() == CRItems.beamCage){
-				((CageChargerTileEntity) te).setCage(playerIn.getItemInHand(hand));
+			}else if(held.getItem() == CRItems.beamCage){
+				bte.setCage(playerIn.getItemInHand(hand));
 				playerIn.setItemInHand(hand, ItemStack.EMPTY);
 				worldIn.setBlockAndUpdate(pos, defaultBlockState().setValue(CRProperties.ACTIVE, true));
 			}
 		}
-		return InteractionResult.SUCCESS;
+		return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
 	}
 
 	@Override

@@ -43,7 +43,8 @@ public class BoboRod extends Item{
 		@Override
 		public ItemStack execute(BlockSource source, ItemStack stack){
 			//Able to do bobo crafting via dispenser
-			act(source.level(), source.pos(), source.center(), null);
+			BlockPos actPos = source.pos().relative(source.state().getValue(DispenserBlock.FACING));
+			act(source.level(), actPos, actPos.getCenter(), null);
 			return stack;
 		}
 	};

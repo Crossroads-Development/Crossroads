@@ -4,24 +4,17 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
 
 public class SquidHelmet extends ArmorItem{
 
 	protected SquidHelmet(){
-		super(ChickenBoots.BOBO_MATERIAL, Type.HELMET, new Properties().stacksTo(1));
+		super(CRItems.BOBO_ARMOR_MATERIAL, Type.HELMET, new Properties().stacksTo(1).rarity(CRItems.BOBO_RARITY));
 		String name = "squid_helmet";
 		CRItems.queueForRegister(name, this);
-	}
-
-	@Override
-	public Rarity getRarity(ItemStack stack){
-		return CRItems.BOBO_RARITY;
 	}
 
 	@Override

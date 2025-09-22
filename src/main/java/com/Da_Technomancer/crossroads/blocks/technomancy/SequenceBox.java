@@ -10,6 +10,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -91,14 +92,14 @@ public class SequenceBox extends BaseEntityBlock implements IWireConnect{
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit){
+	public ItemInteractionResult useItemOn(ItemStack held, BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit){
 		BlockEntity te;
 		if(!worldIn.isClientSide && (te = worldIn.getBlockEntity(pos)) instanceof SequenceBoxTileEntity){
 			SequenceBoxTileEntity cte = (SequenceBoxTileEntity) te;
-			NetworkHooks.openScreen((ServerPlayer) player, cte, cte::encodeBuf);
+			((ServerPlayer) player).openMenu(cte, cte::encodeBuf);
 		}
 
-		return InteractionResult.SUCCESS;
+		return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
 	}
 
 	@Override

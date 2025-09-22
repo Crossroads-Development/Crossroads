@@ -15,7 +15,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -75,12 +75,12 @@ public class HydroponicsTrough extends TEBlock implements IReadable, Bonemealabl
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
+	public ItemInteractionResult useItemOn(ItemStack held, BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		BlockEntity te;
 		if(!worldIn.isClientSide && (te = worldIn.getBlockEntity(pos)) instanceof MenuProvider){
-			NetworkHooks.openScreen((ServerPlayer) playerIn, (MenuProvider) te, pos);
+			((ServerPlayer) playerIn).openMenu((MenuProvider) te, pos);
 		}
-		return InteractionResult.SUCCESS;
+		return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
 	}
 
 	@Override
@@ -102,16 +102,11 @@ public class HydroponicsTrough extends TEBlock implements IReadable, Bonemealabl
 	}
 
 	@Override
-	public boolean isValidBonemealTarget(LevelReader world, BlockPos pos, BlockState state, boolean p_176473_4_){
+	public boolean isValidBonemealTarget(LevelReader world, BlockPos pos, BlockState state){
 		BlockEntity te = world.getBlockEntity(pos);
 		if(te instanceof HydroponicsTroughTileEntity){
 			return ((HydroponicsTroughTileEntity) te).canBonemeal();
 		}
-		return false;
-	}
-
-	@Override
-	public boolean isValidBonemealTarget(LevelReader levelReader, BlockPos blockPos, BlockState blockState){
 		return false;
 	}
 

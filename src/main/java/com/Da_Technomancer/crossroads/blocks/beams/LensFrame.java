@@ -11,7 +11,7 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -82,7 +82,7 @@ public class LensFrame extends TEBlock implements IReadable{
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
+	public ItemInteractionResult useItemOn(ItemStack held, BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		ItemStack stack = playerIn.getItemInHand(hand);
 
 		if(ConfigUtil.isWrench(stack)){
@@ -90,16 +90,15 @@ public class LensFrame extends TEBlock implements IReadable{
 			if(!worldIn.isClientSide){
 				worldIn.setBlockAndUpdate(pos, state.cycle(CRProperties.AXIS));
 			}
-			return InteractionResult.SUCCESS;
+			return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
 //		}else if(stack.getItem() == CRItems.omnimeter)){
 //			// Omnimeter performs its function instead
 //			return InteractionResult.PASS;
 		}else{
 			BlockEntity te = worldIn.getBlockEntity(pos);
-			if(!(te instanceof LensFrameTileEntity)){
-				return InteractionResult.PASS;
+			if(!(te instanceof LensFrameTileEntity lens)){
+				return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 			}
-			LensFrameTileEntity lens = (LensFrameTileEntity) te;
 			ItemStack inLens = lens.getLensItem();
 			if(!inLens.isEmpty()){
 				if(!worldIn.isClientSide){
@@ -107,23 +106,23 @@ public class LensFrame extends TEBlock implements IReadable{
 						ItemEntity dropped = playerIn.drop(inLens, false);
 						if(dropped != null){
 							dropped.setNoPickUpDelay();
-							dropped.setThrower(playerIn.getUUID());
+							dropped.setThrower(playerIn);
 						}
 					}
 					lens.setLensItem(ItemStack.EMPTY);
 				}
-				return InteractionResult.SUCCESS;
+				return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
 			}else if(!stack.isEmpty()){
 				if(worldIn.getRecipeManager().getRecipeFor(CRRecipes.BEAM_LENS_TYPE, new SingleRecipeInput(stack), worldIn).isPresent()){
 					if(!worldIn.isClientSide){
 						lens.setLensItem(stack.split(1));
 					}
-					return InteractionResult.SUCCESS;
+					return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
 				}
 			}
 		}
 
-		return InteractionResult.PASS;
+		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 	}
 
 	@Override

@@ -28,7 +28,7 @@ public class LiechWrench extends Item{
 	private final Multimap<Attribute, AttributeModifier> attributeModifiers;
 
 	public LiechWrench(){
-		super(new Properties().stacksTo(1));
+		super(new Properties().stacksTo(1).rarity(CRItems.BOBO_RARITY));
 		String name = "liech_wrench";
 		CRItems.queueForRegister(name, this);
 		//This item is registered as a wrench in the wrench tag
@@ -43,11 +43,6 @@ public class LiechWrench extends Item{
 	@Override
 	public boolean doesSneakBypassUse(ItemStack stack, LevelReader world, BlockPos pos, Player player){
 		return true;
-	}
-
-	@Override
-	public Rarity getRarity(ItemStack stack){
-		return CRItems.BOBO_RARITY;
 	}
 
 	@Override

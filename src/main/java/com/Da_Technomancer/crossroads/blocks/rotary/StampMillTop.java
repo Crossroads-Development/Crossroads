@@ -8,6 +8,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -47,7 +48,7 @@ public class StampMillTop extends Block{
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
+	public ItemInteractionResult useItemOn(ItemStack held, BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		if(ConfigUtil.isWrench(playerIn.getItemInHand(hand))){
 			if(!worldIn.isClientSide){
 				worldIn.setBlockAndUpdate(pos, state.cycle(CRProperties.HORIZ_AXIS));
@@ -56,14 +57,14 @@ public class StampMillTop extends Block{
 					worldIn.setBlockAndUpdate(pos.below(), lowerState.cycle(CRProperties.HORIZ_AXIS));
 				}
 			}
-			return InteractionResult.SUCCESS;
+			return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
 		}
 
 		BlockEntity te;
 		if(!worldIn.isClientSide && (te = worldIn.getBlockEntity(pos.below())) instanceof MenuProvider){
-			NetworkHooks.openScreen((ServerPlayer) playerIn, (MenuProvider) te, pos.below());
+			((ServerPlayer) playerIn).openMenu((MenuProvider) te, pos.below());
 		}
-		return InteractionResult.SUCCESS;
+		return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
 	}
 
 	@Override

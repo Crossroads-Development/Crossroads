@@ -7,7 +7,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -48,15 +48,15 @@ public class DetailedCrafter extends Block{
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
+	public ItemInteractionResult useItemOn(ItemStack held, BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		if(!worldIn.isClientSide){
 //			StoreNBTToClient.syncNBTToClient((ServerPlayerEntity) playerIn);//Sync player path data to client
-			NetworkHooks.openScreen((ServerPlayer) playerIn, new DetailedCrafterProvider(pos), buf -> {
+			((ServerPlayer) playerIn).openMenu(new DetailedCrafterProvider(pos), buf -> {
 				buf.writeBoolean(false);
 				buf.writeBlockPos(pos);
 			});
 		}
-		return InteractionResult.SUCCESS;
+		return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
 	}
 
 	private static class DetailedCrafterProvider implements MenuProvider{

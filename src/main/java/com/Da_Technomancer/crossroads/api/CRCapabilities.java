@@ -7,14 +7,12 @@ import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.api.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.api.rotary.ICogHandler;
-import com.Da_Technomancer.crossroads.integration.CRIntegration;
-import com.Da_Technomancer.essentials.api.redstone.IRedstoneCapable;
-import com.Da_Technomancer.essentials.api.redstone.IRedstoneHandler;
-import com.Da_Technomancer.essentials.blocks.ESBlocks;
+import com.Da_Technomancer.crossroads.items.LeydenJar;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
 
@@ -34,7 +32,8 @@ public class CRCapabilities{
 	@SuppressWarnings("unused")
 	@SubscribeEvent
 	public static void registerCapabilities(RegisterCapabilitiesEvent e){
-		e.registerBlock(IRedstoneHandler.REDS_HANDLER_BLOCK, IRedstoneCapable.CAPABLE_PROVIDER, ESBlocks.wireCircuit, ESBlocks.wireJunctionCircuit, ESBlocks.consCircuit, ESBlocks.interfaceCircuit, ESBlocks.andCircuit, ESBlocks.notCircuit, ESBlocks.orCircuit, ESBlocks.xorCircuit, ESBlocks.maxCircuit, ESBlocks.minCircuit, ESBlocks.sumCircuit, ESBlocks.difCircuit, ESBlocks.prodCircuit, ESBlocks.quotCircuit, ESBlocks.powCircuit, ESBlocks.invCircuit, ESBlocks.sinCircuit, ESBlocks.cosCircuit, ESBlocks.tanCircuit, ESBlocks.asinCircuit, ESBlocks.acosCircuit, ESBlocks.atanCircuit, ESBlocks.equalsCircuit, ESBlocks.lessCircuit, ESBlocks.moreCircuit, ESBlocks.roundCircuit, ESBlocks.floorCircuit, ESBlocks.ceilCircuit, ESBlocks.logCircuit, ESBlocks.moduloCircuit, ESBlocks.absCircuit, ESBlocks.signCircuit, ESBlocks.readerCircuit, ESBlocks.timerCircuit, ESBlocks.timerCircuit, ESBlocks.delayCircuit, ESBlocks.pulseCircuitRising, ESBlocks.pulseCircuitFalling, ESBlocks.pulseCircuitDual, ESBlocks.dCounterCircuit, ESBlocks.redstoneTransmitter, ESBlocks.redstoneReceiver);
-		CRIntegration.init();
+		//TODO need to register every CR block providing any type of capability. For reference, see Essentials' ESEventHandlerCommon.registerCapabilities(...)
+
+		e.registerItem(Capabilities.EnergyStorage.ITEM, LeydenJar.ENERGY_STORAGE_PROVIDER);
 	}
 }

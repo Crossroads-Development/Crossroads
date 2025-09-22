@@ -21,7 +21,7 @@ import java.util.List;
 public class ChaosRod extends Item{
 
 	protected ChaosRod(){
-		super(new Properties().stacksTo(1));
+		super(new Properties().stacksTo(1).rarity(CRItems.BOBO_RARITY));
 		String name = "chaos_rod";
 		CRItems.queueForRegister(name, this);
 	}
@@ -45,10 +45,5 @@ public class ChaosRod extends Item{
 	@Override
 	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
 		tooltip.add(Component.translatable("tt.crossroads.chaos_rod.quip").setStyle(MiscUtil.TT_QUIP));
-	}
-
-	@Override
-	public Rarity getRarity(ItemStack stack){
-		return CRItems.BOBO_RARITY;
 	}
 }
