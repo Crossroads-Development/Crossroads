@@ -9,19 +9,17 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class ArmorPropellerPack extends TechnomancyArmor implements WindingTableTileEntity.IWindableItem{
 
 	public static final double WIND_PER_BOOST = 0.005;
 
-	public ArmorPropellerPack(){
-		super(Type.CHESTPLATE);
-		String name = "propeller_pack";
+	public ArmorPropellerPack(boolean reinforced){
+		super(Type.CHESTPLATE, reinforced);
+		String name = reinforced ? "propeller_pack_reinforced" : "propeller_pack";
 		CRItems.queueForRegister(name, this);
 	}
 
@@ -44,13 +42,8 @@ public class ArmorPropellerPack extends TechnomancyArmor implements WindingTable
 	public ItemStack[] populateCreativeTab(){
 		ItemStack[] result = new ItemStack[4];
 		result[0] = new ItemStack(this, 1);
-		ItemStack unarmoredWound = new ItemStack(this, 1);
-		setWindLevel(unarmoredWound, getMaxWind());
-		result[1] = unarmoredWound;
-		result[2] = setReinforced(new ItemStack(this, 1), true);
-		ItemStack armoredWound = new ItemStack(this, 1);
-		setWindLevel(armoredWound, getMaxWind());
-		result[3] = setReinforced(armoredWound, true);
+		result[1] = new ItemStack(this, 1);
+		setWindLevel(result[1], getMaxWind());
 		return result;
 	}
 

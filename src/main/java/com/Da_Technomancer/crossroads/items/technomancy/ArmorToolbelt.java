@@ -5,16 +5,14 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class ArmorToolbelt extends TechnomancyArmor{
 
-	public ArmorToolbelt(){
-		super(Type.LEGGINGS);
-		String name = "toolbelt";
+	public ArmorToolbelt(boolean reinforced){
+		super(Type.LEGGINGS, reinforced);
+		String name = reinforced ? "toolbelt_reinforced" : "toolbelt";
 		CRItems.queueForRegister(name, this);
 	}
 

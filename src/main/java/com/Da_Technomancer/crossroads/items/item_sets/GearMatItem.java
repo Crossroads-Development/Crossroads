@@ -7,9 +7,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
 
-import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 
@@ -26,10 +24,10 @@ public abstract class GearMatItem extends OreProfileItem{
 	 */
 	public static CRMaterialLibrary.GearMaterial getMaterial(ItemStack stack){
 		String matKey;
-		if(!stack.hasTag()){
+		if(!stack.has(CRItems.ORE_MATERIAL_ID_DATA)){
 			return CRMaterialLibrary.getDefaultMaterial();
 		}else{
-			matKey = stack.getTag().getString(KEY);
+			matKey = stack.get(CRItems.ORE_MATERIAL_ID_DATA);
 		}
 		return CRMaterialLibrary.findMaterial(matKey);
 	}

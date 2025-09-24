@@ -4,10 +4,10 @@ import com.Da_Technomancer.crossroads.api.alchemy.IReagent;
 import com.Da_Technomancer.crossroads.api.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.blocks.alchemy.GlasswareHolderTileEntity;
-import net.minecraft.core.dispenser.BlockSource;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.core.Direction;
+import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.Item;
@@ -17,7 +17,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.List;
 import java.util.Locale;
@@ -42,8 +41,6 @@ public abstract class AbstractGlassware extends Item{
 		}
 	}
 
-	private static final String TAG_NAME = "reagents";
-
 	protected final GlasswareTypes type;
 	protected final boolean isCrystal;
 
@@ -67,7 +64,7 @@ public abstract class AbstractGlassware extends Item{
 			return -1;
 		}
 
-		ReagentMap reags = ((AbstractGlassware) stack.getItem()).getReagants(stack);
+		ReagentMap reags = ((AbstractGlassware) stack.getItem()).getReagents(stack);
 
 		int r = 0;
 		int g = 0;
@@ -100,8 +97,8 @@ public abstract class AbstractGlassware extends Item{
 	 * @return The contained reagents. Modifying the returned array does NOT write through to the ItemStack, use the setReagents method.
 	 */
 	@Nonnull
-	public ReagentMap getReagants(ItemStack stack){
-		return stack.hasTag() ? ReagentMap.readFromNBT(stack.get.getCompound(TAG_NAME)) : new ReagentMap();
+	public ReagentMap getReagents(ItemStack stack){
+		return stack.getOrDefault(CRItems.REAGENT_DATA, new ReagentMap()).copy();
 	}
 
 	/**
@@ -110,23 +107,16 @@ public abstract class AbstractGlassware extends Item{
 	 * @param reagents The reagents to store
 	 */
 	public void setReagents(ItemStack stack, ReagentMap reagents){
-		if(!stack.hasTag()){
-			stack.setTag(new CompoundTag());
-		}
-
-		CompoundTag nbt = new CompoundTag();
-		stack.getTag().put(TAG_NAME, nbt);
-
-		reagents.write(nbt);
+		stack.set(CRItems.REAGENT_DATA, reagents);
 	}
 
 	@Override
 	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
 		tooltip.add(Component.translatable("tt.crossroads.boilerplate.alchemy_capacity", getCapacity()));
-		if(!stack.hasTag()){
+		if(!stack.has(CRItems.REAGENT_DATA)){
 			return;
 		}
-		ReagentMap stored = getReagants(stack);
+		ReagentMap stored = getReagents(stack);
 
 		double temp = stored.getTempC();
 

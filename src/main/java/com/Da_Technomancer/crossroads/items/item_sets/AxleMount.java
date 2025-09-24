@@ -22,7 +22,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class AxleMount extends GearMatItem{
@@ -54,7 +53,7 @@ public class AxleMount extends GearMatItem{
 	public InteractionResult useOn(UseOnContext context){
 		CRMaterialLibrary.GearMaterial type = getMaterial(context.getItemInHand());
 		if(type == null){
-			return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
+			return InteractionResult.SUCCESS;
 		}
 		Level world = context.getLevel();
 		BlockPos pos = context.getClickedPos();//The position of the block clicked
@@ -72,7 +71,7 @@ public class AxleMount extends GearMatItem{
 				MechanismTileEntity mte = (MechanismTileEntity) teAtPlacement;
 				if(mte.members[mechInd] != null){
 					//This spot is already taken
-					return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
+					return InteractionResult.SUCCESS;
 				}
 
 				mte.setMechanism(mechInd, mechanismToPlace(), type, null, false);
@@ -104,6 +103,6 @@ public class AxleMount extends GearMatItem{
 			}
 		}
 
-		return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
+		return InteractionResult.SUCCESS;
 	}
 }

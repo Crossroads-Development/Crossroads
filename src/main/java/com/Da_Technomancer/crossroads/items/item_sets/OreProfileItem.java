@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.items.item_sets;
 
 import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
 import com.Da_Technomancer.crossroads.api.templates.ICreativeTabPopulatingItem;
-import net.minecraft.nbt.CompoundTag;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -13,8 +13,6 @@ import java.util.Collection;
 
 public class OreProfileItem extends Item implements ICreativeTabPopulatingItem{
 
-	protected static final String KEY = "material";
-
 	public OreProfileItem(Item.Properties prop){
 		super(prop);
 	}
@@ -24,8 +22,7 @@ public class OreProfileItem extends Item implements ICreativeTabPopulatingItem{
 			mat = CRMaterialLibrary.getDefaultProfile();
 		}
 		ItemStack out = new ItemStack(this, count);
-		out.setTag(new CompoundTag());
-		out.getTag().putString(KEY, mat.getId());
+		out.set(CRItems.ORE_MATERIAL_ID_DATA, mat.getId());
 		return out;
 	}
 
@@ -39,10 +36,10 @@ public class OreProfileItem extends Item implements ICreativeTabPopulatingItem{
 
 	protected CRMaterialLibrary.OreProfile getSelfProfile(ItemStack stack){
 		String matKey;
-		if(!stack.hasTag()){
+		if(!stack.has(CRItems.ORE_MATERIAL_ID_DATA)){
 			return CRMaterialLibrary.getDefaultProfile();
 		}else{
-			matKey = stack.getTag().getString(KEY);
+			matKey = stack.get(CRItems.ORE_MATERIAL_ID_DATA);
 		}
 		return CRMaterialLibrary.findProfile(matKey);
 	}

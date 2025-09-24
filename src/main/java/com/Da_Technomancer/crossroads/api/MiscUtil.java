@@ -284,6 +284,16 @@ public final class MiscUtil{
 		return result;
 	}
 
+	/**
+	 * Use this sparingly. When the option exists, it is better to do BuiltInRegistries.(REGISTRY_NAME).get(resourceKey.location())
+	 * @param resourceKey Key which could point to any registered object in any registry
+	 * @return The object the resourceKey points to
+	 * @param <T> The type of thing the resourceKey points to
+	 */
+	public static <T> T lookupResourceKey(ResourceKey<T> resourceKey){
+		return (T) BuiltInRegistries.REGISTRY.get(resourceKey.registry()).getHolder(resourceKey.location());
+	}
+
 	public static <T, U> U putReturn(Map<T, U> map, T key, U val){
 		map.put(key, val);
 		return val;

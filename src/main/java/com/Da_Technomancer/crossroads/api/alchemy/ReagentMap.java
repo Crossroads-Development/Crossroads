@@ -1,7 +1,11 @@
 package com.Da_Technomancer.crossroads.api.alchemy;
 
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
+import com.mojang.serialization.Codec;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -12,6 +16,19 @@ import java.util.stream.Collectors;
  * Stores Alchemy reagents, along with temperature. Avoid using HashMap methods that aren't overwritten to minimize unintended behaviour
  */
 public class ReagentMap extends HashMap<String, Integer>{
+
+	public static final Codec<ReagentMap> CODEC = CompoundTag.CODEC.xmap(ReagentMap::readFromNBT, ReagentMap::getAsCompoundTag);
+	public static final StreamCodec<ByteBuf, ReagentMap> STREAM_CODEC = new StreamCodec<ByteBuf, ReagentMap>(){
+		@Override
+		public ReagentMap decode(ByteBuf byteBuf){
+			return readFromNBT(FriendlyByteBuf.readNbt(byteBuf));
+		}
+
+		@Override
+		public void encode(ByteBuf byteBuf, ReagentMap reagentMap){
+			FriendlyByteBuf.writeNbt(byteBuf, reagentMap.getAsCompoundTag());
+		}
+	};
 
 	private double heat = 0;
 	private int totalQty;
@@ -192,6 +209,10 @@ public class ReagentMap extends HashMap<String, Integer>{
 		}
 	}
 
+	private CompoundTag getAsCompoundTag(){
+		return write(new CompoundTag());
+	}
+
 	public CompoundTag write(CompoundTag nbt){
 		nbt.putDouble("he", heat);
 		for(String key : keySet()){
@@ -238,5 +259,9 @@ public class ReagentMap extends HashMap<String, Integer>{
 			keySetCache = entrySet().stream().filter((entry) -> entry.getValue() > 0).map(Entry::getKey).map(ReagentManager::getReagent).filter(Objects::nonNull).collect(Collectors.toSet());
 		}
 		return keySetCache;
+	}
+
+	public ReagentMap copy(){
+		return readFromNBT(getAsCompoundTag());
 	}
 }

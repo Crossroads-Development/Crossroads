@@ -16,7 +16,7 @@ public class Phial extends AbstractGlassware{
 
 	@Override
 	public InteractionResult useOn(UseOnContext context){
-		ReagentMap contents = getReagants(context.getItemInHand());
+		ReagentMap contents = getReagents(context.getItemInHand());
 		if(contents.getTotalQty() != 0){
 			if(!context.getLevel().isClientSide){
 				AlchemyUtil.releaseChemical(context.getLevel(), context.getClickedPos(), contents);
@@ -24,7 +24,7 @@ public class Phial extends AbstractGlassware{
 					setReagents(context.getItemInHand(), new ReagentMap());
 				}
 			}
-			return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
+			return InteractionResult.SUCCESS;
 		}
 
 		return InteractionResult.PASS;

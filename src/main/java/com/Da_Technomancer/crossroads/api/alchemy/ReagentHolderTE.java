@@ -305,7 +305,7 @@ public abstract class ReagentHolderTE extends BlockEntity implements ITickableTi
 		}else if(stack.getItem() instanceof AbstractGlassware){
 			boolean crystal = ((AbstractGlassware) stack.getItem()).isCrystal();
 			//Move reagents between glassware and carrier
-			ReagentMap phial = ((AbstractGlassware) stack.getItem()).getReagants(stack);
+			ReagentMap phial = ((AbstractGlassware) stack.getItem()).getReagents(stack);
 			if(phial.getTotalQty() <= 0){
 				phial.clear();
 				//Move from carrier to glassware

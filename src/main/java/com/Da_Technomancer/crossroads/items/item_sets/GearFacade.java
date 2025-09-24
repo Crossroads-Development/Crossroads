@@ -16,7 +16,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
@@ -27,7 +26,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.Shapes;
 
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.List;
 
@@ -44,11 +42,10 @@ public class GearFacade extends Item{
 	}
 
 	public FacadeBlock getMaterial(ItemStack stack){
-		CompoundTag nbt = stack.getTag();
-		if(nbt != null && nbt.contains("facadeBlock")){
-			return FacadeBlock.create(ResourceLocation.withDefaultNamespace(nbt.getString("facadeBlock")));
+		if(stack.has(CRItems.FACADE_BLOCK_DATA)){
+			return FacadeBlock.create(ResourceLocation.withDefaultNamespace(stack.get(CRItems.FACADE_BLOCK_DATA)));
 		}
-		return FacadeBlock.create(BuiltInRegistries.BLOCKS.getKey(Blocks.STONE_BRICKS));
+		return FacadeBlock.create(BuiltInRegistries.BLOCK.getKey(Blocks.STONE_BRICKS));
 	}
 
 	@Override
@@ -59,8 +56,7 @@ public class GearFacade extends Item{
 	}
 
 	public void setMaterial(ItemStack stack, BlockState state){
-		CompoundTag nbt = stack.getOrCreateTag();
-		nbt.putString("facadeBlock", BuiltInRegistries.BLOCK.getKey(state.getBlock()).toString());
+		stack.set(CRItems.FACADE_BLOCK_DATA, BuiltInRegistries.BLOCK.getKey(state.getBlock()).toString());
 	}
 
 	@Override
@@ -166,8 +162,8 @@ public class GearFacade extends Item{
 
 		public BlockState getBlockState(){
 			if(blockstateCache == null){
-				Block block = BuiltInRegistries.BLOCK.getValue(blockRegName);
-				if(block == null){
+				Block block = BuiltInRegistries.BLOCK.get(blockRegName);
+				if(block == null || block == Blocks.AIR){
 					block = Blocks.STONE_BRICKS;
 				}
 				blockstateCache = block.defaultBlockState();

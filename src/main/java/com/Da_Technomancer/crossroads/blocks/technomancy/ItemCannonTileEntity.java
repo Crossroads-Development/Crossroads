@@ -75,7 +75,7 @@ public class ItemCannonTileEntity extends AbstractCannonTileEntity implements II
 				itemPos = itemPos.add(aimed.scale(2));//Offset the item start position to ensure it clears the base
 
 				if(inventory.getItem() instanceof Shell shellItem){
-					ReagentMap contents = shellItem.getReagants(inventory);
+					ReagentMap contents = shellItem.getReagents(inventory);
 					EntityShell shellEnt = new EntityShell(level, contents, inventory);
 					shellEnt.setPos(itemPos.x, itemPos.y, itemPos.z);
 					shellEnt.setDeltaMovement(aimed.scale(force));

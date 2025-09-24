@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.alchemy.*;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.api.heat.IHeatCapable;
@@ -156,7 +155,7 @@ public class GlasswareHolderTileEntity extends ReagentHolderTE implements IHeatC
 		if(heldType() == AbstractGlassware.GlasswareTypes.NONE && stack.getItem() instanceof AbstractGlassware glassware){
 			//No stored glassware- place onto stand
 			//Add item into TE
-			this.contents = glassware.getReagants(stack);
+			this.contents = glassware.getReagents(stack);
 			glass = !glassware.isCrystal();
 			dirtyReag = true;
 			setChanged();

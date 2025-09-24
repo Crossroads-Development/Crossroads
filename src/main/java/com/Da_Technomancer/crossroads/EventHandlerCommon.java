@@ -27,9 +27,13 @@ import com.Da_Technomancer.crossroads.entity.EntityHopperHawk;
 import com.Da_Technomancer.crossroads.entity.mob_effects.CRPotions;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.items.CRItems;
+import com.Da_Technomancer.crossroads.items.technomancy.ArmorGoggles;
 import com.Da_Technomancer.crossroads.items.technomancy.TechnomancyArmor;
 import com.Da_Technomancer.crossroads.world.CRWorldGen;
 import com.Da_Technomancer.essentials.api.ReflectionUtil;
+import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
+import it.unimi.dsi.fastutil.objects.Object2BooleanMaps;
+import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -56,6 +60,7 @@ import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.trading.Merchant;
@@ -394,12 +399,22 @@ public class EventHandlerCommon{
 
 		//Technomancy armor
 		if(inputLeft.getItem() instanceof TechnomancyArmor){
-			CompoundTag nbt = e.getLeft().getOrCreateTag();
-
 			//Add netherite armor
 			if(!TechnomancyArmor.isReinforced(inputLeft) && CRConfig.technoArmorReinforce.get()){
-				if(inputLeft.getItem() == CRItems.armorGoggles && inputRight.getItem() == Items.NETHERITE_HELMET || inputLeft.getItem() == CRItems.propellerPack && inputRight.getItem() == Items.NETHERITE_CHESTPLATE || inputLeft.getItem() == CRItems.armorToolbelt && inputRight.getItem() == Items.NETHERITE_LEGGINGS || inputLeft.getItem() == CRItems.armorEnviroBoots && inputRight.getItem() == Items.NETHERITE_BOOTS){
-					e.setOutput(TechnomancyArmor.setReinforced(inputLeft.copy(), true));
+				Item outputItem = null;
+				Item inputItem1 = inputLeft.getItem();
+				Item inputItem2 = inputRight.getItem();
+				if(inputItem1 == CRItems.armorGoggles && inputItem2 == Items.NETHERITE_HELMET){
+					outputItem = CRItems.armorGogglesReinforced;
+				}else if(inputItem1 == CRItems.propellerPack && inputItem2 == Items.NETHERITE_CHESTPLATE){
+					outputItem = CRItems.propellerPackReinforced;
+				}else if(inputItem1 == CRItems.armorToolbelt && inputItem2 == Items.NETHERITE_LEGGINGS){
+					outputItem = CRItems.armorToolbeltReinforced;
+				}else if(inputItem1 == CRItems.armorEnviroBoots && inputItem2 == Items.NETHERITE_BOOTS){
+					outputItem = CRItems.armorEnviroBootsReinforced;
+				}
+				if(outputItem != null){
+					e.setOutput(inputLeft.transmuteCopy(outputItem));
 					e.setMaterialCost(1);
 					e.setCost(CRConfig.technoArmorCost.get() * 10);
 					return;
@@ -408,17 +423,14 @@ public class EventHandlerCommon{
 
 			//Add lenses to goggles
 			if(inputLeft.getItem() == CRItems.armorGoggles){
+				ArmorGoggles.LensesSet lenses = inputLeft.getOrDefault(CRItems.GOGGLE_LENSES_DATA, new ArmorGoggles.LensesSet(Object2BooleanMaps.emptyMap()));
 				for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
-					if(lens.matchesRecipe(inputRight) && !nbt.contains(lens.toString())){
+					if(lens.matchesRecipe(inputRight) && !lenses.lenses().containsKey(lens)){
 						ItemStack out = inputLeft.copy();
-						int cost = CRConfig.technoArmorCost.get();
-						for(EnumGoggleLenses otherLens : EnumGoggleLenses.values()){
-							if(nbt.contains(otherLens.toString())){
-								cost *= 2;
-							}
-						}
-						e.setCost(cost);
-						out.getOrCreateTag().putBoolean(lens.toString(), false);
+						e.setCost(CRConfig.technoArmorCost.get() * (long) Math.pow(2, lenses.lenses().size()));
+						Object2BooleanMap<EnumGoggleLenses> newLenses = new Object2BooleanOpenHashMap(lenses.lenses());
+						newLenses.put(lens, false);
+						out.set(CRItems.GOGGLE_LENSES_DATA, new ArmorGoggles.LensesSet(newLenses));
 						e.setOutput(out);
 						e.setMaterialCost(1);
 						return;

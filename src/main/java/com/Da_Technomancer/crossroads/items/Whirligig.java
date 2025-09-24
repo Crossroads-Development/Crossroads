@@ -28,7 +28,7 @@ public class Whirligig extends Item implements WindingTableTileEntity.IWindableI
 	protected Whirligig(){
 		super(new Properties().stacksTo(1)
 				.attributes(ItemAttributeModifiers.builder()
-						.add(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_DAMAGE_ID, 5, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
+						.add(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_ID, 5, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
 						.add(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_ID, -3.1D, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND).build()));
 		String name = "whirligig";
 		CRItems.queueForRegister(name, this);

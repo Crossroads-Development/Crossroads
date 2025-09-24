@@ -9,7 +9,6 @@ import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.gui.container.DetailedCrafterContainer;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.item_sets.OreProfileItem;
-import com.Da_Technomancer.crossroads.items.technomancy.TechnomancyArmor;
 import com.google.common.collect.ImmutableList;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
@@ -27,6 +26,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 
@@ -106,16 +106,16 @@ public class JEICrossroadsPlugin implements IModPlugin{
 		//Add anvil recipes for Technomancy items
 		IVanillaRecipeFactory vanillaFactory = registration.getVanillaRecipeFactory();
 		ArrayList<IJeiAnvilRecipe> anvilRecipes = new ArrayList<>(4);
-		anvilRecipes.add(vanillaFactory.createAnvilRecipe(new ItemStack(CRItems.armorGoggles), ImmutableList.of(new ItemStack(Items.NETHERITE_HELMET)), ImmutableList.of(TechnomancyArmor.setReinforced(new ItemStack(CRItems.armorGoggles, 1), true))));
-		anvilRecipes.add(vanillaFactory.createAnvilRecipe(new ItemStack(CRItems.propellerPack), ImmutableList.of(new ItemStack(Items.NETHERITE_CHESTPLATE)), ImmutableList.of(TechnomancyArmor.setReinforced(new ItemStack(CRItems.propellerPack, 1), true))));
-		anvilRecipes.add(vanillaFactory.createAnvilRecipe(new ItemStack(CRItems.armorToolbelt), ImmutableList.of(new ItemStack(Items.NETHERITE_LEGGINGS)), ImmutableList.of(TechnomancyArmor.setReinforced(new ItemStack(CRItems.armorToolbelt, 1), true))));
-		anvilRecipes.add(vanillaFactory.createAnvilRecipe(new ItemStack(CRItems.armorEnviroBoots), ImmutableList.of(new ItemStack(Items.NETHERITE_BOOTS)), ImmutableList.of(TechnomancyArmor.setReinforced(new ItemStack(CRItems.armorEnviroBoots, 1), true))));
+		anvilRecipes.add(vanillaFactory.createAnvilRecipe(new ItemStack(CRItems.armorGoggles), ImmutableList.of(new ItemStack(Items.NETHERITE_HELMET)), ImmutableList.of(new ItemStack(CRItems.armorGogglesReinforced, 1)), ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "reinforce_techno_helmet")));
+		anvilRecipes.add(vanillaFactory.createAnvilRecipe(new ItemStack(CRItems.propellerPack), ImmutableList.of(new ItemStack(Items.NETHERITE_CHESTPLATE)), ImmutableList.of(new ItemStack(CRItems.propellerPackReinforced, 1)), ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "reinforce_techno_chestplate")));
+		anvilRecipes.add(vanillaFactory.createAnvilRecipe(new ItemStack(CRItems.armorToolbelt), ImmutableList.of(new ItemStack(Items.NETHERITE_LEGGINGS)), ImmutableList.of(new ItemStack(CRItems.armorToolbeltReinforced, 1)), ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "reinforce_techno_leggings")));
+		anvilRecipes.add(vanillaFactory.createAnvilRecipe(new ItemStack(CRItems.armorEnviroBoots), ImmutableList.of(new ItemStack(Items.NETHERITE_BOOTS)), ImmutableList.of(new ItemStack(CRItems.armorEnviroBootsReinforced, 1)), ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "reinforce_techno_boots")));
 		registration.addRecipes(RecipeTypes.ANVIL, anvilRecipes);
 	}
 
 	private static <T extends Recipe<?>> List<T> getRecipes(RecipeManager manage, RecipeType<T> type){
 		//Filter to recipes of the passed type, and check that they're enabled if they're IOptionalRecipe
-		return manage.getRecipes().parallelStream().filter(rec -> rec.getType() == type && (!(rec instanceof IOptionalRecipe) || ((IOptionalRecipe<?>) rec).isEnabled())).map(recipe -> (T) recipe).collect(Collectors.toList());
+		return manage.getRecipes().parallelStream().map(RecipeHolder::value).filter(rec -> rec.getType() == type && (!(rec instanceof IOptionalRecipe) || ((IOptionalRecipe<?>) rec).isEnabled())).map(recipe -> (T) recipe).collect(Collectors.toList());
 	}
 
 	@Override

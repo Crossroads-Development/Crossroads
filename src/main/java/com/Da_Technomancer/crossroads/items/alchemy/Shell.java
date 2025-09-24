@@ -3,9 +3,8 @@ package com.Da_Technomancer.crossroads.items.alchemy;
 import com.Da_Technomancer.crossroads.api.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.entity.EntityShell;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.Direction;
-import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
+import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -30,12 +29,12 @@ public class Shell extends AbstractGlassware{
 			if(isSuccess()){
 				return stack;
 			}
-			ReagentMap contents = CRItems.shellGlass.getReagants(stack);
+			ReagentMap contents = CRItems.shellGlass.getReagents(stack);
 			if(contents.getTotalQty() != 0){
 				Direction dir = source.state().getValue(DispenserBlock.FACING);
 				Level world = source.level();
 				EntityShell shellEnt = new EntityShell(world, contents, stack.copy());
-				shellEnt.setPos(source.x() + dir.getStepX() + 0.5D, source.y() + dir.getStepY() + 0.5D, source.z() + dir.getStepZ() + 0.5D);
+				shellEnt.setPos(source.pos().relative(dir).getCenter());
 				shellEnt.shoot(dir.getStepX(), dir.getStepY(), dir.getStepZ(), 0.8F, 1.0F);
 				world.addFreshEntity(shellEnt);
 				stack.shrink(1);
@@ -55,7 +54,7 @@ public class Shell extends AbstractGlassware{
 	@Override
 	public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn){
 		ItemStack held = playerIn.getItemInHand(handIn);
-		ReagentMap contents = getReagants(held);
+		ReagentMap contents = getReagents(held);
 		if(contents.getTotalQty() != 0){
 			worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), SoundEvents.SNOWBALL_THROW, SoundSource.NEUTRAL, 0.5F, 0.4F / (worldIn.random.nextFloat() * 0.4F + 0.8F));
 

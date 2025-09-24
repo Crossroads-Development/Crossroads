@@ -5,15 +5,19 @@ import com.Da_Technomancer.crossroads.EventHandlerCommon;
 import com.Da_Technomancer.crossroads.api.CRReflection;
 import com.Da_Technomancer.crossroads.api.EnumPath;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.api.alchemy.ReagentMap;
+import com.Da_Technomancer.crossroads.api.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.api.templates.ICreativeTabPopulatingItem;
 import com.Da_Technomancer.crossroads.api.witchcraft.IPerishable;
 import com.Da_Technomancer.crossroads.blocks.witchcraft.EmbryoLab;
+import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.entity.EntityHopperHawk;
 import com.Da_Technomancer.crossroads.items.alchemy.*;
 import com.Da_Technomancer.crossroads.items.item_sets.*;
 import com.Da_Technomancer.crossroads.items.technomancy.*;
 import com.Da_Technomancer.crossroads.items.witchcraft.*;
 import com.Da_Technomancer.essentials.api.ReflectionUtil;
+import com.mojang.serialization.Codec;
 import net.minecraft.Util;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.item.CompassItemPropertyFunction;
@@ -145,7 +149,9 @@ public final class CRItems{
 	public static ChickenBoots chickenBoots;
 	public static ChaosRod chaosRod;
 	public static ArmorGoggles armorGoggles;
+	public static ArmorGoggles armorGogglesReinforced;
 	public static ArmorPropellerPack propellerPack;
+	public static ArmorPropellerPack propellerPackReinforced;
 	public static StaffTechnomancy staffTechnomancy;
 	public static BeamCage beamCage;
 	public static Item adamant;
@@ -195,7 +201,9 @@ public final class CRItems{
 	public static PathSigil sigilTech;
 	public static PathSigil sigilWitch;
 	public static ArmorEnviroBoots armorEnviroBoots;
+	public static ArmorEnviroBoots armorEnviroBootsReinforced;
 	public static ArmorToolbelt armorToolbelt;
+	public static ArmorToolbelt armorToolbeltReinforced;
 	public static Item bloodSampleEmpty;
 	public static BloodSample bloodSample;
 	public static BloodSample separatedBloodSample;
@@ -230,7 +238,7 @@ public final class CRItems{
 	public static ToggleGear invToggleGear;
 	public static LargeGear largeGear;
 	public static AxleMount axleMount;
-//	@Deprecated
+	//	@Deprecated
 //	public static Item gearFacadeStoneBrick;
 //	@Deprecated
 //	public static Item gearFacadeCobble;
@@ -244,6 +252,10 @@ public final class CRItems{
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> HUNGER_RESTORED_DATA = DATA_COMPONENTS.registerComponentType("food", builder -> builder.persistent(ExtraCodecs.NON_NEGATIVE_INT).networkSynchronized(ByteBufCodecs.VAR_INT));
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> SATURATION_RESTORED_DATA = DATA_COMPONENTS.registerComponentType("sat", builder -> builder.persistent(ExtraCodecs.NON_NEGATIVE_INT).networkSynchronized(ByteBufCodecs.VAR_INT));
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> ELECTRIC_CHARGE_DATA = DATA_COMPONENTS.registerComponentType("charge", builder -> builder.persistent(ExtraCodecs.NON_NEGATIVE_INT).networkSynchronized(ByteBufCodecs.VAR_INT));
+	public static final DeferredHolder<DataComponentType<?>, DataComponentType<ReagentMap>> REAGENT_DATA = DATA_COMPONENTS.registerComponentType("reagents", builder -> builder.persistent(ReagentMap.CODEC).networkSynchronized(ReagentMap.STREAM_CODEC));
+	public static final DeferredHolder<DataComponentType<?>, DataComponentType<String>> FACADE_BLOCK_DATA = DATA_COMPONENTS.registerComponentType("facadeBlock", builder -> builder.persistent(Codec.STRING).networkSynchronized(ByteBufCodecs.STRING_UTF8));
+	public static final DeferredHolder<DataComponentType<?>, DataComponentType<String>> ORE_MATERIAL_ID_DATA = DATA_COMPONENTS.registerComponentType("material", builder -> builder.persistent(Codec.STRING).networkSynchronized(ByteBufCodecs.STRING_UTF8));
+	public static final DeferredHolder<DataComponentType<?>, DataComponentType<ArmorGoggles.LensesSet>> GOGGLE_LENSES_DATA = DATA_COMPONENTS.registerComponentType("lenses", builder -> builder.persistent(ArmorGoggles.LensesSet.CODEC).networkSynchronized(ArmorGoggles.LensesSet.STREAM_CODEC));
 
 	public static final DeferredRegister<ArmorMaterial> ARMOR_MATERIALS = DeferredRegister.create(BuiltInRegistries.ARMOR_MATERIAL, Crossroads.MODID);
 	public static final Holder<ArmorMaterial> BOBO_ARMOR_MATERIAL = ARMOR_MATERIALS.register("bobo", () -> new ArmorMaterial(
@@ -256,11 +268,37 @@ public final class CRItems{
 					0,
 					Holder.direct(SoundEvents.HORSE_DEATH), //I am not a benevolent overlord. RIP the ears of anyone who uses headphones
 					() -> Ingredient.EMPTY,
-					List.of(new ArmorMaterial.Layer(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "bobo"))), //TODO: I have no idea what to pass here
+					List.of(new ArmorMaterial.Layer(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "bobo"))),
 					0,
 					0
 			)
 	);
+	public static final Holder<ArmorMaterial> TECHNOMANCY_ARMOR_MATERIAL = ARMOR_MATERIALS.register("technomancy", () -> new ArmorMaterial(
+					Util.make(new EnumMap<>(ArmorItem.Type.class), map -> {
+						map.put(ArmorItem.Type.HELMET, 0);
+						map.put(ArmorItem.Type.CHESTPLATE, 0);
+						map.put(ArmorItem.Type.LEGGINGS, 0);
+						map.put(ArmorItem.Type.BOOTS, 0);
+					}),
+					ArmorMaterials.NETHERITE.value().enchantmentValue(),
+					SoundEvents.ARMOR_EQUIP_IRON,
+					() -> Ingredient.of(CRItemTags.INGOTS_BRONZE),
+					EnumGoggleLenses.makeBlankLayers(new ArmorMaterial.Layer(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "technomancy"))),
+					0,
+					0
+			)
+	);
+	public static final Holder<ArmorMaterial> TECHNOMANCY_REINFORCED_ARMOR_MATERIAL = ARMOR_MATERIALS.register("technomancy_reinforced", () -> new ArmorMaterial(
+					ArmorMaterials.NETHERITE.value().defense(),
+					ArmorMaterials.NETHERITE.value().enchantmentValue(),
+					SoundEvents.ARMOR_EQUIP_NETHERITE,
+					ArmorMaterials.NETHERITE.value().repairIngredient(),
+					EnumGoggleLenses.makeBlankLayers(new ArmorMaterial.Layer(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "technomancy_reinforced"))),
+					ArmorMaterials.NETHERITE.value().toughness(),
+					ArmorMaterials.NETHERITE.value().knockbackResistance()
+			)
+	);
+
 
 	public static void registerItems(){
 		//Ores
@@ -348,10 +386,14 @@ public final class CRItems{
 		lensArray = queueForRegister("lens_array", new Item(baseItemProperties()));
 
 		//Technomancy items
-		armorGoggles = new ArmorGoggles();
-		propellerPack = new ArmorPropellerPack();
-		armorToolbelt = new ArmorToolbelt();
-		armorEnviroBoots = new ArmorEnviroBoots();
+		armorGoggles = new ArmorGoggles(false);
+		armorGogglesReinforced = new ArmorGoggles(true);
+		propellerPack = new ArmorPropellerPack(false);
+		propellerPackReinforced = new ArmorPropellerPack(true);
+		armorToolbelt = new ArmorToolbelt(false);
+		armorToolbeltReinforced = new ArmorToolbelt(true);
+		armorEnviroBoots = new ArmorEnviroBoots(false);
+		armorEnviroBootsReinforced = new ArmorEnviroBoots(true);
 		staffTechnomancy = new StaffTechnomancy();
 		beamCage = new BeamCage();
 		recallDevice = new RecallDevice();

@@ -21,7 +21,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -94,7 +93,7 @@ public class ReagentFilterTileEntity extends ReagentHolderTE implements MenuProv
 
 		//Separate reagents to be filtered
 		if(!contents.isEmpty() && !inventory.isEmpty() && inventory.getItem() instanceof AbstractGlassware && inventory.hasTag()){
-			ReagentMap filtered = ((AbstractGlassware) inventory.getItem()).getReagants(inventory);
+			ReagentMap filtered = ((AbstractGlassware) inventory.getItem()).getReagents(inventory);
 			for(IReagent filtReag : filtered.keySetReag()){
 				if(filtered.getQty(filtReag) != 0){
 					filterMap.transferReagent(filtReag, contents.getQty(filtReag), contents);
