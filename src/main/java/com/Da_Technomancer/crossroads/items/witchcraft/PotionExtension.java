@@ -40,7 +40,7 @@ public class PotionExtension extends Item implements IPerishable{
 		if(penalty > 0){
 			tooltip.add(Component.translatable("tt.crossroads.potion_extension.penalty", penalty));
 		}
-		IPerishable.addTooltip(stack, world, tooltip);
+		IPerishable.addTooltip(stack, context.level(), tooltip);
 		tooltip.add(Component.translatable("tt.crossroads.potion_extension.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 }

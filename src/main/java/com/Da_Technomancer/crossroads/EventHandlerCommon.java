@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.ambient.particles.CRParticles;
 import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
 import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
+import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.CRReflection;
 import com.Da_Technomancer.crossroads.api.alchemy.AtmosChargeSavedData;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
@@ -81,6 +82,7 @@ import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.event.AnvilUpdateEvent;
 import net.neoforged.neoforge.event.VanillaGameEvent;
+import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
@@ -690,5 +692,10 @@ public class EventHandlerCommon{
 				dispenserTE.addItem(result);
 			}
 		}
+	}
+
+	@SubscribeEvent
+	public void registerPotionBrewingRecipes(RegisterBrewingRecipesEvent e){
+		CRPotions.registerPotionRecipes(e);
 	}
 }

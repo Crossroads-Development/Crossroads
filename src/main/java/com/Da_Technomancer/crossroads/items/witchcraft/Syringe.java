@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.entity.mob_effects.CRPotions;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.alchemy.PoisonVodka;
 import com.Da_Technomancer.essentials.api.BlockUtil;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -18,8 +19,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nonnull;
@@ -55,8 +55,8 @@ public class Syringe extends Item{
 			return InteractionResultHolder.fail(item);
 		});
 		SyringeExtension potionResult = (item, syringe, world, target, user) -> {
-			Potion potion = PotionUtils.getPotion(item);
-			if(potion != Potions.EMPTY && target != null){
+			if(item.has(DataComponents.POTION_CONTENTS) && target != null){
+				PotionContents potion = item.get(DataComponents.POTION_CONTENTS);
 				boolean treated = isTreated(syringe);
 				//Use up any treatment on the syringe
 				setTreated(syringe, false);
@@ -65,8 +65,8 @@ public class Syringe extends Item{
 				if(treated){
 					//The syringe has a treatment applied; applied effects are more powerful/longer lasting
 					int penalty = CRConfig.injectionPermaPenalty.get();
-					for(MobEffectInstance effect : potion.getEffects()){
-						if(effect.getEffect().isInstantenous()){
+					for(MobEffectInstance effect : potion.getAllEffects()){
+						if(effect.getEffect().value().isInstantenous()){
 							//Multiply intensity
 							target.addEffect(new MobEffectInstance(effect.getEffect(), effect.getDuration(), (int) Math.round(effect.getAmplifier() * multiplier), effect.isAmbient(), effect.isVisible(), effect.showIcon()));
 						}else if(CRPotions.applyAsPermanent(target, effect) && penalty > 0){
@@ -78,10 +78,10 @@ public class Syringe extends Item{
 						}
 					}
 				}else{
-					for(MobEffectInstance effect : potion.getEffects()){
-						if(effect.getEffect().isInstantenous()){
+					for(MobEffectInstance effect : potion.getAllEffects()){
+						if(effect.getEffect().value().isInstantenous()){
 							//Multiply intensity
-							effect.getEffect().applyInstantenousEffect(user, user, target, (int) Math.round(effect.getAmplifier() * multiplier), 1);
+							effect.getEffect().value().applyInstantenousEffect(user, user, target, (int) Math.round(effect.getAmplifier() * multiplier), 1);
 //						target.addEffect(new MobEffectInstance(effect.getEffect(), effect.getDuration(), (int) Math.round(effect.getAmplifier() * multiplier), effect.isAmbient(), effect.isVisible(), effect.showIcon()));
 						}else{
 							//Multiply duration
@@ -107,11 +107,11 @@ public class Syringe extends Item{
 	}
 
 	public static boolean isTreated(ItemStack stack){
-		return stack.getOrCreateTag().getBoolean("extension_treated");
+		return stack.getOrDefault(CRItems.EXTENSION_TREATED_DATA, false);
 	}
 
 	public static void setTreated(ItemStack stack, boolean treated){
-		stack.getOrCreateTag().putBoolean("extension_treated", treated);
+		stack.set(CRItems.EXTENSION_TREATED_DATA, treated);
 	}
 
 	private InteractionResult interact(ItemStack stack, Player self, LivingEntity target){

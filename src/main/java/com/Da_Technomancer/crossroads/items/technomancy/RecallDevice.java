@@ -2,10 +2,15 @@ package com.Da_Technomancer.crossroads.items.technomancy;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.api.packets.StreamCodecUtils;
 import com.Da_Technomancer.crossroads.blocks.rotary.WindingTableTileEntity;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import net.minecraft.nbt.CompoundTag;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -52,19 +57,21 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 			}else{
 				tooltip.add(Component.translatable("tt.crossroads.recall_device.config", limit));
 			}
-			CompoundTag nbt = stack.getOrCreateTagElement("recall_data");
+			RecallData recallData = stack.get(CRItems.TIME_RECALL_DATA);
 			long timeElapsed;
 
-			//TODO: where else to get game time?
-			if(nbt.contains("timestamp") && (timeElapsed = context.getGameTime() - nbt.getLong("timestamp")) < limit * 20){
-				tooltip.add(Component.translatable("tt.crossroads.recall_device.current", (int) (timeElapsed / 20)));
-			}else{
-				tooltip.add(Component.translatable("tt.crossroads.recall_device.current.none"));
+			Level level = context.level();
+			if(level != null){
+				if(recallData != null && (timeElapsed = context.level().getGameTime() - recallData.timestamp) < limit * 20){
+					tooltip.add(Component.translatable("tt.crossroads.recall_device.current", (int) (timeElapsed / 20)));
+				}else{
+					tooltip.add(Component.translatable("tt.crossroads.recall_device.current.none"));
+				}
 			}
 		}
 	}
 
-	private static void storeData(CompoundTag data, Player player){
+	private static RecallData storeData(Player player){
 		//Data to store is:
 		//Timestamp
 		//Player username
@@ -75,39 +82,42 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 		//Hunger
 		//Velocity
 
-		data.putLong("timestamp", player.level().getGameTime());
+		long timestamp = player.level().getGameTime();
 		String playerName = player.getGameProfile().getName();
-		data.putString("username", playerName == null ? "NULL" : playerName);
-		data.putString("dimension", player.level().dimension().location().toString());//World registry key is used
-		data.putDouble("pos_x", player.getX());
-		data.putDouble("pos_y", player.getY());
-		data.putDouble("pos_z", player.getZ());
-		data.putLong("position", player.blockPosition().asLong());
-		data.putFloat("yaw", player.getViewYRot(1F));
-		data.putFloat("yaw_head", player.getYHeadRot());
-		data.putFloat("pitch", player.getViewXRot(1F));
-		data.putFloat("health", player.getHealth());
-		data.putInt("hunger", player.getFoodData().getFoodLevel());
-		data.putFloat("saturation", player.getFoodData().getSaturationLevel());
-		data.putDouble("vel_x", player.getDeltaMovement().x());
-		data.putDouble("vel_y", player.getDeltaMovement().y());
-		data.putDouble("vel_z", player.getDeltaMovement().z());
+		if(playerName == null){
+			playerName = "NULL";
+		}
+		String dimension = player.level().dimension().location().toString();//World registry key is used
+		double posX = player.getX();
+		double posY = player.getY();
+		double posZ = player.getZ();
+		long blockPos = player.blockPosition().asLong();
+		float yaw = player.getViewYRot(1F);
+		float yawHead = player.getYHeadRot();
+		float pitch = player.getViewXRot(1F);
+		float health = player.getHealth();
+		int hunger = player.getFoodData().getFoodLevel();
+		float saturation = player.getFoodData().getSaturationLevel();
+		double velX = player.getDeltaMovement().x();
+		double velY = player.getDeltaMovement().y();
+		double velZ = player.getDeltaMovement().z();
 
 		if(player.level().isClientSide()){
 			//Player only sound for setting a position
 			player.playSound(SoundEvents.BELL_BLOCK, 2F, 1F);
 		}
+		return new RecallData(timestamp, playerName, dimension, posX, posY, posY, blockPos, yaw, yawHead, pitch, health, hunger, saturation, velX, velY, velZ);
 	}
 
-	private void recall(CompoundTag data, Player player, ItemStack held){
-		if(!data.contains("timestamp")){
+	private void recall(@Nullable RecallData data, Player player, ItemStack held){
+		if(data == null){
 			if(player.level().isClientSide){
 				MiscUtil.displayMessage(player, Component.translatable("tt.crossroads.recall_device.none"));
 			}
 			return;//No data stored
 		}
 		//Check time delay and that it's the same player
-		long delay = player.level().getGameTime() - data.getLong("timestamp");
+		long delay = player.level().getGameTime() - data.timestamp;
 		int limit = CRConfig.recallTimeLimit.get() * 20;//In ticks
 		if(limit >= 0 && delay > limit){
 			if(player.level().isClientSide){
@@ -128,7 +138,7 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 		}
 
 		String playerName = player.getGameProfile().getName();
-		if(playerName == null || !playerName.equals(data.getString("username"))){
+		if(playerName == null || !playerName.equals(data.playerName)){
 			if(player.level().isClientSide){
 				MiscUtil.displayMessage(player, Component.translatable("tt.crossroads.recall_device.wrong_player"));
 			}
@@ -137,13 +147,13 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 
 		if(CRConfig.allowStatRecall.get()){
 			//Only restore health and hunger if enabled in config
-			player.setHealth(data.getFloat("health"));
-			MiscUtil.setPlayerFood(player, data.getInt("hunger"), data.getFloat("saturation"));
+			player.setHealth(data.health);
+			MiscUtil.setPlayerFood(player, data.hunger, data.saturation);
 		}
 
 		if(!player.level().isClientSide){
 			ServerPlayer playerServ = (ServerPlayer) player;
-			ResourceLocation targetDimension = ResourceLocation.withDefaultNamespace(data.getString("dimension"));
+			ResourceLocation targetDimension = ResourceLocation.withDefaultNamespace(data.dimension);
 			ServerLevel targetWorld;//World we are recalling to. Almost always the same as current dimension. Null if something went wrong
 			if(targetDimension.equals(player.level().dimension().location())){
 				targetWorld = (ServerLevel) player.level();
@@ -155,14 +165,14 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 				}
 			}
 			if(targetWorld == player.level()){
-				playerServ.connection.teleport(data.getDouble("pos_x"), data.getDouble("pos_y"), data.getDouble("pos_z"), data.getFloat("yaw"), data.getFloat("pitch"));
+				playerServ.connection.teleport(data.posX, data.posY, data.posZ, data.yaw, data.pitch);
 			}else if(targetWorld != null){
-				playerServ.teleportTo(targetWorld, data.getDouble("pos_x"), data.getDouble("pos_y"), data.getDouble("pos_z"), data.getFloat("yaw"), data.getFloat("pitch"));
+				playerServ.teleportTo(targetWorld, data.posX, data.posY, data.posZ, data.yaw, data.pitch);
 			}
 		}
 
-		player.setYHeadRot(data.getFloat("yaw_head"));
-		player.setDeltaMovement(new Vec3(data.getDouble("vel_x"), data.getDouble("vel_y"), data.getDouble("vel_z")));
+		player.setYHeadRot(data.yawHead);
+		player.setDeltaMovement(new Vec3(data.velX, data.velY, data.velZ));
 
 		applySickness(player, delay, limit);
 	}
@@ -190,19 +200,18 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 		//Apply sickness based on time between uses
 
 		ItemStack held = playerIn.getItemInHand(hand);
-		CompoundTag nbt = held.getOrCreateTagElement("recall_data");
+		RecallData oldData = held.getOrDefault(CRItems.TIME_RECALL_DATA, null);
 
-		CompoundTag newStored = new CompoundTag();
-		storeData(newStored, playerIn);
+		RecallData newData = storeData(playerIn);
 
 		if(!playerIn.isShiftKeyDown()){
 			//World sound for recalling
 			//Played at source and destination
 			worldIn.playSound(null, playerIn.blockPosition(), SoundEvents.BELL_RESONATE, SoundSource.PLAYERS, 1F, 1F);
-			recall(nbt, playerIn, held);//Will do nothing if over time limit, wrong player, or no data stored
+			recall(oldData, playerIn, held);//Will do nothing if over time limit, wrong player, or no data stored
 		}
 
-		held.getTag().put("recall_data", newStored);
+		held.set(CRItems.TIME_RECALL_DATA, newData);
 
 		return InteractionResultHolder.success(held);
 	}
@@ -210,5 +219,47 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 	@Override
 	public double getMaxWind(){
 		return 10;
+	}
+
+	public static record RecallData(long timestamp, String playerName, String dimension, double posX, double posY, double posZ, long blockPosition, float yaw, float yawHead, float pitch, float health, int hunger, float saturation, double velX, double velY, double velZ){
+
+		public static final Codec<RecallData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+				Codec.LONG.fieldOf("timestamp").forGetter(RecallData::timestamp),
+				Codec.STRING.fieldOf("playerName").forGetter(RecallData::playerName),
+				Codec.STRING.fieldOf("stability").forGetter(RecallData::dimension),
+				Codec.DOUBLE.fieldOf("posX").forGetter(RecallData::posX),
+				Codec.DOUBLE.fieldOf("posY").forGetter(RecallData::posY),
+				Codec.DOUBLE.fieldOf("posZ").forGetter(RecallData::posZ),
+				Codec.LONG.fieldOf("blockPosition").forGetter(RecallData::blockPosition),
+				Codec.FLOAT.fieldOf("yaw").forGetter(RecallData::yaw),
+				Codec.FLOAT.fieldOf("yawHead").forGetter(RecallData::yawHead),
+				Codec.FLOAT.fieldOf("pitch").forGetter(RecallData::pitch),
+				Codec.FLOAT.fieldOf("health").forGetter(RecallData::health),
+				Codec.INT.fieldOf("hunger").forGetter(RecallData::hunger),
+				Codec.FLOAT.fieldOf("saturation").forGetter(RecallData::saturation),
+				Codec.DOUBLE.fieldOf("velX").forGetter(RecallData::velX),
+				Codec.DOUBLE.fieldOf("velY").forGetter(RecallData::velY),
+				Codec.DOUBLE.fieldOf("velZ").forGetter(RecallData::velZ)
+		).apply(instance, RecallData::new));
+
+		public static final StreamCodec<ByteBuf, RecallData> STREAM_CODEC = StreamCodecUtils.composite(
+				ByteBufCodecs.VAR_LONG, RecallData::timestamp,
+				ByteBufCodecs.STRING_UTF8, RecallData::playerName,
+				ByteBufCodecs.STRING_UTF8, RecallData::dimension,
+				ByteBufCodecs.DOUBLE, RecallData::posX,
+				ByteBufCodecs.DOUBLE, RecallData::posY,
+				ByteBufCodecs.DOUBLE, RecallData::posZ,
+				ByteBufCodecs.VAR_LONG, RecallData::blockPosition,
+				ByteBufCodecs.FLOAT, RecallData::yaw,
+				ByteBufCodecs.FLOAT, RecallData::yawHead,
+				ByteBufCodecs.FLOAT, RecallData::pitch,
+				ByteBufCodecs.FLOAT, RecallData::health,
+				ByteBufCodecs.VAR_INT, RecallData::hunger,
+				ByteBufCodecs.FLOAT, RecallData::saturation,
+				ByteBufCodecs.DOUBLE, RecallData::velX,
+				ByteBufCodecs.DOUBLE, RecallData::velY,
+				ByteBufCodecs.DOUBLE, RecallData::velZ,
+			RecallData::new
+		);
 	}
 }

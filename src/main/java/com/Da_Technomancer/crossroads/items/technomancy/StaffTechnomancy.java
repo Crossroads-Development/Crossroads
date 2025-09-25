@@ -7,41 +7,35 @@ import com.Da_Technomancer.crossroads.api.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.integration.curios.CurioHelper;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Multimap;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 public class StaffTechnomancy extends BeamUsingItem{
 
 	private static final int MAX_RANGE = 64;
-	private final Multimap<Attribute, AttributeModifier> attributeModifiers;
 
 	public StaffTechnomancy(){
-		super(new Properties().stacksTo(1));
+		super(new Properties().stacksTo(1).attributes(ItemAttributeModifiers.builder()
+				.add(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_ID, 9, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
+				.add(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_ID, -3.1D, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND).build()));
+		//Acts as a melee weapon; absolutely a DiscWorld reference
 		String name = "staff_technomancy";
 		CRItems.queueForRegister(name, this);
-
-		//Attributes
-		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", 9, AttributeModifier.Operation.ADDITION));
-		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", -3.1D, AttributeModifier.Operation.ADDITION));
-		attributeModifiers = builder.build();
 	}
 
 	@Override
-	public int getUseDuration(ItemStack stack){
+	public int getUseDuration(ItemStack stack, LivingEntity entity){
 		//Any large number works. 72000 is used in vanilla code, so it's used here for consistency.
 		return 72000;
 	}
@@ -54,7 +48,7 @@ public class StaffTechnomancy extends BeamUsingItem{
 
 	@Override
 	public void onUseTick(Level world, LivingEntity player, ItemStack stack, int count){
-		if(!world.isClientSide && player.isAlive() && (getUseDuration(stack) - count) % BeamUtil.BEAM_TIME == 0){
+		if(!world.isClientSide && player.isAlive() && (getUseDuration(stack, player) - count) % BeamUtil.BEAM_TIME == 0){
 			ItemStack cage = CurioHelper.getEquipped(CRItems.beamCage, player);//player.getHeldItem(player.getActiveHand() == Hand.MAIN_HAND ? Hand.OFF_HAND : Hand.MAIN_HAND);
 			byte[] setting = getSetting(stack);
 			BeamUnit cageBeam = BeamCage.getStored(cage);
@@ -136,12 +130,6 @@ public class StaffTechnomancy extends BeamUsingItem{
 				CRRenderUtil.addBeam(world, start.x, start.y, start.z, beamVec.length(), (float) Math.toDegrees(Math.atan2(-beamVec.y, Math.sqrt(beamVec.x * beamVec.x + beamVec.z * beamVec.z))), (float) Math.toDegrees(Math.atan2(-beamVec.x, beamVec.z)), (byte) Math.round(Math.sqrt(mag.getPower())), mag.getRGB().getRGB());
 			}
 		}
-	}
-
-	@Override
-	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack){
-		//Acts as a melee weapon; absolutely a DiscWorld reference
-		return slot == EquipmentSlot.MAINHAND ? attributeModifiers : super.getAttributeModifiers(slot, stack);
 	}
 
 	@Override

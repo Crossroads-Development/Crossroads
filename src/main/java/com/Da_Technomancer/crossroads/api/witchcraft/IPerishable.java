@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.api.witchcraft;
 
-import net.minecraft.nbt.CompoundTag;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -13,8 +13,6 @@ import java.util.List;
  * For items that need special storage or they spoil after a specific amount of time
  */
 public interface IPerishable{
-
-	String SPOIL_KEY = "cr_spoil_time";
 
 	/**
 	 * Whether this item has already spoiled
@@ -39,16 +37,15 @@ public interface IPerishable{
 	 */
 	static long getAndInitSpoilTime(ItemStack stack, @Nullable Level world){
 		if(stack.getItem() instanceof IPerishable perishable){
-			CompoundTag nbt = stack.getOrCreateTag();
 			//Correct broken stacks, by setting a spoil time for a fresh item
-			if(!nbt.contains(SPOIL_KEY)){
+			if(!stack.has(CRItems.SPOIL_TIME_DATA)){
 				if(world != null && !world.isClientSide()){
 					setSpoilTime(stack, perishable.getLifetime(), world.getGameTime());
 				}else{
 					return -1;
 				}
 			}
-			return nbt.getLong(SPOIL_KEY);
+			return stack.getOrDefault(CRItems.SPOIL_TIME_DATA, 0L);
 		}
 		return -1;
 	}
@@ -61,8 +58,7 @@ public interface IPerishable{
 	 * @return The modified stack
 	 */
 	static ItemStack setSpoilTime(ItemStack stack, long spoilTime, long worldTime){
-		CompoundTag nbt = stack.getOrCreateTag();
-		nbt.putLong(SPOIL_KEY, spoilTime + worldTime);
+		stack.set(CRItems.SPOIL_TIME_DATA, spoilTime + worldTime);
 		return stack;
 	}
 

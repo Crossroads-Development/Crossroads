@@ -3,24 +3,33 @@ package com.Da_Technomancer.crossroads.items.technomancy;
 import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.crossroads.api.packets.SendBeamItemToServer;
+import com.Da_Technomancer.crossroads.items.CRItems;
+import com.mojang.serialization.Codec;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.Util;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public abstract class BeamUsingItem extends Item{
 
-	private static final String NBT_KEY = "setting";
+	public static final Codec<byte[]> CODEC = Codec.BYTE.listOf().comapFlatMap((unboundedList) -> {
+		return Util.fixedSize(unboundedList, 4).map((list) -> {
+			return new byte[] {list.get(0), list.get(1), list.get(2), list.get(3)};
+		});
+	}, byteArray -> List.of(byteArray[0], byteArray[1], byteArray[2], byteArray[3]));
+
+	public static final StreamCodec<ByteBuf, byte[]> STREAM_CODEC = ByteBufCodecs.byteArray(4);
 
 	private static long lastKeyTime = 0;//Used on the client side as a cooldown between setting changes
 
@@ -31,18 +40,11 @@ public abstract class BeamUsingItem extends Item{
 	protected abstract byte maxSetting();
 
 	public static byte[] getSetting(ItemStack stack){
-		CompoundTag nbt = stack.getTag();
-		if(nbt == null || !nbt.contains(NBT_KEY)){
-			return new byte[4];
-		}
-		return nbt.getByteArray(NBT_KEY);
+		return stack.getOrDefault(CRItems.BEAM_SETTING_DATA, new byte[4]);
 	}
 
 	public static void setSetting(ItemStack stack, byte[] settings){
-		if(stack.getTag() == null){
-			stack.setTag(new CompoundTag());
-		}
-		stack.getTag().putByteArray(NBT_KEY, settings);
+		stack.set(CRItems.BEAM_SETTING_DATA, settings);
 	}
 
 	@OnlyIn(Dist.CLIENT)

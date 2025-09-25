@@ -8,12 +8,16 @@ import com.Da_Technomancer.crossroads.entity.EntityGhostMarker;
 import com.Da_Technomancer.crossroads.entity.mob_effects.CRPotions;
 import com.Da_Technomancer.essentials.api.ReflectionUtil;
 import com.mojang.authlib.GameProfile;
+import com.mojang.serialization.Codec;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffect;
@@ -31,6 +35,12 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 public class EntityTemplate implements INBTSerializable<CompoundTag>{
+
+	//TODO: going to overhaul this class as part of the cloning rework
+
+	//TODO
+	public static final Codec<EntityTemplate> CODEC = null;
+	public static final StreamCodec<ByteBuf, EntityTemplate> STREAM_CODEC = null;
 
 	public static final String RESPAWNING_KEY = "cr_respawning";
 	public static final String LOYAL_KEY = "cr_loyal";
@@ -62,7 +72,7 @@ public class EntityTemplate implements INBTSerializable<CompoundTag>{
 		this.entityType = null;
 		this.loyal = template.loyal;
 		this.respawning = template.respawning;
-		this.effects = template.effects;
+		this.effects = new ArrayList<>(template.getEffects());
 		this.degradation = template.degradation;
 		this.originatingUUID = template.originatingUUID;
 		this.customName = template.customName;
@@ -391,7 +401,7 @@ public class EntityTemplate implements INBTSerializable<CompoundTag>{
 		return created;
 	}
 
-	public static MobEffect getRespawnMarkerEffect(){
+	public static Holder<MobEffect> getRespawnMarkerEffect(){
 		return CRPotions.TRANSIENT_EFFECT;
 	}
 
@@ -412,7 +422,7 @@ public class EntityTemplate implements INBTSerializable<CompoundTag>{
 		int degrade = 0;
 		ArrayList<MobEffectInstance> permanentEffects = new ArrayList<>(0);
 		for(MobEffectInstance instance : effects){
-			if(MiscUtil.getRegistryName(CRPotions.HEALTH_PENALTY_EFFECT, BuiltInRegistries.MOB_EFFECT).equals(MiscUtil.getRegistryName(instance.getEffect(), BuiltInRegistries.MOB_EFFECT))){
+			if(MiscUtil.getRegistryName(CRPotions.HEALTH_PENALTY_EFFECT.value(), BuiltInRegistries.MOB_EFFECT).equals(MiscUtil.getRegistryName(instance.getEffect().value(), BuiltInRegistries.MOB_EFFECT))){
 				//This is the health penalty, interpret as degradation
 				degrade += (instance.getAmplifier() + 1) / 2;//We divide by 2, as degradation is measured in hearts
 			}else if(!instance.getEffect().isInstantenous() && instance.getDuration() > CRPotions.PERM_EFFECT_CUTOFF){

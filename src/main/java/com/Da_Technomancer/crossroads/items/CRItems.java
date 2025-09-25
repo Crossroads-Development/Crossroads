@@ -6,8 +6,10 @@ import com.Da_Technomancer.crossroads.api.CRReflection;
 import com.Da_Technomancer.crossroads.api.EnumPath;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.alchemy.ReagentMap;
+import com.Da_Technomancer.crossroads.api.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.api.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.api.templates.ICreativeTabPopulatingItem;
+import com.Da_Technomancer.crossroads.api.witchcraft.EntityTemplate;
 import com.Da_Technomancer.crossroads.api.witchcraft.IPerishable;
 import com.Da_Technomancer.crossroads.blocks.witchcraft.EmbryoLab;
 import com.Da_Technomancer.crossroads.crafting.CRItemTags;
@@ -37,6 +39,7 @@ import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -256,6 +259,16 @@ public final class CRItems{
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<String>> FACADE_BLOCK_DATA = DATA_COMPONENTS.registerComponentType("facadeBlock", builder -> builder.persistent(Codec.STRING).networkSynchronized(ByteBufCodecs.STRING_UTF8));
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<String>> ORE_MATERIAL_ID_DATA = DATA_COMPONENTS.registerComponentType("material", builder -> builder.persistent(Codec.STRING).networkSynchronized(ByteBufCodecs.STRING_UTF8));
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<ArmorGoggles.LensesSet>> GOGGLE_LENSES_DATA = DATA_COMPONENTS.registerComponentType("lenses", builder -> builder.persistent(ArmorGoggles.LensesSet.CODEC).networkSynchronized(ArmorGoggles.LensesSet.STREAM_CODEC));
+	public static final DeferredHolder<DataComponentType<?>, DataComponentType<BeamUnit>> STORED_BEAM_DATA = DATA_COMPONENTS.registerComponentType("beam", builder -> builder.persistent(BeamUnit.CODEC).networkSynchronized(BeamUnit.STREAM_CODEC));
+	public static final DeferredHolder<DataComponentType<?>, DataComponentType<byte[]>> BEAM_SETTING_DATA = DATA_COMPONENTS.registerComponentType("setting", builder -> builder.persistent(BeamUsingItem.CODEC).networkSynchronized(BeamUsingItem.STREAM_CODEC));
+	public static final DeferredHolder<DataComponentType<?>, DataComponentType<RecallDevice.RecallData>> TIME_RECALL_DATA = DATA_COMPONENTS.registerComponentType("recall_data", builder -> builder.persistent(RecallDevice.RecallData.CODEC).networkSynchronized(RecallDevice.RecallData.STREAM_CODEC));
+	public static final DeferredHolder<DataComponentType<?>, DataComponentType<EntityTemplate>> GENETICS_DATA = DATA_COMPONENTS.registerComponentType("cr_genetics", builder -> builder.persistent(EntityTemplate.CODEC).networkSynchronized(EntityTemplate.STREAM_CODEC));
+	public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> WAS_FROZEN_DATA = DATA_COMPONENTS.registerComponentType("cr_was_frozen", builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
+	public static final DeferredHolder<DataComponentType<?>, DataComponentType<Long>> SPOIL_TIME_DATA = DATA_COMPONENTS.registerComponentType("cr_spoil_time", builder -> builder.persistent(Codec.LONG).networkSynchronized(ByteBufCodecs.VAR_LONG));
+	public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> EXTENSION_TREATED_DATA = DATA_COMPONENTS.registerComponentType("extension_treated", builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
+	public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> VILLAGER_TRADE_SELECTION_DATA = DATA_COMPONENTS.registerComponentType("cr_current_trade", builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT));
+	public static final DeferredHolder<DataComponentType<?>, DataComponentType<MerchantOffers>> VILLAGER_TRADES_DATA = DATA_COMPONENTS.registerComponentType("cr_trades", builder -> builder.persistent(MerchantOffers.CODEC).networkSynchronized(MerchantOffers.STREAM_CODEC));
+
 
 	public static final DeferredRegister<ArmorMaterial> ARMOR_MATERIALS = DeferredRegister.create(BuiltInRegistries.ARMOR_MATERIAL, Crossroads.MODID);
 	public static final Holder<ArmorMaterial> BOBO_ARMOR_MATERIAL = ARMOR_MATERIALS.register("bobo", () -> new ArmorMaterial(

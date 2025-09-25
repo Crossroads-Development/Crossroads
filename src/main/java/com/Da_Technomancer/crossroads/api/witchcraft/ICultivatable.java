@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.api.witchcraft;
 
-import net.minecraft.nbt.CompoundTag;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -12,20 +12,12 @@ import java.util.Objects;
 
 public interface ICultivatable extends IPerishable{
 
-	public static final String FROZEN_KEY = "cr_was_frozen";
-
 	default boolean wasFrozen(ItemStack stack){
-		CompoundTag nbt = stack.getOrCreateTag();
-		//Correct broken stacks, by setting a spoil time for a fresh item
-		if(!nbt.contains(FROZEN_KEY)){
-			return false;
-		}
-		return nbt.getBoolean(FROZEN_KEY);
+		return stack.getOrDefault(CRItems.WAS_FROZEN_DATA, false);
 	}
 
 	default ItemStack setWasFrozen(ItemStack stack, boolean frozen){
-		CompoundTag nbt = stack.getOrCreateTag();
-		nbt.putBoolean(FROZEN_KEY, frozen);
+		stack.set(CRItems.WAS_FROZEN_DATA, frozen);
 		return stack;
 	}
 

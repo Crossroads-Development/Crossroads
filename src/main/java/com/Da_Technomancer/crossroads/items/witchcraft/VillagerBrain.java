@@ -3,31 +3,26 @@ package com.Da_Technomancer.crossroads.items.witchcraft;
 import com.Da_Technomancer.crossroads.api.witchcraft.ICultivatable;
 import com.Da_Technomancer.crossroads.api.witchcraft.IPerishable;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class VillagerBrain extends Item implements ICultivatable{
 
 	private static final long LIFETIME = 30 * 60 * 20;//30 minutes
-	private static final String TRADES = "cr_trades";
-	private static final String CURRENT_TRADE = "cr_current_trade";
 
 	public VillagerBrain(){
 		super(new Properties().stacksTo(1).rarity(CRItems.BOBO_RARITY));//Not added to any creative tab
@@ -46,23 +41,22 @@ public class VillagerBrain extends Item implements ICultivatable{
 	}
 
 	public MerchantOffers getOffers(ItemStack stack){
-		return new MerchantOffers(stack.getOrCreateTagElement(TRADES));
+		return stack.getOrDefault(CRItems.VILLAGER_TRADES_DATA, new MerchantOffers());
 	}
 
 	public void setOffers(ItemStack stack, MerchantOffers offers){
-		stack.getOrCreateTag().put(TRADES, offers.createTag());
+		stack.set(CRItems.VILLAGER_TRADES_DATA, offers);
 	}
 
 	public MerchantOffer getCurrentOffer(ItemStack stack){
-		CompoundTag nbt = stack.getOrCreateTag();
-		int tradeIndex = nbt.getInt(CURRENT_TRADE);
+		int tradeIndex = stack.getOrDefault(CRItems.VILLAGER_TRADE_SELECTION_DATA, 0);
 		MerchantOffers offers = getOffers(stack);
 		if(offers.size() == 0){
 			return null;
 		}
 		if(tradeIndex >= offers.size()){
 			tradeIndex %= offers.size();
-			nbt.putInt(CURRENT_TRADE, tradeIndex);
+			stack.set(CRItems.VILLAGER_TRADE_SELECTION_DATA, tradeIndex);
 		}
 
 		MerchantOffer currentOffer = offers.get(tradeIndex);
@@ -74,12 +68,11 @@ public class VillagerBrain extends Item implements ICultivatable{
 	}
 
 	public void incrementCurrentOffer(ItemStack stack){
-		CompoundTag nbt = stack.getOrCreateTag();
 		MerchantOffers offers = getOffers(stack);
 		if(offers.size() != 0){
-			int tradeIndex = nbt.getInt(CURRENT_TRADE);
+			int tradeIndex = stack.getOrDefault(CRItems.VILLAGER_TRADE_SELECTION_DATA, 0);
 			tradeIndex = (tradeIndex + 1) % offers.size();
-			nbt.putInt(CURRENT_TRADE, tradeIndex);
+			stack.set(CRItems.VILLAGER_TRADE_SELECTION_DATA, tradeIndex);
 		}
 	}
 
@@ -98,40 +91,35 @@ public class VillagerBrain extends Item implements ICultivatable{
 			tooltip.add(Component.translatable("tt.crossroads.villager_brain.trade.none"));
 		}else if(offer.getCostB().isEmpty()){
 			//Single input trade
-			tooltip.add(Component.translatable("tt.crossroads.villager_brain.trade.single", getDisplayParameter(offer.getCostA()), offer.getCostA().getCount(), getDisplayParameter(offer.getResult()), offer.getResult().getCount()));
+			tooltip.add(Component.translatable("tt.crossroads.villager_brain.trade.single", getDisplayParameter(offer.getCostA(), context), offer.getCostA().getCount(), getDisplayParameter(offer.getResult(), context), offer.getResult().getCount()));
 		}else{
 			//Dual input trade
-			tooltip.add(Component.translatable("tt.crossroads.villager_brain.trade.dual", getDisplayParameter(offer.getCostA()), offer.getCostA().getCount(), getDisplayParameter(offer.getCostB()), offer.getCostB().getCount(), getDisplayParameter(offer.getResult()), offer.getResult().getCount()));
+			tooltip.add(Component.translatable("tt.crossroads.villager_brain.trade.dual", getDisplayParameter(offer.getCostA(), context), offer.getCostA().getCount(), getDisplayParameter(offer.getCostB(), context), offer.getCostB().getCount(), getDisplayParameter(offer.getResult(), context), offer.getResult().getCount()));
 		}
-		ICultivatable.addTooltip(stack, world, tooltip);
+		ICultivatable.addTooltip(stack, context.level(), tooltip);
 		tooltip.add(Component.translatable("tt.crossroads.village_brain.desc"));
 	}
 
-	private static Object getDisplayParameter(ItemStack stack){
+	private static Object getDisplayParameter(ItemStack stack, Item.TooltipContext context){
 		int totalEnchants = 0;
 		Component firstEnchantName = null;
 
-		if(stack.isEnchanted()){
-			//Doesn't work on enchanted books
-			ListTag enchantList = stack.getEnchantmentTags();
-			totalEnchants = enchantList.size();
-			CompoundTag compoundnbt = enchantList.getCompound(0);
-
-			//TODO None of the registries store the Enchantment type; there are 6 related ones however; work out which
-			// is appropriate.
-			Enchantment firstEnchant = BuiltInRegistries.ENCHANTMENT.get(ResourceLocation.tryParse(compoundnbt.getString("id")));
-			if(firstEnchant != null){
-				firstEnchantName = firstEnchant.getFullname(compoundnbt.getInt("lvl"));
+		if(stack.has(DataComponents.STORED_ENCHANTMENTS)){
+			ItemEnchantments enchants = stack.getOrDefault(DataComponents.STORED_ENCHANTMENTS, ItemEnchantments.EMPTY);
+			totalEnchants = enchants.size();
+			ArrayList<Component> enchantmentComponents = new ArrayList<>(totalEnchants);
+			enchants.addToTooltip(context, enchantmentComponents::add, TooltipFlag.NORMAL);
+			if(!enchantmentComponents.isEmpty()){
+				firstEnchantName = enchantmentComponents.get(0);
 			}
-		}
-		if(stack.getItem() instanceof EnchantedBookItem){
-			ListTag enchantList = EnchantedBookItem.getEnchantments(stack);
-			totalEnchants = enchantList.size();
-			CompoundTag compoundnbt = enchantList.getCompound(0);
-			//TODO see above
-			Enchantment firstEnchant = BuiltInRegistries.ENCHANTMENT.getValue(ResourceLocation.tryParse(compoundnbt.getString("id")));
-			if(firstEnchant != null){
-				firstEnchantName = firstEnchant.getFullname(compoundnbt.getInt("lvl"));
+		}else if(stack.isEnchanted()){
+			//Doesn't work on enchanted books
+			ItemEnchantments enchants = stack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
+			totalEnchants = enchants.size();
+			ArrayList<Component> enchantmentComponents = new ArrayList<>(totalEnchants);
+			enchants.addToTooltip(context, enchantmentComponents::add, TooltipFlag.NORMAL);
+			if(!enchantmentComponents.isEmpty()){
+				firstEnchantName = enchantmentComponents.get(0);
 			}
 		}
 

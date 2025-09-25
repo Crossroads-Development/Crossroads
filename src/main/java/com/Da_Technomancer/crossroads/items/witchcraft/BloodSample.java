@@ -3,22 +3,17 @@ package com.Da_Technomancer.crossroads.items.witchcraft;
 import com.Da_Technomancer.crossroads.api.witchcraft.EntityTemplate;
 import com.Da_Technomancer.crossroads.api.witchcraft.IPerishable;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class BloodSample extends Item implements IPerishable{
 
 	private static final long LIFETIME = 20 * 60 * 60 * 2;
-	private static final String KEY = "cr_genetics";
 
 	public BloodSample(){
 		this("blood_sample");
@@ -35,15 +30,12 @@ public class BloodSample extends Item implements IPerishable{
 	}
 
 	public ItemStack withEntityData(ItemStack stack, EntityTemplate template){
-		stack.getOrCreateTag().put(KEY, template.serializeNBT());
+		stack.set(CRItems.GENETICS_DATA, template);
 		return stack;
 	}
 
 	public static EntityTemplate getEntityTypeData(ItemStack stack){
-		CompoundTag nbt = stack.getOrCreateTag();
-		EntityTemplate template = new EntityTemplate();
-		template.deserializeNBT(nbt.getCompound(KEY));
-		return template;
+		return new EntityTemplate(stack.getOrDefault(CRItems.GENETICS_DATA, new EntityTemplate()));
 	}
 
 	@Override
@@ -63,6 +55,6 @@ public class BloodSample extends Item implements IPerishable{
 		}
 		EntityTemplate template = getEntityTypeData(stack);
 		template.addTooltip(tooltip, 4);
-		IPerishable.addTooltip(stack, world, tooltip);
+		IPerishable.addTooltip(stack, context.level(), tooltip);
 	}
 }

@@ -4,7 +4,6 @@ import com.Da_Technomancer.crossroads.api.witchcraft.EntityTemplate;
 import com.Da_Technomancer.crossroads.api.witchcraft.ICultivatable;
 import com.Da_Technomancer.crossroads.api.witchcraft.IPerishable;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -17,7 +16,6 @@ import java.util.List;
 public class Embryo extends Item implements ICultivatable{
 
 	private static final long LIFETIME = 30 * 60 * 20;//30 minutes
-	private static final String KEY = "cr_genetics";
 	private static final int FREEZE_DEGRADE = 1;
 
 	public Embryo(){
@@ -44,19 +42,16 @@ public class Embryo extends Item implements ICultivatable{
 	 * @param wasFrozen Whether this item should have been frozen in the past
 	 */
 	public void withEntityTypeData(ItemStack stack, EntityTemplate template, boolean wasFrozen){
-		CompoundTag nbt = stack.getOrCreateTag();
 		setWasFrozen(stack, wasFrozen);
 		if(wasFrozen){
 			//getEntityTypeData inflates the degradation value for frozen items. We account for this here
 			template.setDegradation(template.getDegradation() - FREEZE_DEGRADE);
 		}
-		nbt.put(KEY, template.serializeNBT());
+		stack.set(CRItems.GENETICS_DATA, template);
 	}
 
 	public EntityTemplate getEntityTypeData(ItemStack stack){
-		CompoundTag nbt = stack.getOrCreateTag();
-		EntityTemplate template = new EntityTemplate();
-		template.deserializeNBT(nbt.getCompound(KEY));
+		EntityTemplate template = new EntityTemplate(stack.getOrDefault(CRItems.GENETICS_DATA, new EntityTemplate()));
 
 		//If this was frozen, increase degradation
 		//Do not modify the underlying saved template
@@ -71,7 +66,7 @@ public class Embryo extends Item implements ICultivatable{
 	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
 		EntityTemplate template = getEntityTypeData(stack);
 		template.addTooltip(tooltip, 4);
-		ICultivatable.addTooltip(stack, world, tooltip);
+		ICultivatable.addTooltip(stack, context.level(), tooltip);
 	}
 
 	@Nullable

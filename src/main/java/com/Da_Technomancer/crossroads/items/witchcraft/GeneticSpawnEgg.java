@@ -3,10 +3,10 @@ package com.Da_Technomancer.crossroads.items.witchcraft;
 import com.Da_Technomancer.crossroads.api.witchcraft.EntityTemplate;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -53,19 +53,16 @@ public class GeneticSpawnEgg extends Item{
 		DispenserBlock.registerBehavior(this, dispenseBehavior);
 	}
 
-	public void withEntityTypeData(ItemStack stack, EntityTemplate template){
-		CompoundTag nbt = stack.getOrCreateTag();
-		nbt.put(KEY, template.serializeNBT());
+	public ItemStack withEntityData(ItemStack stack, EntityTemplate template){
+		stack.set(CRItems.GENETICS_DATA, template);
 		if(template.getCustomName() != null){
-			stack.setHoverName(template.getCustomName());//Copy any custom name on the template onto the spawn egg
+			stack.set(DataComponents.CUSTOM_NAME, template.getCustomName());//Copy any custom name on the template onto the spawn egg
 		}
+		return stack;
 	}
 
-	public EntityTemplate getEntityTypeData(ItemStack stack){
-		CompoundTag nbt = stack.getOrCreateTag();
-		EntityTemplate template = new EntityTemplate();
-		template.deserializeNBT(nbt.getCompound(KEY));
-		return template;
+	public static EntityTemplate getEntityTypeData(ItemStack stack){
+		return new EntityTemplate(stack.getOrDefault(CRItems.GENETICS_DATA, new EntityTemplate()));
 	}
 
 	@Override
@@ -76,7 +73,7 @@ public class GeneticSpawnEgg extends Item{
 
 	public boolean spawnMob(ItemStack stack, @Nullable Player player, ServerLevel world, BlockPos pos, MobSpawnType reason, boolean offset, boolean unmapped){
 		EntityTemplate template = getEntityTypeData(stack);
-		Entity created = EntityTemplate.spawnEntityFromTemplate(template, world, pos, reason, offset, unmapped, stack.hasCustomHoverName() ? stack.getHoverName() : null, player);
+		Entity created = EntityTemplate.spawnEntityFromTemplate(template, world, pos, reason, offset, unmapped, stack.has(DataComponents.CUSTOM_NAME) ? stack.getHoverName() : null, player);
 		return created != null;
 	}
 

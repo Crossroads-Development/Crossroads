@@ -13,11 +13,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.phys.AABB;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class BloodSampleEmpty extends Item{
@@ -30,8 +28,8 @@ public class BloodSampleEmpty extends Item{
 		DefaultDispenseItemBehavior dispenseBehavior = new OptionalDispenseItemBehavior(){
 			@Override
 			protected ItemStack execute(BlockSource world, ItemStack stack){
-				ServerLevel level = world.getLevel();
-				BlockPos blockpos = world.getPos().relative(world.getBlockState().getValue(DispenserBlock.FACING));
+				ServerLevel level = world.level();
+				BlockPos blockpos = world.pos().relative(world.state().getValue(DispenserBlock.FACING));
 				ItemStack drawn;
 				List<LivingEntity> entities = level.getEntitiesOfClass(LivingEntity.class, new AABB(blockpos), EntitySelector.NO_SPECTATORS);
 				if(entities.size() > 0){
