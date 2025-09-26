@@ -69,7 +69,7 @@ public class FireDetectorTileEntity extends BlockEntity implements ITickableTile
 	}
 
 	@Override
-	protected void saveAdditional(CompoundTag nbt){
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
 		super.saveAdditional(nbt, pRegistries);
 		nbt.putInt("reds", redstone);
 	}

@@ -16,7 +16,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -107,8 +107,8 @@ public class HeatCable extends ConduitBlock<EnumTransferMode>{
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
-		if(!super.use(state, worldIn, pos, playerIn, hand, hit).shouldSwing()){
+	public ItemInteractionResult useItemOn(ItemStack held, BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
+		if(!super.useItemOn(held, state, worldIn, pos, playerIn, hand, hit).consumesAction()){
 			Conductors match = null;
 			Item item = playerIn.getItemInHand(hand).getItem();
 			for(Conductors c : Conductors.values()){
@@ -121,12 +121,12 @@ public class HeatCable extends ConduitBlock<EnumTransferMode>{
 				if(!worldIn.isClientSide){
 					worldIn.setBlock(pos, state.setValue(CRProperties.CONDUCTOR, match), 2);
 				}
-				return InteractionResult.SUCCESS;
+				return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
 			}
 		}else{
-			return InteractionResult.SUCCESS;
+			return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
 		}
-		return InteractionResult.PASS;
+		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 	}
 
 	@Override

@@ -12,8 +12,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-import javax.annotation.Nonnull;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -39,12 +37,12 @@ public record SendTaylorToClient(long timestamp, ArrayList<Float> terms, BlockPo
 	static void handlePacketClient(final SendTaylorToClient packet, final IPayloadContext context){
 		context.enqueueWork(() -> {
 			BlockEntity te = Minecraft.getInstance().level.getBlockEntity(packet.pos);
-			if(te instanceof ITaylorReceiver){
+			if(te instanceof ITaylorReceiver taylorReceiver){
 				float[] terms = new float[4];
 				for(int i = 0; i < 4; i++){
 					terms[i] = packet.terms.get(i);
 				}
-				((ITaylorReceiver) te).receiveSeries(packet.timestamp, terms);
+				taylorReceiver.receiveSeries(packet.timestamp, terms);
 			}
 		});
 	}

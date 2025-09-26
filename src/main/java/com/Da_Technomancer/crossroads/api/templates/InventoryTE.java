@@ -75,8 +75,7 @@ public abstract class InventoryTE extends ModuleTE implements RecipeInput, IItem
 		super.saveAdditional(nbt, pRegistries);
 		for(int i = 0; i < inventory.length; i++){
 			if(!inventory[i].isEmpty()){
-				CompoundTag stackTag = new CompoundTag();
-				stackTag = BlockUtil.stackToNBT(inventory[i], pRegistries);
+				CompoundTag stackTag = BlockUtil.stackToNBT(inventory[i], pRegistries);
 				nbt.put("inv_" + i, stackTag);
 			}
 		}
@@ -100,7 +99,7 @@ public abstract class InventoryTE extends ModuleTE implements RecipeInput, IItem
 		super.loadAdditional(nbt, registries);
 		for(int i = 0; i < inventory.length; i++){
 			if(nbt.contains("inv_" + i)){
-				inventory[i] = ItemStack.of(nbt.getCompound("inv_" + i));
+				inventory[i] = BlockUtil.nbtToItemStack(nbt.getCompound("inv_" + i), registries);
 			}
 		}
 		if(nbt.getBoolean("server")){

@@ -5,8 +5,6 @@ import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
 import com.Da_Technomancer.crossroads.api.alchemy.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -18,7 +16,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.api.distmarker.Dist;
@@ -65,18 +62,13 @@ public class EntityFlameCore extends Entity{
 
 	@Override
 	public AABB getBoundingBoxForCulling(){
-		return BlockEntity.INFINITE_EXTENT_AABB;
+		return AABB.INFINITE;
 	}
 
 	@Override
-	public Packet<ClientGamePacketListener> getAddEntityPacket(){
-		return NetworkHooks.getEntitySpawningPacket(this);
-	}
-
-	@Override
-	protected void defineSynchedData(){
-		entityData.define(TIME_EXISTED, 0);
-		entityData.define(COLOR, Color.WHITE.getRGB());
+	protected void defineSynchedData(SynchedEntityData.Builder builder){
+		builder.define(TIME_EXISTED, 0);
+		builder.define(COLOR, Color.WHITE.getRGB());
 	}
 
 	@Override
@@ -220,7 +212,7 @@ public class EntityFlameCore extends Entity{
 			//Set entities on fire
 			List<LivingEntity> ents = world.getEntitiesOfClass(LivingEntity.class, new AABB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1), EntitySelector.ENTITY_STILL_ALIVE);
 			for(LivingEntity ent : ents){
-				ent.setSecondsOnFire(15);
+				ent.setRemainingFireTicks(20 * 15);
 			}
 		}
 

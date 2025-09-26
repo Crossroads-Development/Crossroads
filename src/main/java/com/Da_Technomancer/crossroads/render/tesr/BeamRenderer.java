@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.render.tesr;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.beams.BeamHelper;
+import com.Da_Technomancer.crossroads.api.beams.BeamUtil;
 import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.api.templates.IBeamRenderTE;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
@@ -11,8 +12,10 @@ import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.AABB;
 import org.apache.commons.lang3.tuple.Triple;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
@@ -119,5 +122,12 @@ public class BeamRenderer<T extends BlockEntity & IBeamRenderTE> implements Bloc
 	@Override
 	public boolean shouldRenderOffScreen(T te){
 		return true;
+	}
+
+	@Override
+	public AABB getRenderBoundingBox(T blockEntity){
+		//Expand the render box to include all possible beams from this block
+		BlockPos pos = blockEntity.getBlockPos();
+		return AABB.encapsulatingFullBlocks(pos.offset(-BeamUtil.MAX_DISTANCE, -BeamUtil.MAX_DISTANCE, -BeamUtil.MAX_DISTANCE), pos.offset(1 + BeamUtil.MAX_DISTANCE, 1 + BeamUtil.MAX_DISTANCE, 1 + BeamUtil.MAX_DISTANCE));
 	}
 }

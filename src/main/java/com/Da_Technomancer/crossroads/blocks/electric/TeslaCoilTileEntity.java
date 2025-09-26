@@ -148,7 +148,7 @@ public class TeslaCoilTileEntity extends BlockEntity implements ITickableTileEnt
 			message |= 1;
 		}
 		message |= getTotalFE() << 1;
-		CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient((byte) 0, message, worldPosition));
+		CRPackets.sendPacketAround(level, worldPosition, new SendLongToTE((byte) 0, message, worldPosition));
 	}
 
 	@Override
@@ -206,7 +206,7 @@ public class TeslaCoilTileEntity extends BlockEntity implements ITickableTileEnt
 		storedSelf = nbt.getInt("stored");
 		redstone = nbt.getBoolean("reds");
 		if(nbt.contains("battery")){
-			battery = ItemStack.of(nbt.getCompound("battery"));
+			battery = BlockUtil.nbtToItemStack(nbt.getCompound("battery"), registries);
 		}else{
 			//TODO remove: backwards compatibility
 			if(!nbt.getBoolean("from_client") && getBlockState().getValue(CRProperties.ACTIVE)){

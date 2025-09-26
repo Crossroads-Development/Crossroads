@@ -126,7 +126,7 @@ public class LargeGearMasterTileEntity extends BlockEntity implements ILongRecei
 			newTE = false;
 			//This is newly placed. Lazy-load send (lazy send? lazy network?) the type data to any clients.
 			//This is unnecessary for the client that placed this, but needed in MP for other clients
-			CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient((byte) 1, type == null ? -1 : type.serialize(), worldPosition));
+			CRPackets.sendPacketAround(level, worldPosition, new SendLongToTE((byte) 1, type == null ? -1 : type.serialize(), worldPosition));
 		}
 	}
 

@@ -144,7 +144,7 @@ public class LensFrameTileEntity extends BeamRenderTE implements INBTReceiver, C
 		super.loadAdditional(nbt, registries);
 		lastRedstone = nbt.getInt("reds");
 		if(nbt.contains("inv")){
-			setLensItem(ItemStack.of(nbt.getCompound("inv")));
+			setLensItem(BlockUtil.nbtToItemStack(nbt.getCompound("inv")), registries);
 		}else{
 			setLensItem(ItemStack.EMPTY);
 		}
@@ -163,7 +163,7 @@ public class LensFrameTileEntity extends BeamRenderTE implements INBTReceiver, C
 
 	@Override
 	public void receiveNBT(CompoundTag nbt, ServerPlayer serverPlayer){
-		setLensItem(ItemStack.of(nbt));
+		setLensItem(BlockUtil.nbtToItemStack(nbt), registries);
 	}
 
 	@Override

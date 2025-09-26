@@ -168,7 +168,7 @@ public class GatewayControllerDestinationTileEntity extends BlockEntity implemen
 				chevrons[i] = null;
 			}
 			setChanged();
-			CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient(3, 0L, worldPosition));
+			CRPackets.sendPacketAround(level, worldPosition, new SendLongToTE(3, 0L, worldPosition));
 		}
 	}
 
@@ -192,7 +192,7 @@ public class GatewayControllerDestinationTileEntity extends BlockEntity implemen
 		lastDialed = other;
 		playEffects(true);
 		//Send chevrons to client
-		CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient(3, new GatewayAddress(chevrons).serialize(), worldPosition));
+		CRPackets.sendPacketAround(level, worldPosition, new SendLongToTE(3, new GatewayAddress(chevrons).serialize(), worldPosition));
 	}
 
 	@Override
@@ -384,7 +384,7 @@ public class GatewayControllerDestinationTileEntity extends BlockEntity implemen
 //		clearCache();
 
 		//Send a packet to the client with the size and orientation info
-		CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient(5, plane.ordinal() | (size << 2), worldPosition));
+		CRPackets.sendPacketAround(level, worldPosition, new SendLongToTE(5, plane.ordinal() | (size << 2), worldPosition));
 
 		return true;
 	}

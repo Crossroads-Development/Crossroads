@@ -18,9 +18,10 @@ import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.pathfinder.PathType;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.common.SoundActions;
+import net.neoforged.neoforge.fluids.BaseFlowingFluid;
 import net.neoforged.neoforge.fluids.FluidType;
+import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class GenericFluid extends LiquidBlock{
@@ -68,30 +69,16 @@ public class GenericFluid extends LiquidBlock{
 		final ResourceLocation stillTexture = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "block/" + name + "_still");
 		final ResourceLocation flowTexture = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "block/" + name + "_flow");
 
-		data.type = new FluidType(properties){
-			@Override
-			public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer){
-				consumer.accept(new IClientFluidTypeExtensions(){
-					@Override
-					public ResourceLocation getStillTexture(){
-						return stillTexture;
-					}
-
-					@Override
-					public ResourceLocation getFlowingTexture(){
-						return flowTexture;
-					}
-				});
-			}
-		};
+		data.type = new FluidType(properties);
 		data.still = new Still(data::getType, data::getStill, data::getFlowing, data::getBlock, data::getBucket);
 		data.flowing = new Flowing(data::getType, data::getStill, data::getFlowing, data::getBlock, data::getBucket);
-		data.bucket = new BucketItem(data::getStill, BUCKET_PROP);
+		data.bucket = new BucketItem(data.getStill(), BUCKET_PROP);
 
-		data.block = new GenericFluid(data::getStill, (lavaLike ? BlockBehaviour.Properties.of().mapColor(MapColor.FIRE) : BlockBehaviour.Properties.of().mapColor(MapColor.WATER)).liquid().sound(SoundType.EMPTY).pushReaction(PushReaction.DESTROY).noCollission().strength(100.0F).noLootTable().lightLevel(state -> light).replaceable());
+		data.block = new GenericFluid(data.still, (lavaLike ? BlockBehaviour.Properties.of().mapColor(MapColor.FIRE) : BlockBehaviour.Properties.of().mapColor(MapColor.WATER)).liquid().sound(SoundType.EMPTY).pushReaction(PushReaction.DESTROY).noCollission().strength(100.0F).noLootTable().lightLevel(state -> light).replaceable());
 
 		CRFluids.toRegisterType.put(name, data.type);
 		CRFluids.toRegisterFluid.put(name, data.still);
+		CRFluids.toRegisterClient.add(Pair.of(new ClientFluidExtension(stillTexture, flowTexture), data.type));
 		CRFluids.toRegisterFluid.put("flowing_" + name, data.flowing);
 		CRBlocks.queueForRegister(name, data.block, false, null);
 		CRItems.queueForRegister(name + "_bucket", data.bucket);
@@ -99,7 +86,7 @@ public class GenericFluid extends LiquidBlock{
 		return data;
 	}
 
-	protected GenericFluid(Supplier<FlowingFluid> still, BlockBehaviour.Properties prop){
+	protected GenericFluid(FlowingFluid still, BlockBehaviour.Properties prop){
 		super(still, prop);
 	}
 
@@ -136,17 +123,39 @@ public class GenericFluid extends LiquidBlock{
 		}
 	}
 
-	private static class Flowing extends ForgeFlowingFluid.Flowing{
+	private static class Flowing extends BaseFlowingFluid.Flowing{
 
 		private Flowing(Supplier<? extends FluidType> typeSupplier, Supplier<? extends Fluid> stillSupplier, Supplier<? extends Fluid> flowSupplier, Supplier<LiquidBlock> blockSupplier, Supplier<Item> bucketSupplier){
 			super(new Properties(typeSupplier, stillSupplier, flowSupplier).block(blockSupplier).bucket(bucketSupplier));
 		}
 	}
 
-	private static class Still extends ForgeFlowingFluid.Source{
+	private static class Still extends BaseFlowingFluid.Source{
 
 		private Still(Supplier<? extends FluidType> typeSupplier, Supplier<? extends Fluid> stillSupplier, Supplier<? extends Fluid> flowSupplier, Supplier<LiquidBlock> blockSupplier, Supplier<Item> bucketSupplier){
 			super(new Properties(typeSupplier, stillSupplier, flowSupplier).block(blockSupplier).bucket(bucketSupplier));
 		}
+	}
+
+	private static class ClientFluidExtension implements IClientFluidTypeExtensions{
+
+		private final ResourceLocation stillTexture;
+		private final ResourceLocation flowTexture;
+
+		public ClientFluidExtension(ResourceLocation stillTexture, ResourceLocation flowTexture){
+			this.stillTexture = stillTexture;
+			this.flowTexture = flowTexture;
+		}
+
+		@Override
+		public ResourceLocation getStillTexture(){
+			return stillTexture;
+		}
+
+		@Override
+		public ResourceLocation getFlowingTexture(){
+			return flowTexture;
+		}
+
 	}
 }

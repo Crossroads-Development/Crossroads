@@ -56,7 +56,7 @@ public class RespawnInventorySavedData extends SavedData{
 			UUID id = new UUID(nbt.getLong("key_high_" + i), nbt.getLong("key_low_" + i));
 			ItemStack[] hotbar = new ItemStack[10];
 			for(int j = 0; j < hotbar.length; j++){
-				hotbar[j] = ItemStack.of(nbt.getCompound("item_" + i + "_" + j));
+				hotbar[j] = BlockUtil.nbtToItemStack(nbt.getCompound("item_" + i + "_" + j), registries);
 			}
 			data.savedInventories.put(id, hotbar);
 			i++;

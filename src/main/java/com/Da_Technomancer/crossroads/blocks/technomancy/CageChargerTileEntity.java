@@ -95,7 +95,7 @@ public class CageChargerTileEntity extends BlockEntity implements IInfoTE, IBeam
 	@Override
 	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
 		super.loadAdditional(nbt, registries);
-		cage = ItemStack.of(nbt.getCompound("inv"));
+		cage = BlockUtil.nbtToItemStack(nbt.getCompound("inv"), registries);
 	}
 
 	private class ItemHandler implements IItemHandler{

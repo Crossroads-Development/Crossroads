@@ -48,7 +48,7 @@ public class SteamTurbineScreen extends MachineScreen<SteamTurbineContainer, Ste
 		menu.mode.set(newMode);
 		listener.updateButtons(newMode);
 		if(te != null){
-			CRPackets.channel.sendToServer(new SendLongToTE(5, newMode, te.getBlockPos()));
+			CRPackets.sendPacketToServer(new SendLongToTE(5, newMode, te.getBlockPos()));
 		}
 	}
 

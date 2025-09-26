@@ -14,14 +14,12 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.RenderShape;
@@ -78,9 +76,12 @@ public class ReactionChamber extends BaseEntityBlock implements IReadable{
 
 	@Override
 	public void setPlacedBy(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
-		if(stack.hasTag()){
-			ReactionChamberTileEntity te = (ReactionChamberTileEntity) world.getBlockEntity(pos);
-			te.setMap(ReagentTank.getReagents(stack));
+		ReagentMap stackReagents = ReagentTank.getReagents(stack);
+		if(!stackReagents.isEmpty()){
+			BlockEntity te = world.getBlockEntity(pos);
+			if(te instanceof ReactionChamberTileEntity rte){
+				rte.setMap(stackReagents);
+			}
 		}
 	}
 

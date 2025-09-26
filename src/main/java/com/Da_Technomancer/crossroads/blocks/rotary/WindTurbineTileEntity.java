@@ -2,13 +2,13 @@ package com.Da_Technomancer.crossroads.blocks.rotary;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.api.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.entity.CRMobDamage;
+import com.Da_Technomancer.essentials.api.packets.SendLongToTE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -25,7 +25,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 
-
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +37,7 @@ public class WindTurbineTileEntity extends ModuleTE{
 	public static final double INERTIA = 1200;
 	public static final double LOW_POWER = 5D;
 	public static final double HIGH_POWER = 25D;
-	private static final AABB RENDER_BOX = new AABB(-2, -2, -2, 3, 3, 3);
+	public static final AABB RENDER_BOX = new AABB(-2, -2, -2, 3, 3, 3);
 
 	//Undocumented 'easter egg'. This person takes way more damage from windmills
 	//Don't ask.
@@ -77,9 +76,9 @@ public class WindTurbineTileEntity extends ModuleTE{
 			}
 			BlockPos center = worldPosition.relative(dir);
 			if(dir.getAxisDirection() == Direction.AxisDirection.POSITIVE){
-				targetBB = new AABB(center.relative(planeDir, -2).relative(Direction.DOWN, 2), center.relative(planeDir, 3).relative(Direction.UP, 3).relative(dir));
+				targetBB = AABB.encapsulatingFullBlocks(center.relative(planeDir, -2).relative(Direction.DOWN, 2), center.relative(planeDir, 3).relative(Direction.UP, 3).relative(dir));
 			}else{
-				targetBB = new AABB(center.relative(planeDir, -2).relative(Direction.DOWN, 2), center.relative(planeDir, 3).relative(Direction.UP, 3).relative(dir, -1));
+				targetBB = AABB.encapsulatingFullBlocks(center.relative(planeDir, -2).relative(Direction.DOWN, 2), center.relative(planeDir, 3).relative(Direction.UP, 3).relative(dir, -1));
 			}
 		}
 
@@ -99,7 +98,7 @@ public class WindTurbineTileEntity extends ModuleTE{
 				for(int i = 0; i < bladeColors.length; i++){
 					message |= bladeColors[i] << i * 4;
 				}
-				CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient(5, message, worldPosition));
+				CRPackets.sendPacketAround(level, worldPosition, new SendLongToTE(5, message, worldPosition));
 
 				setChanged();
 			}
@@ -225,11 +224,6 @@ public class WindTurbineTileEntity extends ModuleTE{
 				bladeColors[i] = (int) ((message >> (i * 4)) & 0xF);
 			}
 		}
-	}
-
-	@Override
-	public AABB getRenderBoundingBox(){
-		return RENDER_BOX.move(worldPosition);
 	}
 
 	@Override

@@ -2,13 +2,16 @@ package com.Da_Technomancer.crossroads.fluids;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.fluids.FluidType;
+import org.apache.commons.lang3.tuple.Pair;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public final class CRFluids{
@@ -34,6 +37,7 @@ public final class CRFluids{
 
 	public static final HashMap<String, FluidType> toRegisterType = new HashMap<>();
 	public static final HashMap<String, Fluid> toRegisterFluid = new HashMap<>();
+	protected static final ArrayList<Pair<IClientFluidTypeExtensions, FluidType>> toRegisterClient = new ArrayList<>();
 
 	private static boolean hasInit = false;
 
@@ -55,5 +59,12 @@ public final class CRFluids{
 		nutrientSolution = GenericFluid.create("nutrient_solution", false, false, 0, true);
 		fertilizerSolution = GenericFluid.create("fertilizer_solution", false, false, 0, true);
 		soulEssence = GenericFluid.create("soul_essence", false, true, 3, false);
+	}
+
+	public static void initClient(RegisterClientExtensionsEvent e){
+		for(Pair<IClientFluidTypeExtensions, FluidType> toRegister : toRegisterClient){
+			e.registerFluidType(toRegister.getLeft(), toRegister.getRight());
+		}
+		toRegisterClient.clear();
 	}
 }

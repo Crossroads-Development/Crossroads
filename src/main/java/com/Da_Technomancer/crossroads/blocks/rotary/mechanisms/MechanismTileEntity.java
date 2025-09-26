@@ -101,7 +101,7 @@ public class MechanismTileEntity extends BlockEntity implements ITickableTileEnt
 		if(index == 6 && getAxleAxis() != axis){
 			axleAxis = axis;
 			if(!newTE && !level.isClientSide){
-				CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient(14, axis == null ? -1 : axis.ordinal(), worldPosition));
+				CRPackets.sendPacketAround(level, worldPosition, new SendLongToTE(14, axis == null ? -1 : axis.ordinal(), worldPosition));
 			}
 		}
 
@@ -242,7 +242,7 @@ public class MechanismTileEntity extends BlockEntity implements ITickableTileEnt
 		ITickableTileEntity.super.serverTick();
 
 		if(updateMembers){
-			CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient(14, getAxleAxis() == null ? -1 : getAxleAxis().ordinal(), worldPosition));
+			CRPackets.sendPacketAround(level, worldPosition, new SendLongToTE(14, getAxleAxis() == null ? -1 : getAxleAxis().ordinal(), worldPosition));
 			for(int i = 0; i < 7; i++){
 				axleHandlers[i].updateStates(true);
 			}
@@ -260,7 +260,7 @@ public class MechanismTileEntity extends BlockEntity implements ITickableTileEnt
 				}
 			}
 			redstoneIn = reds;
-			CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient(15, (long) redstoneIn, worldPosition));
+			CRPackets.sendPacketAround(level, worldPosition, new SendLongToTE(15, (long) redstoneIn, worldPosition));
 		}
 	}
 
@@ -414,7 +414,7 @@ public class MechanismTileEntity extends BlockEntity implements ITickableTileEnt
 					updateNBT.put("prop", propertyNBT);
 				}
 				CRPackets.sendPacketAround(level, worldPosition, new SendNBTToClient(updateNBT, worldPosition));
-//				CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient(side + 7, members[side] == null ? -1L : (MECHANISMS.indexOf(members[side]) & 0xFFFFFFFFL) | (long) (mats[side].serialize()) << 32L, worldPosition));
+//				CRPackets.sendPacketAround(level, worldPosition, new SendLongToTE(side + 7, members[side] == null ? -1L : (MECHANISMS.indexOf(members[side]) & 0xFFFFFFFFL) | (long) (mats[side].serialize()) << 32L, worldPosition));
 			}
 		}
 

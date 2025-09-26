@@ -109,7 +109,7 @@ public class FluxSinkTileEntity extends IFluxLink.FluxHelper{
 			}while(!running && mutPos.getY() > level.getMinBuildHeight());
 			if(prevRunning != running){
 				//Notify the clients
-				CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient(1, running ? level.getGameTime() : 0, worldPosition));
+				CRPackets.sendPacketAround(level, worldPosition, new SendLongToTE(1, running ? level.getGameTime() : 0, worldPosition));
 				setChanged();
 			}
 		}

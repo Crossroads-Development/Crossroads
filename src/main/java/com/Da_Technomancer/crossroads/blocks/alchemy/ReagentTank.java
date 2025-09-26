@@ -1,6 +1,5 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
-import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.alchemy.IReagent;
 import com.Da_Technomancer.crossroads.api.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
@@ -13,6 +12,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -22,6 +22,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.RenderShape;
@@ -90,8 +91,8 @@ public class ReagentTank extends BaseEntityBlock implements IReadable{
 	@Nonnull
 	public static ReagentMap getReagents(ItemStack stack){
 		CompoundTag nbt = null;
-		if((nbt = stack.getTag()) != null && nbt.contains(MiscUtil.BLOCK_NBT_TO_STACK_TAG)){
-			nbt = nbt.getCompound(MiscUtil.BLOCK_NBT_TO_STACK_TAG);
+		if(stack.has(DataComponents.BLOCK_ENTITY_DATA)){
+			nbt = stack.get(DataComponents.BLOCK_ENTITY_DATA).copyTag();
 		}
 		return ReagentMap.readFromNBT(nbt);
 	}
@@ -102,8 +103,9 @@ public class ReagentTank extends BaseEntityBlock implements IReadable{
 	 * @param reagents The reagents to store
 	 */
 	public static void setReagents(ItemStack stack, ReagentMap reagents){
-		CompoundTag nbt = stack.getOrCreateTag();
+		CompoundTag nbt = new CompoundTag();
 		reagents.write(nbt);
+		stack.set(DataComponents.BLOCK_ENTITY_DATA, CustomData.of(nbt));
 	}
 
 	@Override
@@ -149,10 +151,11 @@ public class ReagentTank extends BaseEntityBlock implements IReadable{
 
 	@Override
 	public void setPlacedBy(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
-		if(stack.hasTag()){
+		ReagentMap stackReagents = getReagents(stack);
+		if(!stackReagents.isEmpty()){
 			BlockEntity te = world.getBlockEntity(pos);
 			if(te instanceof ReagentTankTileEntity rte){
-				rte.setMap(getReagents(stack));
+				rte.setMap(stackReagents);
 			}
 		}
 	}

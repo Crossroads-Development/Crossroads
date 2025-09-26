@@ -30,7 +30,6 @@ import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-
 import net.neoforged.neoforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
@@ -93,7 +92,7 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements RecipeInput
 	@Override
 	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
 		super.loadAdditional(nbt, registries);
-		inv = nbt.contains("inv") ? ItemStack.of(nbt.getCompound("inv")) : ItemStack.EMPTY;
+		inv = nbt.contains("inv") ? BlockUtil.nbtToItemStack(nbt.getCompound("inv"), registries) : ItemStack.EMPTY;
 		output = BeamUnit.readFromNBT("output", nbt);
 		timeRemaining = nbt.getInt("remain");
 		timeLimit = nbt.getInt("time_limit");

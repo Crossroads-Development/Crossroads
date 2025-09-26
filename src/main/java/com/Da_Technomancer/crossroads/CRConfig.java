@@ -2,8 +2,6 @@ package com.Da_Technomancer.crossroads;
 
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.essentials.api.ConfigUtil;
-import com.electronwill.nightconfig.core.file.CommentedFileConfig;
-import com.electronwill.nightconfig.core.io.WritingMode;
 import com.google.common.collect.Lists;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
@@ -13,9 +11,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.config.ModConfig;
-import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.ArrayList;
@@ -152,7 +148,7 @@ public class CRConfig{
 		cageMeterOverlay = clientBuilder.comment("Should the overlay for the beam cage render while not holding a beam staff?", "Regardless of setting, it only shows while a beam cage is equipped.").define("beam_cage_overlay", true);
 		readoutChat = clientBuilder.comment("Should omnimeters and similar print to vanilla chat?", "Default is a formatted message overlay").define("message_chat", false);
 		clientSpec = clientBuilder.build();
-		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, clientSpec);
+		modContainer.registerConfig(ModConfig.Type.CLIENT, clientSpec);
 
 
 		//Server config
@@ -270,15 +266,15 @@ public class CRConfig{
 		serverBuilder.pop();
 
 		serverSpec = serverBuilder.build();
-		ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, serverSpec);
+		modContainer.registerConfig(ModConfig.Type.SERVER, serverSpec);
 
-		CommentedFileConfig clientConfig = CommentedFileConfig.builder(FMLPaths.CONFIGDIR.get().resolve(Crossroads.MODID + "-client.toml")).sync().autosave().writingMode(WritingMode.REPLACE).build();
-		clientConfig.load();
-		clientSpec.setConfig(clientConfig);
-
-		CommentedFileConfig serverConfig = CommentedFileConfig.builder(FMLPaths.CONFIGDIR.get().resolve(Crossroads.MODID + "-server.toml")).sync().autosave().writingMode(WritingMode.REPLACE).build();
-		serverConfig.load();
-		serverSpec.setConfig(serverConfig);
+//		CommentedFileConfig clientConfig = CommentedFileConfig.builder(FMLPaths.CONFIGDIR.get().resolve(Crossroads.MODID + "-client.toml")).sync().autosave().writingMode(WritingMode.REPLACE).build();
+//		clientConfig.load();
+//		clientSpec.setConfig(clientConfig);
+//
+//		CommentedFileConfig serverConfig = CommentedFileConfig.builder(FMLPaths.CONFIGDIR.get().resolve(Crossroads.MODID + "-server.toml")).sync().autosave().writingMode(WritingMode.REPLACE).build();
+//		serverConfig.load();
+//		serverSpec.setConfig(serverConfig);
 	}
 
 	@SafeVarargs

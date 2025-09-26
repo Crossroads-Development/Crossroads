@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.render.tesr;
 
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.api.rotary.RotaryUtil;
@@ -17,8 +16,10 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
+import net.minecraft.util.FastColor;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 
 public class WindTurbineRenderer implements BlockEntityRenderer<WindTurbineTileEntity>{
 
@@ -29,9 +30,9 @@ public class WindTurbineRenderer implements BlockEntityRenderer<WindTurbineTileE
 	@Override
 	public void render(WindTurbineTileEntity te, float partialTicks, PoseStack matrix, MultiBufferSource buffer, int combinedLight, int combinedOverlay){
 		BlockState state = te.getBlockState();
-		IAxleHandler axle = te.getCapability(CRCapabilities.AXLE_CAPABILITY, null);
+		IAxleHandler axle = te.getAxleHandler(null);
 
-		if(state.getBlock() != CRBlocks.windTurbine || !axle.isPresent()){
+		if(state.getBlock() != CRBlocks.windTurbine || axle == null){
 			return;
 		}
 
@@ -44,7 +45,7 @@ public class WindTurbineRenderer implements BlockEntityRenderer<WindTurbineTileE
 		matrix.pushPose();
 		matrix.translate(.5F, .5F, .5F);
 		matrix.mulPose(Axis.YP.rotationDegrees(-facing.toYRot()));
-		matrix.mulPose(Axis.ZP.rotationDegrees((float) RotaryUtil.getCCWSign(facing) * axle.orElseThrow(NullPointerException::new).getAngle(partialTicks)));
+		matrix.mulPose(Axis.ZP.rotationDegrees((float) RotaryUtil.getCCWSign(facing) * axle.getAngle(partialTicks)));
 
 		final float scaleConst = 6F / 5F;
 
@@ -78,8 +79,8 @@ public class WindTurbineRenderer implements BlockEntityRenderer<WindTurbineTileE
 
 		//Blades
 		for(int i = 0; i < 4; i++){
-			float[] rawCol = DyeColor.values()[bladeCols[i]].getTextureDiffuseColors();
-			int[] col = {(int) (rawCol[0] * 255F), (int) (rawCol[1] * 255F), (int) (rawCol[2] * 255F), 255};
+			int rawCol = DyeColor.values()[bladeCols[i]].getTextureDiffuseColor();
+			int[] col = {FastColor.ABGR32.red(rawCol), FastColor.ABGR32.green(rawCol), FastColor.ABGR32.blue(rawCol), 255};
 
 //			//Center cap (wood)
 //			CRRenderUtil.addVertexBlock(builder, matrix, -0.25F, 0.25F, 0.5F, sprite.getMinU(), sprite.getInterpolatedV(4), 0, 1, 0, light);
@@ -157,5 +158,10 @@ public class WindTurbineRenderer implements BlockEntityRenderer<WindTurbineTileE
 		}
 
 		matrix.popPose();
+	}
+
+	@Override
+	public AABB getRenderBoundingBox(WindTurbineTileEntity te){
+		return WindTurbineTileEntity.RENDER_BOX.move(te.getBlockPos());
 	}
 }

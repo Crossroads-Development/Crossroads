@@ -177,7 +177,7 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 			referenceSpeed = 0;
 			resyncToClient();
 			setChanged();
-			CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient(3, 0L, worldPosition));
+			CRPackets.sendPacketAround(level, worldPosition, new SendLongToTE(3, 0L, worldPosition));
 		}
 	}
 
@@ -200,7 +200,7 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 		origin = cost;
 		playEffects(true);
 		//Send chevrons to client
-		CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient(3, new GatewayAddress(chevrons).serialize(), worldPosition));
+		CRPackets.sendPacketAround(level, worldPosition, new SendLongToTE(3, new GatewayAddress(chevrons).serialize(), worldPosition));
 	}
 
 	@Override
@@ -398,7 +398,7 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 //		clearCache();
 
 		//Send a packet to the client with the size and orientation info
-		CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient(5, plane.ordinal() | ((long) size << 2), worldPosition));
+		CRPackets.sendPacketAround(level, worldPosition, new SendLongToTE(5, plane.ordinal() | ((long) size << 2), worldPosition));
 
 		return true;
 	}
@@ -570,7 +570,7 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 		clientAngle = angle;
 		clientW = (float) axleHandler.getSpeed() - referenceSpeed;
 		long packet = (Integer.toUnsignedLong(Float.floatToRawIntBits(clientAngle)) << 32L) | Integer.toUnsignedLong(Float.floatToRawIntBits(clientW));
-		CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient(4, packet, worldPosition));
+		CRPackets.sendPacketAround(level, worldPosition, new SendLongToTE(4, packet, worldPosition));
 	}
 
 	//Capabilities
@@ -732,7 +732,7 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 				referenceSpeed = 0;
 			}
 			resyncToClient();//Force a resync of the speed and angle to the client
-			CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient(3, new GatewayAddress(chevrons).serialize(), worldPosition));
+			CRPackets.sendPacketAround(level, worldPosition, new SendLongToTE(3, new GatewayAddress(chevrons).serialize(), worldPosition));
 			setChanged();
 		}
 	}

@@ -102,7 +102,7 @@ public class ItemCannonTileEntity extends AbstractCannonTileEntity implements II
 		super.loadAdditional(nbt, registries);
 		redsHandler.read(nbt);
 		if(nbt.contains("inv")){
-			inventory = ItemStack.of(nbt.getCompound("inv"));
+			inventory = BlockUtil.nbtToItemStack(nbt.getCompound("inv"), registries);
 		}
 	}
 

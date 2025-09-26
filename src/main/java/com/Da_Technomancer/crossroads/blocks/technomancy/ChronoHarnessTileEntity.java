@@ -95,7 +95,7 @@ public class ChronoHarnessTileEntity extends IFluxLink.FluxHelper implements IEn
 
 		if(((curPower == 0) ^ (clientCurPower == 0)) || Math.abs(curPower - clientCurPower) >= 10){
 			clientCurPower = curPower;
-			CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient((byte) 4, clientCurPower, worldPosition));
+			CRPackets.sendPacketAround(level, worldPosition, new SendLongToTE((byte) 4, clientCurPower, worldPosition));
 		}
 
 		if(fe != 0){

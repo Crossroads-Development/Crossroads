@@ -37,7 +37,7 @@ public class FluxNodeTileEntity extends IFluxLink.FluxHelper{
 	private void syncFlux(){
 		if((entropyClient == 0) ^ (getReadingFlux() == 0) || Math.abs(entropyClient - getReadingFlux()) >= 4){
 			entropyClient = getReadingFlux();
-			CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient((byte) 0, getReadingFlux(), worldPosition));
+			CRPackets.sendPacketAround(level, worldPosition, new SendLongToTE((byte) 0, getReadingFlux(), worldPosition));
 		}
 	}
 

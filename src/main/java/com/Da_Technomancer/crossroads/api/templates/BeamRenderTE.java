@@ -2,11 +2,11 @@ package com.Da_Technomancer.crossroads.api.templates;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
-import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.beams.*;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import com.Da_Technomancer.essentials.api.packets.ILongReceiver;
+import com.Da_Technomancer.essentials.api.packets.SendLongToTE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -16,8 +16,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
-
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -64,12 +62,6 @@ public abstract class BeamRenderTE extends BlockEntity implements IBeamRenderTE,
 	}
 
 	@Override
-	public AABB getRenderBoundingBox(){
-		//Expand the render box to include all possible beams from this block
-		return new AABB(worldPosition.offset(-BeamUtil.MAX_DISTANCE, -BeamUtil.MAX_DISTANCE, -BeamUtil.MAX_DISTANCE), worldPosition.offset(1 + BeamUtil.MAX_DISTANCE, 1 + BeamUtil.MAX_DISTANCE, 1 + BeamUtil.MAX_DISTANCE));
-	}
-
-	@Override
 	public void setBlockState(BlockState stateIn){
 		super.setBlockState(stateIn);
 		beamer = null;
@@ -85,7 +77,7 @@ public abstract class BeamRenderTE extends BlockEntity implements IBeamRenderTE,
 		int packet = beamer == null || beamer[index] == null ? 0 : beamer[index].genPacket();
 		beamPackets[index] = packet;
 		if(!level.isClientSide){
-			CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient(index, packet, worldPosition));
+			CRPackets.sendPacketAround(level, worldPosition, new SendLongToTE(index, packet, worldPosition));
 		}
 		if(beamer != null && beamer[index] != null && !beamer[index].getLastSent().isEmpty()){
 			prevMag[index] = beamer[index].getLastSent();

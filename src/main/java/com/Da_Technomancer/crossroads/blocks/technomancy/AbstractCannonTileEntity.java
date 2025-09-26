@@ -25,13 +25,10 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-
-import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
@@ -160,7 +157,7 @@ public abstract class AbstractCannonTileEntity extends BlockEntity implements IT
 			}
 		}else{
 			//Send update packet to ensure this reaches all client
-			CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient(4, locked ? 1 : 0, worldPosition));
+			CRPackets.sendPacketAround(level, worldPosition, new SendLongToTE(4, locked ? 1 : 0, worldPosition));
 		}
 	}
 
@@ -218,7 +215,7 @@ public abstract class AbstractCannonTileEntity extends BlockEntity implements IT
 	}
 
 	@Override
-	protected void saveAdditional(CompoundTag nbt){
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
 		super.saveAdditional(nbt, pRegistries);
 		for(int i = 0; i < 2; i++){
 			nbt.putDouble("energy_" + i, energy[i]);
@@ -231,7 +228,7 @@ public abstract class AbstractCannonTileEntity extends BlockEntity implements IT
 	@Override
 	public @NotNull CompoundTag getUpdateTag(HolderLookup.@NotNull Provider pRegistries){
 		CompoundTag nbt = super.getUpdateTag(pRegistries);
-		saveAdditional(nbt);
+		saveAdditional(nbt, pRegistries);
 		return nbt;
 	}
 

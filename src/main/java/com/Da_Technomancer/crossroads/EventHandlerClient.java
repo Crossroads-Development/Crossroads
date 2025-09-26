@@ -11,10 +11,12 @@ import com.Da_Technomancer.crossroads.api.render.IVisualEffect;
 import com.Da_Technomancer.crossroads.api.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.api.witchcraft.EntityTemplate;
 import com.Da_Technomancer.crossroads.entity.CREntities;
+import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.CRContainers;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 import com.Da_Technomancer.crossroads.items.item_sets.OreProfileItem;
+import com.Da_Technomancer.crossroads.items.technomancy.ArmorGoggles;
 import com.Da_Technomancer.crossroads.items.technomancy.ArmorPropellerPack;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamUsingItem;
 import com.Da_Technomancer.crossroads.items.witchcraft.GeneticSpawnEgg;
@@ -28,7 +30,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -47,6 +48,7 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.*;
+import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 
 import java.awt.*;
@@ -146,6 +148,12 @@ public class EventHandlerClient{
 			};
 			e.register(eggItemColoring, CRItems.geneticSpawnEgg);
 		}
+
+		@SubscribeEvent
+		@SuppressWarnings("unused")
+		public static void registerClientExtensions(RegisterClientExtensionsEvent e){
+			CRFluids.initClient(e);
+		}
 	}
 
 	private static final Random RAND = new Random();
@@ -202,7 +210,7 @@ public class EventHandlerClient{
 		//Handles glow in the dark entities when wearing goggles
 		if(game.level.getGameTime() % 5 == 0){
 			ItemStack helmet = Minecraft.getInstance().player.getItemBySlot(EquipmentSlot.HEAD);
-			boolean doGlowing = helmet.getItem() == CRItems.armorGoggles && helmet.hasTag() && helmet.getTag().getBoolean(EnumGoggleLenses.VOID.toString());
+			boolean doGlowing = helmet.getItem() == CRItems.armorGoggles && helmet.has(CRItems.GOGGLE_LENSES_DATA) && helmet.get(CRItems.GOGGLE_LENSES_DATA).lenses().getBoolean(EnumGoggleLenses.VOID);
 			for(Entity ent : game.level.entitiesForRendering()){
 				CompoundTag entNBT = ent.getPersistentData();
 				if(entNBT == null){
@@ -381,28 +389,26 @@ public class EventHandlerClient{
 
 	@SubscribeEvent
 	@SuppressWarnings("unused")
-	public void dilatePlayerTime(ClientTickEvent e){
-		if(e.phase == TickEvent.Phase.END){
-			Player player = Minecraft.getInstance().player;
-			if(player == null){
-				return;
-			}
+	public void dilatePlayerTime(ClientTickEvent.Post e){
+		Player player = Minecraft.getInstance().player;
+		if(player == null){
+			return;
+		}
 
-			//Goggle entity glowing
-			Minecraft game = Minecraft.getInstance();
-			game.getProfiler().push(Crossroads.MODNAME + ": Goggle Glowing Application");
-			handleGoggleGlowing(game);
+		//Goggle entity glowing
+		Minecraft game = Minecraft.getInstance();
+		game.getProfiler().push(Crossroads.MODNAME + ": Goggle Glowing Application");
+		handleGoggleGlowing(game);
+		game.getProfiler().pop();
+
+		//Handle time dilation for players
+		if(SendPlayerTickCountToClient.playerTickCount > 0){
+			game.getProfiler().push(Crossroads.MODNAME + ": Player time dilation");
+			for(int i = 0; i < SendPlayerTickCountToClient.playerTickCount; i++){
+				player.tick();
+			}
+			SendPlayerTickCountToClient.playerTickCount = 0;
 			game.getProfiler().pop();
-
-			//Handle time dilation for players
-			if(SendPlayerTickCountToClient.playerTickCount > 0){
-				game.getProfiler().push(Crossroads.MODNAME + ": Player time dilation");
-				for(int i = 0; i < SendPlayerTickCountToClient.playerTickCount; i++){
-					player.tick();
-				}
-				SendPlayerTickCountToClient.playerTickCount = 0;
-				game.getProfiler().pop();
-			}
 		}
 	}
 
@@ -422,14 +428,14 @@ public class EventHandlerClient{
 				((BeamUsingItem) stack.getItem()).adjustSetting(Minecraft.getInstance().player, stack, key, !play.isShiftKeyDown());
 				return;
 			}
-		}else if(helmet.getItem() == CRItems.armorGoggles && helmet.hasTag()){
-			CompoundTag nbt = helmet.getTag();
+		}else if(helmet.getItem() == CRItems.armorGoggles && helmet.has(CRItems.GOGGLE_LENSES_DATA)){
+			ArmorGoggles.LensesSet lensData = helmet.get(CRItems.GOGGLE_LENSES_DATA);
 			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
 				KeyMapping key = Keys.asKeyMapping(lens.getKey());
-				if(key != null && key.consumeClick() && key.isDown() && nbt.contains(lens.toString())){
-					boolean wasEnabled = nbt.getBoolean(lens.toString());
+				if(key != null && key.consumeClick() && key.isDown() && lensData.lenses().containsKey(lens)){
+					boolean wasEnabled = lensData.lenses().getBoolean(lens);
 					CRSounds.playSoundClientLocal(play.level(), MiscUtil.blockPos(play.getX(), play.getEyeY(), play.getZ()), SoundEvents.SPYGLASS_USE, SoundSource.PLAYERS, 1.0F, 1.0F);
-					CRPackets.channel.sendToServer(new SendGoggleConfigureToServer(lens, !wasEnabled));
+					CRPackets.sendPacketToServer(new SendGoggleConfigureToServer(lens.toString(), !wasEnabled));
 					if(!wasEnabled || !lens.useKey()){
 						MiscUtil.displayMessage(play, Component.translatable("tt.crossroads.goggles.enabled"));
 					}else{
@@ -463,7 +469,7 @@ public class EventHandlerClient{
 		//Zooms in the view to spyglass levels when the player is wearing goggles with the amethyst lens enabled
 		if(Minecraft.getInstance().options.getCameraType().isFirstPerson()){
 			ItemStack helmet = Minecraft.getInstance().player.getItemBySlot(EquipmentSlot.HEAD);
-			boolean doGoggleZoom = helmet.getItem() == CRItems.armorGoggles && helmet.hasTag() && helmet.getTag().getBoolean(EnumGoggleLenses.AMETHYST.toString());
+			boolean doGoggleZoom = helmet.getItem() == CRItems.armorGoggles && helmet.has(CRItems.GOGGLE_LENSES_DATA) && helmet.get(CRItems.GOGGLE_LENSES_DATA).lenses().getBoolean(EnumGoggleLenses.AMETHYST);
 			if(doGoggleZoom){
 				final float scopingFOV = 0.1F;
 				e.setNewFovModifier((float) Mth.lerp(Minecraft.getInstance().options.fovEffectScale().get(), 1.0F, scopingFOV));

@@ -123,7 +123,7 @@ public class BeamCannonTileEntity extends AbstractCannonTileEntity implements IB
 					packet |= ((beamSize - 1) & 0xF) << 24;//Encode beam radius
 					packet |= ((beamLength - 1) & 0xFFL) << 28L;
 				}
-				CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient(3, packet, worldPosition));
+				CRPackets.sendPacketAround(level, worldPosition, new SendLongToTE(3, packet, worldPosition));
 			}
 
 			//Play sounds

@@ -10,6 +10,7 @@ import com.Da_Technomancer.crossroads.api.rotary.*;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -272,7 +273,7 @@ public class MasterAxisTileEntity extends BlockEntity implements ITickableTileEn
 
 	@Override
 	public void receiveSeries(long timestamp, float[] series){
-		float partTicks = Minecraft.getInstance().getFrameTime();
+		float partTicks = 0;//TODO Minecraft.getInstance().getFrameTime();
 		float prevAngle = runSeries(ticksExisted, partTicks);
 		regrTimestamp = timestamp;
 		coeff = series;

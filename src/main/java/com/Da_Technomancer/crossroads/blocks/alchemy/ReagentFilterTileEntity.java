@@ -1,11 +1,12 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
-import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.CRCapabilities;
+import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.alchemy.*;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.ReagentFilterContainer;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 import com.Da_Technomancer.essentials.api.BlockUtil;
 import io.netty.buffer.Unpooled;
@@ -23,7 +24,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-
 import org.apache.commons.lang3.tuple.Pair;
 import org.joml.Vector3f;
 
@@ -70,7 +70,7 @@ public class ReagentFilterTileEntity extends ReagentHolderTE implements MenuProv
 	@Override
 	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
 		super.loadAdditional(nbt, registries);
-		inventory = nbt.contains("inv") ? ItemStack.of(nbt.getCompound("inv")) : ItemStack.EMPTY;
+		inventory = nbt.contains("inv") ? BlockUtil.nbtToItemStack(nbt.getCompound("inv"), registries) : ItemStack.EMPTY;
 	}
 
 	@Override
@@ -92,7 +92,7 @@ public class ReagentFilterTileEntity extends ReagentHolderTE implements MenuProv
 		ReagentMap filterMap = new ReagentMap();
 
 		//Separate reagents to be filtered
-		if(!contents.isEmpty() && !inventory.isEmpty() && inventory.getItem() instanceof AbstractGlassware && inventory.hasTag()){
+		if(!contents.isEmpty() && !inventory.isEmpty() && inventory.getItem() instanceof AbstractGlassware && inventory.has(CRItems.REAGENT_DATA)){
 			ReagentMap filtered = ((AbstractGlassware) inventory.getItem()).getReagents(inventory);
 			for(IReagent filtReag : filtered.keySetReag()){
 				if(filtered.getQty(filtReag) != 0){

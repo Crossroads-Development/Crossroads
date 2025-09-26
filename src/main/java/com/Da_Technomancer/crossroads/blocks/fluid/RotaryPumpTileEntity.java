@@ -269,7 +269,7 @@ public class RotaryPumpTileEntity extends InventoryTE implements INBTReceiver{
 			progChange = (float) progressChange;
 			long packet = (long) Float.floatToIntBits(progChange) & 0xFFFFFFFFL;
 			packet |= ((long) Float.floatToIntBits((float) progress) & 0xFFFFFFFFL) << 32L;
-			CRPackets.sendPacketAround(level, worldPosition, new SendLongToClient(1, packet, worldPosition));
+			CRPackets.sendPacketAround(level, worldPosition, new SendLongToTE(1, packet, worldPosition));
 		}
 	}
 
