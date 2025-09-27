@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.crafting;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.world.entity.monster.piglin.Piglin;
@@ -17,7 +18,7 @@ import javax.annotation.Nonnull;
 
 public class PiglinBarterLootModifier extends LootModifier{
 
-	protected static final Codec<PiglinBarterLootModifier> CODEC = RecordCodecBuilder.create(inst -> codecStart(inst)
+	protected static final MapCodec<PiglinBarterLootModifier> MAP_CODEC = RecordCodecBuilder.create(inst -> codecStart(inst)
             .and(Codec.BOOL.optionalFieldOf("active", true).forGetter(PiglinBarterLootModifier::isActive))
             .and(Codec.STRING.fieldOf("item_name").forGetter(PiglinBarterLootModifier::getItem))
             .and(Codec.INT.optionalFieldOf("min", 1).forGetter(PiglinBarterLootModifier::getMin))
@@ -79,7 +80,7 @@ public class PiglinBarterLootModifier extends LootModifier{
 	}
 
 	@Override
-	public Codec<? extends IGlobalLootModifier> codec(){
-		return CODEC;
+	public MapCodec<? extends IGlobalLootModifier> codec(){
+		return MAP_CODEC;
 	}
 }

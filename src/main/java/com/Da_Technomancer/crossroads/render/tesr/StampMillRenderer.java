@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 
 import java.awt.*;
 
@@ -148,7 +149,7 @@ public class StampMillRenderer implements BlockEntityRenderer<StampMillTileEntit
 			//Stamp Head
 			rodRad = 1F / 8F;
 			float bottom = 1.25F;
-			float vDiff = sprite.getV((bottom - rodLen) * 16D);
+			float vDiff = sprite.getV((bottom - rodLen) * 16F);
 
 			CRRenderUtil.addVertexBlock(builder, matrix, -rodRad, -rodLen, -rodRad, uRad, v0, 0, 0, -1, combinedLight);
 			CRRenderUtil.addVertexBlock(builder, matrix, rodRad, -rodLen, -rodRad, u3Rad, v0, 0, 0, -1, combinedLight);
@@ -182,5 +183,13 @@ public class StampMillRenderer implements BlockEntityRenderer<StampMillTileEntit
 
 			matrix.translate(5F / 16F, 0, 0);
 		}
+	}
+
+
+	private static final AABB RENDER_BOX = new AABB(0, 0, 0, 1, 2, 1);
+
+	@Override
+	public AABB getRenderBoundingBox(StampMillTileEntity te){
+		return RENDER_BOX.move(te.getBlockPos());
 	}
 }

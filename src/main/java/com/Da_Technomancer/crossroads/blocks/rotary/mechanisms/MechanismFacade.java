@@ -16,13 +16,11 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.client.model.data.ModelData;
-
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -79,19 +77,19 @@ public class MechanismFacade implements IMechanism<GearFacade.FacadeBlock>{
 //		handler.rotRatio = rotRatioIn;
 		handler.setUpdateKey(key);
 
-		BlockEntity sideTE = te.getLevel().getBlockEntity(te.getBlockPos().relative(side));
-
 		//Connected block
-		if(sideTE != null){
-			IAxisHandler axisOpt = sideTE.getCapability(CRCapabilities.AXIS_CAPABILITY, side.getOpposite());
-			if(axisOpt.isPresent()){
-				axisOpt.orElseThrow(NullPointerException::new).trigger(masterIn, key);
-			}
-			IAxleHandler axleOpt = sideTE.getCapability(CRCapabilities.AXLE_CAPABILITY, side.getOpposite());
-			if(axleOpt.isPresent()){
-				axleOpt.orElseThrow(NullPointerException::new).propagate(masterIn, key, rotRatioIn, 0, handler.renderOffset());
-			}
-		}
+		RotaryUtil.propagateAxially(te.getLevel(), te.getBlockPos().relative(side), side.getOpposite(), handler, masterIn, key, handler.renderOffset());
+
+//		if(sideTE != null){
+//			IAxisHandler axisOpt = sideTE.getCapability(CRCapabilities.AXIS_CAPABILITY, side.getOpposite());
+//			if(axisOpt.isPresent()){
+//				axisOpt.orElseThrow(NullPointerException::new).trigger(masterIn, key);
+//			}
+//			IAxleHandler axleOpt = sideTE.getCapability(CRCapabilities.AXLE_CAPABILITY, side.getOpposite());
+//			if(axleOpt.isPresent()){
+//				axleOpt.orElseThrow(NullPointerException::new).propagate(masterIn, key, rotRatioIn, 0, handler.renderOffset());
+//			}
+//		}
 
 		//Axle slot
 		if(te.getAxleAxis() == side.getAxis() && te.members[6] != null && te.members[6].hasCap(CRCapabilities.AXLE_CAPABILITY, side, te.mats[6], null, te.getAxleAxis(), te)){
@@ -136,7 +134,7 @@ public class MechanismFacade implements IMechanism<GearFacade.FacadeBlock>{
 		matrix.translate(0, 7F / 16F, 0);
 
 		//Render along the top
-		VertexConsumer builder = buffer.getBuffer(RenderType.translucentNoCrumbling());
+		VertexConsumer builder = buffer.getBuffer(RenderType.translucent());
 		float antiZFightScale = 0.0001F * (1 + side.get3DDataValue());
 		CRModels.drawBox(matrix, builder, combinedLight, new int[] {255, 255, 255, 255}, 0.5F - antiZFightScale, 1F / 16F, 0.5F - antiZFightScale, sprite.getU0(), sprite.getV0(), sprite.getU1(), sprite.getV1(), sprite.getU0(), sprite.getV0(), sprite.getU1(), sprite.getV(2), sprite.getU0(), sprite.getV0(), sprite.getU1(), sprite.getV(2));
 	}

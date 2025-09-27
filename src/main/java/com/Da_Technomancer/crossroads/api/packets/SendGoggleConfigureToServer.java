@@ -4,10 +4,11 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.api.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.gui.container.DetailedCrafterContainer;
 import com.Da_Technomancer.crossroads.items.CRItems;
-
+import com.Da_Technomancer.crossroads.items.technomancy.ArmorGoggles;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import net.minecraft.nbt.CompoundTag;
+import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
+import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -23,9 +24,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.lang.reflect.Field;
 
 public record SendGoggleConfigureToServer(String lensName, boolean newSetting) implements CustomPacketPayload{
 	public static final CustomPacketPayload.Type<SendGoggleConfigureToServer> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "send_goggle_configure_server"));
@@ -40,13 +39,23 @@ public record SendGoggleConfigureToServer(String lensName, boolean newSetting) i
 		context.enqueueWork(() -> {
 			if(context.player() instanceof ServerPlayer player){
 				ItemStack stack = player.getItemBySlot(EquipmentSlot.HEAD);
-				CompoundTag nbt = stack.getTag();
-				if(stack.getItem() == CRItems.armorGoggles && nbt != null && nbt.contains(packet.lensName)){
-					nbt.putBoolean(packet.lensName, packet.newSetting);
-
+				EnumGoggleLenses packetLens;
+				try{
+					packetLens = EnumGoggleLenses.valueOf(packet.lensName);
+				}catch(IllegalArgumentException e){
+					Crossroads.logger.error("Invalid goggles configuration packet received", e);
+					return;
+				}
+				ArmorGoggles.LensesSet lenses;
+				if(stack.getItem() == CRItems.armorGoggles && stack.has(CRItems.GOGGLE_LENSES_DATA) && (lenses = stack.get(CRItems.GOGGLE_LENSES_DATA)).lenses().containsKey(packetLens)){
 					if(EnumGoggleLenses.DIAMOND.toString().equals(packet.lensName)){
 //					StoreNBTToClient.syncNBTToClient(player);//Sync player path data to client
 						player.openMenu(GoggleProvider.INSTANCE, buf -> buf.writeBoolean(true));
+					}
+					if(packetLens.requireEnableKey()){
+						Object2BooleanMap<EnumGoggleLenses> newLenses = new Object2BooleanOpenHashMap<>(lenses.lenses());
+						newLenses.put(packetLens, packet.newSetting);
+						stack.set(CRItems.GOGGLE_LENSES_DATA, new ArmorGoggles.LensesSet(newLenses));
 					}
 				}
 			}

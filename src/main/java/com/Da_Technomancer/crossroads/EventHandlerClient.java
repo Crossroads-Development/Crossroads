@@ -436,7 +436,7 @@ public class EventHandlerClient{
 					boolean wasEnabled = lensData.lenses().getBoolean(lens);
 					CRSounds.playSoundClientLocal(play.level(), MiscUtil.blockPos(play.getX(), play.getEyeY(), play.getZ()), SoundEvents.SPYGLASS_USE, SoundSource.PLAYERS, 1.0F, 1.0F);
 					CRPackets.sendPacketToServer(new SendGoggleConfigureToServer(lens.toString(), !wasEnabled));
-					if(!wasEnabled || !lens.useKey()){
+					if(!wasEnabled || !lens.requireEnableKey()){
 						MiscUtil.displayMessage(play, Component.translatable("tt.crossroads.goggles.enabled"));
 					}else{
 						MiscUtil.displayMessage(play, Component.translatable("tt.crossroads.goggles.disabled"));

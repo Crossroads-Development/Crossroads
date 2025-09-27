@@ -4,7 +4,6 @@ import com.Da_Technomancer.crossroads.ambient.particles.CRParticles;
 import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
 import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
-import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.CRReflection;
 import com.Da_Technomancer.crossroads.api.alchemy.AtmosChargeSavedData;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
@@ -37,17 +36,18 @@ import it.unimi.dsi.fastutil.objects.Object2BooleanMaps;
 import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ChunkHolder;
+import net.minecraft.server.level.ChunkResult;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.Containers;
 import net.minecraft.world.DifficultyInstance;
@@ -55,10 +55,8 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.horse.SkeletonHorse;
-import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Creeper;
-import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -84,11 +82,13 @@ import net.neoforged.neoforge.event.AnvilUpdateEvent;
 import net.neoforged.neoforge.event.VanillaGameEvent;
 import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
+import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
-import net.neoforged.neoforge.event.entity.living.MobSpawnEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.level.ExplosionEvent;
+import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.neoforged.neoforge.registries.RegisterEvent;
@@ -96,7 +96,6 @@ import net.neoforged.neoforge.registries.RegisterEvent;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
 
@@ -168,7 +167,6 @@ public class EventHandlerCommon{
 			e.register(Registries.POTION, helper -> {
 				CRPotions.init();
 				registerAll(helper, CRPotions.toRegisterPotion);
-				CRPotions.registerPotionRecipes();
 			});
 
 			e.register(Registries.PARTICLE_TYPE, helper -> {
@@ -190,7 +188,7 @@ public class EventHandlerCommon{
 				registerAll(helper, CRWorldGen.toRegisterModifier);
 			});
 
-			e.register(BuiltInRegistries.CREATIVE_MODE_TAB, helper -> {
+			e.register(Registries.CREATIVE_MODE_TAB, helper -> {
 				CRItems.MAIN_CREATIVE_TAB = CreativeModeTab.builder()
 						.title(Component.translatable("item_group." + CRItems.MAIN_CREATIVE_TAB_ID))
 						.icon(() -> new ItemStack(CRItems.omnimeter))
@@ -237,7 +235,7 @@ public class EventHandlerCommon{
 				String regKey = regEntry.getKey();
 				T regValue = regEntry.getValue();
 				assert regKey != null && regValue != null;
-				helper.register(regKey, regValue);
+				helper.register(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, regKey), regValue);
 			}
 			toRegister.clear();
 		}
@@ -258,8 +256,8 @@ public class EventHandlerCommon{
 //	private static final Field entityList = ReflectionUtil.reflectField(CRReflection.ENTITY_LIST);
 
 	@SubscribeEvent
-	@SuppressWarnings({"unused", "unchecked"})
-	public void onEntitySpawn(MobSpawnEvent.FinalizeSpawn e){
+	@SuppressWarnings({"unused"})
+	public void onEntitySpawn(FinalizeSpawnEvent e){
 		if(e.getLevel() instanceof ServerLevel world){
 
 			//Block spawning with closure beams
@@ -301,7 +299,9 @@ public class EventHandlerCommon{
 
 	@SubscribeEvent
 	@SuppressWarnings({"unused", "unchecked"})
-	public void worldTick(TickEvent.LevelTickEvent e){
+	public void worldTick(LevelTickEvent e){
+
+		Level level = e.getLevel();
 
 //		//Time Dilation
 //		//Forge for MC1.14 killed the entity hook that made time slowing/stopping work (Entity::updateBlock field was removed)
@@ -345,42 +345,42 @@ public class EventHandlerCommon{
 
 
 		//Atmospheric overcharge effect
-		if(!e.level.isClientSide && (CRConfig.atmosEffect.get() & 1) == 1){
-			e.level.getProfiler().push(Crossroads.MODNAME + ": Overcharge lightning effects");
-			float chargeLevel = (float) AtmosChargeSavedData.getCharge((ServerLevel) e.level) / (float) AtmosChargeSavedData.getCapacity();
+		if(!level.isClientSide && (CRConfig.atmosEffect.get() & 1) == 1){
+			level.getProfiler().push(Crossroads.MODNAME + ": Overcharge lightning effects");
+			float chargeLevel = (float) AtmosChargeSavedData.getCharge((ServerLevel) level) / (float) AtmosChargeSavedData.getCapacity();
 			if(chargeLevel > 0.5F && getLoadedChunks != null){
 				//1.14
 				//Very similar to vanilla logic in ServerWorld::tickEnvironment as called by ServerChunkProvider::tickChunks
 				//Re-implemented due to the vanilla methods doing far more than just lightning
 				try{
-					Iterable<ChunkHolder> iterable = (Iterable<ChunkHolder>) getLoadedChunks.invoke(((ServerChunkCache) e.level.getChunkSource()).chunkMap);
+					Iterable<ChunkHolder> iterable = (Iterable<ChunkHolder>) getLoadedChunks.invoke(((ServerChunkCache) level.getChunkSource()).chunkMap);
 					for(ChunkHolder holder : iterable){
-						Optional<LevelChunk> opt = holder.getEntityTickingChunkFuture().getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK).left();
-						if(opt.isPresent()){
-							ChunkPos chunkPos = opt.get().getPos();
-							if(!((ServerChunkCache) e.level.getChunkSource()).chunkMap.getPlayersCloseForSpawning(chunkPos).isEmpty()){
+						ChunkResult<LevelChunk> opt = holder.getEntityTickingChunkFuture().getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK);
+						if(opt.isSuccess()){
+							ChunkPos chunkPos = opt.orElseThrow(NullPointerException::new).getPos();
+							if(!((ServerChunkCache) level.getChunkSource()).chunkMap.getPlayersCloseForSpawning(chunkPos).isEmpty()){
 								int i = chunkPos.getMinBlockX();
 								int j = chunkPos.getMinBlockZ();
-								if(e.level.random.nextInt(350_000 - (int) (300_000F * chargeLevel)) == 0){//The vanilla default is 1/100_000; atmos charging ranges from 1/200_000 to 1/50_000
-									BlockPos strikePos = e.level.getBlockRandomPos(i, 0, j, 15);
+								if(level.random.nextInt(350_000 - (int) (300_000F * chargeLevel)) == 0){//The vanilla default is 1/100_000; atmos charging ranges from 1/200_000 to 1/50_000
+									BlockPos strikePos = level.getBlockRandomPos(i, 0, j, 15);
 									if(adjustPosForLightning != null){
 										//This is a minor detail of the implementation- we only do it if the reflection worked
-										strikePos = (BlockPos) adjustPosForLightning.invoke(e.level, strikePos);//Vanilla lightning logic is evil- if there's a nearby entity (including players), hit them instead of the random block
+										strikePos = (BlockPos) adjustPosForLightning.invoke(level, strikePos);//Vanilla lightning logic is evil- if there's a nearby entity (including players), hit them instead of the random block
 									}
-									DifficultyInstance difficulty = e.level.getCurrentDifficultyAt(strikePos);
+									DifficultyInstance difficulty = level.getCurrentDifficultyAt(strikePos);
 									//There's a config for this because at high atmos levels, it can quickly get annoying to have a world flooded with skeleton horses
-									boolean spawnHorsemen = CRConfig.atmosLightningHorsemen.get() && e.level.getGameRules().getBoolean(GameRules.RULE_DOMOBSPAWNING) && e.level.random.nextDouble() < difficulty.getEffectiveDifficulty() * 0.01D;
+									boolean spawnHorsemen = CRConfig.atmosLightningHorsemen.get() && level.getGameRules().getBoolean(GameRules.RULE_DOMOBSPAWNING) && level.random.nextDouble() < difficulty.getEffectiveDifficulty() * 0.01D;
 									if(spawnHorsemen){
-										SkeletonHorse skeletonHorse = EntityType.SKELETON_HORSE.create(e.level);
+										SkeletonHorse skeletonHorse = EntityType.SKELETON_HORSE.create(level);
 										skeletonHorse.setTrap(true);//It's a trap!
 										skeletonHorse.setAge(0);
 										skeletonHorse.setPos(strikePos.getX(), strikePos.getY(), strikePos.getZ());
-										e.level.addFreshEntity(skeletonHorse);
+										level.addFreshEntity(skeletonHorse);
 									}
 
-									LightningBolt lightning = EntityType.LIGHTNING_BOLT.create(e.level);
+									LightningBolt lightning = EntityType.LIGHTNING_BOLT.create(level);
 									lightning.moveTo(Vec3.atBottomCenterOf(strikePos));//Set strike position/set position
-									e.level.addFreshEntity(lightning);
+									level.addFreshEntity(lightning);
 								}
 							}
 						}
@@ -389,7 +389,7 @@ public class EventHandlerCommon{
 					Crossroads.logger.catching(ex);
 				}
 			}
-			e.level.getProfiler().pop();
+			level.getProfiler().pop();
 		}
 	}
 
@@ -430,7 +430,7 @@ public class EventHandlerCommon{
 					if(lens.matchesRecipe(inputRight) && !lenses.lenses().containsKey(lens)){
 						ItemStack out = inputLeft.copy();
 						e.setCost(CRConfig.technoArmorCost.get() * (long) Math.pow(2, lenses.lenses().size()));
-						Object2BooleanMap<EnumGoggleLenses> newLenses = new Object2BooleanOpenHashMap(lenses.lenses());
+						Object2BooleanMap<EnumGoggleLenses> newLenses = new Object2BooleanOpenHashMap<>(lenses.lenses());
 						newLenses.put(lens, false);
 						out.set(CRItems.GOGGLE_LENSES_DATA, new ArmorGoggles.LensesSet(newLenses));
 						e.setOutput(out);
@@ -465,18 +465,9 @@ public class EventHandlerCommon{
 
 	@SubscribeEvent
 	@SuppressWarnings("unused")
-	public void damageTaken(LivingHurtEvent e){
-		if(e.getSource().is(DamageTypeTags.IS_FALL)){
-			LivingEntity ent = e.getEntity();
-
-			ItemStack boots = ent.getItemBySlot(EquipmentSlot.FEET);
-			if(boots.getItem() == CRItems.chickenBoots){
-				e.setCanceled(true);
-				ent.getCommandSenderWorld().playSound(null, ent.getX(), ent.getY(), ent.getZ(), SoundEvents.CHICKEN_HURT, SoundSource.PLAYERS, 2.5F, 1F);
-				return;
-			}
-
-			if(ent instanceof Player player){
+	public void damageTaken(LivingDamageEvent.Post e){
+		if(e.getSource().is(DamageTypeTags.IS_FALL) && e.getNewDamage() > 0){
+			if(e.getEntity() instanceof Player player){
 				//Players who take damage with certain tag-defined items in their inventory explode
 				boolean foundExplosion = false;
 				if(CraftingUtil.tagContains(CRItemTags.EXPLODE_IF_KNOCKED, player.getInventory().offhand.get(0).getItem())){
@@ -499,10 +490,22 @@ public class EventHandlerCommon{
 
 	@SubscribeEvent
 	@SuppressWarnings("unused")
-	public void enviroBootsProtect(LivingAttackEvent e){
+	public void enviroBootsProtect(LivingDamageEvent.Pre e){
 		//Provides immunity from magma block damage and fall damage when wearing enviro_boots
 		if((e.getSource().is(DamageTypes.HOT_FLOOR) || e.getSource().is(DamageTypeTags.IS_FALL)) && e.getEntity().getItemBySlot(EquipmentSlot.FEET).getItem() == CRItems.armorEnviroBoots){
-			e.setCanceled(true);
+			e.setNewDamage(0);
+			return;
+		}
+
+		if(e.getSource().is(DamageTypeTags.IS_FALL)){
+			LivingEntity ent = e.getEntity();
+
+			ItemStack boots = ent.getItemBySlot(EquipmentSlot.FEET);
+			if(boots.getItem() == CRItems.chickenBoots){
+				e.setNewDamage(0);
+				ent.getCommandSenderWorld().playSound(null, ent.getX(), ent.getY(), ent.getZ(), SoundEvents.CHICKEN_HURT, SoundSource.PLAYERS, 2.5F, 1F);
+				return;
+			}
 		}
 	}
 
@@ -513,7 +516,7 @@ public class EventHandlerCommon{
 			return;
 		}
 
-		if(e.getExplosion().getExploder() instanceof Creeper creeper){
+		if(e.getExplosion().getDirectSourceEntity() instanceof Creeper creeper){
 			//Creeper explosions don't trigger a death event; we catch them this way
 			EntityTemplate.handleEntityDeath(creeper);
 		}
@@ -529,7 +532,7 @@ public class EventHandlerCommon{
 //		}
 		for(Entity ent : world.getAllEntities()){
 			if(ent instanceof EntityGhostMarker mark){
-				if(mark.getMarkerType() == EntityGhostMarker.EnumMarkerType.EQUILIBRIUM && mark.data != null && mark.position().subtract(e.getExplosion().getPosition()).length() <= mark.data.getInt("range")){
+				if(mark.getMarkerType() == EntityGhostMarker.EnumMarkerType.EQUILIBRIUM && mark.data != null && mark.position().subtract(e.getExplosion().center()).length() <= mark.data.getInt("range")){
 					e.setCanceled(true);//Equilibrium beams cancel explosions
 					world.getProfiler().pop();
 					return;
@@ -635,6 +638,8 @@ public class EventHandlerCommon{
 	}
 
 	private static final TagKey<EntityType<?>> GHOST_MOB = CraftingUtil.getTagKey(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "ghost"));
+	private static final TagKey<EntityType<?>> NO_SOUL_DROP_MOB = CraftingUtil.getTagKey(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "soul_drop_blacklist"));
+	private static final TagKey<EntityType<?>> HUMANOID_MOB = CraftingUtil.getTagKey(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath("minecraft", "undead"));
 
 	@SubscribeEvent()
 	@SuppressWarnings("unused")
@@ -648,14 +653,14 @@ public class EventHandlerCommon{
 				int soulCount;
 
 				//Players and 'fake' living drop no souls (anti-exploit)
-				if(ent instanceof Player || ent instanceof ArmorStand){
+				if(CraftingUtil.tagContains(NO_SOUL_DROP_MOB, ent.getType())){
 					soulCount = 0;
-				}else if(ent.getMobType() == MobType.UNDEAD){
-					soulCount = 1;//Undead give 1
-				}else if(ent instanceof AbstractVillager || ent.getMobType() == MobType.ILLAGER){
-					soulCount = 4;//'People' type creatures give a full soul cluster worth
 				}else if(CraftingUtil.tagContains(GHOST_MOB, ent.getType())){
 					soulCount = 4;//'Ghost' type creatures give a full soul cluster worth
+				}else if(CraftingUtil.tagContains(EntityTypeTags.UNDEAD, ent.getType())){
+					soulCount = 1;//Undead give 1
+				}else if(CraftingUtil.tagContains(HUMANOID_MOB, ent.getType())){
+					soulCount = 4;//'People' type creatures give a full soul cluster worth
 				}else{
 					soulCount = 2;//Most things give 2
 				}
@@ -689,7 +694,7 @@ public class EventHandlerCommon{
 			//Remove glassware from glassware stand
 			if(e.getLevel().getBlockEntity(targetPos) instanceof GlasswareHolderTileEntity glasswareTE && e.getLevel().getBlockEntity(dispenserPos) instanceof DispenserBlockEntity dispenserTE){
 				ItemStack result = glasswareTE.removeGlassware(true);
-				dispenserTE.addItem(result);
+				dispenserTE.insertItem(result);
 			}
 		}
 	}

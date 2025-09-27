@@ -10,6 +10,8 @@ import com.Da_Technomancer.crossroads.blocks.rotary.Mechanism;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import com.Da_Technomancer.essentials.api.packets.ILongReceiver;
 import com.Da_Technomancer.essentials.api.packets.INBTReceiver;
+import com.Da_Technomancer.essentials.api.packets.SendLongToTE;
+import com.Da_Technomancer.essentials.api.packets.SendNBTToTE;
 import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -25,7 +27,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -413,7 +414,7 @@ public class MechanismTileEntity extends BlockEntity implements ITickableTileEnt
 					mats[side].write(propertyNBT);
 					updateNBT.put("prop", propertyNBT);
 				}
-				CRPackets.sendPacketAround(level, worldPosition, new SendNBTToClient(updateNBT, worldPosition));
+				CRPackets.sendPacketAround(level, worldPosition, new SendNBTToTE(updateNBT, worldPosition));
 //				CRPackets.sendPacketAround(level, worldPosition, new SendLongToTE(side + 7, members[side] == null ? -1L : (MECHANISMS.indexOf(members[side]) & 0xFFFFFFFFL) | (long) (mats[side].serialize()) << 32L, worldPosition));
 			}
 		}

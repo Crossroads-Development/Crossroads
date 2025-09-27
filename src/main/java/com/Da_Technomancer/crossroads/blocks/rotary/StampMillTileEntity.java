@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.blocks.rotary;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.rotary.IAxisHandler;
 import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.api.rotary.RotaryUtil;
@@ -27,11 +26,8 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
-
 import net.neoforged.neoforge.items.IItemHandler;
-import org.apache.logging.log4j.core.jmx.Server;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -191,7 +187,7 @@ public class StampMillTileEntity extends InventoryTE{
 			Direction.Axis ax = state.getValue(CRProperties.HORIZ_AXIS);
 			for(Direction.AxisDirection dir : Direction.AxisDirection.values()){
 				Direction side = Direction.get(dir, ax);
-				RotaryUtil.propagateAxially(level.getBlockEntity(worldPosition.relative(side)), side.getOpposite(), this, masterIn, key, renderOffset);
+				RotaryUtil.propagateAxially(level, worldPosition.relative(side), side.getOpposite(), this, masterIn, key, renderOffset);
 			}
 		}
 	}
@@ -216,10 +212,4 @@ public class StampMillTileEntity extends InventoryTE{
 		return INERTIA;
 	}
 
-	private static final AABB RENDER_BOX = new AABB(0, 0, 0, 1, 2, 1);
-
-	@Override
-	public AABB getRenderBoundingBox(){
-		return RENDER_BOX.move(worldPosition);
-	}
 }

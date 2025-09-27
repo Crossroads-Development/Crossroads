@@ -189,7 +189,7 @@ public class RotaryPumpTileEntity extends InventoryTE implements INBTReceiver{
 			renderFluid = newRenderFluid.copy();
 			CompoundTag nbt = renderFluid.writeToNBT(new CompoundTag());
 			nbt.putBoolean("render_fluid", true);
-			CRPackets.sendPacketAround(level, worldPosition, new SendNBTToClient(nbt, worldPosition));
+			CRPackets.sendPacketAround(level, worldPosition, new SendNBTToTE(nbt, worldPosition));
 		}
 	}
 

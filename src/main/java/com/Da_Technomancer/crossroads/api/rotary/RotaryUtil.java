@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.api.rotary;
 
 import com.Da_Technomancer.crossroads.CRConfig;
-import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.CRCapabilities;
+import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.crossroads.api.packets.SendMasterKeyToClient;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -197,22 +197,23 @@ public class RotaryUtil{
 	 * Connect axially to a tile entity
 	 * Handles both IAxleHandler and IAxisHandler
 	 * Does not connect via cog capability
-	 * @param te The tile entity being connected to
-	 * @param direction The side of the tile entity being connected to
+	 * @param world World
+	 * @param toConnectToPos Position of the block to try to connect to (not the block doing the connecting)
+	 * @param direction The side of the block being connected to
 	 * @param srcHandler The handler calling this
 	 * @param master The master axis being propagated
 	 * @param shouldRenderOffset Whether angles should be rendered with an offset
 	 */
-	public static void propagateAxially(@Nullable BlockEntity te, Direction direction, IAxleHandler srcHandler, IAxisHandler master, byte key, boolean shouldRenderOffset){
-		if(te != null){
-			IAxisHandler axisOpt = te.getCapability(CRCapabilities.AXIS_CAPABILITY, direction);
-			if(axisOpt.isPresent()){
-				axisOpt.orElseThrow(NullPointerException::new).trigger(master, key);
-			}
-
-			IAxleHandler axleOpt = te.getCapability(CRCapabilities.AXLE_CAPABILITY, direction);
-			if(axleOpt.isPresent()){
-				axleOpt.orElseThrow(NullPointerException::new).propagate(master, key, srcHandler.getRotationRatio(), 0, shouldRenderOffset);
+	public static void propagateAxially(Level world, BlockPos toConnectToPos, Direction direction, IAxleHandler srcHandler, IAxisHandler master, byte key, boolean shouldRenderOffset){
+		BlockState toConnectToState = world.getBlockState(toConnectToPos);
+		BlockEntity toConnectToTE = world.getBlockEntity(toConnectToPos);
+		IAxisHandler axisHandler = world.getCapability(CRCapabilities.AXIS_CAPABILITY, toConnectToPos, toConnectToState, toConnectToTE, direction);
+		if(axisHandler != null){
+			axisHandler.trigger(master, key);
+		}else{
+			IAxleHandler axleHandler = world.getCapability(CRCapabilities.AXLE_CAPABILITY, toConnectToPos, toConnectToState, toConnectToTE, direction);
+			if(axleHandler != null){
+				axleHandler.propagate(master, key, srcHandler.getRotationRatio(), 0, shouldRenderOffset);
 			}
 		}
 	}

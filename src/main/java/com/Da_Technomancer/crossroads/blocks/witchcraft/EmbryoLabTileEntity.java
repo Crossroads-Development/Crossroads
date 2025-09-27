@@ -67,7 +67,7 @@ public class EmbryoLabTileEntity extends InventoryTE implements INBTReceiver{
 		if(template != null){
 			nbt.put("template", template.serializeNBT());
 		}
-		CRPackets.sendPacketAround(level, worldPosition, new SendNBTToClient(nbt, worldPosition));
+		CRPackets.sendPacketAround(level, worldPosition, new SendNBTToTE(nbt, worldPosition));
 	}
 
 	public void createOutput(){

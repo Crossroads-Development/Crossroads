@@ -2,8 +2,6 @@ package com.Da_Technomancer.crossroads.entity;
 
 import com.Da_Technomancer.essentials.blocks.ESBlocks;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -35,6 +33,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.event.EventHooks;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
@@ -160,7 +159,7 @@ public class EntityHopperHawk extends ShoulderRidingEntity implements FlyingAnim
 
 			if(!level().isClientSide){
 				//Taming chance of 1/3
-				if(random.nextInt(3) == 0 && !ForgeEventFactory.onAnimalTame(this, player)){
+				if(random.nextInt(3) == 0 && !EventHooks.onAnimalTame(this, player)){
 					tame(player);
 					level().broadcastEntityEvent(this, (byte) 7);
 				}else{
@@ -178,11 +177,6 @@ public class EntityHopperHawk extends ShoulderRidingEntity implements FlyingAnim
 		}else{
 			return super.mobInteract(player, hand);
 		}
-	}
-
-	@Override
-	public Packet<ClientGamePacketListener> getAddEntityPacket(){
-		return NetworkHooks.getEntitySpawningPacket(this);//Required for modded entities
 	}
 
 	@Override
@@ -211,7 +205,7 @@ public class EntityHopperHawk extends ShoulderRidingEntity implements FlyingAnim
 		goalSelector.addGoal(0, new FloatGoal(this));
 //		goalSelector.addGoal(1, new LookAtGoal(this, PlayerEntity.class, 8.0F));
 		goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
-		goalSelector.addGoal(2, new FollowOwnerGoal(this, 1.0D, 8.0F, 3.0F, true));
+		goalSelector.addGoal(2, new FollowOwnerGoal(this, 1.0D, 8.0F, 3.0F));
 		goalSelector.addGoal(3, new CollectItemGoal(this));
 		goalSelector.addGoal(4, new WaterAvoidingRandomFlyingGoal(this, 1.0D));
 		goalSelector.addGoal(5, new LandOnOwnersShoulderGoal(this));

@@ -122,7 +122,7 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements INBTReceiv
 				renderFluid = fluids[0].copy();
 				CompoundTag nbt = renderFluid.writeToNBT(new CompoundTag());
 				nbt.putBoolean("render_fluid", true);
-				CRPackets.sendPacketAround(level, worldPosition, new SendNBTToClient(nbt, worldPosition));
+				CRPackets.sendPacketAround(level, worldPosition, new SendNBTToTE(nbt, worldPosition));
 			}
 		}
 

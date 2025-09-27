@@ -44,7 +44,7 @@ public class ArmorGoggles extends TechnomancyArmor implements ICreativeTabPopula
 				LensesSet lensData = stack.get(CRItems.GOGGLE_LENSES_DATA);
 				for(Map.Entry<EnumGoggleLenses, Boolean> lensEntry : lensData.lenses.object2BooleanEntrySet()){
 					EnumGoggleLenses lens = lensEntry.getKey();
-					if(!lens.useKey() || lensEntry.getValue()){
+					if(!lens.requireEnableKey() || lensEntry.getValue()){
 						lens.doEffect(world, player);
 					}
 				}

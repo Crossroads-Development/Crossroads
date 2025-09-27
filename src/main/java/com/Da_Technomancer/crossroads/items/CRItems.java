@@ -11,6 +11,7 @@ import com.Da_Technomancer.crossroads.api.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.api.templates.ICreativeTabPopulatingItem;
 import com.Da_Technomancer.crossroads.api.witchcraft.EntityTemplate;
 import com.Da_Technomancer.crossroads.api.witchcraft.IPerishable;
+import com.Da_Technomancer.crossroads.blocks.rotary.WindingTableTileEntity;
 import com.Da_Technomancer.crossroads.blocks.witchcraft.EmbryoLab;
 import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.entity.EntityHopperHawk;
@@ -268,6 +269,7 @@ public final class CRItems{
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> EXTENSION_TREATED_DATA = DATA_COMPONENTS.registerComponentType("extension_treated", builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> VILLAGER_TRADE_SELECTION_DATA = DATA_COMPONENTS.registerComponentType("cr_current_trade", builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT));
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<MerchantOffers>> VILLAGER_TRADES_DATA = DATA_COMPONENTS.registerComponentType("cr_trades", builder -> builder.persistent(MerchantOffers.CODEC).networkSynchronized(MerchantOffers.STREAM_CODEC));
+	public static final DeferredHolder<DataComponentType<?>, DataComponentType<WindingTableTileEntity.WindingStatus>> WINDING_DATA = DATA_COMPONENTS.registerComponentType("winding_energy", builder -> builder.persistent(WindingTableTileEntity.WindingStatus.CODEC).networkSynchronized(WindingTableTileEntity.WindingStatus.STREAM_CODEC));
 
 
 	public static final DeferredRegister<ArmorMaterial> ARMOR_MATERIALS = DeferredRegister.create(BuiltInRegistries.ARMOR_MATERIAL, Crossroads.MODID);

@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.rotary.mechanisms;
 
-import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
 import com.Da_Technomancer.crossroads.api.CRCapabilities;
+import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
 import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.api.rotary.*;
 import com.Da_Technomancer.crossroads.items.CRItems;
@@ -18,12 +18,10 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import org.joml.Quaternionf;
 
@@ -108,19 +106,7 @@ public class MechanismClutch extends MechanismAxle{
 				}
 			}else{
 				//Connect externally
-				BlockEntity endTE = te.getLevel().getBlockEntity(te.getBlockPos().relative(endDir));
-				Direction oEndDir = endDir.getOpposite();
-				if(endTE != null){
-					IAxisHandler axisOpt = endTE.getCapability(CRCapabilities.AXIS_CAPABILITY, oEndDir);
-					if(axisOpt.isPresent()){
-						axisOpt.orElseThrow(NullPointerException::new).trigger(masterIn, key);
-					}
-
-					IAxleHandler axleOpt = endTE.getCapability(CRCapabilities.AXLE_CAPABILITY, oEndDir);
-					if(axleOpt.isPresent()){
-						axleOpt.orElseThrow(NullPointerException::new).propagate(masterIn, key, handler.getRotationRatio(), 0, handler.renderOffset());
-					}
-				}
+				RotaryUtil.propagateAxially(te.getLevel(), te.getBlockPos().relative(endDir), endDir.getOpposite(), handler, masterIn, key, handler.renderOffset());
 			}
 		}
 	}

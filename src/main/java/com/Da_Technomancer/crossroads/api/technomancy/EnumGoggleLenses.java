@@ -71,7 +71,7 @@ public enum EnumGoggleLenses implements StringRepresentable{
 		return key.get();
 	}
 
-	public boolean useKey(){
+	public boolean requireEnableKey(){
 		return requireEnable;
 	}
 

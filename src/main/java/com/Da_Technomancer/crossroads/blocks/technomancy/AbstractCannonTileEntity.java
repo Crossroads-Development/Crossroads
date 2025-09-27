@@ -284,7 +284,7 @@ public abstract class AbstractCannonTileEntity extends BlockEntity implements IT
 					Direction.Axis dirAxis = dir.getAxis();
 					if(dirAxis != blockAxis){
 						//Invert renderOffset if switching axis from the handler axis
-						RotaryUtil.propagateAxially(level.getBlockEntity(worldPosition.relative(dir)), dir.getOpposite(), this, masterIn, key, (dirAxis == handlerAxis) == renderOffset);
+						RotaryUtil.propagateAxially(level, worldPosition.relative(dir), dir.getOpposite(), this, masterIn, key, (dirAxis == handlerAxis) == renderOffset);
 					}
 				}
 			}

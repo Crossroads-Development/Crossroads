@@ -1,6 +1,5 @@
 package com.Da_Technomancer.crossroads.render.tesr;
 
-import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.rotary.LargeGearMasterTileEntity;
@@ -10,6 +9,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
+import net.minecraft.world.phys.AABB;
 
 public class LargeGearRenderer implements BlockEntityRenderer<LargeGearMasterTileEntity>{
 
@@ -25,19 +25,25 @@ public class LargeGearRenderer implements BlockEntityRenderer<LargeGearMasterTil
 
 		matrix.translate(0.5D, 0.5D, 0.5D);
 		Direction facing = gear.getFacing();
-		IAxleHandler handler = gear.getCapability(CRCapabilities.AXLE_CAPABILITY, facing);
+		IAxleHandler handler = gear.getAxleHandler(facing);
 		float dirMult = facing.getAxisDirection() == Direction.AxisDirection.POSITIVE ? -1 : 1;
 
 		matrix.mulPose(facing.getOpposite().getRotation());
 
-		if(handler.isPresent()){
-			matrix.mulPose(Axis.YP.rotationDegrees(handler.orElseThrow(NullPointerException::new).getAngle(partialTicks) * dirMult));
-			CRModels.draw24Gear(matrix, buffer, combinedLight, gear.getMember().getColor(), CRModels.generateZFightFactor(gear.getBlockPos(), 0));
+		matrix.mulPose(Axis.YP.rotationDegrees(handler.getAngle(partialTicks) * dirMult));
+		CRModels.draw24Gear(matrix, buffer, combinedLight, gear.getMember().getColor(), CRModels.generateZFightFactor(gear.getBlockPos(), 0));
 
-			if(gear.isRenderedOffset()){
-				matrix.mulPose(Axis.YP.rotationDegrees(-7.5F));
-			}
-			CRModels.drawAxle(matrix, buffer, combinedLight, gear.getMember().getColor());
+		if(gear.isRenderedOffset()){
+			matrix.mulPose(Axis.YP.rotationDegrees(-7.5F));
 		}
+		CRModels.drawAxle(matrix, buffer, combinedLight, gear.getMember().getColor());
+	}
+
+
+	private static final AABB RENDER_BOX = new AABB(-1.5, -1.5, -1.5, 2.5, 2.5, 2.5);
+
+	@Override
+	public AABB getRenderBoundingBox(LargeGearMasterTileEntity te){
+		return RENDER_BOX.move(te.getBlockPos());
 	}
 }

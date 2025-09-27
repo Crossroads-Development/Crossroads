@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.rotary.mechanisms;
 
-import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
 import com.Da_Technomancer.crossroads.api.CRCapabilities;
+import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
 import com.Da_Technomancer.crossroads.api.MathUtil;
 import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.api.rotary.*;
@@ -11,17 +11,19 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.capabilities.BlockCapability;
-
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -90,37 +92,41 @@ public class MechanismSmallGear implements IMechanism<CRMaterialLibrary.GearMate
 			}
 		}
 
-		BlockEntity sideTE = te.getLevel().getBlockEntity(te.getBlockPos().relative(side));
+		Level world = te.getLevel();
+		BlockPos sidePos = te.getBlockPos().relative(side);
+		BlockState sideState = te.getLevel().getBlockState(sidePos);
+		BlockEntity sideTE = te.getLevel().getBlockEntity(sidePos);
 		for(int i = 0; i < 6; i++){
 			if(i != side.get3DDataValue() && i != side.getOpposite().get3DDataValue()){
 				Direction facing = Direction.from3DDataValue(i);
 				// Adjacent gears
-				BlockEntity adjTE = te.getLevel().getBlockEntity(te.getBlockPos().relative(facing));
-				if(adjTE != null){
-					ICogHandler cogOpt;
-					if((cogOpt = adjTE.getCapability(CRCapabilities.COG_CAPABILITY, side)).isPresent()){
-						cogOpt.orElseThrow(NullPointerException::new).connect(masterIn, key, -handler.getRotationRatio(), .5D, facing.getOpposite(), handler.renderOffset());
-					}else if((cogOpt = adjTE.getCapability(CRCapabilities.COG_CAPABILITY, facing.getOpposite())).isPresent()){
-						//Check for large gears
-						cogOpt.orElseThrow(NullPointerException::new).connect(masterIn, key, RotaryUtil.getDirSign(side, facing) * handler.getRotationRatio(), .5D, side, handler.renderOffset());
-					}
+				BlockPos adjPos = te.getBlockPos().relative(facing);
+				BlockEntity adjTE = world.getBlockEntity(adjPos);
+				BlockState adjState = world.getBlockState(adjPos);
+				ICogHandler cogHandler = world.getCapability(CRCapabilities.COG_CAPABILITY, adjPos, adjState, adjTE, side);
+				if(cogHandler != null){
+					cogHandler.connect(masterIn, key, -handler.getRotationRatio(), .5D, facing.getOpposite(), handler.renderOffset());
+				}else if((cogHandler = world.getCapability(CRCapabilities.COG_CAPABILITY, adjPos, adjState, adjTE, facing.getOpposite())) != null){
+					//Check for large gears
+					cogHandler.connect(masterIn, key, RotaryUtil.getDirSign(side, facing) * handler.getRotationRatio(), .5D, side, handler.renderOffset());
 				}
 
 				// Diagonal gears
-				BlockEntity diagTE = te.getLevel().getBlockEntity(te.getBlockPos().relative(facing).relative(side));
-				ICogHandler cogOpt;
-				if(diagTE != null && (cogOpt = diagTE.getCapability(CRCapabilities.COG_CAPABILITY, facing.getOpposite())).isPresent() && RotaryUtil.canConnectThrough(te.getLevel(), te.getBlockPos().relative(facing), facing.getOpposite(), side)){
-					cogOpt.orElseThrow(NullPointerException::new).connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * handler.getRotationRatio(), .5D, side.getOpposite(), handler.renderOffset());
+				BlockPos diagPos = te.getBlockPos().relative(facing).relative(side);
+				BlockEntity diagTE = world.getBlockEntity(diagPos);
+				BlockState diagState = world.getBlockState(diagPos);
+				if((cogHandler = world.getCapability(CRCapabilities.COG_CAPABILITY, diagPos, diagState, diagTE, facing.getOpposite())) != null && RotaryUtil.canConnectThrough(world, te.getBlockPos().relative(facing), facing.getOpposite(), side)){
+					cogHandler.connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * handler.getRotationRatio(), .5D, side.getOpposite(), handler.renderOffset());
 				}
 
-				if(sideTE != null && (cogOpt = sideTE.getCapability(CRCapabilities.COG_CAPABILITY, facing)).isPresent()){
-					cogOpt.orElseThrow(NullPointerException::new).connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * rotRatioIn, .5D, side.getOpposite(), handler.renderOffset());
+				if((cogHandler = world.getCapability(CRCapabilities.COG_CAPABILITY, diagPos, diagState, diagTE, facing)) != null){
+					cogHandler.connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * rotRatioIn, .5D, side.getOpposite(), handler.renderOffset());
 				}
 			}
 		}
 
 		//Connected block
-		RotaryUtil.propagateAxially(sideTE, side.getOpposite(), handler, masterIn, key, handler.renderOffset());
+		RotaryUtil.propagateAxially(te.getLevel(), sidePos, side.getOpposite(), handler, masterIn, key, handler.renderOffset());
 //		if(sideTE != null){
 //			IAxisHandler axisOpt = sideTE.getCapability(Capabilities.AXIS_CAPABILITY, side.getOpposite());
 //			if(axisOpt.isPresent()){

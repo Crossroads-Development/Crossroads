@@ -1,18 +1,23 @@
 package com.Da_Technomancer.crossroads.blocks.rotary;
 
 import com.Da_Technomancer.crossroads.CRConfig;
-import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.api.templates.ICreativeTabPopulatingItem;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.WindingTableContainer;
+import com.Da_Technomancer.crossroads.items.CRItems;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Inventory;
@@ -24,8 +29,6 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-
-import net.neoforged.neoforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -186,19 +189,19 @@ public class WindingTableTileEntity extends InventoryTE{
 		double getMaxWind();
 
 		default void setWindLevel(ItemStack stack, double energy){
-			stack.getOrCreateTag().putDouble("winding_energy", Math.max(0, energy));
+			stack.set(CRItems.WINDING_DATA, new WindingStatus(isBroken(stack), energy));
 		}
 
 		default double getWindLevel(ItemStack stack){
-			return isBroken(stack) ? 0 : stack.getOrCreateTag().getDouble("winding_energy");
+			return stack.getOrDefault(CRItems.WINDING_DATA, WindingStatus.DEFAULT).windingLevel();
 		}
 
 		default void setBrokenState(ItemStack stack, boolean isBroken){
-			stack.getOrCreateTag().putBoolean("winding_broken", isBroken);
+			stack.set(CRItems.WINDING_DATA, new WindingStatus(isBroken, getWindLevel(stack)));
 		}
 
 		default boolean isBroken(ItemStack stack){
-			return stack.getOrCreateTag().getBoolean("winding_broken");
+			return stack.getOrDefault(CRItems.WINDING_DATA, WindingStatus.DEFAULT).broken();
 		}
 
 		default void appendTooltip(ItemStack stack, List<Component> tooltip, TooltipFlag flagIn){
@@ -216,6 +219,18 @@ public class WindingTableTileEntity extends InventoryTE{
 			ItemStack woundStack = new ItemStack((Item) this);
 			setWindLevel(woundStack, getMaxWind());
 			return new ItemStack[] {new ItemStack((Item) this), woundStack};
+		}
+	}
+
+	public static record WindingStatus(boolean broken, double windingLevel){
+
+		public static final WindingStatus DEFAULT = new WindingStatus(false, 0);
+		public static final Codec<WindingStatus> CODEC = RecordCodecBuilder.create(instance -> instance.group(Codec.BOOL.fieldOf("broken").forGetter(WindingStatus::broken), Codec.DOUBLE.fieldOf("winding_level").forGetter(WindingStatus::windingLevel)).apply(instance, WindingStatus::new));
+		public static final StreamCodec<ByteBuf, WindingStatus> STREAM_CODEC = StreamCodec.composite(ByteBufCodecs.BOOL, WindingStatus::broken, ByteBufCodecs.DOUBLE, WindingStatus::windingLevel, WindingStatus::new);
+
+		@Override
+		public double windingLevel(){
+			return broken ? 0 : windingLevel;
 		}
 	}
 }

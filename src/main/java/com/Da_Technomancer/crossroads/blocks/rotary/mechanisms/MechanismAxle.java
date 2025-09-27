@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.rotary.mechanisms;
 
-import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
 import com.Da_Technomancer.crossroads.api.CRCapabilities;
+import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
 import com.Da_Technomancer.crossroads.api.MathUtil;
 import com.Da_Technomancer.crossroads.api.rotary.*;
 import com.Da_Technomancer.crossroads.items.CRItems;
@@ -17,7 +17,6 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import org.joml.Quaternionf;
 
@@ -88,7 +87,7 @@ public class MechanismAxle implements IMechanism<CRMaterialLibrary.GearMaterial>
 			}else{
 				//Connect externally
 				Direction oEndDir = endDir.getOpposite();
-				RotaryUtil.propagateAxially(te.getLevel().getBlockEntity(te.getBlockPos().relative(endDir)), oEndDir, handler, masterIn, key, handler.renderOffset());
+				RotaryUtil.propagateAxially(te.getLevel(), te.getBlockPos().relative(endDir), oEndDir, handler, masterIn, key, handler.renderOffset());
 //				TileEntity endTE = te.getWorld().getTileEntity(te.getPos().offset(endDir));
 //				if(endTE != null){
 //					LazyOptional<IAxisHandler> axisOpt = endTE.getCapability(Capabilities.AXIS_CAPABILITY, oEndDir);

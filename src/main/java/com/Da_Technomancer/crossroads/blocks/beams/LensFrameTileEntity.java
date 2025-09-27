@@ -80,7 +80,7 @@ public class LensFrameTileEntity extends BeamRenderTE implements INBTReceiver, C
 		inventoryWrapper.setItem(0, lens);
 		if(level != null && !level.isClientSide){
 			//Update on the client
-			CRPackets.sendPacketAround(level, worldPosition, new SendNBTToClient(lens.save(new CompoundTag()), worldPosition));
+			CRPackets.sendPacketAround(level, worldPosition, new SendNBTToTE(lens.save(new CompoundTag()), worldPosition));
 		}
 	}
 

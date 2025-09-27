@@ -12,13 +12,13 @@ import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import com.Da_Technomancer.essentials.api.packets.ILongReceiver;
+import com.Da_Technomancer.essentials.api.packets.SendLongToTE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -26,10 +26,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
-import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
-
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -89,13 +86,6 @@ public class LargeGearMasterTileEntity extends BlockEntity implements ILongRecei
 	public CRMaterialLibrary.GearMaterial getMember(){
 		//The first material is returned instead of null to prevent edge case crashes.
 		return type == null ? CRMaterialLibrary.getDefaultMaterial() : type;
-	}
-
-	private static final AABB RENDER_BOX = new AABB(-1.5, -1.5, -1.5, 2.5, 2.5, 2.5);
-
-	@Override
-	public AABB getRenderBoundingBox(){
-		return RENDER_BOX.move(worldPosition);
 	}
 
 	public void breakGroup(Direction side, boolean drop){
