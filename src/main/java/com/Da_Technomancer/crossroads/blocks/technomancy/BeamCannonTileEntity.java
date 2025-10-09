@@ -3,11 +3,11 @@ package com.Da_Technomancer.crossroads.blocks.technomancy;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.beams.*;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
+import com.Da_Technomancer.essentials.api.packets.SendLongToTE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -18,10 +18,8 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-
 import org.joml.Vector3f;
 
 import javax.annotation.Nonnull;
@@ -33,7 +31,7 @@ public class BeamCannonTileEntity extends AbstractCannonTileEntity implements IB
 
 	public static final BlockEntityType<BeamCannonTileEntity> TYPE = CRTileEntity.createType(BeamCannonTileEntity::new, CRBlocks.beamCannon);
 
-	private static final int RANGE = 256;
+	public static final int RANGE = 256;
 
 	//Once again, I find myself wishing java allowed multiple super classes
 	//Because we need the cannon stuff, so we have to re-implement all the beam logic
@@ -136,12 +134,6 @@ public class BeamCannonTileEntity extends AbstractCannonTileEntity implements IB
 				}
 			}
 		}
-	}
-
-	@Override
-	public AABB getRenderBoundingBox(){
-		//Expand the render box to include all possible beams from this block
-		return new AABB(worldPosition.offset(-RANGE, -RANGE, -RANGE), worldPosition.offset(1 + RANGE, 1 + RANGE, 1 + RANGE));
 	}
 
 	@Override

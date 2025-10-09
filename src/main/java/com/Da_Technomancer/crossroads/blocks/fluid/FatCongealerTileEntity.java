@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.blocks.fluid;
 
 import com.Da_Technomancer.crossroads.CRConfig;
-import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.CRCapabilities;
+import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
@@ -16,14 +16,15 @@ import com.Da_Technomancer.essentials.blocks.AbstractShifterTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-
+import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
 
@@ -36,6 +37,7 @@ public class FatCongealerTileEntity extends InventoryTE{
 
 	public static final double HUN_PER_SPD = 4D;
 	public static final double SAT_PER_SPD = 4D;
+	private BlockCapabilityCache<IItemHandler, Direction> itemOutputHandlerCache;
 
 	public FatCongealerTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state, 1);
@@ -58,33 +60,39 @@ public class FatCongealerTileEntity extends InventoryTE{
 	}
 
 	@Override
+	public void setBlockState(BlockState pBlockState){
+		super.setBlockState(pBlockState);
+		itemOutputHandlerCache = null;
+	}
+
+	@Override
 	public void serverTick(){
 		super.serverTick();
 
 		//Eject inventory either into the world or into an inventory.
 		//Despite using the method from ItemShifters, this block can't go through transport chutes
 		int prevCount = inventory[0].getCount();
-		inventory[0] = AbstractShifterTileEntity.ejectItem(level, worldPosition.relative(getFacing()), getFacing(), inventory[0], null);
+		BlockPos outputPos = worldPosition.relative(getFacing());
+		if(itemOutputHandlerCache == null){
+			itemOutputHandlerCache = BlockCapabilityCache.create(Capabilities.ItemHandler.BLOCK, (ServerLevel) level, outputPos, getFacing().getOpposite());
+		}
+		inventory[0] = AbstractShifterTileEntity.ejectItem(level, outputPos, inventory[0], itemOutputHandlerCache);
 		if(prevCount != inventory[0].getCount()){
 			setChanged();
 		}
 
 		//This machine can be disabled by a redstone signal
 		if(!level.hasNeighborSignal(worldPosition)){
-			BlockEntity adjTE;
-			IAxleHandler otherOpt;
-			IAxleHandler topHandler = null;
-			IAxleHandler bottomHandler = null;
+			IAxleHandler topHandler = level.getCapability(CRCapabilities.AXLE_CAPABILITY, worldPosition.relative(Direction.UP), Direction.DOWN);
+			IAxleHandler bottomHandler = level.getCapability(CRCapabilities.AXLE_CAPABILITY, worldPosition.relative(Direction.DOWN), Direction.UP);
 
 			int hun = 0;
 			int sat = 0;
 
-			if((adjTE = level.getBlockEntity(worldPosition.relative(Direction.UP))) != null && (otherOpt = adjTE.getCapability(CRCapabilities.AXLE_CAPABILITY, Direction.DOWN)).isPresent()){
-				topHandler = otherOpt.orElseThrow(NullPointerException::new);
+			if(topHandler != null){
 				hun = (int) Math.min(Math.abs(topHandler.getSpeed()) * HUN_PER_SPD, 20);
 			}
-			if((adjTE = level.getBlockEntity(worldPosition.relative(Direction.DOWN))) != null && (otherOpt = adjTE.getCapability(CRCapabilities.AXLE_CAPABILITY, Direction.UP)).isPresent()){
-				bottomHandler = otherOpt.orElseThrow(NullPointerException::new);
+			if(bottomHandler != null){
 				sat = (int) Math.min(Math.abs(bottomHandler.getSpeed()) * SAT_PER_SPD, 20);
 			}
 

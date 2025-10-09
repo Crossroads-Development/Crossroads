@@ -12,6 +12,7 @@ import com.Da_Technomancer.crossroads.crafting.CrucibleRec;
 import com.Da_Technomancer.crossroads.gui.container.CrucibleContainer;
 import com.Da_Technomancer.essentials.api.BlockUtil;
 import com.Da_Technomancer.essentials.api.packets.INBTReceiver;
+import com.Da_Technomancer.essentials.api.packets.SendNBTToTE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -28,7 +29,6 @@ import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
-
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
@@ -82,7 +82,7 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements INBTReceiv
 	@Override
 	public void receiveNBT(CompoundTag nbt, @Nullable ServerPlayer sender){
 		if(level.isClientSide && nbt.contains("render_fluid")){
-			renderFluid = FluidStack.loadFluidStackFromNBT(nbt);
+			renderFluid = BlockUtil.nbtToFluidStack(nbt, level.registryAccess());
 			updateRendering();
 		}
 	}
@@ -120,7 +120,7 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements INBTReceiv
 
 			if(!BlockUtil.sameFluid(renderFluid, fluids[0])){
 				renderFluid = fluids[0].copy();
-				CompoundTag nbt = renderFluid.writeToNBT(new CompoundTag());
+				CompoundTag nbt = BlockUtil.stackToNBT(renderFluid, level.registryAccess());
 				nbt.putBoolean("render_fluid", true);
 				CRPackets.sendPacketAround(level, worldPosition, new SendNBTToTE(nbt, worldPosition));
 			}
@@ -161,7 +161,7 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements INBTReceiv
 	@Override
 	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
 		super.loadAdditional(nbt, registries);
-		renderFluid = FluidStack.loadFluidStackFromNBT(nbt.getCompound("render_fluid"));
+		renderFluid = BlockUtil.nbtToFluidStack(nbt.getCompound("render_fluid"), registries);
 		if(nbt.getBoolean("is_client")){
 			updateRendering();
 		}

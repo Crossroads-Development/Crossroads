@@ -11,6 +11,7 @@ import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.essentials.api.BlockUtil;
 import com.Da_Technomancer.essentials.api.IItemCapable;
 import com.Da_Technomancer.essentials.api.packets.INBTReceiver;
+import com.Da_Technomancer.essentials.api.packets.SendNBTToTE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.AxisDirection;
@@ -22,11 +23,9 @@ import net.minecraft.world.ContainerListener;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-
 import net.neoforged.neoforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
@@ -80,7 +79,7 @@ public class LensFrameTileEntity extends BeamRenderTE implements INBTReceiver, C
 		inventoryWrapper.setItem(0, lens);
 		if(level != null && !level.isClientSide){
 			//Update on the client
-			CRPackets.sendPacketAround(level, worldPosition, new SendNBTToTE(lens.save(new CompoundTag()), worldPosition));
+			CRPackets.sendPacketAround(level, worldPosition, new SendNBTToTE(BlockUtil.stackToNBT(lens, level.registryAccess()), worldPosition));
 		}
 	}
 
@@ -144,7 +143,7 @@ public class LensFrameTileEntity extends BeamRenderTE implements INBTReceiver, C
 		super.loadAdditional(nbt, registries);
 		lastRedstone = nbt.getInt("reds");
 		if(nbt.contains("inv")){
-			setLensItem(BlockUtil.nbtToItemStack(nbt.getCompound("inv")), registries);
+			setLensItem(BlockUtil.nbtToItemStack(nbt.getCompound("inv"), registries));
 		}else{
 			setLensItem(ItemStack.EMPTY);
 		}
@@ -163,7 +162,7 @@ public class LensFrameTileEntity extends BeamRenderTE implements INBTReceiver, C
 
 	@Override
 	public void receiveNBT(CompoundTag nbt, ServerPlayer serverPlayer){
-		setLensItem(BlockUtil.nbtToItemStack(nbt), registries);
+		setLensItem(BlockUtil.nbtToItemStack(nbt, level.registryAccess()));
 	}
 
 	@Override

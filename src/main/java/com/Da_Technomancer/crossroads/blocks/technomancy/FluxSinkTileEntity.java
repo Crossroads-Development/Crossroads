@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.api.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.api.technomancy.IFluxLink;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
+import com.Da_Technomancer.essentials.api.packets.SendLongToTE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -18,7 +19,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 
 import javax.annotation.Nullable;
@@ -86,11 +86,6 @@ public class FluxSinkTileEntity extends IFluxLink.FluxHelper{
 		return running ? level.getGameTime() - runningStartTime : -1;
 	}
 
-	@Override
-	public AABB getRenderBoundingBox(){
-		return new AABB(worldPosition.offset(-3, -3, -3), worldPosition.offset(4, 4, 4));
-	}
-
 	private boolean isRunning(){
 		//We cache the value of whether this is running, and only recheck once every 5 seconds
 		if(level.getGameTime() % 100 == 0){
@@ -127,7 +122,7 @@ public class FluxSinkTileEntity extends IFluxLink.FluxHelper{
 	private static boolean canBeaconBeamPass(BlockState state, Level world, BlockPos pos){
 		//We don't actually know where the beacon is.
 		//pos.down() is an incorrect value, but all current implementations ignore it (and should have sanity checking anyway)
-		float[] colMult = state.getBeaconColorMultiplier(world, pos, pos.below());
+		Integer colMult = state.getBeaconColorMultiplier(world, pos, pos.below());
 		return colMult != null || state.getLightBlock(world, pos) < 15 || state.getBlock() == Blocks.BEDROCK;
 	}
 

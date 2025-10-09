@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.world.phys.AABB;
 
 public class ChronoHarnessRenderer extends EntropyRenderer<ChronoHarnessTileEntity>{
 
@@ -78,5 +79,11 @@ public class ChronoHarnessRenderer extends EntropyRenderer<ChronoHarnessTileEnti
 		CRRenderUtil.addVertexBlock(builder, matrix, x + rad, maxY, z - rad, sprite.getU0(), sprite.getV1(), 1, 0, 0, light);
 		CRRenderUtil.addVertexBlock(builder, matrix, x + rad, maxY, z + rad, uEn, sprite.getV1(), 1, 0, 0, light);
 		CRRenderUtil.addVertexBlock(builder, matrix, x + rad, minY, z + rad, uEn, sprite.getV0(), 1, 0, 0, light);
+	}
+
+	@Override
+	public AABB getRenderBoundingBox(ChronoHarnessTileEntity te){
+		//Increase render BB to include links
+		return new AABB(te.getBlockPos()).inflate(te.getRange());
 	}
 }

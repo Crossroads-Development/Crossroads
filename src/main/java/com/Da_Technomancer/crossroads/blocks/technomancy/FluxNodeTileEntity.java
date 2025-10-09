@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.api.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.api.technomancy.IFluxLink;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
+import com.Da_Technomancer.essentials.api.packets.SendLongToTE;
 import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -15,7 +16,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 
 import javax.annotation.Nullable;
@@ -48,12 +48,6 @@ public class FluxNodeTileEntity extends IFluxLink.FluxHelper{
 	 */
 	public float getRenderAngle(float partialTicks){
 		return angle + partialTicks * entropyClient * SPIN_RATE / 20F;
-	}
-
-	@Override
-	public AABB getRenderBoundingBox(){
-		//Increase render BB to include links
-		return new AABB(worldPosition).inflate(getRange());
 	}
 
 	@Override

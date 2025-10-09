@@ -1,6 +1,8 @@
 package com.Da_Technomancer.crossroads.api.technomancy;
 
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.essentials.api.BlockUtil;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
@@ -43,12 +45,12 @@ public class RespawnInventorySavedData extends SavedData{
 		}else{
 			storage = world.getServer().overworld().getDataStorage();
 		}
-		return storage.computeIfAbsent(RespawnInventorySavedData::load, RespawnInventorySavedData::new, ID);
+		return storage.computeIfAbsent(new Factory<>(RespawnInventorySavedData::new, RespawnInventorySavedData::load), ID);
 	}
 
 	private final HashMap<UUID, ItemStack[]> savedInventories = new HashMap<>(1);
 
-	public static RespawnInventorySavedData load(CompoundTag nbt){
+	public static RespawnInventorySavedData load(CompoundTag nbt, HolderLookup.Provider provider){
 		RespawnInventorySavedData data = new RespawnInventorySavedData();
 		data.savedInventories.clear();
 		int i = 0;
@@ -56,7 +58,7 @@ public class RespawnInventorySavedData extends SavedData{
 			UUID id = new UUID(nbt.getLong("key_high_" + i), nbt.getLong("key_low_" + i));
 			ItemStack[] hotbar = new ItemStack[10];
 			for(int j = 0; j < hotbar.length; j++){
-				hotbar[j] = BlockUtil.nbtToItemStack(nbt.getCompound("item_" + i + "_" + j), registries);
+				hotbar[j] = BlockUtil.nbtToItemStack(nbt.getCompound("item_" + i + "_" + j), provider);
 			}
 			data.savedInventories.put(id, hotbar);
 			i++;
@@ -65,14 +67,14 @@ public class RespawnInventorySavedData extends SavedData{
 	}
 
 	@Override
-	public CompoundTag save(CompoundTag nbt){
+	public CompoundTag save(CompoundTag nbt, HolderLookup.Provider provider){
 		int i = 0;
 		for(Map.Entry<UUID, ItemStack[]> entry : savedInventories.entrySet()){
 			nbt.putLong("key_high_" + i, entry.getKey().getMostSignificantBits());
 			nbt.putLong("key_low_" + i, entry.getKey().getLeastSignificantBits());
 			ItemStack[] value = entry.getValue();
 			for(int j = 0; j < value.length; j++){
-				nbt.put("item_" + i + "_" + j, value[j].save(new CompoundTag()));
+				nbt.put("item_" + i + "_" + j, BlockUtil.stackToNBT(value[j], provider));
 			}
 			i++;
 		}

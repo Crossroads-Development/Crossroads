@@ -22,10 +22,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-
 import net.neoforged.neoforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
@@ -93,11 +91,6 @@ public class ItemCannonTileEntity extends AbstractCannonTileEntity implements II
 	}
 
 	@Override
-	public AABB getRenderBoundingBox(){
-		return new AABB(worldPosition.offset(-3, -3, -3), worldPosition.offset(4, 4, 4));
-	}
-
-	@Override
 	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
 		super.loadAdditional(nbt, registries);
 		redsHandler.read(nbt);
@@ -111,9 +104,7 @@ public class ItemCannonTileEntity extends AbstractCannonTileEntity implements II
 		super.saveAdditional(nbt, pRegistries);
 		redsHandler.write(nbt);
 		if(!inventory.isEmpty()){
-			CompoundTag stackTag = new CompoundTag();
-			inventory.save(stackTag);
-			nbt.put("inv", stackTag);
+			nbt.put("inv", BlockUtil.stackToNBT(inventory, pRegistries));
 		}
 	}
 

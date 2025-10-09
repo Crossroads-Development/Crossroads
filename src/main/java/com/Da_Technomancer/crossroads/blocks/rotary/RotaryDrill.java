@@ -11,7 +11,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -121,10 +120,6 @@ public class RotaryDrill extends BaseEntityBlock{
 
 	@Override
 	protected MapCodec<? extends BaseEntityBlock> codec(){
-		if(golden){
-			return CRBlocks.ROTARY_DRILL_GOLD_TYPE.value();
-		}else{
-			return CRBlocks.ROTARY_DRILL_TYPE.value();
-		}
+		return CRBlocks.ROTARY_DRILL_TYPE.value();
 	}
 }

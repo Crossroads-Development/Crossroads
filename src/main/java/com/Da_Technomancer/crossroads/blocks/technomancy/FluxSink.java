@@ -11,13 +11,14 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.BeaconBeamBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -30,9 +31,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class FluxSink extends BaseEntityBlock{
+public class FluxSink extends BaseEntityBlock implements BeaconBeamBlock{
 
-	private final float[] COLOR_CODE = new float[] {1, 1, 1F};//R: 255, G: 100, B: 0
 	private final VoxelShape SHAPE = box(1, 1, 1, 15, 15, 15);
 
 	public FluxSink(){
@@ -74,14 +74,13 @@ public class FluxSink extends BaseEntityBlock{
 		return RenderShape.MODEL;
 	}
 
-	@Nullable
-	@Override
-	public float[] getBeaconColorMultiplier(BlockState state, LevelReader world, BlockPos pos, BlockPos beaconPos){
-		return COLOR_CODE;//Allows beacon beams to pass through this block, and dyes them the color of the time alignment
-	}
-
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context){
 		return SHAPE;
+	}
+
+	@Override
+	public DyeColor getColor(){
+		return DyeColor.ORANGE;
 	}
 }

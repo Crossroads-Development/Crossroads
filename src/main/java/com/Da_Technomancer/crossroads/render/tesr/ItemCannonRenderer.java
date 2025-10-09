@@ -10,6 +10,8 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.AABB;
 
 public class ItemCannonRenderer implements BlockEntityRenderer<ItemCannonTileEntity>{
 
@@ -32,5 +34,11 @@ public class ItemCannonRenderer implements BlockEntityRenderer<ItemCannonTileEnt
 		BeamCannonRenderer.renderCannonModel(matrix, buffer, light, bronzeSprite, barrelSprite, te);
 
 		matrix.popPose();
+	}
+
+	@Override
+	public AABB getRenderBoundingBox(ItemCannonTileEntity te){
+		BlockPos worldPosition = te.getBlockPos();
+		return AABB.encapsulatingFullBlocks(worldPosition.offset(-3, -3, -3), worldPosition.offset(4, 4, 4));
 	}
 }

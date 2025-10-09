@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
+import net.minecraft.world.phys.AABB;
 import org.joml.Quaternionf;
 
 public class GatewayControllerDestinationRenderer implements BlockEntityRenderer<GatewayControllerDestinationTileEntity>{
@@ -182,7 +183,7 @@ public class GatewayControllerDestinationRenderer implements BlockEntityRenderer
 			int[] col = {255, 255, 255, 200};
 
 			//Switch builder to translucent
-			builder = buffer.getBuffer(RenderType.translucentNoCrumbling());
+			builder = buffer.getBuffer(RenderType.translucent());
 
 			//Vertices are commented with the number of the vertex on the final octagon
 
@@ -236,5 +237,11 @@ public class GatewayControllerDestinationRenderer implements BlockEntityRenderer
 	@Override
 	public int getViewDistance(){
 		return 256;//Same value as beacon
+	}
+
+	@Override
+	public AABB getRenderBoundingBox(GatewayControllerDestinationTileEntity te){
+		//Increase render BB to include links and the entire formed frame
+		return new AABB(te.getBlockPos()).inflate(te.isActive() ? te.getSize() : 0);
 	}
 }

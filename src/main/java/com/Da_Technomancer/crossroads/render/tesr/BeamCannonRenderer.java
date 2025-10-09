@@ -14,6 +14,8 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 public class BeamCannonRenderer implements BlockEntityRenderer<BeamCannonTileEntity>{
 
@@ -198,5 +200,13 @@ public class BeamCannonRenderer implements BlockEntityRenderer<BeamCannonTileEnt
 		CRRenderUtil.addVertexBlock(builder, matrix, barrelWidth, barrelBottom, barrelWidth, bUSideEn, bVSideSt, 0, 0, 1, light);
 		CRRenderUtil.addVertexBlock(builder, matrix, barrelWidth, barrelTop, barrelWidth, bUSideEn, bVSideEn, 0, 0, 1, light);
 		CRRenderUtil.addVertexBlock(builder, matrix, -barrelWidth, barrelTop, barrelWidth, bUSideSt, bVSideEn, 0, 0, 1, light);
+	}
+
+	@Override
+	public AABB getRenderBoundingBox(BeamCannonTileEntity te){
+		Vec3 worldPosition = te.getBlockPos().getBottomCenter();
+		final int RANGE = BeamCannonTileEntity.RANGE;
+		//Expand the render box to include all possible beams from this block
+		return new AABB(worldPosition.add(-RANGE, -RANGE, -RANGE), worldPosition.add(1 + RANGE, 1 + RANGE, 1 + RANGE));
 	}
 }

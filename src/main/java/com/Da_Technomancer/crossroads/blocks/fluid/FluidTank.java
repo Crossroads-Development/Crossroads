@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.fluid;
 
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.essentials.api.redstone.IReadable;
 import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import com.google.common.collect.Lists;
@@ -62,23 +63,19 @@ public class FluidTank extends BaseEntityBlock implements IReadable{
 		BlockEntity te = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
 		if(te instanceof FluidTankTileEntity ftte){
 			ItemStack drop = new ItemStack(this.asItem(), 1);
-			ftte.getContent().writeToNBT(drop.getOrCreateTag());
+			drop.set(CRItems.FLUID_DATA, ftte.getContent());
 			return Lists.newArrayList(drop);
 		}
 		return super.getDrops(state, builder);
 	}
 
 	private FluidStack getFluidOnItem(ItemStack stack){
-		FluidStack nbtFluid = FluidStack.loadFluidStackFromNBT(stack.getTag());
-		if(nbtFluid.isEmpty()){
-			nbtFluid = FluidStack.loadFluidStackFromNBT(stack.getOrCreateTagElement("BlockEntityTag").getCompound("fluid_0"));
-		}
-		return nbtFluid;
+		return stack.getOrDefault(CRItems.FLUID_DATA, FluidStack.EMPTY);
 	}
 
 	@Override
 	public void setPlacedBy(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
-		if(stack.hasTag()){
+		if(stack.has(CRItems.FLUID_DATA)){
 			FluidTankTileEntity te = (FluidTankTileEntity) world.getBlockEntity(pos);
 			te.setContent(getFluidOnItem(stack));
 		}

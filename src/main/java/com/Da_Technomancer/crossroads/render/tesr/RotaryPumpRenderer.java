@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.render.tesr;
 
 import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
-import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.blocks.fluid.RotaryPumpTileEntity;
@@ -14,6 +13,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.world.phys.AABB;
 import org.joml.Quaternionf;
 
 import java.awt.*;
@@ -29,15 +29,15 @@ public class RotaryPumpRenderer implements BlockEntityRenderer<RotaryPumpTileEnt
 		//Render the screw
 		matrix.pushPose();
 		matrix.translate(0.5D, 0.5D, 0.5D);
-		IAxleHandler opt = te.getCapability(CRCapabilities.AXLE_CAPABILITY, null);
+		IAxleHandler opt = te.getAxleHandler(null);
 
 		double screwOffset = 0.1D;
 		float screwScale = 0.45F;
 		for(int i = 0; i < 2; i++){
 			matrix.pushPose();
 			matrix.translate((2 * i - 1) * screwOffset, -0.25D, 0);
-			if(opt.isPresent()){
-				matrix.mulPose(Axis.YP.rotationDegrees((1F - 2F * i) * opt.orElseThrow(NullPointerException::new).getAngle(partialTicks)));
+			if(opt != null){
+				matrix.mulPose(Axis.YP.rotationDegrees((1F - 2F * i) * opt.getAngle(partialTicks)));
 			}
 			//Draw central axle
 			CRModels.drawAxle(matrix, buffer, combinedLight, CRMaterialLibrary.findMaterial("iron").getColor());
@@ -138,5 +138,10 @@ public class RotaryPumpRenderer implements BlockEntityRenderer<RotaryPumpTileEnt
 			CRRenderUtil.addVertexBlock(builder, matrix, xEn, ySt, zEn, lText.getU1(), lText.getV1(), 0, -1, 0, combinedLight, cols);
 			CRRenderUtil.addVertexBlock(builder, matrix, xSt, ySt, zEn, lText.getU0(), lText.getV1(), 0, -1, 0, combinedLight, cols);
 		}
+	}
+
+	@Override
+	public AABB getRenderBoundingBox(RotaryPumpTileEntity te){
+		return RotaryPumpTileEntity.RENDER_BOX.move(te.getBlockPos());
 	}
 }

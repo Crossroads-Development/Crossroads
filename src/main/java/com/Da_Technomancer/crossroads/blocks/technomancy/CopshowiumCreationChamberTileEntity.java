@@ -28,9 +28,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
-
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
@@ -80,12 +78,6 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 
 	public FluidStack getInputFluid(){
 		return fluids[0];
-	}
-
-	@Override
-	public AABB getRenderBoundingBox(){
-		//Increase render BB to include links
-		return new AABB(worldPosition).inflate(getRange());
 	}
 
 	@Override

@@ -22,7 +22,6 @@ import net.minecraft.world.item.crafting.SmokingRecipe;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
@@ -126,6 +125,7 @@ public class SteamerTileEntity extends InventoryTE{
 		}else if(dir != null){
 			return steamHandler;
 		}
+		return super.getFluidHandler(dir);
 	}
 
 	@Override

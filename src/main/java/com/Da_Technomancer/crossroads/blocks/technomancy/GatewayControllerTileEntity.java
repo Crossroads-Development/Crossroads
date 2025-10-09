@@ -16,6 +16,7 @@ import com.Da_Technomancer.crossroads.api.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.api.technomancy.*;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
+import com.Da_Technomancer.essentials.api.packets.SendLongToTE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -38,7 +39,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -213,12 +213,6 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 			IGateway.teleportEntityTo(entity, (ServerLevel) level, centerPos.x, centerPos.y + scalingRadius * verticalRelPos, centerPos.z + scalingRadius * horizontalRelPos, sourceAxis == plane ? 0 : -90);
 		}
 		playTPEffect(level, entity.getX(), entity.getY(), entity.getZ());
-	}
-
-	@Override
-	public AABB getRenderBoundingBox(){
-		//Increase render BB to include links and the entire formed frame
-		return new AABB(worldPosition).inflate(Math.max(getRange(), isActive() ? size : 0));
 	}
 
 	/**
@@ -437,7 +431,7 @@ public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements
 			//Teleportation
 			if(chevrons[3] != null && plane != null && !isShutDown()){
 				Direction horiz = Direction.get(Direction.AxisDirection.POSITIVE, plane);
-				AABB area = new AABB(worldPosition.below(size).relative(horiz, -size / 2), worldPosition.relative(horiz, size / 2 + 1));
+				AABB area = AABB.encapsulatingFullBlocks(worldPosition.below(size).relative(horiz, -size / 2), worldPosition.relative(horiz, size / 2 + 1));
 				//We use the timeUntilPortal field in Entity to not spam TP entities between two portals
 				//This is both not what it's for, and exactly what it's for
 				List<Entity> entities = level.getEntitiesOfClass(Entity.class, area, EntitySelector.ENTITY_STILL_ALIVE.and(e -> IGateway.isAllowedToTeleport(e, level)));

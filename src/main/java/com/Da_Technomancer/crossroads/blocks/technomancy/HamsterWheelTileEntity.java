@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.CRConfig;
-import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.CRCapabilities;
+import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.api.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -28,10 +28,8 @@ public class HamsterWheelTileEntity extends BlockEntity implements ITickableTile
 	@Override
 	public void tick(){
 		Direction facing = getBlockState().getValue(CRProperties.HORIZ_FACING);
-		BlockEntity te = level.getBlockEntity(worldPosition.relative(facing));
-		IAxleHandler axleOpt;
-		if(te != null && (axleOpt = te.getCapability(CRCapabilities.AXLE_CAPABILITY, facing.getOpposite())).isPresent()){
-			IAxleHandler axle = axleOpt.orElseThrow(NullPointerException::new);
+		IAxleHandler axle = level.getCapability(CRCapabilities.AXLE_CAPABILITY, worldPosition.relative(facing), facing.getOpposite());
+		if(axle != null){
 			if(level.isClientSide){
 				angle = axle.getAngle(0);
 				nextAngle = axle.getAngle(1F);

@@ -12,6 +12,7 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import com.Da_Technomancer.essentials.api.packets.ILongReceiver;
+import com.Da_Technomancer.essentials.api.packets.SendLongToTE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -207,12 +208,6 @@ public class GatewayControllerDestinationTileEntity extends BlockEntity implemen
 		playTPEffect(level, entity.getX(), entity.getY(), entity.getZ());
 	}
 
-	@Override
-	public AABB getRenderBoundingBox(){
-		//Increase render BB to include links and the entire formed frame
-		return new AABB(worldPosition).inflate(isActive() ? size : 0);
-	}
-
 	/**
 	 * Creates purely aesthetic sounds/particles
 	 * Virtual-server side only
@@ -401,7 +396,7 @@ public class GatewayControllerDestinationTileEntity extends BlockEntity implemen
 
 			//Teleportation
 			Direction horiz = Direction.get(Direction.AxisDirection.POSITIVE, plane);
-			AABB area = new AABB(worldPosition.below(size).relative(horiz, -size / 2), worldPosition.relative(horiz, size / 2 + 1));
+			AABB area = AABB.encapsulatingFullBlocks(worldPosition.below(size).relative(horiz, -size / 2), worldPosition.relative(horiz, size / 2 + 1));
 			//We use the timeUntilPortal field in Entity to not spam TP entities between two portals
 			//This is both not what it's for, and exactly what it's for
 			List<Entity> entities = level.getEntitiesOfClass(Entity.class, area, EntitySelector.ENTITY_STILL_ALIVE.and(e -> IGateway.isAllowedToTeleport(e, level)));

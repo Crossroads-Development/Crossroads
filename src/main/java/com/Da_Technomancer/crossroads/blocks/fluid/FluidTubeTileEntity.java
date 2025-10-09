@@ -18,7 +18,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -363,7 +362,7 @@ public class FluidTubeTileEntity extends BlockEntity implements ITickableTileEnt
 	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
 		super.loadAdditional(nbt, registries);
 		ConduitBlock.IConduitTE.readConduitNBT(nbt, this);
-		content = FluidStack.loadFluidStackFromNBT(nbt);
+		content = BlockUtil.nbtToFluidStack(nbt, registries);
 	}
 
 	@Override

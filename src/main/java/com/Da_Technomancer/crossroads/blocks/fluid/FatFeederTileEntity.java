@@ -24,7 +24,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
@@ -58,7 +57,7 @@ public class FatFeederTileEntity extends InventoryTE{
 		float gain = (float) Math.abs(fluids[0].getAmount() - fluidProps[0].capacity / 2) / (float) (fluidProps[0].capacity / 2);
 		;
 		int range = Math.round((1F - gain) * (MAX_RANGE - MIN_RANGE) + MIN_RANGE);
-		List<Player> players = level.getEntitiesOfClass(Player.class, new AABB(worldPosition.subtract(new Vec3i(range, range, range)), worldPosition.offset(new Vec3i(range, range, range))), EntitySelector.ENTITY_STILL_ALIVE);
+		List<Player> players = level.getEntitiesOfClass(Player.class, AABB.encapsulatingFullBlocks(worldPosition.subtract(new Vec3i(range, range, range)), worldPosition.offset(new Vec3i(range, range, range))), EntitySelector.ENTITY_STILL_ALIVE);
 		for(Player play : players){
 			FoodData food = play.getFoodData();
 			int added = Math.min(fluids[0].getAmount() / CRConfig.fatPerValue.get(), 40 - (food.getFoodLevel() + (int) food.getSaturationLevel()));
@@ -82,7 +81,7 @@ public class FatFeederTileEntity extends InventoryTE{
 			return;
 		}
 
-		List<AgeableMob> animals = level.getEntitiesOfClass(AgeableMob.class, new AABB(worldPosition.subtract(new Vec3i(range, range, range)), worldPosition.offset(new Vec3i(range, range, range))), EntitySelector.ENTITY_STILL_ALIVE);
+		List<AgeableMob> animals = level.getEntitiesOfClass(AgeableMob.class, AABB.encapsulatingFullBlocks(worldPosition.subtract(new Vec3i(range, range, range)), worldPosition.offset(new Vec3i(range, range, range))), EntitySelector.ENTITY_STILL_ALIVE);
 
 		//Cap out animal feeding at 64, to prevent flooding the world with animals
 		if(animals.size() >= 64){

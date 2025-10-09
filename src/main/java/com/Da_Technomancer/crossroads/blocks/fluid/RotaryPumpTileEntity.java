@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.blocks.fluid;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
-import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.MathUtil;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
@@ -12,6 +11,8 @@ import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.RotaryPumpContainer;
 import com.Da_Technomancer.essentials.api.BlockUtil;
 import com.Da_Technomancer.essentials.api.packets.INBTReceiver;
+import com.Da_Technomancer.essentials.api.packets.SendLongToTE;
+import com.Da_Technomancer.essentials.api.packets.SendNBTToTE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -33,7 +34,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
-
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.common.SoundActions;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -187,7 +187,7 @@ public class RotaryPumpTileEntity extends InventoryTE implements INBTReceiver{
 		//Doesn't send empty render fluids to the client (unnecessary)
 		if(!newRenderFluid.isEmpty() && !BlockUtil.sameFluid(renderFluid, newRenderFluid)){
 			renderFluid = newRenderFluid.copy();
-			CompoundTag nbt = renderFluid.writeToNBT(new CompoundTag());
+			CompoundTag nbt = BlockUtil.stackToNBT(renderFluid, level.registryAccess());
 			nbt.putBoolean("render_fluid", true);
 			CRPackets.sendPacketAround(level, worldPosition, new SendNBTToTE(nbt, worldPosition));
 		}
@@ -273,12 +273,7 @@ public class RotaryPumpTileEntity extends InventoryTE implements INBTReceiver{
 		}
 	}
 
-	private static final AABB RENDER_BOX = new AABB(0, -1, 0, 1, 1, 1);
-
-	@Override
-	public AABB getRenderBoundingBox(){
-		return RENDER_BOX.move(worldPosition);
-	}
+	public static final AABB RENDER_BOX = new AABB(0, -1, 0, 1, 1, 1);
 
 	public float getCompletion(float partialTicks){
 		return MathUtil.clamp(((float) progress + partialTicks * progChange) / (float) REQUIRED, -1F, 1F);
@@ -296,7 +291,7 @@ public class RotaryPumpTileEntity extends InventoryTE implements INBTReceiver{
 	@Override
 	public void receiveNBT(CompoundTag nbt, @Nullable ServerPlayer sender){
 		if(level.isClientSide && nbt.contains("render_fluid")){
-			renderFluid = FluidStack.loadFluidStackFromNBT(nbt);
+			renderFluid = BlockUtil.nbtToFluidStack(nbt, level.registryAccess());
 			updateRendering();
 		}
 	}
@@ -321,7 +316,7 @@ public class RotaryPumpTileEntity extends InventoryTE implements INBTReceiver{
 		super.loadAdditional(nbt, registries);
 		progress = nbt.getDouble("prog");
 		progChange = nbt.getFloat("prog_change");
-		renderFluid = FluidStack.loadFluidStackFromNBT(nbt.getCompound("render_fluid"));
+		renderFluid = BlockUtil.nbtToFluidStack(nbt.getCompound("render_fluid"), registries);
 	}
 
 	@Override
@@ -351,7 +346,7 @@ public class RotaryPumpTileEntity extends InventoryTE implements INBTReceiver{
 	}
 
 	@Override
-	public @org.jetbrains.annotations.Nullable IAxleHandler getAxleHandler(Direction dir){
+	public @Nullable IAxleHandler getAxleHandler(Direction dir){
 		if(dir == Direction.UP || dir == null){
 			return axleHandler;
 		}

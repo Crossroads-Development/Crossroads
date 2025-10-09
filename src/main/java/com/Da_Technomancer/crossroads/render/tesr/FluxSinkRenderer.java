@@ -8,6 +8,8 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.AABB;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
@@ -144,5 +146,11 @@ public class FluxSinkRenderer extends EntropyRenderer<FluxSinkTileEntity>{
 		float z = len * (float) Math.sin(angle);
 		float y = 0.4F * (float) Math.sin(runtime / 100 + plateIndex * 5);
 		return new float[] {x, y, z};
+	}
+
+	@Override
+	public AABB getRenderBoundingBox(FluxSinkTileEntity te){
+		BlockPos worldPosition = te.getBlockPos();
+		return AABB.encapsulatingFullBlocks(worldPosition.offset(-3, -3, -3), worldPosition.offset(3, 3, 3));
 	}
 }

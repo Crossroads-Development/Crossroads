@@ -1,6 +1,5 @@
 package com.Da_Technomancer.crossroads.blocks.rotary;
 
-import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -24,10 +23,9 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
-import net.neoforged.neoforge.items.IItemHandler;
-
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class MillstoneTileEntity extends InventoryTE{
@@ -53,7 +51,7 @@ public class MillstoneTileEntity extends InventoryTE{
 		return (int) Math.min(REQUIRED, progress);
 	}
 
-	private void createOutput(ItemStack[] outputs){
+	private void createOutput(List<ItemStack> outputs){
 		if(canFit(outputs)){
 			progress = 0;
 			inventory[0].shrink(1);
@@ -87,7 +85,7 @@ public class MillstoneTileEntity extends InventoryTE{
 		}
 	}
 
-	private boolean canFit(ItemStack[] outputs){
+	private boolean canFit(List<ItemStack> outputs){
 		//The millstone is literally the first machine added to Crossroads (called the grindstone at the time)
 		//Which is why the code for this block is so weird- it was written when I had no idea what I was doing
 		//Unlike now, where I have no idea what I was thinking
@@ -99,13 +97,13 @@ public class MillstoneTileEntity extends InventoryTE{
 		for(ItemStack stack : outputs){
 
 			int remain = stack.getCount();
-			for(int slot : new int[] {1, 2, 3}){
+			for(int slot = 1; slot < 4; slot++){
 				if(!locked.contains(slot) && BlockUtil.sameItem(inventory[slot], stack)){
 					remain -= stack.getMaxStackSize() - inventory[slot].getCount();
 				}
 			}
 
-			for(int slot : new int[] {1, 2, 3}){
+			for(int slot = 1; slot < 4; slot++){
 				if(!locked.contains(slot) && remain > 0 && inventory[slot].isEmpty()){
 					remain -= stack.getMaxStackSize();
 					locked.add(slot);

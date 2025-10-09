@@ -1,6 +1,5 @@
 package com.Da_Technomancer.crossroads.api.templates;
 
-import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.api.heat.IHeatCapable;
 import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
@@ -25,8 +24,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.BlockHitResult;
-
-import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.IFluidTank;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
@@ -174,7 +171,7 @@ public abstract class ModuleTE extends BlockEntity implements ITickableTileEntit
 
 		for(int i = 0; i < fluids.length; i++){
 			if(nbt.contains("fluid_" + i)){
-				fluids[i] = FluidStack.loadFluidStackFromNBT(nbt.getCompound("fluid_" + i));
+				fluids[i] = BlockUtil.nbtToFluidStack(nbt.getCompound("fluid_" + i), registries);
 			}
 		}
 	}

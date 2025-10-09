@@ -1,6 +1,5 @@
 package com.Da_Technomancer.crossroads.blocks.heat;
 
-import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.api.templates.ModuleTE;
@@ -8,7 +7,6 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -33,11 +31,9 @@ public class HeatReservoirTileEntity extends ModuleTE{
 		return new MassiveHeatHandler();
 	}
 
-	public CompoundTag getDropNBT(){
-		CompoundTag nbt = new CompoundTag();
+	public double getDropTemp(){
 		heatHandler.init();
-		nbt.putDouble("temp", temp);
-		return nbt;
+		return temp;
 	}
 
 	@Override

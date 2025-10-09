@@ -46,6 +46,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.DeferredSpawnEggItem;
+import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.RegisterEvent;
@@ -270,7 +271,8 @@ public final class CRItems{
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> VILLAGER_TRADE_SELECTION_DATA = DATA_COMPONENTS.registerComponentType("cr_current_trade", builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT));
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<MerchantOffers>> VILLAGER_TRADES_DATA = DATA_COMPONENTS.registerComponentType("cr_trades", builder -> builder.persistent(MerchantOffers.CODEC).networkSynchronized(MerchantOffers.STREAM_CODEC));
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<WindingTableTileEntity.WindingStatus>> WINDING_DATA = DATA_COMPONENTS.registerComponentType("winding_energy", builder -> builder.persistent(WindingTableTileEntity.WindingStatus.CODEC).networkSynchronized(WindingTableTileEntity.WindingStatus.STREAM_CODEC));
-
+	public static final DeferredHolder<DataComponentType<?>, DataComponentType<Double>> TEMPERATURE_DATA = DATA_COMPONENTS.registerComponentType("temperature", builder -> builder.persistent(Codec.DOUBLE).networkSynchronized(ByteBufCodecs.DOUBLE));
+	public static final DeferredHolder<DataComponentType<?>, DataComponentType<FluidStack>> FLUID_DATA = DATA_COMPONENTS.registerComponentType("fluid", builder -> builder.persistent(FluidStack.CODEC).networkSynchronized(FluidStack.STREAM_CODEC));
 
 	public static final DeferredRegister<ArmorMaterial> ARMOR_MATERIALS = DeferredRegister.create(BuiltInRegistries.ARMOR_MATERIAL, Crossroads.MODID);
 	public static final Holder<ArmorMaterial> BOBO_ARMOR_MATERIAL = ARMOR_MATERIALS.register("bobo", () -> new ArmorMaterial(
