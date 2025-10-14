@@ -6,7 +6,8 @@ import com.Da_Technomancer.essentials.Essentials;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import com.google.gson.JsonSyntaxException;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
@@ -17,8 +18,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.material.Fluid;
-import net.neoforged.neoforge.common.crafting.CraftingHelper;
+import net.neoforged.neoforge.common.util.NeoForgeExtraCodecs;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -28,92 +28,80 @@ import java.util.*;
 
 public class CraftingUtil{
 
-	/**
-	 * Reads a FluidStack from JSON. Throws an exception if it fails
-	 *
-	 * Format:
-	 *
-	 * <memberName>:
-	 * {
-	 *     "fluid": <fluid name; ex: water or crossroads:distilled_water>
-	 *     "amount": <size>
-	 * }
-	 *
-	 * Does not currently support NBT tags
-	 *
-	 * @param json The object to read from
-	 * @param memberName The name of the tag
-	 * @return The defined fluidstack
-	 */
-	public static FluidStack getFluidStack(JsonObject json, String memberName){
-		JsonObject obj = GsonHelper.getAsJsonObject(json, memberName);
-		String name = GsonHelper.getAsString(obj, "fluid");
-		Fluid f = BuiltInRegistries.FLUID.get(ResourceLocation.withDefaultNamespace(name));
-		int qty = GsonHelper.getAsInt(obj, "amount");
-		//Note: Does not currently support NBT
-		return f == null || qty <= 0 ? FluidStack.EMPTY : new FluidStack(f, qty);
+	public static MapCodec<String> recipeGroupFieldCodec(){
+		return Codec.STRING.optionalFieldOf("name", "");
 	}
 
 	/**
-	 *
-	 * Reads a FluidStack from JSON. Returns fallback if it fails
-	 *
-	 * Format:
-	 *
-	 * "<memberName>":
-	 * {
-	 *     "fluid": "<fluid name; ex: water or crossroads:distilled_water>"
-	 *     "amount": <size>
-	 * }
-	 *
-	 * Does not currently support NBT tags
-	 *
-	 * @param json The object to read from
-	 * @param memberName The name of the tag
-	 * @param fallback The value to return if no such fluidstack is defined
-	 * @return The defined fluidstack
+	 * This is for when you have a Codec to some composite data type (ex. ItemStack.CODEC) and you want two options for how it can be specified in JSON:
+	 *  - Nested style (normal ItemStack.CODEC.fieldOf(fieldName)) where it's {"fieldName": {...itemstack fields}}
+	 *  - Direct style where it's {...itemstack fields} without an enclosing "fieldName" object
+	 *  This will decode from either style, but encodes only to nested style
+	 * Example usage: alternativeEncodeDirect(ItemStack.CODEC, "output").forGetter(myGetter) as part of a RecordCodecBuilder call
+	 * This only works for some kinds of elementCodecs, mainly the ones created by RecordCodecBuilder or a Codec.lazyInitialized RecordCodecBuilder
+	 * @param elementCodec Base codec for a composite data type
+	 * @param fieldName Field name (optional in the JSON)
+	 * @return A MapCodec with two alternative decoding styles for the Codec
+	 * @param <T> The data type being encoded by the codecs
 	 */
-	public static FluidStack getFluidStack(JsonObject json, String memberName, FluidStack fallback){
-		FluidStack out;
-		try{
-			out = getFluidStack(json, memberName);
-		}catch(JsonParseException | IllegalArgumentException e){
-			out = fallback;
-		}
-		return out;
+	public static <T> MapCodec<T> allowDirectEncode(Codec<T> elementCodec, String fieldName){
+		MapCodec<T> directMapCodec = MapCodec.assumeMapUnsafe(elementCodec);//Only works for some types of elementCodec
+		return NeoForgeExtraCodecs.withAlternative(elementCodec.fieldOf(fieldName), directMapCodec);
 	}
 
-	public static ItemStack getItemStack(JsonObject json, String memberName, boolean allowDirect, boolean nbt){
-		if(allowDirect && json.has("item")){
-			return CraftingHelper.getItemStack(json, nbt);
-		}
-		if(memberName.isEmpty()){
-			throw new JsonSyntaxException("No item defined");
-		}
-		return CraftingHelper.getItemStack(json.getAsJsonObject(memberName), nbt);
+	/**
+	 * Makes this an optional field
+	 *
+	 * This is for when you have a Codec to some composite data type (ex. ItemStack.CODEC) and you want two options for how it can be specified in JSON:
+	 *  - Nested style (normal ItemStack.CODEC.fieldOf(fieldName)) where it's {"fieldName": {...itemstack fields}}
+	 *  - Direct style where it's {...itemstack fields} without an enclosing "fieldName" object
+	 *  This will decode from either style, but encodes only to nested style
+	 * Example usage: alternativeEncodeDirect(ItemStack.CODEC, "output").forGetter(myGetter) as part of a RecordCodecBuilder call
+	 * This only works for some kinds of elementCodecs, mainly the ones created by RecordCodecBuilder or a Codec.lazyInitialized RecordCodecBuilder
+	 * @param elementCodec Base codec for a composite data type
+	 * @param fieldName Field name (optional in the JSON)
+	 * @param fallback Fallback value if not present in JSON
+	 * @return A MapCodec with two alternative decoding styles for the Codec
+	 * @param <T> The data type being encoded by the codecs
+	 */
+	public static <T> MapCodec<T> allowDirectEncode(Codec<T> elementCodec, String fieldName, T fallback){
+		MapCodec<T> directMapCodec = MapCodec.assumeMapUnsafe(elementCodec).orElse(fallback);//Only works for some types of elementCodec
+		return NeoForgeExtraCodecs.withAlternative(elementCodec.fieldOf(fieldName), directMapCodec);
 	}
 
-	public static ItemStack getItemStack(JsonObject json, String memberName, boolean allowDirect, boolean nbt, ItemStack fallback){
-		ItemStack out;
-		try{
-			out = getItemStack(json, memberName, allowDirect, nbt);
-		}catch(JsonParseException | IllegalArgumentException e){
-			out = fallback;
-		}
-		return out;
-	}
-
-	public static Ingredient getIngredient(JsonElement json, String memberName, boolean allowDirect){
-		if(json.isJsonObject()){
-			JsonObject jsonO = (JsonObject) json;
-			if(jsonO.has(memberName)){
-				return Ingredient.fromJson(((JsonObject) json).get(memberName));
-			}
-		}
+	public static MapCodec<ItemStack> itemStackMapCodec(String fieldName, boolean allowDirect){
 		if(allowDirect){
-			return Ingredient.fromJson(json);
+			return allowDirectEncode(ItemStack.OPTIONAL_CODEC, fieldName);
 		}
-		throw new JsonParseException("Non-Ingredient passed as JSON ingredient");
+		return ItemStack.OPTIONAL_CODEC.fieldOf(fieldName);
+	}
+
+	public static MapCodec<ItemStack> itemStackMapCodec(String fieldName, boolean allowDirect, ItemStack fallback){
+		if(allowDirect){
+			return allowDirectEncode(ItemStack.OPTIONAL_CODEC, fieldName, fallback);
+		}
+		return ItemStack.OPTIONAL_CODEC.optionalFieldOf(fieldName, fallback);
+	}
+
+	public static MapCodec<FluidStack> fluidStackMapCodec(String fieldName, boolean allowDirect){
+		if(allowDirect){
+			return allowDirectEncode(FluidStack.OPTIONAL_CODEC, fieldName);
+		}
+		return FluidStack.OPTIONAL_CODEC.fieldOf(fieldName);
+	}
+
+	public static MapCodec<FluidStack> fluidStackMapCodec(String fieldName, boolean allowDirect, FluidStack fallback){
+		if(allowDirect){
+			return allowDirectEncode(FluidStack.OPTIONAL_CODEC, fieldName, fallback);
+		}
+		return FluidStack.OPTIONAL_CODEC.optionalFieldOf(fieldName, fallback);
+	}
+
+	public static MapCodec<Ingredient> itemIngredientMapCodec(String fieldName, boolean allowDirect){
+		if(allowDirect){
+			return allowDirectEncode(Ingredient.CODEC, fieldName);
+		}
+		return Ingredient.CODEC.fieldOf(fieldName);
 	}
 
 	public static BlockIngredient getBlockIngredient(JsonElement json, String memberName, boolean allowDirect){

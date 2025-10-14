@@ -14,9 +14,11 @@ import com.Da_Technomancer.crossroads.gui.container.EmbryoLabContainer;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.witchcraft.BloodSample;
 import com.Da_Technomancer.essentials.api.packets.INBTReceiver;
+import com.Da_Technomancer.essentials.api.packets.SendNBTToTE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -27,12 +29,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-
 import net.neoforged.neoforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
@@ -134,39 +135,42 @@ public class EmbryoLabTileEntity extends InventoryTE implements INBTReceiver{
 				syncTemplate();
 				return stack;
 			}
-			Potion potion = PotionUtils.getPotion(stack);
-			if(potion != Potions.EMPTY){
-				//Add potion effects which can be made permanent and do not already exist on the template
-				boolean foundLegalEffect = false;
-				NextPotionEffect:
-				for(MobEffectInstance potionEffect : potion.getEffects()){
-					//Special case curative to remove all potion effects
-					if(potionEffect.getEffect() == CRPotions.CURATIVE_EFFECT){
-						foundLegalEffect = true;
-						template.getEffects().clear();
-					}else if(CRPotions.canBePermanentEffect(potionEffect)){
-						//Check that the effect isn't already part of the template
-						for(MobEffectInstance templateEffect : template.getEffects()){
-							if(templateEffect.getEffect() == potionEffect.getEffect() && templateEffect.getAmplifier() >= potionEffect.getAmplifier()){
-								//This effect already exists in permanent form in an equal or stronger intensity
-								continue NextPotionEffect;
+			if(stack.getItem() == Items.POTION || stack.getItem() == Items.SPLASH_POTION){
+				PotionContents potion = stack.get(DataComponents.POTION_CONTENTS);
+				if(potion != null){
+					//Add potion effects which can be made permanent and do not already exist on the template
+					boolean foundLegalEffect = false;
+					NextPotionEffect:
+					for(MobEffectInstance potionEffect : potion.getAllEffects()){
+						//Special case curative to remove all potion effects
+						if(potionEffect.getEffect() == CRPotions.CURATIVE_EFFECT){
+							foundLegalEffect = true;
+							template.getEffects().clear();
+						}else if(CRPotions.canBePermanentEffect(potionEffect)){
+							//Check that the effect isn't already part of the template
+							for(MobEffectInstance templateEffect : template.getEffects()){
+								if(templateEffect.getEffect() == potionEffect.getEffect() && templateEffect.getAmplifier() >= potionEffect.getAmplifier()){
+									//This effect already exists in permanent form in an equal or stronger intensity
+									continue NextPotionEffect;
+								}
 							}
+							//This is a legal effect
+							template.getEffects().add(potionEffect);
+							foundLegalEffect = true;
 						}
-						//This is a legal effect
-						template.getEffects().add(potionEffect);
-						foundLegalEffect = true;
 					}
-				}
-				if(foundLegalEffect){
-					setChanged();
-					syncTemplate();
-					return new ItemStack(Items.GLASS_BOTTLE);
+					if(foundLegalEffect){
+						setChanged();
+						syncTemplate();
+						return new ItemStack(Items.GLASS_BOTTLE);
+					}
 				}
 			}
 
 			//Handle entity type morphing
-			List<EmbryoLabMorphRec> recipes = level.getRecipeManager().getAllRecipesFor(CRRecipes.EMBRYO_LAB_MORPH_TYPE);
-			for(EmbryoLabMorphRec rec : recipes){
+			List<RecipeHolder<EmbryoLabMorphRec>> recipes = level.getRecipeManager().getAllRecipesFor(CRRecipes.EMBRYO_LAB_MORPH_TYPE);
+			for(RecipeHolder<EmbryoLabMorphRec> recHolder : recipes){
+				EmbryoLabMorphRec rec = recHolder.value();
 				if(rec.isEnabled() && rec.getInputMob().equals(template.getEntityName()) && rec.getIngr().test(stack)){
 					template.setEntityName(rec.getOutputMob());
 					stack.shrink(1);

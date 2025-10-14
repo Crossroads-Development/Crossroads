@@ -7,6 +7,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.util.ExtraCodecs;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -19,10 +20,10 @@ import java.util.Arrays;
 public class BeamUnit{
 
 	public static Codec<BeamUnit> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-			Codec.INT.fieldOf("energy").forGetter(BeamUnit::getEnergy),
-			Codec.INT.fieldOf("potential").forGetter(BeamUnit::getPotential),
-			Codec.INT.fieldOf("stability").forGetter(BeamUnit::getStability),
-			Codec.INT.fieldOf("voi").forGetter(BeamUnit::getVoid)
+			ExtraCodecs.NON_NEGATIVE_INT.fieldOf("energy").forGetter(BeamUnit::getEnergy),
+			ExtraCodecs.NON_NEGATIVE_INT.fieldOf("potential").forGetter(BeamUnit::getPotential),
+			ExtraCodecs.NON_NEGATIVE_INT.fieldOf("stability").forGetter(BeamUnit::getStability),
+			ExtraCodecs.NON_NEGATIVE_INT.fieldOf("voi").forGetter(BeamUnit::getVoid)
 	).apply(instance, BeamUnit::new));
 
 	public static StreamCodec<ByteBuf, BeamUnit> STREAM_CODEC = StreamCodec.composite(

@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.blocks.witchcraft.AutoInjectorTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.AutoInjectorContainer;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
@@ -31,7 +32,12 @@ public class AutoInjectorScreen extends MachineScreen<AutoInjectorContainer, Aut
 	protected void renderLabels(GuiGraphics matrix, int mouseX, int mouseY){
 		super.renderLabels(matrix, mouseX, mouseY);
 
-		MobEffect effect = MobEffect.byId(menu.effectRef.get());
+		MobEffect effect;
+		if(menu.effectRef.get() < 0){
+			effect = null;
+		}else{
+			effect = BuiltInRegistries.MOB_EFFECT.byId(menu.effectRef.get());
+		}
 		String typeStr;
 		if(effect == null){
 			typeStr = MiscUtil.localize("container.crossroads.auto_injector.empty");

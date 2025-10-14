@@ -25,7 +25,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-
 import net.neoforged.neoforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
@@ -71,7 +70,7 @@ public class BrewingVatTileEntity extends InventoryTE{
 
 		//Only allow crafting if all inputs are present, all input potions are the same item, and all outputs are empty
 		if(!inventory[0].isEmpty() && !inventory[1].isEmpty() && BlockUtil.sameItem(inventory[1], inventory[2]) && BlockUtil.sameItem(inventory[1], inventory[3]) && inventory[4].isEmpty() && inventory[5].isEmpty() && inventory[6].isEmpty()){
-			created = BrewingRecipeRegistry.getOutput(inventory[1], inventory[0]);
+			created = level.potionBrewing().mix(inventory[1], inventory[0]);
 		}
 
 		if(created.isEmpty()){
@@ -196,7 +195,7 @@ public class BrewingVatTileEntity extends InventoryTE{
 			return false;
 		}
 		if(index == 0){
-			return BrewingRecipeRegistry.isValidIngredient(stack);
+			return level.potionBrewing().isPotionIngredient(stack);
 		}
 		if(index > 0 && index < 4){
 			if(stack.getCount() > 1){
@@ -204,7 +203,7 @@ public class BrewingVatTileEntity extends InventoryTE{
 				stack = stack.copy();
 				stack.setCount(1);
 			}
-			return BrewingRecipeRegistry.isValidInput(stack);
+			return level.potionBrewing().isContainerIngredient(stack);
 		}
 		return false;
 	}

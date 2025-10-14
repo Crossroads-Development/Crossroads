@@ -6,7 +6,6 @@
 /out/
 /asm/
 /bin/
-/build/
 /config/
 crash-reports/
 /.idea/
@@ -19,6 +18,7 @@ crash-reports/
 /screenshots/
 /classes/
 /net/
+/testing/
 
 # File Extensions
 *.psd

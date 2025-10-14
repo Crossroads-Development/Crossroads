@@ -3,5 +3,7 @@
 	"input": {
 		"item": "crossroads:void_crystal"
 	},
-	"void_convert": 1
+	"beam_modification": {
+		"void_convert": 1
+	}
 }

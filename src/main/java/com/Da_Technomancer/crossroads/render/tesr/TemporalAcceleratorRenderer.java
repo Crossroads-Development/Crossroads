@@ -18,6 +18,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 
 public class TemporalAcceleratorRenderer extends EntropyRenderer<TemporalAcceleratorTileEntity>{
 
@@ -100,5 +101,11 @@ public class TemporalAcceleratorRenderer extends EntropyRenderer<TemporalAcceler
 		matrix.translate(0, -4F / 16F, 0);
 		matrix.scale(0.8F, 1, 0.8F);
 		CRModels.draw8Core(builder, matrix, col, medLight, sprite, spriteRim);
+	}
+
+	@Override
+	public AABB getRenderBoundingBox(TemporalAcceleratorTileEntity te){
+		//Increase render BB to include links
+		return new AABB(te.getBlockPos()).inflate(te.getRange());
 	}
 }

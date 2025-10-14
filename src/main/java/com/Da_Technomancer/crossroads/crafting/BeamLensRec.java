@@ -5,12 +5,14 @@ import com.Da_Technomancer.crossroads.api.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.api.crafting.IOptionalRecipe;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.NonNullList;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeInput;
@@ -18,12 +20,8 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
-import javax.annotation.Nullable;
-import java.util.Locale;
-
 public class BeamLensRec implements IOptionalRecipe<RecipeInput>{
 
-	private final ResourceLocation id;
 	private final String group;
 	private final Ingredient ingr;
 	private final BeamMod output;
@@ -33,15 +31,24 @@ public class BeamLensRec implements IOptionalRecipe<RecipeInput>{
 
 	private final boolean active;
 
-	public BeamLensRec(ResourceLocation location, String name, Ingredient input, BeamMod output, ItemStack transmuteResult, EnumBeamAlignments transmuteAlignment, boolean transmuteVoid, boolean active){
-		id = location;
+	private BeamLensRec(){
+		group = "";
+		ingr = Ingredient.EMPTY;
+		output = BeamMod.IDENTITY;
+		transmuteAlignment = EnumBeamAlignments.NO_MATCH;
+		transmuteVoid = false;
+		transmuteResult = ItemStack.EMPTY;
+		active = false;
+	}
+
+	private BeamLensRec(String name, Ingredient input, BeamMod output, ItemStack transmuteResult, EnumBeamAlignments transmuteAlignment, boolean transmuteVoid){
 		group = name;
 		ingr = input;
 		this.output = output;
-		this.active = active;
+		this.active = true;
 		this.transmuteResult = transmuteResult;
-		this.transmuteVoid = transmuteVoid;
 		this.transmuteAlignment = transmuteAlignment;
+		this.transmuteVoid = transmuteVoid;
 	}
 
 	public BeamMod getOutput(){
@@ -76,7 +83,7 @@ public class BeamLensRec implements IOptionalRecipe<RecipeInput>{
 		return transmuteAlignment;
 	}
 
-	public boolean isVoid(){
+	public Boolean isVoid(){
 		return transmuteVoid;
 	}
 
@@ -117,85 +124,42 @@ public class BeamLensRec implements IOptionalRecipe<RecipeInput>{
 
 	public static class Serializer implements RecipeSerializer<BeamLensRec>{
 
-		@Override
-		public BeamLensRec fromJson(ResourceLocation recipeId, JsonObject json){
-			//Normal specification of recipe group and ingredient
-			String s = GsonHelper.getAsString(json, "group", "");
-			Ingredient ingredient = Ingredient.EMPTY;
-			ItemStack transform = ItemStack.EMPTY;
-			EnumBeamAlignments alignment = EnumBeamAlignments.NO_MATCH;
-			boolean transformVoid = false;
+		static{
+			BeamLensRec disabledRec = new BeamLensRec();
+			MapCodec<BeamLensRec> codec = RecordCodecBuilder.mapCodec(instance -> instance.group(
+					CraftingUtil.recipeGroupFieldCodec().forGetter(BeamLensRec::getGroup),
+					Ingredient.CODEC.fieldOf("input").forGetter(BeamLensRec::getIngr),
+					BeamMod.CODEC.optionalFieldOf("beam_modification", BeamMod.IDENTITY).forGetter(BeamLensRec::getOutput),
+					CraftingUtil.itemStackMapCodec("transmute_result", false, ItemStack.EMPTY).forGetter(BeamLensRec::getResultItem),
+					EnumBeamAlignments.CODEC.optionalFieldOf("transmute_alignment", EnumBeamAlignments.NO_MATCH).forGetter(BeamLensRec::getTransmuteAlignment),
+					Codec.BOOL.optionalFieldOf("transmute_void", false).forGetter(BeamLensRec::isVoid)
+			).apply(instance, BeamLensRec::new));
+			codec = codec.validate((BeamLensRec lensRec) -> !lensRec.active || lensRec.transmuteResult.isEmpty() || lensRec.transmuteAlignment != EnumBeamAlignments.NO_MATCH ? DataResult.success(lensRec) : DataResult.error(() -> "Invalid beam lens recipe; must specify transmute_alignment if a transmute_result is specified"));
+			CODEC = IOptionalRecipe.codecWithDisable(codec, disabledRec);
 
-			boolean active = CraftingUtil.isActiveJSON(json);
-			if(active){
-				ingredient = CraftingUtil.getIngredient(json, "input", true);
-
-				if(GsonHelper.isValidNode(json, "transmute_result")){
-					transform = CraftingUtil.getItemStack(json, "transmute_result", false, true);
-				}
-
-				if(GsonHelper.isValidNode(json, "transmute_alignment")){
-					try{
-						String alignName = GsonHelper.getAsString(json, "transmute_alignment");
-						alignment = EnumBeamAlignments.valueOf(alignName.toUpperCase(Locale.US));
-					}catch(NullPointerException e){
-						throw new JsonParseException("Non-existent alignment specified");
-					}
-				}
-				transformVoid = GsonHelper.getAsBoolean(json, "transmute_void", false);
-
-				//Output specified as 5 float tags, all of which are optional
-				//Filters default to 1, while void conversion defaults to 0
-				//This means beams pass right through by default
-				float[] mults = new float[5];
-				mults[0] = GsonHelper.getAsFloat(json, "energy", 1);
-				mults[1] = GsonHelper.getAsFloat(json, "potential", 1);
-				mults[2] = GsonHelper.getAsFloat(json, "stability", 1);
-				mults[3] = GsonHelper.getAsFloat(json, "void", 1);
-				mults[4] = GsonHelper.getAsFloat(json, "void_convert", 0);
-
-				return new BeamLensRec(recipeId, s, ingredient, new BeamMod(mults), transform, alignment, transformVoid, true);
-			}
-			return new BeamLensRec(recipeId, s, ingredient, BeamMod.IDENTITY, transform, alignment, transformVoid, false);
+			StreamCodec<RegistryFriendlyByteBuf, BeamLensRec> streamCodec = StreamCodec.composite(
+					ByteBufCodecs.STRING_UTF8, BeamLensRec::getGroup,
+					Ingredient.CONTENTS_STREAM_CODEC, BeamLensRec::getIngr,
+					BeamMod.STREAM_CODEC, BeamLensRec::getOutput,
+					ItemStack.OPTIONAL_STREAM_CODEC, BeamLensRec::getResultItem,
+					EnumBeamAlignments.STREAM_CODEC, BeamLensRec::getTransmuteAlignment,
+					ByteBufCodecs.BOOL, BeamLensRec::isVoid,
+					BeamLensRec::new
+			);
+			STREAM_CODEC = IOptionalRecipe.codecWithDisable(streamCodec, disabledRec);
 		}
 
-		@Nullable
+		public static MapCodec<BeamLensRec> CODEC;
+		public static StreamCodec<RegistryFriendlyByteBuf, BeamLensRec> STREAM_CODEC;
+
 		@Override
-		public BeamLensRec fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer){
-			String s = buffer.readUtf(Short.MAX_VALUE);
-			boolean active = buffer.readBoolean();
-
-			if(active){
-				Ingredient ingredient = Ingredient.fromNetwork(buffer);
-				ItemStack stack = buffer.readItem();
-				EnumBeamAlignments alignment = EnumBeamAlignments.valueOf(buffer.readUtf());
-				boolean transformVoid = buffer.readBoolean();
-
-				float[] units = new float[5];
-				for(int i = 0; i < units.length; i++){
-					units[i] = buffer.readFloat();
-				}
-				return new BeamLensRec(recipeId, s, ingredient, new BeamMod(units), stack, alignment, transformVoid, true);
-			}else{
-				return new BeamLensRec(recipeId, s, Ingredient.EMPTY, BeamMod.IDENTITY, ItemStack.EMPTY, EnumBeamAlignments.NO_MATCH, false, false);
-			}
+		public MapCodec<BeamLensRec> codec(){
+			return CODEC;
 		}
 
 		@Override
-		public void toNetwork(FriendlyByteBuf buffer, BeamLensRec recipe){
-			buffer.writeUtf(recipe.getGroup());
-			buffer.writeBoolean(recipe.active);
-			if(recipe.active){
-				recipe.ingr.toNetwork(buffer);
-				buffer.writeItem(recipe.transmuteResult);
-				buffer.writeUtf(recipe.transmuteAlignment.name());
-				buffer.writeBoolean(recipe.transmuteVoid);
-				buffer.writeFloat(recipe.output.getEnergyMult());
-				buffer.writeFloat(recipe.output.getPotentialMult());
-				buffer.writeFloat(recipe.output.getStabilityMult());
-				buffer.writeFloat(recipe.output.getVoidMult());
-				buffer.writeFloat(recipe.output.getVoidConvert());
-			}
+		public StreamCodec<RegistryFriendlyByteBuf, BeamLensRec> streamCodec(){
+			return STREAM_CODEC;
 		}
 	}
 }

@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.crafting;
 
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.api.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.api.crafting.IOptionalRecipe;
 import com.Da_Technomancer.crossroads.api.witchcraft.IPerishable;
@@ -16,6 +17,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
@@ -36,13 +38,22 @@ public class IncubatorRec implements IOptionalRecipe<RecipeInput>{
 	private final boolean datacopy;
 	private final boolean active;
 
-	public IncubatorRec(String group, Ingredient mainInput, Ingredient secondaryInput, ItemStack product, boolean datacopy, boolean active){
+	private IncubatorRec(){
+		group = "";
+		mainInput = Ingredient.EMPTY;
+		secondaryInput = Ingredient.EMPTY;
+		product = ItemStack.EMPTY;
+		datacopy = false;
+		active = false;
+	}
+
+	private IncubatorRec(String group, Ingredient mainInput, Ingredient secondaryInput, ItemStack product, boolean datacopy){
 		this.group = group;
 		this.mainInput = mainInput;
 		this.secondaryInput = secondaryInput;
 		this.product = product;
 		this.datacopy = datacopy;
-		this.active = active;
+		this.active = true;
 	}
 
 	public Ingredient getMainInput(){
@@ -118,25 +129,31 @@ public class IncubatorRec implements IOptionalRecipe<RecipeInput>{
 	}
 
 	public static class Serializer implements RecipeSerializer<IncubatorRec>{
-		//String group, Ingredient mainInput, Ingredient secondaryInput, ItemStack product, boolean datacopy, boolean active
-		private static final MapCodec<IncubatorRec> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-				Codec.STRING.optionalFieldOf("group", "").forGetter(IncubatorRec::getGroup),
-				Ingredient.CODEC.fieldOf("main_input").forGetter(IncubatorRec::getMainInput),
-				Ingredient.CODEC.fieldOf("secondary_input").forGetter(IncubatorRec::getSecondaryInput),
-				ItemStack.CODEC.fieldOf("output").forGetter(IncubatorRec::getResultItem),
-				Codec.BOOL.optionalFieldOf("datacopy", false).forGetter((IncubatorRec incubatorRec) -> incubatorRec.datacopy),
-				Codec.BOOL.optionalFieldOf("active", true).forGetter(IncubatorRec::isEnabled)
-		).apply(instance, IncubatorRec::new));
 
-		private static final StreamCodec<RegistryFriendlyByteBuf, IncubatorRec> STREAM_CODEC = StreamCodec.composite(
-				ByteBufCodecs.STRING_UTF8, IncubatorRec::getGroup,
-				Ingredient.CONTENTS_STREAM_CODEC, IncubatorRec::getMainInput,
-				Ingredient.CONTENTS_STREAM_CODEC, IncubatorRec::getSecondaryInput,
-				ItemStack.STREAM_CODEC, IncubatorRec::getResultItem,
-				ByteBufCodecs.BOOL, (IncubatorRec incubatorRec) -> incubatorRec.datacopy,
-				ByteBufCodecs.BOOL, IncubatorRec::isEnabled,
-				IncubatorRec::new
-		);
+		static{
+			MapCodec<IncubatorRec> codec = RecordCodecBuilder.mapCodec(instance -> instance.group(
+					CraftingUtil.recipeGroupFieldCodec().forGetter(IncubatorRec::getGroup),
+					CraftingUtil.itemIngredientMapCodec("main_input", false).forGetter(IncubatorRec::getMainInput),
+					CraftingUtil.itemIngredientMapCodec("secondary_input", false).forGetter(IncubatorRec::getSecondaryInput),
+					CraftingUtil.itemStackMapCodec("output", false).forGetter(IncubatorRec::getResultItem),
+					Codec.BOOL.optionalFieldOf("datacopy", false).forGetter((IncubatorRec incubatorRec) -> incubatorRec.datacopy)
+					).apply(instance, IncubatorRec::new));
+
+			StreamCodec<RegistryFriendlyByteBuf, IncubatorRec> streamCodec = StreamCodec.composite(
+					ByteBufCodecs.STRING_UTF8, IncubatorRec::getGroup,
+					Ingredient.CONTENTS_STREAM_CODEC, IncubatorRec::getMainInput,
+					Ingredient.CONTENTS_STREAM_CODEC, IncubatorRec::getSecondaryInput,
+					ItemStack.STREAM_CODEC, IncubatorRec::getResultItem,
+					ByteBufCodecs.BOOL, (IncubatorRec incubatorRec) -> incubatorRec.datacopy,
+					IncubatorRec::new
+			);
+			IncubatorRec disabledRec = new IncubatorRec();
+			CODEC = IOptionalRecipe.codecWithDisable(codec, disabledRec);
+			STREAM_CODEC = IOptionalRecipe.codecWithDisable(streamCodec, disabledRec);
+		}
+
+		private static final MapCodec<IncubatorRec> CODEC;
+		private static final StreamCodec<RegistryFriendlyByteBuf, IncubatorRec> STREAM_CODEC;
 
 		@Override
 		public MapCodec<IncubatorRec> codec(){

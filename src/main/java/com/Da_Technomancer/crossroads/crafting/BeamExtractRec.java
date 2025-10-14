@@ -4,26 +4,19 @@ import com.Da_Technomancer.crossroads.api.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.api.crafting.IOptionalRecipe;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.google.gson.JsonObject;
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.Registry;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-
-import javax.annotation.Nullable;
 
 public class BeamExtractRec implements IOptionalRecipe<RecipeInput>{
 
@@ -35,12 +28,20 @@ public class BeamExtractRec implements IOptionalRecipe<RecipeInput>{
 
 	private final boolean active;
 
-	public BeamExtractRec(String name, Ingredient input, BeamUnit output, int duration, boolean active){
+	private BeamExtractRec(){
+		group = "";
+		ingr = Ingredient.EMPTY;
+		this.output = BeamUnit.EMPTY;
+		this.duration = 0;
+		this.active = false;
+	}
+
+	private BeamExtractRec(String name, Ingredient input, BeamUnit output, int duration){
 		group = name;
 		ingr = input;
 		this.output = output;
 		this.duration = duration;
-		this.active = active;
+		this.active = true;
 	}
 
 	public BeamUnit getOutput(){
@@ -108,23 +109,28 @@ public class BeamExtractRec implements IOptionalRecipe<RecipeInput>{
 
 	public static class Serializer implements RecipeSerializer<BeamExtractRec>{
 
-		//ResourceLocation location, String name, Ingredient input, BeamUnit output, int duration, boolean active
-		public static MapCodec<BeamExtractRec> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-				Codec.STRING.fieldOf("name").forGetter(BeamExtractRec::getGroup),
-				Ingredient.CODEC.fieldOf("input").forGetter(BeamExtractRec::getIngredient),
-				BeamUnit.CODEC.fieldOf("output").forGetter(BeamExtractRec::getOutput),
-				Codec.INT.fieldOf("duration").forGetter(BeamExtractRec::getDuration),
-				Codec.BOOL.fieldOf("active").forGetter(BeamExtractRec::isActive)
-		).apply(instance, BeamExtractRec::new));
+		static{
+			MapCodec<BeamExtractRec> codec = RecordCodecBuilder.mapCodec(instance -> instance.group(
+					CraftingUtil.recipeGroupFieldCodec().forGetter(BeamExtractRec::getGroup),
+					CraftingUtil.itemIngredientMapCodec("input", false).forGetter(BeamExtractRec::getIngredient),
+					BeamUnit.CODEC.fieldOf("output").forGetter(BeamExtractRec::getOutput),
+					ExtraCodecs.NON_NEGATIVE_INT.fieldOf("duration").forGetter(BeamExtractRec::getDuration)
+			).apply(instance, BeamExtractRec::new));
 
-		public static StreamCodec<RegistryFriendlyByteBuf, BeamExtractRec> STREAM_CODEC = StreamCodec.composite(
-				ByteBufCodecs.STRING_UTF8, BeamExtractRec::getGroup,
-				Ingredient.CONTENTS_STREAM_CODEC, BeamExtractRec::getIngredient,
-				BeamUnit.STREAM_CODEC, BeamExtractRec::getOutput,
-				ByteBufCodecs.INT, BeamExtractRec::getDuration,
-				ByteBufCodecs.BOOL, BeamExtractRec::isActive,
-				BeamExtractRec::new
-		);
+			StreamCodec<RegistryFriendlyByteBuf, BeamExtractRec> streamCodec = StreamCodec.composite(
+					ByteBufCodecs.STRING_UTF8, BeamExtractRec::getGroup,
+					Ingredient.CONTENTS_STREAM_CODEC, BeamExtractRec::getIngredient,
+					BeamUnit.STREAM_CODEC, BeamExtractRec::getOutput,
+					ByteBufCodecs.INT, BeamExtractRec::getDuration,
+					BeamExtractRec::new
+			);
+			BeamExtractRec disabledRec = new BeamExtractRec();
+			CODEC = IOptionalRecipe.codecWithDisable(codec, disabledRec);
+			STREAM_CODEC = IOptionalRecipe.codecWithDisable(streamCodec, disabledRec);
+		}
+
+		public static MapCodec<BeamExtractRec> CODEC;
+		public static StreamCodec<RegistryFriendlyByteBuf, BeamExtractRec> STREAM_CODEC;
 
 		@Override
 		public MapCodec<BeamExtractRec> codec(){

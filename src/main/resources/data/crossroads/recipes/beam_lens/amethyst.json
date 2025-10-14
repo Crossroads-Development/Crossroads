@@ -3,8 +3,10 @@
 	"input": {
 		"tag": "forge:gems/amethyst"
 	},
-	"energy": 0.75,
-	"potential": 0,
-	"stability": 1,
-	"void": 0
+	"beam_modification": {
+		"energy": 0.75,
+		"potential": 0,
+		"stability": 1,
+		"void": 0
+	}
 }

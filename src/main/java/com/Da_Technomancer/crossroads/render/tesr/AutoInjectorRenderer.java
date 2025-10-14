@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 
 public class AutoInjectorRenderer implements BlockEntityRenderer<AutoInjectorTileEntity>{
 
@@ -74,5 +75,10 @@ public class AutoInjectorRenderer implements BlockEntityRenderer<AutoInjectorTil
 
 			matrix.popPose();
 		}
+	}
+
+	@Override
+	public AABB getRenderBoundingBox(AutoInjectorTileEntity te){
+		return new AABB(te.getBlockPos()).inflate(AutoInjectorTileEntity.SIZE);
 	}
 }

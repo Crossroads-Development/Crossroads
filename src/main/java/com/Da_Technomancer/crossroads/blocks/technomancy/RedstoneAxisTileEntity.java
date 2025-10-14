@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
-import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.CRCapabilities;
+import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.CircuitUtil;
 import com.Da_Technomancer.crossroads.api.rotary.AxisTypes;
 import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
@@ -11,12 +11,10 @@ import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.blocks.rotary.MasterAxisTileEntity;
 import com.Da_Technomancer.essentials.api.redstone.IRedstoneCapable;
 import com.Da_Technomancer.essentials.api.redstone.IRedstoneHandler;
-import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -57,9 +55,7 @@ public class RedstoneAxisTileEntity extends MasterAxisTileEntity implements IRed
 		double sumIRot = energyCalcResults[3];//Sum of every gear's moment of inertia time rotation ratio squared
 
 		double cost = sumIRot * Math.pow(targetBaseSpeed, 2) / 2D;//Total energy required to hold the output at the requested base speed
-		BlockEntity backTE = level.getBlockEntity(worldPosition.relative(facing.getOpposite()));
-		IAxleHandler backOpt = backTE == null ? LazyOptional.empty() : backTE.getCapability(CRCapabilities.AXLE_CAPABILITY, facing);
-		IAxleHandler sourceAxle = backOpt.isPresent() ? backOpt.orElseThrow(NullPointerException::new) : null;
+		IAxleHandler sourceAxle = level.getCapability(CRCapabilities.AXLE_CAPABILITY, worldPosition.relative(facing.getOpposite()), facing);
 		double availableEnergy = Math.abs(energyCalcResults[0]);
 		//Add energy from the gear on the back. Don't double count if it's in this gear network
 		if(rotaryMembers.contains(sourceAxle)){

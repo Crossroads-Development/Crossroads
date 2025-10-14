@@ -3,18 +3,12 @@ package com.Da_Technomancer.crossroads.crafting;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.api.crafting.IOptionalRecipe;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.google.gson.JsonObject;
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.NonNullList;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeInput;
@@ -22,8 +16,6 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
-
-import javax.annotation.Nullable;
 
 public class CrucibleRec implements IOptionalRecipe<RecipeInput>{
 
@@ -33,11 +25,18 @@ public class CrucibleRec implements IOptionalRecipe<RecipeInput>{
 	private final FluidStack output;
 	private final boolean active;
 
-	public CrucibleRec(String name, Ingredient input, FluidStack output, boolean active){
+	private CrucibleRec(){
+		group = "";
+		input = Ingredient.EMPTY;
+		output = FluidStack.EMPTY;
+		active = false;
+	}
+
+	private CrucibleRec(String name, Ingredient input, FluidStack output){
 		group = name;
 		this.input = input;
 		this.output = output;
-		this.active = active;
+		this.active = true;
 	}
 
 	public FluidStack getOutput(){
@@ -96,21 +95,28 @@ public class CrucibleRec implements IOptionalRecipe<RecipeInput>{
 	}
 
 	public static class Serializer implements RecipeSerializer<CrucibleRec>{
-		// String name, Ingredient input, FluidStack output, boolean active
-		private static final MapCodec<CrucibleRec> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-				Codec.STRING.optionalFieldOf("group", "").forGetter(CrucibleRec::getGroup),
-				Ingredient.CODEC.fieldOf("input").forGetter(CrucibleRec::getIngredient),
-				FluidStack.CODEC.fieldOf("output").forGetter(CrucibleRec::getOutput),
-				Codec.BOOL.optionalFieldOf("active", true).forGetter(CrucibleRec::isEnabled)
-		).apply(instance, CrucibleRec::new));
 
-		private static final StreamCodec<RegistryFriendlyByteBuf, CrucibleRec> STREAM_CODEC = StreamCodec.composite(
-				ByteBufCodecs.STRING_UTF8, CrucibleRec::getGroup,
-				Ingredient.CONTENTS_STREAM_CODEC, CrucibleRec::getIngredient,
-				FluidStack.STREAM_CODEC, CrucibleRec::getOutput,
-				ByteBufCodecs.BOOL, CrucibleRec::isEnabled,
-				CrucibleRec::new
-		);
+		static{
+			MapCodec<CrucibleRec> codec = RecordCodecBuilder.mapCodec(instance -> instance.group(
+					CraftingUtil.recipeGroupFieldCodec().forGetter(CrucibleRec::getGroup),
+					CraftingUtil.itemIngredientMapCodec("input", false).forGetter(CrucibleRec::getIngredient),
+					CraftingUtil.fluidStackMapCodec("output", false).forGetter(CrucibleRec::getOutput)
+			).apply(instance, CrucibleRec::new));
+			StreamCodec<RegistryFriendlyByteBuf, CrucibleRec> streamCodec = StreamCodec.composite(
+					ByteBufCodecs.STRING_UTF8, CrucibleRec::getGroup,
+					Ingredient.CONTENTS_STREAM_CODEC, CrucibleRec::getIngredient,
+					FluidStack.STREAM_CODEC, CrucibleRec::getOutput,
+					CrucibleRec::new
+			);
+			CrucibleRec disabledRec = new CrucibleRec();
+			CODEC = IOptionalRecipe.codecWithDisable(codec, disabledRec);
+			STREAM_CODEC = IOptionalRecipe.codecWithDisable(streamCodec, disabledRec);
+		}
+
+		// String name, Ingredient input, FluidStack output, boolean active
+		private static final MapCodec<CrucibleRec> CODEC;
+
+		private static final StreamCodec<RegistryFriendlyByteBuf, CrucibleRec> STREAM_CODEC;
 
 		@Override
 		public MapCodec<CrucibleRec> codec(){

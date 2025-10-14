@@ -20,9 +20,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerListener;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -32,15 +32,15 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-public class LensFrameTileEntity extends BeamRenderTE implements INBTReceiver, ContainerListener, IItemCapable{
+public class LensFrameTileEntity extends BeamRenderTE implements INBTReceiver, ContainerListener, IItemCapable, RecipeInput{
 
 	public static final BlockEntityType<LensFrameTileEntity> TYPE = CRTileEntity.createType(LensFrameTileEntity::new, CRBlocks.lensFrame);
 
-	private final SimpleContainer inventoryWrapper = new SimpleContainer(1);
 	private Direction.Axis axis = null;
 	private BeamLensRec currRec;
 	private boolean recipeCheck;
 	private int lastRedstone;
+	private ItemStack lensItem = ItemStack.EMPTY;
 
 	private final IItemHandler lensItemHandler = new LensHandler();
 
@@ -56,7 +56,6 @@ public class LensFrameTileEntity extends BeamRenderTE implements INBTReceiver, C
 
 	public LensFrameTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state);
-		inventoryWrapper.addListener(this);
 	}
 
 	private Direction.Axis getAxis(){
@@ -72,11 +71,12 @@ public class LensFrameTileEntity extends BeamRenderTE implements INBTReceiver, C
 	}
 
 	public ItemStack getLensItem(){
-		return inventoryWrapper.getItem(0);
+		return lensItem;
 	}
 
 	public void setLensItem(ItemStack lens){
-		inventoryWrapper.setItem(0, lens);
+		lensItem = lens;
+		setChanged();
 		if(level != null && !level.isClientSide){
 			//Update on the client
 			CRPackets.sendPacketAround(level, worldPosition, new SendNBTToTE(BlockUtil.stackToNBT(lens, level.registryAccess()), worldPosition));
@@ -107,7 +107,8 @@ public class LensFrameTileEntity extends BeamRenderTE implements INBTReceiver, C
 	@Nullable
 	public BeamLensRec getCurrRec(){
 		if(!recipeCheck){
-			Optional<RecipeHolder<BeamLensRec>> rec = level.getRecipeManager().getRecipeFor(CRRecipes.BEAM_LENS_TYPE, inventoryWrapper, level);
+			RecipeInput input = null;
+			Optional<RecipeHolder<BeamLensRec>> rec = level.getRecipeManager().getRecipeFor(CRRecipes.BEAM_LENS_TYPE, input, level);
 			currRec = rec.orElse(null) == null ? null : rec.get().value();
 			recipeCheck = true;
 		}
@@ -238,6 +239,16 @@ public class LensFrameTileEntity extends BeamRenderTE implements INBTReceiver, C
 		return new LensBeamHandler();
 	}
 
+	@Override
+	public ItemStack getItem(int i){
+		return i == 0 ? lensItem : ItemStack.EMPTY;
+	}
+
+	@Override
+	public int size(){
+		return 1;
+	}
+
 	private class LensBeamHandler implements IBeamHandler{
 
 		@Override
@@ -247,7 +258,7 @@ public class LensFrameTileEntity extends BeamRenderTE implements INBTReceiver, C
 			BeamMod mod = BeamMod.IDENTITY;
 			if(recipe != null){
 				if(!beamIn.isEmpty() && EnumBeamAlignments.getAlignment(beamIn) == recipe.getTransmuteAlignment() && (recipe.isVoid() == (beamIn.getVoid() > 0))){
-					setLensItem(recipe.assemble(inventoryWrapper));
+					setLensItem(recipe.assemble(LensFrameTileEntity.this));
 				}
 				mod = recipe.getOutput();
 			}
@@ -295,7 +306,7 @@ public class LensFrameTileEntity extends BeamRenderTE implements INBTReceiver, C
 		@Nonnull
 		@Override
 		public ItemStack getStackInSlot(int slot){
-			return slot == 0 ? inventoryWrapper.getItem(slot) : ItemStack.EMPTY;
+			return slot == 0 ? lensItem : ItemStack.EMPTY;
 		}
 
 		@Nonnull

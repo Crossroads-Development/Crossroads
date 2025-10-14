@@ -1,26 +1,21 @@
 package com.Da_Technomancer.crossroads.crafting;
 
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.api.crafting.IOptionalRecipe;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.google.gson.JsonObject;
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-
-import javax.annotation.Nullable;
 
 public class EmbryoLabMorphRec implements IOptionalRecipe<RecipeInput>{
 
@@ -30,12 +25,20 @@ public class EmbryoLabMorphRec implements IOptionalRecipe<RecipeInput>{
 	private final Ingredient ingr;
 	private final boolean active;
 
-	public EmbryoLabMorphRec(String group, ResourceLocation inputMob, ResourceLocation outputMob, Ingredient ingr, boolean active){
+	private EmbryoLabMorphRec(){
+		group = "";
+		inputMob = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "empty");
+		outputMob = inputMob;
+		ingr = Ingredient.EMPTY;
+		active = false;
+	}
+
+	private EmbryoLabMorphRec(String group, ResourceLocation inputMob, ResourceLocation outputMob, Ingredient ingr){
 		this.group = group;
 		this.inputMob = inputMob;
 		this.outputMob = outputMob;
 		this.ingr = ingr;
-		this.active = active;
+		this.active = true;
 	}
 
 	public ResourceLocation getInputMob(){
@@ -91,23 +94,28 @@ public class EmbryoLabMorphRec implements IOptionalRecipe<RecipeInput>{
 	}
 
 	public static class Serializer implements RecipeSerializer<EmbryoLabMorphRec>{
-		//String group, ResourceLocation inputMob, ResourceLocation outputMob, Ingredient ingr, boolean active
-		public static final MapCodec<EmbryoLabMorphRec> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-				Codec.STRING.optionalFieldOf("group", "").forGetter(EmbryoLabMorphRec::getGroup),
-				ResourceLocation.CODEC.fieldOf("input_mob").forGetter(EmbryoLabMorphRec::getInputMob),
-				ResourceLocation.CODEC.fieldOf("output_mob").forGetter(EmbryoLabMorphRec::getOutputMob),
-				Ingredient.CODEC.fieldOf("input").forGetter(EmbryoLabMorphRec::getIngr),
-				Codec.BOOL.optionalFieldOf("active", true).forGetter(EmbryoLabMorphRec::isEnabled)
-		).apply(instance, EmbryoLabMorphRec::new));
 
-		public static final StreamCodec<RegistryFriendlyByteBuf, EmbryoLabMorphRec> STREAM_CODEC = StreamCodec.composite(
-				ByteBufCodecs.STRING_UTF8, EmbryoLabMorphRec::getGroup,
-				ResourceLocation.STREAM_CODEC, EmbryoLabMorphRec::getInputMob,
-				ResourceLocation.STREAM_CODEC, EmbryoLabMorphRec::getOutputMob,
-				Ingredient.CONTENTS_STREAM_CODEC, EmbryoLabMorphRec::getIngr,
-				ByteBufCodecs.BOOL, EmbryoLabMorphRec::isEnabled,
-				EmbryoLabMorphRec::new
-		);
+		static{
+			MapCodec<EmbryoLabMorphRec> codec = RecordCodecBuilder.mapCodec(instance -> instance.group(
+					CraftingUtil.recipeGroupFieldCodec().forGetter(EmbryoLabMorphRec::getGroup),
+					ResourceLocation.CODEC.fieldOf("input_mob").forGetter(EmbryoLabMorphRec::getInputMob),
+					ResourceLocation.CODEC.fieldOf("output_mob").forGetter(EmbryoLabMorphRec::getOutputMob),
+					CraftingUtil.itemIngredientMapCodec("input", false).forGetter(EmbryoLabMorphRec::getIngr)
+			).apply(instance, EmbryoLabMorphRec::new));
+			StreamCodec<RegistryFriendlyByteBuf, EmbryoLabMorphRec> streamCodec = StreamCodec.composite(
+					ByteBufCodecs.STRING_UTF8, EmbryoLabMorphRec::getGroup,
+					ResourceLocation.STREAM_CODEC, EmbryoLabMorphRec::getInputMob,
+					ResourceLocation.STREAM_CODEC, EmbryoLabMorphRec::getOutputMob,
+					Ingredient.CONTENTS_STREAM_CODEC, EmbryoLabMorphRec::getIngr,
+					EmbryoLabMorphRec::new
+			);
+			EmbryoLabMorphRec disabledRec = new EmbryoLabMorphRec();
+			CODEC = IOptionalRecipe.codecWithDisable(codec, disabledRec);
+			STREAM_CODEC = IOptionalRecipe.codecWithDisable(streamCodec, disabledRec);
+		}
+
+		public static final MapCodec<EmbryoLabMorphRec> CODEC;
+		public static final StreamCodec<RegistryFriendlyByteBuf, EmbryoLabMorphRec> STREAM_CODEC;
 
 		@Override
 		public MapCodec<EmbryoLabMorphRec> codec(){

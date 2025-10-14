@@ -81,11 +81,11 @@ public class BeamLensCategory implements IRecipeCategory<BeamLensRec>{
 		}
 
 		BeamMod output = recipe.getOutput();
-		int energy = (int) (output.getEnergyMult() * 100);
-		int potential = (int) (output.getPotentialMult() * 100);
-		int stability = (int) (output.getStabilityMult() * 100);
-		int voi = (int) (output.getVoidMult() * 100);
-		int voidConv = (int) (output.getVoidConvert() * 100);
+		int energy = (int) (output.energyMult() * 100);
+		int potential = (int) (output.potentialMult() * 100);
+		int stability = (int) (output.stabilityMult() * 100);
+		int voi = (int) (output.voidMult() * 100);
+		int voidConv = (int) (output.voidConvert() * 100);
 
 		int x = 50;
 		int y = 18;

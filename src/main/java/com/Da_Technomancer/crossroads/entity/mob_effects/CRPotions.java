@@ -55,7 +55,7 @@ public class CRPotions{
 		return Holder.direct(effect);
 	}
 
-	private static Holder<Potion> registerPotion(String regName, String potionName, MobEffectInstance effectInstance){
+	private static Holder<Potion> registerPotion(String regName, String potionName, MobEffectInstance... effectInstance){
 		Potion potion = new Potion(potionName, effectInstance);
 		toRegisterPotion.put(regName, potion);
 		return Holder.direct(potion);

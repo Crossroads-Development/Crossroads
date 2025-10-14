@@ -16,6 +16,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.item.crafting.SmokingRecipe;
@@ -66,8 +67,9 @@ public class SteamerTileEntity extends InventoryTE{
 	public void serverTick(){
 		super.serverTick();
 
-		SmokingRecipe rec;
-		if(!inventory[0].isEmpty() && (rec = level.getRecipeManager().getRecipeFor(RecipeType.SMOKING, this, level).orElse(null)) != null && (inventory[1].isEmpty() || BlockUtil.sameItem(rec.getResultItem(level.registryAccess()), inventory[1]) && inventory[1].getCount() < inventory[1].getMaxStackSize())){
+		RecipeHolder<SmokingRecipe> rec;
+		SingleRecipeInput input = new SingleRecipeInput(inventory[0]);
+		if(!inventory[0].isEmpty() && (rec = level.getRecipeManager().getRecipeFor(RecipeType.SMOKING, input, level).orElse(null)) != null && (inventory[1].isEmpty() || BlockUtil.sameItem(rec.value().getResultItem(level.registryAccess()), inventory[1]) && inventory[1].getCount() < inventory[1].getMaxStackSize())){
 			//Check fluids
 			if(fluids[0].getAmount() >= FLUID_USE && fluidProps[1].capacity - fluids[1].getAmount() >= FLUID_USE){
 				if(fluids[1].isEmpty()){
@@ -81,7 +83,7 @@ public class SteamerTileEntity extends InventoryTE{
 				if(++progress >= REQUIRED){
 					progress = 0;
 					if(inventory[1].isEmpty()){
-						inventory[1] = rec.assemble(this, level.registryAccess());
+						inventory[1] = rec.value().assemble(input, level.registryAccess());
 					}else{
 						inventory[1].grow(1);
 					}

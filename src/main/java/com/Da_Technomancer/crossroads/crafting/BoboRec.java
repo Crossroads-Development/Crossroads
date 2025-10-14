@@ -3,27 +3,18 @@ package com.Da_Technomancer.crossroads.crafting;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.api.crafting.IOptionalRecipe;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.google.gson.JsonObject;
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.NonNullList;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
 
 public class BoboRec implements IOptionalRecipe<RecipeInput>{
 
@@ -32,11 +23,18 @@ public class BoboRec implements IOptionalRecipe<RecipeInput>{
 	private final ItemStack output;
 	private final boolean active;
 
-	public BoboRec(String name, List<Ingredient> input, ItemStack output, boolean active){
+	private BoboRec(){
+		group = "";
+		ingr = new Ingredient[0];
+		output = ItemStack.EMPTY;
+		active = false;
+	}
+
+	private BoboRec(String name, Ingredient inputA, Ingredient inputB, Ingredient inputC, ItemStack output){
 		group = name;
-		ingr = input.toArray(new Ingredient[] {});
+		ingr = new Ingredient[] {inputA, inputB, inputC};
 		this.output = output;
-		this.active = active;
+		this.active = true;
 	}
 
 	@Override
@@ -106,21 +104,32 @@ public class BoboRec implements IOptionalRecipe<RecipeInput>{
 	}
 
 	public static class Serializer implements RecipeSerializer<BoboRec>{
-		//ResourceLocation location, String name, List<Ingredient> input, ItemStack output, boolean active
-		public static final MapCodec<BoboRec> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-				Codec.STRING.optionalFieldOf("group", "").forGetter(BoboRec::getGroup),
-				Codec.list(Ingredient.CODEC).fieldOf("input").forGetter(BoboRec::getIngredients), //TODO: change the file format to actually match this description.
-				ItemStack.CODEC.fieldOf("output").forGetter(BoboRec::getResultItem),
-				Codec.BOOL.optionalFieldOf("active", true).forGetter(BoboRec::isEnabled)
-		).apply(instance, BoboRec::new));
 
-		public static final StreamCodec<RegistryFriendlyByteBuf, BoboRec> STREAM_CODEC = StreamCodec.composite(
-				ByteBufCodecs.STRING_UTF8, BoboRec::getGroup,
-				ByteBufCodecs.collection(ArrayList::new, Ingredient.CONTENTS_STREAM_CODEC), BoboRec::getIngredients,
-				ItemStack.STREAM_CODEC, BoboRec::getResultItem,
-				ByteBufCodecs.BOOL, BoboRec::isEnabled,
-				BoboRec::new
-		);
+		static{
+			BoboRec disabledRec = new BoboRec();
+
+			MapCodec<BoboRec> codec = RecordCodecBuilder.mapCodec(instance -> instance.group(
+					CraftingUtil.recipeGroupFieldCodec().forGetter(BoboRec::getGroup),
+					CraftingUtil.itemIngredientMapCodec("input_a", false).forGetter(boboRec -> boboRec.ingr[0]),
+					CraftingUtil.itemIngredientMapCodec("input_b", false).forGetter(boboRec -> boboRec.ingr[1]),
+					CraftingUtil.itemIngredientMapCodec("input_c", false).forGetter(boboRec -> boboRec.ingr[2]),
+					CraftingUtil.itemStackMapCodec("output", false).forGetter(BoboRec::getResultItem)
+			).apply(instance, BoboRec::new));
+			CODEC = IOptionalRecipe.codecWithDisable(codec, disabledRec);
+
+			StreamCodec<RegistryFriendlyByteBuf, BoboRec> streamCodec = StreamCodec.composite(
+					ByteBufCodecs.STRING_UTF8, BoboRec::getGroup,
+					Ingredient.CONTENTS_STREAM_CODEC, boboRec -> boboRec.ingr[0],
+					Ingredient.CONTENTS_STREAM_CODEC, boboRec -> boboRec.ingr[1],
+					Ingredient.CONTENTS_STREAM_CODEC, boboRec -> boboRec.ingr[2],
+					ItemStack.STREAM_CODEC, BoboRec::getResultItem,
+					BoboRec::new
+			);
+			STREAM_CODEC = IOptionalRecipe.codecWithDisable(streamCodec, disabledRec);
+		}
+
+		public static final MapCodec<BoboRec> CODEC;
+		public static final StreamCodec<RegistryFriendlyByteBuf, BoboRec> STREAM_CODEC;
 
 		@Override
 		public MapCodec<BoboRec> codec(){

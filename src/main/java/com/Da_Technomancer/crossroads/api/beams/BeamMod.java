@@ -9,85 +9,43 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
 
 /**
- * An immutable class that represents a modification to be performed to incoming beam units
+ * Represents a modification to be performed to incoming beam units
  */
-public class BeamMod{
+public record BeamMod(float energyMult, float potentialMult, float stabilityMult, float voidMult, float voidConvert){
 
 	public static Codec<BeamMod> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-			Codec.FLOAT.optionalFieldOf("energy", 1f).forGetter(BeamMod::getEnergyMult),
-			Codec.FLOAT.optionalFieldOf("potential", 1f).forGetter(BeamMod::getPotentialMult),
-			Codec.FLOAT.optionalFieldOf("stability", 1f).forGetter(BeamMod::getStabilityMult),
-			Codec.FLOAT.optionalFieldOf("voi", 1f).forGetter(BeamMod::getVoidMult),
-			Codec.FLOAT.optionalFieldOf("voiConv", 0f).forGetter(BeamMod::getVoidConvert)
+			Codec.FLOAT.optionalFieldOf("energy", 1f).forGetter(BeamMod::energyMult),
+			Codec.FLOAT.optionalFieldOf("potential", 1f).forGetter(BeamMod::potentialMult),
+			Codec.FLOAT.optionalFieldOf("stability", 1f).forGetter(BeamMod::stabilityMult),
+			Codec.FLOAT.optionalFieldOf("void", 1f).forGetter(BeamMod::voidMult),
+			Codec.FLOAT.optionalFieldOf("void_convert", 0f).forGetter(BeamMod::voidConvert)
 	).apply(instance, BeamMod::new));
 
 	public static StreamCodec<ByteBuf, BeamMod> STREAM_CODEC = StreamCodec.composite(
-			ByteBufCodecs.FLOAT, BeamMod::getEnergyMult,
-			ByteBufCodecs.FLOAT, BeamMod::getPotentialMult,
-			ByteBufCodecs.FLOAT, BeamMod::getStabilityMult,
-			ByteBufCodecs.FLOAT, BeamMod::getVoidMult,
-			ByteBufCodecs.FLOAT, BeamMod::getVoidConvert,
+			ByteBufCodecs.FLOAT, BeamMod::energyMult,
+			ByteBufCodecs.FLOAT, BeamMod::potentialMult,
+			ByteBufCodecs.FLOAT, BeamMod::stabilityMult,
+			ByteBufCodecs.FLOAT, BeamMod::voidMult,
+			ByteBufCodecs.FLOAT, BeamMod::voidConvert,
 			BeamMod::new
 	);
 
 	public static final BeamMod IDENTITY = new BeamMod(1, 1, 1, 1, 0);
 
-	private final float[] multipliers = new float[5];//0: Energy, 1: Potential, 2: stability, 3: Void, 4: Void Convert
-
 	public BeamMod(float[] mults){
 		this(mults[0], mults[1], mults[2], mults[3], mults[4]);
 	}
 
-	public BeamMod(float energy, float potential, float stability, float voi, float voiConv){
-		multipliers[0] = energy;
-		multipliers[1] = potential;
-		multipliers[2] = stability;
-		multipliers[3] = voi;
-		multipliers[4] = voiConv;
-
-		if(energy < 0 || potential < 0 || stability < 0 || voi < 0 || voiConv < 0){
-			throw new IllegalArgumentException("Negative BeamMod input! EN: " + energy + "; PO: " + potential + "; ST: " + stability + "; VO: " + voi + "; VO-CONV: " + voiConv);
+	public BeamMod{
+		if(energyMult < 0 || potentialMult < 0 || stabilityMult < 0 || voidMult < 0 || voidConvert < 0){
+			throw new IllegalArgumentException("Negative BeamMod input! EN: " + energyMult + "; PO: " + potentialMult + "; ST: " + stabilityMult + "; VO: " + voidMult + "; VO-CONV: " + voidConvert);
 		}
 	}
 
-	public float getEnergyMult(){
-		return multipliers[0];
-	}
-
-	public float getPotentialMult(){
-		return multipliers[1];
-	}
-
-	public float getStabilityMult(){
-		return multipliers[2];
-	}
-
-	public float getVoidMult(){
-		return multipliers[3];
-	}
-
-	public float getVoidConvert(){
-		return multipliers[4];
-	}
-
 	public boolean isEmpty(){
-		return this == BeamMod.IDENTITY ||
-				multipliers[0] == 1
-						&& multipliers[1] == 1
-						&& multipliers[2] == 1
-						&& multipliers[3] == 1
-						&& multipliers[4] == 0;
-	}
-
-	/**
-	 * @return A size five array containing energy, potential, stability, void, and void conversion in that order.
-	 * Changes to the array will not write back to the BeamMod
-	 */
-	public float[] getValues(){
-		return Arrays.copyOf(multipliers, 5);
+		return equals(BeamMod.IDENTITY);
 	}
 
 	/**
@@ -95,12 +53,12 @@ public class BeamMod{
 	 * @return A BeamUnit modified by this set of multipliers and the void conversion factor.
 	 */
 	public BeamUnit mult(BeamUnit u){
-		int energy = Math.round(u.getEnergy() * getEnergyMult());
-		int potential = Math.round(u.getPotential() * getPotentialMult());
-		int stability = Math.round(u.getStability() * getStabilityMult());
-		int voi = Math.round(u.getVoid() * getVoidMult());
+		int energy = Math.round(u.getEnergy() * this.energyMult());
+		int potential = Math.round(u.getPotential() * this.potentialMult());
+		int stability = Math.round(u.getStability() * this.stabilityMult());
+		int voi = Math.round(u.getVoid() * this.voidMult());
 
-		int powToVoid = Math.round((energy + potential + stability) * getVoidConvert());
+		int powToVoid = Math.round((energy + potential + stability) * this.voidConvert());
 		if(powToVoid > 0){
 			int[] toWithdraw = MiscUtil.withdrawExact(new int[] {energy, potential, stability}, powToVoid);
 
@@ -113,27 +71,13 @@ public class BeamMod{
 		return new BeamUnit(energy, potential, stability, voi);
 	}
 
-	@Override
-	public boolean equals(Object other){
-		if(other instanceof BeamMod){
-			BeamMod o = (BeamMod) other;
-			return o == this ||
-					o.multipliers[0] == multipliers[0]
-							&& o.multipliers[1] == multipliers[1]
-							&& o.multipliers[2] == multipliers[2]
-							&& o.multipliers[3] == multipliers[3]
-							&& o.multipliers[4] == multipliers[4];
-		}
-		return false;
-	}
-
 	public void writeToNBT(@Nonnull String key, CompoundTag nbt){
 		CompoundTag newNBT = new CompoundTag();
-		newNBT.putFloat("energy", multipliers[0]);
-		newNBT.putFloat("potential", multipliers[1]);
-		newNBT.putFloat("stability", multipliers[2]);
-		newNBT.putFloat("void", multipliers[3]);
-		newNBT.putFloat("voidConvert", multipliers[4]);
+		newNBT.putFloat("energy", energyMult);
+		newNBT.putFloat("potential", potentialMult);
+		newNBT.putFloat("stability", stabilityMult);
+		newNBT.putFloat("void", voidMult);
+		newNBT.putFloat("voidConvert", voidConvert);
 		nbt.put(key, newNBT);
 	}
 

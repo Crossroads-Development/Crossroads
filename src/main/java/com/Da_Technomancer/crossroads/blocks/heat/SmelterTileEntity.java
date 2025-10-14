@@ -16,13 +16,13 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-
 import net.neoforged.neoforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
@@ -89,8 +89,9 @@ public class SmelterTileEntity extends InventoryTE{
 	}
 
 	private ItemStack getOutput(){
-		Optional<SmeltingRecipe> recOpt = level.getRecipeManager().getRecipeFor(RecipeType.SMELTING, this, level);
-		ItemStack stack = recOpt.isPresent() ? recOpt.get().getResultItem(level.registryAccess()) : ItemStack.EMPTY;
+		SingleRecipeInput input = new SingleRecipeInput(inventory[0]);
+		Optional<RecipeHolder<SmeltingRecipe>> recOpt = level.getRecipeManager().getRecipeFor(RecipeType.SMELTING, input, level);
+		ItemStack stack = recOpt.isPresent() ? recOpt.get().value().getResultItem(level.registryAccess()) : ItemStack.EMPTY;
 
 		if(stack.isEmpty()){
 			return ItemStack.EMPTY;

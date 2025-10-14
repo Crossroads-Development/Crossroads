@@ -225,7 +225,7 @@ public class FormulationVatTileEntity extends InventoryTE{
 
 	@Override
 	public boolean canPlaceItem(int index, ItemStack stack){
-		return index == 0 && level.getRecipeManager().getAllRecipesFor(CRRecipes.FORMULATION_VAT_TYPE).stream().anyMatch(rec -> rec.getIngredients().get(0).test(stack));
+		return index == 0 && level.getRecipeManager().getAllRecipesFor(CRRecipes.FORMULATION_VAT_TYPE).stream().anyMatch(rec -> rec.value().getIngredients().get(0).test(stack));
 	}
 
 	@Override

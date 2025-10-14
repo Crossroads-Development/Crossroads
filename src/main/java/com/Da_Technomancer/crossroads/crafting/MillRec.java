@@ -3,18 +3,13 @@ package com.Da_Technomancer.crossroads.crafting;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.api.crafting.IOptionalRecipe;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.NonNullList;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeInput;
@@ -22,7 +17,6 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,18 +27,24 @@ public class MillRec implements IOptionalRecipe<RecipeInput>{
 	private final List<ItemStack> outputs;
 	private final boolean active;
 
+	private MillRec(){
+		group = "";
+		ingr = Ingredient.EMPTY;
+		outputs = List.of();
+		active = false;
+	}
+
 	/**
 	 *
 	 * @param name Recipe group
 	 * @param input Input ingredient
-	 * @param active Whether this recipe is active
 	 * @param output Maximum of 3 ItemStacks
 	 */
-	public MillRec(String name, Ingredient input, boolean active, List<ItemStack> output){
+	private MillRec(String name, Ingredient input, List<ItemStack> output){
 		group = name;
 		ingr = input;
-		this.active = active;
 		outputs = output;
+		this.active = false;
 	}
 
 	/**
@@ -107,21 +107,27 @@ public class MillRec implements IOptionalRecipe<RecipeInput>{
 	}
 
 	public static class Serializer implements RecipeSerializer<MillRec>{
-		//String name, Ingredient input, boolean active, ItemStack[] output
-		public static final MapCodec<MillRec> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-				Codec.STRING.optionalFieldOf("group", "").forGetter(MillRec::getGroup),
-				Ingredient.CODEC.fieldOf("input").forGetter(MillRec::getIngredient),
-				Codec.BOOL.optionalFieldOf("active", true).forGetter(MillRec::isEnabled),
-				Codec.list(ItemStack.CODEC).fieldOf("output").forGetter(MillRec::getOutputs)
-		).apply(instance, MillRec::new));
 
-		public static final StreamCodec<RegistryFriendlyByteBuf, MillRec> STREAM_CODEC = StreamCodec.composite(
-				ByteBufCodecs.STRING_UTF8, MillRec::getGroup,
-				Ingredient.CONTENTS_STREAM_CODEC, MillRec::getIngredient,
-				ByteBufCodecs.BOOL, MillRec::isEnabled,
-				ByteBufCodecs.collection(ArrayList::new, ItemStack.STREAM_CODEC), MillRec::getOutputs,
-				MillRec::new
-		);
+		static{
+			MapCodec<MillRec> codec = RecordCodecBuilder.mapCodec(instance -> instance.group(
+					CraftingUtil.recipeGroupFieldCodec().forGetter(MillRec::getGroup),
+					CraftingUtil.itemIngredientMapCodec("input", false).forGetter(MillRec::getIngredient),
+					Codec.withAlternative(ItemStack.CODEC.listOf(1, 3), ItemStack.CODEC.xmap(List::of, stackList -> stackList.isEmpty() ? ItemStack.EMPTY : stackList.get(0))).fieldOf("output").forGetter(MillRec::getOutputs)
+			).apply(instance, MillRec::new));
+
+			StreamCodec<RegistryFriendlyByteBuf, MillRec> streamCodec = StreamCodec.composite(
+					ByteBufCodecs.STRING_UTF8, MillRec::getGroup,
+					Ingredient.CONTENTS_STREAM_CODEC, MillRec::getIngredient,
+					ByteBufCodecs.collection(ArrayList::new, ItemStack.STREAM_CODEC), MillRec::getOutputs,
+					MillRec::new
+			);
+			MillRec disabledRec = new MillRec();
+			CODEC = IOptionalRecipe.codecWithDisable(codec, disabledRec);
+			STREAM_CODEC = IOptionalRecipe.codecWithDisable(streamCodec, disabledRec);
+		}
+
+		public static final MapCodec<MillRec> CODEC;
+		public static final StreamCodec<RegistryFriendlyByteBuf, MillRec> STREAM_CODEC;
 
 		@Override
 		public MapCodec<MillRec> codec(){

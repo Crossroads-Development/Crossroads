@@ -29,7 +29,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 
-
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -87,12 +86,6 @@ public class TemporalAcceleratorTileEntity extends IFluxLink.FluxHelper implemen
 			return (int) Math.pow(2, boost) * FLUX_MULT;
 		}
 		return 0;
-	}
-
-	@Override
-	public AABB getRenderBoundingBox(){
-		//Increase render BB to include links
-		return new AABB(worldPosition).inflate(getRange());
 	}
 
 	private Direction getFacing(){

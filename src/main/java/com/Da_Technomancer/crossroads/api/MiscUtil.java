@@ -301,4 +301,12 @@ public final class MiscUtil{
 	public static BlockPos blockPos(Vec3 pos){
 		return blockPos(pos.x, pos.y, pos.z);
 	}
+
+	@Nonnull
+	public static <T> T nullFallback(@Nullable T value, @Nonnull T fallback){
+		if(value == null){
+			return fallback;
+		}
+		return value;
+	}
 }

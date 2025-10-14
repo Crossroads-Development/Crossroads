@@ -23,7 +23,6 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-
 import net.neoforged.neoforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
@@ -153,11 +152,11 @@ public class IncubatorTileEntity extends InventoryTE{
 	public boolean canPlaceItem(int index, ItemStack stack){
 		//Only accept inputs listed in one of the recipes for each slot to make it clearer what-goes-where
 		if(index == 0){
-			List<IncubatorRec> recipes = level.getRecipeManager().getAllRecipesFor(CRRecipes.INCUBATOR_TYPE);
-			return recipes.stream().anyMatch(rec -> rec.getMainInput().test(stack));
+			List<RecipeHolder<IncubatorRec>> recipes = level.getRecipeManager().getAllRecipesFor(CRRecipes.INCUBATOR_TYPE);
+			return recipes.stream().anyMatch(rec -> rec.value().getMainInput().test(stack));
 		}else if(index == 1){
-			List<IncubatorRec> recipes = level.getRecipeManager().getAllRecipesFor(CRRecipes.INCUBATOR_TYPE);
-			return recipes.stream().anyMatch(rec -> rec.getSecondaryInput().test(stack));
+			List<RecipeHolder<IncubatorRec>> recipes = level.getRecipeManager().getAllRecipesFor(CRRecipes.INCUBATOR_TYPE);
+			return recipes.stream().anyMatch(rec -> rec.value().getSecondaryInput().test(stack));
 		}
 		return false;
 	}
