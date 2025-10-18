@@ -2,46 +2,38 @@ package com.Da_Technomancer.crossroads.crafting;
 
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.api.crafting.IOptionalRecipe;
-import com.google.gson.JsonObject;
+import com.mojang.datafixers.util.Function3;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.NonNullList;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
 public abstract class SingleIngrRecipe implements IOptionalRecipe<RecipeInput>{
 
 	protected final Ingredient ingredient;
 	protected final ItemStack result;
-	private final RecipeType<?> type;
-	private final RecipeSerializer<?> serializer;
-	protected final ResourceLocation id;
 	protected final String group;
 	protected final boolean active;
 
-	public SingleIngrRecipe(RecipeType<?> type, RecipeSerializer<?> serializer, ResourceLocation id, String group, Ingredient ingredient, ItemStack result, boolean active){
-		this.type = type;
-		this.serializer = serializer;
-		this.id = id;
+	protected SingleIngrRecipe(){
+		ingredient = Ingredient.EMPTY;
+		result = ItemStack.EMPTY;
+		group = "";
+		active = false;
+	}
+
+	protected SingleIngrRecipe(String group, Ingredient ingredient, ItemStack result){
 		this.group = group;
 		this.ingredient = ingredient;
 		this.result = result;
-		this.active = active;
-	}
-
-	@Override
-	public RecipeType<?> getType(){
-		return type;
-	}
-
-	@Override
-	public RecipeSerializer<?> getSerializer(){
-		return serializer;
+		this.active = true;
 	}
 
 	@Override
@@ -79,7 +71,7 @@ public abstract class SingleIngrRecipe implements IOptionalRecipe<RecipeInput>{
 
 	@Override
 	public boolean matches(RecipeInput input, Level worldIn){
-		return isEnabled() && ingredient.test(inv.getItem(0));
+		return isEnabled() && ingredient.test(input.getItem(0));
 	}
 
 	/**
@@ -92,47 +84,37 @@ public abstract class SingleIngrRecipe implements IOptionalRecipe<RecipeInput>{
 
 	public static class SingleRecipeSerializer<T extends SingleIngrRecipe> implements RecipeSerializer<T>{
 
-		private final IRecipeFactory<T> factory;
+		private final MapCodec<T> CODEC;
+		private final StreamCodec<RegistryFriendlyByteBuf, T> STREAM_CODEC;
 
-		public SingleRecipeSerializer(IRecipeFactory<T> factory){
-			this.factory = factory;
+		public SingleRecipeSerializer(IRecipeFactory<T> factory, T disabledRecipe){
+			MapCodec<T> codec = RecordCodecBuilder.mapCodec(instance -> instance.group(
+					CraftingUtil.recipeGroupFieldCodec().forGetter(SingleIngrRecipe::getGroup),
+					CraftingUtil.itemIngredientMapCodec("ingredient", false).forGetter(SingleIngrRecipe::getIngredient),
+					CraftingUtil.itemStackMapCodec("output", true).forGetter(SingleIngrRecipe::getResultItem)
+			).apply(instance, factory));
+			CODEC = IOptionalRecipe.codecWithDisable(codec, disabledRecipe);
+			StreamCodec<RegistryFriendlyByteBuf, T> streamCodec = StreamCodec.composite(
+					ByteBufCodecs.STRING_UTF8, SingleIngrRecipe::getGroup,
+					Ingredient.CONTENTS_STREAM_CODEC, SingleIngrRecipe::getIngredient,
+					ItemStack.STREAM_CODEC, SingleIngrRecipe::getResultItem,
+					factory
+			);
+			STREAM_CODEC = IOptionalRecipe.codecWithDisable(streamCodec, disabledRecipe);
 		}
 
 		@Override
-		public T fromJson(ResourceLocation recipeId, JsonObject json){
-			String s = GsonHelper.getAsString(json, "group", "");
-			if(!CraftingUtil.isActiveJSON(json)){
-				return factory.create(recipeId, s, Ingredient.EMPTY, ItemStack.EMPTY, false);
-			}
-			Ingredient ingredient = CraftingUtil.getIngredient(json, "ingredient", false);
-
-			ItemStack itemstack = CraftingUtil.getItemStack(json, "output", true, true);
-			return factory.create(recipeId, s, ingredient, itemstack, true);
+		public MapCodec<T> codec(){
+			return CODEC;
 		}
 
 		@Override
-		public T fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer){
-			String s = buffer.readUtf(Short.MAX_VALUE);
-			if(!buffer.readBoolean()){
-				return factory.create(recipeId, s, Ingredient.EMPTY, ItemStack.EMPTY, false);
-			}
-			Ingredient ingredient = Ingredient.fromNetwork(buffer);
-			ItemStack itemstack = buffer.readItem();
-			return factory.create(recipeId, s, ingredient, itemstack, true);
+		public StreamCodec<RegistryFriendlyByteBuf, T> streamCodec(){
+			return STREAM_CODEC;
 		}
 
-		@Override
-		public void toNetwork(FriendlyByteBuf buffer, T recipe){
-			buffer.writeUtf(recipe.getGroup());
-			buffer.writeBoolean(recipe.isEnabled());
-			if(recipe.active){
-				recipe.getIngredients().get(0).toNetwork(buffer);
-				buffer.writeItem(recipe.getResultItem());
-			}
-		}
+		public interface IRecipeFactory<T extends SingleIngrRecipe> extends Function3<String, Ingredient, ItemStack, T>{
 
-		public interface IRecipeFactory<T extends SingleIngrRecipe>{
-			T create(ResourceLocation location, String name, Ingredient input, ItemStack output, boolean active);
 		}
 	}
 }

@@ -32,7 +32,7 @@ public class ReagIngr{
 	}
 
 	public ReagIngr(ReagentStack reag){
-		this(reag.getId(), reag.getAmount());
+		this(reag.typeId(), reag.amount());
 	}
 
 	public IReagent getReag(){

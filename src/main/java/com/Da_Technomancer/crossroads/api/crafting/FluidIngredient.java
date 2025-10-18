@@ -2,21 +2,27 @@ package com.Da_Technomancer.crossroads.api.crafting;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.mojang.datafixers.util.Either;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.codec.StreamDecoder;
+import net.minecraft.network.codec.StreamEncoder;
 import net.minecraft.tags.TagKey;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
+import net.neoforged.neoforge.common.util.NeoForgeExtraCodecs;
 import net.neoforged.neoforge.fluids.FluidStack;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -28,7 +34,7 @@ import java.util.stream.Collectors;
  */
 public class FluidIngredient implements Predicate<FluidStack>{
 
-	public static final FluidIngredient EMPTY = new FluidIngredient();
+	public static final FluidIngredient EMPTY = new FluidIngredient(List.of());
 
 	private final List<IFluidList> keys;
 	private boolean cacheValid = false;//Currently nothing invalidates the cache
@@ -38,35 +44,40 @@ public class FluidIngredient implements Predicate<FluidStack>{
 	 * Everything in matched should be either a fluid tag, a fluid, an IFluidList, or a fluidstate
 	 * @param matched Everything this ingredient should match
 	 */
-	public FluidIngredient(Object... matched){
+	public static FluidIngredient of(Object... matched){
 		if(matched.length == 1 && matched[0].getClass().isArray()){
 			//Because of the unusually vague parameters for the constructor, it's easy to accidentally pass an array of values as an array of the array (due to it being a varArgs)
 			//This detects that case, and corrects it rather than throwing an error
 			matched = (Object[]) matched[0];
 		}
 
-		keys = new ArrayList<>(matched.length);
+		ArrayList<IFluidList> keys = new ArrayList<>(matched.length);
 		for(Object key : matched){
-			if(key instanceof IFluidList){
-				keys.add((IFluidList) key);
-			}else if(key instanceof TagKey){
-				try{
-					TagKey<Fluid> tag = (TagKey<Fluid>) key;
-					keys.add(new TagList(tag));
-				}catch(ClassCastException e){
-					Crossroads.logger.error("An illegal tag type was added to a FluidIngredient. Report to mod author!", e);
+			switch(key){
+				case IFluidList iFluidList -> keys.add(iFluidList);
+				case TagKey<?> tagKey -> {
+					try{
+						TagKey<Fluid> tag = (TagKey<Fluid>) tagKey;
+						keys.add(new TagList(tag));
+					}catch(ClassCastException e){
+						Crossroads.logger.error("An illegal tag type was added to a FluidIngredient. Report to mod author!", e);
+						throw e;
+					}
+				}
+				case Fluid fluid -> keys.add(new FluidList(List.of(fluid)));
+				case FluidStack fluidStack -> keys.add(new FluidList(List.of(fluidStack.getFluid())));
+				case null, default -> {
+					ClassCastException e = new ClassCastException("Illegal type added to FluidIngredient; Type: " + key.getClass() + "; Value: " + key.toString());
+					Crossroads.logger.error("An illegal value was added to a FluidIngredient. Report to mod author!", e);
 					throw e;
 				}
-			}else if(key instanceof Fluid){
-				keys.add(new SingleList((Fluid) key));
-			}else if(key instanceof FluidStack){
-				keys.add(new SingleList(((FluidStack) key).getFluid()));
-			}else{
-				JsonParseException e = new JsonParseException("Illegal type added to FluidIngredient; Type: " + key.getClass() + "; Value: " + key.toString());
-				Crossroads.logger.error("An illegal value was added to a FluidIngredient. Report to mod author!", e);
-				throw e;
 			}
 		}
+		return new FluidIngredient(keys);
+	}
+
+	private FluidIngredient(List<IFluidList> matched){
+		this.keys = matched;
 	}
 
 	public Collection<Fluid> getMatchedFluids(){
@@ -101,57 +112,6 @@ public class FluidIngredient implements Predicate<FluidStack>{
 		}
 	}
 
-	public void writeToBuffer(FriendlyByteBuf buf){
-		updateCache();
-		buf.writeVarInt(matched.size());//Write how many Fluids this matches
-		for(Fluid b : matched){
-			buf.writeResourceLocation(MiscUtil.getRegistryName(b, BuiltInRegistries.FLUID));//Write the registry name of every matched fluid.
-		}
-	}
-
-	public static FluidIngredient readFromBuffer(FriendlyByteBuf buf){
-		int count = buf.readVarInt();
-		if(count <= 0){
-			return FluidIngredient.EMPTY;
-		}
-		Fluid[] matched = new Fluid[count];
-		for(int i = 0; i < count; i++){
-			matched[i] = BuiltInRegistries.FLUID.get(buf.readResourceLocation());
-		}
-		//Create a fluid ingredient with one large IFluidList that matches every fluid. Note this doesn't preserve Tag associations of the original definition
-		return new FluidIngredient(new FluidList(matched));
-	}
-
-	public static FluidIngredient readFromJSON(JsonElement o){
-		if(o.isJsonArray()){
-			JsonArray array = (JsonArray) o;
-			IFluidList[] lists = new IFluidList[array.size()];
-			for(int i = 0; i < array.size(); i++){
-				JsonElement el = array.get(i);
-				if(el.isJsonObject()){
-					lists[i] = readIngr((JsonObject) el);
-				}else{
-					throw new JsonParseException("Value in JSON array instead of JSON object");
-				}
-			}
-			return new FluidIngredient((Object[]) lists);
-		}else if(o.isJsonObject()){
-			return new FluidIngredient(readIngr((JsonObject) o));
-		}else{
-			throw new JsonParseException("Value passed to FluidIngredient");
-		}
-	}
-
-	private static IFluidList readIngr(JsonObject o){
-		if(o.has("tag")){
-			return new TagList(CraftingUtil.getTagKey(Registries.FLUID, ResourceLocation.parse(GsonHelper.getAsString(o, "tag"))));
-		}else if(o.has("fluid")){
-			return new SingleList(BuiltInRegistries.FLUID.get(ResourceLocation.parse(GsonHelper.getAsString(o, "fluid"))));
-		}else{
-			throw new JsonParseException("No value defined in FluidIngredient");
-		}
-	}
-
 	@Override
 	public boolean test(FluidStack fluidState){
 		updateCache();
@@ -162,7 +122,47 @@ public class FluidIngredient implements Predicate<FluidStack>{
 		return matched.contains(b);
 	}
 
+	public static final Codec<FluidIngredient> CODEC = CraftingUtil.singleOrListCodec(IFluidList.CODEC, 1, Integer.MAX_VALUE).xmap(FluidIngredient::new, fluidIngredient -> fluidIngredient.keys);
+
+	public static final StreamCodec<RegistryFriendlyByteBuf, FluidIngredient> STREAM_CODEC = StreamCodec.of(new StreamEncoder<RegistryFriendlyByteBuf, FluidIngredient>(){
+		@Override
+		public void encode(RegistryFriendlyByteBuf buf, FluidIngredient ingr){
+			ingr.updateCache();
+			buf.writeVarInt(ingr.matched.size());//Write how many Fluids this matches
+			for(Fluid b : ingr.matched){
+				buf.writeResourceLocation(MiscUtil.getRegistryName(b, BuiltInRegistries.FLUID));//Write the registry name of every matched fluid.
+			}
+		}
+	}, new StreamDecoder<RegistryFriendlyByteBuf, FluidIngredient>(){
+		@Override
+		public FluidIngredient decode(RegistryFriendlyByteBuf buf){
+			int count = buf.readVarInt();
+			if(count <= 0){
+				return FluidIngredient.EMPTY;
+			}
+			List<Fluid> matched = new ArrayList<>(count);
+			for(int i = 0; i < count; i++){
+				matched.add(BuiltInRegistries.FLUID.get(buf.readResourceLocation()));
+			}
+			//Create a fluid ingredient with one large IFluidList that matches every fluid. Note this doesn't preserve Tag associations of the original definition
+			return new FluidIngredient(List.of(new FluidList(matched)));
+		}
+	});
+
 	private interface IFluidList{
+
+		//Based on Ingredient.Value.MAP_CODEC
+		static final MapCodec<FluidIngredient.IFluidList> MAP_CODEC = NeoForgeExtraCodecs.xor(FluidIngredient.FluidList.MAP_CODEC, FluidIngredient.TagList.MAP_CODEC)
+				.xmap(either -> either.map(fluidList -> fluidList, tagList -> tagList), iFluidList -> {
+					if(iFluidList instanceof FluidIngredient.TagList tagList){
+						return Either.right(tagList);
+					}else if(iFluidList instanceof FluidIngredient.FluidList fluidList){
+						return Either.left(fluidList);
+					}else{
+						throw new UnsupportedOperationException("This is neither a fluid value nor a tag value.");
+					}
+				});
+		static final Codec<FluidIngredient.IFluidList> CODEC = MAP_CODEC.codec();
 
 		Collection<Fluid> getMatched();
 
@@ -170,30 +170,12 @@ public class FluidIngredient implements Predicate<FluidStack>{
 
 	}
 
-	private static class SingleList implements IFluidList{
-
-		private final List<Fluid> matchL;
-
-		public SingleList(Fluid matched){
-			matchL = new ArrayList<>(1);
-			matchL.add(matched);
-			if(matched == null){
-				throw new JsonParseException("No defined fluid in FluidIngredient");
-			}
-		}
-
-		@Override
-		public Collection<Fluid> getMatched(){
-			return matchL;
-		}
-
-		@Override
-		public boolean isEmpty(){
-			return false;
-		}
-	}
-
 	private static class TagList implements IFluidList{
+
+		private static final MapCodec<TagList> MAP_CODEC = RecordCodecBuilder.mapCodec(
+				instance -> instance.group(TagKey.codec(Registries.FLUID).fieldOf("tag").forGetter(tagList -> tagList.tag))
+						.apply(instance, FluidIngredient.TagList::new)
+		);
 
 		private final TagKey<Fluid> tag;
 
@@ -217,10 +199,19 @@ public class FluidIngredient implements Predicate<FluidStack>{
 
 	private static class FluidList implements IFluidList{
 
-		private final Collection<Fluid> fluids;
+		//This codec is a bit over-engineered. Technically, it allows the fluid tag in JSON to have a list of fluid IDs instead of just a single fluid ID, but this is only to allow Codec re-encoding of FluidList with multiple entries, which only occurs for a FluidIngredient which has been de-serialized by the StreamCodec
+		private static final MapCodec<FluidList> MAP_CODEC = RecordCodecBuilder.mapCodec(
+				instance -> instance.group(CraftingUtil.singleOrListCodec(BuiltInRegistries.FLUID.byNameCodec(), 1, Integer.MAX_VALUE).fieldOf("fluid").forGetter(fluidList -> fluidList.fluids))
+						.apply(instance, FluidIngredient.FluidList::new)
+		);
 
-		public FluidList(Fluid... matched){
-			fluids = Arrays.asList(matched);
+		private final List<Fluid> fluids;
+
+		public FluidList(List<Fluid> matched){
+			fluids = matched;
+			if(matched == null){
+				throw new JsonParseException("No defined fluid in FluidIngredient");
+			}
 		}
 
 		@Override

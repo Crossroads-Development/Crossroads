@@ -16,9 +16,20 @@ public interface IReagent{
 	 * Note: May return different values based on language or on client vs server side
 	 * Do not use this name for logic- use getId() instead
 	 * @return A human readable name
+	 * @deprecated On client side, use MiscUtil.localize(getLocalizationKey()); on server side, make the localization occur on the client
 	 */
+	@Deprecated
 	default String getName(){
-		return MiscUtil.localize("reagent." + getID());
+		return MiscUtil.localize(getLocalizationKey());
+	}
+
+	/**
+	 * Gets the translation lookup key for the reagent name
+	 * Do not use this name for logic- use getId() instead
+	 * @return Localization key for the reagent name
+	 */
+	default String getLocalizationKey(){
+		return "reagent." + getID();
 	}
 
 	/**
@@ -31,34 +42,24 @@ public interface IReagent{
 	 */
 	double getBoilingPoint();
 
-	default boolean requiresCrystal(){
-		return false;
-	}
+	boolean requiresCrystal();
 
-	default boolean destroysBadContainer(){
-		return false;
-	}
+	boolean destroysBadContainer();
 
 	String getID();
 
 	/**
 	 * @return A FluidIngredient representing the fluid equivalent of 1 unit of this reagent. EMPTY means no equivalent.
 	 */
-	default FluidIngredient getFluid(){
-		return FluidIngredient.EMPTY;
-	}
+	FluidIngredient getFluid();
 
 	/**
 	 *
 	 * @return The quantity of fluid associated with 1 unit of this reagent. May be 0 only if getFluid() returns FluidIngredient.EMPTY
 	 */
-	default int getFluidQty(){
-		return 0;
-	}
+	int getFluidQty();
 
-	default int getFlameRadius(int amount){
-		return 0;
-	}
+	int getFlameRadius(int amount);
 
 	/**
 	 * Gets the (purely visual) color. 
@@ -74,13 +75,9 @@ public interface IReagent{
 	 * @param reag The reagent
 	 * @return The matching solid ItemStack. ItemStack.EMPTY if there either isn't enough material (or cannot be solidifed for any other reason). 
 	 */
-	default ItemStack getStackFromReagent(ReagentStack reag){
-		return ItemStack.EMPTY;
-	}
+	ItemStack getStackFromReagent(ReagentStack reag);
 
-	default boolean isLockedFlame(){
-		return false;
-	}
+	boolean isLockedFlame();
 
 	/**
 	 * Used for JEI support. Do not use this for game logic.

@@ -1,17 +1,18 @@
 package com.Da_Technomancer.crossroads.crafting;
 
-import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.api.crafting.BlockIngredient;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.api.crafting.IOptionalRecipe;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -21,12 +22,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
-import javax.annotation.Nullable;
-import java.util.Locale;
-
 public class BeamTransmuteRec implements IOptionalRecipe<RecipeInput>{
 
-	private final ResourceLocation id;
 	private final String group;
 	private final EnumBeamAlignments align;
 	private final boolean voi;
@@ -35,15 +32,24 @@ public class BeamTransmuteRec implements IOptionalRecipe<RecipeInput>{
 	private final int power;
 	private final boolean active;
 
-	public BeamTransmuteRec(ResourceLocation location, String name, EnumBeamAlignments align, boolean voi, BlockIngredient input, Block output, int power, boolean active){
-		id = location;
+	private BeamTransmuteRec(){
+		group = "";
+		align = EnumBeamAlignments.NO_MATCH;
+		voi = false;
+		ingr = BlockIngredient.EMPTY;
+		output = Blocks.AIR;
+		power = 0;
+		active = false;
+	}
+
+	private BeamTransmuteRec(String name, EnumBeamAlignments align, boolean voi, BlockIngredient input, Block output, int power){
 		group = name;
 		ingr = input;
 		this.align = align;
 		this.voi = voi;
 		this.output = output;
 		this.power = power;
-		this.active = active;
+		this.active = true;
 	}
 
 	public EnumBeamAlignments getAlign(){
@@ -120,67 +126,41 @@ public class BeamTransmuteRec implements IOptionalRecipe<RecipeInput>{
 
 	public static class Serializer implements RecipeSerializer<BeamTransmuteRec>{
 
-		@Override
-		public BeamTransmuteRec fromJson(ResourceLocation recipeId, JsonObject json){
-			//Normal specification of recipe group and ingredient
-			String s = GsonHelper.getAsString(json, "group", "");
+		static{
+			BeamTransmuteRec disabledRec = new BeamTransmuteRec();
+			MapCodec<BeamTransmuteRec> codec = RecordCodecBuilder.mapCodec(instance -> instance.group(
+					CraftingUtil.recipeGroupFieldCodec().forGetter(BeamTransmuteRec::getGroup),
+					EnumBeamAlignments.CODEC.optionalFieldOf("alignment", EnumBeamAlignments.NO_MATCH).forGetter(BeamTransmuteRec::getAlign),
+					Codec.BOOL.optionalFieldOf("void", false).forGetter(BeamTransmuteRec::isVoid),
+					CraftingUtil.blockIngredientMapCodec("input", false).forGetter(BeamTransmuteRec::getIngr),
+					BuiltInRegistries.BLOCK.byNameCodec().fieldOf("output").forGetter(BeamTransmuteRec::getOutput),
+					ExtraCodecs.NON_NEGATIVE_INT.optionalFieldOf("power", 1).forGetter(BeamTransmuteRec::getPower)
+			).apply(instance, BeamTransmuteRec::new));
+			CODEC = IOptionalRecipe.codecWithDisable(codec, disabledRec);
 
-			if(!CraftingUtil.isActiveJSON(json)){
-				return new BeamTransmuteRec(recipeId, s, EnumBeamAlignments.NO_MATCH, false, BlockIngredient.EMPTY, Blocks.AIR, 0, false);
-			}
-
-			//Beam alignment as string name (names in com.Da_Technomancer.crossroads.API.beams.EnumBeamAlignments), case ignored
-			String alignName = GsonHelper.getAsString(json, "alignment");
-			EnumBeamAlignments align;
-			try{
-				align = EnumBeamAlignments.valueOf(alignName.toUpperCase(Locale.US));
-			}catch(NullPointerException e){
-				throw new JsonParseException("Non-existent alignment specified");
-			}
-
-			//Optional specification of void version of beam, defaults false
-			boolean voidBeam = GsonHelper.getAsBoolean(json, "void", false);
-			//Optional specification of minimum beam power. Defaults to 1
-			int power = GsonHelper.getAsInt(json, "power", 1);
-			//BlockIngredient input, with name "input"
-			BlockIngredient in = CraftingUtil.getBlockIngredient(json, "input", false);
-			//Block output
-			ResourceLocation outName = Resourcelocation.parse(GsonHelper.getAsString(json, "output"));
-			Block created = BuiltInRegistries.BLOCK.get(outName);
-			if(created == null){
-				throw new JsonParseException("Non-existent output specified");
-			}
-			return new BeamTransmuteRec(recipeId, s, align, voidBeam, in, created, power, true);
+			StreamCodec<RegistryFriendlyByteBuf, BeamTransmuteRec> streamCodec = StreamCodec.composite(
+					ByteBufCodecs.STRING_UTF8, BeamTransmuteRec::getGroup,
+					EnumBeamAlignments.STREAM_CODEC, BeamTransmuteRec::getAlign,
+					ByteBufCodecs.BOOL, BeamTransmuteRec::isVoid,
+					BlockIngredient.STREAM_CODEC, BeamTransmuteRec::getIngr,
+					ByteBufCodecs.fromCodecWithRegistries(BuiltInRegistries.BLOCK.byNameCodec()), BeamTransmuteRec::getOutput,
+					ByteBufCodecs.VAR_INT, BeamTransmuteRec::getPower,
+					BeamTransmuteRec::new
+			);
+			STREAM_CODEC = IOptionalRecipe.codecWithDisable(streamCodec, disabledRec);
 		}
 
-		@Nullable
+		public static MapCodec<BeamTransmuteRec> CODEC;
+		public static StreamCodec<RegistryFriendlyByteBuf, BeamTransmuteRec> STREAM_CODEC;
+
 		@Override
-		public BeamTransmuteRec fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer){
-			String s = buffer.readUtf(Short.MAX_VALUE);
-			boolean active = buffer.readBoolean();
-			if(active){
-				EnumBeamAlignments align = EnumBeamAlignments.values()[buffer.readVarInt()];
-				boolean voi = buffer.readBoolean();
-				int power = buffer.readVarInt();
-				Block out = BuiltInRegistries.BLOCK.get(buffer.readResourceLocation());
-				BlockIngredient input = BlockIngredient.readFromBuffer(buffer);
-				return new BeamTransmuteRec(recipeId, s, align, voi, input, out, power, true);
-			}else{
-				return new BeamTransmuteRec(recipeId, s, EnumBeamAlignments.NO_MATCH, false, BlockIngredient.EMPTY, Blocks.AIR, 0, false);
-			}
+		public MapCodec<BeamTransmuteRec> codec(){
+			return CODEC;
 		}
 
 		@Override
-		public void toNetwork(FriendlyByteBuf buffer, BeamTransmuteRec recipe){
-			buffer.writeUtf(recipe.getGroup());
-			buffer.writeBoolean(recipe.active);
-			if(recipe.active){
-				buffer.writeVarInt(recipe.align.ordinal());
-				buffer.writeBoolean(recipe.voi);
-				buffer.writeVarInt(recipe.power);
-				buffer.writeResourceLocation(MiscUtil.getRegistryName(recipe.output, BuiltInRegistries.BLOCK));
-				recipe.ingr.writeToBuffer(buffer);
-			}
+		public StreamCodec<RegistryFriendlyByteBuf, BeamTransmuteRec> streamCodec(){
+			return STREAM_CODEC;
 		}
 	}
 }

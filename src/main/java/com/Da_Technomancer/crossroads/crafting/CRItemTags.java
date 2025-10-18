@@ -21,4 +21,6 @@ public class CRItemTags{
 	public static final TagKey<Item> GEMS_VOID = CraftingUtil.getTagKey(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(CR, "gems/void"));
 	public static final TagKey<Item> EXPLODE_IF_KNOCKED = CraftingUtil.getTagKey(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(CR, "explode_on_hit"));
 	public static final TagKey<Item> SALT_REACTOR_COOLANT = CraftingUtil.getTagKey(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(CR, "salt_reactor_coolant"));
+	public static final TagKey<Item> EMPTY = CraftingUtil.getTagKey(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(CR, "empty"));
+
 }

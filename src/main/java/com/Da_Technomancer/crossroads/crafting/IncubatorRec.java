@@ -1,24 +1,18 @@
 package com.Da_Technomancer.crossroads.crafting;
 
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.api.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.api.crafting.IOptionalRecipe;
 import com.Da_Technomancer.crossroads.api.witchcraft.IPerishable;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.witchcraft.IncubatorTileEntity;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.ExtraCodecs;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -26,8 +20,6 @@ import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-
-import javax.annotation.Nullable;
 
 public class IncubatorRec implements IOptionalRecipe<RecipeInput>{
 
@@ -81,7 +73,7 @@ public class IncubatorRec implements IOptionalRecipe<RecipeInput>{
 		ItemStack created = getResultItem().copy();
 		if(datacopy){
 			try{
-				CRItems.geneticSpawnEgg.withEntityTypeData(created, CRItems.embryo.getEntityTypeData(inv.getItem(0)));
+				CRItems.geneticSpawnEgg.withEntityData(created, CRItems.embryo.getEntityTypeData(inv.getItem(0)));
 			}catch(Exception e){
 				Crossroads.logger.error("Invalid item types for datacopy in incubator recipe", e); // TODO: figure out something other than ID that'll identify this recipe
 			}

@@ -475,7 +475,7 @@ public abstract class ReagentHolderTE extends BlockEntity implements ITickableTi
 					ReagentStack r = reag.getStack(type);
 					EnumMatterPhase phase;
 					if(!r.isEmpty() && (ignorePhase || (phase = type.getPhase(callerTemp)).flows() && (side != Direction.UP || phase.flowsDown()) && (side != Direction.DOWN || phase.flowsUp()))){
-						preQty[index] = r.getAmount();
+						preQty[index] = r.amount();
 					}else{
 						preQty[index] = 0;//Set the pre-qty to 0 to indicate no transfer of that type is allowed
 					}

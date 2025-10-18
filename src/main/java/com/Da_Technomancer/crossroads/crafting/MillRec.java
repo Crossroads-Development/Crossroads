@@ -3,7 +3,6 @@ package com.Da_Technomancer.crossroads.crafting;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.api.crafting.IOptionalRecipe;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.NonNullList;
@@ -112,7 +111,7 @@ public class MillRec implements IOptionalRecipe<RecipeInput>{
 			MapCodec<MillRec> codec = RecordCodecBuilder.mapCodec(instance -> instance.group(
 					CraftingUtil.recipeGroupFieldCodec().forGetter(MillRec::getGroup),
 					CraftingUtil.itemIngredientMapCodec("input", false).forGetter(MillRec::getIngredient),
-					Codec.withAlternative(ItemStack.CODEC.listOf(1, 3), ItemStack.CODEC.xmap(List::of, stackList -> stackList.isEmpty() ? ItemStack.EMPTY : stackList.get(0))).fieldOf("output").forGetter(MillRec::getOutputs)
+					CraftingUtil.singleOrListCodec(ItemStack.CODEC, 1, 3).fieldOf("output").forGetter(MillRec::getOutputs)
 			).apply(instance, MillRec::new));
 
 			StreamCodec<RegistryFriendlyByteBuf, MillRec> streamCodec = StreamCodec.composite(

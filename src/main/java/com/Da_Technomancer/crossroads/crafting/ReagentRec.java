@@ -4,19 +4,22 @@ import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.alchemy.*;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.api.crafting.FluidIngredient;
+import com.Da_Technomancer.crossroads.api.packets.StreamCodecUtils;
 import com.Da_Technomancer.crossroads.effects.alchemy_effects.*;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.tags.TagKey;
-import net.minecraft.util.GsonHelper;
-import net.minecraft.world.Container;
+import net.minecraft.util.ExtraCodecs;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
@@ -24,18 +27,15 @@ import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.function.Function;
 
 public class ReagentRec implements Recipe<RecipeInput>, IReagent{
 
-	private final ResourceLocation location;
 	private final String group;
 	private final String id;
 	private final double melting;
@@ -45,31 +45,28 @@ public class ReagentRec implements Recipe<RecipeInput>, IReagent{
 	private final FluidIngredient fluid;
 	private final int fluidQty;
 	private final ContainRequirements containment;
-	private final int[] colMap;//Used for serialization
-	private final Function<EnumMatterPhase, Color> colorFunc;
+	private final PhaseColorMap colMap;
 	private final String effectName;//Used for serialization
 	@Nonnull
 	private final IAlchEffect effect;
 	private final String flameName;//Used for serialization
 	private final Function<Integer, Integer> flameFunction;
 
-	public ReagentRec(ResourceLocation location, String group, String id, double melting, double boiling, boolean flame, TagKey<Item> solid, FluidIngredient fluid, int fluidQty, ContainRequirements containment, int[] colMap, Function<EnumMatterPhase, Color> colorFunc, String effectName, @Nonnull IAlchEffect effect, String flameName, Function<Integer, Integer> flameFunction){
-		this.location = location;
+	private ReagentRec(String group, String id, double melting, double boiling, TagKey<Item> solid, FluidIngredient fluid, int fluidQty, ContainRequirements containment, PhaseColorMap colMap, String effectName, String flameName){
 		this.group = group;
 		this.id = id;
 		this.melting = melting;
 		this.boiling = boiling;
-		this.flame = flame;
 		this.solid = solid;
 		this.fluid = fluid;
 		this.fluidQty = fluidQty;
 		this.containment = containment;
 		this.colMap = colMap;
-		this.colorFunc = colorFunc;
 		this.effectName = effectName;
-		this.effect = effect;
 		this.flameName = flameName;
-		this.flameFunction = flameFunction;
+		this.effect = effectMap.getOrDefault(effectName, effectMap.get("none"));
+		this.flameFunction = flameRadiusMap.getOrDefault(flameName, flameRadiusMap.get("none"));
+		this.flame = flameFunction != flameRadiusMap.get("none");
 		ReagentManager.updateReagent(this);
 	}
 
@@ -130,7 +127,7 @@ public class ReagentRec implements Recipe<RecipeInput>, IReagent{
 
 	@Override
 	public Color getColor(EnumMatterPhase phase){
-		return colorFunc.apply(phase);
+		return colMap.apply(phase);
 	}
 
 	@Override
@@ -149,6 +146,22 @@ public class ReagentRec implements Recipe<RecipeInput>, IReagent{
 		return containment.destructive;
 	}
 
+	private ContainRequirements getContainment(){
+		return containment;
+	}
+
+	private PhaseColorMap getColMap(){
+		return colMap;
+	}
+
+	private String getEffectName(){
+		return effectName;
+	}
+
+	private String getFlameName(){
+		return flameName;
+	}
+
 	@Override
 	public boolean isLockedFlame(){
 		return flame;
@@ -160,7 +173,7 @@ public class ReagentRec implements Recipe<RecipeInput>, IReagent{
 
 	/**
 	 * @param reag The reagent (assumes phase is SOLID)
-	 * @return The matching solid ItemStack. ItemStack.EMPTY if there either isn't enough material (or cannot be solidifed for any other reason).
+	 * @return The matching solid ItemStack. ItemStack.EMPTY if there either isn't enough material (or cannot be solidified for any other reason).
 	 */
 	@Override
 	public ItemStack getStackFromReagent(ReagentStack reag){
@@ -169,7 +182,7 @@ public class ReagentRec implements Recipe<RecipeInput>, IReagent{
 			if(item == null){
 				return ItemStack.EMPTY;
 			}
-			return new ItemStack(item, reag.getAmount());
+			return new ItemStack(item, reag.amount());
 		}
 		return ItemStack.EMPTY;
 	}
@@ -196,10 +209,9 @@ public class ReagentRec implements Recipe<RecipeInput>, IReagent{
 
 	public static class Serializer implements RecipeSerializer<ReagentRec>{
 
-
 		/*
 		 * Specifications for a custom reagent
-		 * Reagents can be added or overwritten, but the default reagents can not be removed- their properties can be completely changed, but something with their ID must exis
+		 * Reagents can be added or overwritten, but the default reagents can not be removed- their properties can be completely changed, but something with their ID must exist
 		 *
 		 * Anything prefaced by // is a comment, and should not be in a real JSON
 		 *
@@ -231,92 +243,91 @@ public class ReagentRec implements Recipe<RecipeInput>, IReagent{
 		 * 		}
 		 * }
 		 */
-		@Override
-		public ReagentRec fromJson(ResourceLocation recipeId, JsonObject json){
-			//Normal specification of recipe group and ingredient
-			String group = GsonHelper.getAsString(json, "group", "");
-			String id = GsonHelper.getAsString(json, "id").toLowerCase(Locale.US).replace(' ', '_');
-			double melting = GsonHelper.getAsString(json, "melting", "-275").equals("never") ? Short.MAX_VALUE - 1 : GsonHelper.getAsFloat(json, "melting", -275);
-			double boiling = GsonHelper.getAsString(json, "boiling", "-274").equals("never") ? Short.MAX_VALUE : GsonHelper.getAsFloat(json, "boiling", -274);
-			if(melting > boiling){
-				boiling = melting;//Equal melting and boiling point would cause sublimation, skipping liquid
-			}
-			TagKey<Item> item = CraftingUtil.getTagKey(Registries.ITEM, ResourceLocation.parse(GsonHelper.getAsString(json, "item", "crossroads:empty")));
-			//Fluid definition is optional, but must have a quantity and be specified in a subelement if present
-			Pair<FluidIngredient, Integer> fluid = json.has("fluid") ? CraftingUtil.getFluidIngredientAndQuantity(json, "fluid", false, -1) : null;
-			ContainRequirements vessel = containTypeMap.getOrDefault(GsonHelper.getAsString(json, "vessel", "none"), ContainRequirements.NONE);
-			String effectName = GsonHelper.getAsString(json, "effect", "none");
-			IAlchEffect effect = effectMap.getOrDefault(effectName, null);
-			String flameName = GsonHelper.getAsString(json, "flame", "none");
-			Function<Integer, Integer> flameFunc = flameRadiusMap.getOrDefault(flameName, flameRadiusMap.get("none"));
-			boolean flame = flameFunc != flameRadiusMap.get("none");
-			Function<EnumMatterPhase, Color> colorFunction;
-			JsonElement colorElem = json.get("color");
-			Color[] colorMap = new Color[EnumMatterPhase.values().length];
-			int[] colEncodeMap = new int[colorMap.length];
-			if(colorElem.isJsonObject()){
-				JsonObject colorObj = colorElem.getAsJsonObject();
-				Color base = CraftingUtil.getColor(colorObj, "base", Color.WHITE);
-				colorMap[EnumMatterPhase.FLAME.ordinal()] = CraftingUtil.getColor(colorObj, "flame", base);
-				colorMap[EnumMatterPhase.GAS.ordinal()] = CraftingUtil.getColor(colorObj, "gas", base);
-				colorMap[EnumMatterPhase.LIQUID.ordinal()] = CraftingUtil.getColor(colorObj, "liquid", base);
-				colorMap[EnumMatterPhase.SOLID.ordinal()] = CraftingUtil.getColor(colorObj, "solid", base);
-			}else{
-				Color c = CraftingUtil.getColor(json, "color", Color.WHITE);
-				colorMap[0] = colorMap[1] = colorMap[2] = colorMap[3] = c;
-			}
-			for(int i = 0; i < colEncodeMap.length; i++){
-				colEncodeMap[i] = colorMap[i].getRGB();
-			}
 
-			colorFunction = elem -> colorMap[elem.ordinal()];
-
-			return new ReagentRec(recipeId, group, id, melting, boiling, flame, item, fluid == null ? FluidIngredient.EMPTY : fluid.getLeft(), fluid == null ? 0 : fluid.getRight(), vessel, colEncodeMap, colorFunction, effectName, effect, flameName, flameFunc);
+		static{
+			MapCodec<ReagentRec> codec = RecordCodecBuilder.mapCodec(instance -> instance.group(
+					CraftingUtil.recipeGroupFieldCodec().forGetter(ReagentRec::getGroup),
+					Codec.STRING.fieldOf("id").forGetter(ReagentRec::getID),
+					Codec.withAlternative(Codec.DOUBLE, Codec.STRING.flatXmap(str -> "never".equals(str) ? DataResult.success(Short.MAX_VALUE - 1D) : DataResult.error(() -> "Must be a number or \"never\"", 0D), val -> DataResult.success(val.toString()))).optionalFieldOf("melting", -275D).forGetter(ReagentRec::getMeltingPoint),
+					Codec.withAlternative(Codec.DOUBLE, Codec.STRING.flatXmap(str -> "never".equals(str) ? DataResult.success((double) Short.MAX_VALUE) : DataResult.error(() -> "Must be a number or \"never\""), val -> DataResult.success(val.toString()))).optionalFieldOf("boiling", -274D).forGetter(ReagentRec::getBoilingPoint),
+					TagKey.codec(Registries.ITEM).optionalFieldOf("item", CRItemTags.EMPTY).forGetter(ReagentRec::getSolid),
+					CraftingUtil.fluidIngredientMapCodec("fluid", false).forGetter(ReagentRec::getFluid),
+					ExtraCodecs.NON_NEGATIVE_INT.optionalFieldOf("fluid_amount", 0).forGetter(ReagentRec::getFluidQty),
+					StringRepresentable.fromEnum(ContainRequirements::values).optionalFieldOf("vessel", ContainRequirements.NONE).forGetter(ReagentRec::getContainment),
+					PhaseColorMap.CODEC.optionalFieldOf("color", PhaseColorMap.DEFAULT).forGetter(ReagentRec::getColMap),
+					Codec.STRING.optionalFieldOf("effect", "none").forGetter(ReagentRec::getEffectName),
+					Codec.STRING.optionalFieldOf("flame", "none").forGetter(ReagentRec::getFlameName)
+			).apply(instance, ReagentRec::new));
+			CODEC = codec.validate((ReagentRec rec) -> !rec.getFluid().isStrictlyEmpty() && rec.getFluidQty() == 0 ? DataResult.error(() -> "Must specify fluid quantity") : DataResult.success(rec));
 		}
 
-		@Nullable
+		public static final MapCodec<ReagentRec> CODEC;
+		public static final StreamCodec<RegistryFriendlyByteBuf, ReagentRec> STREAM_CODEC = StreamCodecUtils.composite(
+				ByteBufCodecs.STRING_UTF8, ReagentRec::getGroup,
+				ByteBufCodecs.STRING_UTF8, ReagentRec::getID,
+				ByteBufCodecs.DOUBLE, ReagentRec::getMeltingPoint,
+				ByteBufCodecs.DOUBLE, ReagentRec::getBoilingPoint,
+				ByteBufCodecs.fromCodecWithRegistries(TagKey.codec(Registries.ITEM)), ReagentRec::getSolid,
+				FluidIngredient.STREAM_CODEC, ReagentRec::getFluid,
+				ByteBufCodecs.VAR_INT, ReagentRec::getFluidQty,
+				ByteBufCodecs.fromCodecWithRegistries(StringRepresentable.fromEnum(ContainRequirements::values)), ReagentRec::getContainment,
+				PhaseColorMap.STREAM_CODEC, ReagentRec::getColMap,
+				ByteBufCodecs.STRING_UTF8, ReagentRec::getEffectName,
+				ByteBufCodecs.STRING_UTF8, ReagentRec::getFlameName,
+				ReagentRec::new
+		);
+
 		@Override
-		public ReagentRec fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer){
-			String group = buffer.readUtf(Short.MAX_VALUE);
-			String id = buffer.readUtf();
-			double melting = buffer.readDouble();
-			double boiling = buffer.readDouble();
-			boolean flame = buffer.readBoolean();
-			TagKey<Item> solid = CraftingUtil.getTagKey(Registries.ITEM, ResourceLocation.withDefaultNamespace(buffer.readUtf()));
-			FluidIngredient fl = FluidIngredient.readFromBuffer(buffer);
-			int flQty = buffer.readVarInt();
-			ContainRequirements vessel = ContainRequirements.values()[buffer.readVarInt()];
-			int[] colMapInt = buffer.readVarIntArray();
-			Color[] colMap = new Color[colMapInt.length];
-			for(int i = 0; i < colMap.length; i++){
-				colMap[i] = new Color(colMapInt[i], true);
-			}
-			Function<EnumMatterPhase, Color> colFunc = phase -> colMap[phase.ordinal()];
-			String effectName = buffer.readUtf();
-			IAlchEffect effect = effectMap.getOrDefault(effectName, effectMap.get("none"));
-			String flameName = buffer.readUtf();
-			Function<Integer, Integer> flameFunc = flameRadiusMap.getOrDefault(flameName, flameRadiusMap.get("none"));
-			return new ReagentRec(recipeId, group, id, melting, boiling, flame, solid, fl, flQty, vessel, colMapInt, colFunc, effectName, effect, flameName, flameFunc);
+		public MapCodec<ReagentRec> codec(){
+			return CODEC;
 		}
 
 		@Override
-		public void toNetwork(FriendlyByteBuf buffer, ReagentRec recipe){
-			buffer.writeUtf(recipe.getGroup());
-			buffer.writeUtf(recipe.id);
-			buffer.writeDouble(recipe.melting);
-			buffer.writeDouble(recipe.boiling);
-			buffer.writeBoolean(recipe.flame);
-			buffer.writeUtf(recipe.solid.location().toString());
-			recipe.fluid.writeToBuffer(buffer);
-			buffer.writeVarInt(recipe.fluidQty);
-			buffer.writeVarInt(recipe.containment.ordinal());
-			buffer.writeVarIntArray(recipe.colMap);
-			buffer.writeUtf(recipe.effectName);
-			buffer.writeUtf(recipe.flameName);
+		public StreamCodec<RegistryFriendlyByteBuf, ReagentRec> streamCodec(){
+			return STREAM_CODEC;
 		}
 	}
 
-	private static final HashMap<String, ContainRequirements> containTypeMap = new HashMap<>(3);//No register method for this, as it maps to an enum
+	private record PhaseColorMap(Color flame, Color gas, Color liq, Color solid, int[] serialized) implements Function<EnumMatterPhase, Color>{
+
+		private static final PhaseColorMap DEFAULT = new PhaseColorMap(Color.WHITE);
+
+		private static final Codec<PhaseColorMap> CODEC = Codec.withAlternative(RecordCodecBuilder.create(instance -> instance.group(CraftingUtil.COLOR_CODEC.fieldOf("base").forGetter(PhaseColorMap::solid), CraftingUtil.COLOR_CODEC.optionalFieldOf("flame", null).forGetter(PhaseColorMap::flame), CraftingUtil.COLOR_CODEC.optionalFieldOf("gas", null).forGetter(PhaseColorMap::gas), CraftingUtil.COLOR_CODEC.optionalFieldOf("liquid", null).forGetter(PhaseColorMap::liq), CraftingUtil.COLOR_CODEC.optionalFieldOf("solid", null).forGetter(PhaseColorMap::solid)).apply(instance, PhaseColorMap::new)), CraftingUtil.COLOR_CODEC.flatComapMap(PhaseColorMap::new, colMap -> DataResult.error(() -> "Can't encode PhaseColorMap to a single color")));;
+		private static final StreamCodec<ByteBuf, PhaseColorMap> STREAM_CODEC = StreamCodec.of(
+				(buf, val) -> {
+					for(int i = 0; i < 4; i++){
+						buf.writeInt(val.serialized[i]);
+					}
+				},
+				buf -> new PhaseColorMap(new int[] {buf.readInt(), buf.readInt(), buf.readInt(), buf.readInt()}));
+
+		private PhaseColorMap(int[] serialized){
+			this(new Color(serialized[0], true), new Color(serialized[1], true), new Color(serialized[2], true), new Color(serialized[3], true), serialized);
+		}
+
+		private PhaseColorMap(@Nonnull Color base){
+			this(base, base, base, base);
+		}
+
+		private PhaseColorMap(@Nonnull Color flame, @Nonnull Color gas, @Nonnull Color liq, @Nonnull Color sol){
+			this(flame, gas, liq, sol, new int[] {flame.getRGB(), gas.getRGB(), liq.getRGB(), sol.getRGB()});
+		}
+
+		private PhaseColorMap(@Nonnull Color base, @Nullable Color flame, @Nullable Color gas, @Nullable Color liq, @Nullable Color solid){
+			this(flame == null ? base : flame, gas == null ? base : gas, liq == null ? base : liq, solid == null ? base : solid);
+		}
+
+		@Override
+		public Color apply(EnumMatterPhase phase){
+			return switch(phase){
+				case FLAME -> flame;
+				case GAS -> gas;
+				case LIQUID -> liq;
+				case SOLID -> solid;
+			};
+		}
+	}
+
 	private static final HashMap<String, Function<Integer, Integer>> flameRadiusMap = new HashMap<>(5);
 	private static final HashMap<String, IAlchEffect> effectMap = new HashMap<>(19);
 
@@ -342,10 +353,6 @@ public class ReagentRec implements Recipe<RecipeInput>, IReagent{
 	}
 
 	static{
-		containTypeMap.put("glass", ContainRequirements.NONE);
-		containTypeMap.put("crystal", ContainRequirements.CRYSTAL_EVAP);
-		containTypeMap.put("destructive", ContainRequirements.CRYSTAL_DESTROY);
-
 		registerFlameFormula("none", qty -> 0);
 		registerFlameFormula("small", qty -> Math.min(8, (int) Math.round(qty / 2D)));
 		registerFlameFormula("large", qty -> CRConfig.allowHellfire.get() ? Math.min(64, qty * 4) : Math.min(8, (int) Math.round(qty / 2D)));
@@ -373,18 +380,25 @@ public class ReagentRec implements Recipe<RecipeInput>, IReagent{
 		registerEffect("terraform_flower_forest", new FlowerForestTerraformEffect());
 	}
 
-	private enum ContainRequirements{
+	private enum ContainRequirements implements StringRepresentable{
 
-		NONE(false, false),//Safe
-		CRYSTAL_EVAP(true, false),//Euclid
-		CRYSTAL_DESTROY(true, true);//Keter
+		NONE(false, false, "glass"),//Safe
+		CRYSTAL_EVAP(true, false, "crystal"),//Euclid
+		CRYSTAL_DESTROY(true, true, "destructive");//Keter
 
 		public final boolean requireCrystal;
 		public final boolean destructive;
+		public final String name;
 
-		ContainRequirements(boolean requireCrystal, boolean destructive){
+		ContainRequirements(boolean requireCrystal, boolean destructive, String name){
 			this.requireCrystal = requireCrystal;
 			this.destructive = destructive;
+			this.name = name;
+		}
+
+		@Override
+		public String getSerializedName(){
+			return name;
 		}
 	}
 }

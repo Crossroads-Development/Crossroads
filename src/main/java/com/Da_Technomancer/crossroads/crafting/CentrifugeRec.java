@@ -5,11 +5,13 @@ import com.Da_Technomancer.crossroads.api.crafting.IOptionalRecipe;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.fluid.WaterCentrifugeTileEntity;
 import com.Da_Technomancer.essentials.api.BlockUtil;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -17,7 +19,6 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -26,24 +27,31 @@ public class CentrifugeRec implements IOptionalRecipe<RecipeInput>{
 
 	private static final Random RAND = new Random();
 
-	private final ResourceLocation id;
 	private final String group;
 
 	private final FluidStack input;
 
 	private final FluidStack fluidOutput;
-	private final WeightOutput[] outputs;
+	private final List<WeightOutput> outputs;
 	private final boolean active;
 
 	private final int totalWeight;//Cached
 
-	public CentrifugeRec(ResourceLocation location, String name, FluidStack input, FluidStack fluidOutput, WeightOutput[] outputs, boolean active){
-		id = location;
+	private CentrifugeRec(){
+		active = false;
+		group = "";
+		input = FluidStack.EMPTY;
+		fluidOutput = FluidStack.EMPTY;
+		outputs = List.of();
+		totalWeight = 0;
+	}
+
+	private CentrifugeRec(String name, FluidStack input, FluidStack fluidOutput, List<WeightOutput> outputs){
 		group = name;
 		this.input = input;
 		this.fluidOutput = fluidOutput;
 		this.outputs = outputs;
-		this.active = active;
+		this.active = true;
 
 		int weight = 0;
 		for(WeightOutput out : outputs){
@@ -55,7 +63,7 @@ public class CentrifugeRec implements IOptionalRecipe<RecipeInput>{
 	@Override
 	public boolean matches(RecipeInput inv, Level worldIn){
 		FluidStack teInput;
-		return active && inv instanceof WaterCentrifugeTileEntity && BlockUtil.sameFluid(teInput = ((WaterCentrifugeTileEntity) inv).getInputFluid(), input) && teInput.getAmount() >= input.getAmount();
+		return active && inv instanceof WaterCentrifugeTileEntity centrifuge && BlockUtil.sameFluid(teInput = centrifuge.getInputFluid(), input) && teInput.getAmount() >= input.getAmount();
 	}
 
 	@Override
@@ -68,7 +76,7 @@ public class CentrifugeRec implements IOptionalRecipe<RecipeInput>{
 	 * @return Every produced item
 	 */
 	public List<ItemStack> getOutputList(){
-		List<ItemStack> out = new ArrayList<>(outputs.length);
+		List<ItemStack> out = new ArrayList<>(outputs.size());
 		for(WeightOutput output : outputs){
 			out.add(output.item);
 		}
@@ -77,6 +85,9 @@ public class CentrifugeRec implements IOptionalRecipe<RecipeInput>{
 
 	@Override
 	public ItemStack getResultItem(){
+		if(totalWeight == 0){
+			return ItemStack.EMPTY;
+		}
 		int selected = RAND.nextInt(totalWeight);
 		for(WeightOutput out : outputs){
 			selected -= out.weight;
@@ -85,6 +96,10 @@ public class CentrifugeRec implements IOptionalRecipe<RecipeInput>{
 			}
 		}
 		return ItemStack.EMPTY;
+	}
+
+	private List<WeightOutput> getOutputWeights(){
+		return outputs;
 	}
 
 	@Override
@@ -120,101 +135,51 @@ public class CentrifugeRec implements IOptionalRecipe<RecipeInput>{
 		return active;
 	}
 
-	private static class WeightOutput{
+	private static record WeightOutput(ItemStack item, int weight){
 
-		private final ItemStack item;
-		private final int weight;
+		private static final Codec<WeightOutput> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+						CraftingUtil.itemStackMapCodec("", true).forGetter(WeightOutput::item),
+						ExtraCodecs.POSITIVE_INT.optionalFieldOf("weight", 1).forGetter(WeightOutput::weight))
+				.apply(instance, WeightOutput::new));
+		private static final StreamCodec<RegistryFriendlyByteBuf, WeightOutput> STREAM_CODEC = StreamCodec.composite(
+				ItemStack.STREAM_CODEC, WeightOutput::item,
+				ByteBufCodecs.VAR_INT, WeightOutput::weight,
+				WeightOutput::new);
 
-		public WeightOutput(ItemStack item, int weight){
-			this.item = item;
-			this.weight = weight;
-		}
-
-		private void serialize(FriendlyByteBuf buf){
-			buf.writeItem(item);
-			buf.writeVarInt(weight);
-		}
-
-		private static WeightOutput deserialize(FriendlyByteBuf buf){
-			return new WeightOutput(buf.readItem(), buf.readVarInt());
-		}
 	}
 
 	public static class Serializer implements RecipeSerializer<CentrifugeRec>{
 
-		@Override
-		public CentrifugeRec fromJson(ResourceLocation recipeId, JsonObject json){
-			//Normal specification of recipe group and output
-			String s = GsonHelper.getAsString(json, "group", "");
-			if(!CraftingUtil.isActiveJSON(json)){
-				return new CentrifugeRec(recipeId, s, FluidStack.EMPTY, FluidStack.EMPTY, new WeightOutput[0], false);
-			}
-
-			FluidStack input = CraftingUtil.getFluidStack(json, "input");
-			FluidStack outputFluid = CraftingUtil.getFluidStack(json, "output_fluid");
-
-			//Read the item output(s)
-			//If the output is specified as an object, treat it as a single weighted output
-			//If it's an array, expect it to be an array of objects of outputs
-
-			WeightOutput[] outputs;
-			if(GsonHelper.isArrayNode(json, "output")){
-				JsonArray arr = GsonHelper.getAsJsonArray(json, "output");
-				outputs = new WeightOutput[arr.size()];
-				for(int i = 0; i < outputs.length; i++){
-					outputs[i] = readOutput(arr.get(i).getAsJsonObject());
-				}
-			}else{
-				outputs = new WeightOutput[1];
-				outputs[0] = readOutput(GsonHelper.getAsJsonObject(json, "output"));
-			}
-
-			return new CentrifugeRec(recipeId, s, input, outputFluid, outputs, true);
+		static{
+			CentrifugeRec disabledRec = new CentrifugeRec();
+			MapCodec<CentrifugeRec> codec = RecordCodecBuilder.mapCodec(instance -> instance.group(
+					CraftingUtil.recipeGroupFieldCodec().forGetter(CentrifugeRec::getGroup),
+					CraftingUtil.fluidStackMapCodec("input", false).forGetter(CentrifugeRec::getInput),
+					CraftingUtil.fluidStackMapCodec("output_fluid", false).forGetter(CentrifugeRec::getFluidOutput),
+					CraftingUtil.singleOrListCodec(WeightOutput.CODEC, 1, Integer.MAX_VALUE).fieldOf("output").forGetter(CentrifugeRec::getOutputWeights)
+			).apply(instance, CentrifugeRec::new));
+			CODEC = IOptionalRecipe.codecWithDisable(codec, disabledRec);
+			StreamCodec<RegistryFriendlyByteBuf, CentrifugeRec> streamCodec = StreamCodec.composite(
+					ByteBufCodecs.STRING_UTF8, CentrifugeRec::getGroup,
+					FluidStack.STREAM_CODEC, CentrifugeRec::getInput,
+					FluidStack.STREAM_CODEC, CentrifugeRec::getFluidOutput,
+					ByteBufCodecs.collection(ArrayList::new, WeightOutput.STREAM_CODEC), CentrifugeRec::getOutputWeights,
+					CentrifugeRec::new
+			);
+			STREAM_CODEC = IOptionalRecipe.codecWithDisable(streamCodec, disabledRec);
 		}
 
-		/**
-		 * Reads a single weight object from a Json Object
-		 * @param json The Json Object containing the output
-		 * @return The contained output
-		 */
-		private static WeightOutput readOutput(JsonObject json){
-			/*
-			 * Expects format:
-			 * "item": "<item type>"
-			 * "count": <number>
-			 * "weight": <number, optional- defaults to 1>
-			 */
-			return new WeightOutput(CraftingUtil.getItemStack(json, "output", true, false), GsonHelper.getAsInt(json, "weight", 1));
-		}
+		public static final MapCodec<CentrifugeRec> CODEC;
+		public static final StreamCodec<RegistryFriendlyByteBuf, CentrifugeRec> STREAM_CODEC;
 
-		@Nullable
 		@Override
-		public CentrifugeRec fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer){
-			String s = buffer.readUtf(Short.MAX_VALUE);
-			if(!buffer.readBoolean()){
-				return new CentrifugeRec(recipeId, s, FluidStack.EMPTY, FluidStack.EMPTY, new WeightOutput[0], false);
-			}
-			FluidStack input = buffer.readFluidStack();
-			FluidStack fluidOut = buffer.readFluidStack();
-			WeightOutput[] outputs = new WeightOutput[buffer.readVarInt()];
-			for(int i = 0; i < outputs.length; i++){
-				outputs[i] = WeightOutput.deserialize(buffer);
-			}
-			return new CentrifugeRec(recipeId, s, input, fluidOut, outputs, true);
+		public MapCodec<CentrifugeRec> codec(){
+			return CODEC;
 		}
 
 		@Override
-		public void toNetwork(FriendlyByteBuf buffer, CentrifugeRec recipe){
-			buffer.writeUtf(recipe.getGroup());
-			buffer.writeBoolean(recipe.active);
-			if(recipe.active){
-				buffer.writeFluidStack(recipe.input);
-				buffer.writeFluidStack(recipe.fluidOutput);
-				buffer.writeVarInt(recipe.outputs.length);
-				for(WeightOutput out : recipe.outputs){
-					out.serialize(buffer);
-				}
-			}
+		public StreamCodec<RegistryFriendlyByteBuf, CentrifugeRec> streamCodec(){
+			return STREAM_CODEC;
 		}
 	}
 }

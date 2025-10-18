@@ -78,9 +78,9 @@ public final class CRRecipes{
 		toRegisterType.put("embryo_lab_morph", EMBRYO_LAB_MORPH_TYPE);
 		toRegisterType.put("incubator", INCUBATOR_TYPE);
 
-		STAMP_MILL_SERIAL = MiscUtil.putReturn(toRegisterSerializer, "stamp_mill", new SingleIngrRecipe.SingleRecipeSerializer<>(StampMillRec::new));
+		STAMP_MILL_SERIAL = MiscUtil.putReturn(toRegisterSerializer, "stamp_mill", new SingleIngrRecipe.SingleRecipeSerializer<>(StampMillRec::new, new StampMillRec()));
 		MILL_SERIAL = MiscUtil.putReturn(toRegisterSerializer, "mill", new MillRec.Serializer());
-		ORE_CLEANSER_SERIAL = MiscUtil.putReturn(toRegisterSerializer, "ore_cleanser", new SingleIngrRecipe.SingleRecipeSerializer<>(OreCleanserRec::new));
+		ORE_CLEANSER_SERIAL = MiscUtil.putReturn(toRegisterSerializer, "ore_cleanser", new SingleIngrRecipe.SingleRecipeSerializer<>(OreCleanserRec::new, new OreCleanserRec()));
 		BEAM_EXTRACT_SERIAL = MiscUtil.putReturn(toRegisterSerializer, "beam_extract", new BeamExtractRec.Serializer());
 		COOLING_SERIAL = MiscUtil.putReturn(toRegisterSerializer, "cooling", new IceboxRec.Serializer());
 		CENTRIFUGE_SERIAL = MiscUtil.putReturn(toRegisterSerializer, "centrifuge", new CentrifugeRec.Serializer());

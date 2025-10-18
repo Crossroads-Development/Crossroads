@@ -9,15 +9,17 @@ import com.Da_Technomancer.crossroads.api.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.api.crafting.IOptionalRecipe;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
+import com.Da_Technomancer.crossroads.api.packets.StreamCodecUtils;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.google.common.collect.Lists;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
-import net.minecraft.world.Container;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -25,50 +27,65 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class AlchemyRec implements IOptionalRecipe<RecipeInput>{
 
 	private static final float MAX_BLAST = 8;
 
-	private final ResourceLocation id;
 	private final String group;
 
 	private final Type type;
 	private final double heatChange;
 	private final double minTemp;
 	private final double maxTemp;
-	private final String cat;
+	@Nullable
+	private final String catalyst;
 	private final boolean charged;
 	private final ReagentStack[] reagents;
 	private final ReagentStack[] products;
 	private final int amountChange;
 	private final float data;//What "data" means varies with reaction type. Currently, destructive measures it as blast strength per reaction
-	private final boolean real;//If false, disable this recipe. For datapacks
+	private final boolean active;//If false, disable this recipe. For datapacks
 	private final EnumBeamAlignments alignment;//Only used for ELEMENTAL type
 
-	public AlchemyRec(ResourceLocation location, String name, Type type, ReagentStack[] reagents, ReagentStack[] products, @Nullable String cat, double minTemp, double maxTemp, double heatChange, boolean charged, float data, boolean real, EnumBeamAlignments alignment){
-		id = location;
-		group = name;
+	private AlchemyRec(){
+		group = "";
+		type = Type.NORMAL;
+		heatChange = 0;
+		minTemp = 0;
+		maxTemp = 0;
+		catalyst = null;
+		charged = false;
+		products = reagents = new ReagentStack[0];
+		amountChange = 0;
+		data = 0;
+		active = false;
+		alignment = EnumBeamAlignments.NO_MATCH;
+	}
 
+	private AlchemyRec(String name, Type type, ReagentStack[] reagents, ReagentStack[] products, String cat, double minTemp, double maxTemp, double heatChange, boolean charged, float data, EnumBeamAlignments alignment){
+		group = name;
 		this.type = type;
 		this.reagents = reagents;
 		this.products = products;
-		this.cat = cat;
+		this.catalyst = Serializer.VOID_STR.equals(cat) ? null : cat;
 		this.minTemp = minTemp;
 		this.maxTemp = maxTemp;
 		this.heatChange = heatChange;
 		this.charged = charged;
 		this.data = data;
-		this.real = real;
+		this.active = true;
 		this.alignment = alignment;
 		int change = 0;
 
 		for(ReagentStack reag : reagents){
-			change -= reag.getAmount();
+			change -= reag.amount();
 		}
 		for(ReagentStack prod : products){
-			change += prod.getAmount();
+			change += prod.amount();
 		}
 
 		this.amountChange = change;
@@ -76,7 +93,11 @@ public class AlchemyRec implements IOptionalRecipe<RecipeInput>{
 
 	@Nullable
 	public String getCatalyst(){
-		return cat;
+		return catalyst;
+	}
+
+	private String getNonnullCatalyst(){
+		return catalyst == null ? Serializer.VOID_STR : catalyst;
 	}
 
 	public double minTemp(){
@@ -107,9 +128,17 @@ public class AlchemyRec implements IOptionalRecipe<RecipeInput>{
 		return type;
 	}
 
+	private float getData(){
+		return data;
+	}
+
+	private EnumBeamAlignments getAlignment(){
+		return alignment;
+	}
+
 	@Override
 	public boolean isEnabled(){
-		return real;
+		return active;
 	}
 
 	/**
@@ -118,7 +147,7 @@ public class AlchemyRec implements IOptionalRecipe<RecipeInput>{
 	 * @return Whether this reaction was performed
 	 */
 	public boolean performReaction(IReactionChamber chamb){
-		if(!real){
+		if(!active){
 			return false;//If this is not a real reaction, do nothing
 		}
 
@@ -128,7 +157,7 @@ public class AlchemyRec implements IOptionalRecipe<RecipeInput>{
 		}
 
 		ReagentMap reags = chamb.getReagents();
-		if(cat != null && reags.getQty(cat) <= 0){
+		if(catalyst != null && reags.getQty(catalyst) <= 0){
 			return false;
 		}
 		double chambTemp = reags.getTempC();
@@ -150,7 +179,7 @@ public class AlchemyRec implements IOptionalRecipe<RecipeInput>{
 				reags.remove(EnumReagents.ADAMANT.id());
 
 				for(ReagentStack reag : getProducts()){
-					reags.addReagent(reag.getType(), created * reag.getAmount(), reags.getTempC());
+					reags.addReagent(reag.getType(), created * reag.amount(), reags.getTempC());
 				}
 
 				return created > 0;
@@ -162,11 +191,11 @@ public class AlchemyRec implements IOptionalRecipe<RecipeInput>{
 
 		int prevMax = 0;
 		for(ReagentStack reag : reagents){
-			if(reags.getQty(reag.getId()) <= 0){
+			if(reags.getQty(reag.typeId()) <= 0){
 				return false;
 			}
 
-			int maxFromReag = reags.getQty(reag.getId()) / reag.getAmount();
+			int maxFromReag = reags.getQty(reag.typeId()) / reag.amount();
 			maxReactions = Math.min(maxReactions, maxFromReag);
 
 			//Destroy the chamber for precise type if the ratio isn't perfect for the input
@@ -191,11 +220,11 @@ public class AlchemyRec implements IOptionalRecipe<RecipeInput>{
 		}
 
 		for(ReagentStack reag : getProducts()){
-			reags.addReagent(reag.getType(), maxReactions * reag.getAmount(), reags.getTempC());
+			reags.addReagent(reag.getType(), maxReactions * reag.amount(), reags.getTempC());
 		}
 
 		for(ReagentStack reag : getReagents()){
-			reags.removeReagent(reag.getType(), maxReactions * reag.getAmount());
+			reags.removeReagent(reag.getType(), maxReactions * reag.amount());
 		}
 
 		reags.setTemp(HeatUtil.toCelcius((reags.getTempK() * reags.getTotalQty() - deltaHeat * maxReactions) / reags.getTotalQty()));
@@ -294,144 +323,67 @@ public class AlchemyRec implements IOptionalRecipe<RecipeInput>{
 		 *
 		 */
 
-		@Override
-		public AlchemyRec fromJson(ResourceLocation recipeId, JsonObject json){
-			//Normal specification of recipe group and output
-			String group = GsonHelper.getAsString(json, "group", "");
-
-			boolean real = CraftingUtil.isActiveJSON(json);
-			if(real){
-				//Only bother reading the whole file if this is a real recipe
-				Type type = Type.getType(GsonHelper.getAsString(json, "category", "normal"));
-				double minTemp = GsonHelper.getAsFloat(json, "min_temp", -300F);
-				double maxTemp = GsonHelper.getAsFloat(json, "max_temp", Short.MAX_VALUE);
-				double heatChange = GsonHelper.getAsFloat(json, "heat", 0);
-				String s = GsonHelper.getAsString(json, "catalyst", VOID_STR);
-				String cat = s.equals(VOID_STR) ? null : s;
-				boolean charge = GsonHelper.getAsBoolean(json, "charged", false);
-
-				float data = 0;
-				EnumBeamAlignments alignment = EnumBeamAlignments.NO_MATCH;
-				if(type == Type.DESTRUCTIVE){
-					data = GsonHelper.getAsFloat(json, "data", 0);
-				}else if(type == Type.ELEMENTAL){
-					alignment = EnumBeamAlignments.valueOf(GsonHelper.getAsString(json, "data", "no_match").toUpperCase(Locale.US));
-				}
-
-				JsonArray jsonR;
-				if(GsonHelper.isArrayNode(json, "reagents")){
-					jsonR = GsonHelper.getAsJsonArray(json, "reagents");
-				}else{
-					jsonR = new JsonArray();
-					jsonR.add(GsonHelper.getAsJsonObject(json, "reagents"));
-				}
-				ReagentStack[] reags = new ReagentStack[jsonR.size()];
-				for(int i = 0; i < reags.length; i++){
-					JsonElement elem = jsonR.get(i);
-					if(elem instanceof JsonObject){
-						JsonObject obj = (JsonObject) elem;
-						String reagent = GsonHelper.getAsString(obj, "type");
-						reags[i] = new ReagentStack(reagent, GsonHelper.getAsInt(obj, "qty", 1));
-					}
-				}
-				if(GsonHelper.isArrayNode(json, "products")){
-					jsonR = GsonHelper.getAsJsonArray(json, "products");
-				}else{
-					jsonR = new JsonArray();
-					jsonR.add(GsonHelper.getAsJsonObject(json, "products"));
-				}
-				ReagentStack[] prods = new ReagentStack[jsonR.size()];
-				for(int i = 0; i < prods.length; i++){
-					JsonElement elem = jsonR.get(i);
-					if(elem instanceof JsonObject){
-						JsonObject obj = (JsonObject) elem;
-						String reagent = GsonHelper.getAsString(obj, "type");
-						prods[i] = new ReagentStack(reagent, GsonHelper.getAsInt(obj, "qty", 1));
-					}
-				}
-
-				return new AlchemyRec(recipeId, group, type, reags, prods, cat, minTemp, maxTemp, heatChange, charge, data, true, alignment);
-			}else{
-				return new AlchemyRec(recipeId, group, Type.NORMAL, new ReagentStack[0], new ReagentStack[0], null, HeatUtil.ABSOLUTE_ZERO, HeatUtil.ABSOLUTE_ZERO, 0, false, 0, false, EnumBeamAlignments.NO_MATCH);
-			}
-		}
-
 		private static final String VOID_STR = "NONE";
 
-		@Nullable
+		static{
+			AlchemyRec disabledRec = new AlchemyRec();
+			MapCodec<AlchemyRec> codec = RecordCodecBuilder.mapCodec(instance -> instance.group(
+					CraftingUtil.recipeGroupFieldCodec().forGetter(AlchemyRec::getGroup),
+					StringRepresentable.fromEnum(AlchemyRec.Type::values).optionalFieldOf("category", Type.NORMAL).forGetter(AlchemyRec::getReactionType),
+					CraftingUtil.singleOrListCodec(ReagentStack.CODEC, 1, Integer.MAX_VALUE).xmap(list -> list.toArray(new ReagentStack[list.size()]), List::of).fieldOf("reagents").forGetter(AlchemyRec::getReagents),
+					CraftingUtil.singleOrListCodec(ReagentStack.CODEC, 1, Integer.MAX_VALUE).xmap(list -> list.toArray(new ReagentStack[list.size()]), List::of).fieldOf("products").forGetter(AlchemyRec::getProducts),
+					Codec.STRING.optionalFieldOf("catalyst", VOID_STR).forGetter(AlchemyRec::getNonnullCatalyst),
+					Codec.DOUBLE.optionalFieldOf("min_temp", -300D).forGetter(AlchemyRec::minTemp),
+					Codec.DOUBLE.optionalFieldOf("max_temp", (double) Short.MAX_VALUE).forGetter(AlchemyRec::maxTemp),
+					Codec.DOUBLE.optionalFieldOf("heat", 0D).forGetter(AlchemyRec::deltaHeatPer),
+					Codec.BOOL.optionalFieldOf("charged", false).forGetter(AlchemyRec::charged),
+					//There are two different fields using "data"- mutually exclusive on decode, but not sure if that works on encode
+					Codec.FLOAT.lenientOptionalFieldOf("data", 0F).forGetter(AlchemyRec::getData),
+					StringRepresentable.fromEnum(EnumBeamAlignments::values).lenientOptionalFieldOf("data", EnumBeamAlignments.NO_MATCH).forGetter(AlchemyRec::getAlignment)
+			).apply(instance, AlchemyRec::new));
+			CODEC = IOptionalRecipe.codecWithDisable(codec, disabledRec);
+
+			StreamCodec<RegistryFriendlyByteBuf, AlchemyRec> streamCodec = StreamCodecUtils.composite(
+					ByteBufCodecs.STRING_UTF8, AlchemyRec::getGroup,
+					ByteBufCodecs.fromCodecWithRegistries(StringRepresentable.fromEnum(AlchemyRec.Type::values)), AlchemyRec::getReactionType,
+					ByteBufCodecs.collection(ArrayList::new, ReagentStack.STREAM_CODEC).map(list -> list.toArray(new ReagentStack[list.size()]), Lists::newArrayList), AlchemyRec::getReagents,
+					ByteBufCodecs.collection(ArrayList::new, ReagentStack.STREAM_CODEC).map(list -> list.toArray(new ReagentStack[list.size()]), Lists::newArrayList), AlchemyRec::getProducts,
+					ByteBufCodecs.STRING_UTF8, AlchemyRec::getNonnullCatalyst,
+					ByteBufCodecs.DOUBLE, AlchemyRec::minTemp,
+					ByteBufCodecs.DOUBLE, AlchemyRec::maxTemp,
+					ByteBufCodecs.DOUBLE, AlchemyRec::deltaHeatPer,
+					ByteBufCodecs.BOOL, AlchemyRec::charged,
+					ByteBufCodecs.FLOAT, AlchemyRec::getData,
+					ByteBufCodecs.fromCodecWithRegistries(StringRepresentable.fromEnum(EnumBeamAlignments::values)), AlchemyRec::getAlignment,
+					AlchemyRec::new
+			);
+			STREAM_CODEC = IOptionalRecipe.codecWithDisable(streamCodec, disabledRec);
+		}
+
+		public static MapCodec<AlchemyRec> CODEC;
+		public static StreamCodec<RegistryFriendlyByteBuf, AlchemyRec> STREAM_CODEC;
+
 		@Override
-		public AlchemyRec fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer){
-			boolean real = buffer.readBoolean();
-			String group = buffer.readUtf(Short.MAX_VALUE);
-
-			if(real){
-				Type type = Type.values()[buffer.readByte()];
-				float heatChange = buffer.readFloat();
-				float minTemp = buffer.readFloat();
-				float maxTemp = buffer.readFloat();
-				String s = buffer.readUtf(Short.MAX_VALUE);
-				String catalyst = s.equals(VOID_STR) ? null : s;
-				boolean charged = buffer.readBoolean();
-				ReagentStack[] reags = new ReagentStack[buffer.readByte()];
-				for(int i = 0; i < reags.length; i++){
-					reags[i] = new ReagentStack(buffer.readUtf(), buffer.readByte());
-				}
-				ReagentStack[] prod = new ReagentStack[buffer.readByte()];
-				for(int i = 0; i < prod.length; i++){
-					prod[i] = new ReagentStack(buffer.readUtf(), buffer.readByte());
-				}
-				float data = buffer.readFloat();
-				EnumBeamAlignments alignment = EnumBeamAlignments.values()[buffer.readVarInt()];
-
-				return new AlchemyRec(recipeId, group, type, reags, prod, catalyst, minTemp, maxTemp, heatChange, charged, data, true, alignment);
-			}else{
-				return new AlchemyRec(recipeId, group, Type.NORMAL, new ReagentStack[0], new ReagentStack[0], null, HeatUtil.ABSOLUTE_ZERO, HeatUtil.ABSOLUTE_ZERO, 0, false, 0, false, EnumBeamAlignments.NO_MATCH);
-			}
+		public MapCodec<AlchemyRec> codec(){
+			return CODEC;
 		}
 
 		@Override
-		public void toNetwork(FriendlyByteBuf buffer, AlchemyRec recipe){
-			buffer.writeBoolean(recipe.real);
-			buffer.writeUtf(recipe.getGroup());//group
-			if(recipe.real){
-				buffer.writeByte(recipe.type.ordinal());//type
-				buffer.writeFloat((float) recipe.heatChange);//heat
-				buffer.writeFloat((float) recipe.minTemp);//min temp
-				buffer.writeFloat((float) recipe.maxTemp);//max temp
-				buffer.writeUtf(recipe.cat == null ? VOID_STR : recipe.cat);//catalyst
-				buffer.writeBoolean(recipe.charged);//charged
-				int total = recipe.reagents.length;
-				buffer.writeByte(total);//Number of reagents
-				for(ReagentStack reag : recipe.reagents){
-					buffer.writeUtf(reag.getType().getID());//reag type
-					buffer.writeByte(reag.getAmount());//reag qty
-				}
-				total = recipe.products.length;
-				buffer.writeByte(total);//Number of products
-				for(ReagentStack reag : recipe.products){
-					buffer.writeUtf(reag.getType().getID());//prod type
-					buffer.writeByte(reag.getAmount());//prod qty
-				}
-				buffer.writeFloat(recipe.data);//data
-				buffer.writeVarInt(recipe.alignment.ordinal());
-			}
+		public StreamCodec<RegistryFriendlyByteBuf, AlchemyRec> streamCodec(){
+			return STREAM_CODEC;
 		}
+
 	}
 
-	public enum Type{
+	public enum Type implements StringRepresentable{
 		NORMAL(),
 		PRECISE(),//Destroys the chamber if proportions aren't exact
 		DESTRUCTIVE(),//Destroys the chamber
 		ELEMENTAL();//Practitioner stone tier elemental reagent
 
-		public static Type getType(String s){
-			s = s.toUpperCase(Locale.ENGLISH);
-			for(Type t : values()){
-				if(t.name().equals(s)){
-					return t;
-				}
-			}
-			return NORMAL;
+		@Override
+		public String getSerializedName(){
+			return name().toLowerCase(Locale.ENGLISH);
 		}
 	}
 }

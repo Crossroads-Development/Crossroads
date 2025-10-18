@@ -221,7 +221,7 @@ public class EntityFlameCore extends Entity{
 			//reagList should never contain null
 			if(r != null){
 				effect = r.getType().getEffect();
-				effect.doEffect(world, pos, r.getAmount(), EnumMatterPhase.FLAME, reags);
+				effect.doEffect(world, pos, r.amount(), EnumMatterPhase.FLAME, reags);
 			}
 		}
 	}
