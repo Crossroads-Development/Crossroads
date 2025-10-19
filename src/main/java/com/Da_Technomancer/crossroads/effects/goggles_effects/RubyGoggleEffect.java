@@ -48,7 +48,7 @@ public class RubyGoggleEffect implements IGoggleEffect{
 
 			BlockPos endPos = MiscUtil.blockPos(end);
 			if(entHit != null){
-				entHit.setSecondsOnFire(3);
+				entHit.igniteForSeconds(3);
 			}else if(world.getBlockState(endPos).isAir()){
 				world.setBlockAndUpdate(endPos, Blocks.FIRE.defaultBlockState());
 			}

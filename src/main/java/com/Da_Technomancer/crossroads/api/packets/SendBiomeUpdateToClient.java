@@ -1,8 +1,7 @@
 package com.Da_Technomancer.crossroads.api.packets;
 
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.effects.alchemy_effects.AetherEffect;
-
+import com.Da_Technomancer.crossroads.api.alchemy.TerraformEffect;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -26,7 +25,7 @@ public record SendBiomeUpdateToClient(BlockPos pos, String newBiome) implements 
 		context.enqueueWork(() -> {
 			Level world;
 			if((world = SafeCallable.getClientWorld()) != null){
-				AetherEffect.setBiomeAtPos(world, packet.pos, AetherEffect.getBiomeHolder(ResourceLocation.withDefaultNamespace(packet.newBiome)));
+				TerraformEffect.setBiomeAtPos(world, packet.pos, TerraformEffect.getBiomeHolder(world, ResourceLocation.parse(packet.newBiome)));
 			}
 		});
 

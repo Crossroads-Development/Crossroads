@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.effects.alchemy_effects;
 
+import com.Da_Technomancer.crossroads.api.alchemy.TerraformEffect;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.biome.Biome;
@@ -7,7 +8,7 @@ import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
-public class FlowerForestTerraformEffect extends AetherEffect{
+public class FlowerForestTerraformEffect extends TerraformEffect{
 
 	@Override
 	protected ResourceKey<Biome> biome(){
@@ -17,6 +18,31 @@ public class FlowerForestTerraformEffect extends AetherEffect{
 	@Override
 	protected Block crystalBlock(){
 		return Blocks.HONEY_BLOCK;
+	}
+
+	@Override
+	protected Block soilBlock(){
+		return Blocks.GRASS_BLOCK;
+	}
+
+	@Override
+	protected Block rockBlock(){
+		return Blocks.STONE;
+	}
+
+	@Override
+	protected Block fluidBlock(){
+		return Blocks.WATER;
+	}
+
+	@Override
+	protected Block woodBlock(){
+		return Blocks.OAK_LOG;
+	}
+
+	@Override
+	protected Block foliageBlock(){
+		return Blocks.OAK_LEAVES;
 	}
 
 	@Override

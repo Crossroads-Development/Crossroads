@@ -4,8 +4,7 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.neoforged.neoforge.common.EffectCures;
 
 import javax.annotation.Nullable;
 
@@ -19,7 +18,7 @@ public class Curative extends MobEffect{
 	@Override
 	public void applyInstantenousEffect(@Nullable Entity p_180793_1_, @Nullable Entity p_180793_2_, LivingEntity self, int p_180793_4_, double p_180793_5_){
 		if(!self.level().isClientSide){
-			self.curePotionEffects(new ItemStack(Items.MILK_BUCKET));
+			self.removeEffectsCuredBy(EffectCures.MILK);
 		}
 	}
 

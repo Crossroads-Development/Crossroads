@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.effects.alchemy_effects;
 
+import com.Da_Technomancer.crossroads.api.alchemy.TerraformEffect;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -8,7 +9,7 @@ import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
-public class LumenEffect extends AetherEffect{
+public class LumenEffect extends TerraformEffect{
 
 	@Override
 	protected Block soilBlock(){

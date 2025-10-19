@@ -2,8 +2,7 @@ package com.Da_Technomancer.crossroads.entity;
 
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.core.Direction;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EntityType;
@@ -31,8 +30,8 @@ public class EntityNitro extends ThrowableProjectile implements ItemSupplier{
 	}
 
 	@Override
-	public void setSecondsOnFire(int seconds){
-		if(seconds > 0){
+	public void igniteForTicks(int ticks){
+		if(ticks > 0){
 			onHit(new BlockHitResult(new Vec3(getX(), getY(), getZ()), Direction.UP, blockPosition(), true));
 		}
 	}
@@ -50,13 +49,8 @@ public class EntityNitro extends ThrowableProjectile implements ItemSupplier{
 	}
 
 	@Override
-	protected void defineSynchedData(){
+	protected void defineSynchedData(SynchedEntityData.Builder builder){
 
-	}
-
-	@Override
-	public Packet<ClientGamePacketListener> getAddEntityPacket(){
-		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 
 	@Override

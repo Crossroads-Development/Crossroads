@@ -3,11 +3,13 @@ package com.Da_Technomancer.crossroads.entity;
 import com.Da_Technomancer.crossroads.render.HopperHawkShoulderRenderer;
 import com.Da_Technomancer.crossroads.render.TechnomancyElytraRenderer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.entity.*;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.api.distmarker.Dist;
@@ -55,12 +57,12 @@ public final class CREntities{
 	@OnlyIn(Dist.CLIENT)
 	public static void attachLayerRenderers(EntityRenderersEvent.AddLayers e){
 		EntityModelSet modelSet = e.getEntityModels();
-
 		//Add the technomancy armor elytra render layer to every entity that can render an elytra
 		EntityRenderDispatcher manager = Minecraft.getInstance().getEntityRenderDispatcher();
-		for(EntityRenderer<?> entityRenderer : manager.renderers.values()){
+		for(EntityType<?> entityType : e.getEntityTypes()){
+			EntityRenderer<?> entityRenderer = e.getRenderer(entityType);
 			if(entityRenderer instanceof HumanoidMobRenderer || entityRenderer instanceof ArmorStandRenderer){
-				LivingEntityRenderer<?, ?> livingRenderer = (LivingEntityRenderer<?, ?>) entityRenderer;
+				LivingEntityRenderer<? extends LivingEntity, ? extends EntityModel<?>> livingRenderer = (LivingEntityRenderer<?, ?>) entityRenderer;
 				livingRenderer.addLayer(new TechnomancyElytraRenderer(livingRenderer, modelSet));
 			}
 		}

@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.effects.overheat_effects;
 
 import com.Da_Technomancer.crossroads.blocks.heat.HeatInsulators;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LightningBolt;
@@ -35,7 +36,9 @@ public class DirtEffect implements HeatInsulators.IOverheatEffect{
 				break;
 			case 1:
 				worldIn.destroyBlock(pos, false);
-				worldIn.addFreshEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Blocks.OBSIDIAN).setHoverName(Component.literal("Dirt LvL 3"))));
+				ItemStack obsidianStack = new ItemStack(Blocks.OBSIDIAN);
+				obsidianStack.set(DataComponents.CUSTOM_NAME, Component.literal("Dirt LvL 3"));
+				worldIn.addFreshEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), obsidianStack));
 				break;
 			case 2:
 				worldIn.destroyBlock(pos, false);
@@ -73,7 +76,5 @@ public class DirtEffect implements HeatInsulators.IOverheatEffect{
 				worldIn.addFreshEntity(lightning);
 				break;
 		}
-
 	}
-
 }

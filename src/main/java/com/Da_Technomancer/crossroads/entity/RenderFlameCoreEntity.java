@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.entity;
 
+import com.Da_Technomancer.crossroads.api.MathUtil;
 import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -28,8 +29,8 @@ public class RenderFlameCoreEntity extends EntityRenderer<EntityFlameCore>{
 
 		Color color = new Color(entity.getEntityData().get(EntityFlameCore.COLOR), true);
 		//Note that we tweak the alpha value
-		int[] col = new int[] {color.getRed(), color.getGreen(), color.getBlue(), Math.max(150, Math.min(240, 80 + color.getAlpha()))};
-		float scale = EntityFlameCore.FLAME_VEL * (float) entity.getEntityData().get(EntityFlameCore.TIME_EXISTED);
+		float scale = entity.getRenderScale(entity.getEntityData().get(EntityFlameCore.TIME_EXISTED));
+		int[] col = new int[] {color.getRed(), color.getGreen(), color.getBlue(), Math.round((1F - scale / entity.getMaxRadius()) * 60F) + MathUtil.clamp(40 + color.getAlpha(), 90, 180)};
 		float minU = -scale;
 		float minV = minU;
 		float maxU = minU + scale * 2;

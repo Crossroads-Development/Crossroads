@@ -1,7 +1,9 @@
 package com.Da_Technomancer.crossroads.entity.mob_effects;
 
 import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -17,6 +19,8 @@ import java.util.List;
 public class Sedation extends MobEffect{
 
 	private static final String SEDATION_KEY = "cr_sedation";
+	private static final ResourceLocation ATTACK_SPEED_MODIFIER_SEDATION_ID = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "effect.sedation.attack_speed");
+	private static final ResourceLocation MOVE_SPEED_MODIFIER_SEDATION_ID = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "effect.sedation.move_speed");
 
 	public Sedation(){
 		super(MobEffectCategory.HARMFUL, 0x848484);
@@ -29,8 +33,8 @@ public class Sedation extends MobEffect{
 
 		//Also applies a slowness and mining fatigue effect
 		//These effects are meaningless to anything with AI disabled, but will do something to players
-		addAttributeModifier(Attributes.MOVEMENT_SPEED, "ABCDEF01-7CE8-4030-940E-514C1F160890", -0.3D, AttributeModifier.Operation.MULTIPLY_TOTAL);
-		addAttributeModifier(Attributes.ATTACK_SPEED, "ABCDEF01-E92A-486E-9800-B47F202C4386", -0.2D, AttributeModifier.Operation.MULTIPLY_TOTAL);
+		addAttributeModifier(Attributes.MOVEMENT_SPEED, MOVE_SPEED_MODIFIER_SEDATION_ID, -0.3D, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+		addAttributeModifier(Attributes.ATTACK_SPEED, ATTACK_SPEED_MODIFIER_SEDATION_ID, -0.2D, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
 	}
 
 	private boolean canSedationApplyFully(LivingEntity entity){
@@ -56,13 +60,13 @@ public class Sedation extends MobEffect{
 	}
 
 	@Override
-	public void addAttributeModifiers(LivingEntity entity, AttributeMap p_111185_2_, int p_111185_3_){
+	public void onEffectStarted(LivingEntity entity, int intensity){
 		if(canSedationApplyFully(entity)){
 			Mob mob = (Mob) entity;
 			mob.setNoAi(true);
 			mob.getPersistentData().putBoolean(SEDATION_KEY, true);
 		}
-		super.addAttributeModifiers(entity, p_111185_2_, p_111185_3_);
+		super.onEffectStarted(entity, intensity);
 	}
 
 	@Override
@@ -76,7 +80,7 @@ public class Sedation extends MobEffect{
 	}
 
 	@Override
-	public void applyEffectTick(LivingEntity entity, int p_76394_2_){
+	public boolean applyEffectTick(LivingEntity entity, int p_76394_2_){
 		if(canSedationApplyFully(entity)){
 			//Force basic physics to apply despite AI being disabled
 			//Done by enabling AI, calling the method responsible for physics, then re-disabling AI
@@ -91,10 +95,11 @@ public class Sedation extends MobEffect{
 				mob.setNoAi(true);
 			}
 		}
+		return true;
 	}
 
 	@Override
-	public boolean isDurationEffectTick(int p_76397_1_, int p_76397_2_){
+	public boolean shouldApplyEffectTickThisTick(int pDuration, int pAmplifier){
 		return true;
 	}
 }

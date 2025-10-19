@@ -63,7 +63,7 @@ public class GrowEffect extends BeamEffect{
 					if(CraftingUtil.tagContains(growBlacklist, state.getBlock())){
 						return;
 					}
-					if(growable.isValidBonemealTarget(beamHit.getWorld(), pos, state, false)){
+					if(growable.isValidBonemealTarget(beamHit.getWorld(), pos, state)){
 						growable.performBonemeal(beamHit.getWorld(), beamHit.getWorld().random, pos, state);
 					}
 					//The state must be queried every loop because some plants could break themselves upon growing

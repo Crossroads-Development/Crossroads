@@ -4,21 +4,17 @@ import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 public class EntityFlyingMachine extends Entity{
 
@@ -35,8 +31,8 @@ public class EntityFlyingMachine extends Entity{
 	}
 
 	@Override
-	protected void defineSynchedData(){
-		entityData.define(GRAV_PLATE_ANGLE, 0F);
+	protected void defineSynchedData(SynchedEntityData.Builder builder){
+		builder.define(GRAV_PLATE_ANGLE, 0F);
 	}
 
 	protected float getAngle(){
@@ -164,7 +160,7 @@ public class EntityFlyingMachine extends Entity{
 			if(!level().isClientSide){
 				player.startRiding(this);
 			}
-			return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
+			return InteractionResult.sidedSuccess(level().isClientSide);
 		}
 		return InteractionResult.PASS;
 	}
@@ -180,13 +176,8 @@ public class EntityFlyingMachine extends Entity{
 	}
 
 	@Override
-	public Packet<ClientGamePacketListener> getAddEntityPacket(){
-		return NetworkHooks.getEntitySpawningPacket(this);
-	}
-
-	@Override
-	public double getPassengersRidingOffset(){
-		return 1.1D;
+	protected Vec3 getPassengerAttachmentPoint(Entity pEntity, EntityDimensions pDimensions, float pPartialTick){
+		return super.getPassengerAttachmentPoint(pEntity, pDimensions, pPartialTick).add(0, 1.1D, 0);
 	}
 
 	@Override

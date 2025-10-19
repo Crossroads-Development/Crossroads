@@ -9,6 +9,7 @@ import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public class ChargeEffect extends BeamEffect{
 	@Override
 	public void doBeamEffect(EnumBeamAlignments align, boolean voi, int power, BeamHit beamHit){
 		if(!performTransmute(align, voi, power, beamHit)){
-			IEnergyStorage energy = beamHit.getEndCapability(ForgeCapabilities.ENERGY, false);
+			IEnergyStorage energy = beamHit.getEndCapability(Capabilities.EnergyStorage.BLOCK, false);
 
 			if(voi){
 				//Discharge machine
@@ -28,17 +29,14 @@ public class ChargeEffect extends BeamEffect{
 				}
 
 				//Attempt to discharge items in inventory
-                final int[] availableFE = new int[] {CRConfig.fePerCharge.get() * power};
+				final int[] availableFE = new int[] {CRConfig.fePerCharge.get() * power};
 				List<Player> players = beamHit.getNearbyEntities(Player.class, BeamHit.WITHIN_BLOCK_RANGE, null);
 				for(Player player : players){
 					CurioHelper.forAllInventoryItems(player, (ItemStack item) -> {
-						if(!item.isEmpty() && item.getCapability(ForgeCapabilities.ENERGY).isPresent()){
-							IEnergyStorage energyStor;
+						if(!item.isEmpty() && item.getCapability(Capabilities.EnergyStorage.ITEM) != null){
 							ItemStack copy = item.copy();
-							if((energyStor = copy.getCapability(ForgeCapabilities.ENERGY)).isPresent()){
-								availableFE[0] -= energyStor.orElseThrow(NullPointerException::new).extractEnergy(availableFE[0], false);
-								return copy;
-							}
+							availableFE[0] -= copy.getCapability(Capabilities.EnergyStorage.ITEM).extractEnergy(availableFE[0], false);
+							return copy;
 						}
 						return item;
 					});
@@ -55,17 +53,14 @@ public class ChargeEffect extends BeamEffect{
 				}
 
 				//Attempt to charge items in inventory
-                final int[] availableFE = new int[] {CRConfig.fePerCharge.get() * power};
+				final int[] availableFE = new int[] {CRConfig.fePerCharge.get() * power};
 				List<Player> players = beamHit.getNearbyEntities(Player.class, BeamHit.WITHIN_BLOCK_RANGE, null);
 				for(Player player : players){
 					CurioHelper.forAllInventoryItems(player, (ItemStack item) -> {
-						if(!item.isEmpty() && item.getCapability(ForgeCapabilities.ENERGY).isPresent()){
-							IEnergyStorage energyStor;
+						if(!item.isEmpty() && item.getCapability(Capabilities.EnergyStorage.ITEM) != null){
 							ItemStack copy = item.copy();
-							if((energyStor = copy.getCapability(ForgeCapabilities.ENERGY)).isPresent()){
-								availableFE[0] -= energyStor.orElseThrow(NullPointerException::new).receiveEnergy(availableFE[0], false);
-								return copy;
-							}
+							availableFE[0] -= copy.getCapability(Capabilities.EnergyStorage.ITEM).receiveEnergy(availableFE[0], false);
+							return copy;
 						}
 						return item;
 					});

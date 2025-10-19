@@ -16,7 +16,7 @@ public class ChlorineAlchemyEffect implements IAlchEffect{
 
 	@Override
 	public void doEffect(Level world, BlockPos pos, int amount, EnumMatterPhase phase, ReagentMap reags){
-		for(LivingEntity e : world.getEntitiesOfClass(LivingEntity.class, new AABB(pos, pos.offset(1, 1, 1)), EntitySelector.ENTITY_STILL_ALIVE)){
+		for(LivingEntity e : world.getEntitiesOfClass(LivingEntity.class, AABB.encapsulatingFullBlocks(pos, pos), EntitySelector.ENTITY_STILL_ALIVE)){
 			e.addEffect(new MobEffectInstance(MobEffects.WITHER, 300, 3));
 			e.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 600, 3));
 			e.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 600, 1));

@@ -31,7 +31,6 @@ public class EntityFlameCore extends Entity{
 
 	protected static final EntityDataAccessor<Integer> TIME_EXISTED = SynchedEntityData.defineId(EntityFlameCore.class, EntityDataSerializers.INT);
 	protected static final EntityDataAccessor<Integer> COLOR = SynchedEntityData.defineId(EntityFlameCore.class, EntityDataSerializers.INT);
-	protected static final float FLAME_VEL = 0.08F;//Flame interface speed, blocks per tick
 
 	/**
 	 * In order to avoid iterating over a large ReagentStack[] that is mostly empty several times a tick, this list is created to store all non-null reagent stacks
@@ -103,18 +102,31 @@ public class EntityFlameCore extends Entity{
 	}
 
 	public int getRadius(){
-		return getRadius(ticksExisted);
+		return getRadius(this.ticksExisted);
 	}
 
-	private static int getRadius(int ticksExisted){
-		return Math.round(FLAME_VEL * (float) ticksExisted);
+	protected int getRadius(int ticksExisted){
+		return Math.round(getRenderScale(ticksExisted));
+	}
+
+	private static final float FLAME_VEL_BASE = 0.21F;//blocks per tick
+	private static final float CUTOFF_RATIO = 0.9F;
+
+	protected float getRenderScale(int ticksExisted){
+		//Radius is a slowing exponential curve with respect to time
+		//Velocity is scaled based on maximum radius to have total time linearly increase with maximum radius
+		//Chosen to create a cloud that expands quickly initially but slows down, and gives the player time to react at the larger scales
+		float velocityScaling = FLAME_VEL_BASE * CUTOFF_RATIO / (maxRadius == 0 ? 8F : maxRadius);
+		return FLAME_VEL_BASE / velocityScaling * (1F - (float) Math.exp(-velocityScaling * ticksExisted));
+	}
+
+	protected int getMaxRadius(){
+		return maxRadius;
 	}
 
 	@Override
 	public void tick(){
 		super.tick();
-
-		//TODO change flame clouds to expand fast (linear velocity) initially but slow down as they grow, and also become less opaque as they reach the limit of their range
 
 		if(level().isClientSide || reags == null){
 			return;

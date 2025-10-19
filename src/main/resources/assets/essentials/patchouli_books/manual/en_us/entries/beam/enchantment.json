@@ -15,11 +15,11 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<em>has a chance to be destroyed/$. When an item is enchanted by this beam, there is a (power)% chance to destroy the item. For example, a power 15 beam has a 15% chance to destroy the enchanted item. This can be disabled in the config.$(br2)This beam is very powerful, as one shot can enchant an items with max level enchants, including treasure enchants, without costing XP.$(br2)"
+			"text": "<em>has a chance to be destroyed/$. When an item is enchanted by this beam, there is a (power)% chance to destroy the item. For example, a power 15 beam has a 15% chance to destroy the enchanted item. This can be disabled in the config.$(br2)This beam is very powerful, able to apply max level enchants (including mending) without costing XP.$(br2)"
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<thing>Void-Enchantment/$ AKA <thing>Disenchantment/$ will disenchant all items dropped in the world within range. The range is a radius of sqrt(<thing>power/$) / 2 blocks. This can also remove curses from items.$(br2)"
+			"text": "<thing>Void-Enchantment/$ AKA <thing>Disenchantment/$ will disenchant (including removing curses) all items dropped in the world within range. The range is a radius of sqrt(<thing>power/$) / 2 blocks."
 		}
 	],
 	"extra_recipe_mappings": {}

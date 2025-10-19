@@ -3,10 +3,9 @@ package com.Da_Technomancer.crossroads.effects.beam_effects;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.beams.BeamHit;
 import com.Da_Technomancer.crossroads.api.beams.EnumBeamAlignments;
-import com.Da_Technomancer.crossroads.entity.CRMobDamage;
 import com.Da_Technomancer.crossroads.entity.EntityGhostMarker;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.random.WeightedRandomList;
 import net.minecraft.world.Difficulty;
@@ -18,6 +17,7 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.event.EventHooks;
 
 public class RiftEffect extends BeamEffect{
 
@@ -62,18 +62,20 @@ public class RiftEffect extends BeamEffect{
 								if(ent instanceof LivingEntity lEnt && worldServ.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT)){
 									//All the methods for this are protected, so we re-implement them here
 
-									//LivingEntity::dropLoot
-									ResourceLocation resourcelocation = lEnt.getLootTable();
-									LootTable loottable = worldServ.getServer().getLootData().getLootTable(resourcelocation);
-									LootParams.Builder lootcontext$builder = new LootParams.Builder(worldServ).withParameter(LootContextParams.THIS_ENTITY, lEnt).withParameter(LootContextParams.ORIGIN, lEnt.position()).withParameter(LootContextParams.DAMAGE_SOURCE, CRMobDamage.damageSource(CRMobDamage.VOID, worldServ)).withOptionalParameter(LootContextParams.KILLER_ENTITY, null).withOptionalParameter(LootContextParams.DIRECT_KILLER_ENTITY, null);
-									LootParams ctx = lootcontext$builder.create(LootContextParamSets.ENTITY);
-									loottable.getRandomItems(ctx).forEach(lEnt::spawnAtLocation);
+									//LivingEntity::dropFromLootTable
+									ResourceKey<LootTable> resourcekey = lEnt.getLootTable();
+									LootTable loottable = worldServ.getServer().reloadableRegistries().getLootTable(resourcekey);
+									LootParams.Builder lootparams$builder = new LootParams.Builder(worldServ)
+											.withParameter(LootContextParams.THIS_ENTITY, lEnt)
+											.withParameter(LootContextParams.ORIGIN, lEnt.position());
+									LootParams lootparams = lootparams$builder.create(LootContextParamSets.ENTITY);
+									loottable.getRandomItems(lootparams, lEnt.getLootTableSeed(), lEnt::spawnAtLocation);
 
-									//We don't implement/access LivingEntity::dropSpecialItems, because that is entity specific and usually irrelevant for newly spawned mobs
+									//We don't implement/access LivingEntity::dropCustomDeathLoot because that is entity specific and usually irrelevant for newly spawned mobs
 								}
 							}else{
 								if(ent instanceof Mob){
-									ForgeEventFactory.onFinalizeSpawn((Mob) ent, worldServ, worldServ.getCurrentDifficultyAt(beamHit.getPos()), MobSpawnType.SPAWNER, null, null);//Gives mobs weapons/armor, makes slimes not have glitched health, and other essential things
+									EventHooks.finalizeMobSpawn((Mob) ent, worldServ, worldServ.getCurrentDifficultyAt(beamHit.getPos()), MobSpawnType.SPAWNER, null);//Gives mobs weapons/armor, makes slimes not have glitched health, and other essential things
 								}
 								worldServ.addFreshEntity(ent);
 							}

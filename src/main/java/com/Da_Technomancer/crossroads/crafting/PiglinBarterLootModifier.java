@@ -4,13 +4,14 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.monster.piglin.Piglin;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.neoforged.neoforge.common.crafting.CraftingHelper;
 import net.neoforged.neoforge.common.loot.IGlobalLootModifier;
 import net.neoforged.neoforge.common.loot.LootModifier;
 
@@ -18,26 +19,24 @@ import javax.annotation.Nonnull;
 
 public class PiglinBarterLootModifier extends LootModifier{
 
-	protected static final MapCodec<PiglinBarterLootModifier> MAP_CODEC = RecordCodecBuilder.create(inst -> codecStart(inst)
-            .and(Codec.BOOL.optionalFieldOf("active", true).forGetter(PiglinBarterLootModifier::isActive))
-            .and(Codec.STRING.fieldOf("item_name").forGetter(PiglinBarterLootModifier::getItem))
-            .and(Codec.INT.optionalFieldOf("min", 1).forGetter(PiglinBarterLootModifier::getMin))
-            .and(Codec.INT.optionalFieldOf("max", 1).forGetter(PiglinBarterLootModifier::getMax))
-            .and(Codec.FLOAT.fieldOf("override_chance").forGetter(PiglinBarterLootModifier::getOverrideChance))
-            .apply(inst, PiglinBarterLootModifier::new));
+	protected static final MapCodec<PiglinBarterLootModifier> MAP_CODEC = RecordCodecBuilder.mapCodec(inst -> codecStart(inst)
+			.and(inst.group(Codec.BOOL.optionalFieldOf("active", true).forGetter(PiglinBarterLootModifier::isActive),
+					BuiltInRegistries.ITEM.byNameCodec().fieldOf("item_name").forGetter(PiglinBarterLootModifier::getItem),
+					ExtraCodecs.POSITIVE_INT.optionalFieldOf("min", 1).forGetter(PiglinBarterLootModifier::getMin),
+					ExtraCodecs.POSITIVE_INT.optionalFieldOf("max", 1).forGetter(PiglinBarterLootModifier::getMax),
+					Codec.FLOAT.fieldOf("override_chance").forGetter(PiglinBarterLootModifier::getOverrideChance)))
+			.apply(inst, PiglinBarterLootModifier::new));
 
 	private final boolean active;
-	private final String itemName;
 	private final Item item;
 	private final int min;
 	private final int max;
 	private final float overrideChance;
 
-	private PiglinBarterLootModifier(LootItemCondition[] conditions, boolean active, String itemName, int min, int max, float overrideChance){
+	private PiglinBarterLootModifier(LootItemCondition[] conditions, boolean active, Item item, int min, int max, float overrideChance){
 		super(conditions);
 		this.active = active;
-		this.itemName = itemName;
-		this.item = CraftingHelper.getItem(itemName, true);
+		this.item = item;
 		this.min = min;
 		this.max = max;
 		this.overrideChance = overrideChance;
@@ -48,8 +47,8 @@ public class PiglinBarterLootModifier extends LootModifier{
 		return active;
 	}
 
-	private String getItem(){
-		return itemName;
+	private Item getItem(){
+		return item;
 	}
 
 	private int getMin(){

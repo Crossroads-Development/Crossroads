@@ -4,10 +4,7 @@ import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.alchemy.AlchemyUtil;
 import com.Da_Technomancer.crossroads.api.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -21,13 +18,9 @@ import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.entity.projectile.ThrowableProjectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.TheEndGatewayBlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.event.EventHooks;
 
 public class EntityShell extends ThrowableProjectile implements ItemSupplier{
 
@@ -110,31 +103,14 @@ public class EntityShell extends ThrowableProjectile implements ItemSupplier{
 		//Impact handling
 		//Copied from ThrowableProjectile
 		HitResult hitresult = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
-		boolean flag = false;
-		if(hitresult.getType() == HitResult.Type.BLOCK){
-			BlockPos blockpos = ((BlockHitResult) hitresult).getBlockPos();
-			BlockState blockstate = level().getBlockState(blockpos);
-			if(blockstate.is(Blocks.NETHER_PORTAL)){
-				this.handleInsidePortal(blockpos);
-				flag = true;
-			}else if(blockstate.is(Blocks.END_GATEWAY)){
-				BlockEntity blockentity = level().getBlockEntity(blockpos);
-				if(blockentity instanceof TheEndGatewayBlockEntity && TheEndGatewayBlockEntity.canEntityTeleport(this)){
-					TheEndGatewayBlockEntity.teleportEntity(level(), blockpos, blockstate, this, (TheEndGatewayBlockEntity) blockentity);
-				}
-
-				flag = true;
-			}
-		}
-
-		if(hitresult.getType() != HitResult.Type.MISS && !flag && !net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, hitresult)){
-			onHit(hitresult);
+		if(hitresult.getType() != HitResult.Type.MISS && !EventHooks.onProjectileImpact(this, hitresult)){
+			hitTargetOrDeflectSelf(hitresult);
 		}
 	}
 
 	@Override
-	protected void defineSynchedData(){
-		entityData.define(item, new ItemStack(CRItems.shellGlass));
+	protected void defineSynchedData(SynchedEntityData.Builder builder){
+		builder.define(item, new ItemStack(CRItems.shellGlass));
 	}
 
 	@Override
@@ -149,11 +125,6 @@ public class EntityShell extends ThrowableProjectile implements ItemSupplier{
 		if(contents != null){
 			contents.write(nbt);
 		}
-	}
-
-	@Override
-	public Packet<ClientGamePacketListener> getAddEntityPacket(){
-		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 
 	@Override

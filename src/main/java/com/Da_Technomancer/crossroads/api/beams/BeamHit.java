@@ -181,28 +181,23 @@ public class BeamHit{
 	}
 
 	@Nullable
-	public <T, C> T getEndCapability(BlockCapability<T, C> capability){
-		//TODO: should probably accept `C context` as a param here - though this method presumes the context is
-		// a direction. Which isn't unfair... if this isn't used outside this class, it should be private and specify
-		// C instanceof Direction
+	public <T> T getEndCapability(BlockCapability<T, Direction> capability){
 		return getEndCapability(capability, true);
 	}
 
 	@Nullable
-	public <T, C> T getEndCapability(BlockCapability<T, C> capability, boolean allowNull){
+	public <T> T getEndCapability(BlockCapability<T, Direction> capability, boolean allowNullSide){
 		BlockPos blockPos = getPos();
 
 
 		//Try hit face first
-		T handler = world.getCapability(capability, blockPos, (C) getDirection());
+		T handler = world.getCapability(capability, blockPos, getDirection());
 		if(handler != null){
 			return handler;
-		}else if(allowNull){
+		}else if(allowNullSide){
 			//Try the null side as a fallback
 			handler = world.getCapability(capability, blockPos, null);
-			if(handler != null){
-				return handler;
-			}
+			return handler;
 		}
 		return null;
 	}

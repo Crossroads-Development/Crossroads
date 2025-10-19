@@ -56,7 +56,7 @@ public class EnergizeEffect extends BeamEffect{
 					//Get hit entities, set them on fire
 					List<Entity> entities = beamHit.getNearbyEntities(Entity.class, BeamHit.WITHIN_BLOCK_RANGE, null);
 					for(Entity ent : entities){
-						ent.setSecondsOnFire(power);
+						ent.igniteForSeconds(power);
 					}
 
 					BlockState state = beamHit.getEndState();

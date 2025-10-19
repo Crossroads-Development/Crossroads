@@ -3,19 +3,25 @@ package com.Da_Technomancer.crossroads.effects.beam_effects;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.beams.BeamHit;
 import com.Da_Technomancer.crossroads.api.beams.EnumBeamAlignments;
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.EnchantmentTags;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 
 import java.util.List;
+import java.util.Optional;
 
 public class EnchantEffect extends BeamEffect{
 
@@ -25,67 +31,71 @@ public class EnchantEffect extends BeamEffect{
 			int range = (int) Math.sqrt(power) / 2;
 			List<ItemEntity> items = beamHit.getNearbyEntities(ItemEntity.class, range, null);
 			if(voi){
-				if(items.size() != 0){
+				if(!items.isEmpty()){
 					for(ItemEntity ent : items){
 						ItemStack stack = ent.getItem();
-						if(stack.getTag() != null && (stack.getItem() == Items.ENCHANTED_BOOK || stack.getTag().contains("Enchantments"))){
-							if(stack.getItem() == Items.ENCHANTED_BOOK){
-								ent.setItem(new ItemStack(Items.BOOK, stack.getCount()));
-							}else{
-								stack.getTag().remove("Enchantments");
-							}
+						stack.remove(DataComponents.ENCHANTMENTS);
+						stack.remove(DataComponents.STORED_ENCHANTMENTS);
+						if(stack.getItem() == Items.ENCHANTED_BOOK){
+							stack = stack.transmuteCopy(Items.BOOK);
 						}
+						ent.setItem(stack);
 					}
 				}
-			}else if(items.size() != 0){
+			}else if(!items.isEmpty()){
 				for(ItemEntity ent : items){
-					ItemStack stack = ent.getItem();
+					ItemStack entStack = ent.getItem();
 
-					if(stack.isEnchanted()){
+					if(entStack.isEnchanted()){
+						//Skip already enchanted items
 						continue;
 					}
 
-					List<EnchantmentInstance> ench = EnchantmentHelper.selectEnchantment(beamHit.getWorld().random, stack, Math.min(power, 45), power >= 64);
+					ItemStack created = entStack.split(1);
+					if(entStack.isEmpty()){
+						ent.remove(Entity.RemovalReason.DISCARDED);
+					}
+
+					RandomSource random = beamHit.getWorld().getRandom();
+					Optional<HolderSet.Named<Enchantment>> allowedEnchantSet;
+					if(power >= 64){
+						//Allows some treasure enchants, but not the exclusive ones like Swift Sneak
+						allowedEnchantSet = beamHit.getWorld().registryAccess().registryOrThrow(Registries.ENCHANTMENT).getTag(EnchantmentTags.ON_RANDOM_LOOT);
+					}else{
+						allowedEnchantSet = beamHit.getWorld().registryAccess().registryOrThrow(Registries.ENCHANTMENT).getTag(EnchantmentTags.IN_ENCHANTING_TABLE);
+					}
+
+					if(allowedEnchantSet.isEmpty()){
+						return;//Something is wrong
+					}
+					List<EnchantmentInstance> ench = EnchantmentHelper.selectEnchantment(random, created, Math.min(power, 45), allowedEnchantSet.get().stream());
+					if(created.is(Items.BOOK) && ench.size() > 1){
+						ench.remove(random.nextInt(ench.size()));
+					}
 
 					if(ench.isEmpty()){
-						//Non-enchantable items should be skipped
+						//Skip non-enchantable items
 						continue;
 					}
-
-//						for(int i = 0; i < stack.getCount(); i++){
-					ItemStack created;
 
 					if(CRConfig.enchantDestruction.get() && beamHit.getWorld().random.nextInt(100) < power){
 						//Destroy the item
-						created = ItemStack.EMPTY;
 						beamHit.getWorld().addParticle(ParticleTypes.SMOKE, ent.getX(), ent.getY(), ent.getZ(), 0, 0, 0);
 						beamHit.getWorld().playSound(null, ent.getX(), ent.getY(), ent.getZ(), SoundEvents.REDSTONE_TORCH_BURNOUT, SoundSource.BLOCKS, 1, 1);
-					}else{
-						if(stack.getItem() == Items.BOOK){
-							created = new ItemStack(Items.ENCHANTED_BOOK, 1);
-							if(ench.size() > 1){
-								ench.remove(0);//Vanilla behavior when enchanting books is to put on 1 fewer enchantments
-							}
-						}else{
-							created = stack.copy();
-							created.setCount(1);
-						}
+						return;
+					}
 
-						for(EnchantmentInstance datum : ench){
-							if(created.getItem() == Items.ENCHANTED_BOOK){
-								EnchantedBookItem.addEnchantment(created, datum);
-							}else{
-								created.enchant(datum.enchantment, datum.level);
-							}
+
+					if(created.getItem() == Items.BOOK){
+						created = new ItemStack(Items.ENCHANTED_BOOK, 1);
+						if(ench.size() > 1){
+							ench.remove(0);//Vanilla behavior when enchanting books is to put on 1 fewer enchantments
 						}
 					}
 
+					created = created.getItem().applyEnchantments(created, ench);
 					Containers.dropItemStack(beamHit.getWorld(), ent.getX(), ent.getY(), ent.getZ(), created);
-					ent.getItem().shrink(1);
-					if(ent.getItem().isEmpty()){
-						ent.remove(Entity.RemovalReason.DISCARDED);
-					}
-					return;//Only enchant 1 item
+					return;
 				}
 			}
 		}

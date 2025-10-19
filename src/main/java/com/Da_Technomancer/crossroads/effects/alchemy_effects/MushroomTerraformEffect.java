@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.effects.alchemy_effects;
 
+import com.Da_Technomancer.crossroads.api.alchemy.TerraformEffect;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.biome.Biome;
@@ -7,7 +8,7 @@ import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
-public class MushroomTerraformEffect extends AetherEffect{
+public class MushroomTerraformEffect extends TerraformEffect{
 
 	@Override
 	protected Block soilBlock(){
@@ -32,6 +33,16 @@ public class MushroomTerraformEffect extends AetherEffect{
 	@Override
 	protected ResourceKey<Biome> biome(){
 		return Biomes.MUSHROOM_FIELDS;
+	}
+
+	@Override
+	protected Block rockBlock(){
+		return Blocks.STONE;
+	}
+
+	@Override
+	protected Block fluidBlock(){
+		return Blocks.WATER;
 	}
 
 	@Override
