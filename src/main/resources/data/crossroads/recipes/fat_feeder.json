@@ -14,10 +14,10 @@
 			"tag": "crossroads:golden_apple"
 		},
 		"T": {
-			"tag": "forge:ingots/tin"
+			"tag": "c:ingots/tin"
 		},
 		"N": {
-			"tag": "forge:netherrack"
+			"tag": "c:netherracks"
 		}
 	}
 }

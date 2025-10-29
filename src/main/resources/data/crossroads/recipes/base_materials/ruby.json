@@ -9,7 +9,7 @@
 	],
 	"key": {
 		"*": {
-			"tag": "forge:storage_blocks/ruby"
+			"tag": "c:storage_blocks/ruby"
 		}
 	}
 }

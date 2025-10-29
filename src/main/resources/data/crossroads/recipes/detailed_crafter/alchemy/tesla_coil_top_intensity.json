@@ -15,7 +15,7 @@
 			"item": "crossroads:tesla_coil_top_normal"
 		},
 		"M": {
-			"tag": "forge:ingots/gold"
+			"tag": "c:ingots/gold"
 		}
 	}
 }

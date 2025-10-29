@@ -12,7 +12,7 @@
 	],
 	"key": {
 		"B": {
-			"tag": "forge:storage_blocks/coal"
+			"tag": "c:storage_blocks/coal"
 		},
 		"C": {
 			"tag": "minecraft:coals"

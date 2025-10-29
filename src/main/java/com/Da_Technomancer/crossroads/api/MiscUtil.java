@@ -2,11 +2,13 @@ package com.Da_Technomancer.crossroads.api;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.essentials.api.ConfigUtil;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -34,6 +36,10 @@ public final class MiscUtil{
 	 * A common style applied to "quip" lines in tooltips
 	 */
 	public static final Style TT_QUIP = ConfigUtil.TT_QUIP;
+	/**
+	 * A common style applied to parameter values in tooltips
+	 */
+	public static final Style TT_DYNAMIC = Style.EMPTY.applyFormat(ChatFormatting.YELLOW);
 
 	//Useful flags for Level::setBlock
 	public static final int BLOCK_FLAG_UPDATE = 1;
@@ -308,5 +314,12 @@ public final class MiscUtil{
 			return fallback;
 		}
 		return value;
+	}
+
+	public static MutableComponent asMutable(Component component){
+		if(component instanceof MutableComponent mutable){
+			return mutable;
+		}
+		return component.copy();
 	}
 }

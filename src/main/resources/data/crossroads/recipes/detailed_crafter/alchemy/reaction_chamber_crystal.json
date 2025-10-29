@@ -12,7 +12,7 @@
 	],
 	"key": {
 		"B": {
-			"tag": "forge:ingots/bronze"
+			"tag": "c:ingots/bronze"
 		},
 		"G": {
 			"tag": "crossroads:gems/alch_cryst"

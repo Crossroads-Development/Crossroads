@@ -4,20 +4,20 @@ import os
 
 # Each entry is in order material name, block tag, ingot tag, nugget tag
 types = [
-    ("iron", "forge:storage_blocks/iron", "forge:ingots/iron", "forge:nuggets/iron"),
-    ("gold", "forge:storage_blocks/gold", "forge:ingots/gold", "forge:nuggets/gold"),
+    ("iron", "c:storage_blocks/iron", "c:ingots/iron", "c:nuggets/iron"),
+    ("gold", "c:storage_blocks/gold", "c:ingots/gold", "c:nuggets/gold"),
     (
         "copper",
-        "forge:storage_blocks/copper",
-        "forge:ingots/copper",
-        "forge:nuggets/copper",
+        "c:storage_blocks/copper",
+        "c:ingots/copper",
+        "c:nuggets/copper",
     ),
-    ("tin", "forge:storage_blocks/tin", "forge:ingots/tin", "forge:nuggets/tin"),
+    ("tin", "c:storage_blocks/tin", "c:ingots/tin", "c:nuggets/tin"),
     (
         "bronze",
-        "forge:storage_blocks/bronze",
-        "forge:ingots/bronze",
-        "forge:nuggets/bronze",
+        "c:storage_blocks/bronze",
+        "c:ingots/bronze",
+        "c:nuggets/bronze",
     ),
     (
         "copshowium",

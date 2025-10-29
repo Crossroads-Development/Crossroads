@@ -12,10 +12,10 @@
 	],
 	"key": {
 		"E": {
-			"tag": "forge:gems/emerald"
+			"tag": "c:gems/emerald"
 		},
 		"G": {
-			"tag": "forge:ingots/gold"
+			"tag": "c:ingots/gold"
 		},
 		"S": {
 			"item": "crossroads:soul_cluster"

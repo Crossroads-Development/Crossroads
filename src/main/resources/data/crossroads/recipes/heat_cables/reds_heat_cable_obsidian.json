@@ -9,13 +9,13 @@
 			"item": "crossroads:heat_cable_obsidian"
 		},
 		{
-			"tag": "forge:dusts/redstone"
+			"tag": "c:dusts/redstone"
 		},
 		{
-			"tag": "forge:dusts/redstone"
+			"tag": "c:dusts/redstone"
 		},
 		{
-			"tag": "forge:dusts/redstone"
+			"tag": "c:dusts/redstone"
 		}
 	]
 }

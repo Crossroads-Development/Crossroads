@@ -11,7 +11,7 @@
 	],
 	"key": {
 		"*": {
-			"tag": "forge:ingots/iron"
+			"tag": "c:ingots/iron"
 		},
 		"A": {
 			"item": "crossroads:axle"

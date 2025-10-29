@@ -15,7 +15,7 @@
 			"tag": "crossroads:ingots/copshowium"
 		},
 		"I": {
-			"tag": "forge:ingots/iron"
+			"tag": "c:ingots/iron"
 		},
 		"L": {
 			"item": "crossroads:leyden_jar"

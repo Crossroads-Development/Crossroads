@@ -3,6 +3,6 @@
 	"id": "quicksilver",
 	"melting": -40,
 	"boiling": 560,
-	"item": "forge:gems/mercury",
+	"item": "c:gems/mercury",
 	"color": "C0C0C0"
 }

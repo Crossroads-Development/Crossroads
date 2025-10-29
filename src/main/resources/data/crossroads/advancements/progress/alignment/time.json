@@ -5,7 +5,7 @@
 			"item": "crossroads:pure_quartz"
 		},
 		"title": {
-			"translate": "alignment.time"
+			"translate": "crossroads.advancement.align.time"
 		},
 		"description": {
 			"translate": "crossroads.advancement.align.time.desc"
@@ -14,8 +14,17 @@
 		"announce_to_chat": false
 	},
 	"criteria": {
-		"command": {
-			"trigger": "minecraft:impossible"
+		"time": {
+			"trigger": "crossroads:beam_alignment",
+			"conditions": {
+				"alignment": "time",
+				"void": "any"
+			}
 		}
-	}
+	},
+	"requirements": [
+		[
+			"time"
+		]
+	]
 }

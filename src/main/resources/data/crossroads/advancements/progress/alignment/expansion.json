@@ -5,7 +5,7 @@
 			"item": "crossroads:pure_quartz"
 		},
 		"title": {
-			"translate": "alignment.expansion"
+			"translate": "crossroads.advancement.align.expansion"
 		},
 		"description": {
 			"translate": "crossroads.advancement.align.expansion.desc"
@@ -14,8 +14,17 @@
 		"announce_to_chat": false
 	},
 	"criteria": {
-		"command": {
-			"trigger": "minecraft:impossible"
+		"expansion": {
+			"trigger": "crossroads:beam_alignment",
+			"conditions": {
+				"alignment": "expansion",
+				"void": "any"
+			}
 		}
-	}
+	},
+	"requirements": [
+		[
+			"expansion"
+		]
+	]
 }

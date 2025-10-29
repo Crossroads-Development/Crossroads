@@ -3,6 +3,6 @@
 	"id": "slag",
 	"melting": 2000,
 	"boiling": 3000,
-	"item": "forge:dusts/slag",
+	"item": "c:dusts/slag",
 	"color": "404040"
 }

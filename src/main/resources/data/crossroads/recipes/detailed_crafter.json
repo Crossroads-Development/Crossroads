@@ -11,7 +11,7 @@
 	],
 	"key": {
 		"T": {
-			"tag": "forge:ingots/tin"
+			"tag": "c:ingots/tin"
 		},
 		"C": {
 			"item": "minecraft:crafting_table"

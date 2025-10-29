@@ -7,7 +7,7 @@
 	"slag": 4,
 	"ingredient": [
 		{
-			"tag": "forge:raw_materials/iron"
+			"tag": "c:raw_materials/iron"
 		}
 	]
 }

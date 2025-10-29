@@ -132,13 +132,13 @@ public class CrystalMasterAxisTileEntity extends MasterAxisTileEntity implements
 				EnumBeamAlignments newElem = EnumBeamAlignments.getAlignment(mag);
 				if(newElem != currentElement){
 					currentElement = newElem;
-					if(mag.getVoid() == 0){
+					if(!mag.isVoidVariant()){
 						time = mag.getPower() * BeamUtil.BEAM_TIME;
 					}else{
 						time = 0;
 					}
 				}else{
-					time = Math.max(mag.getVoid() == 0 ? time + mag.getPower() * BeamUtil.BEAM_TIME : time - mag.getPower() * BeamUtil.BEAM_TIME, 0);
+					time = Math.max(!mag.isVoidVariant() ? time + mag.getPower() * BeamUtil.BEAM_TIME : time - mag.getPower() * BeamUtil.BEAM_TIME, 0);
 				}
 			}
 		}

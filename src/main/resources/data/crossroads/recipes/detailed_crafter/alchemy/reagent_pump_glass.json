@@ -15,7 +15,7 @@
 			"tag": "forge:glass/colorless"
 		},
 		"B": {
-			"tag": "forge:ingots/bronze"
+			"tag": "c:ingots/bronze"
 		}
 	}
 }

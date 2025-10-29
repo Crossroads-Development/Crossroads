@@ -128,7 +128,7 @@ public class ChunkAcceleratorTileEntity extends IFluxLink.FluxHelper implements 
 		@Override
 		public void setBeam(BeamUnit mag){
 			if(mag != null && EnumBeamAlignments.getAlignment(mag) == EnumBeamAlignments.TIME){
-				if(mag.getVoid() == 0){
+				if(!mag.isVoidVariant()){
 					intensity += mag.getPower();//Speed up time
 				}
 				setChanged();

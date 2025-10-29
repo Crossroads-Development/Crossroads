@@ -1,11 +1,11 @@
 {
-	"parent": "crossroads:progress/root",
+	"parent": "crossroads:root",
 	"display": {
 		"icon": {
-			"item": "crossroads:pure_quartz"
+			"item": "crossroads:gem_ruby"
 		},
 		"title": {
-			"translate": "alignment.energy"
+			"translate": "crossroads.advancement.align.energy"
 		},
 		"description": {
 			"translate": "crossroads.advancement.align.energy.desc"
@@ -14,8 +14,17 @@
 		"announce_to_chat": false
 	},
 	"criteria": {
-		"command": {
-			"trigger": "minecraft:impossible"
+		"energy": {
+			"trigger": "crossroads:beam_alignment",
+			"conditions": {
+				"alignment": "energy",
+				"void": "any"
+			}
 		}
-	}
+	},
+	"requirements": [
+		[
+			"energy"
+		]
+	]
 }

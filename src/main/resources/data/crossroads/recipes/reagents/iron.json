@@ -3,9 +3,9 @@
 	"id": "iron",
 	"melting": 1500,
 	"boiling": 2560,
-	"item": "forge:nuggets/iron",
+	"item": "c:nuggets/iron",
 	"fluid": {
-		"tag": "forge:molten_iron"
+		"tag": "c:molten_iron"
 	},
 	"fluid_amount": 10,
 	"color": {

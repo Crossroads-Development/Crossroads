@@ -16,7 +16,7 @@
 			"item": "crossroads:gear_base"
 		},
 		"I": {
-			"tag": "forge:ingots/iron"
+			"tag": "c:ingots/iron"
 		}
 	}
 }

@@ -1,7 +1,7 @@
 {
 	"type": "crossroads:mill",
 	"input": {
-		"tag": "forge:ores/emerald"
+		"tag": "c:ores/emerald"
 	},
 	"output": [
 		{

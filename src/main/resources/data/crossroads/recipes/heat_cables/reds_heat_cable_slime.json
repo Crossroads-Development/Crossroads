@@ -9,13 +9,13 @@
 			"item": "crossroads:heat_cable_slime"
 		},
 		{
-			"tag": "forge:dusts/redstone"
+			"tag": "c:dusts/redstone"
 		},
 		{
-			"tag": "forge:dusts/redstone"
+			"tag": "c:dusts/redstone"
 		},
 		{
-			"tag": "forge:dusts/redstone"
+			"tag": "c:dusts/redstone"
 		}
 	]
 }

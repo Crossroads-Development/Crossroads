@@ -6,16 +6,16 @@
 	},
 	"ingredients": [
 		{
-			"tag": "forge:nuggets/tin"
+			"tag": "c:nuggets/tin"
 		},
 		{
-			"tag": "forge:nuggets/copper"
+			"tag": "c:nuggets/copper"
 		},
 		{
-			"tag": "forge:nuggets/copper"
+			"tag": "c:nuggets/copper"
 		},
 		{
-			"tag": "forge:nuggets/copper"
+			"tag": "c:nuggets/copper"
 		}
 	]
 }

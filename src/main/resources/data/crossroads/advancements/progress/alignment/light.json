@@ -5,7 +5,7 @@
 			"item": "crossroads:pure_quartz"
 		},
 		"title": {
-			"translate": "alignment.light"
+			"translate": "crossroads.advancement.align.light"
 		},
 		"description": {
 			"translate": "crossroads.advancement.align.light.desc"
@@ -14,8 +14,17 @@
 		"announce_to_chat": false
 	},
 	"criteria": {
-		"command": {
-			"trigger": "minecraft:impossible"
+		"light": {
+			"trigger": "crossroads:beam_alignment",
+			"conditions": {
+				"alignment": "light",
+				"void": "any"
+			}
 		}
-	}
+	},
+	"requirements": [
+		[
+			"light"
+		]
+	]
 }

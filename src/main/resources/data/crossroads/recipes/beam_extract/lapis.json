@@ -1,7 +1,7 @@
 {
 	"type": "crossroads:beam_extract",
 	"input": {
-		"tag": "forge:gems/lapis"
+		"tag": "c:gems/lapis"
 	},
 	"energy": 3,
 	"potential": 3,

@@ -17,7 +17,7 @@ import java.util.Arrays;
  * An immutable class that represents one beam pulse lasting one cycle. It stores the energy, potential, stability, and void values and has several helper methods
  * For a mutable version, see BeamUnitStorage
  */
-public class BeamUnit{
+public final class BeamUnit{
 
 	public static Codec<BeamUnit> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			ExtraCodecs.NON_NEGATIVE_INT.fieldOf("energy").forGetter(BeamUnit::getEnergy),
@@ -69,6 +69,10 @@ public class BeamUnit{
 
 	public int getVoid(){
 		return contents[3];
+	}
+
+	public boolean isVoidVariant(){
+		return getVoid() != 0;
 	}
 
 	public int getPower(){

@@ -1,7 +1,7 @@
 {
 	"type": "crossroads:mill",
 	"input": {
-		"tag": "forge:ores/ruby"
+		"tag": "c:ores/ruby"
 	},
 	"output": [
 		{

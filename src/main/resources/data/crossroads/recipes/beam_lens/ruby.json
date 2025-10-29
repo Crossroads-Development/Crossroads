@@ -1,7 +1,7 @@
 {
 	"type": "crossroads:beam_lens",
 	"input": {
-		"tag": "forge:gems/ruby"
+		"tag": "c:gems/ruby"
 	},
 	"beam_modification": {
 		"energy": 1,

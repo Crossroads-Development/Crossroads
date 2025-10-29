@@ -4,7 +4,7 @@
 	"experience": 1.0,
 	"ingredient": [
 		{
-			"tag": "forge:ores/ruby"
+			"tag": "c:ores/ruby"
 		}
 	]
 }

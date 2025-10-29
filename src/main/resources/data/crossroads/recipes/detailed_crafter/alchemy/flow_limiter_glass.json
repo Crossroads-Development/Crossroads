@@ -13,7 +13,7 @@
 			"tag": "forge:glass/colorless"
 		},
 		"G": {
-			"tag": "forge:ingots/gold"
+			"tag": "c:ingots/gold"
 		}
 	}
 }

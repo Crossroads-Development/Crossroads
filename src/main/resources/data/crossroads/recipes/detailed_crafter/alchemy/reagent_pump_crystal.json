@@ -15,7 +15,7 @@
 			"tag": "crossroads:gems/alch_cryst"
 		},
 		"B": {
-			"tag": "forge:ingots/bronze"
+			"tag": "c:ingots/bronze"
 		}
 	}
 }

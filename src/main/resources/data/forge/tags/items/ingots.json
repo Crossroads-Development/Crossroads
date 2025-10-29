@@ -1,9 +1,0 @@
-{
-	"replace": false,
-	"values": [
-		"#forge:ingots/copper",
-		"#forge:ingots/tin",
-		"#forge:ingots/bronze",
-		"#crossroads:ingots/copshowium"
-	]
-}

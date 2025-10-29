@@ -11,10 +11,10 @@
 	],
 	"key": {
 		"i": {
-			"tag": "forge:nuggets/iron"
+			"tag": "c:nuggets/iron"
 		},
 		"T": {
-			"tag": "forge:ingots/tin"
+			"tag": "c:ingots/tin"
 		}
 	}
 }

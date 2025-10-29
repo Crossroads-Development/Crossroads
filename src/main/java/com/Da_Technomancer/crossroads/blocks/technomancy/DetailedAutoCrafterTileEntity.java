@@ -2,36 +2,65 @@ package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
-import com.Da_Technomancer.crossroads.crafting.CRRecipes;
-import com.Da_Technomancer.crossroads.crafting.DetailedCrafterRec;
 import com.Da_Technomancer.crossroads.gui.container.DetailedAutoCrafterContainer;
 import com.Da_Technomancer.crossroads.items.PathSigil;
+import com.Da_Technomancer.essentials.api.BlockUtil;
+import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.CrafterBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-import javax.annotation.Nullable;
-import java.util.List;
-
-//TODO: Probably outmoded, see DetailedAutoCrafter
-public class DetailedAutoCrafterTileEntity extends AutoCrafterTileEntity{
+public class DetailedAutoCrafterTileEntity extends CrafterBlockEntity{
 
 	public static final BlockEntityType<DetailedAutoCrafterTileEntity> TYPE = CRTileEntity.createType(DetailedAutoCrafterTileEntity::new, CRBlocks.detailedAutoCrafter);
 
+	//Specifically the sigil slot is a separate container instance from everything else (which is handled by the superclass)
+	public final SimpleContainer sigilSlotContainer = new SimpleContainer(1){
+		@Override
+		public boolean canPlaceItem(int pSlot, ItemStack pStack){
+			return pStack.getItem() instanceof PathSigil;
+		}
+	};
+	private boolean isLoading = false;
+
 	public DetailedAutoCrafterTileEntity(BlockPos pos, BlockState state){
-		super((BlockEntityType<? extends AutoCrafterTileEntity>) TYPE, pos, state);
+		super(pos, state);
+		sigilSlotContainer.addListener(this::sigilSlotChange);
+	}
+
+	private void sigilSlotChange(Container container){
+		if(!isLoading){
+			setChanged();
+		}
 	}
 
 	@Override
-	protected int invSize(){
-		return 20;//We use slot 19 for the sigil
+	public BlockEntityType<?> getType(){
+		return TYPE;//Kind of dirty- the final BlockEntity.type field is set wrong by the superclass' constructor
+	}
+
+	@Override
+	protected void saveAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries){
+		super.saveAdditional(pTag, pRegistries);
+		pTag.put("sigil_item", BlockUtil.stackToNBT(sigilSlotContainer.getItem(0), pRegistries));
+	}
+
+	@Override
+	protected void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries){
+		super.loadAdditional(pTag, pRegistries);
+		isLoading = true;
+		sigilSlotContainer.setItem(0, BlockUtil.nbtToItemStack(pTag.getCompound("sigil_item"), pRegistries));
+		isLoading = false;
 	}
 
 	@Override
@@ -39,49 +68,8 @@ public class DetailedAutoCrafterTileEntity extends AutoCrafterTileEntity{
 		return Component.translatable("container.detailed_auto_crafter");
 	}
 
-	@Nullable
 	@Override
-	public AbstractContainerMenu createMenu(int id, Inventory playerInventory, Player player){
-		return new DetailedAutoCrafterContainer(id, playerInventory, iInv, worldPosition);
-	}
-
-	@Nullable
-	@Override
-	public Recipe<CraftingContainer> validateRecipe(Recipe<?> rec, @Nullable AutoCrafterContainer container){
-		if(rec != null && rec.getType() == CRRecipes.DETAILED_TYPE && rec.canCraftInDimensions(3, 3)){
-			DetailedCrafterRec drec = (DetailedCrafterRec) rec;
-			ItemStack sigil = container == null ? inv[19] : container.getSlot(55).getItem();
-			if(!sigil.isEmpty() && sigil.getItem() instanceof PathSigil && drec.getPath() == ((PathSigil) sigil.getItem()).getPath()){
-				return drec;
-			}
-		}
-		return null;
-	}
-
-	@Override
-	@Nullable
-	public Recipe<CraftingContainer> findRecipe(CraftingContainer fakeInv, @Nullable AutoCrafterContainer container){
-		//Same as super version, except with different recipe type
-
-		Recipe<CraftingContainer> iRecipe;
-
-		if(recipe == null){
-			//No recipe has been directly set via recipe book/JEI. Pick a recipe based on manually configured inputs, if applicable
-			//Use the recipe manager to find a recipe matching the inputs
-			List<DetailedCrafterRec> recipeList = getRecipeManager().getRecipesFor(CRRecipes.DETAILED_TYPE, fakeInv, level);
-			iRecipe = null;
-			//There may be several recipes with the same inputs, but different path. Check to find one for the current path
-			for(DetailedCrafterRec rec : recipeList){
-				Recipe<CraftingContainer> validatedRec;
-				if((validatedRec = validateRecipe(rec, container)) != null){
-					iRecipe = validatedRec;
-					break;
-				}
-			}
-		}else{
-			//Recipe set via recipe book/JEI
-			iRecipe = validateRecipe(lookupRecipe(getRecipeManager(), recipe), container);
-		}
-		return iRecipe;
+	protected AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory){
+		return new DetailedAutoCrafterContainer(pContainerId, pInventory, (new FriendlyByteBuf(Unpooled.buffer())).writeBlockPos(getBlockPos()), this.containerData);
 	}
 }

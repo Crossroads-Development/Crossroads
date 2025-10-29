@@ -117,13 +117,13 @@ public class StaffTechnomancy extends BeamUsingItem{
 //				}else{
 //					EnumBeamAlignments align = mag.getAlignment();
 //					if(!world.isOutsideBuildHeight(beamHitResult.getPos())){
-//						align.getEffect().doBeamEffect(align, mag.getVoid() != 0, Math.min(BeamUtil.MAX_EFFECT_POWER, mag.getPower()), beamHitResult);
+//						align.getEffect().doBeamEffect(align, mag.isVoidVariant(), Math.min(BeamUtil.MAX_EFFECT_POWER, mag.getPower()), beamHitResult);
 //					}
 //				}
 
 				EnumBeamAlignments align = mag.getAlignment();
 				if(!world.isOutsideBuildHeight(beamHitResult.getPos())){
-					align.getEffect().doBeamEffect(align, mag.getVoid() != 0, Math.min(BeamUtil.MAX_EFFECT_POWER, mag.getPower()), beamHitResult);
+					align.getEffect().doBeamEffect(align, mag.isVoidVariant(), Math.min(BeamUtil.MAX_EFFECT_POWER, mag.getPower()), beamHitResult);
 				}
 
 				Vec3 beamVec = beamHitResult.getHitPos().subtract(start);

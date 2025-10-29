@@ -11,10 +11,10 @@
 	],
 	"key": {
 		"*": {
-			"tag": "forge:ingots/gold"
+			"tag": "c:ingots/gold"
 		},
 		"B": {
-			"tag": "forge:ingots/bronze"
+			"tag": "c:ingots/bronze"
 		}
 	}
 }

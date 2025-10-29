@@ -11,10 +11,10 @@
 	],
 	"key": {
 		"I": {
-			"tag": "forge:nuggets/iron"
+			"tag": "c:nuggets/iron"
 		},
 		"R": {
-			"tag": "forge:dusts/redstone"
+			"tag": "c:dusts/redstone"
 		},
 		"G": {
 			"tag": "forge:glass/colorless"

@@ -12,10 +12,10 @@
 	],
 	"key": {
 		"G": {
-			"tag": "forge:ingots/gold"
+			"tag": "c:ingots/gold"
 		},
 		"I": {
-			"tag": "forge:ingots/iron"
+			"tag": "c:ingots/iron"
 		},
 		"C": {
 			"tag": "crossroads:ingots/copshowium"

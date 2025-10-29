@@ -1,7 +1,7 @@
 {
 	"type": "crossroads:beam_extract",
 	"input": {
-		"tag": "forge:dusts/sulfur"
+		"tag": "c:dusts/sulfur"
 	},
 	"energy": 16,
 	"duration": 5

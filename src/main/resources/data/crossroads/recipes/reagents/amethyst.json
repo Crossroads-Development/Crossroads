@@ -3,6 +3,6 @@
 	"id": "amethyst",
 	"melting": 1700,
 	"boiling": 2300,
-	"item": "forge:gems/amethyst",
+	"item": "c:gems/amethyst",
 	"color": "B38DF5"
 }

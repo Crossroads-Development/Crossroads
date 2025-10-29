@@ -10,12 +10,12 @@
 	],
 	"input_b": [
 		{
-			"tag": "forge:gems/lapis"
+			"tag": "c:gems/lapis"
 		}
 	],
 	"input_c": [
 		{
-			"tag": "forge:nuggets/gold"
+			"tag": "c:nuggets/gold"
 		}
 	],
 	"output": {

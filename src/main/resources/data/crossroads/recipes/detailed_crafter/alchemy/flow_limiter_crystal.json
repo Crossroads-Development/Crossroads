@@ -13,7 +13,7 @@
 			"tag": "crossroads:gems/alch_cryst"
 		},
 		"G": {
-			"tag": "forge:ingots/gold"
+			"tag": "c:ingots/gold"
 		}
 	}
 }

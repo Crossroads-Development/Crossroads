@@ -3,9 +3,9 @@
 	"id": "gold",
 	"melting": 1100,
 	"boiling": 3000,
-	"item": "forge:nuggets/gold",
+	"item": "c:nuggets/gold",
 	"fluid": {
-		"tag": "forge:molten_gold"
+		"tag": "c:molten_gold"
 	},
 	"fluid_amount": 10,
 	"color": "FFFF00"

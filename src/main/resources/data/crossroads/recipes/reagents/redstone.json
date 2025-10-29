@@ -3,6 +3,6 @@
 	"id": "redstone",
 	"melting": 580,
 	"boiling": "never",
-	"item": "forge:dusts/redstone",
+	"item": "c:dusts/redstone",
 	"color": "FF0000"
 }

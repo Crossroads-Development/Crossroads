@@ -12,13 +12,13 @@
 	],
 	"key": {
 		"C": {
-			"tag": "forge:ingots/copper"
+			"tag": "c:ingots/copper"
 		},
 		"O": {
 			"tag": "forge:obsidian"
 		},
 		"R": {
-			"tag": "forge:dusts/redstone"
+			"tag": "c:dusts/redstone"
 		}
 	}
 }

@@ -1,7 +1,7 @@
 {
 	"type": "crossroads:beam_lens",
 	"input": {
-		"tag": "forge:gems/quartz"
+		"tag": "c:gems/quartz"
 	},
 	"beam_modification": {
 		"energy": 0.5,

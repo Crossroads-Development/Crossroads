@@ -1,7 +1,7 @@
 {
 	"type": "crossroads:mill",
 	"input": {
-		"tag": "forge:ores/copper"
+		"tag": "c:ores/copper"
 	},
 	"output": [
 		{

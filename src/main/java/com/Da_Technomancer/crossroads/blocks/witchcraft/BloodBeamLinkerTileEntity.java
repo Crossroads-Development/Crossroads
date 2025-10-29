@@ -134,7 +134,7 @@ public class BloodBeamLinkerTileEntity extends InventoryTE implements IBeamCapab
 					boolean spoiledBeam = IPerishable.isSpoiled(inventory[0], level) && level.random.nextInt(10) < 1;
 					//Base the alignment/effect on the full incoming beam, but only transmit the power-limited version
 					EnumBeamAlignments align;
-					boolean voidBeam = beamIn.getVoid() != 0;
+					boolean voidBeam = beamIn.isVoidVariant();
 					;
 					int beamPower = Math.min(Math.min(beamIn.getPower(), CRConfig.maximumBloodLinkerPower.get()), BeamUtil.MAX_EFFECT_POWER);
 					BeamUnit toTransmit;

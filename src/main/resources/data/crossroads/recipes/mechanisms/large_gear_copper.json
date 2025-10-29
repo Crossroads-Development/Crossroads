@@ -14,10 +14,10 @@
 	],
 	"key": {
 		"#": {
-			"tag": "forge:storage_blocks/copper"
+			"tag": "c:storage_blocks/copper"
 		},
 		"*": {
-			"tag": "forge:ingots/copper"
+			"tag": "c:ingots/copper"
 		}
 	}
 }

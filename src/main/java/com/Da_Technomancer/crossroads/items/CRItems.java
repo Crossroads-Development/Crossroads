@@ -273,6 +273,7 @@ public final class CRItems{
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<WindingTableTileEntity.WindingStatus>> WINDING_DATA = DATA_COMPONENTS.registerComponentType("winding_energy", builder -> builder.persistent(WindingTableTileEntity.WindingStatus.CODEC).networkSynchronized(WindingTableTileEntity.WindingStatus.STREAM_CODEC));
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<Double>> TEMPERATURE_DATA = DATA_COMPONENTS.registerComponentType("temperature", builder -> builder.persistent(Codec.DOUBLE).networkSynchronized(ByteBufCodecs.DOUBLE));
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<FluidStack>> FLUID_DATA = DATA_COMPONENTS.registerComponentType("fluid", builder -> builder.persistent(FluidStack.CODEC).networkSynchronized(FluidStack.STREAM_CODEC));
+	public static final DeferredHolder<DataComponentType<?>, DataComponentType<PathSigil.DetailedCrafterRecipeReference>> SIGIL_RECIPE_DATA = DATA_COMPONENTS.registerComponentType("sigil_recipe", builder -> builder.persistent(PathSigil.DetailedCrafterRecipeReference.CODEC).networkSynchronized(PathSigil.DetailedCrafterRecipeReference.STREAM_CODEC));
 
 	public static final DeferredRegister<ArmorMaterial> ARMOR_MATERIALS = DeferredRegister.create(BuiltInRegistries.ARMOR_MATERIAL, Crossroads.MODID);
 	public static final Holder<ArmorMaterial> BOBO_ARMOR_MATERIAL = ARMOR_MATERIALS.register("bobo", () -> new ArmorMaterial(

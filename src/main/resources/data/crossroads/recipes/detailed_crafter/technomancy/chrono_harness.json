@@ -12,13 +12,13 @@
 	],
 	"key": {
 		"I": {
-			"tag": "forge:ingots/iron"
+			"tag": "c:ingots/iron"
 		},
 		"C": {
 			"tag": "crossroads:ingots/copshowium"
 		},
 		"R": {
-			"tag": "forge:storage_blocks/redstone"
+			"tag": "c:storage_blocks/redstone"
 		}
 	}
 }

@@ -14,7 +14,7 @@
 	],
 	"key": {
 		"*": {
-			"tag": "forge:ingots/tin"
+			"tag": "c:ingots/tin"
 		},
 		"|": {
 			"type": "forge:nbt",

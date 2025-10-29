@@ -12,7 +12,7 @@
 	],
 	"key": {
 		"C": {
-			"tag": "forge:nuggets/copper"
+			"tag": "c:nuggets/copper"
 		},
 		"G": {
 			"tag": "forge:glass/colorless"

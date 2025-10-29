@@ -1,7 +1,7 @@
 {
 	"type": "crossroads:mill",
 	"input": {
-		"tag": "forge:ores/lapis"
+		"tag": "c:ores/lapis"
 	},
 	"output": [
 		{

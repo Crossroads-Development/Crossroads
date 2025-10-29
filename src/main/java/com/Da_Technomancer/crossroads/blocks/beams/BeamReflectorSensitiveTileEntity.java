@@ -60,14 +60,14 @@ public class BeamReflectorSensitiveTileEntity extends BeamReflectorTileEntity{
 //			}else{
 //				EnumBeamAlignments align = EnumBeamAlignments.getAlignment(mag);
 //				if(!world.isOutsideBuildHeight(beamHit.getPos())){
-//					align.getEffect().doBeamEffect(align, mag.getVoid() != 0, Math.min(BeamUtil.MAX_EFFECT_POWER, mag.getPower()), beamHit);
+//					align.getEffect().doBeamEffect(align, mag.isVoidVariant(), Math.min(BeamUtil.MAX_EFFECT_POWER, mag.getPower()), beamHit);
 //				}
 //			}
 
 			//Handle beam effect
 			EnumBeamAlignments align = mag.getAlignment();
 			if(!world.isOutsideBuildHeight(beamHit.getPos())){
-				align.getEffect().doBeamEffect(align, mag.getVoid() != 0, Math.min(BeamUtil.MAX_EFFECT_POWER, mag.getPower()), beamHit);
+				align.getEffect().doBeamEffect(align, mag.isVoidVariant(), Math.min(BeamUtil.MAX_EFFECT_POWER, mag.getPower()), beamHit);
 			}
 
 			//Update the values used for rendering

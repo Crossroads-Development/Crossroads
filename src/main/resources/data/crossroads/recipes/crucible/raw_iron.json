@@ -1,7 +1,7 @@
 {
 	"type": "crossroads:crucible",
 	"input": {
-		"tag": "forge:raw_materials/iron"
+		"tag": "c:raw_materials/iron"
 	},
 	"output": {
 		"fluid": "crossroads:molten_iron",

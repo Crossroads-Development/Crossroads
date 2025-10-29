@@ -1,0 +1,12 @@
+{
+	"replace": false,
+	"values": [
+		"#c:gems/ruby",
+		"#c:gems/mercury",
+		"#crossroads:gems/void",
+		"#crossroads:gems/pure_quartz",
+		"#crossroads:gems/bright_quartz",
+		"#crossroads:gems/cavorite",
+		"#crossroads:gems/alch_cryst"
+	]
+}

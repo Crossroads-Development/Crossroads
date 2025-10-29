@@ -7,7 +7,7 @@
 	"slag": 4,
 	"ingredient": [
 		{
-			"tag": "forge:raw_materials/gold"
+			"tag": "c:raw_materials/gold"
 		}
 	]
 }

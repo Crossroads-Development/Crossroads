@@ -3,9 +3,9 @@
 	"id": "copper",
 	"melting": 1000,
 	"boiling": 2560,
-	"item": "forge:nuggets/copper",
+	"item": "c:nuggets/copper",
 	"fluid": {
-		"tag": "forge:molten_copper"
+		"tag": "c:molten_copper"
 	},
 	"fluid_amount": 10,
 	"color": "FFC800"

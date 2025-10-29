@@ -19,6 +19,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.List;
+
 public class MillstoneCategory implements IRecipeCategory<MillRec>{
 
 	public static final RecipeType<MillRec> TYPE = RecipeType.create(Crossroads.MODID, "millstone", MillRec.class);
@@ -73,13 +75,14 @@ public class MillstoneCategory implements IRecipeCategory<MillRec>{
 	@Override
 	public void setRecipe(IRecipeLayoutBuilder builder, MillRec recipe, IFocusGroup focuses){
 		builder.addSlot(RecipeIngredientRole.INPUT, 80, 17).addIngredients(recipe.getIngredient());
-		int length = recipe.getOutputs().length;
+		List<ItemStack> outputs = recipe.getOutputs();
+		int length = outputs.size();
 		if(length >= 1){
-			builder.addSlot(RecipeIngredientRole.OUTPUT, 62, 53).addItemStack(recipe.getOutputs()[0]);
+			builder.addSlot(RecipeIngredientRole.OUTPUT, 62, 53).addItemStack(outputs.get(0));
 			if(length >= 2){
-				builder.addSlot(RecipeIngredientRole.OUTPUT, 80, 53).addItemStack(recipe.getOutputs()[1]);
+				builder.addSlot(RecipeIngredientRole.OUTPUT, 80, 53).addItemStack(outputs.get(1));
 				if(length >= 3){
-					builder.addSlot(RecipeIngredientRole.OUTPUT, 98, 53).addItemStack(recipe.getOutputs()[2]);
+					builder.addSlot(RecipeIngredientRole.OUTPUT, 98, 53).addItemStack(outputs.get(2));
 				}
 			}
 		}

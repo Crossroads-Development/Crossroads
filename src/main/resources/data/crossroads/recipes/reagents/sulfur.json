@@ -3,7 +3,7 @@
 	"id": "sulfur",
 	"melting": 115,
 	"boiling": 445,
-	"item": "forge:dusts/sulfur",
+	"item": "c:dusts/sulfur",
 	"color": {
 		"base": "FFFF00",
 		"gas": "C8FFFF00",

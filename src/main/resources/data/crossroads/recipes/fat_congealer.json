@@ -14,10 +14,10 @@
 			"item": "crossroads:axle"
 		},
 		"T": {
-			"tag": "forge:ingots/tin"
+			"tag": "c:ingots/tin"
 		},
 		"N": {
-			"tag": "forge:netherrack"
+			"tag": "c:netherracks"
 		}
 	}
 }

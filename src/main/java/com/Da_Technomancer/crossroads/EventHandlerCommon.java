@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads;
 
+import com.Da_Technomancer.crossroads.advancements.BeamAlignmentTrigger;
 import com.Da_Technomancer.crossroads.ambient.particles.CRParticles;
 import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
 import com.Da_Technomancer.crossroads.api.CRCapabilities;
@@ -25,6 +26,7 @@ import com.Da_Technomancer.crossroads.entity.CRMobDamage;
 import com.Da_Technomancer.crossroads.entity.EntityGhostMarker;
 import com.Da_Technomancer.crossroads.entity.EntityHopperHawk;
 import com.Da_Technomancer.crossroads.entity.mob_effects.CRPotions;
+import com.Da_Technomancer.crossroads.entity.mob_effects.Sedation;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.technomancy.ArmorGoggles;
@@ -82,10 +84,7 @@ import net.neoforged.neoforge.event.AnvilUpdateEvent;
 import net.neoforged.neoforge.event.VanillaGameEvent;
 import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
-import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
-import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
-import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
-import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
+import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.level.ExplosionEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
@@ -228,6 +227,15 @@ public class EventHandlerCommon{
 						).build();
 				helper.register(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, CRItems.GEAR_CREATIVE_TAB_ID), CRItems.GEAR_CREATIVE_TAB);
 			});
+
+			e.register(Registries.TRIGGER_TYPE, helper -> {
+				registerThing(helper, "beam_alignment", BeamAlignmentTrigger.INSTANCE);
+			});
+		}
+
+		public static <T> void registerThing(RegisterEvent.RegisterHelper<T> helper, String regKey, T toRegister){
+			assert regKey != null && toRegister != null;
+			helper.register(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, regKey), toRegister);
 		}
 
 		public static <T> void registerAll(RegisterEvent.RegisterHelper<T> helper, Map<String, T> toRegister){
@@ -702,5 +710,15 @@ public class EventHandlerCommon{
 	@SubscribeEvent
 	public void registerPotionBrewingRecipes(RegisterBrewingRecipesEvent e){
 		CRPotions.registerPotionRecipes(e);
+	}
+
+	@SubscribeEvent
+	public void potionEffectTimesOut(MobEffectEvent.Expired e){
+		Sedation.checkForEffectEnd(e.getEntity(), e.getEffectInstance());
+	}
+
+	@SubscribeEvent
+	public void potionEffectRemoved(MobEffectEvent.Remove e){
+		Sedation.checkForEffectEnd(e.getEntity(), e.getEffectInstance());
 	}
 }

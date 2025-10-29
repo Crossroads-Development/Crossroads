@@ -3,6 +3,6 @@
 	"id": "diamond",
 	"melting": 3500,
 	"boiling": 4800,
-	"item": "forge:gems/diamond",
+	"item": "c:gems/diamond",
 	"color": "00FFFF"
 }

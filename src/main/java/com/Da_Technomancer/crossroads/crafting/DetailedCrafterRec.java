@@ -1,31 +1,38 @@
 package com.Da_Technomancer.crossroads.crafting;
 
 import com.Da_Technomancer.crossroads.api.EnumPath;
-import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.api.crafting.IOptionalRecipe;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import net.minecraft.core.NonNullList;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
-import net.minecraft.world.inventory.CraftingContainer;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 
-public class DetailedCrafterRec extends ShapedRecipe implements IOptionalRecipe<CraftingContainer>{
+import java.util.Map;
+
+public class DetailedCrafterRec extends ShapedRecipe implements IOptionalRecipe<CraftingInput>{
 
 	private final EnumPath path;
-	private final boolean active;
 	private final ItemStack result;
+	private final boolean active;
 
-	public DetailedCrafterRec(ResourceLocation idIn, String groupIn, CraftingBookCategory category, EnumPath path, boolean active, int recipeWidthIn, int recipeHeightIn, NonNullList<Ingredient> recipeItemsIn, ItemStack recipeOutputIn){
-		super(idIn, groupIn, category, recipeWidthIn, recipeHeightIn, recipeItemsIn, recipeOutputIn);
-		result = recipeOutputIn;
+	private DetailedCrafterRec(){
+		super("", CraftingBookCategory.MISC, ShapedRecipePattern.of(Map.of('c', Ingredient.EMPTY), "c"), ItemStack.EMPTY, false);
+		this.path = EnumPath.TECHNOMANCY;
+		this.result = ItemStack.EMPTY;
+		this.active = false;
+	}
+
+	private DetailedCrafterRec(String group, CraftingBookCategory category, ShapedRecipePattern pattern, ItemStack result, boolean showNotification, EnumPath path){
+		super(group, category, pattern, result, showNotification);
+		this.result = result;
 		this.path = path;
-		this.active = active;
+		this.active = true;
 	}
 
 	public EnumPath getPath(){
@@ -58,49 +65,55 @@ public class DetailedCrafterRec extends ShapedRecipe implements IOptionalRecipe<
 	}
 
 	@Override
-	public boolean matches(CraftingContainer inv, Level world){
+	public boolean matches(CraftingInput inv, Level world){
 		return active && super.matches(inv, world);
 	}
 
 	public static class Serializer implements RecipeSerializer<DetailedCrafterRec>{
 
-		@Override
-		public DetailedCrafterRec fromJson(ResourceLocation recipeId, JsonObject json){
-			if(!CraftingUtil.isActiveJSON(json)){
-				return new DetailedCrafterRec(recipeId, "", CraftingBookCategory.MISC, EnumPath.ALCHEMY, false, 0, 0, NonNullList.create(), ItemStack.EMPTY);
-			}
-
-			EnumPath path = EnumPath.fromName(GsonHelper.getAsString(json, "path"));
-			if(path == null){
-				throw new JsonParseException("Invalid path/no path set");
-			}
-
-			//Currently, the method of specifying a Detailed Crafter recipe is the same as for a vanilla recipe,
-			//Except type is crossroads:detailed_crafter
-			//Path is specified as the name of the path with the key "path"
-			//And only shaped recipes are supported. No shapeless recipes currently <- this could change
-
-			ShapedRecipe templateRec = RecipeSerializer.SHAPED_RECIPE.fromJson(recipeId, json);
-			return new DetailedCrafterRec(recipeId, templateRec.getGroup(), templateRec.category(), path, true, templateRec.getRecipeWidth(), templateRec.getRecipeHeight(), templateRec.getIngredients(), templateRec.getResultItem(null));
+		static{
+			MapCodec<DetailedCrafterRec> codec = RecordCodecBuilder.mapCodec(
+					p_340778_ -> p_340778_.group(
+								Codec.STRING.optionalFieldOf("group", "").forGetter(DetailedCrafterRec::getGroup),
+								CraftingBookCategory.CODEC.fieldOf("category").orElse(CraftingBookCategory.MISC).forGetter(DetailedCrafterRec::category),
+								ShapedRecipePattern.MAP_CODEC.forGetter(p_311733_ -> p_311733_.pattern),
+								ItemStack.STRICT_CODEC.fieldOf("result").forGetter(DetailedCrafterRec::getResultItem),
+								Codec.BOOL.optionalFieldOf("show_notification", true).forGetter(DetailedCrafterRec::showNotification),
+								StringRepresentable.fromEnum(EnumPath::values).fieldOf("path").forGetter(DetailedCrafterRec::getPath)
+							).apply(p_340778_, DetailedCrafterRec::new));
+			StreamCodec<RegistryFriendlyByteBuf, DetailedCrafterRec> streamCodec = StreamCodec.of(Serializer::toNetwork, Serializer::fromNetwork);
+			DetailedCrafterRec disabledRec = new DetailedCrafterRec();
+			CODEC = IOptionalRecipe.codecWithDisable(codec, disabledRec);
+			STREAM_CODEC = IOptionalRecipe.codecWithDisable(streamCodec, disabledRec);
 		}
 
-		@Override
-		public DetailedCrafterRec fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer){
-			if(!buffer.readBoolean()){
-				return new DetailedCrafterRec(recipeId, "", CraftingBookCategory.MISC, EnumPath.ALCHEMY, false, 0, 0, NonNullList.create(), ItemStack.EMPTY);
-			}
+		private static final MapCodec<DetailedCrafterRec> CODEC;
+
+		private static final StreamCodec<RegistryFriendlyByteBuf, DetailedCrafterRec> STREAM_CODEC;
+
+		private static DetailedCrafterRec fromNetwork(RegistryFriendlyByteBuf buffer){
+			String s = buffer.readUtf();
+			CraftingBookCategory craftingbookcategory = buffer.readEnum(CraftingBookCategory.class);
+			ShapedRecipePattern shapedrecipepattern = ShapedRecipePattern.STREAM_CODEC.decode(buffer);
+			ItemStack itemstack = ItemStack.STREAM_CODEC.decode(buffer);
+			boolean flag = buffer.readBoolean();
 			EnumPath path = EnumPath.fromIndex(buffer.readByte());
-			ShapedRecipe templateRec = RecipeSerializer.SHAPED_RECIPE.fromNetwork(recipeId, buffer);
-			return new DetailedCrafterRec(recipeId, templateRec.getGroup(), templateRec.category(), path, true, templateRec.getRecipeWidth(), templateRec.getRecipeHeight(), templateRec.getIngredients(), templateRec.getResultItem(null));
+			return new DetailedCrafterRec(s, craftingbookcategory, shapedrecipepattern, itemstack, flag, path);
+		}
+
+		private static void toNetwork(RegistryFriendlyByteBuf buffer, DetailedCrafterRec recipe){
+			ShapedRecipe.Serializer.STREAM_CODEC.encode(buffer, recipe);
+			buffer.writeByte(recipe.path.getIndex());
 		}
 
 		@Override
-		public void toNetwork(FriendlyByteBuf buffer, DetailedCrafterRec recipe){
-			buffer.writeBoolean(recipe.active);
-			if(recipe.active){
-				buffer.writeByte(recipe.path.getIndex());
-				RecipeSerializer.SHAPED_RECIPE.toNetwork(buffer, recipe);
-			}
+		public MapCodec<DetailedCrafterRec> codec(){
+			return CODEC;
+		}
+
+		@Override
+		public StreamCodec<RegistryFriendlyByteBuf, DetailedCrafterRec> streamCodec(){
+			return STREAM_CODEC;
 		}
 	}
 }

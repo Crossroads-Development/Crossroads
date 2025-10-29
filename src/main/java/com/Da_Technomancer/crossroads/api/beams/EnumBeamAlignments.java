@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.api.beams;
 
+import com.Da_Technomancer.crossroads.advancements.BeamAlignmentTrigger;
 import com.Da_Technomancer.crossroads.api.AdvancementTracker;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.effects.beam_effects.*;
@@ -115,28 +116,12 @@ public enum EnumBeamAlignments implements StringRepresentable{
 	 * Sets whether a player has unlocked this alignment.
 	 * Only works on the server side
 	 * @param player The player to (un)lock this path for
-	 * @param discover Whether this player should have this alignment unlocked. If false, relocks this path
+	 * @param voidAlignment Whether this is the void version
 	 */
-	public void discover(Player player, boolean discover){
-		if(player.level().isClientSide){
-			return;//We can't do this on the client side
+	public void discover(Player player, boolean voidAlignment){
+		if(player instanceof ServerPlayer sPlayer){
+			BeamAlignmentTrigger.INSTANCE.trigger(sPlayer, this, voidAlignment);
 		}
-		AdvancementTracker.unlockAdvancement((ServerPlayer) player, "progress/alignment/" + toString(), discover);
-//
-//		CompoundNBT nbt = StoreNBTToClient.getPlayerTag(player);
-//		if(!nbt.contains("alignments")){
-//			nbt.put("alignments", new CompoundNBT());
-//		}
-//		if(isDiscovered(player) ^ discover){
-//			nbt.getCompound("alignments").putBoolean(toString(), discover);
-//			StoreNBTToClient.syncNBTToClient((ServerPlayerEntity) player);
-//			//Doesn't use deletion-chat as the element discovery notification shouldn't be wiped away in 1 tick.
-//			if(discover){
-//				MiscUtil.chatMessage(player, new TranslationTextComponent("tt.crossroads.element_discover", getLocalName(false)).applyTextStyle(TextFormatting.BOLD));
-//			}else{
-//				MiscUtil.chatMessage(player, new TranslationTextComponent("tt.crossroads.element_discover.undo", getLocalName(false)).applyTextStyle(TextFormatting.BOLD));
-//			}
-//		}
 	}
 
 	@Override

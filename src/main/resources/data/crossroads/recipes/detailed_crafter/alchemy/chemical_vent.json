@@ -12,7 +12,7 @@
 	],
 	"key": {
 		"T": {
-			"tag": "forge:ingots/tin"
+			"tag": "c:ingots/tin"
 		},
 		"B": {
 			"item": "minecraft:iron_bars"

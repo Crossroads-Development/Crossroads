@@ -11,10 +11,10 @@
 	],
 	"key": {
 		"B": {
-			"tag": "forge:ingots/bronze"
+			"tag": "c:ingots/bronze"
 		},
 		"I": {
-			"tag": "forge:ingots/iron"
+			"tag": "c:ingots/iron"
 		},
 		"M": {
 			"item": "crossroads:mainspring"

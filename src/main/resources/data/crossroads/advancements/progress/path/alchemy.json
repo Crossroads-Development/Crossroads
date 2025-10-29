@@ -1,5 +1,5 @@
 {
-	"parent": "crossroads:progress/root",
+	"parent": "crossroads:root",
 	"display": {
 		"icon": {
 			"item": "crossroads:florence_flask_glass",

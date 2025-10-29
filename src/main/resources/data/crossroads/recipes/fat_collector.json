@@ -11,13 +11,13 @@
 	],
 	"key": {
 		"C": {
-			"tag": "forge:ingots/copper"
+			"tag": "c:ingots/copper"
 		},
 		"T": {
-			"tag": "forge:ingots/tin"
+			"tag": "c:ingots/tin"
 		},
 		"N": {
-			"tag": "forge:netherrack"
+			"tag": "c:netherracks"
 		}
 	}
 }

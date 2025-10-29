@@ -1,7 +1,7 @@
 {
 	"type": "crossroads:beam_lens",
 	"input": {
-		"tag": "forge:gems/emerald"
+		"tag": "c:gems/emerald"
 	},
 	"beam_modification": {
 		"energy": 0,

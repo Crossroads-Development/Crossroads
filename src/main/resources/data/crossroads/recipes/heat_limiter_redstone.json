@@ -9,13 +9,13 @@
 			"item": "crossroads:heat_limiter_basic"
 		},
 		{
-			"tag": "forge:dusts/redstone"
+			"tag": "c:dusts/redstone"
 		},
 		{
-			"tag": "forge:dusts/redstone"
+			"tag": "c:dusts/redstone"
 		},
 		{
-			"tag": "forge:dusts/redstone"
+			"tag": "c:dusts/redstone"
 		}
 	]
 }

@@ -6,16 +6,16 @@
 	},
 	"ingredients": [
 		{
-			"tag": "forge:storage_blocks/tin"
+			"tag": "c:storage_blocks/tin"
 		},
 		{
-			"tag": "forge:storage_blocks/copper"
+			"tag": "c:storage_blocks/copper"
 		},
 		{
-			"tag": "forge:storage_blocks/copper"
+			"tag": "c:storage_blocks/copper"
 		},
 		{
-			"tag": "forge:storage_blocks/copper"
+			"tag": "c:storage_blocks/copper"
 		}
 	]
 }

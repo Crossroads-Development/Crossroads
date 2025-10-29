@@ -12,10 +12,10 @@
 	],
 	"key": {
 		"R": {
-			"tag": "forge:dusts/redstone"
+			"tag": "c:dusts/redstone"
 		},
 		"I": {
-			"tag": "forge:ingots/iron"
+			"tag": "c:ingots/iron"
 		},
 		"b": {
 			"tag": "crossroads:atmos_antenna"

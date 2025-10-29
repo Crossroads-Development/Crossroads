@@ -15,7 +15,7 @@
 			"item": "crossroads:solid_voltus"
 		},
 		"I": {
-			"tag": "forge:ingots/iron"
+			"tag": "c:ingots/iron"
 		},
 		"G": {
 			"tag": "crossroads:gems/alch_cryst"

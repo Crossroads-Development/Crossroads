@@ -6,16 +6,16 @@
 	},
 	"ingredients": [
 		{
-			"tag": "forge:ingots/tin"
+			"tag": "c:ingots/tin"
 		},
 		{
-			"tag": "forge:ingots/copper"
+			"tag": "c:ingots/copper"
 		},
 		{
-			"tag": "forge:ingots/copper"
+			"tag": "c:ingots/copper"
 		},
 		{
-			"tag": "forge:ingots/copper"
+			"tag": "c:ingots/copper"
 		}
 	]
 }

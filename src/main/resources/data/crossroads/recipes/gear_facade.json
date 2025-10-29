@@ -16,7 +16,7 @@
 			"item": "stone_bricks"
 		},
 		"I": {
-			"tag": "forge:ingots/iron"
+			"tag": "c:ingots/iron"
 		}
 	}
 }

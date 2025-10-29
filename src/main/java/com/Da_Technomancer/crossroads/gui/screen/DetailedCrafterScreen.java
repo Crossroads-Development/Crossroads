@@ -13,6 +13,8 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class DetailedCrafterScreen extends AbstractContainerScreen<DetailedCrafterContainer>{
 
+	//TODO path unlocking option
+
 	private static final ResourceLocation BACKGROUND = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/gui/container/detailed_crafter.png");
 
 	public DetailedCrafterScreen(DetailedCrafterContainer cont, Inventory playerInv, Component name){
@@ -29,7 +31,7 @@ public class DetailedCrafterScreen extends AbstractContainerScreen<DetailedCraft
 
 	@Override
 	public void render(GuiGraphics matrix, int mouseX, int mouseY, float partialTicks){
-		renderBackground(matrix);
+		renderBackground(matrix, mouseX, mouseY, partialTicks);
 		super.render(matrix, mouseX, mouseY, partialTicks);
 		renderTooltip(matrix, mouseX, mouseY);
 	}

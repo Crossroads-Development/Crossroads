@@ -9,15 +9,13 @@ import net.minecraft.world.item.Item;
 
 public class CRItemTags{
 
-	private static final String FORGE = "forge";
+	private static final String COMMON = "c";
 	private static final String CR = Crossroads.MODID;
 
-	//TODO review
-
-	public static final TagKey<Item> INGOTS_COPPER = CraftingUtil.getTagKey(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(FORGE, "ingots/copper"));
-	public static final TagKey<Item> INGOTS_BRONZE = CraftingUtil.getTagKey(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(FORGE, "ingots/bronze"));
+	public static final TagKey<Item> INGOTS_COPPER = CraftingUtil.getTagKey(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(COMMON, "ingots/copper"));
+	public static final TagKey<Item> INGOTS_BRONZE = CraftingUtil.getTagKey(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(COMMON, "ingots/bronze"));
 	public static final TagKey<Item> GEMS_PURE_QUARTZ = CraftingUtil.getTagKey(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(CR, "gems/pure_quartz"));
-	public static final TagKey<Item> GEMS_RUBY = CraftingUtil.getTagKey(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(FORGE, "gems/ruby"));
+	public static final TagKey<Item> GEMS_RUBY = CraftingUtil.getTagKey(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(COMMON, "gems/ruby"));
 	public static final TagKey<Item> GEMS_VOID = CraftingUtil.getTagKey(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(CR, "gems/void"));
 	public static final TagKey<Item> EXPLODE_IF_KNOCKED = CraftingUtil.getTagKey(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(CR, "explode_on_hit"));
 	public static final TagKey<Item> SALT_REACTOR_COOLANT = CraftingUtil.getTagKey(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(CR, "salt_reactor_coolant"));

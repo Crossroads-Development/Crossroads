@@ -25,9 +25,9 @@ import net.neoforged.neoforge.common.Tags;
 
 public class AcidAlchemyEffect implements IAlchEffect{
 
-	private static final TagKey<Block> copperBlock = CraftingUtil.getTagKey(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath("forge", "storage_blocks/copper"));
-	private static final TagKey<Block> tinBlock = CraftingUtil.getTagKey(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath("forge", "storage_blocks/tin"));
-	private static final TagKey<Block> bronzeBlock = CraftingUtil.getTagKey(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath("forge", "storage_blocks/bronze"));
+	private static final TagKey<Block> copperBlock = CraftingUtil.getTagKey(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath("c", "storage_blocks/copper"));
+	private static final TagKey<Block> tinBlock = CraftingUtil.getTagKey(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath("c", "storage_blocks/tin"));
+	private static final TagKey<Block> bronzeBlock = CraftingUtil.getTagKey(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath("c", "storage_blocks/bronze"));
 
 	protected int getDamage(){
 		return 8;

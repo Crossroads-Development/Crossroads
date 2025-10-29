@@ -14,7 +14,7 @@
 			"tag": "crossroads:ice"
 		},
 		"C": {
-			"tag": "forge:ingots/copper"
+			"tag": "c:ingots/copper"
 		}
 	}
 }

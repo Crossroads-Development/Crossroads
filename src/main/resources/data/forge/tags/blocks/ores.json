@@ -1,8 +1,0 @@
-{
-	"replace": false,
-	"values": [
-		"#forge:ores/tin",
-		"#forge:ores/ruby",
-		"#crossroads:ores/void"
-	]
-}

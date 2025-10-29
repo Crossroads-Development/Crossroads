@@ -135,7 +135,7 @@ public class StasisStorageTileEntity extends InventoryTE implements IBeamCapable
 			}
 
 			EnumBeamAlignments align = EnumBeamAlignments.getAlignment(mag);
-			if(align == EnumBeamAlignments.TIME && mag.getVoid() == 0){
+			if(align == EnumBeamAlignments.TIME && !mag.isVoidVariant()){
 				//Time beams only
 				//Rewind time by the power of the beam * BEAM_TIME ticks
 				int rewind = mag.getPower() * BeamUtil.BEAM_TIME;

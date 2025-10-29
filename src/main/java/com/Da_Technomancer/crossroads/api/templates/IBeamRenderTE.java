@@ -21,11 +21,11 @@ public interface IBeamRenderTE extends IInfoTE{
 				BeamUnit check = mag[i];
 				if(!check.isEmpty()){
 					output = true;
-					EnumBeamAlignments.getAlignment(check).discover(player, true);
+					EnumBeamAlignments.getAlignment(check).discover(player, check.isVoidVariant());
 					String dir = Direction.from3DDataValue(i).toString();
 					dir = Character.toUpperCase(dir.charAt(0)) + dir.substring(1);
 					Color col = check.getRGB();
-					chat.add(Component.translatable("tt.crossroads.meter.beam", dir, check.toString(), EnumBeamAlignments.getAlignment(check).getLocalName(check.getVoid() != 0), col.getRed(), col.getGreen(), col.getBlue(), check.getEnergy(), check.getPotential(), check.getStability(), check.getVoid(), check.getPower()));
+					chat.add(Component.translatable("tt.crossroads.meter.beam", dir, check.toString(), EnumBeamAlignments.getAlignment(check).getLocalName(check.isVoidVariant()), col.getRed(), col.getGreen(), col.getBlue(), check.getEnergy(), check.getPotential(), check.getStability(), check.getVoid(), check.getPower()));
 				}
 			}
 		}

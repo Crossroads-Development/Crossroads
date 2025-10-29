@@ -11,7 +11,7 @@
 	],
 	"key": {
 		"B": {
-			"tag": "forge:nuggets/bronze"
+			"tag": "c:nuggets/bronze"
 		},
 		"Q": {
 			"tag": "crossroads:gems/pure_quartz"

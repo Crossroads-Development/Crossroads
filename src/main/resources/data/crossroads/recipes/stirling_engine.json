@@ -14,13 +14,13 @@
 			"item": "crossroads:axle"
 		},
 		"T": {
-			"tag": "forge:ingots/tin"
+			"tag": "c:ingots/tin"
 		},
 		"I": {
-			"tag": "forge:ingots/iron"
+			"tag": "c:ingots/iron"
 		},
 		"C": {
-			"tag": "forge:ingots/copper"
+			"tag": "c:ingots/copper"
 		}
 	}
 }

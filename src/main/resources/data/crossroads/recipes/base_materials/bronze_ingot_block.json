@@ -9,7 +9,7 @@
 	],
 	"key": {
 		"*": {
-			"tag": "forge:storage_blocks/bronze"
+			"tag": "c:storage_blocks/bronze"
 		}
 	}
 }

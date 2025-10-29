@@ -11,10 +11,10 @@
 	],
 	"key": {
 		"C": {
-			"tag": "forge:ingots/copper"
+			"tag": "c:ingots/copper"
 		},
 		"S": {
-			"tag": "forge:dusts/salt"
+			"tag": "c:dusts/salt"
 		}
 	}
 }

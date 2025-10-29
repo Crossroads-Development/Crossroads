@@ -11,7 +11,7 @@
 	],
 	"key": {
 		"B": {
-			"tag": "forge:ingots/bronze"
+			"tag": "c:ingots/bronze"
 		},
 		"G": {
 			"tag": "forge:glass/colorless"

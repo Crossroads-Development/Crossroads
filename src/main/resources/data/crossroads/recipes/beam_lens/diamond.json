@@ -1,7 +1,7 @@
 {
 	"type": "crossroads:beam_lens",
 	"input": {
-		"tag": "forge:gems/diamond"
+		"tag": "c:gems/diamond"
 	},
 	"beam_modification": {
 		"energy": 0,

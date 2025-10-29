@@ -7,9 +7,9 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.phys.Vec3;
@@ -37,7 +37,7 @@ public class Sedation extends MobEffect{
 		addAttributeModifier(Attributes.ATTACK_SPEED, ATTACK_SPEED_MODIFIER_SEDATION_ID, -0.2D, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
 	}
 
-	private boolean canSedationApplyFully(LivingEntity entity){
+	private static boolean canSedationApplyFully(LivingEntity entity){
 		if(entity instanceof Mob){
 			//If the entity is already sedated, it must be sedatable
 			if(entity.getPersistentData().getBoolean(SEDATION_KEY)){
@@ -70,16 +70,6 @@ public class Sedation extends MobEffect{
 	}
 
 	@Override
-	public void removeAttributeModifiers(LivingEntity entity, AttributeMap p_111187_2_, int p_111187_3_){
-		if(canSedationApplyFully(entity)){
-			Mob mob = (Mob) entity;
-			mob.setNoAi(false);
-			mob.getPersistentData().putBoolean(SEDATION_KEY, false);
-		}
-		super.removeAttributeModifiers(entity, p_111187_2_, p_111187_3_);
-	}
-
-	@Override
 	public boolean applyEffectTick(LivingEntity entity, int p_76394_2_){
 		if(canSedationApplyFully(entity)){
 			//Force basic physics to apply despite AI being disabled
@@ -101,5 +91,15 @@ public class Sedation extends MobEffect{
 	@Override
 	public boolean shouldApplyEffectTickThisTick(int pDuration, int pAmplifier){
 		return true;
+	}
+
+	public static void checkForEffectEnd(LivingEntity entity, MobEffectInstance endedEffect){
+		//Called by event handlers
+		if(endedEffect.is(CRPotions.SEDATION_EFFECT)){
+			if(canSedationApplyFully(entity) && entity instanceof Mob mob){
+				mob.setNoAi(false);
+				mob.getPersistentData().putBoolean(SEDATION_KEY, false);
+			}
+		}
 	}
 }

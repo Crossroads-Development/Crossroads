@@ -1,24 +1,27 @@
 package com.Da_Technomancer.crossroads.api;
 
-import com.Da_Technomancer.crossroads.CRConfig;
-import com.Da_Technomancer.crossroads.api.beams.EnumBeamAlignments;
-import net.minecraft.client.Minecraft;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.player.Player;
 
-import javax.annotation.Nullable;
 import java.util.Locale;
 
-public enum EnumPath{
+public enum EnumPath implements StringRepresentable{
 
-	TECHNOMANCY((byte) 0),
-	ALCHEMY((byte) 1),
-	WITCHCRAFT((byte) 2);
+	TECHNOMANCY((byte) 0, "progress/path/technomancy", "progress/path/technomancy_complete", "progress/path/can_unlock_path"),
+	ALCHEMY((byte) 1, "progress/path/alchemy", "progress/path/alchemy_complete", "progress/path/can_unlock_path"),
+	WITCHCRAFT((byte) 2, "progress/path/witchcraft", "progress/path/witchcraft_complete", "progress/path/can_unlock_path");
 
 	private final byte index;
+	private final String pathAdvancement;//Advancement used to track whether this path is currently unlocked
+	private final String finishingAdvancement;//Finishing this advancement will unlock the ability to take another path with certain config options
+	private final String unlockAdvancement;//Advancement required to unlock this path (pre-requisite)
 
-	EnumPath(byte ind){
+	EnumPath(byte ind, String pathAdvancement, String finishingAdvancement, String unlockAdvancement){
 		index = ind;
+		this.pathAdvancement = pathAdvancement;
+		this.finishingAdvancement = finishingAdvancement;
+		this.unlockAdvancement = unlockAdvancement;
 	}
 
 	public byte getIndex(){
@@ -38,15 +41,6 @@ public enum EnumPath{
 		return MiscUtil.localize("path." + toString());
 	}
 
-	@Nullable
-	public static EnumPath fromName(String name){
-		try{
-			return valueOf(name.toUpperCase(Locale.US));
-		}catch(Exception e){
-			return null;
-		}
-	}
-
 	/**
 	 * Gets whether a player has unlocked this path.
 	 * If this is the client side, requires AdvancementTracker.listen() having been called first
@@ -54,7 +48,7 @@ public enum EnumPath{
 	 * @return Whether the given player has unlocked this path
 	 */
 	public boolean isUnlocked(Player player){
-		return AdvancementTracker.hasAdvancement(player, "progress/path/" + toString());
+		return AdvancementTracker.hasAdvancement(player, pathAdvancement);
 	}
 
 	/**
@@ -67,52 +61,19 @@ public enum EnumPath{
 		if(player.level().isClientSide){
 			return;//We can't do this on the client side
 		}
-		AdvancementTracker.unlockAdvancement((ServerPlayer) player, "progress/path/" + toString(), unlocked);
+		AdvancementTracker.unlockAdvancement((ServerPlayer) player, pathAdvancement, unlocked);
 	}
 
-	/**
-	 * Tests whether this player is allowed to unlock new paths based on the number of paths already taken
-	 * @param player The player to check
-	 * @return Whether they are allowed to unlock new paths. Does not check path-specific requirements
-	 */
-	public static boolean canUnlockNewPath(Player player){
-		boolean multiplayer;//We use a different config option depending on if this is multiplayer or singleplayer
-		if(player.level().isClientSide){
-			multiplayer = !Minecraft.getInstance().hasSingleplayerServer();
-		}else{
-			multiplayer = player.level().getServer().isDedicatedServer();
-		}
-		boolean multiAllow = CRConfig.allowAllServer.get();
-		boolean singleAllow = CRConfig.allowAllSingle.get();
-		if(multiplayer ? !multiAllow : !singleAllow){
-			//If only 1 path is allowed, deny if any other path is found
-			for(EnumPath path : values()){
-				if(path.isUnlocked(player)){
-					return false;
-				}
-			}
-		}
-
-		return true;
+	@Override
+	public String getSerializedName(){
+		return toString();
 	}
 
-	/**
-	 * Tests whether a player has passed the gate to be allowed to unlock paths
-	 * Current requirement: Discover every alignment other than void and no_match
-	 *
-	 * @param player The player to check
-	 * @return Whether this player should be allowed to unlock paths
-	 */
-	public boolean pathGatePassed(Player player){
-		if(!canUnlockNewPath(player)){
-			return false;
-		}
+	public enum MultiPathMode{
 
-		for(EnumBeamAlignments align : EnumBeamAlignments.values()){
-			if(align != EnumBeamAlignments.VOID && align != EnumBeamAlignments.NO_MATCH && !align.isDiscovered(player)){
-				return false;
-			}
-		}
-		return true;
+		SINGLE,
+		UNLIMITED,
+		SEQUENTIAL
+
 	}
 }

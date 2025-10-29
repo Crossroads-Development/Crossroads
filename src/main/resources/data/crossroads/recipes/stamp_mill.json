@@ -20,7 +20,7 @@
 			"item": "crossroads:axle"
 		},
 		"I": {
-			"tag": "forge:storage_blocks/iron"
+			"tag": "c:storage_blocks/iron"
 		}
 	}
 }

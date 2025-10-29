@@ -9,7 +9,7 @@
 	],
 	"key": {
 		"*": {
-			"tag": "forge:ingots/bronze"
+			"tag": "c:ingots/bronze"
 		}
 	}
 }

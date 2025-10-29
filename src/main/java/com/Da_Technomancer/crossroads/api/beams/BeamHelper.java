@@ -50,7 +50,7 @@ public class BeamHelper{
 		if(!world.isClientSide){
 			EnumBeamAlignments align = mag.getAlignment();
 			BeamEffect e = align.getEffect();
-			e.doBeamEffect(align, mag.getVoid() != 0, Math.min(BeamUtil.MAX_EFFECT_POWER, mag.getPower()), beamHit);
+			e.doBeamEffect(align, mag.isVoidVariant(), Math.min(BeamUtil.MAX_EFFECT_POWER, mag.getPower()), beamHit);
 		}
 		return updateBeamRender(mag, newDist);
 	}

@@ -9,7 +9,7 @@
 	],
 	"key": {
 		"*": {
-			"tag": "forge:storage_blocks/salt"
+			"tag": "c:storage_blocks/salt"
 		}
 	}
 }

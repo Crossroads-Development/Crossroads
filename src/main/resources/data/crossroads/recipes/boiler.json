@@ -11,10 +11,10 @@
 	],
 	"key": {
 		"*": {
-			"tag": "forge:ingots/bronze"
+			"tag": "c:ingots/bronze"
 		},
 		"C": {
-			"tag": "forge:ingots/copper"
+			"tag": "c:ingots/copper"
 		},
 		"#": {
 			"item": "minecraft:cauldron"

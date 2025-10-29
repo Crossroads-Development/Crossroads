@@ -24,6 +24,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.CrafterBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
@@ -253,7 +254,7 @@ public class CRBlocks{
 	//	public static final DeferredHolder<MapCodec<? extends Block>, MapCodec<BasicBlock>> BASIC_BLOCK_TYPE = BLOCK_TYPES.register("redstone_crystal", singletonBlockType(BasicBlock::new));
 	public static final DeferredHolder<MapCodec<? extends Block>, MapCodec<RedstoneCrystal>> REDSTONE_CRYSTAL_TYPE = BLOCK_TYPES.register("redstone_crystal", singletonBlockType(RedstoneCrystal::new));
 	public static RedstoneCrystal redstoneCrystal;
-	public static final DeferredHolder<MapCodec<? extends Block>, MapCodec<DetailedAutoCrafter>> DETAILED_AUTO_CRAFTER_TYPE = BLOCK_TYPES.register("detailed_auto_crafter", singletonBlockType(DetailedAutoCrafter::new));
+	public static final DeferredHolder<MapCodec<? extends Block>, MapCodec<CrafterBlock>> DETAILED_AUTO_CRAFTER_TYPE = BLOCK_TYPES.register("detailed_auto_crafter", singletonBlockType(DetailedAutoCrafter::new));
 	public static DetailedAutoCrafter detailedAutoCrafter;
 	public static final DeferredHolder<MapCodec<? extends Block>, MapCodec<LodestoneTurbine>> LODESTONE_TURBINE_TYPE = BLOCK_TYPES.register("lodestone_turbine", singletonBlockType(LodestoneTurbine::new));
 	public static LodestoneTurbine lodestoneTurbine;

@@ -85,7 +85,6 @@ public class EnchantEffect extends BeamEffect{
 						return;
 					}
 
-
 					if(created.getItem() == Items.BOOK){
 						created = new ItemStack(Items.ENCHANTED_BOOK, 1);
 						if(ench.size() > 1){
@@ -95,6 +94,7 @@ public class EnchantEffect extends BeamEffect{
 
 					created = created.getItem().applyEnchantments(created, ench);
 					Containers.dropItemStack(beamHit.getWorld(), ent.getX(), ent.getY(), ent.getZ(), created);
+					beamHit.getWorld().playSound(null, ent.getX(), ent.getY(), ent.getZ(), SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.BLOCKS, 0.3F, 1);
 					return;
 				}
 			}

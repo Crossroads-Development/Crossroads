@@ -12,7 +12,7 @@
 	],
 	"key": {
 		"N": {
-			"tag": "forge:nuggets/copper"
+			"tag": "c:nuggets/copper"
 		},
 		"C": {
 			"item": "minecraft:compass"

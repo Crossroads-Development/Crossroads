@@ -14,10 +14,10 @@
 	],
 	"key": {
 		"#": {
-			"tag": "forge:storage_blocks/bronze"
+			"tag": "c:storage_blocks/bronze"
 		},
 		"*": {
-			"tag": "forge:ingots/bronze"
+			"tag": "c:ingots/bronze"
 		}
 	}
 }

@@ -6,13 +6,13 @@
 	},
 	"ingredients": [
 		{
-			"tag": "forge:gems/quartz"
+			"tag": "c:gems/quartz"
 		},
 		{
-			"tag": "forge:dusts/salt"
+			"tag": "c:dusts/salt"
 		},
 		{
-			"tag": "forge:dusts/salt"
+			"tag": "c:dusts/salt"
 		}
 	]
 }

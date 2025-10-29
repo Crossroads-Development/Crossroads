@@ -14,7 +14,7 @@
 			"tag": "forge:cobblestone"
 		},
 		"I": {
-			"tag": "forge:ingots/iron"
+			"tag": "c:ingots/iron"
 		},
 		"A": {
 			"item": "crossroads:axle"

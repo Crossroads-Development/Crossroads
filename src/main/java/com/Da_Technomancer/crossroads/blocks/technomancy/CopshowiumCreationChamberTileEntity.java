@@ -217,7 +217,7 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 			}
 
 			EnumBeamAlignments align = EnumBeamAlignments.getAlignment(mag);
-			if(mag.getVoid() != 0){
+			if(mag.isVoidVariant()){
 				//A void beam destroys all stored liquid
 				fluids[0] = FluidStack.EMPTY;
 				fluids[1] = FluidStack.EMPTY;

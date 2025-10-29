@@ -19,16 +19,24 @@ import java.util.HashMap;
 
 public class AdvancementTracker{
 
-	private static final HashMap<String, Boolean> progressMap = new HashMap<>(16);
+	private static final HashMap<String, Boolean> progressMap = new HashMap<>(32);
 
 	/**
-	 * Tracks Crossroads advancements.
+	 * Tracks Crossroads advancements in the crossroads/advancements/progress/ directory. Crossroads advancements outside this directory are untracked.
 	 * Required for hasAdvancement() to work on the client side
 	 * Usually called in init() in relevant screens
 	 */
 	@OnlyIn(Dist.CLIENT)
 	public static void listen(){
 		Minecraft.getInstance().player.connection.getAdvancements().setListener(Listener.INSTANCE);
+	}
+
+	private static boolean shouldTrackAdvancement(ResourceLocation location){
+		return location.getNamespace().equals(Crossroads.MODID) && shouldTrackLocation(location.getPath());
+	}
+
+	private static boolean shouldTrackLocation(String id){
+		return id.startsWith("progress");
 	}
 
 	/**
@@ -39,6 +47,7 @@ public class AdvancementTracker{
 	 * @return Whether the passed advancement has been completed
 	 */
 	public static boolean hasAdvancement(Player ent, String advancement){
+		assert shouldTrackLocation(advancement);
 		if(ent instanceof ServerPlayer){
 			return ((ServerPlayer) ent).getAdvancements().getOrStartProgress(ent.level().getServer().getAdvancements().get(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, advancement))).isDone();
 		}else if(ent instanceof LocalPlayer){
@@ -107,7 +116,7 @@ public class AdvancementTracker{
 		@Override
 		public void onUpdateAdvancementProgress(AdvancementNode advancementNode, AdvancementProgress progress){
 			ResourceLocation id = advancementNode.holder().id();
-			if(id.getNamespace().equals(Crossroads.MODID)){
+			if(shouldTrackAdvancement(id)){
 				progressMap.put(id.getPath(), progress.isDone());
 			}
 		}

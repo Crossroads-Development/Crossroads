@@ -9,13 +9,13 @@
 			"item": "crossroads:alch_tube"
 		},
 		{
-			"tag": "forge:dusts/redstone"
+			"tag": "c:dusts/redstone"
 		},
 		{
-			"tag": "forge:dusts/redstone"
+			"tag": "c:dusts/redstone"
 		},
 		{
-			"tag": "forge:dusts/redstone"
+			"tag": "c:dusts/redstone"
 		}
 	]
 }

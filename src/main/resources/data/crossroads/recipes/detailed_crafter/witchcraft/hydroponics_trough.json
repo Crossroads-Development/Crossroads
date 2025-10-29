@@ -11,10 +11,10 @@
 	],
 	"key": {
 		"T": {
-			"tag": "forge:storage_blocks/tin"
+			"tag": "c:storage_blocks/tin"
 		},
 		"t": {
-			"tag": "forge:ingots/tin"
+			"tag": "c:ingots/tin"
 		},
 		"F": {
 			"item": "crossroads:fluid_tube"

@@ -17,7 +17,7 @@
 			"tag": "crossroads:gems/pure_quartz"
 		},
 		"B": {
-			"tag": "forge:ingots/bronze"
+			"tag": "c:ingots/bronze"
 		}
 	}
 }

@@ -12,10 +12,10 @@
 			"tag": "crossroads:dusts/alchemy_salt"
 		},
 		{
-			"tag": "forge:dusts/redstone"
+			"tag": "c:dusts/redstone"
 		},
 		{
-			"tag": "forge:dusts/salt"
+			"tag": "c:dusts/salt"
 		}
 	]
 }

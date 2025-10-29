@@ -11,7 +11,7 @@
 	],
 	"key": {
 		"I": {
-			"tag": "forge:ingots/iron"
+			"tag": "c:ingots/iron"
 		},
 		"L": {
 			"tag": "forge:leather"

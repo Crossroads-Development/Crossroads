@@ -11,13 +11,13 @@
 	],
 	"key": {
 		"B": {
-			"tag": "forge:ingots/bronze"
+			"tag": "c:ingots/bronze"
 		},
 		"R": {
-			"tag": "forge:dusts/redstone"
+			"tag": "c:dusts/redstone"
 		},
 		"Q": {
-			"tag": "forge:gems/quartz"
+			"tag": "c:gems/quartz"
 		},
 		"S": {
 			"item": "minecraft:smooth_stone"

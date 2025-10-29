@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads;
 
+import com.Da_Technomancer.crossroads.api.EnumPath;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.essentials.api.ConfigUtil;
 import com.google.common.collect.Lists;
@@ -33,8 +34,7 @@ public class CRConfig{
 	public static ModConfigSpec.BooleanValue enchantDestruction;
 	//	public static ModConfigSpec.ConfigValue<String> retrogen; TODO
 	public static ModConfigSpec.BooleanValue heatEffects;
-	public static ModConfigSpec.BooleanValue allowAllSingle;
-	public static ModConfigSpec.BooleanValue allowAllServer;
+	public static ModConfigSpec.EnumValue<EnumPath.MultiPathMode> multiPathMode;
 	public static ModConfigSpec.BooleanValue fluxEvent;
 	public static ModConfigSpec.IntValue gearResetTime;
 	//	public static ModConfigSpec.BooleanValue wipeInvalidMappings;
@@ -73,7 +73,6 @@ public class CRConfig{
 	public static ModConfigSpec.DoubleValue windingResist;
 	public static ModConfigSpec.DoubleValue whirligigHover;
 	public static ModConfigSpec.DoubleValue whirligigSafe;
-	public static ModConfigSpec.BooleanValue forgetPaths;
 	public static ModConfigSpec.DoubleValue lodestoneTurbinePower;
 	public static ModConfigSpec.DoubleValue hamsterPower;
 	public static ModConfigSpec.DoubleValue demonPower;
@@ -124,9 +123,6 @@ public class CRConfig{
 
 	private static final TagKey<Block> destroyBlacklist = CraftingUtil.getTagKey(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "destroy_blacklist"));
 
-	private static ModConfigSpec clientSpec;
-	private static ModConfigSpec serverSpec;
-
 	private static final String CAT_INTERNAL = "Internal";
 	private static final String CAT_ORES = "Ores";
 	private static final String CAT_BALANCE = "Balance";
@@ -147,7 +143,7 @@ public class CRConfig{
 		fluxSounds = clientBuilder.comment("Should temporal entropy transfer make sounds?").define("entropy_sounds", true);
 		cageMeterOverlay = clientBuilder.comment("Should the overlay for the beam cage render while not holding a beam staff?", "Regardless of setting, it only shows while a beam cage is equipped.").define("beam_cage_overlay", true);
 		readoutChat = clientBuilder.comment("Should omnimeters and similar print to vanilla chat?", "Default is a formatted message overlay").define("message_chat", false);
-		clientSpec = clientBuilder.build();
+		ModConfigSpec clientSpec = clientBuilder.build();
 		modContainer.registerConfig(ModConfig.Type.CLIENT, clientSpec);
 
 
@@ -171,8 +167,8 @@ public class CRConfig{
 		genVoidOre = serverBuilder.comment("Generate Void Crystal Ore?").define("void", true);
 //		rubyRarity = serverBuilder.comment("Ruby ore spawn frequency", "The chance that a nether quartz ore will generate as ruby instead").defineInRange("ruby_rate", 1D / 64D, 0F, 1D);
 //		retrogen = serverBuilder.comment("Retrogen Key", "Changing this value will cause retrogen. Leaving it blank disables retrogen", "Turn this off when you are done!").define("retrogen", "");
-		processableOres = serverBuilder.worldRestart().comment("Metal ore types that Crossroads should generate tripling items for", "Specify the metal then a space then a hexadecimal color, ex. \"copper FF4800\"", "Doesn't register a molten fluid, recipes, or localization", "Use a datapack to register any desired recipes or localization for new materials, Find a mod already adding the desired molten fluid for the fluid").defineList("process_ores", initList("copper FF7800", "tin C8C8C8", "iron A0A0A0", "gold FFFF00"), compileRegex("\\w++ [0-9A-Fa-f]{6}+"));
-		gearTypes = serverBuilder.worldRestart().comment("Metal types that Crossroads should add gears for", "Specify the metal then a space then a hexadecimal color then a space then a density in kg/m3", "Adding a new gear material requires adding localization and recipes via datapack", "Removing a default gear material is not recommended").defineList("gear_types", initList("copper FF783C 9000", "tin FFFFFF 7300", "iron C0C0C0 8000", "gold FFFF00 20000", "bronze FFA03C 8800", "copshowium FF8200 0"), compileRegex("\\w++ [0-9A-Fa-f]{6}+ [+]?\\d*\\.?[0-9]+"));
+		processableOres = serverBuilder.worldRestart().comment("Metal ore types that Crossroads should generate tripling items for", "Specify the metal then a space then a hexadecimal color, ex. \"copper FF4800\"", "Doesn't register a molten fluid, recipes, or localization", "Use a datapack to register any desired recipes or localization for new materials, Find a mod already adding the desired molten fluid for the fluid").defineList("process_ores", initList("copper FF7800", "tin C8C8C8", "iron A0A0A0", "gold FFFF00"), () -> "gold FFFF00", compileRegex("\\w++ [0-9A-Fa-f]{6}+"));
+		gearTypes = serverBuilder.worldRestart().comment("Metal types that Crossroads should add gears for", "Specify the metal then a space then a hexadecimal color then a space then a density in kg/m3", "Adding a new gear material requires adding localization and recipes via datapack", "Removing a default gear material is not recommended").defineList("gear_types", initList("copper FF783C 9000", "tin FFFFFF 7300", "iron C0C0C0 8000", "gold FFFF00 20000", "bronze FFA03C 8800", "copshowium FF8200 0"), () -> "bronze FFA03C 8800", compileRegex("\\w++ [0-9A-Fa-f]{6}+ [+]?\\d*\\.?[0-9]+"));
 		serverBuilder.pop();
 		serverBuilder.push(CAT_BALANCE);
 		steamWorth = serverBuilder.comment("The number of degrees one bucket of steam is worth", "If this is changed, it is recommended to rebalance JSON recipes with steam").defineInRange("steam_value", 50, 0, Integer.MAX_VALUE);
@@ -211,9 +207,7 @@ public class CRConfig{
 
 		//Category includes overall path controls, and path specific categories
 		serverBuilder.push(CAT_SPECIALIZATION);
-		allowAllSingle = serverBuilder.comment("Allow Multiple specializations per player in Singleplayer?").define("paths_single", true);
-		allowAllServer = serverBuilder.comment("Allow Multiple specializations per player in Multiplayer?").define("paths_multi", false);
-		forgetPaths = serverBuilder.comment("Allow forgetting paths using Path Sigils?").define("path_forget", false);
+		multiPathMode = serverBuilder.comment("How multiple paths are unlocked", "Options are 'SINGLE' (only 1 allowed), 'UNLIMITED' (can unlock them all simultaneously), and 'SEQUENTIAL' (default, unlocking an additional path requires beating the previous path)").defineEnum("multi_path_mode", EnumPath.MultiPathMode.SEQUENTIAL);
 		serverBuilder.push(CAT_TECHNOMANCY);
 		entropyDropBlock = serverBuilder.comment("Whether Technomancy machines should drop an item when overloaded").define("drop_machine", false);
 		fluxEvent = serverBuilder.comment("Allow Temporal Entropy disasters from Technomancy?", "If disabled, disasters create a small explosion instead").define("flux_disaster", true);
@@ -248,9 +242,9 @@ public class CRConfig{
 		riftSpawnDrops = serverBuilder.comment("If true, rift beams will spawn mob drops instead of actual mobs", "Rift beams do this regardless of config setting in peaceful mode").define("rift_drops", false);
 		serverBuilder.pop();
 		serverBuilder.push(CAT_WITCHCRAFT);
-		sedationBlacklist = serverBuilder.comment("Specify entities that can not have their AI disabled by sedation. Players can never be fully sedated", "Format of 'domain:entity_id', ex. minecraft:pig").defineList("sedation_blacklist", Lists.newArrayList("minecraft:player", "minecraft:wither", "minecraft:ender_dragon"), (Object entry) -> entry instanceof String);
-		cloningBlacklist = serverBuilder.comment("Specify entities which can not be cloned. Players can never be cloned", "Format of 'domain:entity_id', ex. minecraft:pig").defineList("cloning_blacklist", Lists.newArrayList("minecraft:player", "minecraft:wither", "minecraft:ender_dragon"), (Object entry) -> entry instanceof String);
-		permanentEffectBlacklist = serverBuilder.comment("Specify potion effects that can not be applied permanently to an entity or player", "Format of 'domain:potion_effect_id', ex. minecraft:health_boost").defineList("permanent_effect_blacklist", Lists.newArrayList("minecraft:health_boost", "minecraft:glowing"), (Object entry) -> entry instanceof String);
+		sedationBlacklist = serverBuilder.comment("Specify entities that can not have their AI disabled by sedation. Players can never be fully sedated", "Format of 'domain:entity_id', ex. minecraft:pig").defineList("sedation_blacklist", Lists.newArrayList("minecraft:player", "minecraft:wither", "minecraft:ender_dragon"), () -> "minecraft:wither", (Object entry) -> entry instanceof String);
+		cloningBlacklist = serverBuilder.comment("Specify entities which can not be cloned. Players can never be cloned", "Format of 'domain:entity_id', ex. minecraft:pig").defineList("cloning_blacklist", Lists.newArrayList("minecraft:player", "minecraft:wither", "minecraft:ender_dragon"), () -> "minecraft:wither", (Object entry) -> entry instanceof String);
+		permanentEffectBlacklist = serverBuilder.comment("Specify potion effects that can not be applied permanently to an entity or player", "Format of 'domain:potion_effect_id', ex. minecraft:health_boost").defineList("permanent_effect_blacklist", Lists.newArrayList("minecraft:health_boost", "minecraft:glowing"), () -> "minecraft:glowing", (Object entry) -> entry instanceof String);
 		limitPermanentPotionStrength = serverBuilder.comment("Limit the strength of permanent potion effects to level 1", "Applies to both injected potions and clones. Does not affect genetic strain").define("permanent_effect_limit", true);
 		permanentPotionParticles = serverBuilder.comment("Whether to show particles for permanent potion effects").define("permanent_potion_particles", false);
 		maximumBloodLinkerPower = serverBuilder.comment("Maximum beam power transmitted with the hemic entanglement chamber", "Set to 0 to effectively disable").defineInRange("blood_linker_Limit", 1, 0, 64);
@@ -265,7 +259,7 @@ public class CRConfig{
 		serverBuilder.pop();
 		serverBuilder.pop();
 
-		serverSpec = serverBuilder.build();
+		ModConfigSpec serverSpec = serverBuilder.build();
 		modContainer.registerConfig(ModConfig.Type.SERVER, serverSpec);
 
 //		CommentedFileConfig clientConfig = CommentedFileConfig.builder(FMLPaths.CONFIGDIR.get().resolve(Crossroads.MODID + "-client.toml")).sync().autosave().writingMode(WritingMode.REPLACE).build();

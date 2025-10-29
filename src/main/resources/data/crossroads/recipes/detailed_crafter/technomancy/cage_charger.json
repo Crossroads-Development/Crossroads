@@ -11,7 +11,7 @@
 	],
 	"key": {
 		"B": {
-			"tag": "forge:ingots/bronze"
+			"tag": "c:ingots/bronze"
 		},
 		"Q": {
 			"tag": "crossroads:gems/pure_quartz"

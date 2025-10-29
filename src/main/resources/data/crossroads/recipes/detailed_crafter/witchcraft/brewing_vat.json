@@ -11,7 +11,7 @@
 	],
 	"key": {
 		"C": {
-			"tag": "forge:ingots/copper"
+			"tag": "c:ingots/copper"
 		},
 		"B": {
 			"item": "minecraft:brewing_stand"

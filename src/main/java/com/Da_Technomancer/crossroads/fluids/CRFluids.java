@@ -31,7 +31,7 @@ public final class CRFluids{
 	public static GenericFluid.FluidData fertilizerSolution;
 	public static GenericFluid.FluidData soulEssence;
 
-	public static final TagKey<Fluid> STEAM = CraftingUtil.getTagKey(Registries.FLUID, ResourceLocation.parse("forge:steam"));
+	public static final TagKey<Fluid> STEAM = CraftingUtil.getTagKey(Registries.FLUID, ResourceLocation.parse("c:steam"));
 	public static final TagKey<Fluid> DISTILLED_WATER = CraftingUtil.getTagKey(Registries.FLUID, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "distilled_water"));
 	public static final TagKey<Fluid> LIQUID_FAT = CraftingUtil.getTagKey(Registries.FLUID, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "liquid_fat"));
 

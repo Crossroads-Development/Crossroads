@@ -1,7 +1,7 @@
 {
 	"type": "crossroads:crucible",
 	"input": {
-		"tag": "forge:nuggets/tin"
+		"tag": "c:nuggets/tin"
 	},
 	"output": {
 		"fluid": "crossroads:molten_tin",

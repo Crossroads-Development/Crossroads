@@ -5,7 +5,7 @@
 	"power": 8,
 	"input": [
 		{
-			"tag": "forge:netherrack"
+			"tag": "c:netherracks"
 		}
 	],
 	"output": "minecraft:nether_bricks"

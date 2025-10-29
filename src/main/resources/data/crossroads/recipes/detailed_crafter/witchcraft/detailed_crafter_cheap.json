@@ -18,7 +18,7 @@
 			"tag": "forge:obsidian"
 		},
 		"T": {
-			"tag": "forge:ingots/iron"
+			"tag": "c:ingots/iron"
 		}
 	}
 }

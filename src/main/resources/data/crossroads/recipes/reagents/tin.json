@@ -3,9 +3,9 @@
 	"id": "tin",
 	"melting": 230,
 	"boiling": 2560,
-	"item": "forge:nuggets/tin",
+	"item": "c:nuggets/tin",
 	"fluid": {
-		"tag": "forge:molten_tin"
+		"tag": "c:molten_tin"
 	},
 	"fluid_amount": 10,
 	"color": "C0C0C0"

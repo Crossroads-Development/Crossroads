@@ -1,7 +1,7 @@
 {
 	"type": "crossroads:beam_lens",
 	"input": {
-		"tag": "forge:gems/lapis"
+		"tag": "c:gems/lapis"
 	},
 	"beam_modification": {
 		"energy": 0,

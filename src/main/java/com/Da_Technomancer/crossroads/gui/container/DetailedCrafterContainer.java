@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.gui.container;
 
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.api.EnumPath;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
@@ -24,19 +23,19 @@ import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CraftingRecipe;
-import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.Optional;
 
 import static net.neoforged.neoforge.common.CommonHooks.setCraftingPlayer;
 
 
-public class DetailedCrafterContainer extends RecipeBookMenu<CraftingContainer>{
+public class DetailedCrafterContainer extends RecipeBookMenu<CraftingInput, CraftingRecipe>{
 
 
 	@SuppressWarnings("unchecked")
@@ -106,11 +105,11 @@ public class DetailedCrafterContainer extends RecipeBookMenu<CraftingContainer>{
 	}
 
 	@Override
-	public boolean recipeMatches(Recipe<? super CraftingContainer> recipeIn){
-		if(recipeIn instanceof DetailedCrafterRec){
-			return ((DetailedCrafterRec) recipeIn).getPath().isUnlocked(player) && recipeIn.matches(inInv, player.level());
+	public boolean recipeMatches(RecipeHolder<CraftingRecipe> recipeIn){
+		if(recipeIn.value() instanceof DetailedCrafterRec rec){
+			return rec.getPath().isUnlocked(player) && rec.matches(inInv.asCraftInput(), player.level());
 		}else{
-			return recipeIn.matches(inInv, player.level());
+			return recipeIn.value().matches(inInv.asCraftInput(), player.level());
 		}
 	}
 
@@ -216,46 +215,16 @@ public class DetailedCrafterContainer extends RecipeBookMenu<CraftingContainer>{
 		return slotIndex != getResultSlotIndex();
 	}
 
-	/**
-	 * On the client side, there can be a delay before the client is informed when unlocking a path.
-	 * This represents the last path unlocked in this UI by this player on the client, and is wiped every time the ui is re-opened
-	 * It exists to prevent unlocking the same path several times on the client side during this delay- a minor visual inventory-desync glitch when unlocking while holding shift
-	 */
-	private byte lastUnlock = -1;
-
 	@Override
 	public void slotsChanged(Container inventoryIn){
-		for(EnumPath path : EnumPath.values()){
-			//Check for path unlocking
-			if(!path.isUnlocked(player) && path.pathGatePassed(player) && unlockRecipe(path) && (!world.isClientSide || lastUnlock != path.getIndex())){
-				if(world.isClientSide){
-					lastUnlock = path.getIndex();
-					playUnlockSound();
-				}else{
-					path.setUnlocked(player, true);
-				}
-				for(int i = 0; i < 9; i++){
-					inInv.removeItem(i, 1);
-				}
-				return;
-			}
-		}
-
 		if(!world.isClientSide){
 			ServerPlayer serverplayerentity = (ServerPlayer) player;
 			ItemStack itemstack = ItemStack.EMPTY;
-			List<DetailedCrafterRec> recipes = world.getRecipeManager().getRecipesFor(CRRecipes.DETAILED_TYPE, inInv, world);
-			//Find a detailed crafter specific recipe first
-			Optional<? extends CraftingRecipe> recipeOpt = recipes.stream().filter(rec -> rec.getPath().isUnlocked(player)).findFirst();
-			//If there is no valid detailed crafter recipe, try vanilla crafting
-			if(!recipeOpt.isPresent()){
-				recipeOpt = world.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, inInv, world);
-			}
-
-			if(recipeOpt.isPresent()){
-				CraftingRecipe recipe = recipeOpt.get();
-				if(outInv.setRecipeUsed(world, serverplayerentity, recipe)){
-					itemstack = recipe.assemble(inInv, world.registryAccess());
+			RecipeHolder<? extends CraftingRecipe> recipeOpt = getMatchedRecipe(player, inInv);
+			if(recipeOpt != null){
+				CraftingRecipe recipe = recipeOpt.value();
+				if(outInv.setRecipeUsed(world, serverplayerentity, recipeOpt)){
+					itemstack = recipe.assemble(inInv.asCraftInput(), world.registryAccess());
 				}
 			}
 			outInv.setItem(0, itemstack);
@@ -263,22 +232,18 @@ public class DetailedCrafterContainer extends RecipeBookMenu<CraftingContainer>{
 		}
 	}
 
-	/**
-	 * Checks if an "unlock recipe" is set
-	 * @param path The path to check for
-	 * @return Whether the current recipe is the correct one for unlocked the passed path
-	 */
-	private boolean unlockRecipe(EnumPath path){
-		for(int i = 0; i < 9; i++){
-			if(i != 4 && !CraftingUtil.tagContains(fillerMats, inInv.getItem(i).getItem())){
-				return false;
-			}
-		}
-		return CraftingUtil.tagContains(unlockKeys[path.getIndex()], inInv.getItem(4).getItem());
+	private void playUnlockSound(){
+		//TODO
+		world.playSound(player, player.blockPosition(), SoundEvents.PLAYER_LEVELUP, SoundSource.PLAYERS, 2, 0);
 	}
 
-	private void playUnlockSound(){
-		world.playSound(player, player.blockPosition(), SoundEvents.PLAYER_LEVELUP, SoundSource.PLAYERS, 2, 0);
+	private static RecipeHolder<? extends CraftingRecipe> getMatchedRecipe(Player thePlayer, CraftingContainer craftMatrix){
+		List<RecipeHolder<DetailedCrafterRec>> recipes = thePlayer.level().getRecipeManager().getRecipesFor(CRRecipes.DETAILED_TYPE, craftMatrix.asCraftInput(), thePlayer.level());
+		RecipeHolder<DetailedCrafterRec> recipe = recipes.stream().filter(rec -> rec.value().getPath().isUnlocked(thePlayer)).findFirst().orElse(null);
+		if(recipe == null){
+			return thePlayer.level().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftMatrix.asCraftInput(), thePlayer.level()).orElse(null);
+		}
+		return recipe;
 	}
 
 	private static class SlotCraftingFlexible extends ResultSlot{
@@ -295,14 +260,10 @@ public class DetailedCrafterContainer extends RecipeBookMenu<CraftingContainer>{
 		public void onTake(Player thePlayer, ItemStack stack){
 			checkTakeAchievements(stack);
 			setCraftingPlayer(thePlayer);
-			List<DetailedCrafterRec> recipes = thePlayer.level().getRecipeManager().getRecipesFor(CRRecipes.DETAILED_TYPE, craftMatrix, thePlayer.level());
-			Optional<? extends CraftingRecipe> recipeOpt = recipes.stream().filter(rec -> rec.getPath().isUnlocked(thePlayer)).findFirst();
-			if(!recipeOpt.isPresent()){
-				recipeOpt = thePlayer.level().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftMatrix, thePlayer.level());
-			}
-			if(recipeOpt.isPresent()){
+			RecipeHolder<? extends CraftingRecipe> recipeOpt = getMatchedRecipe(thePlayer, craftMatrix);
+			if(recipeOpt != null){
 				//Remove items if there is a matching recipe
-				NonNullList<ItemStack> remaining = recipeOpt.get().getRemainingItems(craftMatrix);
+				NonNullList<ItemStack> remaining = recipeOpt.value().getRemainingItems(craftMatrix.asCraftInput());
 				for(int i = 0; i < remaining.size(); i++){
 					craftMatrix.removeItem(i, 1);//Consume crafting ingredients
 

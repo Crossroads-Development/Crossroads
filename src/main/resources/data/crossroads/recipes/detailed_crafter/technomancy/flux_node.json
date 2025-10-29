@@ -15,10 +15,10 @@
 			"tag": "crossroads:storage_blocks/copshowium"
 		},
 		"I": {
-			"tag": "forge:ingots/iron"
+			"tag": "c:ingots/iron"
 		},
 		"D": {
-			"tag": "forge:gems/diamond"
+			"tag": "c:gems/diamond"
 		}
 	}
 }

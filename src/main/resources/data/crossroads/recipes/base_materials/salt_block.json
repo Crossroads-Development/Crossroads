@@ -11,7 +11,7 @@
 	],
 	"key": {
 		"*": {
-			"tag": "forge:dusts/salt"
+			"tag": "c:dusts/salt"
 		}
 	}
 }

@@ -14,7 +14,7 @@
 			"tag": "forge:cobblestone"
 		},
 		"C": {
-			"tag": "forge:ingots/copper"
+			"tag": "c:ingots/copper"
 		},
 		"#": {
 			"item": "minecraft:furnace"

@@ -17,7 +17,7 @@
 			"item": "crossroads:fluid_tube"
 		},
 		"I": {
-			"tag": "forge:ingots/iron"
+			"tag": "c:ingots/iron"
 		},
 		"B": {
 			"item": "minecraft:bricks"

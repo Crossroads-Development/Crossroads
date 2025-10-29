@@ -53,7 +53,7 @@ public class BeamCannonTileEntity extends AbstractCannonTileEntity implements IB
 	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
 		super.addInfo(chat, player, hit);
 		if(!readingBeam.isEmpty()){
-			EnumBeamAlignments.getAlignment(readingBeam).discover(player, true);
+			EnumBeamAlignments.getAlignment(readingBeam).discover(player, readingBeam.isVoidVariant());
 			chat.add(Component.translatable("tt.crossroads.beam_cannon.beam", readingBeam.toString()));
 		}
 	}
@@ -100,13 +100,13 @@ public class BeamCannonTileEntity extends AbstractCannonTileEntity implements IB
 //					}else{
 //						EnumBeamAlignments align = EnumBeamAlignments.getAlignment(out);
 //						if(!level.isOutsideBuildHeight(endPos)){
-//							align.getEffect().doBeamEffect(align, out.getVoid() != 0, Math.min(BeamUtil.MAX_EFFECT_POWER, outPower), beamHitResult);
+//							align.getEffect().doBeamEffect(align, out.isVoidVariant(), Math.min(BeamUtil.MAX_EFFECT_POWER, outPower), beamHitResult);
 //						}
 //					}
 
 					EnumBeamAlignments align = out.getAlignment();
 					if(!level.isOutsideBuildHeight(endPos)){
-						align.getEffect().doBeamEffect(align, out.getVoid() != 0, Math.min(BeamUtil.MAX_EFFECT_POWER, outPower), beamHitResult);
+						align.getEffect().doBeamEffect(align, out.isVoidVariant(), Math.min(BeamUtil.MAX_EFFECT_POWER, outPower), beamHitResult);
 					}
 				}
 			}
