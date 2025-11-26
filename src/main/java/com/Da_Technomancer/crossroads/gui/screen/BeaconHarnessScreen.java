@@ -26,7 +26,7 @@ public class BeaconHarnessScreen extends AbstractContainerScreen<BeaconHarnessCo
 
 	@Override
 	public void render(GuiGraphics matrix, int mouseX, int mouseY, float partialTicks){
-		renderBackground(matrix);
+		renderBackground(matrix, mouseX, mouseY, partialTicks);
 		super.render(matrix, mouseX, mouseY, partialTicks);
 		renderTooltip(matrix, mouseX, mouseY);
 	}

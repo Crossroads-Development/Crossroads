@@ -86,7 +86,7 @@ public class SequenceBoxScreen extends AbstractContainerScreen<SequenceBoxContai
 
 	@Override
 	public void render(GuiGraphics matrix, int mouseX, int mouseY, float partialTicks){
-		renderBackground(matrix);
+		renderBackground(matrix, mouseX, mouseY, partialTicks);
 		super.render(matrix, mouseX, mouseY, partialTicks);
 //		RenderSystem.disableLighting();
 //		RenderSystem.disableBlend();
@@ -132,9 +132,9 @@ public class SequenceBoxScreen extends AbstractContainerScreen<SequenceBoxContai
 	}
 
 	@Override
-	public boolean mouseScrolled(double mouseX, double mouseY, double delta){
+	public boolean mouseScrolled(double mouseX, double mouseY, double pScrollX, double pScrollY){
 		//Allow moving selection up/down with the scroll wheel
-		return keyPressed(delta < 0 ? GLFW.GLFW_KEY_DOWN : GLFW.GLFW_KEY_UP, 0, 0);
+		return keyPressed(pScrollY < 0 ? GLFW.GLFW_KEY_DOWN : GLFW.GLFW_KEY_UP, 0, 0);
 	}
 
 	@Override

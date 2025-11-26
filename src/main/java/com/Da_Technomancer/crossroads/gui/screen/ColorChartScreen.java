@@ -65,7 +65,7 @@ public class ColorChartScreen extends AbstractContainerScreen<ColorChartContaine
 
 	@Override
 	public void render(GuiGraphics matrix, int mouseX, int mouseY, float partialTicks){
-		renderBackground(matrix);
+		renderBackground(matrix, mouseX, mouseY, partialTicks);
 		super.render(matrix, mouseX, mouseY, partialTicks);
 
 		//Tooltip

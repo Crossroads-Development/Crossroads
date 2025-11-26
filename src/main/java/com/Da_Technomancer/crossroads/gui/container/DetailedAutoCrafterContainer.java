@@ -17,6 +17,7 @@ public class DetailedAutoCrafterContainer extends BlockMenuContainer<DetailedAut
 	private final ContainerData containerData;
 	private final ResultContainer resultContainer = new ResultContainer();
 
+
 	public DetailedAutoCrafterContainer(int id, Inventory playerInventory, FriendlyByteBuf data){
 		super(CRContainers.DETAILED_AUTO_CRAFTER_CONTAINER.get(), id, playerInventory, data);
 		//Called on client side
@@ -40,6 +41,10 @@ public class DetailedAutoCrafterContainer extends BlockMenuContainer<DetailedAut
 
 		addDataSlots(containerData);
 		refreshRecipeResult();
+	}
+
+	public DetailedAutoCrafterTileEntity getTE(){
+		return te;
 	}
 
 	@Override

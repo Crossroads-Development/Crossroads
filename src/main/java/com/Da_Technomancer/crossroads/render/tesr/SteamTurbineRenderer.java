@@ -1,6 +1,5 @@
 package com.Da_Technomancer.crossroads.render.tesr;
 
-import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.blocks.rotary.SteamTurbineTileEntity;
@@ -25,9 +24,9 @@ public class SteamTurbineRenderer implements BlockEntityRenderer<SteamTurbineTil
 	@Override
 	public void render(SteamTurbineTileEntity te, float partialTicks, PoseStack matrix, MultiBufferSource buffer, int combinedLight, int combinedOverlay){
 		matrix.translate(0.5D, 0.5D, 0.5D);
-		IAxleHandler opt = te.getCapability(CRCapabilities.AXLE_CAPABILITY, null);
-		if(opt.isPresent()){
-			matrix.mulPose(Axis.YP.rotationDegrees(opt.orElseThrow(NullPointerException::new).getAngle(partialTicks)));
+		IAxleHandler opt = te.getAxleHandler(null);
+		if(opt != null){
+			matrix.mulPose(Axis.YP.rotationDegrees(opt.getAngle(partialTicks)));
 		}
 		//Draw central axle
 		CRModels.drawAxle(matrix, buffer, combinedLight, new Color(160, 160, 160));

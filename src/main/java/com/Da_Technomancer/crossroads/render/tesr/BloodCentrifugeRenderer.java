@@ -35,8 +35,8 @@ public class BloodCentrifugeRenderer implements BlockEntityRenderer<BloodCentrif
 	@Override
 	public void render(BloodCentrifugeTileEntity te, float partialTicks, PoseStack matrix, MultiBufferSource buffer, int combinedLight, int combinedOverlay){
 		BlockState state = te.getBlockState();
-		IAxleHandler axle = te.getCapability(CRCapabilities.AXLE_CAPABILITY, null);
-		if(state.getBlock() != CRBlocks.bloodCentrifuge || !axle.isPresent()){
+		IAxleHandler axle = te.getAxleHandler(null);
+		if(state.getBlock() != CRBlocks.bloodCentrifuge || axle == null){
 			return;
 		}
 		int sampleCount = state.getValue(CRProperties.CONTENTS);
@@ -44,7 +44,7 @@ public class BloodCentrifugeRenderer implements BlockEntityRenderer<BloodCentrif
 
 		matrix.translate(.5F, .5F, .5F);
 		//Rotate
-		matrix.mulPose(Axis.YP.rotationDegrees((float) RotaryUtil.getCCWSign(Direction.UP) * axle.orElseThrow(NullPointerException::new).getAngle(partialTicks)));
+		matrix.mulPose(Axis.YP.rotationDegrees((float) RotaryUtil.getCCWSign(Direction.UP) * axle.getAngle(partialTicks)));
 
 		Color ironCol = CRMaterialLibrary.findMaterial("iron").getColor();
 		Color tinCol = CRMaterialLibrary.findMaterial("tin").getColor();
@@ -59,7 +59,7 @@ public class BloodCentrifugeRenderer implements BlockEntityRenderer<BloodCentrif
 
 		//Draw sample 'holder'
 		matrix.translate(0, 0.4F, 0);
-		CRModels.drawBox(matrix, builder, combinedLight, new int[] {tinCol.getRed(), tinCol.getGreen(), tinCol.getBlue(), tinCol.getAlpha()}, supportWid, supportHeight, supportLen, sSprite.getU0(), sSprite.getV0(), sSprite.getU(supportWid * 32D), sSprite.getV(supportLen * 32D), sSprite.getU0(), sSprite.getV0(), sSprite.getU(supportLen * 32D), sSprite.getV(supportHeight * 32D), sSprite.getU0(), sSprite.getV0(), sSprite.getU(supportWid * 32D), sSprite.getV(supportHeight * 32D));
+		CRModels.drawBox(matrix, builder, combinedLight, new int[] {tinCol.getRed(), tinCol.getGreen(), tinCol.getBlue(), tinCol.getAlpha()}, supportWid, supportHeight, supportLen, sSprite.getU0(), sSprite.getV0(), sSprite.getU(supportWid * 32F), sSprite.getV(supportLen * 32F), sSprite.getU0(), sSprite.getV0(), sSprite.getU(supportLen * 32F), sSprite.getV(supportHeight * 32F), sSprite.getU0(), sSprite.getV0(), sSprite.getU(supportWid * 32F), sSprite.getV(supportHeight * 32F));
 
 		//Draw sample(s), if present
 		for(int i = 0; i < sampleCount; i++){

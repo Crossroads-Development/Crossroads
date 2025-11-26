@@ -4,8 +4,9 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.api.CircuitUtil;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.beams.BeamUnit;
+import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.crossroads.gui.container.BeamExtractorCreativeContainer;
-import com.Da_Technomancer.essentials.api.packets.EssentialsPackets;
+import com.Da_Technomancer.essentials.api.packets.SendNBTToTE;
 import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
@@ -68,7 +69,7 @@ public class BeamExtractorCreativeScreen extends AbstractContainerScreen<BeamExt
 
 	@Override
 	public void render(GuiGraphics matrix, int mouseX, int mouseY, float partialTicks){
-		renderBackground(matrix);
+		renderBackground(matrix, mouseX, mouseY, partialTicks);
 		super.render(matrix, mouseX, mouseY, partialTicks);
 //		RenderSystem.disableLighting();
 		RenderSystem.disableBlend();
@@ -93,7 +94,7 @@ public class BeamExtractorCreativeScreen extends AbstractContainerScreen<BeamExt
 		menu.output = new BeamUnit(newOutput);
 		menu.output.writeToNBT("value", nbt);
 		if(menu.pos != null){
-			EssentialsPackets.channel.sendToServer(new SendNBTToServer(nbt, menu.pos));
+			CRPackets.sendPacketToServer(new SendNBTToTE(nbt, menu.pos));
 		}
 	}
 

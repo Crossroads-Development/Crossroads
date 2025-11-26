@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.render.tesr;
 
 import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.api.templates.ModuleTE;
@@ -33,15 +32,15 @@ public class DynamoRenderer implements BlockEntityRenderer<ModuleTE>{
 		}
 
 		Direction facing = dynamo.getBlockState().getValue(CRProperties.HORIZ_FACING);
-		IAxleHandler axle = dynamo.getCapability(CRCapabilities.AXLE_CAPABILITY, null);
-		if(!axle.isPresent()){
+		IAxleHandler axle = dynamo.getAxleHandler(null);
+		if(axle == null){
 			return;
 		}
 
 		matrix.translate(0.5D, 0.5D, 0.5D);
 		matrix.mulPose(Axis.YP.rotationDegrees(270F - facing.toYRot()));
 		matrix.mulPose(Axis.ZP.rotationDegrees(90));
-		matrix.mulPose(Axis.YP.rotationDegrees(-facing.getAxisDirection().getStep() * axle.orElseThrow(NullPointerException::new).getAngle(partialTicks)));
+		matrix.mulPose(Axis.YP.rotationDegrees(-facing.getAxisDirection().getStep() * axle.getAngle(partialTicks)));
 		CRModels.drawAxle(matrix, buffer, combinedLight, CRMaterialLibrary.findMaterial("iron").getColor());
 
 		matrix.translate(0, 0.45626D, 0);

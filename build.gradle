@@ -28,11 +28,8 @@ repositories {
 		}
 	}
 	maven {url "https://maven.theillusivec4.top/"} //Curios
-	maven {
-		//Create, Flywheel, Registrate
-		name = 'tterrag maven'
-		url = 'https://maven.tterrag.com/'
-	}
+	maven { url = "https://maven.createmod.net" } // Create, Ponder, Flywheel
+	maven { url = "https://maven.ithundxr.dev/snapshots" } // Registrate
 	maven {
 		url "https://cursemaven.com"
 		content {
@@ -178,11 +175,11 @@ dependencies {
 	// We add the full version of JEI to localRuntime, not runtimeOnly, so that we do not publish a dependency on it
 	localRuntime "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
 
-	//TODO None of these are on 1.21 yet
-	//TODO Create specified transitive = false using forge; can't figure out how to do that with neoforge
-	//compileOnly "com.simibubi.create:create-$minecraft_version:$create_version:slim"
-	//compileOnly "com.jozufozu.flywheel:flywheel-forge-$minecraft_version:$flywheel_version"
-	//compileOnly "com.tterrag.registrate:Registrate:$registrate_version"
+	compileOnly("com.simibubi.create:create-${create_minecraft_version}:${create_version}:slim") { transitive = false }
+	compileOnly("net.createmod.ponder:Ponder-NeoForge-${create_minecraft_version}:${ponder_version}")
+	compileOnly("dev.engine-room.flywheel:flywheel-neoforge-api-${create_minecraft_version}:${flywheel_version}")
+//	runtimeOnly("dev.engine-room.flywheel:flywheel-neoforge-${create_minecraft_version}:${flywheel_version}")
+	compileOnly("com.tterrag.registrate:Registrate:${registrate_version}")
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

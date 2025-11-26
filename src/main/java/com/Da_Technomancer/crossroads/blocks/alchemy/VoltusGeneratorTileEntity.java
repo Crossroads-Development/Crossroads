@@ -31,7 +31,7 @@ public class VoltusGeneratorTileEntity extends BlockEntity implements ITickableT
 	public static final BlockEntityType<VoltusGeneratorTileEntity> TYPE = CRTileEntity.createType(VoltusGeneratorTileEntity::new, CRBlocks.voltusGenerator);
 
 	private static final int VOLTUS_CAPACITY = 100;
-	private static final int FE_CAPACITY = 100_000;
+	private static final int FE_CAPACITY = 1_000_000;
 	private int voltusAmount = 0;
 	private int fe = 0;
 

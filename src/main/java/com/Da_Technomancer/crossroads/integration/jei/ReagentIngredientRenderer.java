@@ -6,9 +6,9 @@ import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
+import mezz.jei.api.gui.builder.ITooltipBuilder;
 import mezz.jei.api.ingredients.IIngredientRenderer;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.TooltipFlag;
@@ -36,23 +36,22 @@ public class ReagentIngredientRenderer implements IIngredientRenderer<ReagIngr>{
 		matrix.pushPose();
 //		matrix.translate(xPosition, yPosition, 0);
 
-		BufferBuilder buf = Tesselator.getInstance().getBuilder();
-		RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
 		RenderSystem.setShaderTexture(0, PHIAL_TEXTURE);
-		buf.begin(VertexFormat.Mode.QUADS, CRRenderTypes.POSITION_COLOR_TEX);
+		RenderSystem.setShader(CRRenderTypes::getPositionColorTexShaderInstance);
+		BufferBuilder buf = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, CRRenderTypes.POSITION_COLOR_TEX);
 		buf.addVertex(matrix.last().pose(), 0, 16, 100).setColor(255, 255, 255, 255).setUv(0, 1);
 		buf.addVertex(matrix.last().pose(), 16, 16, 100).setColor(255, 255, 255, 255).setUv(1, 1);
 		buf.addVertex(matrix.last().pose(), 16, 0, 100).setColor(255, 255, 255, 255).setUv(1, 0);
 		buf.addVertex(matrix.last().pose(), 0, 0, 100).setColor(255, 255, 255, 255).setUv(0, 0);
-		Tesselator.getInstance().end();
+		BufferUploader.drawWithShader(buf.buildOrThrow());
 
 		RenderSystem.setShaderTexture(0, INNER_TEXTURE);
-		buf.begin(VertexFormat.Mode.QUADS, CRRenderTypes.POSITION_COLOR_TEX);
+		buf = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, CRRenderTypes.POSITION_COLOR_TEX);
 		buf.addVertex(matrix.last().pose(), 0, 16, 200).setColor(col[0], col[1], col[2], col[3]).setUv(0, 1);
 		buf.addVertex(matrix.last().pose(), 16, 16, 200).setColor(col[0], col[1], col[2], col[3]).setUv(1, 1);
 		buf.addVertex(matrix.last().pose(), 16, 0, 200).setColor(col[0], col[1], col[2], col[3]).setUv(1, 0);
 		buf.addVertex(matrix.last().pose(), 0, 0, 200).setColor(col[0], col[1], col[2], col[3]).setUv(0, 0);
-		Tesselator.getInstance().end();
+		BufferUploader.drawWithShader(buf.buildOrThrow());
 
 		matrix.popPose();
 
@@ -62,6 +61,8 @@ public class ReagentIngredientRenderer implements IIngredientRenderer<ReagIngr>{
 	}
 
 	@Override
+	@Deprecated
+	@SuppressWarnings("deprecated")
 	public List<Component> getTooltip(ReagIngr ingredient, TooltipFlag tooltipFlag){
 		ArrayList<Component> tooltip = new ArrayList<>(3);
 		tooltip.add(Component.literal(ingredient.getReag().getName()));
@@ -76,5 +77,20 @@ public class ReagentIngredientRenderer implements IIngredientRenderer<ReagIngr>{
 			tooltip.add(Component.translatable("tt.crossroads.jei.reag.id", ingredient.getReag().getID()));
 		}
 		return tooltip;
+	}
+
+	@Override
+	public void getTooltip(ITooltipBuilder builder, ReagIngr ingredient, TooltipFlag tooltipFlag){
+		builder.add(Component.literal(ingredient.getReag().getName()));
+		if(ingredient.getParts() > 0){
+			if(ingredient.getParts() == 1){
+				builder.add(Component.translatable("tt.crossroads.jei.reag.amount.single", ingredient.getParts()));
+			}else{
+				builder.add(Component.translatable("tt.crossroads.jei.reag.amount.plural", ingredient.getParts()));
+			}
+		}
+		if(tooltipFlag.isAdvanced()){
+			builder.add(Component.translatable("tt.crossroads.jei.reag.id", ingredient.getReag().getID()));
+		}
 	}
 }

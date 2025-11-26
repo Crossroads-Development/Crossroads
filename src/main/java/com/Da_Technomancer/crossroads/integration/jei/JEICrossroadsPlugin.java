@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.api.alchemy.ReagentManager;
 import com.Da_Technomancer.crossroads.api.crafting.IOptionalRecipe;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
+import com.Da_Technomancer.crossroads.gui.container.DetailedAutoCrafterContainer;
 import com.Da_Technomancer.crossroads.gui.container.DetailedCrafterContainer;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.item_sets.OreProfileItem;
@@ -78,7 +79,8 @@ public class JEICrossroadsPlugin implements IModPlugin{
 	public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration){
 		registration.addRecipeTransferHandler(DetailedCrafterContainer.class, null, DetailedCrafterCategory.TYPE, 1, 9, 10, 36);
 		registration.addRecipeTransferHandler(DetailedCrafterContainer.class, null, RecipeTypes.CRAFTING, 1, 9, 10, 36);
-		registration.addRecipeTransferHandler(new DetailedAutoCrafterTransfers.DetailedRecipeTransfer(registration.getTransferHelper()), DetailedCrafterCategory.TYPE);
+		registration.addRecipeTransferHandler(DetailedAutoCrafterContainer.class, null, DetailedCrafterCategory.TYPE, 0, 9, 11, 36);
+		registration.addRecipeTransferHandler(DetailedAutoCrafterContainer.class, null, RecipeTypes.CRAFTING, 0, 9, 11, 36);
 	}
 
 	@Override

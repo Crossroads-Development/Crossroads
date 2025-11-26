@@ -1,9 +1,10 @@
 package com.Da_Technomancer.crossroads.gui.screen;
 
 import com.Da_Technomancer.crossroads.api.CircuitUtil;
+import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.crossroads.gui.container.HeatReservoirCreativeContainer;
 import com.Da_Technomancer.essentials.Essentials;
-import com.Da_Technomancer.essentials.api.packets.EssentialsPackets;
+import com.Da_Technomancer.essentials.api.packets.SendNBTToTE;
 import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
@@ -52,7 +53,7 @@ public class HeatReservoirCreativeScreen extends AbstractContainerScreen<HeatRes
 
 	@Override
 	public void render(GuiGraphics matrix, int mouseX, int mouseY, float partialTicks){
-		renderBackground(matrix);
+		renderBackground(matrix, mouseX, mouseY, partialTicks);
 		super.render(matrix, mouseX, mouseY, partialTicks);
 //		RenderSystem.disableLighting();
 		RenderSystem.disableBlend();
@@ -71,7 +72,7 @@ public class HeatReservoirCreativeScreen extends AbstractContainerScreen<HeatRes
 		nbt.putFloat("value", output);
 		nbt.putString("config", newFilter);
 		if(menu.pos != null){
-			EssentialsPackets.channel.sendToServer(new SendNBTToServer(nbt, menu.pos));
+			CRPackets.sendPacketToServer(new SendNBTToTE(nbt, menu.pos));
 		}
 	}
 

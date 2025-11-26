@@ -72,7 +72,11 @@ public class CRRenderTypes extends RenderType{
 
 	//Shader
 	private static ShaderInstance positionColorTexShaderInstance;
-	private static final ShaderStateShard POSITION_COLOR_TEX_SHADER = new ShaderStateShard(() -> positionColorTexShaderInstance);
+
+	public static ShaderInstance getPositionColorTexShaderInstance(){
+		return positionColorTexShaderInstance;
+	}
+	private static final ShaderStateShard POSITION_COLOR_TEX_SHADER = new ShaderStateShard(CRRenderTypes::getPositionColorTexShaderInstance);
 
 	//Types
 	public static final RenderType BEAM_TYPE = RenderType.create("cr_beam", POSITION_COLOR_TEX, VertexFormat.Mode.QUADS, 256, false, true, RenderType.CompositeState.builder().setShaderState(POSITION_COLOR_TEX_SHADER).setCullState(RenderStateShard.NO_CULL).setTextureState(new RenderStateShard.TextureStateShard(BEAM_TEXTURE, false, false)).setTransparencyState(CRConfig.beamTransparent.get() ? TransparencyStateShard.ADDITIVE_TRANSPARENCY : TransparencyStateShard.NO_TRANSPARENCY).createCompositeState(false));

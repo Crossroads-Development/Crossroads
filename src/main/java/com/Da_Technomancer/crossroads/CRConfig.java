@@ -32,7 +32,7 @@ public class CRConfig{
 	public static ModConfigSpec.ConfigValue<List<? extends String>> gearTypes;
 	public static ModConfigSpec.DoubleValue speedPrecision;
 	public static ModConfigSpec.BooleanValue enchantDestruction;
-	//	public static ModConfigSpec.ConfigValue<String> retrogen; TODO
+	//	public static ModConfigSpec.ConfigValue<String> retrogen;
 	public static ModConfigSpec.BooleanValue heatEffects;
 	public static ModConfigSpec.EnumValue<EnumPath.MultiPathMode> multiPathMode;
 	public static ModConfigSpec.BooleanValue fluxEvent;
@@ -236,7 +236,7 @@ public class CRConfig{
 		atmosEffect = serverBuilder.comment("Level of effects from overcharging the atmosphere", "0: No negative effects", "1: Allow lightning strikes", "2: Allow creeper charging", "3: Allow lightning strikes & creeper charging").defineInRange("atmos_effects", 3, 0, 3);
 		atmosLightningHorsemen = serverBuilder.comment("Whether lightning bolts from atmospheric overcharging can spawn the 4 horsemen", "Overriden by gamerules").define("atmos_horses", true);
 		atmosCap = serverBuilder.comment("Maximum charge for the atmosphere").defineInRange("charge_limit", 1_000_000_000, 0, 2_000_000_000);
-		voltusValue = serverBuilder.comment("FE produced by one Voltus").defineInRange("voltus_power", 2_000, 0, 100_000);
+		voltusValue = serverBuilder.comment("FE produced by one Voltus").defineInRange("voltus_power", 50_000, 0, 1_000_000);
 		gravRange = serverBuilder.comment("Range of Density Plates").defineInRange("grav_range", 64, 0, 128);
 		gravAccel = serverBuilder.comment("Acceleration of Density Plates", "In blocks/tick/tick, where normal gravity ~0.08").defineInRange("grav_accel", 0.15D, 0, 10D);
 		riftSpawnDrops = serverBuilder.comment("If true, rift beams will spawn mob drops instead of actual mobs", "Rift beams do this regardless of config setting in peaceful mode").define("rift_drops", false);

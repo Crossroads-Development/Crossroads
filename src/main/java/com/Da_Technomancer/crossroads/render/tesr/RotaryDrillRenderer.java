@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.render.tesr;
 
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.api.rotary.RotaryUtil;
@@ -28,9 +27,9 @@ public class RotaryDrillRenderer implements BlockEntityRenderer<RotaryDrillTileE
 	@Override
 	public void render(RotaryDrillTileEntity te, float partialTicks, PoseStack matrix, MultiBufferSource buffer, int combinedLight, int combinedOverlay){
 		BlockState state = te.getBlockState();
-		IAxleHandler axle = te.getCapability(CRCapabilities.AXLE_CAPABILITY, null);
+		IAxleHandler axle = te.getAxleHandler(null);
 
-		if(!(state.getBlock() instanceof RotaryDrill) || !axle.isPresent()){
+		if(!(state.getBlock() instanceof RotaryDrill) || axle == null){
 			return;
 		}
 
@@ -41,7 +40,7 @@ public class RotaryDrillRenderer implements BlockEntityRenderer<RotaryDrillTileE
 		matrix.mulPose(dir.getRotation());
 
 		//Rotate w/ gear angle
-		matrix.mulPose(Axis.YP.rotationDegrees(axle.orElseThrow(NullPointerException::new).getAngle(partialTicks) * (float) RotaryUtil.getCCWSign(dir)));
+		matrix.mulPose(Axis.YP.rotationDegrees(axle.getAngle(partialTicks) * (float) RotaryUtil.getCCWSign(dir)));
 
 		TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(CRRenderTypes.DRILL_TEXTURE);
 
