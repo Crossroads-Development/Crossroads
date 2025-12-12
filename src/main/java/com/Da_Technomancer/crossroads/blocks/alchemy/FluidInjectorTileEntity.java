@@ -1,23 +1,22 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
-import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.api.alchemy.IChemicalHandler;
 import com.Da_Technomancer.crossroads.api.alchemy.ReagentHolderTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
+import com.Da_Technomancer.essentials.api.IFluidCapable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.apache.commons.lang3.tuple.Pair;
 import org.joml.Vector3f;
 
 import javax.annotation.Nullable;
 
-public class FluidInjectorTileEntity extends ReagentHolderTE{
+public class FluidInjectorTileEntity extends ReagentHolderTE implements IFluidCapable{
 
 	public static final BlockEntityType<FluidInjectorTileEntity> TYPE = CRTileEntity.createType(FluidInjectorTileEntity::new, CRBlocks.fluidInjectorCrystal, CRBlocks.fluidInjectorGlass);
 
@@ -48,6 +47,7 @@ public class FluidInjectorTileEntity extends ReagentHolderTE{
 	@Override
 	@Nullable
 	public IFluidHandler getFluidHandler(Direction dir){
+		//Allow pipes access to the internal fluid handler normally used for bucketing fluids in & out
 		if(dir == null || dir == Direction.UP){
 			return getInternalFluidHandler();
 		}

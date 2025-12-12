@@ -12,6 +12,7 @@ import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.BloodBeamLinkerContainer;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.witchcraft.BloodSample;
+import com.Da_Technomancer.essentials.api.IItemCapable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -30,7 +31,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
-public class BloodBeamLinkerTileEntity extends InventoryTE implements IBeamCapable{
+public class BloodBeamLinkerTileEntity extends InventoryTE implements IBeamCapable, IItemCapable{
 
 	public static final BlockEntityType<BloodBeamLinkerTileEntity> TYPE = CRTileEntity.createType(BloodBeamLinkerTileEntity::new, CRBlocks.bloodBeamLinker);
 
@@ -122,8 +123,9 @@ public class BloodBeamLinkerTileEntity extends InventoryTE implements IBeamCapab
 				return;
 			}
 			long beamCycle = level.getGameTime() / BeamUtil.BEAM_TIME;
-			UUID srcUUID;
-			if(beamCycle != lastActiveBeamCycle && inventory[0].getItem() instanceof BloodSample && (srcUUID = BloodSample.getEntityTypeData(inventory[0]).getOriginatingUUID()) != null){
+			BloodSample.EntitySourceData sourceData;
+			if(beamCycle != lastActiveBeamCycle && inventory[0].getItem() instanceof BloodSample && (sourceData = inventory[0].get(CRItems.ENTITY_SOURCE_DATA)) != null){
+				UUID srcUUID = sourceData.effectiveUUID();
 				//Only allow one beam effect per cycle
 				lastActiveBeamCycle = beamCycle;
 				ServerLevel serverLevel = (ServerLevel) level;

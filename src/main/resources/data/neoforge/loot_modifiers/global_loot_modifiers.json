@@ -1,6 +1,7 @@
 {
 	"replace": false,
 	"entries": [
-		"crossroads:piglin_rubies"
+		"crossroads:piglin_rubies",
+		"crossroads:sized_mob_loot"
 	]
 }

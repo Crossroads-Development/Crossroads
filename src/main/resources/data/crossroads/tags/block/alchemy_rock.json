@@ -1,18 +1,18 @@
 {
 	"replace": false,
 	"values": [
-		"#forge:cobblestone",
+		"#c:cobblestones",
 		"#minecraft:base_stone_overworld",
 		"#minecraft:base_stone_nether",
-		"#forge:gravel",
-		"#forge:obsidian",
+		"#c:gravels",
+		"#c:obsidians",
 		"#c:ores",
-		"#forge:sandstone",
+		"#c:blocks/sandstone/block",
 		"minecraft:packed_ice",
 		"minecraft:prismarine",
 		"minecraft:prismarine_bricks",
 		"minecraft:dark_prismarine",
-		"#forge:end_stones",
+		"#c:end_stones",
 		"minecraft:magma_block"
 	]
 }

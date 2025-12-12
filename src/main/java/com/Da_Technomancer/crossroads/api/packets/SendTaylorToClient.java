@@ -19,6 +19,7 @@ import java.util.Arrays;
  * Sends a Taylor series to the client. Used by Master Axes to reduce packet overhead
  */
 public record SendTaylorToClient(long timestamp, ArrayList<Float> terms, BlockPos pos) implements CustomPacketPayload{
+
 	public static final CustomPacketPayload.Type<SendTaylorToClient> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "send_taylor_client"));
 
 	public static final StreamCodec<ByteBuf, SendTaylorToClient> STREAM_CODEC = StreamCodec.composite(
@@ -29,8 +30,6 @@ public record SendTaylorToClient(long timestamp, ArrayList<Float> terms, BlockPo
 	);
 
 	public SendTaylorToClient(long timestamp, float[] terms, BlockPos pos){
-		//TODO: it's more convenient to make a streamcodec for an ArrayList than an Array; should either use ofMember
-		// and manually write buffer or switch to ArrayLists up/downstream from here.
 		this(timestamp, new ArrayList(Arrays.asList(terms)), pos);
 	}
 

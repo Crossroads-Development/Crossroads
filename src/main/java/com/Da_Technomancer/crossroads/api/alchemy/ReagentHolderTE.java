@@ -14,7 +14,6 @@ import com.Da_Technomancer.crossroads.api.templates.IInfoTE;
 import com.Da_Technomancer.crossroads.api.templates.IReagRenderTE;
 import com.Da_Technomancer.crossroads.items.alchemy.AbstractGlassware;
 import com.Da_Technomancer.essentials.api.BlockUtil;
-import com.Da_Technomancer.essentials.api.IFluidCapable;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -53,7 +52,7 @@ import java.util.function.Supplier;
  * Helper implementation for a tile entity that stores reagents, optional support for connecting to conduits and/or heat cables
  * Implementations must override getCapability to connect to anything
  */
-public abstract class ReagentHolderTE extends BlockEntity implements ITickableTileEntity, IInfoTE, IReagRenderTE, IIntArrayReceiver, IChemicalCapable, IFluidCapable{
+public abstract class ReagentHolderTE extends BlockEntity implements ITickableTileEntity, IInfoTE, IReagRenderTE, IIntArrayReceiver, IChemicalCapable{
 
 	protected boolean init = false;
 	protected double cableTemp = 0;
@@ -139,13 +138,9 @@ public abstract class ReagentHolderTE extends BlockEntity implements ITickableTi
 	}
 
 	@Override
-	@Nullable
-	public IFluidHandler getFluidHandler(Direction direction){
-		// TODO: RegentHolderTE implements an internal fluid buffer that, as far as I can see, is only used by the
-		//  FluidInjectorTileEntity - which is also the only child that allows requests for a FluidHandler. It seems
-		//  like the fluid buffer should be stored on that class instead, and *it* should implement IFluidCapable,
-		//  but I am not addressing that on this pass. Anyway, this returns null as a default.
-		return null;
+	public void setBlockState(BlockState pBlockState){
+		super.setBlockState(pBlockState);
+		level.invalidateCapabilities(worldPosition);
 	}
 
 	protected void destroyCarrier(float strength){

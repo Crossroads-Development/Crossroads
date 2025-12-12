@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.render.tesr;
 import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
 import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
+import com.Da_Technomancer.crossroads.api.rotary.IAxleCapable;
 import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.api.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.blocks.electric.Dynamo;
@@ -32,7 +33,7 @@ public class DynamoRenderer implements BlockEntityRenderer<ModuleTE>{
 		}
 
 		Direction facing = dynamo.getBlockState().getValue(CRProperties.HORIZ_FACING);
-		IAxleHandler axle = dynamo.getAxleHandler(null);
+		IAxleHandler axle = ((IAxleCapable) dynamo).getAxleHandler(null);
 		if(axle == null){
 			return;
 		}

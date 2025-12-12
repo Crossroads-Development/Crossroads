@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.blocks.fluid;
 
 import com.Da_Technomancer.crossroads.CRConfig;
-import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
+import com.Da_Technomancer.crossroads.api.heat.IHeatCapable;
 import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -10,6 +10,8 @@ import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.FatCollectorContainer;
 import com.Da_Technomancer.crossroads.items.CRItems;
+import com.Da_Technomancer.essentials.api.IFluidCapable;
+import com.Da_Technomancer.essentials.api.IItemCapable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -20,14 +22,13 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 
-public class FatCollectorTileEntity extends InventoryTE{
+public class FatCollectorTileEntity extends InventoryTE implements IHeatCapable, IFluidCapable, IItemCapable{
 
 	public static final BlockEntityType<FatCollectorTileEntity> TYPE = CRTileEntity.createType(FatCollectorTileEntity::new, CRBlocks.fatCollector);
 
@@ -44,11 +45,6 @@ public class FatCollectorTileEntity extends InventoryTE{
 	@Override
 	public int fluidTanks(){
 		return 1;
-	}
-
-	@Override
-	public boolean useHeat(){
-		return true;
 	}
 
 	@Override
@@ -94,6 +90,11 @@ public class FatCollectorTileEntity extends InventoryTE{
 		return null;
 	}
 
+	@Nullable
+	@Override
+	public IItemHandler getItemHandler(Direction direction){
+		return itemHandler;
+	}
 
 	@Override
 	public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction){

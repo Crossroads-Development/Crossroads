@@ -1,11 +1,16 @@
 package com.Da_Technomancer.crossroads.api.packets;
 
 import com.mojang.datafixers.util.*;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 
 public class StreamCodecUtils{
+
 	public static <B, C, T1, T2, T3, T4, T5, T6, T7> StreamCodec<B, C> composite(final StreamCodec<? super B, T1> pCodec1, final Function<C, T1> pGetter1, final StreamCodec<? super B, T2> pCodec2, final Function<C, T2> pGetter2, final StreamCodec<? super B, T3> pCodec3, final Function<C, T3> pGetter3, final StreamCodec<? super B, T4> pCodec4, final Function<C, T4> pGetter4, final StreamCodec<? super B, T5> pCodec5, final Function<C, T5> pGetter5, final StreamCodec<? super B, T6> pCodec6, final Function<C, T6> pGetter6, final StreamCodec<? super B, T7> pCodec7, final Function<C, T7> pGetter7, final Function7<T1, T2, T3, T4, T5, T6, T7, C> pFactory){
 		return new StreamCodec<B, C>(){
 			public C decode(B p_330310_){
@@ -163,4 +168,37 @@ public class StreamCodecUtils{
 		};
 	}
 
+	/**
+	 * StreamCodec version of Codec::dispatchedMap
+	 */
+	public static <B extends ByteBuf, K, V> StreamCodec<B, Map<K, V>> dispatchedMap(final StreamCodec<B, K> keyCodec, final Function<K, StreamCodec<B, ? extends V>> valueCodecFunction){
+		return new StreamCodec<B, Map<K, V>>(){
+
+			@Override
+			public void encode(B buffer, final Map<K, V> input){
+				ByteBufCodecs.VAR_INT.encode(buffer, input.size());//Encode map size
+				for(final Map.Entry<K, V> entry : input.entrySet()){
+					final K key = entry.getKey();
+					keyCodec.encode(buffer, key);
+					encodeValue(valueCodecFunction.apply(key), buffer, entry.getValue());
+				}
+			}
+
+			private <T, V2 extends V> void encodeValue(final StreamCodec<B, V2> codec, B buffer, final V input) {
+				codec.encode(buffer, (V2) input);
+			}
+
+			@Override
+			public Map<K, V> decode(B buffer){
+				final int size = ByteBufCodecs.VAR_INT.decode(buffer);
+				HashMap<K, V> result = new HashMap<>(size);
+				for(int i = 0; i < size; i++){
+					K key = keyCodec.decode(buffer);
+					V value = valueCodecFunction.apply(key).decode(buffer);
+					result.put(key, value);
+				}
+				return result;
+			}
+		};
+	}
 }

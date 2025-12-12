@@ -16,7 +16,7 @@ import java.util.List;
 public class Embryo extends Item implements ICultivatable{
 
 	private static final long LIFETIME = 30 * 60 * 20;//30 minutes
-	private static final int FREEZE_DEGRADE = 1;
+	private static final int FREEZE_DEGRADE = 10;
 
 	public Embryo(){
 		super(new Item.Properties().stacksTo(1));//Not added to any creative tab
@@ -36,36 +36,31 @@ public class Embryo extends Item implements ICultivatable{
 
 	/**
 	 * Writes the template and freeze history to the stack
-	 * The passed template may be modified
 	 * @param stack The stack to write to
 	 * @param template The template, as would be returned from getEntityTypeData
 	 * @param wasFrozen Whether this item should have been frozen in the past
 	 */
 	public void withEntityTypeData(ItemStack stack, EntityTemplate template, boolean wasFrozen){
-		setWasFrozen(stack, wasFrozen);
-		if(wasFrozen){
-			//getEntityTypeData inflates the degradation value for frozen items. We account for this here
-			template.setDegradation(template.getDegradation() - FREEZE_DEGRADE);
-		}
+		stack.set(CRItems.WAS_FROZEN_DATA, wasFrozen);
 		stack.set(CRItems.GENETICS_DATA, template);
 	}
 
+	@Override
+	public ItemStack doFreezeDamage(ItemStack stack, Level world){
+		//damage the template
+		EntityTemplate prevTemplate = getEntityTypeData(stack);
+		stack.set(CRItems.GENETICS_DATA, prevTemplate.withQuality(prevTemplate.quality() - FREEZE_DEGRADE));
+		return stack;
+	}
+
 	public EntityTemplate getEntityTypeData(ItemStack stack){
-		EntityTemplate template = new EntityTemplate(stack.getOrDefault(CRItems.GENETICS_DATA, new EntityTemplate()));
-
-		//If this was frozen, increase degradation
-		//Do not modify the underlying saved template
-		if(wasFrozen(stack)){
-			template.setDegradation(template.getDegradation() + FREEZE_DEGRADE);
-		}
-
-		return template;
+		return stack.getOrDefault(CRItems.GENETICS_DATA, EntityTemplate.DEFAULT);
 	}
 
 	@Override
 	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
 		EntityTemplate template = getEntityTypeData(stack);
-		template.addTooltip(tooltip, 4);
+		template.addTooltip(tooltip, context.level());
 		ICultivatable.addTooltip(stack, context.level(), tooltip);
 	}
 
@@ -84,15 +79,17 @@ public class Embryo extends Item implements ICultivatable{
 
 		ItemStack ingr1 = ItemStack.EMPTY;
 		ItemStack ingr2 = ItemStack.EMPTY;
-		if(template.getEffects().size() > 0){
-			//Require as many mutagen as there are effects applied
-			ingr1 = new ItemStack(CRItems.mutagen, template.getEffects().size());
+		int complexity = template.totalComplexity();
+		if(complexity > 0){
+			//Require as many mutagen as there is complexity
+			ingr1 = new ItemStack(CRItems.mutagen, complexity);
 		}
-		if(template.isRespawning()){
+		int soulComplexity = template.totalSoulComplexity();
+		if(soulComplexity > 0){
 			if(ingr1.isEmpty()){
-				ingr1 = new ItemStack(CRItems.soulCluster);
+				ingr1 = new ItemStack(CRItems.soulCluster, soulComplexity);
 			}else{
-				ingr2 = new ItemStack(CRItems.soulCluster);
+				ingr2 = new ItemStack(CRItems.soulCluster, soulComplexity);
 			}
 		}
 

@@ -19,15 +19,10 @@ public record SendBeamItemToServer(byte[] newSetting) implements CustomPacketPay
 			SendBeamItemToServer::new
 	);
 
-
-	// TODO: This should be server side only. Remove this message before final commit.
-
 	public static void handlePacketServer(final SendBeamItemToServer packet, final IPayloadContext context){
-		// TODO: this used to be a ServerPlayer, supplied as param, but I cannot see how to get one through context.
-		//  Not sure if it matters tho
 		context.enqueueWork(() -> {
-			Player player;
-			if((player = context.player()) != null){
+			Player player = context.player();
+			if(player != null){
 				ItemStack stack;
 				stack = player.getMainHandItem();
 				if(!(stack.getItem() instanceof BeamUsingItem)){

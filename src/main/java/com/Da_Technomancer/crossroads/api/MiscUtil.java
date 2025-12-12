@@ -38,6 +38,7 @@ public final class MiscUtil{
 	public static final Style TT_QUIP = ConfigUtil.TT_QUIP;
 	/**
 	 * A common style applied to parameter values in tooltips
+	 * Equivalent string formatting code is '§e' and reset '§r'
 	 */
 	public static final Style TT_DYNAMIC = Style.EMPTY.applyFormat(ChatFormatting.YELLOW);
 

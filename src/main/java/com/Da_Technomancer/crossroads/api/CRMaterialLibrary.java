@@ -25,6 +25,7 @@ public final class CRMaterialLibrary{
 	private static final ArrayList<GearMaterial> gearMatList = new ArrayList<>();
 	private static OreProfile DEFAULT_ORE_PROFILE;
 	private static GearMaterial DEFAULT_GEAR_MATERIAL;
+	private static boolean hasLoaded = false;
 
 	public static OreProfile findProfile(String id){
 		return metalTypes.getOrDefault(id, getDefaultProfile());
@@ -35,10 +36,12 @@ public final class CRMaterialLibrary{
 	}
 
 	public static Collection<OreProfile> getProfiles(){
+		assert hasLoaded;
 		return metalTypes.values();
 	}
 
 	public static Collection<GearMaterial> getMaterials(){
+		assert hasLoaded;
 		return gearMats.values();
 	}
 
@@ -57,6 +60,7 @@ public final class CRMaterialLibrary{
 	 * @return The Iron OreProfile
 	 */
 	public static OreProfile getDefaultProfile(){
+		assert hasLoaded;
 		return DEFAULT_ORE_PROFILE;
 	}
 
@@ -65,10 +69,12 @@ public final class CRMaterialLibrary{
 	 * @return The Iron GearMaterial
 	 */
 	public static GearMaterial getDefaultMaterial(){
+		assert hasLoaded;
 		return DEFAULT_GEAR_MATERIAL;
 	}
 
 	public static void loadConfig(){
+		hasLoaded = true;
 
 		//GearMaterial stuff
 

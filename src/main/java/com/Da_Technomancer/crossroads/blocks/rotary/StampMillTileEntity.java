@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.blocks.rotary;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.rotary.IAxisHandler;
+import com.Da_Technomancer.crossroads.api.rotary.IAxleCapable;
 import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.api.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
@@ -11,6 +12,7 @@ import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.StampMillRec;
 import com.Da_Technomancer.crossroads.gui.container.StampMillContainer;
+import com.Da_Technomancer.essentials.api.IItemCapable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -33,7 +35,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Optional;
 
-public class StampMillTileEntity extends InventoryTE{
+public class StampMillTileEntity extends InventoryTE implements IAxleCapable, IItemCapable{
 
 	public static final BlockEntityType<StampMillTileEntity> TYPE = CRTileEntity.createType(StampMillTileEntity::new, CRBlocks.stampMill);
 
@@ -43,8 +45,6 @@ public class StampMillTileEntity extends InventoryTE{
 	public static final double PROGRESS_PER_RADIAN = 20D;//Energy to consume per radian the internal gear turns
 	private double progress = 0;
 	private int timer = 0;
-	private final IItemHandler itemHandler = new ItemHandler();
-
 
 	public StampMillTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state, 2);
@@ -56,11 +56,6 @@ public class StampMillTileEntity extends InventoryTE{
 
 	public int getTimer(){
 		return timer;
-	}
-
-	@Override
-	protected boolean useRotary(){
-		return true;
 	}
 
 	@Override
@@ -148,17 +143,18 @@ public class StampMillTileEntity extends InventoryTE{
 	}
 
 	@Override
-	public void setBlockState(BlockState stateIn){
-		super.setBlockState(stateIn);
-	}
-
-	@Override
 	@Nullable
 	public IAxleHandler getAxleHandler(Direction dir){
 		if(dir == null || dir.getAxis() == getBlockState().getValue(CRProperties.HORIZ_AXIS)){
 			return axleHandler;
 		}
 		return null;
+	}
+
+	@Nullable
+	@Override
+	public IItemHandler getItemHandler(Direction direction){
+		return itemHandler;
 	}
 
 	@Nullable

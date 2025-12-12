@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:embryo_lab_modifier",
+	"input": [
+		{
+			"item": "crossroads:soul_cluster"
+		}
+	],
+	"modifier": "respawning",
+	"soul_complexity": 1
+}

@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.AutoInjectorContainer;
+import com.Da_Technomancer.essentials.api.IItemCapable;
 import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -37,7 +38,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AutoInjectorTileEntity extends InventoryTE{
+public class AutoInjectorTileEntity extends InventoryTE implements IItemCapable{
 
 	public static final BlockEntityType<AutoInjectorTileEntity> TYPE = CRTileEntity.createType(AutoInjectorTileEntity::new, CRBlocks.autoInjector);
 

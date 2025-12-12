@@ -1,0 +1,13 @@
+{
+	"type": "crossroads:sized_mob_drops",
+	"conditions": [
+
+	],
+	"active": true,
+	"can_scale_up": true,
+	"can_scale_down": true,
+	"item_filter": "crossroads:empty",
+	"is_item_filter_allowlist": false,
+	"entity_filter": "crossroads:empty",
+	"is_entity_filter_allowlist": false
+}

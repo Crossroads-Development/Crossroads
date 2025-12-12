@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.blocks.witchcraft;
 
-import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.api.rotary.IAxleCapable;
 import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.api.witchcraft.EntityTemplate;
@@ -12,6 +12,7 @@ import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.BloodCentrifugeContainer;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.witchcraft.BloodSample;
+import com.Da_Technomancer.essentials.api.IItemCapable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -24,13 +25,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-
 import net.neoforged.neoforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-public class BloodCentrifugeTileEntity extends InventoryTE{
+public class BloodCentrifugeTileEntity extends InventoryTE implements IAxleCapable, IItemCapable{
 
 	public static final BlockEntityType<BloodCentrifugeTileEntity> TYPE = CRTileEntity.createType(BloodCentrifugeTileEntity::new, CRBlocks.bloodCentrifuge);
 
@@ -38,9 +38,11 @@ public class BloodCentrifugeTileEntity extends InventoryTE{
 	public static final double HIGH_SPEED = 10;
 	public static final int REQUIRED = 100;
 	public static final int INERTIA = 100;
+	private static final double MAXIMUM_AVG_DEVIATION = 2F;
+	public static final double MAX_ADDED_QUALITY = 50;
 
 	private int progress = 0;
-	private int deviation = 0;
+	private double deviation = 0;
 
 	private final IItemHandler itemHandler = new ItemHandler();
 
@@ -54,11 +56,6 @@ public class BloodCentrifugeTileEntity extends InventoryTE{
 		chat.add(Component.translatable("tt.crossroads.blood_centrifuge.deviation", progress == 0 ? 0 : deviation / progress));
 		chat.add(Component.translatable("tt.crossroads.boilerplate.progress", progress, REQUIRED));
 		super.addInfo(chat, player, hit);
-	}
-
-	@Override
-	protected boolean useRotary(){
-		return true;
 	}
 
 	public double getTargetSpeed(){
@@ -85,19 +82,20 @@ public class BloodCentrifugeTileEntity extends InventoryTE{
 		if((!inventory[0].isEmpty() || !inventory[1].isEmpty()) && (inventory[0].isEmpty() || inventory[2].isEmpty()) && (inventory[1].isEmpty() || inventory[3].isEmpty())){
 			//Check we have an input and all relevant output slots are empty
 			double targetSpeed = getTargetSpeed();
-			//Add difference between target and actual speed magnitude, rounded down
-			deviation += (int) Math.abs(Math.abs(axleHandler.getSpeed()) - targetSpeed);
+			//Add difference between target and actual speed magnitude
+			deviation += Math.abs(Math.abs(axleHandler.getSpeed()) - targetSpeed);
 			progress++;
 			if(progress >= REQUIRED){
-				int degradation = (int) Math.round(CRConfig.bloodCentrifugeMult.get() * (double) deviation / REQUIRED);//Average value of deviation increment
+				int qualityChange = Math.max(0, (int) Math.round(MAX_ADDED_QUALITY * (1D - (deviation / REQUIRED) / MAXIMUM_AVG_DEVIATION)));
 				for(int i = 0; i < 2; i++){
 					if(!inventory[i].isEmpty()){
 						EntityTemplate template = BloodSample.getEntityTypeData(inventory[i]);
-						//Increase degradation based on deviation
-						template.setDegradation(template.getDegradation() + degradation);
 						//Sets the output to a copy of the input with the item as a separated blood sample instead of normal blood sample
-						//Has to copy spoil time and template
-						inventory[2 + i] = IPerishable.setSpoilTime(CRItems.separatedBloodSample.withEntityData(new ItemStack(CRItems.separatedBloodSample, 1), template), IPerishable.getAndInitSpoilTime(inventory[i], level), 0);
+						//Has to copy spoil time, template, any other data
+						inventory[2 + i] = inventory[i].transmuteCopy(CRItems.separatedBloodSample);
+						//Upgrade the quality
+						inventory[2 + i].set(CRItems.GENETICS_DATA, template.withQuality(template.quality() + qualityChange));
+//						IPerishable.setSpoilTime(CRItems.separatedBloodSample.withEntityData(new ItemStack(CRItems.separatedBloodSample, 1), template), IPerishable.getAndInitSpoilTime(inventory[i], level), 0);
 						inventory[i] = ItemStack.EMPTY;
 					}
 				}
@@ -114,14 +112,14 @@ public class BloodCentrifugeTileEntity extends InventoryTE{
 	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
 		super.saveAdditional(nbt, pRegistries);
 		nbt.putInt("progress", progress);
-		nbt.putInt("deviation", deviation);
+		nbt.putDouble("deviation", deviation);
 	}
 
 	@Override
 	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
 		super.loadAdditional(nbt, registries);
 		progress = nbt.getInt("progress");
-		deviation = nbt.getInt("deviation");
+		deviation = nbt.getDouble("deviation");
 	}
 
 	@Override

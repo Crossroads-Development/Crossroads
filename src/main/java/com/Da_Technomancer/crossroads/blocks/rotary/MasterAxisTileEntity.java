@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.blocks.rotary;
 
 import com.Da_Technomancer.crossroads.CRConfig;
-import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.CRCapabilities;
+import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.crossroads.api.packets.ITaylorReceiver;
 import com.Da_Technomancer.crossroads.api.packets.SendTaylorToClient;
@@ -10,18 +10,14 @@ import com.Da_Technomancer.crossroads.api.rotary.*;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
-
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -78,7 +74,7 @@ public class MasterAxisTileEntity extends BlockEntity implements ITickableTileEn
 	private float[] prevAngles = new float[4];
 
 	//	private static final float ANGLE_MARGIN = CRConfig.speedPrecision.get().floatValue();
-	protected static final int UPDATE_TIME = CRConfig.gearResetTime.get();
+	protected final int UPDATE_TIME = CRConfig.gearResetTime.get();
 
 
 	protected final IAxisHandler axisHandler = new AxisHandler();
@@ -273,12 +269,14 @@ public class MasterAxisTileEntity extends BlockEntity implements ITickableTileEn
 
 	@Override
 	public void receiveSeries(long timestamp, float[] series){
-		float partTicks = 0;//TODO Minecraft.getInstance().getFrameTime();
-		float prevAngle = runSeries(ticksExisted, partTicks);
-		regrTimestamp = timestamp;
-		coeff = series;
-		//Fine tune the linear term to match up with the currently displayed angle- preventing a jerking motion
-		coeff[3] += prevAngle - runSeries(ticksExisted, partTicks);
+		if(level.isClientSide){
+			float partTicks = Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(false);
+			float prevAngle = runSeries(ticksExisted, partTicks);
+			regrTimestamp = timestamp;
+			coeff = series;
+			//Fine tune the linear term to match up with the currently displayed angle- preventing a jerking motion
+			coeff[3] += prevAngle - runSeries(ticksExisted, partTicks);
+		}
 	}
 
 	@Override

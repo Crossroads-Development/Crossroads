@@ -49,6 +49,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 
 import java.awt.*;
@@ -109,7 +110,7 @@ public class EventHandlerClient{
 		@SubscribeEvent
 		public static void registerOverlays(RegisterGuiLayersEvent e){
 			e.registerAboveAll(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "beam_tool_overlay"), new BeamToolOverlay());
-			e.registerBelow(ResourceLocation.withDefaultNamespace("record_overlay"), ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "multi_line_overlay"), new MultiLineMessageOverlay());
+			e.registerBelow(VanillaGuiLayers.OVERLAY_MESSAGE, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "multi_line_overlay"), new MultiLineMessageOverlay());
 		}
 
 		@SuppressWarnings("unused")

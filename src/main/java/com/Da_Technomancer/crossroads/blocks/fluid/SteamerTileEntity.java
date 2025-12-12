@@ -7,6 +7,8 @@ import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.SteamerContainer;
 import com.Da_Technomancer.essentials.api.BlockUtil;
+import com.Da_Technomancer.essentials.api.IFluidCapable;
+import com.Da_Technomancer.essentials.api.IItemCapable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -25,11 +27,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-public class SteamerTileEntity extends InventoryTE{
+public class SteamerTileEntity extends InventoryTE implements IFluidCapable, IItemCapable{
 
 	public static final BlockEntityType<SteamerTileEntity> TYPE = CRTileEntity.createType(SteamerTileEntity::new, CRBlocks.steamer);
 
@@ -119,6 +122,12 @@ public class SteamerTileEntity extends InventoryTE{
 		return index == 1;
 	}
 
+	@Nullable
+	@Override
+	public IItemHandler getItemHandler(Direction direction){
+		return itemHandler;
+	}
+
 	@Override
 	@Nullable
 	public IFluidHandler getFluidHandler(Direction dir){
@@ -126,8 +135,9 @@ public class SteamerTileEntity extends InventoryTE{
 			return waterHandler;
 		}else if(dir != null){
 			return steamHandler;
+		}else{
+			return globalFluidHandler;
 		}
-		return super.getFluidHandler(dir);
 	}
 
 	@Override

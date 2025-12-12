@@ -1,4 +1,4 @@
-package com.Da_Technomancer.crossroads.crafting;
+package com.Da_Technomancer.crossroads.crafting.loot_modifiers;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;

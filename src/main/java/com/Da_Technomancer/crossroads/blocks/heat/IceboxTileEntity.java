@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.heat;
 
 import com.Da_Technomancer.crossroads.api.CRProperties;
+import com.Da_Technomancer.crossroads.api.heat.IHeatCapable;
 import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -8,6 +9,7 @@ import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.IceboxRec;
 import com.Da_Technomancer.crossroads.gui.container.IceboxContainer;
+import com.Da_Technomancer.essentials.api.IItemCapable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -22,13 +24,12 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-
 import net.neoforged.neoforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-public class IceboxTileEntity extends InventoryTE{
+public class IceboxTileEntity extends InventoryTE implements IHeatCapable, IItemCapable{
 
 	public static final BlockEntityType<IceboxTileEntity> TYPE = CRTileEntity.createType(IceboxTileEntity::new, CRBlocks.icebox);
 
@@ -46,11 +47,6 @@ public class IceboxTileEntity extends InventoryTE{
 
 	public int getCoolProg(){
 		return maxBurnTime == 0 ? 0 : 100 * burnTime / maxBurnTime;
-	}
-
-	@Override
-	protected boolean useHeat(){
-		return true;
 	}
 
 	@Override

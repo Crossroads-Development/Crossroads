@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:embryo_lab_modifier",
+	"input": [
+		{
+			"item": "crossroads:solid_anti_densus"
+		}
+	],
+	"modifier": "anti_grav",
+	"complexity": 30
+}

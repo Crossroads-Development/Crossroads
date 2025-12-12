@@ -9,7 +9,6 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -18,8 +17,12 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.common.util.NeoForgeExtraCodecs;
 import net.neoforged.neoforge.fluids.FluidStack;
 
@@ -236,17 +239,26 @@ public class CraftingUtil{
 		return (Registry<T>) BuiltInRegistries.REGISTRY.get(tagKey.registry().location());
 	}
 
+	public static boolean tagContains(TagKey<Item> tagKey, Item thing){
+		return thing.builtInRegistryHolder().is(tagKey);
+	}
+
+	public static boolean tagContains(TagKey<EntityType<?>> tagKey, EntityType<?> thing){
+		return thing.is(tagKey);
+	}
+
+	public static boolean tagContains(TagKey<Block> tagKey, Block thing){
+		return thing.builtInRegistryHolder().is(tagKey);
+	}
+
+	public static boolean tagContains(TagKey<Fluid> tagKey, Fluid thing){
+		return thing.is(tagKey);
+	}
+
+	@Deprecated
 	public static <T> boolean tagContains(TagKey<T> tagKey, T thing){
-		Optional<HolderSet.Named<T>> tagHolderSet;
-		if((tagHolderSet = getRegistryForKey(tagKey).getTag(tagKey)).isPresent()){
-			//TODO don't actually know what Holder.direct() is doing but it seems like something vaguely appropriate
-			// to inline here.
-			return tagHolderSet.get().contains(Holder.direct(thing));
-		}else{
-			throw new IllegalArgumentException(
-					"tagContains() called using generic type that does not possess an associated registry"
-			);
-		}
+		//Most types we actually care about have a better implementation that is preferred (see above)
+		return getRegistryForKey(tagKey).asLookup().getOrThrow(tagKey).stream().anyMatch(holder -> holder.value() == thing);
 	}
 
 	/**

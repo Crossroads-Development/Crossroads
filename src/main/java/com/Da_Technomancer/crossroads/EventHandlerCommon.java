@@ -11,7 +11,6 @@ import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.crossroads.api.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.api.technomancy.RespawnInventorySavedData;
-import com.Da_Technomancer.crossroads.api.witchcraft.EntityTemplate;
 import com.Da_Technomancer.crossroads.api.witchcraft.IPerishable;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
@@ -19,8 +18,9 @@ import com.Da_Technomancer.crossroads.blocks.alchemy.GlasswareHolderTileEntity;
 import com.Da_Technomancer.crossroads.blocks.heat.HeatInsulators;
 import com.Da_Technomancer.crossroads.blocks.rotary.WindingTableTileEntity;
 import com.Da_Technomancer.crossroads.crafting.CRItemTags;
-import com.Da_Technomancer.crossroads.crafting.CRLootModifiers;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
+import com.Da_Technomancer.crossroads.crafting.loot_modifiers.CRLootModifiers;
+import com.Da_Technomancer.crossroads.effects.entity_modifiers.RespawningEntityModifier;
 import com.Da_Technomancer.crossroads.entity.CREntities;
 import com.Da_Technomancer.crossroads.entity.CRMobDamage;
 import com.Da_Technomancer.crossroads.entity.EntityGhostMarker;
@@ -114,7 +114,7 @@ public class EventHandlerCommon{
 		public static void register(RegisterEvent e){
 			e.register(Registries.BLOCK, helper -> {
 				CRBlocks.registerBlocks();
-				CRMaterialLibrary.loadConfig();
+//				CRMaterialLibrary.loadConfig();
 				CRFluids.init();
 				CRBlocks.registerBlocks(helper);
 			});
@@ -259,6 +259,22 @@ public class EventHandlerCommon{
 		public static void register(RegisterPayloadHandlersEvent e){
 			CRPackets.registerPayloads(e);
 		}
+
+		@SubscribeEvent
+		@SuppressWarnings("unused")
+		public static void rebuildConfigData(ModConfigEvent.Loading e){
+			if(e.getConfig().getModId().equals(Crossroads.MODID) && e.getConfig().getType() == ModConfig.Type.SERVER){
+				CRMaterialLibrary.loadConfig();
+			}
+		}
+
+		@SubscribeEvent
+		@SuppressWarnings("unused")
+		public static void rebuildConfigData(ModConfigEvent.Reloading e){
+			if(e.getConfig().getModId().equals(Crossroads.MODID) && e.getConfig().getType() == ModConfig.Type.SERVER){
+				CRMaterialLibrary.loadConfig();
+			}
+		}
 	}
 
 //	private static final Field entityList = ReflectionUtil.reflectField(CRReflection.ENTITY_LIST);
@@ -307,7 +323,7 @@ public class EventHandlerCommon{
 
 	@SubscribeEvent
 	@SuppressWarnings({"unused", "unchecked"})
-	public void worldTick(LevelTickEvent e){
+	public void worldTick(LevelTickEvent.Pre e){
 
 		Level level = e.getLevel();
 
@@ -526,7 +542,7 @@ public class EventHandlerCommon{
 
 		if(e.getExplosion().getDirectSourceEntity() instanceof Creeper creeper){
 			//Creeper explosions don't trigger a death event; we catch them this way
-			EntityTemplate.handleEntityDeath(creeper);
+			RespawningEntityModifier.handleEntityDeath(creeper);
 		}
 
 		world.getProfiler().push(Crossroads.MODNAME + ": Explosion modification");
@@ -548,14 +564,6 @@ public class EventHandlerCommon{
 			}
 		}
 		world.getProfiler().pop();
-	}
-
-	@SubscribeEvent
-	@SuppressWarnings("unused")
-	public void rebuildConfigData(ModConfigEvent.Reloading e){
-		if(e.getConfig().getModId().equals(Crossroads.MODID) && e.getConfig().getType() == ModConfig.Type.SERVER){
-			CRMaterialLibrary.loadConfig();
-		}
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
@@ -641,13 +649,13 @@ public class EventHandlerCommon{
 	@SuppressWarnings("unused")
 	public void trackDeaths(LivingDeathEvent e){
 		if(!e.getSource().is(CRMobDamage.NON_VIABLE)){//if non-viable (max health less than or equal to 0), don't let it respawn
-			EntityTemplate.handleEntityDeath(e.getEntity());
+			RespawningEntityModifier.handleEntityDeath(e.getEntity());
 		}
 	}
 
-	private static final TagKey<EntityType<?>> GHOST_MOB = CraftingUtil.getTagKey(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "ghost"));
-	private static final TagKey<EntityType<?>> NO_SOUL_DROP_MOB = CraftingUtil.getTagKey(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "soul_drop_blacklist"));
-	private static final TagKey<EntityType<?>> HUMANOID_MOB = CraftingUtil.getTagKey(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath("minecraft", "undead"));
+	public static final TagKey<EntityType<?>> GHOST_MOB = CraftingUtil.getTagKey(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "ghost"));
+	public static final TagKey<EntityType<?>> NO_SOUL_DROP_MOB = CraftingUtil.getTagKey(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "soul_drop_blacklist"));
+	public static final TagKey<EntityType<?>> HUMANOID_MOB = CraftingUtil.getTagKey(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath("minecraft", "undead"));
 
 	@SubscribeEvent()
 	@SuppressWarnings("unused")

@@ -9,6 +9,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.BlockItem;
@@ -19,14 +20,13 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.CactusBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
-import net.neoforged.neoforge.common.util.TriState;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -50,13 +50,9 @@ public class PetrolCactus extends CactusBlock implements ICustomItemBlock{
 	}
 
 	@Override
-	public TriState canSustainPlant(BlockState state, BlockGetter level, BlockPos soilPosition, Direction facing, BlockState plant){
-		// TODO: Should this ever use TriState.DEFAULT?
-		if(plant.is(this) && (state.is(this) || state.is(Blocks.SAND) || state.is(Blocks.RED_SAND))){
-			return TriState.TRUE;
-		}else{
-			return TriState.FALSE;
-		}
+	protected boolean canSurvive(BlockState plant, LevelReader level, BlockPos pos){
+		BlockState soilState = level.getBlockState(pos.below());
+		return (soilState.is(this) || soilState.is(BlockTags.SAND)) && !level.getBlockState(pos.above()).liquid();
 	}
 
 	@Override

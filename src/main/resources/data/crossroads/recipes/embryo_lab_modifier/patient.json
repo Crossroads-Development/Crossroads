@@ -1,0 +1,9 @@
+{
+	"type": "crossroads:embryo_lab_modifier",
+	"input": [
+		{
+			"item": "minecraft:lead"
+		}
+	],
+	"modifier": "patient"
+}

@@ -5,10 +5,10 @@ import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.templates.MachineScreen;
 import com.Da_Technomancer.crossroads.blocks.witchcraft.EmbryoLabTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.EmbryoLabContainer;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.player.Inventory;
 
 import java.util.ArrayList;
@@ -37,10 +37,14 @@ public class EmbryoLabScreen extends MachineScreen<EmbryoLabContainer, EmbryoLab
 			matrix.drawString(font, MiscUtil.localize("container.crossroads.embryo_lab.empty"), 8, 25, 0x404040, false);
 		}else{
 			ArrayList<Component> lines = new ArrayList<>();
-			te.template.addTooltip(lines, 13);
-			for(int i = 0; i < lines.size(); i++){
-				Component line = lines.get(i);
-				matrix.drawString(font, line.getString(), 8, 25 + i * 10, 0x404040, false);
+			te.template.addTooltip(lines, te.getLevel());
+			int yOffset = 0;
+			for(Component line : lines){
+				for(FormattedCharSequence formattedcharsequence : font.split(line, 30)){
+					matrix.drawString(font, formattedcharsequence, 8, 25 + yOffset, 0x404040, false);
+					yOffset += 9;
+				}
+				yOffset += 1;
 			}
 		}
 	}

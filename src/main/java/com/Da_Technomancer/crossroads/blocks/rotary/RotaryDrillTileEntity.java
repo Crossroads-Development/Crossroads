@@ -2,8 +2,8 @@ package com.Da_Technomancer.crossroads.blocks.rotary;
 
 import com.Da_Technomancer.crossroads.ambient.particles.CRParticles;
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.api.rotary.IAxleCapable;
 import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.api.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -22,14 +22,13 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-
 import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class RotaryDrillTileEntity extends ModuleTE{
+public class RotaryDrillTileEntity extends ModuleTE implements IAxleCapable{
 
 	public static final BlockEntityType<RotaryDrillTileEntity> TYPE = CRTileEntity.createType(RotaryDrillTileEntity::new, CRBlocks.rotaryDrill, CRBlocks.rotaryDrillGold);
 
@@ -45,11 +44,6 @@ public class RotaryDrillTileEntity extends ModuleTE{
 
 	public boolean isGolden(){
 		return getBlockState().getBlock() == CRBlocks.rotaryDrillGold;
-	}
-
-	@Override
-	protected boolean useRotary(){
-		return true;
 	}
 
 	@Override

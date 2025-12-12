@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.blocks.heat;
 
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
+import com.Da_Technomancer.crossroads.api.heat.IHeatCapable;
 import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -9,6 +10,8 @@ import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.SaltReactorContainer;
+import com.Da_Technomancer.essentials.api.IFluidCapable;
+import com.Da_Technomancer.essentials.api.IItemCapable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -21,14 +24,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
-
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 
-public class SaltReactorTileEntity extends InventoryTE{
+public class SaltReactorTileEntity extends InventoryTE implements IHeatCapable, IFluidCapable, IItemCapable{
 
 	public static final BlockEntityType<SaltReactorTileEntity> TYPE = CRTileEntity.createType(SaltReactorTileEntity::new, CRBlocks.saltReactor);
 
@@ -50,11 +52,6 @@ public class SaltReactorTileEntity extends InventoryTE{
 	@Override
 	public int fluidTanks(){
 		return 2;
-	}
-
-	@Override
-	public boolean useHeat(){
-		return true;
 	}
 
 	@Override

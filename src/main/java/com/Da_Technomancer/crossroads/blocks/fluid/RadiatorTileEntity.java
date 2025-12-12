@@ -1,14 +1,15 @@
 package com.Da_Technomancer.crossroads.blocks.fluid;
 
 import com.Da_Technomancer.crossroads.CRConfig;
-import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
+import com.Da_Technomancer.crossroads.api.heat.IHeatCapable;
 import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.RadiatorContainer;
+import com.Da_Technomancer.essentials.api.IFluidCapable;
 import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -23,13 +24,12 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 import javax.annotation.Nullable;
 
-public class RadiatorTileEntity extends InventoryTE{
+public class RadiatorTileEntity extends InventoryTE implements IHeatCapable, IFluidCapable{
 
 	public static final BlockEntityType<RadiatorTileEntity> TYPE = CRTileEntity.createType(RadiatorTileEntity::new, CRBlocks.radiator);
 
@@ -46,11 +46,6 @@ public class RadiatorTileEntity extends InventoryTE{
 	@Override
 	public int fluidTanks(){
 		return 2;
-	}
-
-	@Override
-	public boolean useHeat(){
-		return true;
 	}
 
 	public int getMode(){

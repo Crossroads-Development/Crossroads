@@ -16,8 +16,7 @@ public interface ICultivatable extends IPerishable{
 		return stack.getOrDefault(CRItems.WAS_FROZEN_DATA, false);
 	}
 
-	default ItemStack setWasFrozen(ItemStack stack, boolean frozen){
-		stack.set(CRItems.WAS_FROZEN_DATA, frozen);
+	default ItemStack doFreezeDamage(ItemStack stack, Level world){
 		return stack;
 	}
 
@@ -25,7 +24,10 @@ public interface ICultivatable extends IPerishable{
 	default ItemStack freeze(ItemStack stack, Level world, double temp, long duration){
 		if(temp <= getFreezeTemperature()){
 			//Damage the item if applicable
-			stack = setWasFrozen(stack, true);
+			if(!stack.getOrDefault(CRItems.WAS_FROZEN_DATA, false)){
+				stack.set(CRItems.WAS_FROZEN_DATA, true);
+				stack = doFreezeDamage(stack, world);
+			}
 			IPerishable.setSpoilTime(stack, IPerishable.getAndInitSpoilTime(stack, world) + duration, 0);
 		}
 

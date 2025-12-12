@@ -33,6 +33,10 @@ public class CRPotions{
 
 	public static final Holder<MobEffect> SEDATION_EFFECT = registerMobEffect("sedation", new Sedation());
 	public static final Holder<MobEffect> CURATIVE_EFFECT = registerMobEffect("curative", new Curative());
+	/**
+	 * @deprecated Use a penalty to the MAX_HEALTH attribute instead. See EntityTemplate for an example.
+	 */
+	@Deprecated
 	public static final Holder<MobEffect> HEALTH_PENALTY_EFFECT = registerMobEffect("health_penalty", new HealthPenalty());
 	public static final Holder<MobEffect> TRANSIENT_EFFECT = registerMobEffect("transient", new Transient());
 

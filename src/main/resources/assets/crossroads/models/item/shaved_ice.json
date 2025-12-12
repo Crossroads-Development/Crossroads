@@ -1,0 +1,14 @@
+{
+	"parent": "item/generated",
+	"textures": {
+		"layer0": "crossroads:item/shaved_ice"
+	},
+	"overrides": [
+		{
+			"predicate": {
+				"spoiled": 1
+			},
+			"model": "crossroads:item/shaved_ice_spoiled"
+		}
+	]
+}

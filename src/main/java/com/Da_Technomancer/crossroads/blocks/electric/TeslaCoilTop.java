@@ -3,11 +3,11 @@ package com.Da_Technomancer.crossroads.blocks.electric;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.api.ILinkTE;
 import com.Da_Technomancer.essentials.api.LinkHelper;
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -31,7 +31,7 @@ import java.util.Locale;
 
 public class TeslaCoilTop extends BaseEntityBlock{
 
-	public static final MapCodec<TeslaCoilTop> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(Codec.STRING.fieldOf("variant").forGetter(TeslaCoilTop::getVariant)).apply(instance, TeslaCoilTop::new));
+	public static final MapCodec<TeslaCoilTop> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(StringRepresentable.fromEnum(TeslaCoilVariants::values).fieldOf("variant").forGetter(block -> block.variant)).apply(instance, TeslaCoilTop::new));
 
 	private static final VoxelShape SHAPE = Shapes.or(box(4, 0, 4, 12, 8, 12), box(0, 8, 0, 16, 16, 16));
 	public final TeslaCoilVariants variant;
@@ -41,15 +41,6 @@ public class TeslaCoilTop extends BaseEntityBlock{
 		this.variant = variant;
 		String name = "tesla_coil_top_" + variant.toString();
 		CRBlocks.queueForRegister(name, this);
-	}
-
-	//TODO: this is a stupid hack to make the codec work without implementing something custom, come back and fix this later.
-	public TeslaCoilTop(String variantStr){
-		this(TeslaCoilVariants.valueOf(variantStr));
-	}
-
-	private String getVariant(){
-		return variant.toString();
 	}
 
 	@Override
@@ -108,7 +99,7 @@ public class TeslaCoilTop extends BaseEntityBlock{
 //		return ITickableTileEntity.createTicker(type, TeslaCoilTopTileEntity.TYPE);
 //	}
 
-	public enum TeslaCoilVariants{
+	public enum TeslaCoilVariants implements StringRepresentable{
 
 		//Yep, it's an enum. Sorry addon makers- go bug me on discord if you need this changed
 		NORMAL(1_000, 8, 98),
@@ -131,6 +122,11 @@ public class TeslaCoilTop extends BaseEntityBlock{
 		@Override
 		public String toString(){
 			return name().toLowerCase(Locale.US);
+		}
+
+		@Override
+		public String getSerializedName(){
+			return name();
 		}
 	}
 }

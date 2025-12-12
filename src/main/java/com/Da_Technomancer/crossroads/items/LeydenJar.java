@@ -9,6 +9,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class LeydenJar extends Item implements ICreativeTabPopulatingItem{
@@ -42,6 +43,7 @@ public class LeydenJar extends Item implements ICreativeTabPopulatingItem{
 		tooltip.add(Component.translatable("tt.crossroads.leyden_jar.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 
+	@Nonnull
 	@Override
 	public ItemStack[] populateCreativeTab(){
 		ItemStack chargedStack = new ItemStack(this, 1);

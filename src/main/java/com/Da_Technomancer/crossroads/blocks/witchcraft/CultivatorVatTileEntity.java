@@ -9,6 +9,8 @@ import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.CultivatorVatContainer;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.essentials.api.BlockUtil;
+import com.Da_Technomancer.essentials.api.IFluidCapable;
+import com.Da_Technomancer.essentials.api.IItemCapable;
 import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -28,7 +30,7 @@ import net.neoforged.neoforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 
-public class CultivatorVatTileEntity extends AbstractNutrientEnvironmentTileEntity{
+public class CultivatorVatTileEntity extends AbstractNutrientEnvironmentTileEntity implements IFluidCapable, IItemCapable{
 
 	public static final BlockEntityType<CultivatorVatTileEntity> TYPE = CRTileEntity.createType(CultivatorVatTileEntity::new, CRBlocks.cultivatorVat);
 	public static final int REQUIRED_PROGRESS = 100;

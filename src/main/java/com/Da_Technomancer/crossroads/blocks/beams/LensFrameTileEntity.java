@@ -258,7 +258,14 @@ public class LensFrameTileEntity extends BeamRenderTE implements INBTReceiver, C
 			BeamMod mod = BeamMod.IDENTITY;
 			if(recipe != null){
 				if(!beamIn.isEmpty() && EnumBeamAlignments.getAlignment(beamIn) == recipe.getTransmuteAlignment() && (recipe.isVoid() == (beamIn.isVoidVariant()))){
-					setLensItem(recipe.assemble(LensFrameTileEntity.this));
+					ItemStack res;
+					ItemStack result = recipe.getResultItem();
+					if(result.isEmpty()){
+						res = result;
+					}else{
+						res = result.copy();
+					}
+					setLensItem(res);
 				}
 				mod = recipe.getOutput();
 			}

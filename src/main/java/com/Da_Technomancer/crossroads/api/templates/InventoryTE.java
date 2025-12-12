@@ -1,6 +1,9 @@
 package com.Da_Technomancer.crossroads.api.templates;
 
-import com.Da_Technomancer.essentials.api.*;
+import com.Da_Technomancer.essentials.api.BlockUtil;
+import com.Da_Technomancer.essentials.api.FluidSlotManager;
+import com.Da_Technomancer.essentials.api.IFluidSlotTE;
+import com.Da_Technomancer.essentials.api.IItemContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -19,7 +22,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 
-public abstract class InventoryTE extends ModuleTE implements RecipeInput, IItemContainer, MenuProvider, IFluidSlotTE, IItemCapable{
+public abstract class InventoryTE extends ModuleTE implements RecipeInput, IItemContainer, MenuProvider, IFluidSlotTE{
 
 	protected final ItemStack[] inventory;
 	public final FluidSlotManager[] fluidManagers = new FluidSlotManager[fluidTanks()];
@@ -117,12 +120,6 @@ public abstract class InventoryTE extends ModuleTE implements RecipeInput, IItem
 	@Override
 	public int getContainerSize(){
 		return inventory.length;
-	}
-
-	@Nullable
-	@Override
-	public IItemHandler getItemHandler(Direction direction){
-		return itemHandler;
 	}
 
 	@Override

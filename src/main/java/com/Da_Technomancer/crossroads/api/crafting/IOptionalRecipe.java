@@ -16,18 +16,13 @@ import java.util.stream.Stream;
 
 public interface IOptionalRecipe<T extends RecipeInput> extends Recipe<T>{
 
-	// TODO: Determine if changed inherited param "level" should remain unused
-	@Override
-	default @NotNull ItemStack assemble(T recipeInput, HolderLookup.Provider var2){
-		return assemble(recipeInput);
-	}
-
 	/**
 	 * Gets the created itemstack
 	 * Safe to modify.
 	 * Some recipes may return different items for assemble vs getResultItem- trust assemble
 	 */
-	default ItemStack assemble(T recipeInput){
+	@Override
+	default @NotNull ItemStack assemble(T recipeInput, HolderLookup.Provider var2){
 		ItemStack result = getResultItem();
 		if(result.isEmpty()){
 			return result;
@@ -36,7 +31,6 @@ public interface IOptionalRecipe<T extends RecipeInput> extends Recipe<T>{
 		}
 	}
 
-	// TODO: Determine if changed inherited param "provider" should remain unused
 	@Override
 	default @NotNull ItemStack getResultItem(@NotNull HolderLookup.Provider provider){
 		return getResultItem();

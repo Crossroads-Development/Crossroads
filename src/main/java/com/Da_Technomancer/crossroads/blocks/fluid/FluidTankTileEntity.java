@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.FluidTankContainer;
+import com.Da_Technomancer.essentials.api.IFluidCapable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -19,7 +20,7 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 import javax.annotation.Nullable;
 
-public class FluidTankTileEntity extends InventoryTE{
+public class FluidTankTileEntity extends InventoryTE implements IFluidCapable{
 
 	public static final BlockEntityType<FluidTankTileEntity> TYPE = CRTileEntity.createType(FluidTankTileEntity::new, CRBlocks.fluidTank);
 

@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.blocks.fluid;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
+import com.Da_Technomancer.crossroads.api.heat.IHeatCapable;
 import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -10,6 +11,7 @@ import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.SteamBoilerContainer;
 import com.Da_Technomancer.crossroads.items.CRItems;
+import com.Da_Technomancer.essentials.api.IFluidCapable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -21,14 +23,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-public class SteamBoilerTileEntity extends InventoryTE{
+public class SteamBoilerTileEntity extends InventoryTE implements IHeatCapable, IFluidCapable{
 
 	public static final BlockEntityType<SteamBoilerTileEntity> TYPE = CRTileEntity.createType(SteamBoilerTileEntity::new, CRBlocks.steamBoiler);
 
@@ -48,11 +49,6 @@ public class SteamBoilerTileEntity extends InventoryTE{
 	@Override
 	public int fluidTanks(){
 		return 2;//0: Water; 1: Steam
-	}
-
-	@Override
-	public boolean useHeat(){
-		return true;
 	}
 
 	@Override

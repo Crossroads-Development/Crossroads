@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:embryo_lab_modifier",
+	"input": [
+		{
+			"item": "minecraft:ink_sac"
+		}
+	],
+	"modifier": "semi_aquatic",
+	"complexity": 20
+}

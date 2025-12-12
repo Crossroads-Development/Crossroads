@@ -1,6 +1,5 @@
 package com.Da_Technomancer.crossroads.blocks.fluid;
 
-import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.api.templates.ConduitBlock;
@@ -13,12 +12,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -34,7 +31,6 @@ public class FluidTubeTileEntity extends BlockEntity implements ITickableTileEnt
 
 	protected static final int CAPACITY = 2000;
 
-	//TODO strongly suspicious that I've set this up wrong, or hideously overcomplicated
 	//Caching of instances
 	//Pipes may change blockstate often, so as much caching of handler and optional references as possible is done
 	private final IFluidHandler mainHandlerIns = new BiFluidHandler();
@@ -42,35 +38,11 @@ public class FluidTubeTileEntity extends BlockEntity implements ITickableTileEnt
 	private final IFluidHandler outHandlerIns = new OutFluidHandler();
 	private final IFluidHandler innerHandlerIns = new InnerFluidHandler();
 
-	private BlockCapabilityCache<BiFluidHandler, Direction> mainHandler = BlockCapabilityCache.create(mainHandlerCap, (ServerLevel) level, worldPosition, Direction.UP);
-	private BlockCapabilityCache<InFluidHandler, Direction> inHandler = BlockCapabilityCache.create(inHandlerCap, (ServerLevel) level, worldPosition, Direction.UP);
-	private BlockCapabilityCache<OutFluidHandler, Direction> outHandler = BlockCapabilityCache.create(outHandlerCap, (ServerLevel) level, worldPosition, Direction.UP);
-	private BlockCapabilityCache<InnerFluidHandler, Direction> innerHandler = BlockCapabilityCache.create(innerHandlerCap, (ServerLevel) level, worldPosition, Direction.UP);
-
-
-	private static final ResourceLocation BiFluidID = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "bi_fluid");
-	private static final ResourceLocation InFluidID = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "in_fluid");
-	private static final ResourceLocation OutFluidID = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "out_fluid");
-	private static final ResourceLocation InnerFluidID = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "inner_fluid");
-
-
-	private static final BlockCapability<BiFluidHandler, Direction> mainHandlerCap = BlockCapability.create(BiFluidID, BiFluidHandler.class, Direction.class);
-	private static final BlockCapability<InFluidHandler, Direction> inHandlerCap = BlockCapability.create(InFluidID, InFluidHandler.class, Direction.class);
-	private static final BlockCapability<OutFluidHandler, Direction> outHandlerCap = BlockCapability.create(OutFluidID, OutFluidHandler.class, Direction.class);
-	private static final BlockCapability<InnerFluidHandler, Direction> innerHandlerCap = BlockCapability.create(InnerFluidID, InnerFluidHandler.class, Direction.class);
-
-
-
 	protected boolean[] matches = new boolean[6];
 	protected EnumTransferMode[] modes = ConduitBlock.IConduitTE.genModeArray(EnumTransferMode.INPUT);
 
 	//Cache of neighboring optionals
-	@SuppressWarnings("unchecked")
-	private IFluidHandler[] otherHandlers = new IFluidHandler[] {null, null, null, null, null, null};
-	//The optionals of this tube, in order both, in, out
-	@SuppressWarnings("unchecked")
-	private IFluidHandler[] internalOpts = new IFluidHandler[] {null, null, null, null};
-
+	private final BlockCapabilityCache<IFluidHandler, Direction>[] otherHandlers = new BlockCapabilityCache[6];
 
 	@Nonnull
 	private FluidStack content = FluidStack.EMPTY;
@@ -83,35 +55,20 @@ public class FluidTubeTileEntity extends BlockEntity implements ITickableTileEnt
 		super(type, pos, state);
 	}
 
+	private void initHandlerCache(){
+		if(level instanceof ServerLevel sLevel && otherHandlers[0] == null){
+			for(int i = 0; i < 6; i++){
+				Direction dir = Direction.from3DDataValue(i);
+				BlockPos relPos = worldPosition.relative(dir);
+				otherHandlers[i] = BlockCapabilityCache.create(Capabilities.FluidHandler.BLOCK, sLevel, relPos, dir.getOpposite(), () -> !this.isRemoved(), () -> {});
+			}
+		}
+	}
+
 	@Override
 	public void setBlockState(BlockState stateIn){
 		super.setBlockState(stateIn);
-
-		//invalidate and regenerate all the optionals
-		//TODO I really have no idea what this is doing, and should probably investigate; optionals
-		// don't exist in this class anymore though so the above comment is not relevant.
-		// Essentials inserted this in its similar TE classes
 		level.invalidateCapabilities(worldPosition);
-
-		//TODO there should probably be something done here with the new BlockCapabilityCache; see Essentials
-		// AbstractTileShifterEntity
-
-
-		refreshCache();
-	}
-
-	public void refreshCache(){
-		if(level instanceof ServerLevel sLevel){
-
-			mainHandler = BlockCapabilityCache.create(
-					mainHandlerCap, sLevel, worldPosition, Direction.UP);
-			inHandler = BlockCapabilityCache.create(
-					inHandlerCap, sLevel, worldPosition, Direction.UP);
-			outHandler = BlockCapabilityCache.create(
-					outHandlerCap, sLevel, worldPosition, Direction.UP);
-			innerHandler = BlockCapabilityCache.create(
-					innerHandlerCap, sLevel, worldPosition, Direction.UP);
-		}
 	}
 
 	/*
@@ -132,7 +89,6 @@ public class FluidTubeTileEntity extends BlockEntity implements ITickableTileEnt
 		ITickableTileEntity.super.serverTick();
 
 		//First, we collect all available fluid handlers, and tabulate transfer data for later transfers
-		FluidStack origStack = content.copy();
 		//Found bi-directional connection handlers, stored with all null values at the end
 		IFluidHandler[] biHandlers = new IFluidHandler[6];
 		int biHandlerCount = 0;//Number of found bi-handlers
@@ -156,6 +112,7 @@ public class FluidTubeTileEntity extends BlockEntity implements ITickableTileEnt
 		BlockState state = getBlockState();
 
 		//Collect all handlers, using or updating cache, and build fluid total data
+		initHandlerCache();
 		for(int i = 0; i < 6; i++){
 			EnumTransferMode mode = state.getValue(CRProperties.CONDUIT_SIDES_FULL[i]);//Set mode in this direction on the blockstate
 			boolean hasMatch;//Whether there is a valid connection direction
@@ -164,20 +121,7 @@ public class FluidTubeTileEntity extends BlockEntity implements ITickableTileEnt
 				continue;
 			}
 
-			IFluidHandler otherHandler = null;
-			//Use the cache if possible
-			if(otherHandlers[i] != null){
-				otherHandler = otherHandlers[i];
-			}else{
-				//Cache is invalid- get from world
-				Direction dir = Direction.from3DDataValue(i);
-				BlockPos relPos = worldPosition.relative(dir);
-				//Update cache
-				if((otherHandlers[i] = level.getCapability(Capabilities.FluidHandler.BLOCK, relPos, dir.getOpposite())) != null){
-					otherHandler = otherHandlers[i];
-				}
-			}
-
+			IFluidHandler otherHandler = otherHandlers[i].getCapability();
 			hasMatch = otherHandler != null;
 
 			//Collect behaviour data from handlers, and sort them into 3 arrays for interaction in stage 2
@@ -362,7 +306,7 @@ public class FluidTubeTileEntity extends BlockEntity implements ITickableTileEnt
 	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
 		super.loadAdditional(nbt, registries);
 		ConduitBlock.IConduitTE.readConduitNBT(nbt, this);
-		content = BlockUtil.nbtToFluidStack(nbt, registries);
+		content = BlockUtil.nbtToFluidStack(nbt.getCompound("stored"), registries);
 	}
 
 	@Override
@@ -370,8 +314,7 @@ public class FluidTubeTileEntity extends BlockEntity implements ITickableTileEnt
 		super.saveAdditional(nbt, pRegistries);
 		ConduitBlock.IConduitTE.writeConduitNBT(nbt, this);
 		if(!content.isEmpty()){
-			//TODO: did I do this right?
-			nbt.put("content", BlockUtil.stackToNBT(content, pRegistries));
+			nbt.put("stored", BlockUtil.stackToNBT(content, pRegistries));
 		}
 
 	}
@@ -386,9 +329,9 @@ public class FluidTubeTileEntity extends BlockEntity implements ITickableTileEnt
 	public IFluidHandler getFluidHandler(Direction direction){
 		if(canConnect(direction)){
 			return switch(modes[direction.get3DDataValue()]){
-				case INPUT -> internalOpts[1];
-				case OUTPUT -> internalOpts[2];
-				case BOTH -> internalOpts[0];
+				case INPUT -> inHandlerIns;
+				case OUTPUT -> outHandlerIns;
+				case BOTH -> mainHandlerIns;
 				case NONE -> null;
 			};
 		}
@@ -462,11 +405,13 @@ public class FluidTubeTileEntity extends BlockEntity implements ITickableTileEnt
 			}
 
 			//Try all neighbors- see we are in out mode on a side, and that side will accept any of our fluid
+			initHandlerCache();
 			for(int i = 0; i < 6; i++){
 				//We use the TE modes instead of blockstate modes because by checking the handler cache, we effectively also check hasMatch and speed things up a little
 				if(modes[i] == EnumTransferMode.OUTPUT){
 					//Use the handler cache- it's much faster than checking the world, and the cache and world would only differ during the tick things are being changed.
-					if(otherHandlers[i] != null && otherHandlers[i].fill(content, FluidAction.SIMULATE) != 0){
+					IFluidHandler otherHandler = otherHandlers[i].getCapability();
+					if(otherHandler != null && otherHandler.fill(content, FluidAction.SIMULATE) != 0){
 						return false;
 					}
 				}

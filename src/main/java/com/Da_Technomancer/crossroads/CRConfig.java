@@ -103,13 +103,12 @@ public class CRConfig{
 	public static ModConfigSpec.DoubleValue beamRaytraceStep;
 	public static ModConfigSpec.ConfigValue<List<? extends String>> sedationBlacklist;
 	public static ModConfigSpec.ConfigValue<List<? extends String>> cloningBlacklist;
-	public static ModConfigSpec.DoubleValue bloodCentrifugeMult;
 	public static ModConfigSpec.DoubleValue injectionEfficiency;
 	public static ModConfigSpec.IntValue injectionPermaPenalty;
 	public static ModConfigSpec.IntValue hydroponicsMult;
 	public static ModConfigSpec.IntValue respawnDelay;
+	public static ModConfigSpec.DoubleValue respawnChance;
 	public static ModConfigSpec.IntValue respawnPenaltyDuration;
-	public static ModConfigSpec.IntValue degradationPenalty;
 	public static ModConfigSpec.ConfigValue<List<? extends String>> permanentEffectBlacklist;
 	public static ModConfigSpec.BooleanValue limitPermanentPotionStrength;
 	public static ModConfigSpec.IntValue maximumBloodLinkerPower;
@@ -250,12 +249,11 @@ public class CRConfig{
 		maximumBloodLinkerPower = serverBuilder.comment("Maximum beam power transmitted with the hemic entanglement chamber", "Set to 0 to effectively disable").defineInRange("blood_linker_Limit", 1, 0, 64);
 		injectionEfficiency = serverBuilder.comment("The duration of injected potions vs drinking them", "Setting to 1 or below makes injection equivalent to normal potions").defineInRange("injection_efficiency", 2F, 1F, 100F);
 		injectionPermaPenalty = serverBuilder.comment("The permanent maximum health reduction for each injected permanent potion effect", "Set to 0 or lower to disable the penalty", "Set to 20 or higher to effectively disable permanent injection for players").defineInRange("injection_perma_penalty", 2, 0, 100);
-		degradationPenalty = serverBuilder.comment("The reduction in maximum health for each point of degradation on a clone").defineInRange("degradation_penalty", 2, 0, 100);
 		hydroponicsMult = serverBuilder.comment("Production/growth speed multiplier for the Hydroponics Trough compared to normal crop growth", "Setting to 0 will effectively disable the machine").defineInRange("hydroponics_mult", 16, 0, 100);
-		respawnDelay = serverBuilder.comment("Time in seconds for genetically modified entities to respawn", "Set to 0 or a negative value to disable respawning").defineInRange("respawn_delay", 30, -1, Short.MAX_VALUE);
+		respawnDelay = serverBuilder.comment("Time in seconds for genetically modified entities to respawn", "Set to -1 to disable respawning").defineInRange("respawn_delay", 30, -1, Short.MAX_VALUE);
+		respawnChance = serverBuilder.comment("Chance an ensouled genetically modified entity will be able to respawn", "Set to 0 to disable respawning").defineInRange("respawn_chance", 0.95D, 0, 1);
 		respawnPenaltyDuration = serverBuilder.comment("Time in seconds for the debuffs on respawned entities", "Also controls the vulnerability period. Cannot be disabled").defineInRange("respawn_penalty_duration", 30, 1, Short.MAX_VALUE);
 		medicinalMushroomSpread = serverBuilder.comment("Chance for a medicinal mushroom to attempt to spread on a random tick", "Value out of 1. Set to 0 to disable spread").defineInRange("medicinal_mushroom_spread", 1D, 0D, 1D);
-		bloodCentrifugeMult = serverBuilder.comment("Multiplier for the degradation added by the blood centrifuge").defineInRange("blood_centrifuge_degradation_mult", 1.25D, 0D, 4D);
 		serverBuilder.pop();
 		serverBuilder.pop();
 

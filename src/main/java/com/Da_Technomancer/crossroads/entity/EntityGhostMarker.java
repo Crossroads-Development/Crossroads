@@ -124,9 +124,8 @@ public class EntityGhostMarker extends Entity{
 			//Used for genetically modified entities which are respawning after death
 
 			int penaltyTime = CRConfig.respawnPenaltyDuration.get() * 20;//Converted to ticks from seconds
-			EntityTemplate template = new EntityTemplate();
 			if(marker.data != null && !marker.level().isClientSide){
-				template.deserializeNBT(marker.data);
+				EntityTemplate template = EntityTemplate.deserializeNBT(marker.registryAccess(), marker.data.get(EntityTemplate.TEMPLATE_KEY));
 				Entity created = EntityTemplate.spawnEntityFromTemplate(template, (ServerLevel) marker.level(), marker.blockPosition(), MobSpawnType.COMMAND, false, false, null, null);
 				if(created instanceof LivingEntity entity){
 					entity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, penaltyTime));
@@ -136,6 +135,7 @@ public class EntityGhostMarker extends Entity{
 				}
 			}
 		}, () -> ParticleTypes.TOTEM_OF_UNDYING);
+
 		private final int defaultLifespan;
 		private final Consumer<EntityGhostMarker> expireEffect;
 		@Nullable

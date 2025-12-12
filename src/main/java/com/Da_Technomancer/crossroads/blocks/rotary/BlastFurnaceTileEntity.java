@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.blocks.rotary;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.api.rotary.IAxleCapable;
 import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
@@ -14,6 +13,8 @@ import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.gui.container.BlastFurnaceContainer;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.essentials.api.BlockUtil;
+import com.Da_Technomancer.essentials.api.IFluidCapable;
+import com.Da_Technomancer.essentials.api.IItemCapable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -32,7 +33,6 @@ import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
 
@@ -40,15 +40,15 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Optional;
 
-public class BlastFurnaceTileEntity extends InventoryTE{
+public class BlastFurnaceTileEntity extends InventoryTE implements IAxleCapable, IFluidCapable, IItemCapable{
 
 	public static final BlockEntityType<BlastFurnaceTileEntity> TYPE = CRTileEntity.createType(BlastFurnaceTileEntity::new, CRBlocks.blastFurnace);
 
 	public static final int CARBON_LIMIT = 32;
-	public static final double POWER = 5;
+	public static final double POWER = 2;
 	public static final double REQUIRED_SPD = 2.5;
 	public static final int REQUIRED_PRG = 40;
-	public static final double INERTIA = 200;
+	public static final double INERTIA = 100;
 
 	private static final TagKey<Item> CARBON_SOURCES = CraftingUtil.getTagKey(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "blast_furnace_carbon"));
 
@@ -75,15 +75,16 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 	}
 
 	@Override
+	@Nullable
+	public IFluidHandler getFluidHandler(Direction dir){
+		return globalFluidHandler;
+	}
+
+	@Override
 	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
 		chat.add(Component.translatable("tt.crossroads.boilerplate.progress", progress, REQUIRED_PRG));
 		chat.add(Component.translatable("tt.crossroads.blast_furnace.carbon", carbon));
 		super.addInfo(chat, player, hit);
-	}
-
-	@Override
-	protected boolean useRotary(){
-		return true;
 	}
 
 	@Override
@@ -204,5 +205,11 @@ public class BlastFurnaceTileEntity extends InventoryTE{
 			return axleHandler;
 		}
 		return null;
+	}
+
+	@Nullable
+	@Override
+	public IItemHandler getItemHandler(Direction direction){
+		return itemHandler;
 	}
 }

@@ -9,6 +9,8 @@ import com.Da_Technomancer.crossroads.crafting.OreCleanserRec;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.OreCleanserContainer;
 import com.Da_Technomancer.essentials.api.BlockUtil;
+import com.Da_Technomancer.essentials.api.IFluidCapable;
+import com.Da_Technomancer.essentials.api.IItemCapable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -25,11 +27,12 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-public class OreCleanserTileEntity extends InventoryTE{
+public class OreCleanserTileEntity extends InventoryTE implements IFluidCapable, IItemCapable{
 
 	public static final BlockEntityType<OreCleanserTileEntity> TYPE = CRTileEntity.createType(OreCleanserTileEntity::new, CRBlocks.oreCleanser);
 
@@ -52,6 +55,12 @@ public class OreCleanserTileEntity extends InventoryTE{
 		return 2;
 	}
 
+	@Nullable
+	@Override
+	public IItemHandler getItemHandler(Direction direction){
+		return itemHandler;
+	}
+
 	public int getProgress(){
 		return Math.min(progress, 50);
 	}
@@ -68,7 +77,14 @@ public class OreCleanserTileEntity extends InventoryTE{
 				created = inventory[0].copy();
 				created.setCount(1);
 			}else{
-				created = rec.get().value().assemble(this).copy();
+				ItemStack res;
+				ItemStack result = rec.get().value().getResultItem();
+				if(result.isEmpty()){
+					res = result;
+				}else{
+					res = result.copy();
+				}
+				created = res.copy();
 			}
 
 			if(!inventory[1].isEmpty() && (inventory[1].getMaxStackSize() - inventory[1].getCount() < created.getCount() || !BlockUtil.sameItem(created, inventory[1]))){

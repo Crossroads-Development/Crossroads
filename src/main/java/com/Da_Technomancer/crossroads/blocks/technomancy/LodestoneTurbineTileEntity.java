@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.CRConfig;
-import com.Da_Technomancer.crossroads.api.CRCapabilities;
+import com.Da_Technomancer.crossroads.api.rotary.IAxleCapable;
 import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.api.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -11,11 +11,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class LodestoneTurbineTileEntity extends ModuleTE{
+public class LodestoneTurbineTileEntity extends ModuleTE implements IAxleCapable{
 
 	public static final BlockEntityType<LodestoneTurbineTileEntity> TYPE = CRTileEntity.createType(LodestoneTurbineTileEntity::new, CRBlocks.lodestoneTurbine);
 
@@ -24,11 +22,6 @@ public class LodestoneTurbineTileEntity extends ModuleTE{
 
 	public LodestoneTurbineTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state);
-	}
-
-	@Override
-	protected boolean useRotary(){
-		return true;
 	}
 
 	@Override

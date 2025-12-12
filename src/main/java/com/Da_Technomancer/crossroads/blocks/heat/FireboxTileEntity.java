@@ -2,11 +2,13 @@ package com.Da_Technomancer.crossroads.blocks.heat;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.CRProperties;
+import com.Da_Technomancer.crossroads.api.heat.IHeatCapable;
 import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.FireboxContainer;
+import com.Da_Technomancer.essentials.api.IItemCapable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -19,13 +21,11 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.items.IItemHandler;
-
 
 import javax.annotation.Nullable;
 
-public class FireboxTileEntity extends InventoryTE{
+public class FireboxTileEntity extends InventoryTE implements IHeatCapable, IItemCapable{
 
 	public static final BlockEntityType<FireboxTileEntity> TYPE = CRTileEntity.createType(FireboxTileEntity::new, CRBlocks.firebox);
 
@@ -37,11 +37,6 @@ public class FireboxTileEntity extends InventoryTE{
 
 	public FireboxTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state, 1);
-	}
-
-	@Override
-	protected boolean useHeat(){
-		return true;
 	}
 
 	public int getBurnProg(){

@@ -2,325 +2,218 @@ package com.Da_Technomancer.crossroads.api.witchcraft;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.api.CRReflection;
+import com.Da_Technomancer.crossroads.EventHandlerCommon;
+import com.Da_Technomancer.crossroads.api.LazyCache;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
-import com.Da_Technomancer.crossroads.entity.EntityGhostMarker;
+import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
+import com.Da_Technomancer.crossroads.api.packets.StreamCodecUtils;
 import com.Da_Technomancer.crossroads.entity.mob_effects.CRPotions;
-import com.Da_Technomancer.essentials.api.ReflectionUtil;
-import com.mojang.authlib.GameProfile;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.EntityTypeTags;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.animal.horse.AbstractHorse;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.common.util.FakePlayerFactory;
-import net.neoforged.neoforge.common.util.INBTSerializable;
+import net.minecraft.world.level.Level;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class EntityTemplate implements INBTSerializable<CompoundTag>{
+public record EntityTemplate(@Nonnull ResourceLocation entityID, @Nonnull LazyCache<EntityType<?>> entityType, @Nonnull LazyCache<Integer> modifierComplexity, @Nonnull LazyCache<Integer> modifierSoulComplexity, int quality, @Nonnull Map<IEntityModifierType<?>, IEntityModifier> modifiers){
 
-	//TODO: going to overhaul this class as part of the cloning rework
+	public static final Codec<EntityTemplate> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+			ResourceLocation.CODEC.fieldOf("entity_id").forGetter(EntityTemplate::entityID),
+			ExtraCodecs.NON_NEGATIVE_INT.fieldOf("quality").forGetter(EntityTemplate::quality),
+			Codec.dispatchedMap(IEntityModifierType.CODEC, IEntityModifierType::modifierCodec).fieldOf("modifiers").forGetter(EntityTemplate::modifiers)
+	).apply(instance, EntityTemplate::new));
 
-	//TODO
-	public static final Codec<EntityTemplate> CODEC = null;
-	public static final StreamCodec<ByteBuf, EntityTemplate> STREAM_CODEC = null;
+	public static final StreamCodec<ByteBuf, EntityTemplate> STREAM_CODEC = StreamCodec.composite(
+			ResourceLocation.STREAM_CODEC, EntityTemplate::entityID,
+			ByteBufCodecs.VAR_INT, EntityTemplate::quality,
+			StreamCodecUtils.dispatchedMap(IEntityModifierType.STREAM_CODEC, IEntityModifierType::modifierStreamCodec), EntityTemplate::modifiers,
+			EntityTemplate::new
+	);
+	public static final EntityTemplate DEFAULT = new EntityTemplate(ResourceLocation.parse("pig"), 0, new HashMap<>(0));
 
-	public static final String RESPAWNING_KEY = "cr_respawning";
-	public static final String LOYAL_KEY = "cr_loyal";
-	public static final String OWNER_KEY = "cr_owner";
+	public static final String TEMPLATE_KEY = "cr_template";
 
-	private static final Method OFFSPRING_SPAWNING_METHOD = ReflectionUtil.reflectMethod(CRReflection.OFFSPRING_SPAWN_EGG);
+	private static final int MIN_COMPLEXITY = 1;
+	private static final int MIN_SOUL_COMPLEXITY = 0;
+	public static final int MIN_QUALITY = 0;
+	public static final int MAX_QUALITY = 100;
 
-	private ResourceLocation entityName;
-	@Nullable
-	private Component customName;
-	private boolean loyal;
-	private boolean respawning;
-	private ArrayList<MobEffectInstance> effects;//Durations of these effects are ignored when applying
-	private int degradation;
-	@Nullable
-	private UUID imprintingPlayer;
-	@Nullable
-	private UUID originatingUUID;//UUID of the entity that created this template; data is usually dropped after processing
-
-	//Cache generated based on entity name
-	private EntityType<?> entityType;
-
-	public EntityTemplate(){
-
+	public EntityTemplate(ResourceLocation entityID, int quality, Map<IEntityModifierType<?>, IEntityModifier> modifiers){
+		this(entityID, new LazyCache<>(() -> BuiltInRegistries.ENTITY_TYPE.get(entityID)), new LazyCache<>(() -> modifiers.values().stream().map(IEntityModifier::complexity).reduce(0, Integer::sum)), new LazyCache<>(() -> modifiers.values().stream().map(IEntityModifier::soulComplexity).reduce(0, Integer::sum)), Math.max(MIN_QUALITY, Math.min(MAX_QUALITY, quality)), new HashMap<>(modifiers));
 	}
 
-	public EntityTemplate(EntityTemplate template){
-		this.entityName = template.entityName;
-		this.entityType = null;
-		this.loyal = template.loyal;
-		this.respawning = template.respawning;
-		this.effects = new ArrayList<>(template.getEffects());
-		this.degradation = template.degradation;
-		this.originatingUUID = template.originatingUUID;
-		this.customName = template.customName;
-		this.imprintingPlayer = template.imprintingPlayer;
+	public EntityTemplate withQuality(int newQuality){
+		if(newQuality == quality){
+			return this;
+		}
+		return new EntityTemplate(entityID, newQuality, modifiers);
 	}
 
-	public ResourceLocation getEntityName(){
-		return entityName;
+	public EntityTemplate withMob(ResourceLocation newEntityID){
+		return new EntityTemplate(newEntityID, quality, modifiers);
 	}
 
-	public void setEntityName(ResourceLocation entityName){
-		this.entityName = entityName;
-		entityType = null;
+	public EntityTemplate withModifiers(Map<IEntityModifierType<?>, IEntityModifier> newModifiers){
+		return new EntityTemplate(entityID, quality, newModifiers);
 	}
 
 	@Nullable
 	public EntityType<?> getEntityType(){
-		if(entityType == null){
-			//Generate a cache based on entityName
-			entityType = entityName == null ? null : BuiltInRegistries.ENTITY_TYPE.get(entityName);
+		return entityType.get();
+	}
+
+	private int baseComplexity(){
+		//TODO balance
+		if(isCloningForbidden(entityID)){
+			return 999;
 		}
-		return entityType;
-	}
-
-	public boolean isLoyal(){
-		return loyal;
-	}
-
-	public void setLoyal(boolean loyal){
-		this.loyal = loyal;
-	}
-
-	public boolean isRespawning(){
-		return respawning;
-	}
-
-	public void setRespawning(boolean respawning){
-		this.respawning = respawning;
-	}
-
-	@Nullable
-	public Component getCustomName(){
-		return customName;
-	}
-
-	public void setCustomName(@Nullable Component customName){
-		this.customName = customName;
-	}
-
-	@Nullable
-	public UUID getImprintingPlayer(){
-		return imprintingPlayer;
-	}
-
-	public void setImprintingPlayer(@Nullable UUID imprintingPlayer){
-		this.imprintingPlayer = imprintingPlayer;
-	}
-
-	@Nonnull
-	public ArrayList<MobEffectInstance> getEffects(){
-		if(effects == null){
-			effects = new ArrayList<>(0);
+		EntityType<?> entType = getEntityType();
+		if(entType == null){
+			return 999;
 		}
-		return effects;
+		if(CraftingUtil.tagContains(EventHandlerCommon.GHOST_MOB, entType)){
+			return 0;
+		}
+		if(CraftingUtil.tagContains(EventHandlerCommon.HUMANOID_MOB, entType)){
+			return 50;
+		}
+		if(CraftingUtil.tagContains(EntityTypeTags.UNDEAD, entType)){
+			return 10;
+		}
+		return 40;
 	}
 
-	public void setEffects(ArrayList<MobEffectInstance> effects){
-		this.effects = effects;
+	public int totalComplexity(){
+		return Math.max(baseComplexity() + modifierComplexity.get(), MIN_COMPLEXITY);
 	}
 
-	public int getDegradation(){
-		return degradation;
+	private int baseSoulComplexity(){
+		if(entityID.equals(ResourceLocation.parse("minecraft:player"))){
+			//The player can have a soul, as a treat
+			return 1;
+		}
+		EntityType<?> entType = getEntityType();
+		if(entType == null){
+			return 0;
+		}
+		if(CraftingUtil.tagContains(EventHandlerCommon.GHOST_MOB, entType)){
+			return 1;
+		}
+
+		return 0;
 	}
 
-	public void setDegradation(int degradation){
-		this.degradation = degradation;
+	public int totalSoulComplexity(){
+		return Math.max(baseSoulComplexity() + modifierSoulComplexity.get(), MIN_SOUL_COMPLEXITY);
 	}
 
-	@Nullable
-	public UUID getOriginatingUUID(){
-		return originatingUUID;
+	public Tag serializeNBT(HolderLookup.Provider provider){
+		DataResult<Tag> encoded = CODEC.encodeStart(NbtOps.INSTANCE, this);
+		if(encoded.isSuccess()){
+			return encoded.getOrThrow();
+		}
+		Crossroads.logger.error("Failed to encode entity template");
+		Crossroads.logger.error(this);
+		Crossroads.logger.error("Encoding error:" + encoded.error().get().messageSupplier().get());
+		return new CompoundTag();
 	}
 
-	public void setOriginatingUUID(@Nullable UUID originatingUUID){
-		this.originatingUUID = originatingUUID;
-	}
-
-	@Override
-	public CompoundTag serializeNBT(){
-		CompoundTag nbt = new CompoundTag();
-		nbt.putString("entity_name", entityName == null ? "" : entityName.toString());
-		nbt.putBoolean("loyal", loyal);
-		nbt.putBoolean("respawning", respawning);
-		ListTag potions = new ListTag();
-		if(effects != null){
-			for(MobEffectInstance instance : effects){
-				potions.add(instance.save(new CompoundTag()));
-			}
+	public static EntityTemplate deserializeNBT(HolderLookup.Provider provider, Tag nbt){
+		DataResult<com.mojang.datafixers.util.Pair<EntityTemplate, Tag>> decoded = CODEC.decode(NbtOps.INSTANCE, nbt);
+		if(decoded.isSuccess()){
+			return decoded.getOrThrow().getFirst();
 		}
-		nbt.put("potions", potions);
-		nbt.putInt("degradation", degradation);
-		if(customName != null){
-			nbt.putString("custom_name", Component.Serializer.toJson(customName));
-		}
-		if(imprintingPlayer != null){
-			nbt.putUUID("imprinting_player", imprintingPlayer);
-		}
-		if(originatingUUID != null){
-			nbt.putUUID("originating_uuid", originatingUUID);
-		}
-		return nbt;
-	}
-
-	@Override
-	public void deserializeNBT(CompoundTag nbt){
-		String name = nbt.getString("entity_name");
-		entityName = name == null || name.length() == 0 ? null : ResourceLocation.withDefaultNamespace(name);
-		entityType = null;
-		loyal = nbt.getBoolean("loyal");
-		respawning = nbt.getBoolean("respawning");
-		ListTag potions = nbt.getList("potions", 10);//ID 10 is CompoundNBT
-		effects = new ArrayList<>();
-		for(int i = 0; i < potions.size(); i++){
-			effects.add(MobEffectInstance.load(potions.getCompound(i)));
-		}
-		degradation = nbt.getInt("degradation");
-		if(nbt.contains("custom_name")){
-			customName = Component.Serializer.fromJson(nbt.getString("custom_name"));
-		}
-		if(nbt.contains("imprinting_player")){
-			imprintingPlayer = nbt.getUUID("imprinting_player");
-		}
-		if(nbt.contains("originating_uuid")){
-			originatingUUID = nbt.getUUID("originating_uuid");
-		}
-	}
-
-	@Override
-	public boolean equals(Object o){
-		if(this == o){
-			return true;
-		}
-		if(o == null || getClass() != o.getClass()){
-			return false;
-		}
-		EntityTemplate that = (EntityTemplate) o;
-		return loyal == that.loyal && respawning == that.respawning && degradation == that.degradation && entityName.equals(that.entityName) && Objects.equals(customName, that.customName) && Objects.equals(effects, that.effects) && Objects.equals(imprintingPlayer, that.imprintingPlayer) && Objects.equals(originatingUUID, that.originatingUUID);
-	}
-
-	@Override
-	public int hashCode(){
-		return Objects.hash(entityName, customName, loyal, respawning, effects, degradation, imprintingPlayer, originatingUUID);
-	}
-
-	public boolean isDummyTemplate(){
-		return entityName == null;
+		Crossroads.logger.error("Failed to decode entity template");
+		Crossroads.logger.error("Decoding error:" + decoded.error().get().messageSupplier().get());
+		return DEFAULT;
 	}
 
 	/**
 	 * Adds a tooltip based on the information in this template
+	 * Formatted better when called on the client-side!
 	 * @param tooltips The tooltip to append to
-	 * @param maxLines The maximum lines to append. This value will be ignored for essential information
 	 */
-	public void addTooltip(List<Component> tooltips, int maxLines){
-		if(isDummyTemplate()){
-			tooltips.add(Component.translatable("tt.crossroads.boilerplate.entity_template.dummy"));
-			return;
-		}
-
-		getEntityType();//Builds the cache
-
-		int linesUsed = 0;
-
-		if(entityName == null){
-			tooltips.add(Component.translatable("tt.crossroads.boilerplate.entity_template.type.missing"));
-			linesUsed += 1;
-			//Error message, nothing else
-		}else{
-			tooltips.add(Component.translatable("tt.crossroads.boilerplate.entity_template.type").append(entityType == null ? Component.literal(entityName.toString()) : entityType.getDescription()));
-
-			if(maxLines <= 4){
-				//Only a few lines; fit degradation, loyalty, and respawning onto one line
-				MutableComponent detailsCompon = Component.translatable("tt.crossroads.boilerplate.entity_template.degradation", degradation);
-				if(loyal){
-					detailsCompon.append(Component.translatable("tt.crossroads.boilerplate.entity_template.separator"));
-					if(imprintingPlayer != null){
-						detailsCompon.append(Component.translatable("tt.crossroads.boilerplate.entity_template.loyal.preset"));
-					}else{
-						detailsCompon.append(Component.translatable("tt.crossroads.boilerplate.entity_template.loyal"));
-					}
-				}
-				if(respawning){
-					detailsCompon.append(Component.translatable("tt.crossroads.boilerplate.entity_template.separator"));
-					detailsCompon.append(Component.translatable("tt.crossroads.boilerplate.entity_template.respawning"));
-				}
-				tooltips.add(detailsCompon);
-				linesUsed += 1;
-			}else{
-				//Degradation, loyalty, and respawning all get separate lines
-				tooltips.add(Component.translatable("tt.crossroads.boilerplate.entity_template.degradation", degradation));
-				linesUsed += 1;
-				if(loyal){
-					if(imprintingPlayer != null){
-						tooltips.add(Component.translatable("tt.crossroads.boilerplate.entity_template.loyal.preset"));
-					}else{
-						tooltips.add(Component.translatable("tt.crossroads.boilerplate.entity_template.loyal"));
-					}
-					linesUsed += 1;
-				}
-				if(respawning){
-					tooltips.add(Component.translatable("tt.crossroads.boilerplate.entity_template.respawning"));
-					linesUsed += 1;
+	public void addTooltip(List<Component> tooltips, Level level){
+		final EntityType<?> entityType = getEntityType();
+		//Main line with entity name, complexity, soul complexity, quality
+		tooltips.add(Component.translatable("tt.crossroads.boilerplate.entity_template.desc1")
+				.append(MiscUtil.asMutable(entityType == null ? Component.literal(entityID.toString()) : entityType.getDescription())).withStyle(MiscUtil.TT_DYNAMIC)
+				.append(Component.translatable("tt.crossroads.boilerplate.entity_template.desc2", totalComplexity(), totalSoulComplexity(), quality())));
+		//Modifiers
+		if(!modifiers.isEmpty()){
+			//We want modifierComponents sorted in alphabetical order...
+			//...but the system isn't made for that
+			//Known issue: If we're on the client, this works fine
+			//But if we're on the server, it will be alphabetized based on the server language, but displayed to the user in their client language in (probably) the wrong order
+			List<Component> modifierComponents = modifiers.values().stream().map(entityModifier -> entityModifier.getName(entityType, level)).map(component -> Pair.of(component.getString(10), component)).sorted(Comparator.comparing(Pair::getLeft)).map(Pair::getRight).toList();
+			int modifierCount = modifierComponents.size();
+			MutableComponent modifierComponent = Component.translatable("tt.crossroads.boilerplate.entity_template.modifier.start");
+			for(int i = 0; i < modifierCount; i++){
+				modifierComponent.append(modifierComponents.get(i));
+				if(i + 1 != modifierCount){
+					modifierComponent.append(Component.translatable("tt.crossroads.boilerplate.entity_template.modifier.divider"));
 				}
 			}
-
-			int effectCount = effects.size();
-			int needExtension = Math.max(0, effectCount - (maxLines - linesUsed));
-			boolean limitPower = CRConfig.limitPermanentPotionStrength.get();
-			for(MobEffectInstance effect : effects){
-				if(linesUsed < maxLines || needExtension > 0 && linesUsed < maxLines - 1){
-					if(limitPower){
-						//Don't display the potion level
-						tooltips.add(Component.translatable("tt.crossroads.boilerplate.entity_template.potion").append(effect.getEffect().getDisplayName()));
-					}else{
-						tooltips.add(Component.translatable("tt.crossroads.boilerplate.entity_template.potion").append(effect.getEffect().getDisplayName()).append(" ").append(Component.translatable("enchantment.level." + (effect.getAmplifier() + 1))));
-					}
-					linesUsed++;
-				}else{
-					break;
-				}
-			}
-			if(needExtension > 0){
-				tooltips.add(Component.translatable("tt.crossroads.boilerplate.entity_template.potion.additional", needExtension));
-			}
+			tooltips.add(modifierComponent);
 		}
 	}
+
+	private static final ResourceLocation HEALTH_PENALTY_ATTRIBUTE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "degraded_clone");
 
 	@Nullable
 	public static Entity spawnEntityFromTemplate(EntityTemplate template, ServerLevel world, BlockPos pos, MobSpawnType reason, boolean offset, boolean unmapped, @Nullable Component customName, @Nullable Player player){
 		//Check if the entity is on the blacklist. If so, refuse to spawn
-		ResourceLocation entityRegistryName = template.getEntityName();
-		if(!isCloningAllowed(entityRegistryName)){
+		ResourceLocation entityRegistryName = template.entityID();
+		if(isCloningForbidden(entityRegistryName)){
 			return null;
 		}
 
 		EntityType<?> type = template.getEntityType();
 		if(type == null){
 			return null;
+		}
+
+		float mobHealthPenalty = 0;
+		int quality = template.quality();
+		int complexity = template.totalComplexity();
+		if(complexity > quality){
+			mobHealthPenalty = (quality - complexity) * 0.05F;//-1 is -100% health
+			if(mobHealthPenalty <= -.99F){
+				//Clone is going to die immediately on spawning
+				//Force it, and switch the mob type to something crummy
+				type = EntityType.SLIME;
+				mobHealthPenalty = -999;
+			}
 		}
 
 		//Don't pass the itemstack to the spawn method
@@ -330,74 +223,23 @@ public class EntityTemplate implements INBTSerializable<CompoundTag>{
 		if(created == null){
 			return null;
 		}
-		//Custom name
-		//The custom name parameter is used preferentially, with a custom name on the template as a fallback
-		customName = customName == null ? template.customName : customName;
+
 		if(customName != null){
 			created.setCustomName(customName);
 		}
-		//NBT traits
-		CompoundTag nbt = created.getPersistentData();
-		nbt.putBoolean(EntityTemplate.LOYAL_KEY, template.isLoyal());
-		if(template.getImprintingPlayer() != null){
-			nbt.putUUID(EntityTemplate.OWNER_KEY, template.getImprintingPlayer());
-		}
-		nbt.putBoolean(EntityTemplate.RESPAWNING_KEY, template.isRespawning());
 
+		for(IEntityModifier modifier : template.modifiers().values()){
+			created = modifier.apply(created);
+		}
+
+		//Degradation
 		if(created instanceof LivingEntity entity){
-			//Degradation
-			int degradeConfig = CRConfig.degradationPenalty.get();
-			if(template.getDegradation() > 0 && degradeConfig > 0){
-				CRPotions.applyAsPermanent(entity, new MobEffectInstance(CRPotions.HEALTH_PENALTY_EFFECT, Integer.MAX_VALUE, template.getDegradation() * degradeConfig - 1));
-			}
-
-			//Potion effects
-			ArrayList<MobEffectInstance> rawEffects = template.getEffects();
-			for(MobEffectInstance effect : rawEffects){
-				CRPotions.applyAsPermanent(entity, effect);
-			}
-
-			//Loyalty
-			if(template.isLoyal()){
-				//Prevent despawning
-				if(created instanceof Mob){
-					((Mob) created).setPersistenceRequired();
-				}
-
-				Player tamingPlayer = null;
-				//If a target taming player is already set, use that for imprinting
-				//Otherwise, fallback to the player who placed the mob
-				if(template.getImprintingPlayer() != null){
-					tamingPlayer = world.getPlayerByUUID(template.getImprintingPlayer());
-					if(tamingPlayer == null){
-						//Will be null if the player isn't currently online in the world; a fake player is used as a substitute
-						tamingPlayer = FakePlayerFactory.get(world, new GameProfile(template.getImprintingPlayer(), null));
-					}
-				}
-				if(tamingPlayer == null){
-					tamingPlayer = player;
-				}
-
-				//Auto-tame it to the player who spawned it
-				if(tamingPlayer != null){
-					//There isn't a single method for this. The correct way to set something as tamed varies based on the mob
-					//New vanilla tamable mobs may require changes here, and modded tameable mobs are unlikely to work
-					if(created instanceof TamableAnimal){
-						((TamableAnimal) created).tame(tamingPlayer);
-					}else if(created instanceof AbstractHorse){
-						((AbstractHorse) created).tameWithName(tamingPlayer);
-					}else if(created instanceof Mob && OFFSPRING_SPAWNING_METHOD != null){
-						//As of vanilla MC1.16.5, this is literally only applicable to foxes
-						try{
-							OFFSPRING_SPAWNING_METHOD.invoke(created, tamingPlayer, created);
-						}catch(IllegalAccessException | InvocationTargetException e){
-							Crossroads.logger.catching(e);
-						}
-					}
-				}
+			if(mobHealthPenalty < 0){
+				entity.getAttributes().getInstance(Attributes.MAX_HEALTH).addPermanentModifier(new AttributeModifier(HEALTH_PENALTY_ATTRIBUTE, mobHealthPenalty, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
 			}
 		}
-
+		//Save the original EntityTemplate in the entity
+		created.getPersistentData().put(TEMPLATE_KEY, template.serializeNBT(world.registryAccess()));
 		return created;
 	}
 
@@ -406,56 +248,47 @@ public class EntityTemplate implements INBTSerializable<CompoundTag>{
 	}
 
 	public static EntityTemplate getTemplateFromEntity(LivingEntity source){
-		EntityTemplate template = new EntityTemplate();
-		template.setEntityName(MiscUtil.getRegistryName(source.getType(), BuiltInRegistries.ENTITY_TYPE));
-		template.setRespawning(source.getPersistentData().getBoolean(RESPAWNING_KEY));
-		template.setLoyal(source.getPersistentData().getBoolean(LOYAL_KEY));
-		if(source.getPersistentData().contains(OWNER_KEY)){
-			template.setImprintingPlayer(source.getPersistentData().getUUID(OWNER_KEY));
+//		EntityTemplate template = new EntityTemplate();
+//		template.setEntityName(MiscUtil.getRegistryName(source.getType(), BuiltInRegistries.ENTITY_TYPE));
+//		template.setRespawning(source.getPersistentData().getBoolean(RESPAWNING_KEY));
+//		template.setLoyal(source.getPersistentData().getBoolean(LOYAL_KEY));
+//		if(source.getPersistentData().contains(OWNER_KEY)){
+//			template.setImprintingPlayer(source.getPersistentData().getUUID(OWNER_KEY));
+//		}
+//
+//		if(source.getCustomName() != null){
+//			template.setCustomName(source.getCustomName());
+//		}
+//
+//		Collection<MobEffectInstance> effects = source.getActiveEffects();
+//		int degrade = 0;
+//		ArrayList<MobEffectInstance> permanentEffects = new ArrayList<>(0);
+//		for(MobEffectInstance instance : effects){
+//			if(MiscUtil.getRegistryName(CRPotions.HEALTH_PENALTY_EFFECT.value(), BuiltInRegistries.MOB_EFFECT).equals(MiscUtil.getRegistryName(instance.getEffect().value(), BuiltInRegistries.MOB_EFFECT))){
+//				//This is the health penalty, interpret as degradation
+//				degrade += (instance.getAmplifier() + 1) / 2;//We divide by 2, as degradation is measured in hearts
+//			}else if(!instance.getEffect().value().isInstantenous() && instance.getDuration() > CRPotions.PERM_EFFECT_CUTOFF){
+//				permanentEffects.add(new MobEffectInstance(instance));//Copy the value to prevent changes in the mutable instance
+//			}
+//		}
+//		template.setDegradation(degrade);
+//		template.setEffects(permanentEffects);
+//		template.setOriginatingUUID(source.getUUID());
+//
+//		return template;
+		Tag savedTemplateData = source.getPersistentData().get(TEMPLATE_KEY);
+		if(savedTemplateData != null){
+			return deserializeNBT(source.registryAccess(), savedTemplateData).withQuality(0);
 		}
-
-		if(source.getCustomName() != null){
-			template.setCustomName(source.getCustomName());
-		}
-
-		Collection<MobEffectInstance> effects = source.getActiveEffects();
-		int degrade = 0;
-		ArrayList<MobEffectInstance> permanentEffects = new ArrayList<>(0);
-		for(MobEffectInstance instance : effects){
-			if(MiscUtil.getRegistryName(CRPotions.HEALTH_PENALTY_EFFECT.value(), BuiltInRegistries.MOB_EFFECT).equals(MiscUtil.getRegistryName(instance.getEffect().value(), BuiltInRegistries.MOB_EFFECT))){
-				//This is the health penalty, interpret as degradation
-				degrade += (instance.getAmplifier() + 1) / 2;//We divide by 2, as degradation is measured in hearts
-			}else if(!instance.getEffect().isInstantenous() && instance.getDuration() > CRPotions.PERM_EFFECT_CUTOFF){
-				permanentEffects.add(new MobEffectInstance(instance));//Copy the value to prevent changes in the mutable instance
-			}
-		}
-		template.setDegradation(degrade);
-		template.setEffects(permanentEffects);
-		template.setOriginatingUUID(source.getUUID());
-
-		return template;
+		ResourceLocation entityName = MiscUtil.getRegistryName(source.getType(), BuiltInRegistries.ENTITY_TYPE);
+		return new EntityTemplate(entityName, 0, new HashMap<>(0));
 	}
 
-	public static boolean isCloningAllowed(ResourceLocation entityName){
+	public static boolean isCloningForbidden(ResourceLocation entityName){
 		if(entityName.equals(ResourceLocation.parse("minecraft:player"))){
-			return false;
+			return true;
 		}
 		List<? extends String> blacklist = CRConfig.cloningBlacklist.get();
-		return blacklist.stream().noneMatch(entry -> ResourceLocation.withDefaultNamespace(entry).equals(entityName));
-	}
-
-	public static void handleEntityDeath(LivingEntity entity){
-		//For genetically modified mobs with respawning, if they died without the respawn marker effect, create a ghost marker to respawn them
-		EntityTemplate template;
-		if(!entity.level().isClientSide && (template = EntityTemplate.getTemplateFromEntity(entity)).isRespawning()){
-			int delay = CRConfig.respawnDelay.get() * 20;//Convert from seconds to ticks
-			//Ensure it doesn't have the marker effect and this is enabled in config
-			if(!entity.hasEffect(EntityTemplate.getRespawnMarkerEffect()) && delay > 0){
-				EntityGhostMarker marker = new EntityGhostMarker(entity.level(), EntityGhostMarker.EnumMarkerType.RESPAWNING, delay);
-				marker.setPos(entity.getX(), entity.getY(), entity.getZ());
-				marker.data = template.serializeNBT();
-				entity.level().addFreshEntity(marker);
-			}
-		}
+		return blacklist.stream().anyMatch(entry -> ResourceLocation.withDefaultNamespace(entry).equals(entityName));
 	}
 }

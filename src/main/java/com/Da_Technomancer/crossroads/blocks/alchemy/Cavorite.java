@@ -14,7 +14,7 @@ public class Cavorite extends Block{
 
 	public Cavorite(){
 		super(CRBlocks.getRockProperty());
-		String name = "cavorite";
+		String name = "block_cavorite";
 		CRBlocks.queueForRegister(name, this);
 	}
 

@@ -36,11 +36,6 @@ public class DynamoTileEntity extends ModuleTE implements IEnergyCapable, IAxleC
 	}
 
 	@Override
-	protected boolean useRotary(){
-		return true;
-	}
-
-	@Override
 	public double getMoInertia(){
 		return INERTIA;
 	}

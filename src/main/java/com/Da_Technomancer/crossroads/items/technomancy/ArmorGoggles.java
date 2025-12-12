@@ -24,6 +24,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -90,6 +91,7 @@ public class ArmorGoggles extends TechnomancyArmor implements ICreativeTabPopula
 		return super.getArmorTexture(stack, entity, slot, layer, innerModel);
 	}
 
+	@Nonnull
 	@Override
 	public ItemStack[] populateCreativeTab(){
 		ItemStack[] result = new ItemStack[2];

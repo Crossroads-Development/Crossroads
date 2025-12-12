@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.crafting;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.api.crafting.IOptionalRecipe;
+import com.Da_Technomancer.crossroads.api.witchcraft.IEntityModifierType;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -16,6 +17,8 @@ import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+
+import java.util.HashMap;
 
 public class EmbryoLabMorphRec implements IOptionalRecipe<RecipeInput>{
 

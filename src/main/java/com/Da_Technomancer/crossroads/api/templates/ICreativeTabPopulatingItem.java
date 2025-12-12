@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.api.templates;
 
 import net.minecraft.world.item.ItemStack;
 
+import javax.annotation.Nonnull;
 import java.util.function.Supplier;
 
 /**
@@ -12,6 +13,7 @@ public interface ICreativeTabPopulatingItem extends Supplier<ItemStack[]>{
 	/**
 	 * @return Itemstacks to add to the creative tab. Array can be empty
 	 */
+	@Nonnull
 	ItemStack[] populateCreativeTab();
 
 	@Override

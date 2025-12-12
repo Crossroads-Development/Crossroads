@@ -226,6 +226,7 @@ public final class CRItems{
 	public static Item hopperHawkSpawnEgg;
 	public static BloodCompass bloodCompass;
 	public static Item mainspring;
+	public static ShavedIce shavedIce;
 
 	public static OreProfileItem oreGravel;
 	public static OreProfileItem oreClump;
@@ -243,14 +244,6 @@ public final class CRItems{
 	public static ToggleGear invToggleGear;
 	public static LargeGear largeGear;
 	public static AxleMount axleMount;
-	//	@Deprecated
-//	public static Item gearFacadeStoneBrick;
-//	@Deprecated
-//	public static Item gearFacadeCobble;
-//	@Deprecated
-//	public static Item gearFacadeIron;
-//	@Deprecated
-//	public static Item gearFacadeGlass;
 	public static GearFacade gearFacade;
 
 	public static final DeferredRegister.DataComponents DATA_COMPONENTS = DeferredRegister.DataComponents.createDataComponents(Crossroads.MODID);
@@ -258,7 +251,7 @@ public final class CRItems{
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> SATURATION_RESTORED_DATA = DATA_COMPONENTS.registerComponentType("sat", builder -> builder.persistent(ExtraCodecs.NON_NEGATIVE_INT).networkSynchronized(ByteBufCodecs.VAR_INT));
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> ELECTRIC_CHARGE_DATA = DATA_COMPONENTS.registerComponentType("charge", builder -> builder.persistent(ExtraCodecs.NON_NEGATIVE_INT).networkSynchronized(ByteBufCodecs.VAR_INT));
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<ReagentMap>> REAGENT_DATA = DATA_COMPONENTS.registerComponentType("reagents", builder -> builder.persistent(ReagentMap.CODEC).networkSynchronized(ReagentMap.STREAM_CODEC));
-	public static final DeferredHolder<DataComponentType<?>, DataComponentType<String>> FACADE_BLOCK_DATA = DATA_COMPONENTS.registerComponentType("facadeBlock", builder -> builder.persistent(Codec.STRING).networkSynchronized(ByteBufCodecs.STRING_UTF8));
+	public static final DeferredHolder<DataComponentType<?>, DataComponentType<String>> FACADE_BLOCK_DATA = DATA_COMPONENTS.registerComponentType("facade_block", builder -> builder.persistent(Codec.STRING).networkSynchronized(ByteBufCodecs.STRING_UTF8));
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<String>> ORE_MATERIAL_ID_DATA = DATA_COMPONENTS.registerComponentType("material", builder -> builder.persistent(Codec.STRING).networkSynchronized(ByteBufCodecs.STRING_UTF8));
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<ArmorGoggles.LensesSet>> GOGGLE_LENSES_DATA = DATA_COMPONENTS.registerComponentType("lenses", builder -> builder.persistent(ArmorGoggles.LensesSet.CODEC).networkSynchronized(ArmorGoggles.LensesSet.STREAM_CODEC));
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<BeamUnit>> STORED_BEAM_DATA = DATA_COMPONENTS.registerComponentType("beam", builder -> builder.persistent(BeamUnit.CODEC).networkSynchronized(BeamUnit.STREAM_CODEC));
@@ -274,6 +267,7 @@ public final class CRItems{
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<Double>> TEMPERATURE_DATA = DATA_COMPONENTS.registerComponentType("temperature", builder -> builder.persistent(Codec.DOUBLE).networkSynchronized(ByteBufCodecs.DOUBLE));
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<FluidStack>> FLUID_DATA = DATA_COMPONENTS.registerComponentType("fluid", builder -> builder.persistent(FluidStack.CODEC).networkSynchronized(FluidStack.STREAM_CODEC));
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<PathSigil.DetailedCrafterRecipeReference>> SIGIL_RECIPE_DATA = DATA_COMPONENTS.registerComponentType("sigil_recipe", builder -> builder.persistent(PathSigil.DetailedCrafterRecipeReference.CODEC).networkSynchronized(PathSigil.DetailedCrafterRecipeReference.STREAM_CODEC));
+	public static final DeferredHolder<DataComponentType<?>, DataComponentType<BloodSample.EntitySourceData>> ENTITY_SOURCE_DATA = DATA_COMPONENTS.registerComponentType("entity_source", builder -> builder.persistent(BloodSample.EntitySourceData.CODEC).networkSynchronized(BloodSample.EntitySourceData.STREAM_CODEC));
 
 	public static final DeferredRegister<ArmorMaterial> ARMOR_MATERIALS = DeferredRegister.create(BuiltInRegistries.ARMOR_MATERIAL, Crossroads.MODID);
 	public static final Holder<ArmorMaterial> BOBO_ARMOR_MATERIAL = ARMOR_MATERIALS.register("bobo", () -> new ArmorMaterial(
@@ -350,34 +344,6 @@ public final class CRItems{
 		invToggleGear = new ToggleGear(true);
 		largeGear = new LargeGear();
 		axleMount = new AxleMount();
-//		gearFacadeStoneBrick = queueForRegister("gear_facade_stone_brick", new Item(CRItems.baseItemProperties()){
-//			@Override
-//			public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
-//				tooltip.add(Component.literal("THIS ITEM IS BEING REMOVED"));
-//				tooltip.add(Component.literal("CRAFT IT INTO THE NEW VERSION"));
-//			}
-//		}, null);
-//		gearFacadeCobble = queueForRegister("gear_facade_cobble", new Item(CRItems.baseItemProperties()){
-//			@Override
-//			public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
-//				tooltip.add(Component.literal("THIS ITEM IS BEING REMOVED"));
-//				tooltip.add(Component.literal("CRAFT IT INTO THE NEW VERSION"));
-//			}
-//		}, null);
-//		gearFacadeIron = queueForRegister("gear_facade_iron", new Item(CRItems.baseItemProperties()){
-//			@Override
-//			public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
-//				tooltip.add(Component.literal("THIS ITEM IS BEING REMOVED"));
-//				tooltip.add(Component.literal("CRAFT IT INTO THE NEW VERSION"));
-//			}
-//		}, null);
-//		gearFacadeGlass = queueForRegister("gear_facade_glass", new Item(CRItems.baseItemProperties()){
-//			@Override
-//			public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
-//				tooltip.add(Component.literal("THIS ITEM IS BEING REMOVED"));
-//				tooltip.add(Component.literal("CRAFT IT INTO THE NEW VERSION"));
-//			}
-//		}, null);
 		gearFacade = new GearFacade();
 		handCrank = new HandCrank();
 		debugGearWriter = new CheatWandRotary();
@@ -397,6 +363,7 @@ public final class CRItems{
 		sigilTech = new PathSigil(EnumPath.TECHNOMANCY);
 		sigilAlch = new PathSigil(EnumPath.ALCHEMY);
 		sigilWitch = new PathSigil(EnumPath.WITCHCRAFT);
+		shavedIce = new ShavedIce();
 
 		//Beam items
 		pureQuartz = queueForRegister("pure_quartz", new Item(baseItemProperties()));
@@ -495,7 +462,8 @@ public final class CRItems{
 	}
 
 	public static void init(IEventBus modBus){
-		//TODO data components
+		DATA_COMPONENTS.register(modBus);
+		ARMOR_MATERIALS.register(modBus);
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -558,7 +526,7 @@ public final class CRItems{
 		ItemPropertyFunction syringePropertyGetter = (ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity, int unmapped) -> syringe.isTreated(stack) ? 1 : 0;
 		ItemProperties.register(syringe, ResourceLocation.withDefaultNamespace("treated"), syringePropertyGetter);
 		//Blood compass
-		ItemProperties.register(bloodCompass, ResourceLocation.withDefaultNamespace("angle"), new CompassItemPropertyFunction((world, stack, player) -> bloodCompass.getTarget(stack, player, world)));
+		ItemProperties.register(bloodCompass, ResourceLocation.withDefaultNamespace("angle"), new CompassItemPropertyFunction(bloodCompass::getTargetClient));
 	}
 
 	/**

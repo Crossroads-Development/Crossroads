@@ -14,6 +14,7 @@ import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.CopshowiumRec;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.CopshowiumMakerContainer;
+import com.Da_Technomancer.essentials.api.IFluidCapable;
 import com.Da_Technomancer.essentials.api.ILinkTE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -38,7 +39,7 @@ import java.util.Optional;
 import java.util.Set;
 
 
-public class CopshowiumCreationChamberTileEntity extends InventoryTE implements IFluxLink, IBeamCapable{
+public class CopshowiumCreationChamberTileEntity extends InventoryTE implements IFluxLink, IBeamCapable, IFluidCapable{
 
 	public static final BlockEntityType<CopshowiumCreationChamberTileEntity> TYPE = CRTileEntity.createType(CopshowiumCreationChamberTileEntity::new, CRBlocks.copshowiumCreationChamber);
 

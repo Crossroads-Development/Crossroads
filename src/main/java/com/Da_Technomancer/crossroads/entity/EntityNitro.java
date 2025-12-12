@@ -19,7 +19,7 @@ public class EntityNitro extends ThrowableProjectile implements ItemSupplier{
 
 	public static EntityType<EntityNitro> type;
 
-	private static final ItemStack RENDER_STACK = new ItemStack(CRItems.nitroglycerin);
+	private final ItemStack RENDER_STACK = new ItemStack(CRItems.nitroglycerin);
 
 	public EntityNitro(EntityType<EntityNitro> type, Level worldIn){
 		super(type, worldIn);

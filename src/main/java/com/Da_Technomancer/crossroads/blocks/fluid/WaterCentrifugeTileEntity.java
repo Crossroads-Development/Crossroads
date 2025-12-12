@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.fluid;
 
+import com.Da_Technomancer.crossroads.api.rotary.IAxleCapable;
 import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -8,6 +9,8 @@ import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.CentrifugeRec;
 import com.Da_Technomancer.crossroads.gui.container.WaterCentrifugeContainer;
 import com.Da_Technomancer.essentials.api.BlockUtil;
+import com.Da_Technomancer.essentials.api.IFluidCapable;
+import com.Da_Technomancer.essentials.api.IItemCapable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -20,14 +23,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-public class WaterCentrifugeTileEntity extends InventoryTE{
+public class WaterCentrifugeTileEntity extends InventoryTE implements IAxleCapable, IFluidCapable, IItemCapable{
 
 	public static final BlockEntityType<WaterCentrifugeTileEntity> TYPE = CRTileEntity.createType(WaterCentrifugeTileEntity::new, CRBlocks.waterCentrifuge);
 
@@ -52,13 +55,14 @@ public class WaterCentrifugeTileEntity extends InventoryTE{
 		return 2;
 	}
 
-	public FluidStack getInputFluid(){
-		return fluids[0];//Used for recipe selection
+	@Override
+	@Nullable
+	public IFluidHandler getFluidHandler(Direction dir){
+		return globalFluidHandler;
 	}
 
-	@Override
-	public boolean useRotary(){
-		return true;
+	public FluidStack getInputFluid(){
+		return fluids[0];//Used for recipe selection
 	}
 
 	@Override
@@ -113,6 +117,12 @@ public class WaterCentrifugeTileEntity extends InventoryTE{
 			return axleHandler;
 		}
 		return null;
+	}
+
+	@Nullable
+	@Override
+	public IItemHandler getItemHandler(Direction direction){
+		return itemHandler;
 	}
 
 	@Override

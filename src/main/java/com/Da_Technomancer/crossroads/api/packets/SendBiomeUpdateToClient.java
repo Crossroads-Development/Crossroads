@@ -31,8 +31,6 @@ public record SendBiomeUpdateToClient(BlockPos pos, String newBiome) implements 
 
 	}
 
-	// TODO: This should be client side only. Remove this message before final commit.
-
 	@Override
 	public Type<? extends CustomPacketPayload> type(){
 		return TYPE;

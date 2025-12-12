@@ -1,27 +1,28 @@
 package com.Da_Technomancer.crossroads.crafting;
 
-import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.api.crafting.IOptionalRecipe;
+import com.Da_Technomancer.crossroads.api.witchcraft.EntityTemplate;
 import com.Da_Technomancer.crossroads.api.witchcraft.IPerishable;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.witchcraft.IncubatorTileEntity;
 import com.Da_Technomancer.crossroads.items.CRItems;
+import com.Da_Technomancer.crossroads.items.witchcraft.GeneticSpawnEgg;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
-public class IncubatorRec implements IOptionalRecipe<RecipeInput>{
+public class IncubatorRec implements IOptionalRecipe<IncubatorTileEntity>{
 
 	private final String group;
 	private final Ingredient mainInput;
@@ -57,30 +58,24 @@ public class IncubatorRec implements IOptionalRecipe<RecipeInput>{
 	}
 
 	@Override
-	public boolean matches(RecipeInput input, Level worldIn){
-		return active && input instanceof IncubatorTileEntity incubator && mainInput.test(incubator.getItem(0)) && secondaryInput.test(incubator.getItem(1));
+	public boolean matches(IncubatorTileEntity input, Level worldIn){
+		return active && mainInput.test(input.getItem(0)) && secondaryInput.test(input.getItem(1));
 	}
 
-	/**
-	 * TODO: what the hell is this? And should it be using RecipeInput instead of Container now
-	 * Use this instead of getResultItem
-	 * It is safe to modify the returned itemstack
-	 * @param inv Container with the ingredient item in slot 0
-	 * @param worldIn World
-	 * @return The created itemstack
-	 */
-	public ItemStack getCreatedItem(Container inv, Level worldIn){
+	@Override
+	public @NotNull ItemStack assemble(IncubatorTileEntity recipeInput, HolderLookup.Provider var2){
 		ItemStack created = getResultItem().copy();
 		if(datacopy){
-			try{
-				CRItems.geneticSpawnEgg.withEntityData(created, CRItems.embryo.getEntityTypeData(inv.getItem(0)));
-			}catch(Exception e){
-				Crossroads.logger.error("Invalid item types for datacopy in incubator recipe", e); // TODO: figure out something other than ID that'll identify this recipe
+			ItemStack mainInputItem = recipeInput.getItem(0);
+			created.applyComponents(mainInputItem.getComponents());
+			if(created.getItem() instanceof GeneticSpawnEgg){
+				GeneticSpawnEgg.withEntityData(created, mainInputItem.getOrDefault(CRItems.GENETICS_DATA, EntityTemplate.DEFAULT));
 			}
+//			CRItems.geneticSpawnEgg.withEntityData(created, CRItems.embryo.getEntityTypeData(recipeInput.getItem(0)));
 			return created;
 		}
-		if(created.getItem() instanceof IPerishable perishable){
-			IPerishable.getAndInitSpoilTime(created, worldIn);//Set the spoil time if perishable
+		if(created.getItem() instanceof IPerishable){
+			IPerishable.getAndInitSpoilTime(created, recipeInput.getLevel());//Set the spoil time if perishable
 		}
 		return created;
 	}

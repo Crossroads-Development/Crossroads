@@ -28,6 +28,7 @@ public final class CRRecipes{
 	public static RecipeSerializer<?> FORMULATION_VAT_SERIAL = null;
 	public static RecipeSerializer<?> BEAM_LENS_SERIAL = null;
 	public static RecipeSerializer<?> EMBRYO_LAB_MORPH_SERIAL = null;
+	public static RecipeSerializer<?> EMBRYO_LAB_MODIFIER_SERIAL = null;
 	public static RecipeSerializer<?> INCUBATOR_SERIAL = null;
 
 	public static final RecipeType<MillRec> MILL_TYPE = RecipeType.simple(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "mill"));
@@ -48,6 +49,7 @@ public final class CRRecipes{
 	public static final RecipeType<FormulationVatRec> FORMULATION_VAT_TYPE = RecipeType.simple(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "formulation_vat"));
 	public static final RecipeType<BeamLensRec> BEAM_LENS_TYPE = RecipeType.simple(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "beam_lens"));
 	public static final RecipeType<EmbryoLabMorphRec> EMBRYO_LAB_MORPH_TYPE = RecipeType.simple(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "embryo_lab_morph"));
+	public static final RecipeType<EmbryoLabModifierRec> EMBRYO_LAB_MODIFIER_TYPE = RecipeType.simple(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "embryo_lab_modifier"));
 	public static final RecipeType<IncubatorRec> INCUBATOR_TYPE = RecipeType.simple(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "incubator"));
 
 	private static boolean hasInit = false;
@@ -76,6 +78,7 @@ public final class CRRecipes{
 		toRegisterType.put("formulation_vat", FORMULATION_VAT_TYPE);
 		toRegisterType.put("beam_lens", BEAM_LENS_TYPE);
 		toRegisterType.put("embryo_lab_morph", EMBRYO_LAB_MORPH_TYPE);
+		toRegisterType.put("embryo_lab_modifier", EMBRYO_LAB_MODIFIER_TYPE);
 		toRegisterType.put("incubator", INCUBATOR_TYPE);
 
 		STAMP_MILL_SERIAL = MiscUtil.putReturn(toRegisterSerializer, "stamp_mill", new SingleIngrRecipe.SingleRecipeSerializer<>(StampMillRec::new, new StampMillRec()));
@@ -96,6 +99,7 @@ public final class CRRecipes{
 		FORMULATION_VAT_SERIAL = MiscUtil.putReturn(toRegisterSerializer, "formulation_vat", new FormulationVatRec.Serializer());
 		BEAM_LENS_SERIAL = MiscUtil.putReturn(toRegisterSerializer, ("beam_lens"), new BeamLensRec.Serializer());
 		EMBRYO_LAB_MORPH_SERIAL = MiscUtil.putReturn(toRegisterSerializer, "embryo_lab_morph", new EmbryoLabMorphRec.Serializer());
+		EMBRYO_LAB_MODIFIER_SERIAL = MiscUtil.putReturn(toRegisterSerializer, "embryo_lab_modifier", new EmbryoLabModifierRec.Serializer());
 		INCUBATOR_SERIAL = MiscUtil.putReturn(toRegisterSerializer, "incubator", new IncubatorRec.Serializer());
 	}
 

@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
 import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
+import com.Da_Technomancer.crossroads.api.heat.IHeatCapable;
 import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.api.templates.ConduitBlock;
 import com.Da_Technomancer.crossroads.api.templates.ModuleTE;
@@ -21,16 +22,14 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.IConduitTE<EnumTransferMode>{
+public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.IConduitTE<EnumTransferMode>, IHeatCapable{
 
 	public static final BlockEntityType<HeatCableTileEntity> TYPE = CRTileEntity.createType(HeatCableTileEntity::new, CRBlocks.HEAT_CABLES.values().toArray(new HeatCable[0]));
 
@@ -38,7 +37,6 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 	protected HeatInsulators insulator;
 	protected boolean[] matches = new boolean[6];
 	protected EnumTransferMode[] modes = ConduitBlock.IConduitTE.genModeArray(EnumTransferMode.BOTH);
-	private HolderLookup.Provider registries;
 
 	public HeatCableTileEntity(BlockPos pos, BlockState state){
 		this(pos, state, state.getBlock() instanceof HeatCable hc ? hc.insulator : HeatInsulators.WOOL);
@@ -61,11 +59,6 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 			biomeTempCache = HeatUtil.convertBiomeTemp(level, worldPosition);
 		}
 		return biomeTempCache;
-	}
-
-	@Override
-	protected boolean useHeat(){
-		return true;
 	}
 
 	@Override
@@ -151,7 +144,6 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 
 	@Override
 	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
-		this.registries = registries;
 		super.loadAdditional(nbt, registries);
 		ConduitBlock.IConduitTE.readConduitNBT(nbt, this);
 		insulator = nbt.contains("insul") ? HeatInsulators.valueOf(nbt.getString("insul")) : HeatInsulators.WOOL;

@@ -1,9 +1,9 @@
 package com.Da_Technomancer.crossroads.blocks.heat;
 
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
+import com.Da_Technomancer.crossroads.api.heat.IHeatCapable;
 import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.api.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
@@ -18,13 +18,12 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
-
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 import static com.Da_Technomancer.crossroads.blocks.CRBlocks.heatSink;
 
-public class HeatSinkTileEntity extends ModuleTE{
+public class HeatSinkTileEntity extends ModuleTE implements IHeatCapable{
 
 	public static final BlockEntityType<HeatSinkTileEntity> TYPE = CRTileEntity.createType(HeatSinkTileEntity::new, heatSink);
 
@@ -55,11 +54,6 @@ public class HeatSinkTileEntity extends ModuleTE{
 
 	public int getCreateIntegrationHeatTier(){
 		return getBlockState().getValue(CRProperties.POWER_LEVEL_4) - 1;
-	}
-
-	@Override
-	protected boolean useHeat(){
-		return true;
 	}
 
 	@Override

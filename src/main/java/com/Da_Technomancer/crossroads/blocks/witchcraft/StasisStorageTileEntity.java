@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.api.witchcraft.IPerishable;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.StasisStorageContainer;
+import com.Da_Technomancer.essentials.api.IItemCapable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -23,7 +24,7 @@ import net.neoforged.neoforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 
-public class StasisStorageTileEntity extends InventoryTE implements IBeamCapable{
+public class StasisStorageTileEntity extends InventoryTE implements IBeamCapable, IItemCapable{
 
 	public static final BlockEntityType<StasisStorageTileEntity> TYPE = CRTileEntity.createType(StasisStorageTileEntity::new, CRBlocks.stasisStorage);
 

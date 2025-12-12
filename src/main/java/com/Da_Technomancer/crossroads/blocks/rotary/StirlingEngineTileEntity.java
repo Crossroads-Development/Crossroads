@@ -4,7 +4,9 @@ import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
+import com.Da_Technomancer.crossroads.api.heat.IHeatCapable;
 import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
+import com.Da_Technomancer.crossroads.api.rotary.IAxleCapable;
 import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.api.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -23,7 +25,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-public class StirlingEngineTileEntity extends ModuleTE{
+public class StirlingEngineTileEntity extends ModuleTE implements IAxleCapable, IHeatCapable{
 
 	public static final BlockEntityType<StirlingEngineTileEntity> TYPE = CRTileEntity.createType(StirlingEngineTileEntity::new, CRBlocks.stirlingEngine);
 
@@ -47,11 +49,6 @@ public class StirlingEngineTileEntity extends ModuleTE{
 
 	public StirlingEngineTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state);
-	}
-
-	@Override
-	protected boolean useRotary(){
-		return true;
 	}
 
 	@Override

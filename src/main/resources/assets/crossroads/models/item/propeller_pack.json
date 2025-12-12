@@ -2,13 +2,5 @@
 	"parent": "item/generated",
 	"textures": {
 		"layer0": "crossroads:item/propeller_pack"
-	},
-	"overrides": [
-		{
-			"predicate": {
-				"protection": 2
-			},
-			"model": "crossroads:item/propeller_pack_armor"
-		}
-	]
+	}
 }

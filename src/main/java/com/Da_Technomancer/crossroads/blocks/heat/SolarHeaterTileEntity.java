@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.blocks.heat;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.CRCapabilities;
+import com.Da_Technomancer.crossroads.api.heat.IHeatCapable;
 import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.api.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -18,7 +18,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import javax.annotation.Nullable;
 
 
-public class SolarHeaterTileEntity extends ModuleTE{
+public class SolarHeaterTileEntity extends ModuleTE implements IHeatCapable{
 
 	public static final BlockEntityType<SolarHeaterTileEntity> TYPE = CRTileEntity.createType(SolarHeaterTileEntity::new, CRBlocks.solarHeater);
 
@@ -29,11 +29,6 @@ public class SolarHeaterTileEntity extends ModuleTE{
 
 	public SolarHeaterTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state);
-	}
-
-	@Override
-	protected boolean useHeat(){
-		return true;
 	}
 
 	@Override

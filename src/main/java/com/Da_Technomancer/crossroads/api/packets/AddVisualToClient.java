@@ -35,9 +35,6 @@ public record AddVisualToClient(CompoundTag nbt) implements CustomPacketPayload{
 		});
 	}
 
-	// TODO: This should be client side only. Remove this message before final commit.
-
-
 	@Override
 	public Type<? extends CustomPacketPayload> type(){
 		return TYPE;

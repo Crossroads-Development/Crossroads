@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.heat;
 
-import com.Da_Technomancer.crossroads.api.CRCapabilities;
+import com.Da_Technomancer.crossroads.api.heat.IHeatCapable;
 import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.api.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -20,10 +20,9 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-
 import javax.annotation.Nullable;
 
-public class HeatReservoirCreativeTileEntity extends ModuleTE implements INBTReceiver, MenuProvider{
+public class HeatReservoirCreativeTileEntity extends ModuleTE implements INBTReceiver, MenuProvider, IHeatCapable{
 
 	public static final BlockEntityType<HeatReservoirCreativeTileEntity> TYPE = CRTileEntity.createType(HeatReservoirCreativeTileEntity::new, CRBlocks.heatReservoirCreative);
 
@@ -32,11 +31,6 @@ public class HeatReservoirCreativeTileEntity extends ModuleTE implements INBTRec
 
 	public HeatReservoirCreativeTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state);
-	}
-
-	@Override
-	protected boolean useHeat(){
-		return true;
 	}
 
 	@Override

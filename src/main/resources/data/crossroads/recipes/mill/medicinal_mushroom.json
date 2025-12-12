@@ -4,6 +4,7 @@
 		"item": "crossroads:medicinal_mushroom"
 	},
 	"output": {
-		"item": "crossroads:mushroom_dust"
+		"item": "crossroads:mushroom_dust",
+		"count": 4
 	}
 }

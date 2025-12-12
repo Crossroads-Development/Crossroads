@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.heat;
 
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
+import com.Da_Technomancer.crossroads.api.heat.IHeatCapable;
 import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.api.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -13,17 +14,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import javax.annotation.Nullable;
 
 
-public class HeatReservoirTileEntity extends ModuleTE{
+public class HeatReservoirTileEntity extends ModuleTE implements IHeatCapable{
 
 	public static final BlockEntityType<HeatReservoirTileEntity> TYPE = CRTileEntity.createType(HeatReservoirTileEntity::new, CRBlocks.heatReservoir);
 
 	public HeatReservoirTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state);
-	}
-
-	@Override
-	protected boolean useHeat(){
-		return true;
 	}
 
 	@Override

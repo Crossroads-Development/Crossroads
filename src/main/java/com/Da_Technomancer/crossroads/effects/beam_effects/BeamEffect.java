@@ -62,9 +62,7 @@ public class BeamEffect{
 		}
 
 		//Try converting the block according to a recipe
-		// TODO: Passing a SingleRecipeInput with null ItemStack as a replacement for previous SimpleContainer(0); the matches method of BeamTransmuteRec ignores the
-		//  RecipeInput, so this shouldn't become relevant, but there may be a better way to do this.
-		List<RecipeHolder<BeamTransmuteRec>> recipes = beamHit.getWorld().getRecipeManager().getRecipesFor(CRRecipes.BEAM_TRANSMUTE_TYPE, new SingleRecipeInput(null), beamHit.getWorld());
+		List<RecipeHolder<BeamTransmuteRec>> recipes = beamHit.getWorld().getRecipeManager().getAllRecipesFor(CRRecipes.BEAM_TRANSMUTE_TYPE);
 		BlockState state = beamHit.getEndState();
 		Optional<RecipeHolder<BeamTransmuteRec>> recipe = recipes.parallelStream().filter(rec -> rec.value().canApply(align, voi, power, state)).findAny();
 		if(recipe.isPresent()){

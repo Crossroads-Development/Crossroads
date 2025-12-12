@@ -39,15 +39,6 @@ public class ArmorPropellerPack extends TechnomancyArmor implements WindingTable
 	}
 
 	@Override
-	public ItemStack[] populateCreativeTab(){
-		ItemStack[] result = new ItemStack[4];
-		result[0] = new ItemStack(this, 1);
-		result[1] = new ItemStack(this, 1);
-		setWindLevel(result[1], getMaxWind());
-		return result;
-	}
-
-	@Override
 	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
 		super.appendHoverText(stack, context, tooltip, flag);
 		appendTooltip(stack, tooltip, flag);

@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.blocks.heat;
 
 import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
+import com.Da_Technomancer.crossroads.api.heat.IHeatCapable;
 import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
@@ -11,6 +12,8 @@ import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.CrucibleRec;
 import com.Da_Technomancer.crossroads.gui.container.CrucibleContainer;
 import com.Da_Technomancer.essentials.api.BlockUtil;
+import com.Da_Technomancer.essentials.api.IFluidCapable;
+import com.Da_Technomancer.essentials.api.IItemCapable;
 import com.Da_Technomancer.essentials.api.packets.INBTReceiver;
 import com.Da_Technomancer.essentials.api.packets.SendNBTToTE;
 import net.minecraft.core.BlockPos;
@@ -37,7 +40,7 @@ import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.Optional;
 
-public class HeatingCrucibleTileEntity extends InventoryTE implements INBTReceiver{
+public class HeatingCrucibleTileEntity extends InventoryTE implements INBTReceiver, IHeatCapable, IFluidCapable, IItemCapable{
 
 	public static final BlockEntityType<HeatingCrucibleTileEntity> TYPE = CRTileEntity.createType(HeatingCrucibleTileEntity::new, CRBlocks.heatingCrucible);
 
@@ -72,11 +75,6 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements INBTReceiv
 	@Override
 	protected int fluidTanks(){
 		return 1;
-	}
-
-	@Override
-	protected boolean useHeat(){
-		return true;
 	}
 
 	@Override

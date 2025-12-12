@@ -4,32 +4,30 @@ import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.api.witchcraft.EntityTemplate;
+import com.Da_Technomancer.crossroads.api.witchcraft.IEntityModifier;
+import com.Da_Technomancer.crossroads.api.witchcraft.IEntityModifierType;
 import com.Da_Technomancer.crossroads.api.witchcraft.IPerishable;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
+import com.Da_Technomancer.crossroads.crafting.EmbryoLabModifierRec;
 import com.Da_Technomancer.crossroads.crafting.EmbryoLabMorphRec;
-import com.Da_Technomancer.crossroads.entity.mob_effects.CRPotions;
 import com.Da_Technomancer.crossroads.gui.container.EmbryoLabContainer;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.witchcraft.BloodSample;
+import com.Da_Technomancer.essentials.api.IItemCapable;
 import com.Da_Technomancer.essentials.api.packets.INBTReceiver;
 import com.Da_Technomancer.essentials.api.packets.SendNBTToTE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -38,9 +36,11 @@ import net.neoforged.neoforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class EmbryoLabTileEntity extends InventoryTE implements INBTReceiver{
+public class EmbryoLabTileEntity extends InventoryTE implements INBTReceiver, IItemCapable{
 
 	public static final BlockEntityType<EmbryoLabTileEntity> TYPE = CRTileEntity.createType(EmbryoLabTileEntity::new, CRBlocks.embryoLab);
 
@@ -53,7 +53,7 @@ public class EmbryoLabTileEntity extends InventoryTE implements INBTReceiver{
 		if(template == null){
 			chat.add(Component.translatable("tt.crossroads.embryo_lab.empty"));
 		}else{
-			template.addTooltip(chat, 13);
+			template.addTooltip(chat, player.level());
 		}
 		super.addInfo(chat, player, hit);
 	}
@@ -66,7 +66,7 @@ public class EmbryoLabTileEntity extends InventoryTE implements INBTReceiver{
 	private void syncTemplate(){
 		CompoundTag nbt = new CompoundTag();
 		if(template != null){
-			nbt.put("template", template.serializeNBT());
+			nbt.put("template", template.serializeNBT(level.registryAccess()));
 		}
 		CRPackets.sendPacketAround(level, worldPosition, new SendNBTToTE(nbt, worldPosition));
 	}
@@ -88,17 +88,13 @@ public class EmbryoLabTileEntity extends InventoryTE implements INBTReceiver{
 			//Add blood to an empty lab
 			EntityTemplate bloodTemplate = BloodSample.getEntityTypeData(stack);
 
-			//Check if the entity is on the blacklist. If so, refuse to add it
-			if(!EntityTemplate.isCloningAllowed(bloodTemplate.getEntityName())){
-				return stack;
-			}
+//			//Check if the entity is on the blacklist. If so, refuse to add it
+//			if(EntityTemplate.isCloningForbidden(bloodTemplate.entityID())){
+//				return stack;
+//			}
 
-			template = bloodTemplate;
+			template = bloodTemplate.withQuality(IPerishable.isSpoiled(stack, level) ? 0 : 20);
 
-			//If the blood sample was spoiled, increase degradation
-			if(IPerishable.isSpoiled(stack, level)){
-				template.setDegradation(template.getDegradation() + 1);
-			}
 			level.setBlockAndUpdate(worldPosition, getBlockState().setValue(CRProperties.ACTIVE, true));
 			setChanged();
 			syncTemplate();
@@ -106,64 +102,31 @@ public class EmbryoLabTileEntity extends InventoryTE implements INBTReceiver{
 		}
 
 		if(template != null){
-			if(stack.getItem() == Items.NAME_TAG && !template.isLoyal()){
-				//Apply the imprinting trait and consume the item
-				template.setLoyal(true);
-				stack = stack.copy();
-				stack.shrink(1);
-				setChanged();
-				syncTemplate();
-				return stack;
-			}
-			if(stack.getItem() == CRItems.bloodSample && !template.isLoyal()){
-				//Blood sample from a player can act to set imprinting, targeting the specific player
-				EntityTemplate imprintingBloodTemplate = BloodSample.getEntityTypeData(stack);
-				if(imprintingBloodTemplate.getOriginatingUUID() != null && imprintingBloodTemplate.getEntityType() == EntityType.PLAYER){
-					template.setLoyal(true);
-					template.setImprintingPlayer(imprintingBloodTemplate.getOriginatingUUID());
+			//Handle applying a modifier
+			List<RecipeHolder<EmbryoLabModifierRec>> modifierRecipes = level.getRecipeManager().getAllRecipesFor(CRRecipes.EMBRYO_LAB_MODIFIER_TYPE);
+			for(RecipeHolder<EmbryoLabModifierRec> recHolder : modifierRecipes){
+				EmbryoLabModifierRec rec = recHolder.value();
+				if(rec.isEnabled() && rec.getIngr().test(stack)){
+					IEntityModifierType<?> modifierType = rec.getModifierType();
+					IEntityModifier modifier = rec.createModifier(stack);
+					if(modifier == null){
+						//Invalid item - reject
+						continue;
+					}
+					//Not allowed to modify returned map from template.modifiers() - copy it first
+					Map<IEntityModifierType<?>, IEntityModifier> modiferMap = new HashMap<>(template.modifiers());
+					IEntityModifier prevMod = modiferMap.get(modifierType);
+					if(prevMod != null){
+						//Merge it with the pre-existing modifier and update the template
+						modiferMap.put(modifierType, modifierType.mergeModifiers(prevMod, modifier));
+					}else{
+						//No pre-existing modifier; insert the new one
+						modiferMap.put(modifierType, modifier);
+					}
+					template = template.withModifiers(modiferMap);
 					setChanged();
 					syncTemplate();
-					return new ItemStack(CRItems.bloodSampleEmpty);
-				}
-			}
-			if(stack.getItem() == CRItems.soulCluster && !template.isRespawning()){
-				//Apply the respawning trait and consume the item
-				template.setRespawning(true);
-				stack = stack.copy();
-				stack.shrink(1);
-				setChanged();
-				syncTemplate();
-				return stack;
-			}
-			if(stack.getItem() == Items.POTION || stack.getItem() == Items.SPLASH_POTION){
-				PotionContents potion = stack.get(DataComponents.POTION_CONTENTS);
-				if(potion != null){
-					//Add potion effects which can be made permanent and do not already exist on the template
-					boolean foundLegalEffect = false;
-					NextPotionEffect:
-					for(MobEffectInstance potionEffect : potion.getAllEffects()){
-						//Special case curative to remove all potion effects
-						if(potionEffect.getEffect() == CRPotions.CURATIVE_EFFECT){
-							foundLegalEffect = true;
-							template.getEffects().clear();
-						}else if(CRPotions.canBePermanentEffect(potionEffect)){
-							//Check that the effect isn't already part of the template
-							for(MobEffectInstance templateEffect : template.getEffects()){
-								if(templateEffect.getEffect() == potionEffect.getEffect() && templateEffect.getAmplifier() >= potionEffect.getAmplifier()){
-									//This effect already exists in permanent form in an equal or stronger intensity
-									continue NextPotionEffect;
-								}
-							}
-							//This is a legal effect
-							template.getEffects().add(potionEffect);
-							foundLegalEffect = true;
-						}
-					}
-					if(foundLegalEffect){
-						setChanged();
-						syncTemplate();
-						return new ItemStack(Items.GLASS_BOTTLE);
-					}
+					return rec.assemble(this, level.registryAccess());
 				}
 			}
 
@@ -171,8 +134,8 @@ public class EmbryoLabTileEntity extends InventoryTE implements INBTReceiver{
 			List<RecipeHolder<EmbryoLabMorphRec>> recipes = level.getRecipeManager().getAllRecipesFor(CRRecipes.EMBRYO_LAB_MORPH_TYPE);
 			for(RecipeHolder<EmbryoLabMorphRec> recHolder : recipes){
 				EmbryoLabMorphRec rec = recHolder.value();
-				if(rec.isEnabled() && rec.getInputMob().equals(template.getEntityName()) && rec.getIngr().test(stack)){
-					template.setEntityName(rec.getOutputMob());
+				if(rec.isEnabled() && rec.getInputMob().equals(template.entityID()) && rec.getIngr().test(stack)){
+					template = template.withMob(rec.getOutputMob());
 					stack.shrink(1);
 					setChanged();
 					syncTemplate();
@@ -185,9 +148,8 @@ public class EmbryoLabTileEntity extends InventoryTE implements INBTReceiver{
 
 	@Override
 	public void receiveNBT(CompoundTag nbt, @Nullable ServerPlayer player){
-		if(nbt.contains("template")){
-			template = new EntityTemplate();
-			template.deserializeNBT(nbt.getCompound("template"));
+		if(nbt.contains("template") && level != null){
+			template = EntityTemplate.deserializeNBT(level.registryAccess(), nbt.getCompound("template"));
 		}else{
 			template = null;
 		}
@@ -197,8 +159,7 @@ public class EmbryoLabTileEntity extends InventoryTE implements INBTReceiver{
 	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
 		super.loadAdditional(nbt, registries);
 		if(nbt.contains("template")){
-			template = new EntityTemplate();
-			template.deserializeNBT(nbt.getCompound("template"));
+			template = EntityTemplate.deserializeNBT(registries, nbt.getCompound("template"));
 		}else{
 			template = null;
 		}
@@ -208,7 +169,7 @@ public class EmbryoLabTileEntity extends InventoryTE implements INBTReceiver{
 	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
 		super.saveAdditional(nbt, pRegistries);
 		if(template != null){
-			nbt.put("template", template.serializeNBT());
+			nbt.put("template", template.serializeNBT(pRegistries));
 		}
 	}
 
@@ -216,7 +177,7 @@ public class EmbryoLabTileEntity extends InventoryTE implements INBTReceiver{
 	public CompoundTag getUpdateTag(HolderLookup.Provider pRegistries){
 		CompoundTag nbt = super.getUpdateTag(pRegistries);
 		if(template != null){
-			nbt.put("template", template.serializeNBT());
+			nbt.put("template", template.serializeNBT(pRegistries));
 		}
 		return nbt;
 	}

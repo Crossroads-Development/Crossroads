@@ -23,7 +23,6 @@ public class CRPackets{
 		registrar.playToServer(SendBeamItemToServer.TYPE, SendBeamItemToServer.STREAM_CODEC, SendBeamItemToServer::handlePacketServer);
 		registrar.playToClient(SendPlayerTickCountToClient.TYPE, SendPlayerTickCountToClient.STREAM_CODEC, SendPlayerTickCountToClient::handlePacketClient);
 		registrar.playToClient(AddVisualToClient.TYPE, AddVisualToClient.STREAM_CODEC, AddVisualToClient::handlePacketClient);
-		registrar.playToClient(NbtToEntityClient.TYPE, NbtToEntityClient.STREAM_CODEC, NbtToEntityClient::handlePacketClient);
 		registrar.playToClient(SendBiomeUpdateToClient.TYPE, SendBiomeUpdateToClient.STREAM_CODEC, SendBiomeUpdateToClient::handlePacketClient);
 		registrar.playToServer(SendGoggleConfigureToServer.TYPE, SendGoggleConfigureToServer.STREAM_CODEC, SendGoggleConfigureToServer::handlePacketServer);
 		registrar.playToClient(SendTaylorToClient.TYPE, SendTaylorToClient.STREAM_CODEC, SendTaylorToClient::handlePacketClient);

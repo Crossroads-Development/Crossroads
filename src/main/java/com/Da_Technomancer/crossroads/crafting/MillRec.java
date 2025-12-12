@@ -77,7 +77,7 @@ public class MillRec implements IOptionalRecipe<RecipeInput>{
 
 	@Override
 	public ItemStack getResultItem(){
-		return outputs.size() != 0 ? outputs.get(0).copy() : ItemStack.EMPTY;
+		return outputs.size() != 0 ? outputs.get(0) : ItemStack.EMPTY;
 	}
 
 	@Override

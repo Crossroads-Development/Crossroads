@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
 import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
+import com.Da_Technomancer.crossroads.api.heat.IHeatCapable;
 import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -14,6 +15,8 @@ import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.FormulationVatRec;
 import com.Da_Technomancer.crossroads.gui.container.FormulationVatContainer;
 import com.Da_Technomancer.essentials.api.BlockUtil;
+import com.Da_Technomancer.essentials.api.IFluidCapable;
+import com.Da_Technomancer.essentials.api.IItemCapable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -28,7 +31,6 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
@@ -38,7 +40,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Optional;
 
-public class FormulationVatTileEntity extends InventoryTE{
+public class FormulationVatTileEntity extends InventoryTE implements IHeatCapable, IFluidCapable, IItemCapable{
 
 	public static final BlockEntityType<FormulationVatTileEntity> TYPE = CRTileEntity.createType(FormulationVatTileEntity::new, CRBlocks.formulationVat);
 
@@ -66,11 +68,6 @@ public class FormulationVatTileEntity extends InventoryTE{
 	@Override
 	protected int fluidTanks(){
 		return 2;
-	}
-
-	@Override
-	protected boolean useHeat(){
-		return true;
 	}
 
 	public FluidStack getInputFluid(){

@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:embryo_lab_modifier",
+	"input": [
+		{
+			"item": "minecraft:dirt"
+		}
+	],
+	"modifier": "inbred",
+	"complexity": -40
+}

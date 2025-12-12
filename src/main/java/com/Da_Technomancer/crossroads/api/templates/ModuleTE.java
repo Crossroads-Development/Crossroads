@@ -12,7 +12,6 @@ import com.Da_Technomancer.essentials.api.IFluidCapable;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import com.Da_Technomancer.essentials.api.packets.ILongReceiver;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -39,7 +38,7 @@ import java.util.function.Predicate;
  * Machines that also use ItemStacks or UIs override the subclass, InventoryTE
  * I'd call this class boilerplate, except its 500+ lines
  */
-public abstract class ModuleTE extends BlockEntity implements ITickableTileEntity, IInfoTE, ILongReceiver, IHeatCapable, IAxleCapable, IFluidCapable{
+public abstract class ModuleTE extends BlockEntity implements ITickableTileEntity, IInfoTE, ILongReceiver{
 
 	//Rotary
 	protected double energy = 0;
@@ -58,14 +57,14 @@ public abstract class ModuleTE extends BlockEntity implements ITickableTileEntit
 	 * @return Whether to enable the default heat helpers. Should not change at runtime
 	 */
 	protected boolean useHeat(){
-		return false;
+		return this instanceof IHeatCapable;
 	}
 
 	/**
 	 * @return Whether to enable the default rotary helpers. Should not change at runtime
 	 */
 	protected boolean useRotary(){
-		return false;
+		return this instanceof IAxleCapable;
 	}
 
 	/**
@@ -73,6 +72,7 @@ public abstract class ModuleTE extends BlockEntity implements ITickableTileEntit
 	 * @return How many fluid tanks this machine has. Should not change at runtime, cannot be negative
 	 */
 	protected int fluidTanks(){
+		assert !(this instanceof IFluidCapable);//Subclasses using IFluidCapable should override this method
 		return 0;
 	}
 
@@ -95,7 +95,7 @@ public abstract class ModuleTE extends BlockEntity implements ITickableTileEntit
 
 	public ModuleTE(BlockEntityType<?> type, BlockPos pos, BlockState state){
 		super(type, pos, state);
-		if(level instanceof ServerLevel serverLevel){
+		if(level instanceof ServerLevel){
 			if(useHeat()){
 				heatHandler = createHeatHandler();
 
@@ -134,6 +134,17 @@ public abstract class ModuleTE extends BlockEntity implements ITickableTileEntit
 		if(useRotary()){
 			RotaryUtil.addRotaryInfo(chat, axleHandler, true);
 		}
+	}
+
+	@Override
+	public void setBlockState(BlockState pBlockState){
+		super.setBlockState(pBlockState);
+		//This is not, strictly speaking, optimized
+		//Pre MC1.21, default behavior for all TEs was that changing blockstate invalidated capability caches
+		//Post MC1.21, this is no longer the case, which opens up some opportunities for optimization
+		//But everything was written with the assumption of invalidation on state change,
+		//So anything other than re-implementing the old default is going to introduce a lot of new bugs
+		level.invalidateCapabilities(worldPosition);
 	}
 
 	/**
@@ -189,33 +200,6 @@ public abstract class ModuleTE extends BlockEntity implements ITickableTileEntit
 			//No-op (removed code)
 			//Reserving identifier 0 for future use
 		}
-	}
-
-	@Override
-	@Nullable
-	public IHeatHandler getHeatHandler(Direction dir){
-		if(dir == null && useHeat()){
-			return heatHandler;
-		}
-		return null;
-	}
-
-	@Override
-	@Nullable
-	public IAxleHandler getAxleHandler(Direction dir){
-		if(dir == null && useRotary()){
-			return axleHandler;
-		}
-		return null;
-	}
-
-	@Override
-	@Nullable
-	public IFluidHandler getFluidHandler(Direction dir){
-		if(dir == null && globalFluidHandler != null){
-			return globalFluidHandler;
-		}
-		return null;
 	}
 
 	protected class FluidHandler implements IFluidHandler{

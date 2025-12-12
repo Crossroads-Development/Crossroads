@@ -33,6 +33,7 @@ public class BeamCage extends Item implements ICreativeTabPopulatingItem{
 		stack.set(CRItems.STORED_BEAM_DATA, toStore);
 	}
 
+	@Nonnull
 	@Override
 	public ItemStack[] populateCreativeTab(){
 		ItemStack chargedStack = new ItemStack(this);

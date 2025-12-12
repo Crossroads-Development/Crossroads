@@ -9,6 +9,7 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 
 public class OreProfileItem extends Item implements ICreativeTabPopulatingItem{
@@ -67,6 +68,7 @@ public class OreProfileItem extends Item implements ICreativeTabPopulatingItem{
 		return Component.translatable(super.getDescriptionId(stack), mat == null ? "INVALID" : mat.getName());
 	}
 
+	@Nonnull
 	@Override
 	public ItemStack[] populateCreativeTab(){
 		//Add every material variant of this item

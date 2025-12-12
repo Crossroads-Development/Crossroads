@@ -4,12 +4,14 @@ import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
 import com.Da_Technomancer.crossroads.api.MathUtil;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
+import com.Da_Technomancer.crossroads.api.rotary.IAxleCapable;
 import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.RotaryPumpContainer;
 import com.Da_Technomancer.essentials.api.BlockUtil;
+import com.Da_Technomancer.essentials.api.IFluidCapable;
 import com.Da_Technomancer.essentials.api.packets.INBTReceiver;
 import com.Da_Technomancer.essentials.api.packets.SendLongToTE;
 import com.Da_Technomancer.essentials.api.packets.SendNBTToTE;
@@ -42,7 +44,7 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import javax.annotation.Nullable;
 import java.awt.*;
 
-public class RotaryPumpTileEntity extends InventoryTE implements INBTReceiver{
+public class RotaryPumpTileEntity extends InventoryTE implements INBTReceiver, IAxleCapable, IFluidCapable{
 
 	public static final BlockEntityType<RotaryPumpTileEntity> TYPE = CRTileEntity.createType(RotaryPumpTileEntity::new, CRBlocks.rotaryPump);
 
@@ -75,11 +77,6 @@ public class RotaryPumpTileEntity extends InventoryTE implements INBTReceiver{
 	@Override
 	protected int fluidTanks(){
 		return 1;
-	}
-
-	@Override
-	protected boolean useRotary(){
-		return true;
 	}
 
 	@Override

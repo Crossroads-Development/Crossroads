@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.api.packets.SendCompassTargetToClient;
 import com.Da_Technomancer.crossroads.api.witchcraft.IPerishable;
 import com.Da_Technomancer.crossroads.integration.curios.CurioHelper;
 import com.Da_Technomancer.crossroads.items.CRItems;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -27,6 +28,7 @@ public class BloodCompass extends Item{
 	 * There is no guarantee that the tracked entity exists on the client
 	 * Therefore, the compass item syncs the location of the tracked entity to the relevant client (the client of the player using the compass)
 	 * This field is null on the server side. On the client side, it tracks the most recently synced entity position
+	 * Don't make this field static
 	 */
 	public EntitySyncRecord syncedEntity = null;
 
@@ -36,34 +38,37 @@ public class BloodCompass extends Item{
 		CRItems.queueForRegister(name, this);
 	}
 
-	@Nullable
-	public GlobalPos getTarget(ItemStack stack, @Nullable Entity holder, @Nullable Level world){
-		if(!(holder instanceof LivingEntity player) || world == null){
-			return null;
-		}
-		UUID uuid = getTargetUUID(stack, player, world);
+	private static GlobalPos getTargetServer(UUID uuid, ServerLevel level){
 		if(uuid != null){
-			if(world.isClientSide){
-				if(syncedEntity != null && syncedEntity.validRecord(uuid, world.getGameTime())){
-					return syncedEntity.entityPos;
-				}
-			}else{
-				ServerLevel serverWorld = (ServerLevel) world;
-				//This will be null if the entity is unloaded or in another dimension
-				Entity ent = serverWorld.getEntity(uuid);
-				if(ent != null){
-					return GlobalPos.of(serverWorld.dimension(), ent.blockPosition());
-				}
+			//This will be null if the entity is unloaded or in another dimension
+			Entity ent = level.getEntity(uuid);
+			if(ent != null){
+				return GlobalPos.of(level.dimension(), ent.blockPosition());
 			}
 		}
 		return null;
 	}
 
 	@Nullable
-	private UUID getTargetUUID(ItemStack stack, @Nonnull LivingEntity player, @Nonnull Level world){
+	public GlobalPos getTargetClient(@Nullable ClientLevel world, ItemStack stack, @Nullable Entity holder){
+		if(!(holder instanceof LivingEntity player) || world == null){
+			return null;
+		}
+		UUID uuid = getTargetUUID(stack, player, world);
+		if(uuid != null){
+			if(syncedEntity != null && syncedEntity.validRecord(uuid, world.getGameTime())){
+				return syncedEntity.entityPos;
+			}
+		}
+		return null;
+	}
+
+	@Nullable
+	private static UUID getTargetUUID(ItemStack stack, @Nonnull LivingEntity player, @Nonnull Level world){
 		ItemStack targetItem = CurioHelper.getEquipped(filtStack -> filtStack.getItem() instanceof BloodSample, player);
 		if(!targetItem.isEmpty() && !IPerishable.isSpoiled(targetItem, world)){
-			return BloodSample.getEntityTypeData(targetItem).getOriginatingUUID();
+			BloodSample.EntitySourceData sourceData = targetItem.get(CRItems.ENTITY_SOURCE_DATA);
+			return sourceData == null ? null : sourceData.effectiveUUID();
 		}
 		return null;
 	}
@@ -74,17 +79,16 @@ public class BloodCompass extends Item{
 			return;
 		}
 
-		if(holdingEnt instanceof ServerPlayer player && world.getGameTime() % 10 == 0){
+		if(holdingEnt instanceof ServerPlayer player && world instanceof ServerLevel serverWorld && world.getGameTime() % 10 == 0){
 			if(selected || player.getOffhandItem() == stack){
 				//Every few ticks, send the location of the targeted entity to the client while the compass is held
-				GlobalPos target = getTarget(stack, player, world);
 				UUID uuid = getTargetUUID(stack, player, world);
+				GlobalPos target = getTargetServer(uuid, serverWorld);
 				if(uuid != null && target != null){
 					CRPackets.sendPacketToPlayer(player, new SendCompassTargetToClient(target, uuid));
 				}
 			}
 		}
-
 	}
 
 	@Override

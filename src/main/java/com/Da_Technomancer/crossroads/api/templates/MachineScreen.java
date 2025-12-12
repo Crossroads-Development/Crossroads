@@ -38,7 +38,10 @@ public abstract class MachineScreen<T extends MachineContainer<U>, U extends Inv
 	@Override
 	protected void renderLabels(GuiGraphics matrix, int mouseX, int mouseY){
 		super.renderLabels(matrix, mouseX, mouseY);
+		renderExtraLabels(matrix, mouseX, mouseY);
+	}
 
+	protected void renderExtraLabels(GuiGraphics matrix, int mouseX, int mouseY){
 		if(menu.heatRef != null){
 			String s = MiscUtil.localize("container.crossroads.boilerplate.temp", menu.heatRef.get());
 			matrix.drawString(font, s, imageWidth - 8 - font.width(s), 6, 0x404040, false);

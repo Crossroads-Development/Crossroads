@@ -2,13 +2,5 @@
 	"parent": "item/generated",
 	"textures": {
 		"layer0": "crossroads:item/module_goggles"
-	},
-	"overrides": [
-		{
-			"predicate": {
-				"protection": 2
-			},
-			"model": "crossroads:item/module_goggles_armor"
-		}
-	]
+	}
 }

@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.FatFeederContainer;
+import com.Da_Technomancer.essentials.api.IFluidCapable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
@@ -30,7 +31,7 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class FatFeederTileEntity extends InventoryTE{
+public class FatFeederTileEntity extends InventoryTE implements IFluidCapable{
 
 	public static final BlockEntityType<FatFeederTileEntity> TYPE = CRTileEntity.createType(FatFeederTileEntity::new, CRBlocks.fatFeeder);
 

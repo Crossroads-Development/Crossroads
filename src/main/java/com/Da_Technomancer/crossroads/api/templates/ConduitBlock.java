@@ -300,7 +300,9 @@ public abstract class ConduitBlock<T extends Comparable<T>> extends BaseEntityBl
 			T curr = matches[side] ? modes[side] : defaul;
 			if(!curr.equals(prev)){
 				//Update the state in world without block update
-				te.getLevel().setBlock(te.getBlockPos(), prevState.setValue(block.getSideProp()[side], curr), 2);
+				Level level = te.getLevel();
+				BlockPos pos = te.getBlockPos();
+				level.setBlock(pos, prevState.setValue(block.getSideProp()[side], curr), 2);
 			}
 		}
 

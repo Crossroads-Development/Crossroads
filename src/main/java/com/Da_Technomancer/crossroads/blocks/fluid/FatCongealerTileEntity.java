@@ -12,6 +12,8 @@ import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.FatCongealerContainer;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.EdibleBlob;
+import com.Da_Technomancer.essentials.api.IFluidCapable;
+import com.Da_Technomancer.essentials.api.IItemCapable;
 import com.Da_Technomancer.essentials.blocks.AbstractShifterTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -31,7 +33,7 @@ import net.neoforged.neoforge.items.IItemHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class FatCongealerTileEntity extends InventoryTE{
+public class FatCongealerTileEntity extends InventoryTE implements IFluidCapable, IItemCapable{
 
 	public static final BlockEntityType<FatCongealerTileEntity> TYPE = CRTileEntity.createType(FatCongealerTileEntity::new, CRBlocks.fatCongealer);
 

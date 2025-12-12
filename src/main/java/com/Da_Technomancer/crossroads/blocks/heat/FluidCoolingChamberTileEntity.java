@@ -23,7 +23,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
@@ -33,7 +32,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-public class FluidCoolingChamberTileEntity extends InventoryTE{
+public class FluidCoolingChamberTileEntity extends InventoryTE implements IHeatCapable, IFluidCapable, IItemCapable{
 
 	public static final BlockEntityType<FluidCoolingChamberTileEntity> TYPE = CRTileEntity.createType(FluidCoolingChamberTileEntity::new, CRBlocks.fluidCoolingChamber);
 
@@ -53,11 +52,6 @@ public class FluidCoolingChamberTileEntity extends InventoryTE{
 	@Override
 	protected int fluidTanks(){
 		return 1;
-	}
-
-	@Override
-	protected boolean useHeat(){
-		return true;
 	}
 
 	public FluidStack getFluid(){
@@ -96,7 +90,14 @@ public class FluidCoolingChamberTileEntity extends InventoryTE{
 					if(rec != null){
 						fluids[0].shrink(rec.getInputQty());
 						if(inventory[0].isEmpty()){
-							inventory[0] = rec.assemble(this);
+							ItemStack res;
+							ItemStack result = rec.getResultItem();
+							if(result.isEmpty()){
+								res = result;
+							}else{
+								res = result.copy();
+							}
+							inventory[0] = res;
 						}else{
 							inventory[0].grow(rec.getResultItem().getCount());
 						}
@@ -129,12 +130,9 @@ public class FluidCoolingChamberTileEntity extends InventoryTE{
 	@Nullable
 	private FluidCoolingRec getRecipe(){
 		//We can not use the recipe manager to filter recipes due to the fluid input
-
-		// TODO: it looks like everything here just got a RecipeHolder wrapped around it for some reason, see if there's a way to bypass that because it's
-		//  generating a bunch of obnoxious calls.
 		List<RecipeHolder<FluidCoolingRec>> recipes = level.getRecipeManager().getRecipesFor(CRRecipes.FLUID_COOLING_TYPE, this, level);
 		Optional<RecipeHolder<FluidCoolingRec>> recOpt = recipes.parallelStream().filter(rec -> rec.value().inputMatches(fluids[0]) && (inventory[0].isEmpty() || BlockUtil.sameItem(inventory[0], rec.value().getResultItem()))).findAny();
-		return recOpt.orElse(null) == null ? null : recOpt.get().value();
+		return recOpt.isPresent() ? recOpt.get().value() : null;
 	}
 
 	@Override

@@ -6,7 +6,6 @@ import com.Da_Technomancer.crossroads.api.electric.IEnergyCapable;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
-import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.LeydenJar;
 import com.Da_Technomancer.essentials.api.BlockUtil;
 import com.Da_Technomancer.essentials.api.IItemCapable;
@@ -207,13 +206,6 @@ public class TeslaCoilTileEntity extends BlockEntity implements ITickableTileEnt
 		redstone = nbt.getBoolean("reds");
 		if(nbt.contains("battery")){
 			battery = BlockUtil.nbtToItemStack(nbt.getCompound("battery"), registries);
-		}else{
-			//TODO remove: backwards compatibility
-			if(!nbt.getBoolean("from_client") && getBlockState().getValue(CRProperties.ACTIVE)){
-				battery = new ItemStack(CRItems.leydenJar);
-				LeydenJar.setCharge(battery, Math.min(LeydenJar.MAX_CHARGE, storedSelf));
-				storedSelf -= Math.min(LeydenJar.MAX_CHARGE, storedSelf);
-			}
 		}
 	}
 
@@ -222,7 +214,6 @@ public class TeslaCoilTileEntity extends BlockEntity implements ITickableTileEnt
 		CompoundTag nbt = super.getUpdateTag(pRegistries);
 		nbt.putInt("stored", getTotalFE());
 		nbt.putBoolean("reds", redstone);
-		nbt.putBoolean("from_client", true);//TODO remove: backwards compatibility
 		return nbt;
 	}
 

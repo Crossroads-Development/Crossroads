@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.api.packets;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.ambient.particles.CRParticles;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -22,10 +21,9 @@ public record CreateParticlesOnClient(ParticleOptions particle, double x, double
 
 	public static final StreamCodec<RegistryFriendlyByteBuf, CreateParticlesOnClient> STREAM_CODEC = StreamCodec.ofMember(CreateParticlesOnClient::encode, CreateParticlesOnClient::new);
 
-	public CreateParticlesOnClient(ByteBuf buffer){
+	public CreateParticlesOnClient(RegistryFriendlyByteBuf buffer){
 		this(
-				// TODO: there's no way this cast is valid
-				ParticleTypes.STREAM_CODEC.decode((RegistryFriendlyByteBuf) buffer),
+				ParticleTypes.STREAM_CODEC.decode(buffer),
 				// position
 				buffer.readDouble(),
 				buffer.readDouble(),
@@ -48,10 +46,9 @@ public record CreateParticlesOnClient(ParticleOptions particle, double x, double
 		);
 	}
 
-	private void encode(ByteBuf buffer){
+	private void encode(RegistryFriendlyByteBuf buffer){
 		// particle
-		// TODO: there's no way this cast is valid
-		ParticleTypes.STREAM_CODEC.encode((RegistryFriendlyByteBuf) buffer, particle);
+		ParticleTypes.STREAM_CODEC.encode(buffer, particle);
 		// position
 		buffer.writeDouble(x);
 		buffer.writeDouble(y);
@@ -101,6 +98,4 @@ public record CreateParticlesOnClient(ParticleOptions particle, double x, double
 			}
 		});
 	}
-
-	// TODO: This should be client side only. Remove this message before final commit.
 }

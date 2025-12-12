@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.rotary;
 
 import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.api.rotary.IAxleCapable;
 import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.api.templates.ICreativeTabPopulatingItem;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
@@ -8,6 +9,7 @@ import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.WindingTableContainer;
 import com.Da_Technomancer.crossroads.items.CRItems;
+import com.Da_Technomancer.essentials.api.IItemCapable;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
@@ -29,12 +31,14 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.neoforged.neoforge.items.IItemHandler;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WindingTableTileEntity extends InventoryTE{
+public class WindingTableTileEntity extends InventoryTE implements IAxleCapable, IItemCapable{
 
 	public static final BlockEntityType<WindingTableTileEntity> TYPE = CRTileEntity.createType(WindingTableTileEntity::new, CRBlocks.windingTable);
 
@@ -60,11 +64,6 @@ public class WindingTableTileEntity extends InventoryTE{
 		}
 
 		super.addInfo(chat, player, hit);
-	}
-
-	@Override
-	protected boolean useRotary(){
-		return true;
 	}
 
 	public void redstoneTrigger(boolean reds){
@@ -176,6 +175,12 @@ public class WindingTableTileEntity extends InventoryTE{
 
 	@Nullable
 	@Override
+	public IItemHandler getItemHandler(Direction direction){
+		return itemHandler;
+	}
+
+	@Nullable
+	@Override
 	public AbstractContainerMenu createMenu(int id, Inventory playerInv, Player player){
 		return new WindingTableContainer(id, playerInv, createContainerBuf());
 	}
@@ -214,6 +219,7 @@ public class WindingTableTileEntity extends InventoryTE{
 			}
 		}
 
+		@Nonnull
 		@Override
 		default ItemStack[] populateCreativeTab(){
 			ItemStack woundStack = new ItemStack((Item) this);

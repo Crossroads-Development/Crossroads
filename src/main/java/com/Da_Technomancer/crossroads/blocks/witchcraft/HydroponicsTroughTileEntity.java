@@ -10,6 +10,8 @@ import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.HydroponicsTroughContainer;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.essentials.api.BlockUtil;
+import com.Da_Technomancer.essentials.api.IFluidCapable;
+import com.Da_Technomancer.essentials.api.IItemCapable;
 import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -46,7 +48,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class HydroponicsTroughTileEntity extends InventoryTE{
+public class HydroponicsTroughTileEntity extends InventoryTE implements IFluidCapable, IItemCapable{
 
 	public static final BlockEntityType<HydroponicsTroughTileEntity> TYPE = CRTileEntity.createType(HydroponicsTroughTileEntity::new, CRBlocks.hydroponicsTrough);
 

@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.blocks.rotary;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
+import com.Da_Technomancer.crossroads.api.rotary.IAxleCapable;
 import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.api.templates.ModuleTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -29,7 +30,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WindTurbineTileEntity extends ModuleTE{
+public class WindTurbineTileEntity extends ModuleTE implements IAxleCapable{
 
 	public static final BlockEntityType<WindTurbineTileEntity> TYPE = CRTileEntity.createType(WindTurbineTileEntity::new, CRBlocks.windTurbine);
 
@@ -96,7 +97,7 @@ public class WindTurbineTileEntity extends ModuleTE{
 				//Send the blade colors to clients
 				long message = 0;
 				for(int i = 0; i < bladeColors.length; i++){
-					message |= bladeColors[i] << i * 4;
+					message |= (long) bladeColors[i] << i * 4;
 				}
 				CRPackets.sendPacketAround(level, worldPosition, new SendLongToTE(5, message, worldPosition));
 
@@ -110,11 +111,6 @@ public class WindTurbineTileEntity extends ModuleTE{
 		super.setBlockState(stateIn);
 		newlyPlaced = true;
 		targetBB = null;
-	}
-
-	@Override
-	protected boolean useRotary(){
-		return true;
 	}
 
 	@Override

@@ -1,6 +1,8 @@
 package com.Da_Technomancer.crossroads.items.witchcraft;
 
 import com.Da_Technomancer.crossroads.api.witchcraft.EntityTemplate;
+import com.Da_Technomancer.crossroads.api.witchcraft.IEntityModifier;
+import com.Da_Technomancer.crossroads.effects.entity_modifiers.NamedEntityModifier;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -53,22 +55,23 @@ public class GeneticSpawnEgg extends Item{
 		DispenserBlock.registerBehavior(this, dispenseBehavior);
 	}
 
-	public ItemStack withEntityData(ItemStack stack, EntityTemplate template){
+	public static void withEntityData(ItemStack stack, EntityTemplate template){
 		stack.set(CRItems.GENETICS_DATA, template);
-		if(template.getCustomName() != null){
-			stack.set(DataComponents.CUSTOM_NAME, template.getCustomName());//Copy any custom name on the template onto the spawn egg
+		IEntityModifier modifier = template.modifiers().get(NamedEntityModifier.TYPE_INSTANCE);
+		if(modifier instanceof NamedEntityModifier nameModifier){
+			//Copy any custom name on the template onto the spawn egg
+			stack.set(DataComponents.CUSTOM_NAME, Component.literal(nameModifier.name()));
 		}
-		return stack;
 	}
 
 	public static EntityTemplate getEntityTypeData(ItemStack stack){
-		return new EntityTemplate(stack.getOrDefault(CRItems.GENETICS_DATA, new EntityTemplate()));
+		return stack.getOrDefault(CRItems.GENETICS_DATA, EntityTemplate.DEFAULT);
 	}
 
 	@Override
 	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
 		EntityTemplate template = getEntityTypeData(stack);
-		template.addTooltip(tooltip, 4);
+		template.addTooltip(tooltip, context.level());
 	}
 
 	public boolean spawnMob(ItemStack stack, @Nullable Player player, ServerLevel world, BlockPos pos, MobSpawnType reason, boolean offset, boolean unmapped){

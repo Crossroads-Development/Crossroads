@@ -1,13 +1,16 @@
 package com.Da_Technomancer.crossroads.blocks.rotary;
 
+import com.Da_Technomancer.crossroads.api.rotary.IAxleCapable;
 import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
+import com.Da_Technomancer.crossroads.api.witchcraft.IPerishable;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.MillRec;
 import com.Da_Technomancer.crossroads.gui.container.MillstoneContainer;
 import com.Da_Technomancer.essentials.api.BlockUtil;
+import com.Da_Technomancer.essentials.api.IItemCapable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -22,13 +25,14 @@ import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.neoforged.neoforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class MillstoneTileEntity extends InventoryTE{
+public class MillstoneTileEntity extends InventoryTE implements IAxleCapable, IItemCapable{
 
 	public static final BlockEntityType<MillstoneTileEntity> TYPE = CRTileEntity.createType(MillstoneTileEntity::new, CRBlocks.millstone);
 
@@ -120,11 +124,6 @@ public class MillstoneTileEntity extends InventoryTE{
 	}
 
 	@Override
-	protected boolean useRotary(){
-		return true;
-	}
-
-	@Override
 	public void serverTick(){
 		super.serverTick();
 		if(inventory[0].isEmpty()){
@@ -138,7 +137,12 @@ public class MillstoneTileEntity extends InventoryTE{
 				axleHandler.addEnergy(-used, false);
 
 				if(progress >= REQUIRED){
-					createOutput(recOpt.get().value().getOutputs());
+					List<ItemStack> outputs = recOpt.get().value().getOutputs();
+					for(ItemStack output : outputs){
+						//Millstone can handle recipes with perishable outputs
+						IPerishable.getAndInitSpoilTime(output, level);
+					}
+					createOutput(outputs);
 				}
 			}else{
 				progress = 0;
@@ -153,6 +157,12 @@ public class MillstoneTileEntity extends InventoryTE{
 			return axleHandler;
 		}
 		return null;
+	}
+
+	@Nullable
+	@Override
+	public IItemHandler getItemHandler(Direction direction){
+		return itemHandler;
 	}
 
 	@Override

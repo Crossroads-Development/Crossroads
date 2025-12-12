@@ -1,12 +1,14 @@
 package com.Da_Technomancer.crossroads.blocks.heat;
 
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
+import com.Da_Technomancer.crossroads.api.heat.IHeatCapable;
 import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.SmelterContainer;
 import com.Da_Technomancer.essentials.api.BlockUtil;
+import com.Da_Technomancer.essentials.api.IItemCapable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -29,7 +31,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Optional;
 
-public class SmelterTileEntity extends InventoryTE{
+public class SmelterTileEntity extends InventoryTE implements IHeatCapable, IItemCapable{
 
 	public static final BlockEntityType<SmelterTileEntity> TYPE = CRTileEntity.createType(SmelterTileEntity::new, CRBlocks.smelter);
 
@@ -47,11 +49,6 @@ public class SmelterTileEntity extends InventoryTE{
 
 	public int getProgress(){
 		return progress;
-	}
-
-	@Override
-	protected boolean useHeat(){
-		return true;
 	}
 
 	@Override

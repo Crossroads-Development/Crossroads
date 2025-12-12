@@ -4,6 +4,7 @@ package com.Da_Technomancer.crossroads.api.packets;
 import com.Da_Technomancer.crossroads.Crossroads;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.VarInt;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
@@ -13,7 +14,6 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 public record SendIntArrayToClient(byte id, int[] message, BlockPos pos) implements CustomPacketPayload{
 	public static CustomPacketPayload.Type<SendIntArrayToClient> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "send_int_array_client"));
 
-	// TODO: needed to use ofMember because I couldn't find a way to encode an int array. If there's one I just missed, this can be returned to a composite
 	public static final StreamCodec<ByteBuf, SendIntArrayToClient> STREAM_CODEC = StreamCodec.ofMember(SendIntArrayToClient::encode, SendIntArrayToClient::new);
 
 	private SendIntArrayToClient(ByteBuf buffer){
@@ -27,7 +27,7 @@ public record SendIntArrayToClient(byte id, int[] message, BlockPos pos) impleme
 	}
 
 	private static int[] bufferToIntArray(ByteBuf buf){
-		int count = buf.readInt();
+		int count = VarInt.read(buf);
 		int[] message = new int[count];
 		for(int i = 0; i < count; i++){
 			message[i] = buf.readInt();
@@ -36,7 +36,7 @@ public record SendIntArrayToClient(byte id, int[] message, BlockPos pos) impleme
 	}
 
 	private void intArrayToBuffer(ByteBuf buffer){
-		buffer.writeInt(message.length);
+		VarInt.write(buffer, message.length);
 		for(int i : message){
 			buffer.writeInt(i);
 		}
@@ -52,9 +52,6 @@ public record SendIntArrayToClient(byte id, int[] message, BlockPos pos) impleme
 			}
 		});
 	}
-
-	// TODO: This should be client side only. Remove this message before final commit.
-
 
 	@Override
 	public Type<? extends CustomPacketPayload> type(){

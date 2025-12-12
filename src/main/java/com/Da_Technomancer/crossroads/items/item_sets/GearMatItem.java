@@ -8,6 +8,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
 
@@ -48,6 +49,7 @@ public abstract class GearMatItem extends OreProfileItem{
 		}
 	}
 
+	@Nonnull
 	@Override
 	public ItemStack[] populateCreativeTab(){
 		//Add every material variant of this item

@@ -9,6 +9,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 
+@Deprecated
 public class HealthPenalty extends MobEffect{
 
 	private static final ResourceLocation HEALTH_MODIFIER_HEALTH_PENALTY_ID = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "effect.health_penalty");

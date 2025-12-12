@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:mill",
+	"input": {
+		"item": "blue_ice"
+	},
+	"output": {
+		"item": "crossroads:shaved_ice",
+		"count": 1
+	}
+}

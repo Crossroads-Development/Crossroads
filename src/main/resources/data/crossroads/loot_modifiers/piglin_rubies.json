@@ -3,7 +3,7 @@
 	"conditions": [
 
 	],
-	"active": "true",
+	"active": true,
 	"override_chance": 0.02,
 	"item_name": "crossroads:gem_ruby",
 	"min": 1,

@@ -11,7 +11,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
@@ -79,8 +78,8 @@ public class BloodCentrifuge extends TEBlock implements IReadable{
 
 	@Override
 	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
-		tooltip.add(Component.translatable("tt.crossroads.blood_centrifuge.desc", BloodCentrifugeTileEntity.HIGH_SPEED));
-		tooltip.add(Component.translatable("tt.crossroads.blood_centrifuge.degradation"));
+		tooltip.add(Component.translatable("tt.crossroads.blood_centrifuge.desc", BloodCentrifugeTileEntity.MAX_ADDED_QUALITY));
+		tooltip.add(Component.translatable("tt.crossroads.blood_centrifuge.speed", BloodCentrifugeTileEntity.HIGH_SPEED));
 		tooltip.add(Component.translatable("tt.crossroads.blood_centrifuge.redstone"));
 		tooltip.add(Component.translatable("tt.crossroads.boilerplate.inertia", BloodCentrifugeTileEntity.INERTIA));
 		tooltip.add(Component.translatable("tt.crossroads.blood_centrifuge.quip").setStyle(MiscUtil.TT_QUIP));

@@ -6,12 +6,14 @@ import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
 import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
+import com.Da_Technomancer.crossroads.api.heat.IHeatCapable;
 import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.BrewingVatContainer;
 import com.Da_Technomancer.essentials.api.BlockUtil;
+import com.Da_Technomancer.essentials.api.IItemCapable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -31,7 +33,7 @@ import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class BrewingVatTileEntity extends InventoryTE{
+public class BrewingVatTileEntity extends InventoryTE implements IHeatCapable, IItemCapable{
 
 	public static final BlockEntityType<BrewingVatTileEntity> TYPE = CRTileEntity.createType(BrewingVatTileEntity::new, CRBlocks.brewingVat);
 
@@ -51,11 +53,6 @@ public class BrewingVatTileEntity extends InventoryTE{
 	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
 		chat.add(Component.translatable("tt.crossroads.boilerplate.progress", progress, REQUIRED));
 		super.addInfo(chat, player, hit);
-	}
-
-	@Override
-	protected boolean useHeat(){
-		return true;
 	}
 
 	public int getProgess(){

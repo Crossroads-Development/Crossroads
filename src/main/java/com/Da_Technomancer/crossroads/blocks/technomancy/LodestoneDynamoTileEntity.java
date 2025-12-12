@@ -2,8 +2,8 @@ package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.electric.IEnergyCapable;
+import com.Da_Technomancer.crossroads.api.rotary.IAxleCapable;
 import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.api.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.api.templates.ModuleTE;
@@ -16,12 +16,11 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-
 import net.neoforged.neoforge.energy.IEnergyStorage;
 
 import javax.annotation.Nullable;
 
-public class LodestoneDynamoTileEntity extends ModuleTE implements IEnergyCapable{
+public class LodestoneDynamoTileEntity extends ModuleTE implements IEnergyCapable, IAxleCapable{
 
 	public static final BlockEntityType<LodestoneDynamoTileEntity> TYPE = CRTileEntity.createType(LodestoneDynamoTileEntity::new, CRBlocks.lodestoneDynamo);
 
@@ -34,11 +33,6 @@ public class LodestoneDynamoTileEntity extends ModuleTE implements IEnergyCapabl
 
 	public LodestoneDynamoTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state);
-	}
-
-	@Override
-	protected boolean useRotary(){
-		return true;
 	}
 
 	@Override
