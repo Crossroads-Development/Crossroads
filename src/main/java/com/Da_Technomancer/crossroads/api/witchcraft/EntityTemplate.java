@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.api.LazyCache;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.api.packets.StreamCodecUtils;
+import com.Da_Technomancer.crossroads.entity.CRMobDamage;
 import com.Da_Technomancer.crossroads.entity.mob_effects.CRPotions;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
@@ -204,6 +205,7 @@ public record EntityTemplate(@Nonnull ResourceLocation entityID, @Nonnull LazyCa
 		}
 
 		float mobHealthPenalty = 0;
+		boolean isNonViable = false;
 		int quality = template.quality();
 		int complexity = template.totalComplexity();
 		if(complexity > quality){
@@ -212,6 +214,7 @@ public record EntityTemplate(@Nonnull ResourceLocation entityID, @Nonnull LazyCa
 				//Clone is going to die immediately on spawning
 				//Force it, and switch the mob type to something crummy
 				type = EntityType.SLIME;
+				isNonViable = true;
 				mobHealthPenalty = -999;
 			}
 		}
@@ -240,6 +243,9 @@ public record EntityTemplate(@Nonnull ResourceLocation entityID, @Nonnull LazyCa
 		}
 		//Save the original EntityTemplate in the entity
 		created.getPersistentData().put(TEMPLATE_KEY, template.serializeNBT(world.registryAccess()));
+		if(isNonViable){
+			created.hurt(CRMobDamage.damageSource(CRMobDamage.NON_VIABLE, world), 1);
+		}
 		return created;
 	}
 

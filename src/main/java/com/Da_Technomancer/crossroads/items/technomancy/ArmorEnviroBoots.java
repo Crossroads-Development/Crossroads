@@ -3,7 +3,6 @@ package com.Da_Technomancer.crossroads.items.technomancy;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.items.CRItems;
-import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Vec3i;
 import net.minecraft.network.chat.Component;
@@ -110,12 +109,10 @@ public class ArmorEnviroBoots extends TechnomancyArmor{
 
 	@Override
 	public ItemEnchantments getAllEnchantments(ItemStack stack, HolderLookup.RegistryLookup<Enchantment> lookup){
-		//TODO test
 		int soulSpeedConfig = CRConfig.enviroBootSoulSpeed.get();
 		if(soulSpeedConfig > 0){
 			ItemEnchantments.Mutable enchants = new ItemEnchantments.Mutable(super.getAllEnchantments(stack, lookup));
-			//TODO replace the MiscUtil.lookupResourceKey call with a direct reference to the enchantments registry once it gets added to BuiltInRegistries
-			enchants.upgrade(new Holder.Direct<>(MiscUtil.lookupResourceKey(Enchantments.SOUL_SPEED)), soulSpeedConfig);
+			enchants.upgrade(lookup.getOrThrow(Enchantments.SOUL_SPEED).getDelegate(), soulSpeedConfig);
 			return enchants.toImmutable();
 		}
 		return super.getAllEnchantments(stack, lookup);

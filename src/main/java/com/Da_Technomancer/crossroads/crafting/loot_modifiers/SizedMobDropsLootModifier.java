@@ -90,7 +90,8 @@ public class SizedMobDropsLootModifier extends LootModifier{
 			AttributeInstance scaleAttribute = living.getAttributes().getInstance(Attributes.SCALE);
 			double baseScale;
 			if(scaleAttribute != null && (baseScale = scaleAttribute.getBaseValue()) > 0){
-				double scale = Math.max(0, scaleAttribute.getValue() / baseScale);
+				//Scales with the cube of size
+				double scale = Math.pow(Math.max(0, scaleAttribute.getValue() / baseScale), 3D);
 				if(scale > 1.1F && canScaleUp || scale < 0.9F && canScaleDown){
 					for(int i = 0; i < generatedLoot.size(); i++){
 						ItemStack generated = generatedLoot.get(i);

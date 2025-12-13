@@ -4,6 +4,7 @@
 		"crossroads:windmill",
 		"crossroads:void",
 		"crossroads:potentialvoid",
-		"crossroads:non_viable"
+		"crossroads:non_viable",
+		"crossroads:cr_syringe"
 	]
 }
