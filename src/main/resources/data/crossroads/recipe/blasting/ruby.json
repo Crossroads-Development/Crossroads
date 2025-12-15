@@ -1,0 +1,12 @@
+{
+	"type": "minecraft:blasting",
+	"result": {
+		"id": "crossroads:gem_ruby"
+	},
+	"experience": 1.0,
+	"ingredient": [
+		{
+			"tag": "c:ores/ruby"
+		}
+	]
+}

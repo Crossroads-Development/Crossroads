@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:beam_extract",
+	"input": {
+		"tag": "c:gunpowders"
+	},
+	"output": {
+		"energy": 24
+	},
+	"duration": 2
+}

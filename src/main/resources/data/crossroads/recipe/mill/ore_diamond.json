@@ -1,0 +1,16 @@
+{
+	"type": "crossroads:mill",
+	"input": {
+		"tag": "c:ores/diamond"
+	},
+	"output": [
+		{
+			"id": "diamond",
+			"count": 2
+		},
+		{
+			"id": "sand",
+			"count": 1
+		}
+	]
+}

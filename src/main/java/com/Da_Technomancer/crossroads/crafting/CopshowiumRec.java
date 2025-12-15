@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.crafting;
 
+import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.api.crafting.FluidIngredient;
 import com.Da_Technomancer.crossroads.api.crafting.IOptionalRecipe;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -10,18 +11,14 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
-import javax.annotation.Nullable;
-
 public class CopshowiumRec implements IOptionalRecipe<RecipeInput>{
 
-	private final ResourceLocation id;
 	private final String group;
 
 	private final FluidIngredient input;
@@ -29,8 +26,7 @@ public class CopshowiumRec implements IOptionalRecipe<RecipeInput>{
 	private final boolean flux;
 	private final boolean active;
 
-	public CopshowiumRec(ResourceLocation location, String name, FluidIngredient input, float expandFactor, boolean flux, boolean active){
-		id = location;
+	public CopshowiumRec(String name, FluidIngredient input, float expandFactor, boolean flux, boolean active){
 		group = name;
 		this.input = input;
 		this.mult = expandFactor;
@@ -94,8 +90,7 @@ public class CopshowiumRec implements IOptionalRecipe<RecipeInput>{
 
 		//ResourceLocation location, String name, FluidIngredient input, float expandFactor, boolean flux, boolean active
 		private static final MapCodec<CopshowiumRec> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-				ResourceLocation.CODEC.fieldOf("id").forGetter((CopshowiumRec copshowiumRec) -> copshowiumRec.id),
-				Codec.STRING.optionalFieldOf("group", "").forGetter(CopshowiumRec::getGroup),
+				CraftingUtil.recipeGroupFieldCodec().forGetter(CopshowiumRec::getGroup),
 				FluidIngredient.CODEC.fieldOf("input").forGetter(CopshowiumRec::getInput),
 				Codec.FLOAT.optionalFieldOf("mult", 1f).forGetter(CopshowiumRec::getMult),
 				Codec.BOOL.optionalFieldOf("entropy", false).forGetter(CopshowiumRec::isFlux),
@@ -103,7 +98,6 @@ public class CopshowiumRec implements IOptionalRecipe<RecipeInput>{
 		).apply(instance, CopshowiumRec::new));
 
 		private static final StreamCodec<RegistryFriendlyByteBuf, CopshowiumRec> STREAM_CODEC = StreamCodec.composite(
-				ResourceLocation.STREAM_CODEC, (CopshowiumRec copshowiumRec) -> copshowiumRec.id,
 				ByteBufCodecs.STRING_UTF8, CopshowiumRec::getGroup,
 				FluidIngredient.STREAM_CODEC, CopshowiumRec::getInput,
 				ByteBufCodecs.FLOAT, CopshowiumRec::getMult,

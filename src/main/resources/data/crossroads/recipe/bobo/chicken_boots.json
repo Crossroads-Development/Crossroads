@@ -1,0 +1,22 @@
+{
+	"type": "crossroads:bobo",
+	"output": {
+		"id": "crossroads:chicken_boots",
+		"count": 1
+	},
+	"input_a": [
+		{
+			"tag": "c:leathers"
+		}
+	],
+	"input_b": [
+		{
+			"tag": "c:feathers"
+		}
+	],
+	"input_c": [
+		{
+			"item": "minecraft:lily_pad"
+		}
+	]
+}

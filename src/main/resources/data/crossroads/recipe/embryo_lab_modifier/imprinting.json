@@ -1,0 +1,13 @@
+{
+	"type": "crossroads:embryo_lab_modifier",
+	"input": [
+		{
+			"item": "crossroads:blood_sample"
+		}
+	],
+	"returned_container": {
+		"id": "crossroads:blood_sample_empty"
+	},
+	"modifier": "imprinting",
+	"complexity": 10
+}

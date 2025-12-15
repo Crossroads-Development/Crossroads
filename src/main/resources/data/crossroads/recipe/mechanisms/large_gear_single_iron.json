@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"id": "crossroads:gear_base_large",
+		"count": 1,
+		"components": {
+			"crossroads:material": "iron"
+		}
+	},
+	"pattern": [
+		"*#*",
+		"###",
+		"*#*"
+	],
+	"key": {
+		"#": {
+			"tag": "c:ingots/iron"
+		},
+		"*": {
+			"tag": "c:nuggets/iron"
+		}
+	}
+}

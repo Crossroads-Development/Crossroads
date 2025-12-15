@@ -1,0 +1,18 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "alchemy",
+	"result": {
+		"id": "crossroads:alch_tube",
+		"count": 8
+	},
+	"pattern": [
+		"GGG",
+		"   ",
+		"GGG"
+	],
+	"key": {
+		"G": {
+			"tag": "c:glass/colorless"
+		}
+	}
+}

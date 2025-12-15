@@ -1,0 +1,24 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "alchemy",
+	"result": {
+		"id": "crossroads:reaction_chamber",
+		"count": 1
+	},
+	"pattern": [
+		"BGB",
+		"GTG",
+		"BGB"
+	],
+	"key": {
+		"B": {
+			"tag": "c:ingots/bronze"
+		},
+		"G": {
+			"tag": "c:glass/colorless"
+		},
+		"T": {
+			"item": "crossroads:reagent_tank"
+		}
+	}
+}

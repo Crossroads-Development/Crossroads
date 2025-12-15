@@ -17,7 +17,7 @@ import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.subtypes.IIngredientSubtypeInterpreter;
+import mezz.jei.api.ingredients.subtypes.ISubtypeInterpreter;
 import mezz.jei.api.ingredients.subtypes.UidContext;
 import mezz.jei.api.recipe.vanilla.IJeiAnvilRecipe;
 import mezz.jei.api.recipe.vanilla.IVanillaRecipeFactory;
@@ -30,6 +30,7 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -126,7 +127,7 @@ public class JEICrossroadsPlugin implements IModPlugin{
 	@Override
 	public void registerIngredients(IModIngredientRegistration registry){
 		ReagIngr.populate();
-		registry.register(ReagIngr.REAG, ReagIngr.REAG_TYPES, new ReagentIngredientHelper(), ReagentIngredientRenderer.RENDERER);
+		registry.register(ReagIngr.REAG, ReagIngr.REAG_TYPES, new ReagentIngredientHelper(), ReagentIngredientRenderer.RENDERER, ReagIngr.CODEC);
 	}
 
 	@Override
@@ -158,9 +159,18 @@ public class JEICrossroadsPlugin implements IModPlugin{
 	public void registerItemSubtypes(ISubtypeRegistration registration){
 		//Register item types with a finite number of variants based on NBT
 
-		final IIngredientSubtypeInterpreter<ItemStack> oreProfileInterpreter = (ItemStack stack, UidContext context) -> {
-			CRMaterialLibrary.OreProfile mat = OreProfileItem.getProfile(stack);
-			return mat == null ? IIngredientSubtypeInterpreter.NONE : mat.getName();
+		final ISubtypeInterpreter<ItemStack> oreProfileInterpreter = new ISubtypeInterpreter<>(){
+			@Override
+			public @Nullable Object getSubtypeData(ItemStack stack, UidContext context){
+				CRMaterialLibrary.OreProfile mat = OreProfileItem.getProfile(stack);
+				return mat == null ? null : mat.getName();
+			}
+
+			@Override
+			public String getLegacyStringSubtypeInfo(ItemStack stack, UidContext context){
+				CRMaterialLibrary.OreProfile mat = OreProfileItem.getProfile(stack);
+				return mat == null ? "" : mat.getName();
+			}
 		};
 
 		registration.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, CRItems.oreClump, oreProfileInterpreter);
@@ -172,6 +182,7 @@ public class JEICrossroadsPlugin implements IModPlugin{
 		registration.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, CRItems.axle, oreProfileInterpreter);
 		registration.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, CRItems.clutch, oreProfileInterpreter);
 		registration.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, CRItems.invClutch, oreProfileInterpreter);
+		registration.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, CRItems.axleMount, oreProfileInterpreter);
 	}
 
 	protected static IDrawableStatic createFluidOverlay(IGuiHelper helper){

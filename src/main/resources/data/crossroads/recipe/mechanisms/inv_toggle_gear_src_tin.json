@@ -1,0 +1,25 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"result": {
+		"id": "crossroads:gear_toggle_inv",
+		"count": 1,
+		"components": {
+			"crossroads:material": "tin"
+		}
+	},
+	"ingredients": [
+		{
+			"item": "minecraft:redstone_torch"
+		},
+		{
+			"type": "neoforge:components",
+			"items": "crossroads:gear_base",
+			"components": {
+				"crossroads:material": "tin"
+			}
+		},
+		{
+			"item": "minecraft:lever"
+		}
+	]
+}

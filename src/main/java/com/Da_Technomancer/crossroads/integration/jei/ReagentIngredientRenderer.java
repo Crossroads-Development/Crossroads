@@ -66,11 +66,11 @@ public class ReagentIngredientRenderer implements IIngredientRenderer<ReagIngr>{
 	public List<Component> getTooltip(ReagIngr ingredient, TooltipFlag tooltipFlag){
 		ArrayList<Component> tooltip = new ArrayList<>(3);
 		tooltip.add(Component.literal(ingredient.getReag().getName()));
-		if(ingredient.getParts() > 0){
-			if(ingredient.getParts() == 1){
-				tooltip.add(Component.translatable("tt.crossroads.jei.reag.amount.single", ingredient.getParts()));
+		if(ingredient.parts() > 0){
+			if(ingredient.parts() == 1){
+				tooltip.add(Component.translatable("tt.crossroads.jei.reag.amount.single", ingredient.parts()));
 			}else{
-				tooltip.add(Component.translatable("tt.crossroads.jei.reag.amount.plural", ingredient.getParts()));
+				tooltip.add(Component.translatable("tt.crossroads.jei.reag.amount.plural", ingredient.parts()));
 			}
 		}
 		if(tooltipFlag.isAdvanced()){
@@ -82,11 +82,11 @@ public class ReagentIngredientRenderer implements IIngredientRenderer<ReagIngr>{
 	@Override
 	public void getTooltip(ITooltipBuilder builder, ReagIngr ingredient, TooltipFlag tooltipFlag){
 		builder.add(Component.literal(ingredient.getReag().getName()));
-		if(ingredient.getParts() > 0){
-			if(ingredient.getParts() == 1){
-				builder.add(Component.translatable("tt.crossroads.jei.reag.amount.single", ingredient.getParts()));
+		if(ingredient.parts() > 0){
+			if(ingredient.parts() == 1){
+				builder.add(Component.translatable("tt.crossroads.jei.reag.amount.single", ingredient.parts()));
 			}else{
-				builder.add(Component.translatable("tt.crossroads.jei.reag.amount.plural", ingredient.getParts()));
+				builder.add(Component.translatable("tt.crossroads.jei.reag.amount.plural", ingredient.parts()));
 			}
 		}
 		if(tooltipFlag.isAdvanced()){

@@ -1,0 +1,12 @@
+{
+	"type": "minecraft:smoking",
+	"result": {
+		"id": "crossroads:mutagen"
+	},
+	"experience": 0.1,
+	"ingredient": [
+		{
+			"item": "crossroads:medicinal_mushroom"
+		}
+	]
+}

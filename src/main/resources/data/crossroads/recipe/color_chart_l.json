@@ -1,0 +1,29 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"id": "crossroads:color_chart",
+		"count": 1
+	},
+	"pattern": [
+		"RGB",
+		"PPP",
+		"WWW"
+	],
+	"key": {
+		"R": {
+			"tag": "c:dyes/red"
+		},
+		"G": {
+			"tag": "c:dyes/lime"
+		},
+		"B": {
+			"tag": "c:dyes/blue"
+		},
+		"P": {
+			"item": "minecraft:paper"
+		},
+		"W": {
+			"tag": "minecraft:wooden_slabs"
+		}
+	}
+}

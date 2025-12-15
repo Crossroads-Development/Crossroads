@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"id": "crossroads:tesla_coil_top_normal",
+		"count": 2
+	},
+	"pattern": [
+		"III",
+		" C ",
+		"RCR"
+	],
+	"key": {
+		"I": {
+			"tag": "c:ingots/iron"
+		},
+		"R": {
+			"tag": "c:dusts/redstone"
+		},
+		"C": {
+			"tag": "c:ingots/copper"
+		}
+	}
+}

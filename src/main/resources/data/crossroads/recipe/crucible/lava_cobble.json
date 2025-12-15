@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:crucible",
+	"input": {
+		"tag": "c:cobblestones"
+	},
+	"output": {
+		"id": "lava",
+		"amount": 200
+	}
+}

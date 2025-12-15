@@ -1,0 +1,12 @@
+{
+	"type": "crossroads:beam_extract",
+	"input": {
+		"tag": "crossroads:dusts/stasisol"
+	},
+	"output": {
+		"energy": 24,
+		"potential": 16,
+		"stability": 24
+	},
+	"duration": 5
+}

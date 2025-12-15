@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"id": "crossroads:gear_base",
+		"count": 9,
+		"components": {
+			"crossroads:material": "iron"
+		}
+	},
+	"pattern": [
+		" * ",
+		"*#*",
+		" * "
+	],
+	"key": {
+		"#": {
+			"tag": "c:storage_blocks/iron"
+		},
+		"*": {
+			"tag": "c:ingots/iron"
+		}
+	}
+}

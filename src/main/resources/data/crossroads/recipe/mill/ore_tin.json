@@ -1,0 +1,16 @@
+{
+	"type": "crossroads:mill",
+	"input": {
+		"tag": "c:ores/tin"
+	},
+	"output": [
+		{
+			"id": "crossroads:raw_tin",
+			"count": 2
+		},
+		{
+			"id": "sand",
+			"count": 1
+		}
+	]
+}

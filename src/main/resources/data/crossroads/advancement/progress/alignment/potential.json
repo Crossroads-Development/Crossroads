@@ -1,0 +1,30 @@
+{
+	"parent": "crossroads:progress/root",
+	"display": {
+		"icon": {
+			"id": "minecraft:emerald"
+		},
+		"title": {
+			"translate": "crossroads.advancement.align.potential"
+		},
+		"description": {
+			"translate": "crossroads.advancement.align.potential.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": false
+	},
+	"criteria": {
+		"potential": {
+			"trigger": "crossroads:beam_alignment",
+			"conditions": {
+				"alignment": "potential",
+				"void": "any"
+			}
+		}
+	},
+	"requirements": [
+		[
+			"potential"
+		]
+	]
+}

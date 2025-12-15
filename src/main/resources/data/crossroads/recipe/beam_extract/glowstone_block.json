@@ -1,0 +1,12 @@
+{
+	"type": "crossroads:beam_extract",
+	"input": {
+		"item": "minecraft:glowstone"
+	},
+	"output": {
+		"energy": 4,
+		"potential": 4,
+		"stability": 4
+	},
+	"duration": 4
+}

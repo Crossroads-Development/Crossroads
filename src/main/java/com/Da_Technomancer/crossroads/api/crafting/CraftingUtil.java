@@ -30,6 +30,7 @@ import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CraftingUtil{
 
@@ -209,19 +210,12 @@ public class CraftingUtil{
 	 */
 	@Nullable
 	public static <T> T getTagEntry(TagKey<T> tag){
-		HashSet<T> contents = getTagContents(tag);
-		Comparator<T> comparator = RegNameComparator.getComparator(tag.registry());
-		return contents.stream().min(comparator).orElse(null);
+		final Comparator<T> comparator = RegNameComparator.getComparator(tag.registry());
+		return getRegistryForKey(tag).getOrCreateTag(tag).stream().map(Holder::value).min(comparator).orElse(null);
 	}
 
-	public static <T> HashSet<T> getTagContents(TagKey<T> tag){
-		HashSet<T> entries = new HashSet<>();
-		getTagContents(tag, getRegistryForKey(tag), entries);
-		return entries;
-	}
-
-	private static <T> void getTagContents(TagKey<T> tag, Registry<T> manager, HashSet<T> entries){
-		manager.getTag(tag).ifPresent(named -> named.unwrap().ifLeft(innerTagKey -> getTagContents(innerTagKey, manager, entries)).ifRight(holderList -> holderList.stream().map(Holder::value).forEach(entries::add)));
+	public static <T> Set<T> getTagContents(TagKey<T> tag){
+		return getRegistryForKey(tag).getOrCreateTag(tag).stream().map(Holder::value).collect(Collectors.toSet());
 	}
 
 	public static <T> T getPreferredEntry(Collection<T> entries, ResourceKey<? extends Registry<T>> registry){

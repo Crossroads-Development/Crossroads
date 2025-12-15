@@ -1,0 +1,12 @@
+{
+	"type": "minecraft:smelting",
+	"result": {
+		"id": "crossroads:mutagen"
+	},
+	"experience": 0.1,
+	"ingredient": [
+		{
+			"item": "crossroads:mushroom_dust"
+		}
+	]
+}

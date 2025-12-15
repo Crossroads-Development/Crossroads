@@ -1,0 +1,20 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"id": "crossroads:beam_extractor",
+		"count": 1
+	},
+	"pattern": [
+		"***",
+		"*# ",
+		"***"
+	],
+	"key": {
+		"*": {
+			"tag": "c:obsidians"
+		},
+		"#": {
+			"item": "crossroads:lens_array"
+		}
+	}
+}

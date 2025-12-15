@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:beam_extract",
+	"input": {
+		"tag": "crossroads:dusts/adamant"
+	},
+	"output": {
+		"stability": 64
+	},
+	"duration": 5
+}

@@ -1,0 +1,15 @@
+{
+	"type": "minecraft:blasting",
+	"result": {
+		"id": "crossroads:nugget_copper",
+		"count": 7
+	},
+	"experience": 0.7,
+	"ingredient": {
+		"type": "neoforge:components",
+		"items": "crossroads:ore_gravel",
+		"components": {
+			"crossroads:material": "copper"
+		}
+	}
+}

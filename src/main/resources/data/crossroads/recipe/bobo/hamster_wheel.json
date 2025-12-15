@@ -1,0 +1,27 @@
+{
+	"type": "crossroads:bobo",
+	"output": {
+		"id": "crossroads:hamster_wheel",
+		"count": 1
+	},
+	"input_a": [
+		{
+			"tag": "c:rods/wooden"
+		}
+	],
+	"input_b": [
+		{
+			"tag": "crossroads:ingots/copshowium"
+		}
+	],
+	"input_c": [
+		{
+			"type": "neoforge:components",
+			"items": "crossroads:edible_blob",
+			"components": {
+				"crossroads:food": 4,
+				"crossroads:sat": 2
+			}
+		}
+	]
+}

@@ -1,0 +1,12 @@
+{
+	"type": "minecraft:blasting",
+	"result": {
+		"id": "crossroads:void_crystal"
+	},
+	"experience": 1.0,
+	"ingredient": [
+		{
+			"tag": "crossroads:ores/void"
+		}
+	]
+}

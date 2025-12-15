@@ -1,8 +1,0 @@
-{
-	"type": "crossroads:beam_extract",
-	"input": {
-		"tag": "c:dusts/redstone"
-	},
-	"energy" : 18,
-	"potential": 24
-}

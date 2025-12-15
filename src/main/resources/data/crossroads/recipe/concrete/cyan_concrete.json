@@ -1,0 +1,36 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"result": {
+		"id": "minecraft:cyan_concrete_powder",
+		"count": 16
+	},
+	"ingredients": [
+		{
+			"tag": "c:dyes/cyan"
+		},
+		{
+			"tag": "c:dusts/slag"
+		},
+		{
+			"tag": "c:dusts/slag"
+		},
+		{
+			"tag": "c:dusts/slag"
+		},
+		{
+			"tag": "c:dusts/slag"
+		},
+		{
+			"tag": "c:sands"
+		},
+		{
+			"tag": "c:sands"
+		},
+		{
+			"tag": "c:sands"
+		},
+		{
+			"tag": "c:sands"
+		}
+	]
+}

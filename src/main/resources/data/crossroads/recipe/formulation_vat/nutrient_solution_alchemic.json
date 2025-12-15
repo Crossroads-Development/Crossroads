@@ -1,0 +1,14 @@
+{
+	"type": "crossroads:formulation_vat",
+	"input_fluid": {
+		"tag": "crossroads:liquid_fat"
+	},
+	"fluid_amount": 100,
+	"input_item": {
+		"tag": "c:dusts/sulfur"
+	},
+	"output": {
+		"id": "crossroads:nutrient_solution",
+		"amount": 200
+	}
+}

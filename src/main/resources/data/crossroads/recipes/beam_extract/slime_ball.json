@@ -1,8 +1,0 @@
-{
-	"type": "crossroads:beam_extract",
-	"input": {
-		"tag": "forge:slimeballs"
-	},
-	"potential": 12,
-	"duration": 4
-}

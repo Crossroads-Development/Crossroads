@@ -1,0 +1,30 @@
+{
+	"type": "crossroads:bobo",
+	"output": {
+		"id": "crossroads:maxwell_demon",
+		"count": 1
+	},
+	"input_a": [
+		{
+			"tag": "crossroads:storage_blocks/cavorite"
+		},
+		{
+			"tag": "crossroads:gems/cavorite"
+		}
+	],
+	"input_b": [
+		{
+			"tag": "c:ingots/copper"
+		}
+	],
+	"input_c": [
+		{
+			"type": "neoforge:components",
+			"items": "crossroads:edible_blob",
+			"components": {
+				"crossroads:food": 6,
+				"crossroads:sat": 4
+			}
+		}
+	]
+}

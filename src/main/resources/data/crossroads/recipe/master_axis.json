@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"id": "crossroads:master_axis",
+		"count": 1
+	},
+	"pattern": [
+		"CCC",
+		"C C",
+		"*A*"
+	],
+	"key": {
+		"*": {
+			"tag": "c:ingots/iron"
+		},
+		"A": {
+			"item": "crossroads:axle"
+		},
+		"C": {
+			"tag": "c:cobblestones"
+		}
+	}
+}

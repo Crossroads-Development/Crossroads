@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:beam_extract",
+	"input": {
+		"item": "honey_bottle"
+	},
+	"output": {
+		"potential": 12
+	},
+	"duration": 5
+}

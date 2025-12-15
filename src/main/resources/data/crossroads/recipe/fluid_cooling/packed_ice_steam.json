@@ -1,0 +1,8 @@
+{
+	"type": "crossroads:fluid_cooling",
+	"fluid": "crossroads:steam",
+	"fluid_amount": 1000,
+	"id": "packed_ice",
+	"max_temp": 0,
+	"temp_change": 65
+}

@@ -1,0 +1,24 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "alchemy",
+	"result": {
+		"id": "crossroads:detailed_crafter",
+		"count": 1
+	},
+	"pattern": [
+		"C",
+		"O",
+		"T"
+	],
+	"key": {
+		"C": {
+			"item": "minecraft:crafting_table"
+		},
+		"O": {
+			"tag": "c:obsidians"
+		},
+		"T": {
+			"tag": "c:ingots/iron"
+		}
+	}
+}

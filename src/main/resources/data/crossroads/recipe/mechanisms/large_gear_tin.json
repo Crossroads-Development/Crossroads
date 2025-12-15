@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"id": "crossroads:gear_base_large",
+		"count": 9,
+		"components": {
+			"crossroads:material": "tin"
+		}
+	},
+	"pattern": [
+		"*#*",
+		"###",
+		"*#*"
+	],
+	"key": {
+		"#": {
+			"tag": "c:storage_blocks/tin"
+		},
+		"*": {
+			"tag": "c:ingots/tin"
+		}
+	}
+}

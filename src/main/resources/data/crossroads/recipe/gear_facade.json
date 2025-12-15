@@ -1,0 +1,22 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"id": "crossroads:gear_facade",
+		"count": 8
+	},
+	"pattern": [
+		"BGB",
+		" I "
+	],
+	"key": {
+		"G": {
+			"tag": "c:glass/colorless"
+		},
+		"B": {
+			"item": "stone_bricks"
+		},
+		"I": {
+			"tag": "c:ingots/iron"
+		}
+	}
+}

@@ -63,16 +63,16 @@ public class IncubatorCategory implements IRecipeCategory<IncubatorRec>{
 		slot.draw(matrix, 26, 23);
 		slot.draw(matrix, 26, 41);
 		slot.draw(matrix, 98, 32);
-		arrowStatic.draw(matrix, 43, 35);
-		arrow.draw(matrix, 43, 35);
+		arrowStatic.draw(matrix, 44, 36);
+		arrow.draw(matrix, 44, 36);
 //		GlStateManager.disableBlend();
 //		GlStateManager.disableAlpha();
 	}
 
 	@Override
 	public void setRecipe(IRecipeLayoutBuilder builder, IncubatorRec recipe, IFocusGroup focuses){
-		builder.addSlot(RecipeIngredientRole.INPUT, 26, 23).addIngredients(recipe.getMainInput());
-		builder.addSlot(RecipeIngredientRole.INPUT, 26, 41).addIngredients(recipe.getSecondaryInput());
-		builder.addSlot(RecipeIngredientRole.OUTPUT, 98, 32).addItemStack(recipe.getResultItem());
+		builder.addSlot(RecipeIngredientRole.INPUT, 27, 24).addIngredients(recipe.getMainInput());
+		builder.addSlot(RecipeIngredientRole.INPUT, 27, 42).addIngredients(recipe.getSecondaryInput());
+		builder.addSlot(RecipeIngredientRole.OUTPUT, 99, 33).addItemStack(recipe.getResultItem());
 	}
 }

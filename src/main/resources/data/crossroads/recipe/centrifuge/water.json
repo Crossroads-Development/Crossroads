@@ -1,0 +1,18 @@
+{
+	"type": "crossroads:centrifuge",
+	"input": {
+		"id": "water",
+		"amount": 500
+	},
+	"output_fluid": {
+		"id": "crossroads:distilled_water",
+		"amount": 500
+	},
+	"output": [
+		{
+			"id": "crossroads:dust_salt",
+			"count": 1,
+			"weight": 1
+		}
+	]
+}

@@ -1,0 +1,11 @@
+{
+	"type": "crossroads:beam_extract",
+	"input": {
+		"item": "dragon_breath"
+	},
+	"output": {
+		"energy": 64,
+		"stability": 64
+	},
+	"duration": 480
+}

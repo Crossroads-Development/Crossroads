@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:crucible",
+	"input": {
+		"tag": "c:dusts/tin"
+	},
+	"output": {
+		"id": "crossroads:molten_tin",
+		"amount": 90
+	}
+}

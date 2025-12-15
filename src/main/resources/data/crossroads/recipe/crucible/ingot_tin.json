@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:crucible",
+	"input": {
+		"tag": "c:ingots/tin"
+	},
+	"output": {
+		"id": "crossroads:molten_tin",
+		"amount": 90
+	}
+}

@@ -1,0 +1,13 @@
+{
+	"type": "crossroads:stamp_mill",
+	"output": {
+		"id": "crossroads:ore_gravel",
+		"count": 3,
+		"components": {
+			"crossroads:material": "tin"
+		}
+	},
+	"ingredient": {
+		"tag": "c:raw_materials/tin"
+	}
+}

@@ -1,0 +1,24 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "witchcraft",
+	"result": {
+		"id": "crossroads:embryo_lab",
+		"count": 1
+	},
+	"pattern": [
+		" R ",
+		"G G",
+		"CCC"
+	],
+	"key": {
+		"C": {
+			"tag": "c:ingots/copper"
+		},
+		"R": {
+			"tag": "crossroads:atmos_antenna"
+		},
+		"G": {
+			"tag": "c:glass/colorless"
+		}
+	}
+}

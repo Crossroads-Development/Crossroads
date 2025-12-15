@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:crucible",
+	"input": {
+		"tag": "c:dusts/iron"
+	},
+	"output": {
+		"id": "crossroads:molten_iron",
+		"amount": 90
+	}
+}

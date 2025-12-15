@@ -1,0 +1,20 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"id": "crossroads:hand_crank",
+		"count": 1
+	},
+	"pattern": [
+		" |",
+		"||",
+		"* "
+	],
+	"key": {
+		"*": {
+			"tag": "c:cobblestones"
+		},
+		"|": {
+			"tag": "c:rods/wooden"
+		}
+	}
+}

@@ -1,0 +1,11 @@
+{
+	"type": "crossroads:beam_extract",
+	"input": {
+		"item": "ender_pearl"
+	},
+	"output": {
+		"energy": 16,
+		"stability": 16
+	},
+	"duration": 15
+}

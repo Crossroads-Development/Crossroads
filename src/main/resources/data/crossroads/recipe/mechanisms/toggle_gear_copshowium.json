@@ -1,0 +1,22 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"result": {
+		"id": "crossroads:gear_toggle",
+		"count": 1,
+		"components": {
+			"crossroads:material": "copshowium"
+		}
+	},
+	"ingredients": [
+		{
+			"item": "minecraft:lever"
+		},
+		{
+			"type": "neoforge:components",
+			"items": "crossroads:gear_base",
+			"components": {
+				"crossroads:material": "copshowium"
+			}
+		}
+	]
+}

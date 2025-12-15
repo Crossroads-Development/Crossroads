@@ -1,0 +1,21 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"result": {
+		"id": "crossroads:damping_powder",
+		"count": 4
+	},
+	"ingredients": [
+		{
+			"tag": "crossroads:dusts/alchemy_salt"
+		},
+		{
+			"tag": "crossroads:dusts/alchemy_salt"
+		},
+		{
+			"tag": "c:dusts/redstone"
+		},
+		{
+			"tag": "c:dusts/salt"
+		}
+	]
+}

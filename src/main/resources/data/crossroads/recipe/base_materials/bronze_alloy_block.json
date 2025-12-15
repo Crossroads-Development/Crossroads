@@ -1,0 +1,21 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"result": {
+		"id": "crossroads:block_bronze",
+		"count": 4
+	},
+	"ingredients": [
+		{
+			"tag": "c:storage_blocks/tin"
+		},
+		{
+			"tag": "c:storage_blocks/copper"
+		},
+		{
+			"tag": "c:storage_blocks/copper"
+		},
+		{
+			"tag": "c:storage_blocks/copper"
+		}
+	]
+}

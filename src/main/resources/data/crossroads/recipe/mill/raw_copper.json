@@ -1,0 +1,12 @@
+{
+	"type": "crossroads:mill",
+	"input": {
+		"tag": "c:raw_materials/copper"
+	},
+	"output": [
+		{
+			"id": "crossroads:dust_copper",
+			"count": 2
+		}
+	]
+}

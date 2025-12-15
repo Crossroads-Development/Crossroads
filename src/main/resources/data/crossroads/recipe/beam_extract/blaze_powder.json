@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:beam_extract",
+	"input": {
+		"item": "blaze_powder"
+	},
+	"output": {
+		"energy": 32,
+		"potential": 16
+	}
+}

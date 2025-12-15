@@ -1,0 +1,26 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"id": "crossroads:stamp_mill",
+		"count": 1
+	},
+	"pattern": [
+		"WAW",
+		"WIW",
+		"WCW"
+	],
+	"key": {
+		"C": {
+			"tag": "c:cobblestones"
+		},
+		"W": {
+			"tag": "minecraft:planks"
+		},
+		"A": {
+			"item": "crossroads:axle"
+		},
+		"I": {
+			"tag": "c:storage_blocks/iron"
+		}
+	}
+}

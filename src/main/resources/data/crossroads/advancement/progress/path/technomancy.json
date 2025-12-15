@@ -1,0 +1,24 @@
+{
+	"parent": "crossroads:progress/path/alchemy",
+	"display": {
+		"icon": {
+			"id": "crossroads:gear_base",
+			"components": {
+				"crossroads:material": "copper"
+			}
+		},
+		"title": {
+			"translate": "crossroads.advancement.path.technomancy"
+		},
+		"description": {
+			"translate": "crossroads.advancement.path.technomancy.desc"
+		},
+		"frame": "challenge",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"command": {
+			"trigger": "minecraft:impossible"
+		}
+	}
+}

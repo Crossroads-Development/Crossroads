@@ -26,9 +26,9 @@ blockstates = os.listdir("../assets/crossroads/blockstates/")
 # Note these have a .json suffix
 regNames = [os.path.basename(bstate) for bstate in blockstates]
 
-loottablePath = "../data/crossroads/loot_tables/blocks"
-templatePath = "../python/templates/loot_tables/"
-mineablePath = "../data/minecraft/tags/blocks/mineable"
+loottablePath = "../data/crossroads/loot_table/blocks"
+templatePath = "../python/templates/loot_table/"
+mineablePath = "../data/minecraft/tags/block/mineable"
 pickaxeTagPath = mineablePath + "/pickaxe.json"
 
 # Delete existing loot tables

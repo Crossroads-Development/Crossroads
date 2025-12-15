@@ -20,10 +20,10 @@ import java.util.Arrays;
 public final class BeamUnit{
 
 	public static Codec<BeamUnit> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-			ExtraCodecs.NON_NEGATIVE_INT.fieldOf("energy").forGetter(BeamUnit::getEnergy),
-			ExtraCodecs.NON_NEGATIVE_INT.fieldOf("potential").forGetter(BeamUnit::getPotential),
-			ExtraCodecs.NON_NEGATIVE_INT.fieldOf("stability").forGetter(BeamUnit::getStability),
-			ExtraCodecs.NON_NEGATIVE_INT.fieldOf("voi").forGetter(BeamUnit::getVoid)
+			ExtraCodecs.NON_NEGATIVE_INT.optionalFieldOf("energy", 0).forGetter(BeamUnit::getEnergy),
+			ExtraCodecs.NON_NEGATIVE_INT.optionalFieldOf("potential", 0).forGetter(BeamUnit::getPotential),
+			ExtraCodecs.NON_NEGATIVE_INT.optionalFieldOf("stability", 0).forGetter(BeamUnit::getStability),
+			ExtraCodecs.NON_NEGATIVE_INT.optionalFieldOf("void", 0).forGetter(BeamUnit::getVoid)
 	).apply(instance, BeamUnit::new));
 
 	public static StreamCodec<ByteBuf, BeamUnit> STREAM_CODEC = StreamCodec.composite(

@@ -1,0 +1,12 @@
+{
+	"type": "crossroads:mill",
+	"input": {
+		"tag": "c:ingots/gold"
+	},
+	"output": [
+		{
+			"id": "crossroads:dust_gold",
+			"count": 1
+		}
+	]
+}

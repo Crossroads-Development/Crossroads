@@ -1,0 +1,27 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "witchcraft",
+	"result": {
+		"id": "crossroads:cultivator_vat",
+		"count": 1
+	},
+	"pattern": [
+		"BTB",
+		"G G",
+		"BLB"
+	],
+	"key": {
+		"B": {
+			"tag": "c:ingots/bronze"
+		},
+		"T": {
+			"item": "crossroads:fluid_tube"
+		},
+		"G": {
+			"tag": "c:glass/colorless"
+		},
+		"L": {
+			"item": "minecraft:redstone_lamp"
+		}
+	}
+}

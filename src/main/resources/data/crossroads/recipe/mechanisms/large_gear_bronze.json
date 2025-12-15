@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"id": "crossroads:gear_base_large",
+		"count": 9,
+		"components": {
+			"crossroads:material": "bronze"
+		}
+	},
+	"pattern": [
+		"*#*",
+		"###",
+		"*#*"
+	],
+	"key": {
+		"#": {
+			"tag": "c:storage_blocks/bronze"
+		},
+		"*": {
+			"tag": "c:ingots/bronze"
+		}
+	}
+}

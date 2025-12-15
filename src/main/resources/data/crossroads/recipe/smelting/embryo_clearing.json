@@ -1,0 +1,12 @@
+{
+	"type": "minecraft:smelting",
+	"result": {
+		"id": "minecraft:rotten_flesh"
+	},
+	"experience": 0.1,
+	"ingredient": [
+		{
+			"item": "crossroads:embryo"
+		}
+	]
+}

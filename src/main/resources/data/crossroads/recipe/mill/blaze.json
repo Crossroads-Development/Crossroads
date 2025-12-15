@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:mill",
+	"input": {
+		"tag": "c:rods/blaze"
+	},
+	"output": {
+		"id": "blaze_powder",
+		"count": 4
+	}
+}

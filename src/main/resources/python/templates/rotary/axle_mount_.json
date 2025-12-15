@@ -1,10 +1,10 @@
 {
 	"type": "minecraft:crafting_shaped",
 	"result": {
-		"item": "crossroads:axle_mount",
+		"id": "crossroads:axle_mount",
 		"count": 8,
-		"nbt": {
-			"material": "MAT"
+		"components": {
+			"crossroads:material": "MAT"
 		}
 	},
 	"pattern": [

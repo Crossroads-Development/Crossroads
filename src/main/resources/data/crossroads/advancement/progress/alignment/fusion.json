@@ -1,0 +1,30 @@
+{
+	"parent": "crossroads:progress/alignment/expansion",
+	"display": {
+		"icon": {
+			"id": "crossroads:pure_quartz"
+		},
+		"title": {
+			"translate": "crossroads.advancement.align.fusion"
+		},
+		"description": {
+			"translate": "crossroads.advancement.align.fusion.desc"
+		},
+		"frame": "goal",
+		"announce_to_chat": false
+	},
+	"criteria": {
+		"fusion": {
+			"trigger": "crossroads:beam_alignment",
+			"conditions": {
+				"alignment": "fusion",
+				"void": "any"
+			}
+		}
+	},
+	"requirements": [
+		[
+			"fusion"
+		]
+	]
+}

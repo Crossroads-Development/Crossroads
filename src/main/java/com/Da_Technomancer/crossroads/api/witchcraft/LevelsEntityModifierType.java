@@ -93,7 +93,7 @@ public class LevelsEntityModifierType implements IEntityModifierType<LevelsEntit
 			if(type.maxLevel == 1){
 				return type.baseDescription;
 			}
-			return type.baseDescription.append(Component.translatable("enchantment.level." + level));
+			return type.baseDescription.copy().append(Component.translatable("enchantment.level." + level));
 		}
 	}
 }

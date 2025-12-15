@@ -1,8 +1,0 @@
-{
-	"type": "crossroads:beam_extract",
-	"input": {
-		"tag": "c:dusts/sulfur"
-	},
-	"energy": 16,
-	"duration": 5
-}

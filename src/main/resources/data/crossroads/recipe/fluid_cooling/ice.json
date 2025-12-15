@@ -1,0 +1,8 @@
+{
+	"type": "crossroads:fluid_cooling",
+	"fluid": "water",
+	"fluid_amount": 1000,
+	"id": "ice",
+	"max_temp": 0,
+	"temp_change": 15
+}

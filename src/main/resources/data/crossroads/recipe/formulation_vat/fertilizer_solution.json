@@ -1,0 +1,14 @@
+{
+	"type": "crossroads:formulation_vat",
+	"input_fluid": {
+		"fluid": "water"
+	},
+	"fluid_amount": 200,
+	"input_item": {
+		"item": "bone_meal"
+	},
+	"output": {
+		"id": "crossroads:fertilizer_solution",
+		"amount": 200
+	}
+}

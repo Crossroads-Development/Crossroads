@@ -1,0 +1,25 @@
+{
+	"type": "crossroads:bobo",
+	"output": {
+		"id": "crossroads:pig_zombie_chestplate",
+		"count": 1
+	},
+	"input_a": [
+		{
+			"tag": "c:leathers"
+		}
+	],
+	"input_b": [
+		{
+			"item": "minecraft:blaze_powder"
+		}
+	],
+	"input_c": [
+		{
+			"item": "minecraft:porkchop"
+		},
+		{
+			"item": "minecraft:cooked_porkchop"
+		}
+	]
+}

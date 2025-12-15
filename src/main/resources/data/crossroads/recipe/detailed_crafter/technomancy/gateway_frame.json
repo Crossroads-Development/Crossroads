@@ -1,0 +1,21 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "technomancy",
+	"result": {
+		"id": "crossroads:gateway_frame",
+		"count": 1
+	},
+	"pattern": [
+		"COC",
+		"OCO",
+		"COC"
+	],
+	"key": {
+		"O": {
+			"item": "crossroads:gateway_edge"
+		},
+		"C": {
+			"tag": "crossroads:ingots/copshowium"
+		}
+	}
+}

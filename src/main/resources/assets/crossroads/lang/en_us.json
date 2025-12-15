@@ -1047,7 +1047,7 @@
 	"ent_mod.semi_aquatic": "Semi-Aquatic",
 	"ent_mod.anti_grav": "Gravity-Defying",
 	"ent_mod.inbred": "Inbred",
-	"ent_mod.nimble": "Nimble",
+	"ent_mod.nimble": "Nimble ",
 	"ent_mod.named.unnamed": "Named[missingno]",
 	"ent_mod.named.named": "Named",
 
@@ -1131,7 +1131,10 @@
 	"crossroads.jei.crucible.min_temp": "When above %1$d°C",
 	"crossroads.jei.crucible.required": "Total Heat Consumed: %1$d°C",
 	"crossroads.jei.embryo_modifier.cat_name": "Embryo Modification",
-
+	"crossroads.jei.embryo_modifier.complexity.increase": "Complexity +$1$d",
+	"crossroads.jei.embryo_modifier.complexity.decrease": "Complexity -$1$d",
+	"crossroads.jei.embryo_modifier.soul_complexity.increase": "Souls +$1$d",
+	"crossroads.jei.embryo_modifier.soul_complexity.decrease": "Souls -$1$d",
 
 	"crossroads.advancement.root": "Crossroads",
 	"crossroads.advancement.root.desc": "Welcome to Crossroads!",
@@ -1160,7 +1163,7 @@
 	"crossroads.advancement.align.expansion": "Grow-ing Ray",
 	"crossroads.advancement.align.expansion.desc": "Discover the beam alignment: Expansion",
 	"crossroads.advancement.align.expansion_void": "Shrink Ray",
-	"crossroads.advancement.align.expansion_vpod.desc": "Discover the void alignment: Contraction",
+	"crossroads.advancement.align.expansion_void.desc": "Discover the void alignment: Contraction",
 	"crossroads.advancement.align.fusion": "30 Years Away",
 	"crossroads.advancement.align.fusion.desc": "Discover the beam alignment: Fusion",
 	"crossroads.advancement.align.fusion_void": "Oddly Safe",

@@ -1,0 +1,21 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"result": {
+		"id": "crossroads:reds_alch_tube",
+		"count": 1
+	},
+	"ingredients": [
+		{
+			"item": "crossroads:alch_tube"
+		},
+		{
+			"tag": "c:dusts/redstone"
+		},
+		{
+			"tag": "c:dusts/redstone"
+		},
+		{
+			"tag": "c:dusts/redstone"
+		}
+	]
+}

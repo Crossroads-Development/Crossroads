@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:mill",
+	"input": {
+		"item": "pumpkin"
+	},
+	"output": {
+		"id": "pumpkin_seeds",
+		"count": 8
+	}
+}

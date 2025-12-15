@@ -1,0 +1,14 @@
+{
+	"type": "crossroads:formulation_vat",
+	"input_fluid": {
+		"fluid": "water"
+	},
+	"fluid_amount": 25,
+	"input_item": {
+		"item": "soul_sand"
+	},
+	"output": {
+		"id": "crossroads:soul_essence",
+		"amount": 25
+	}
+}

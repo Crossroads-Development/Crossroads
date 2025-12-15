@@ -1,0 +1,16 @@
+{
+	"type": "minecraft:smelting",
+	"result": {
+		"id": "crossroads:dust_salt"
+	},
+	"experience": 0.2,
+	"ingredient": {
+		"type": "neoforge:components",
+		"items": "minecraft:potion",
+		"components": {
+			"minecraft:potion_contents": {
+				"potion": "minecraft:water"
+			}
+		}
+	}
+}

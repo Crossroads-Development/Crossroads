@@ -1,0 +1,21 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"result": {
+		"id": "crossroads:redstone_heat_cable_obsidian",
+		"count": 1
+	},
+	"ingredients": [
+		{
+			"item": "crossroads:heat_cable_obsidian"
+		},
+		{
+			"tag": "c:dusts/redstone"
+		},
+		{
+			"tag": "c:dusts/redstone"
+		},
+		{
+			"tag": "c:dusts/redstone"
+		}
+	]
+}

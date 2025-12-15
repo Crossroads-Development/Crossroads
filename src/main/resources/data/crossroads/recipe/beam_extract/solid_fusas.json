@@ -1,0 +1,12 @@
+{
+	"type": "crossroads:beam_extract",
+	"input": {
+		"tag": "crossroads:dusts/fusas"
+	},
+	"output": {
+		"energy": 16,
+		"potential": 24,
+		"stability": 24
+	},
+	"duration": 5
+}

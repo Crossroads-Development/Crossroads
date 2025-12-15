@@ -1,0 +1,21 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "technomancy",
+	"result": {
+		"id": "crossroads:gateway_edge",
+		"count": 10
+	},
+	"pattern": [
+		"OOO",
+		"CCC",
+		"OCO"
+	],
+	"key": {
+		"O": {
+			"tag": "c:stones"
+		},
+		"C": {
+			"tag": "crossroads:ingots/copshowium"
+		}
+	}
+}

@@ -1,0 +1,26 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"id": "crossroads:lens_array",
+		"count": 2
+	},
+	"pattern": [
+		"QEQ",
+		"R D",
+		"QQQ"
+	],
+	"key": {
+		"D": {
+			"tag": "c:gems/diamond"
+		},
+		"E": {
+			"tag": "c:gems/emerald"
+		},
+		"R": {
+			"tag": "c:gems/ruby"
+		},
+		"Q": {
+			"tag": "crossroads:gems/pure_quartz"
+		}
+	}
+}

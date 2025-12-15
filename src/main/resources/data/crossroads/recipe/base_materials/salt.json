@@ -1,0 +1,15 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"id": "crossroads:dust_salt",
+		"count": 9
+	},
+	"pattern": [
+		"*"
+	],
+	"key": {
+		"*": {
+			"tag": "c:storage_blocks/salt"
+		}
+	}
+}

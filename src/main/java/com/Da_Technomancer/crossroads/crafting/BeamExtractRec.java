@@ -114,7 +114,7 @@ public class BeamExtractRec implements IOptionalRecipe<RecipeInput>{
 					CraftingUtil.recipeGroupFieldCodec().forGetter(BeamExtractRec::getGroup),
 					CraftingUtil.itemIngredientMapCodec("input", false).forGetter(BeamExtractRec::getIngredient),
 					BeamUnit.CODEC.fieldOf("output").forGetter(BeamExtractRec::getOutput),
-					ExtraCodecs.NON_NEGATIVE_INT.fieldOf("duration").forGetter(BeamExtractRec::getDuration)
+					ExtraCodecs.NON_NEGATIVE_INT.optionalFieldOf("duration", 1).forGetter(BeamExtractRec::getDuration)
 			).apply(instance, BeamExtractRec::new));
 
 			StreamCodec<RegistryFriendlyByteBuf, BeamExtractRec> streamCodec = StreamCodec.composite(

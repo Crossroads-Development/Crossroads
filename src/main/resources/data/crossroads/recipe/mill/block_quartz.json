@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:mill",
+	"input": {
+		"tag": "c:storage_blocks/quartz"
+	},
+	"output": {
+		"id": "quartz",
+		"count": 4
+	}
+}

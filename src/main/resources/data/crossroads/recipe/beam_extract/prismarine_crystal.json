@@ -1,0 +1,12 @@
+{
+	"type": "crossroads:beam_extract",
+	"input": {
+		"item": "prismarine_crystals"
+	},
+	"output": {
+		"energy": 4,
+		"potential": 14,
+		"stability": 14
+	},
+	"duration": 25
+}

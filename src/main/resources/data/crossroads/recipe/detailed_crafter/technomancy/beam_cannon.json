@@ -1,0 +1,27 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "technomancy",
+	"result": {
+		"id": "crossroads:beam_cannon",
+		"count": 1
+	},
+	"pattern": [
+		" Q ",
+		"IRI",
+		"IAI"
+	],
+	"key": {
+		"I": {
+			"tag": "c:ingots/iron"
+		},
+		"Q": {
+			"tag": "crossroads:gems/pure_quartz"
+		},
+		"A": {
+			"item": "crossroads:lens_array"
+		},
+		"R": {
+			"item": "crossroads:beam_reflector_sensitive"
+		}
+	}
+}

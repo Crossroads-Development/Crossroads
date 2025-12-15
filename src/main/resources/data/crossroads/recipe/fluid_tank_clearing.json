@@ -1,0 +1,12 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"result": {
+		"id": "crossroads:fluid_tank",
+		"count": 1
+	},
+	"ingredients": [
+		{
+			"item": "crossroads:fluid_tank"
+		}
+	]
+}

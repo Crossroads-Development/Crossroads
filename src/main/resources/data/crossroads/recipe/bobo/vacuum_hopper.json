@@ -1,0 +1,53 @@
+{
+	"type": "crossroads:bobo",
+	"output": {
+		"id": "minecraft:hopper",
+		"count": 1,
+		"components": {
+			"minecraft:container": [
+				{
+					"slot": 0,
+					"item": {
+						"id": "crossroads:vacuum",
+						"count": 1
+					}
+				}
+			],
+			"minecraft:block_entity_data": {
+				"id": "minecraft:hopper",
+				"TransferCooldown": 0
+			},
+			"minecraft:custom_name": "{\"translate\": \"item.crossroads.vacuum.hopper_quip\"}"
+		}
+	},
+	"input_a": [
+		{
+			"item": "crossroads:fluid_tube"
+		},
+		{
+			"item": "crossroads:redstone_fluid_tube"
+		},
+		{
+			"item": "crossroads:alch_tube"
+		},
+		{
+			"item": "crossroads:crystal_alch_tube"
+		}
+	],
+	"input_b": [
+		{
+			"tag": "minecraft:wool"
+		}
+	],
+	"input_c": [
+		{
+			"item": "minecraft:hopper"
+		},
+		{
+			"item": "essentials:sorting_hopper"
+		},
+		{
+			"item": "essentials:speed_hopper"
+		}
+	]
+}

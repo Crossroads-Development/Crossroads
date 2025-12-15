@@ -1,0 +1,21 @@
+{
+	"parent": "crossroads:progress/alchemy",
+	"display": {
+		"icon": {
+			"id": "dirt"
+		},
+		"title": {
+			"translate": "crossroads.advancement.path.alchemy_complete"
+		},
+		"description": {
+			"translate": "crossroads.advancement.path.alchemy_complete.desc"
+		},
+		"frame": "challenge",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"command": {
+			"trigger": "minecraft:impossible"
+		}
+	}
+}

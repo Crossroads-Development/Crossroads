@@ -1,0 +1,18 @@
+{
+	"type": "crossroads:beam_transmute",
+	"alignment": "charge",
+	"void": false,
+	"power": 8,
+	"input": [
+		{
+			"tag": "c:stones"
+		},
+		{
+			"tag": "c:cobblestones"
+		},
+		{
+			"tag": "c:sandstone/blocks"
+		}
+	],
+	"output": "crossroads:redstone_crystal"
+}

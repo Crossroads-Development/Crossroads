@@ -1,0 +1,15 @@
+{
+	"type": "crossroads:ore_cleanser",
+	"output": {
+		"id": "crossroads:ore_clump",
+		"count": 2,
+		"components": {
+			"crossroads:material": "tin"
+		}
+	},
+	"ingredient": [
+		{
+			"tag": "c:raw_materials/tin"
+		}
+	]
+}

@@ -1,0 +1,11 @@
+{
+	"type": "crossroads:beam_extract",
+	"input": {
+		"tag": "crossroads:dusts/voltus"
+	},
+	"output": {
+		"energy": 32,
+		"potential": 32
+	},
+	"duration": 5
+}

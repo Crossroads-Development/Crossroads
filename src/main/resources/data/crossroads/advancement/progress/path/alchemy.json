@@ -1,0 +1,26 @@
+{
+	"parent": "crossroads:root",
+	"display": {
+		"icon": {
+			"id": "crossroads:florence_flask_glass",
+			"components": {
+				"crossroads:reagents": {
+					"qty_ruby": 1
+				}
+			}
+		},
+		"title": {
+			"translate": "crossroads.advancement.path.alchemy"
+		},
+		"description": {
+			"translate": "crossroads.advancement.path.alchemy.desc"
+		},
+		"frame": "challenge",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"command": {
+			"trigger": "minecraft:impossible"
+		}
+	}
+}

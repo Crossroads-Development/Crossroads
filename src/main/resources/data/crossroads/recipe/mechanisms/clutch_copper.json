@@ -1,0 +1,27 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"id": "crossroads:clutch",
+		"count": 1,
+		"components": {
+			"crossroads:material": "copper"
+		}
+	},
+	"pattern": [
+		"*",
+		"|",
+		"|"
+	],
+	"key": {
+		"*": {
+			"tag": "c:ingots/tin"
+		},
+		"|": {
+			"type": "neoforge:components",
+			"items": "crossroads:axle",
+			"components": {
+				"crossroads:material": "copper"
+			}
+		}
+	}
+}

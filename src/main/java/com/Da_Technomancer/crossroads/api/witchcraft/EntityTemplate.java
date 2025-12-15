@@ -295,6 +295,6 @@ public record EntityTemplate(@Nonnull ResourceLocation entityID, @Nonnull LazyCa
 			return true;
 		}
 		List<? extends String> blacklist = CRConfig.cloningBlacklist.get();
-		return blacklist.stream().anyMatch(entry -> ResourceLocation.withDefaultNamespace(entry).equals(entityName));
+		return blacklist.stream().anyMatch(entry -> ResourceLocation.parse(entry).equals(entityName));
 	}
 }

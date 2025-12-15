@@ -1,9 +1,0 @@
-{
-	"type": "crossroads:beam_extract",
-	"input": {
-		"item": "prismarine_shard"
-	},
-	"potential": 16,
-	"stability": 16,
-	"duration": 25
-}

@@ -1,9 +1,0 @@
-{
-	"type": "crossroads:beam_extract",
-	"input": {
-		"item": "crossroads:soul_shard"
-	},
-	"potential" : 16,
-	"void": 16,
-	"duration": 10
-}

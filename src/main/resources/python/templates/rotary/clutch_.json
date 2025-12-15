@@ -1,10 +1,10 @@
 {
 	"type": "minecraft:crafting_shaped",
 	"result": {
-		"item": "crossroads:clutch",
+		"id": "crossroads:clutch",
 		"count": 1,
-		"nbt": {
-			"material": "MAT"
+		"components": {
+			"crossroads:material": "MAT"
 		}
 	},
 	"pattern": [
@@ -18,9 +18,9 @@
 		},
 		"|": {
 			"type": "forge:nbt",
-			"item": "crossroads:axle",
-			"nbt": {
-				"material": "MAT"
+			"items": "crossroads:axle",
+			"components": {
+				"crossroads:material": "MAT"
 			}
 		}
 	}

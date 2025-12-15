@@ -1,0 +1,23 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "technomancy",
+	"result": {
+		"id": "crossroads:toolbelt",
+		"count": 1
+	},
+	"pattern": [
+		"LSL",
+		"I I"
+	],
+	"key": {
+		"I": {
+			"tag": "c:ingots/iron"
+		},
+		"L": {
+			"tag": "c:leathers"
+		},
+		"S": {
+			"item": "shulker_shell"
+		}
+	}
+}

@@ -1,0 +1,8 @@
+{
+	"type": "crossroads:fluid_cooling",
+	"fluid": "crossroads:molten_iron",
+	"fluid_amount": 90,
+	"id": "minecraft:iron_ingot",
+	"max_temp": 1500,
+	"temp_change": 100
+}

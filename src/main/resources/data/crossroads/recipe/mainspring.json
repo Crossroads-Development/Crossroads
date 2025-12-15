@@ -1,0 +1,20 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"id": "crossroads:mainspring",
+		"count": 1
+	},
+	"pattern": [
+		"iii",
+		"iTi",
+		"iii"
+	],
+	"key": {
+		"i": {
+			"tag": "c:nuggets/iron"
+		},
+		"T": {
+			"tag": "c:ingots/tin"
+		}
+	}
+}

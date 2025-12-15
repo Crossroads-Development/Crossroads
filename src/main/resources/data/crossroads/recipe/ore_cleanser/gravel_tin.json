@@ -1,0 +1,17 @@
+{
+	"type": "crossroads:ore_cleanser",
+	"output": {
+		"id": "crossroads:ore_clump",
+		"count": 1,
+		"components": {
+			"crossroads:material": "tin"
+		}
+	},
+	"ingredient": {
+		"type": "neoforge:components",
+		"items": "crossroads:ore_gravel",
+		"components": {
+			"crossroads:material": "tin"
+		}
+	}
+}

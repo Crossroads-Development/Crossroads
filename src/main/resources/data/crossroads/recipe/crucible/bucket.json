@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:crucible",
+	"input": {
+		"item": "minecraft:bucket"
+	},
+	"output": {
+		"id": "crossroads:molten_iron",
+		"amount": 270
+	}
+}

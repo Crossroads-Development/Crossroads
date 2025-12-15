@@ -1,8 +1,0 @@
-{
-	"type": "crossroads:beam_extract",
-	"input": {
-		"item": "honey_block"
-	},
-	"potential": 12,
-	"duration": 20
-}

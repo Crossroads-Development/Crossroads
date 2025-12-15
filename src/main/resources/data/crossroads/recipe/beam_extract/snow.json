@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:beam_extract",
+	"input": {
+		"item": "snow_block"
+	},
+	"output": {
+		"stability": 8
+	},
+	"duration": 4
+}

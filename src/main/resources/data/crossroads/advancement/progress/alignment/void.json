@@ -1,0 +1,30 @@
+{
+	"parent": "crossroads:progress/alignment/rift",
+	"display": {
+		"icon": {
+			"id": "crossroads:void_crystal"
+		},
+		"title": {
+			"translate": "crossroads.advancement.align.void"
+		},
+		"description": {
+			"translate": "crossroads.advancement.align.void.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": false
+	},
+	"criteria": {
+		"void": {
+			"trigger": "crossroads:beam_alignment",
+			"conditions": {
+				"alignment": "void",
+				"void": "any"
+			}
+		}
+	},
+	"requirements": [
+		[
+			"void"
+		]
+	]
+}

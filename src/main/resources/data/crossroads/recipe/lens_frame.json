@@ -1,0 +1,20 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"id": "crossroads:lens_frame",
+		"count": 1
+	},
+	"pattern": [
+		"BBB",
+		"BQB",
+		"BBB"
+	],
+	"key": {
+		"B": {
+			"tag": "c:nuggets/bronze"
+		},
+		"Q": {
+			"tag": "crossroads:gems/pure_quartz"
+		}
+	}
+}

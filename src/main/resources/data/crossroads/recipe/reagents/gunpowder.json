@@ -1,0 +1,8 @@
+{
+	"type": "crossroads:reagents",
+	"id": "gunpowder",
+	"melting": "never",
+	"boiling": "never",
+	"item": "c:gunpowders",
+	"color": "808080"
+}

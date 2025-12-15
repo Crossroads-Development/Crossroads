@@ -32,7 +32,7 @@ templates = os.listdir(srcDir)
 # Name, including .json ending
 templateNames = [os.path.basename(template) for template in templates]
 
-outputPath = "../data/crossroads/recipes/mechanisms"
+outputPath = "../data/crossroads/recipe/mechanisms"
 
 # Delete all previous files in the outputPath
 for prevTable in os.listdir(outputPath):

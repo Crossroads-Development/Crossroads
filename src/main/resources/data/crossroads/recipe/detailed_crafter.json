@@ -1,0 +1,26 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"id": "crossroads:detailed_crafter",
+		"count": 1
+	},
+	"pattern": [
+		"OCO",
+		"ODO",
+		"TTT"
+	],
+	"key": {
+		"T": {
+			"tag": "c:ingots/tin"
+		},
+		"C": {
+			"item": "minecraft:crafting_table"
+		},
+		"O": {
+			"tag": "c:obsidians"
+		},
+		"D": {
+			"item": "crossroads:lens_array"
+		}
+	}
+}

@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"id": "crossroads:gear_base",
+		"count": 1,
+		"components": {
+			"crossroads:material": "copper"
+		}
+	},
+	"pattern": [
+		" * ",
+		"*#*",
+		" * "
+	],
+	"key": {
+		"#": {
+			"tag": "c:ingots/copper"
+		},
+		"*": {
+			"tag": "c:nuggets/copper"
+		}
+	}
+}

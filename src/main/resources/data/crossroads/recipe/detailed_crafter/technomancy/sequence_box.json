@@ -1,0 +1,26 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "technomancy",
+	"result": {
+		"id": "crossroads:sequence_box",
+		"count": 1
+	},
+	"pattern": [
+		"QRQ",
+		"SBS"
+	],
+	"key": {
+		"B": {
+			"tag": "c:ingots/bronze"
+		},
+		"R": {
+			"tag": "c:dusts/redstone"
+		},
+		"Q": {
+			"tag": "c:gems/quartz"
+		},
+		"S": {
+			"item": "minecraft:smooth_stone"
+		}
+	}
+}

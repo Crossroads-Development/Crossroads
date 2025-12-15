@@ -1,0 +1,20 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"id": "crossroads:heat_reservoir",
+		"count": 1
+	},
+	"pattern": [
+		"CSC",
+		"SSS",
+		"CSC"
+	],
+	"key": {
+		"C": {
+			"tag": "c:ingots/copper"
+		},
+		"S": {
+			"tag": "c:dusts/salt"
+		}
+	}
+}

@@ -1,0 +1,21 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"result": {
+		"id": "crossroads:bright_quartz",
+		"count": 1
+	},
+	"ingredients": [
+		{
+			"tag": "c:gems/quartz"
+		},
+		{
+			"tag": "c:dusts/salt"
+		},
+		{
+			"tag": "c:dusts/salt"
+		},
+		{
+			"tag": "c:dusts/glowstone"
+		}
+	]
+}

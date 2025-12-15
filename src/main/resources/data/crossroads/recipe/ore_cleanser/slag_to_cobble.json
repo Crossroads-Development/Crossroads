@@ -1,0 +1,12 @@
+{
+	"type": "crossroads:ore_cleanser",
+	"output": {
+		"id": "cobblestone",
+		"count": 1
+	},
+	"ingredient": [
+		{
+			"item": "crossroads:slag"
+		}
+	]
+}

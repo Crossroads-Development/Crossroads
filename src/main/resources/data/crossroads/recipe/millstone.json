@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"id": "crossroads:millstone",
+		"count": 1
+	},
+	"pattern": [
+		"*P*",
+		"*A*",
+		"*P*"
+	],
+	"key": {
+		"*": {
+			"tag": "c:cobblestones"
+		},
+		"A": {
+			"item": "crossroads:axle"
+		},
+		"P": {
+			"item": "minecraft:piston"
+		}
+	}
+}

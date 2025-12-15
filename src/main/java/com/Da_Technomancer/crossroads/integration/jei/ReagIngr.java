@@ -4,18 +4,19 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.api.alchemy.IReagent;
 import com.Da_Technomancer.crossroads.api.alchemy.ReagentManager;
 import com.Da_Technomancer.crossroads.api.alchemy.ReagentStack;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mezz.jei.api.ingredients.IIngredientType;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReagIngr{
+public record ReagIngr(@Nonnull String reag, int parts){
 
 	public static final IIngredientType<ReagIngr> REAG = () -> ReagIngr.class;
 	public static final List<ReagIngr> REAG_TYPES = new ArrayList<>();
-
-	private final String reag;
-	private final int parts;
+	public static final Codec<ReagIngr> CODEC = RecordCodecBuilder.create(instance -> instance.group(Codec.STRING.fieldOf("reagent").forGetter(ReagIngr::reag), Codec.INT.fieldOf("parts").forGetter(ReagIngr::parts)).apply(instance, ReagIngr::new));
 
 	public ReagIngr(IReagent reag, int parts){
 		this(reag.getID(), parts);
@@ -37,14 +38,6 @@ public class ReagIngr{
 
 	public IReagent getReag(){
 		return ReagentManager.getReagent(reag);
-	}
-
-	public String getID(){
-		return reag;
-	}
-
-	public int getParts(){
-		return parts;
 	}
 
 	protected static void populate(){

@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:mill",
+	"input": {
+		"item": "crossroads:redstone_crystal"
+	},
+	"output": {
+		"id": "redstone",
+		"count": 4
+	}
+}

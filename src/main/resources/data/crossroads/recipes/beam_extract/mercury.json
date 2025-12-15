@@ -1,8 +1,0 @@
-{
-	"type": "crossroads:beam_extract",
-	"input": {
-		"tag": "c:gems/mercury"
-	},
-	"potential": 16,
-	"duration": 5
-}

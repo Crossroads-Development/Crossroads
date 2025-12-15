@@ -1,0 +1,11 @@
+{
+	"type": "crossroads:beam_extract",
+	"input": {
+		"tag": "crossroads:dusts/eldrine"
+	},
+	"output": {
+		"energy": 32,
+		"stability": 32
+	},
+	"duration": 5
+}

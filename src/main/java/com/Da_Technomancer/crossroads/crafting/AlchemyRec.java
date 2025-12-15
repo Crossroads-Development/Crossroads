@@ -330,8 +330,8 @@ public class AlchemyRec implements IOptionalRecipe<RecipeInput>{
 			MapCodec<AlchemyRec> codec = RecordCodecBuilder.mapCodec(instance -> instance.group(
 					CraftingUtil.recipeGroupFieldCodec().forGetter(AlchemyRec::getGroup),
 					StringRepresentable.fromEnum(AlchemyRec.Type::values).optionalFieldOf("category", Type.NORMAL).forGetter(AlchemyRec::getReactionType),
-					CraftingUtil.singleOrListCodec(ReagentStack.CODEC, 1, Integer.MAX_VALUE).xmap(list -> list.toArray(new ReagentStack[list.size()]), List::of).fieldOf("reagents").forGetter(AlchemyRec::getReagents),
-					CraftingUtil.singleOrListCodec(ReagentStack.CODEC, 1, Integer.MAX_VALUE).xmap(list -> list.toArray(new ReagentStack[list.size()]), List::of).fieldOf("products").forGetter(AlchemyRec::getProducts),
+					CraftingUtil.singleOrListCodec(ReagentStack.CODEC, 1, Integer.MAX_VALUE).xmap(list -> list.toArray(new ReagentStack[0]), List::of).fieldOf("reagents").forGetter(AlchemyRec::getReagents),
+					CraftingUtil.singleOrListCodec(ReagentStack.CODEC, 0, Integer.MAX_VALUE).xmap(list -> list.toArray(new ReagentStack[0]), List::of).fieldOf("products").forGetter(AlchemyRec::getProducts),
 					Codec.STRING.optionalFieldOf("catalyst", VOID_STR).forGetter(AlchemyRec::getNonnullCatalyst),
 					Codec.DOUBLE.optionalFieldOf("min_temp", -300D).forGetter(AlchemyRec::minTemp),
 					Codec.DOUBLE.optionalFieldOf("max_temp", (double) Short.MAX_VALUE).forGetter(AlchemyRec::maxTemp),

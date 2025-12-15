@@ -29,9 +29,9 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.HashMap;
+import java.util.Optional;
 import java.util.function.Function;
 
 public class ReagentRec implements Recipe<RecipeInput>, IReagent{
@@ -251,7 +251,7 @@ public class ReagentRec implements Recipe<RecipeInput>, IReagent{
 					Codec.withAlternative(Codec.DOUBLE, Codec.STRING.flatXmap(str -> "never".equals(str) ? DataResult.success(Short.MAX_VALUE - 1D) : DataResult.error(() -> "Must be a number or \"never\"", 0D), val -> DataResult.success(val.toString()))).optionalFieldOf("melting", -275D).forGetter(ReagentRec::getMeltingPoint),
 					Codec.withAlternative(Codec.DOUBLE, Codec.STRING.flatXmap(str -> "never".equals(str) ? DataResult.success((double) Short.MAX_VALUE) : DataResult.error(() -> "Must be a number or \"never\""), val -> DataResult.success(val.toString()))).optionalFieldOf("boiling", -274D).forGetter(ReagentRec::getBoilingPoint),
 					TagKey.codec(Registries.ITEM).optionalFieldOf("item", CRItemTags.EMPTY).forGetter(ReagentRec::getSolid),
-					CraftingUtil.fluidIngredientMapCodec("fluid", false).forGetter(ReagentRec::getFluid),
+					CraftingUtil.fluidIngredientMapCodec("fluid", false).orElse(FluidIngredient.EMPTY).forGetter(ReagentRec::getFluid),
 					ExtraCodecs.NON_NEGATIVE_INT.optionalFieldOf("fluid_amount", 0).forGetter(ReagentRec::getFluidQty),
 					StringRepresentable.fromEnum(ContainRequirements::values).optionalFieldOf("vessel", ContainRequirements.NONE).forGetter(ReagentRec::getContainment),
 					PhaseColorMap.CODEC.optionalFieldOf("color", PhaseColorMap.DEFAULT).forGetter(ReagentRec::getColMap),
@@ -292,7 +292,15 @@ public class ReagentRec implements Recipe<RecipeInput>, IReagent{
 
 		private static final PhaseColorMap DEFAULT = new PhaseColorMap(Color.WHITE);
 
-		private static final Codec<PhaseColorMap> CODEC = Codec.withAlternative(RecordCodecBuilder.create(instance -> instance.group(CraftingUtil.COLOR_CODEC.fieldOf("base").forGetter(PhaseColorMap::solid), CraftingUtil.COLOR_CODEC.optionalFieldOf("flame", null).forGetter(PhaseColorMap::flame), CraftingUtil.COLOR_CODEC.optionalFieldOf("gas", null).forGetter(PhaseColorMap::gas), CraftingUtil.COLOR_CODEC.optionalFieldOf("liquid", null).forGetter(PhaseColorMap::liq), CraftingUtil.COLOR_CODEC.optionalFieldOf("solid", null).forGetter(PhaseColorMap::solid)).apply(instance, PhaseColorMap::new)), CraftingUtil.COLOR_CODEC.flatComapMap(PhaseColorMap::new, colMap -> DataResult.error(() -> "Can't encode PhaseColorMap to a single color")));;
+		private static final Codec<PhaseColorMap> CODEC = Codec.withAlternative(
+				RecordCodecBuilder.create(instance -> instance.group(
+						CraftingUtil.COLOR_CODEC.fieldOf("base").forGetter(PhaseColorMap::solid),
+						CraftingUtil.COLOR_CODEC.optionalFieldOf("flame").forGetter(PhaseColorMap::flameOpt),
+						CraftingUtil.COLOR_CODEC.optionalFieldOf("gas").forGetter(PhaseColorMap::gasOpt),
+						CraftingUtil.COLOR_CODEC.optionalFieldOf("liquid").forGetter(PhaseColorMap::liqOpt),
+						CraftingUtil.COLOR_CODEC.optionalFieldOf("solid").forGetter(PhaseColorMap::solidOpt)
+				).apply(instance, PhaseColorMap::new)),
+				CraftingUtil.COLOR_CODEC.flatComapMap(PhaseColorMap::new, colMap -> DataResult.error(() -> "Can't encode PhaseColorMap to a single color")));;
 		private static final StreamCodec<ByteBuf, PhaseColorMap> STREAM_CODEC = StreamCodec.of(
 				(buf, val) -> {
 					for(int i = 0; i < 4; i++){
@@ -313,8 +321,24 @@ public class ReagentRec implements Recipe<RecipeInput>, IReagent{
 			this(flame, gas, liq, sol, new int[] {flame.getRGB(), gas.getRGB(), liq.getRGB(), sol.getRGB()});
 		}
 
-		private PhaseColorMap(@Nonnull Color base, @Nullable Color flame, @Nullable Color gas, @Nullable Color liq, @Nullable Color solid){
-			this(flame == null ? base : flame, gas == null ? base : gas, liq == null ? base : liq, solid == null ? base : solid);
+		private PhaseColorMap(@Nonnull Color base, @Nonnull Optional<Color> flameOpt, @Nonnull Optional<Color> gasOpt, @Nonnull Optional<Color> liqOpt, @Nonnull Optional<Color> solidOpt){
+			this(flameOpt.orElse(base), gasOpt.orElse(base), liqOpt.orElse(base), solidOpt.orElse(base));
+		}
+
+		private Optional<Color> flameOpt(){
+			return Optional.of(flame);
+		}
+
+		private Optional<Color> gasOpt(){
+			return Optional.of(gas);
+		}
+
+		private Optional<Color> liqOpt(){
+			return Optional.of(liq);
+		}
+
+		private Optional<Color> solidOpt(){
+			return Optional.of(solid);
 		}
 
 		@Override

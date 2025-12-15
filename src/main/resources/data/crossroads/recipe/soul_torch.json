@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"id": "soul_torch",
+		"count": 4
+	},
+	"pattern": [
+		"C",
+		"W"
+	],
+	"key": {
+		"C": {
+			"item": "crossroads:soul_shard"
+		},
+		"W": {
+			"tag": "c:rods/wooden"
+		}
+	}
+}

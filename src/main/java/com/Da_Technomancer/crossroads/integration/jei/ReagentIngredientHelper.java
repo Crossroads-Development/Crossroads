@@ -25,7 +25,7 @@ public class ReagentIngredientHelper implements IIngredientHelper<ReagIngr>{
 
 	@Override
 	public boolean isValidIngredient(ReagIngr ingredient){
-		return ingredient.getReag() != null && ingredient.getParts() >= 0;
+		return ingredient.getReag() != null && ingredient.parts() >= 0;
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class ReagentIngredientHelper implements IIngredientHelper<ReagIngr>{
 
 	@Override
 	public String getUniqueId(ReagIngr ingredient, UidContext context){
-		return Crossroads.MODID + ":" + ingredient.getID();
+		return Crossroads.MODID + ":" + ingredient.reag();
 	}
 
 	@Override
@@ -64,7 +64,7 @@ public class ReagentIngredientHelper implements IIngredientHelper<ReagIngr>{
 
 	@Override
 	public ReagIngr normalizeIngredient(ReagIngr ingredient){
-		return ingredient.getParts() == 1 ? ingredient : new ReagIngr(ingredient.getReag(), 1);
+		return ingredient.parts() == 1 ? ingredient : new ReagIngr(ingredient.getReag(), 1);
 	}
 
 	@Override
@@ -73,8 +73,8 @@ public class ReagentIngredientHelper implements IIngredientHelper<ReagIngr>{
 			return "NULL ingredient";
 		}
 		if(ingredient.getReag() == null){
-			return "ID: " + ingredient.getID() + "; Name: NULL; Parts: " + ingredient.getParts();
+			return "ID: " + ingredient.reag() + "; Name: NULL; Parts: " + ingredient.parts();
 		}
-		return "ID: " + ingredient.getID() + "; NAME: " + ingredient.getReag().getName() + "; PARTS: " + ingredient.getParts();
+		return "ID: " + ingredient.reag() + "; NAME: " + ingredient.getReag().getName() + "; PARTS: " + ingredient.parts();
 	}
 }

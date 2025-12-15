@@ -1,0 +1,24 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "alchemy",
+	"result": {
+		"id": "crossroads:fluid_injector",
+		"count": 1
+	},
+	"pattern": [
+		"BPB",
+		"G G",
+		"BPB"
+	],
+	"key": {
+		"G": {
+			"tag": "c:glass/colorless"
+		},
+		"B": {
+			"tag": "c:ingots/bronze"
+		},
+		"P": {
+			"item": "crossroads:fluid_tube"
+		}
+	}
+}

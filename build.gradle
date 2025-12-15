@@ -170,8 +170,7 @@ dependencies {
 	//JEI
 //	runtimeOnly "mezz.jei:jei-$minecraft_version-forge:$jei_version"
 	//Curios
-//	Scuffed for MC1.21, should be fine for MC1.21.1
-//	runtimeOnly "top.theillusivec4.curios:curios-neoforge:$curios_version"
+	runtimeOnly "top.theillusivec4.curios:curios-neoforge:$curios_version"
 
 	// We add the full version of JEI to localRuntime, not runtimeOnly, so that we do not publish a dependency on it
 	localRuntime "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"

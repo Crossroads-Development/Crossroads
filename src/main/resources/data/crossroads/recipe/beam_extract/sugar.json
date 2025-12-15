@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:beam_extract",
+	"input": {
+		"item": "sugar"
+	},
+	"output": {
+		"energy": 8,
+		"potential": 12
+	}
+}

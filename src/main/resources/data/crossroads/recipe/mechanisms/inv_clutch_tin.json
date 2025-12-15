@@ -1,0 +1,22 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"result": {
+		"id": "crossroads:clutch_inv",
+		"count": 1,
+		"components": {
+			"crossroads:material": "tin"
+		}
+	},
+	"ingredients": [
+		{
+			"item": "minecraft:redstone_torch"
+		},
+		{
+			"type": "neoforge:components",
+			"items": "crossroads:clutch",
+			"components": {
+				"crossroads:material": "tin"
+			}
+		}
+	]
+}

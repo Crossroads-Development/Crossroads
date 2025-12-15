@@ -1,0 +1,12 @@
+{
+	"type": "crossroads:mill",
+	"input": {
+		"tag": "c:raw_materials/gold"
+	},
+	"output": [
+		{
+			"id": "crossroads:dust_gold",
+			"count": 2
+		}
+	]
+}

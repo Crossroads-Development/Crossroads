@@ -15,8 +15,8 @@ def writeTemplate(posOut: str, template, recName: str, recPath: str):
 
 with open("recipe_unlock_template.json", "r") as template:
 
-    outputPath = "../data/crossroads/advancements/recipes/"
-    srcPath = "../data/crossroads/recipes/"
+    outputPath = "../data/crossroads/advancement/recipes/"
+    srcPath = "../data/crossroads/recipe/"
 
     # Delete all previous files in the outputPath
     for prevTable in os.listdir(outputPath):
@@ -25,7 +25,7 @@ with open("recipe_unlock_template.json", "r") as template:
 
     for dirName, subDirList, fileList in os.walk(srcPath):
         # print(dirName)
-        outDir = dirName.replace("\\", "/").replace("/recipes", "/advancements/recipes")
+        outDir = dirName.replace("\\", "/").replace("/recipe", "/advancement/recipes")
         if outDir[-1] != "/":  # Any directory other than recipes root
             os.makedirs(outDir, exist_ok=True)
             outDir = outDir + "/"

@@ -1,0 +1,20 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"id": "crossroads:permeable_obsidian",
+		"count": 4
+	},
+	"pattern": [
+		" Q ",
+		"QGQ",
+		" Q "
+	],
+	"key": {
+		"G": {
+			"item": "minecraft:crying_obsidian"
+		},
+		"Q": {
+			"tag": "crossroads:storage_blocks/pure_quartz"
+		}
+	}
+}

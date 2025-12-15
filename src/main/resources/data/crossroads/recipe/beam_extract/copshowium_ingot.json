@@ -1,0 +1,11 @@
+{
+	"type": "crossroads:beam_extract",
+	"input": {
+		"tag": "crossroads:ingots/copshowium"
+	},
+	"output": {
+		"energy": 5,
+		"potential": 2
+	},
+	"duration": 9
+}

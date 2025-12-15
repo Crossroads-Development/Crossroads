@@ -1,0 +1,19 @@
+{
+	"type": "crossroads:detailed_crafter",
+	"path": "alchemy",
+	"result": {
+		"id": "crossroads:heated_tube",
+		"count": 2
+	},
+	"pattern": [
+		"CGC"
+	],
+	"key": {
+		"C": {
+			"tag": "c:glass/colorless"
+		},
+		"G": {
+			"tag": "c:ingots/copper"
+		}
+	}
+}

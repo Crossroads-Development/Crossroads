@@ -1,0 +1,20 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"id": "crossroads:omnimeter",
+		"count": 1
+	},
+	"pattern": [
+		" * ",
+		"*C*",
+		" * "
+	],
+	"key": {
+		"*": {
+			"tag": "c:ingots/bronze"
+		},
+		"C": {
+			"item": "minecraft:compass"
+		}
+	}
+}

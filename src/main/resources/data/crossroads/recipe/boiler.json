@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"id": "crossroads:steam_boiler",
+		"count": 1
+	},
+	"pattern": [
+		"***",
+		"* *",
+		"C#C"
+	],
+	"key": {
+		"*": {
+			"tag": "c:ingots/bronze"
+		},
+		"C": {
+			"tag": "c:ingots/copper"
+		},
+		"#": {
+			"item": "minecraft:cauldron"
+		}
+	}
+}

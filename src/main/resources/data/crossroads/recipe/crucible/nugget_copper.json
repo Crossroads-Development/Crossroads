@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:crucible",
+	"input": {
+		"tag": "c:nuggets/copper"
+	},
+	"output": {
+		"id": "crossroads:molten_copper",
+		"amount": 10
+	}
+}

@@ -1,10 +1,10 @@
 {
 	"type": "minecraft:crafting_shapeless",
 	"result": {
-		"item": "crossroads:gear_toggle",
+		"id": "crossroads:gear_toggle",
 		"count": 1,
-		"nbt": {
-			"material": "MAT"
+		"components": {
+			"crossroads:material": "MAT"
 		}
 	},
 	"ingredients": [
@@ -13,9 +13,9 @@
 		},
 		{
 			"type": "forge:nbt",
-			"item": "crossroads:gear_base",
-			"nbt": {
-				"material": "MAT"
+			"items": "crossroads:gear_base",
+			"components": {
+				"crossroads:material": "MAT"
 			}
 		}
 	]

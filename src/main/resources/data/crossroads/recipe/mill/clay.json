@@ -1,0 +1,12 @@
+{
+	"type": "crossroads:mill",
+	"input": {
+		"item": "clay"
+	},
+	"output": [
+		{
+			"id": "clay_ball",
+			"count": 4
+		}
+	]
+}
