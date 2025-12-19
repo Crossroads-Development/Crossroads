@@ -12,7 +12,7 @@
 	],
 	"key": {
 		"G": {
-			"tag": "c:glass/colorless"
+			"tag": "c:glass_blocks/colorless"
 		},
 		"l": {
 			"item": "crossroads:lens_array"

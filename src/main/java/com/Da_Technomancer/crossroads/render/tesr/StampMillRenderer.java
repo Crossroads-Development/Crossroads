@@ -86,14 +86,14 @@ public class StampMillRenderer implements BlockEntityRenderer<StampMillTileEntit
 			float rodLen = 14F / 16F;
 
 			//Texture coors
-			float uRad = sprite.getU(rodRad * 16);
-			float u2Rad = sprite.getU(rodRad * 2 * 16);
-			float u3Rad = sprite.getU(rodRad * 3 * 16);
+			float uRad = CRRenderUtil.getScaledU(sprite, rodRad * 16);
+			float u2Rad = CRRenderUtil.getScaledU(sprite, rodRad * 2 * 16);
+			float u3Rad = CRRenderUtil.getScaledU(sprite, rodRad * 3 * 16);
 
 			float v0 = sprite.getV0();
-			float vLen = sprite.getV(rodLen * 16);
-			float vRad = sprite.getV(rodRad * 16);
-			float v3Rad = sprite.getV(rodRad * 3 * 16);
+			float vLen = CRRenderUtil.getScaledV(sprite, rodLen * 16);
+			float vRad = CRRenderUtil.getScaledV(sprite, rodRad * 16);
+			float v3Rad = CRRenderUtil.getScaledV(sprite, rodRad * 3 * 16);
 
 			CRRenderUtil.addVertexBlock(builder, matrix, -rodRad, 0, -rodRad, uRad, v0, 0, 0, -1, combinedLight);
 			CRRenderUtil.addVertexBlock(builder, matrix, rodRad, 0, -rodRad, u3Rad, v0, 0, 0, -1, combinedLight);
@@ -149,7 +149,7 @@ public class StampMillRenderer implements BlockEntityRenderer<StampMillTileEntit
 			//Stamp Head
 			rodRad = 1F / 8F;
 			float bottom = 1.25F;
-			float vDiff = sprite.getV((bottom - rodLen) * 16F);
+			float vDiff = CRRenderUtil.getScaledV(sprite, (bottom - rodLen) * 16F);
 
 			CRRenderUtil.addVertexBlock(builder, matrix, -rodRad, -rodLen, -rodRad, uRad, v0, 0, 0, -1, combinedLight);
 			CRRenderUtil.addVertexBlock(builder, matrix, rodRad, -rodLen, -rodRad, u3Rad, v0, 0, 0, -1, combinedLight);

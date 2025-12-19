@@ -33,31 +33,31 @@ public class CRModels{
 	private static void draw24Polygon(PoseStack matrix, VertexConsumer builder, int light, int[] col, TextureAtlasSprite sprite){
 		//Commented numbers specify the order of vertices on the final polygon, increasing clockwise
 
-		float uSt0 = sprite.getU(8 - 16 * sin24[0]);
-		float uSt1 = sprite.getU(8 - 16 * sin24[1]);
-		float uSt2 = sprite.getU(8 - 16 * sin24[2]);
-		float uSt3 = sprite.getU(8 - 16 * sin24[3]);
-		float uSt4 = sprite.getU(8 - 16 * sin24[4]);
-		float uStR = sprite.getU(8 - 16 * radius_24);
-		float uEn0 = sprite.getU(8 + 16 * sin24[0]);
-		float uEn1 = sprite.getU(8 + 16 * sin24[1]);
-		float uEn2 = sprite.getU(8 + 16 * sin24[2]);
-		float uEn3 = sprite.getU(8 + 16 * sin24[3]);
-		float uEn4 = sprite.getU(8 + 16 * sin24[4]);
-		float uEnR = sprite.getU(8 + 16 * radius_24);
+		float uSt0 = CRRenderUtil.getScaledU(sprite, 8 - 16 * sin24[0]);
+		float uSt1 = CRRenderUtil.getScaledU(sprite, 8 - 16 * sin24[1]);
+		float uSt2 = CRRenderUtil.getScaledU(sprite, 8 - 16 * sin24[2]);
+		float uSt3 = CRRenderUtil.getScaledU(sprite, 8 - 16 * sin24[3]);
+		float uSt4 = CRRenderUtil.getScaledU(sprite, 8 - 16 * sin24[4]);
+		float uStR = CRRenderUtil.getScaledU(sprite, 8 - 16 * radius_24);
+		float uEn0 = CRRenderUtil.getScaledU(sprite, 8 + 16 * sin24[0]);
+		float uEn1 = CRRenderUtil.getScaledU(sprite, 8 + 16 * sin24[1]);
+		float uEn2 = CRRenderUtil.getScaledU(sprite, 8 + 16 * sin24[2]);
+		float uEn3 = CRRenderUtil.getScaledU(sprite, 8 + 16 * sin24[3]);
+		float uEn4 = CRRenderUtil.getScaledU(sprite, 8 + 16 * sin24[4]);
+		float uEnR = CRRenderUtil.getScaledU(sprite, 8 + 16 * radius_24);
 
-		float vSt0 = sprite.getV(8 - 16 * sin24[0]);
-		float vSt1 = sprite.getV(8 - 16 * sin24[1]);
-		float vSt2 = sprite.getV(8 - 16 * sin24[2]);
-		float vSt3 = sprite.getV(8 - 16 * sin24[3]);
-		float vSt4 = sprite.getV(8 - 16 * sin24[4]);
-		float vStR = sprite.getV(8 - 16 * radius_24);
-		float vEn0 = sprite.getV(8 + 16 * sin24[0]);
-		float vEn1 = sprite.getV(8 + 16 * sin24[1]);
-		float vEn2 = sprite.getV(8 + 16 * sin24[2]);
-		float vEn3 = sprite.getV(8 + 16 * sin24[3]);
-		float vEn4 = sprite.getV(8 + 16 * sin24[4]);
-		float vEnR = sprite.getV(8 + 16 * radius_24);
+		float vSt0 = CRRenderUtil.getScaledV(sprite, 8 - 16 * sin24[0]);
+		float vSt1 = CRRenderUtil.getScaledV(sprite, 8 - 16 * sin24[1]);
+		float vSt2 = CRRenderUtil.getScaledV(sprite, 8 - 16 * sin24[2]);
+		float vSt3 = CRRenderUtil.getScaledV(sprite, 8 - 16 * sin24[3]);
+		float vSt4 = CRRenderUtil.getScaledV(sprite, 8 - 16 * sin24[4]);
+		float vStR = CRRenderUtil.getScaledV(sprite, 8 - 16 * radius_24);
+		float vEn0 = CRRenderUtil.getScaledV(sprite, 8 + 16 * sin24[0]);
+		float vEn1 = CRRenderUtil.getScaledV(sprite, 8 + 16 * sin24[1]);
+		float vEn2 = CRRenderUtil.getScaledV(sprite, 8 + 16 * sin24[2]);
+		float vEn3 = CRRenderUtil.getScaledV(sprite, 8 + 16 * sin24[3]);
+		float vEn4 = CRRenderUtil.getScaledV(sprite, 8 + 16 * sin24[4]);
+		float vEnR = CRRenderUtil.getScaledV(sprite, 8 + 16 * radius_24);
 
 		CRRenderUtil.addVertexBlock(builder, matrix, sin24[0], 0, radius_24, uEn0, vStR, 0, 1, 0, light, col);//1
 		CRRenderUtil.addVertexBlock(builder, matrix, sin24[1], 0, sin24[4], uEn1, vSt4, 0, 1, 0, light, col);//2
@@ -225,15 +225,15 @@ public class CRModels{
 
 		float sideLength = 2 * sin24[0];
 
-		float vSt = spriteSide.getV(8 - sideLength * 16 / 2);
-		float vEn = spriteSide.getV(8 + sideLength * 16 / 2);
+		float vSt = CRRenderUtil.getScaledV(spriteSide, 8 - sideLength * 16 / 2);
+		float vEn = CRRenderUtil.getScaledV(spriteSide, 8 + sideLength * 16 / 2);
 
 		matrix.pushPose();
 		for(float i = 0; i < 6; i++){
 			matrix.mulPose(rotation);//15 deg
 
-			float uSt = spriteSide.getU(i * 2);
-			float uEn = spriteSide.getU((i + 1) * 2);
+			float uSt = CRRenderUtil.getScaledU(spriteSide, i * 2);
+			float uEn = CRRenderUtil.getScaledU(spriteSide, (i + 1) * 2);
 			float u0St = uSt;
 			float u0En = uEn;
 
@@ -271,17 +271,17 @@ public class CRModels{
 		//right is u=2px->4px, v=4px->6px
 
 		float uSt = spriteTooth.getU0();
-		float uMidTop = spriteTooth.getU(2 * 16 * prongWidthHalf * 4);
-		float uEndTop = spriteTooth.getU(4 * 16 * prongWidthHalf * 4);
+		float uMidTop = CRRenderUtil.getScaledU(spriteTooth, 2 * 16 * prongWidthHalf * 4);
+		float uEndTop = CRRenderUtil.getScaledU(spriteTooth, 4 * 16 * prongWidthHalf * 4);
 		float uEndTip = uMidTop;
-		float uMidSide = spriteTooth.getU(16 * (extend - radius_24));
-		float uEndSide = spriteTooth.getU(2 * 16 * (extend - radius_24));
+		float uMidSide = CRRenderUtil.getScaledU(spriteTooth, 16 * (extend - radius_24));
+		float uEndSide = CRRenderUtil.getScaledU(spriteTooth, 2 * 16 * (extend - radius_24));
 		float vStTop = spriteTooth.getV0();
-		float vEndTop = spriteTooth.getV(2);
+		float vEndTop = CRRenderUtil.getScaledV(spriteTooth, 2);
 		float vStTip = vEndTop;
-		float vEndTip = spriteTooth.getV(4);
+		float vEndTip = CRRenderUtil.getScaledV(spriteTooth, 4);
 		float vStSide = vEndTip;
-		float vEndSide = spriteTooth.getV(6);
+		float vEndSide = CRRenderUtil.getScaledV(spriteTooth, 6);
 
 		for(int i = 0; i < 24; i++){
 			matrix.mulPose(rotation);//15 deg
@@ -333,14 +333,14 @@ public class CRModels{
 		float lHalf = 0.5F;//Distance from center to side
 		//Texture coords
 		float lHalfT = 8F;
-		float uSSt = sprite.getU(8 - sHalfT8);
-		float uSEn = sprite.getU(8 + sHalfT8);
-		float uLSt = sprite.getU(8 - lHalfT);
-		float uLEn = sprite.getU(8 + lHalfT);
-		float vSSt = sprite.getV(8 - sHalfT8);
-		float vSEn = sprite.getV(8 + sHalfT8);
-		float vLSt = sprite.getV(8 - lHalfT);
-		float vLEn = sprite.getV(8 + lHalfT);
+		float uSSt = CRRenderUtil.getScaledU(sprite, 8 - sHalfT8);
+		float uSEn = CRRenderUtil.getScaledU(sprite, 8 + sHalfT8);
+		float uLSt = CRRenderUtil.getScaledU(sprite, 8 - lHalfT);
+		float uLEn = CRRenderUtil.getScaledU(sprite, 8 + lHalfT);
+		float vSSt = CRRenderUtil.getScaledV(sprite, 8 - sHalfT8);
+		float vSEn = CRRenderUtil.getScaledV(sprite, 8 + sHalfT8);
+		float vLSt = CRRenderUtil.getScaledV(sprite, 8 - lHalfT);
+		float vLEn = CRRenderUtil.getScaledV(sprite, 8 + lHalfT);
 
 		//Because we're in GL_QUADS draw mode, we split the octagon into 3 quadrilaterals
 		CRRenderUtil.addVertexBlock(builder, matrix, -sHalf8, 0, lHalf, uSSt, vLSt, 0, 1, 0, light, color);
@@ -394,17 +394,17 @@ public class CRModels{
 
 		//Texture coords
 		float tHeight = 2F;
-		float uSt = spriteRim.getU(8 - sHalf8S * 16);
-		float uEn = spriteRim.getU(8 + sHalf8S * 16);
+		float uSt = CRRenderUtil.getScaledU(spriteRim, 8 - sHalf8S * 16);
+		float uEn = CRRenderUtil.getScaledU(spriteRim, 8 + sHalf8S * 16);
 		float v0 = spriteRim.getV0();
-		float v1 = spriteRim.getV(1 * tHeight);
-		float v2 = spriteRim.getV(2 * tHeight);
-		float v3 = spriteRim.getV(3 * tHeight);
-		float v4 = spriteRim.getV(4 * tHeight);
-		float v5 = spriteRim.getV(5 * tHeight);
-		float v6 = spriteRim.getV(6 * tHeight);
-		float v7 = spriteRim.getV(7 * tHeight);
-		float v8 = spriteRim.getV(8 * tHeight);
+		float v1 = CRRenderUtil.getScaledV(spriteRim, 1 * tHeight);
+		float v2 = CRRenderUtil.getScaledV(spriteRim, 2 * tHeight);
+		float v3 = CRRenderUtil.getScaledV(spriteRim, 3 * tHeight);
+		float v4 = CRRenderUtil.getScaledV(spriteRim, 4 * tHeight);
+		float v5 = CRRenderUtil.getScaledV(spriteRim, 5 * tHeight);
+		float v6 = CRRenderUtil.getScaledV(spriteRim, 6 * tHeight);
+		float v7 = CRRenderUtil.getScaledV(spriteRim, 7 * tHeight);
+		float v8 = CRRenderUtil.getScaledV(spriteRim, 8 * tHeight);
 
 		//Sides
 
@@ -503,17 +503,17 @@ public class CRModels{
 		//right is u=2px->4px, v=4px->6px
 
 		float uSt = spriteTooth.getU0();
-		float uMidTop = spriteTooth.getU(2 * 16 * prongWidthHalf);
-		float uEndTop = spriteTooth.getU(4 * 16 * prongWidthHalf);
+		float uMidTop = CRRenderUtil.getScaledU(spriteTooth, 2 * 16 * prongWidthHalf);
+		float uEndTop = CRRenderUtil.getScaledU(spriteTooth, 4 * 16 * prongWidthHalf);
 		float uEndTip = uMidTop;
-		float uMidSide = spriteTooth.getU(16 * (extend - radius));
-		float uEndSide = spriteTooth.getU(2 * 16 * (extend - radius));
+		float uMidSide = CRRenderUtil.getScaledU(spriteTooth, 16 * (extend - radius));
+		float uEndSide = CRRenderUtil.getScaledU(spriteTooth, 2 * 16 * (extend - radius));
 		float vStTop = spriteTooth.getV0();
-		float vEndTop = spriteTooth.getV(2);
+		float vEndTop = CRRenderUtil.getScaledV(spriteTooth, 2);
 		float vStTip = vEndTop;
-		float vEndTip = spriteTooth.getV(4);
+		float vEndTip = CRRenderUtil.getScaledV(spriteTooth, 4);
 		float vStSide = vEndTip;
-		float vEndSide = spriteTooth.getV(6);
+		float vEndSide = CRRenderUtil.getScaledV(spriteTooth, 6);
 
 		for(int i = 0; i < 8; i++){
 			//Tip
@@ -573,35 +573,35 @@ public class CRModels{
 
 		//Ends
 		CRRenderUtil.addVertexBlock(builder, matrix, -radius, -len, -radius, ends.getU0(), ends.getV0(), 0, -1, 0, light, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, radius, -len, -radius, ends.getU(textureWidth), ends.getV0(), 0, -1, 0, light, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, radius, -len, radius, ends.getU(textureWidth), ends.getV(textureWidth), 0, -1, 0, light, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, -radius, -len, radius, ends.getU0(), ends.getV(textureWidth), 0, -1, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, radius, -len, -radius, CRRenderUtil.getScaledU(ends, textureWidth), ends.getV0(), 0, -1, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, radius, -len, radius, CRRenderUtil.getScaledU(ends, textureWidth), CRRenderUtil.getScaledV(ends, textureWidth), 0, -1, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, -radius, -len, radius, ends.getU0(), CRRenderUtil.getScaledV(ends, textureWidth), 0, -1, 0, light, col);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, -radius, len, radius, ends.getU0(), ends.getV(textureWidth), 0, 1, 0, light, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, radius, len, radius, ends.getU(textureWidth), ends.getV(textureWidth), 0, 1, 0, light, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, radius, len, -radius, ends.getU(textureWidth), ends.getV0(), 0, 1, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, -radius, len, radius, ends.getU0(), CRRenderUtil.getScaledV(ends, textureWidth), 0, 1, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, radius, len, radius, CRRenderUtil.getScaledU(ends, textureWidth), CRRenderUtil.getScaledV(ends, textureWidth), 0, 1, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, radius, len, -radius, CRRenderUtil.getScaledU(ends, textureWidth), ends.getV0(), 0, 1, 0, light, col);
 		CRRenderUtil.addVertexBlock(builder, matrix, -radius, len, -radius, ends.getU0(), ends.getV0(), 0, 1, 0, light, col);
 
 		//Sides
 		CRRenderUtil.addVertexBlock(builder, matrix, -radius, len, -radius, sides.getU0(), sides.getV1(), 0, 0, -1, light, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, radius, len, -radius, sides.getU(textureWidth), sides.getV1(), 0, 0, -1, light, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, radius, -len, -radius, sides.getU(textureWidth), sides.getV0(), 0, 0, -1, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, radius, len, -radius, CRRenderUtil.getScaledU(sides, textureWidth), sides.getV1(), 0, 0, -1, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, radius, -len, -radius, CRRenderUtil.getScaledU(sides, textureWidth), sides.getV0(), 0, 0, -1, light, col);
 		CRRenderUtil.addVertexBlock(builder, matrix, -radius, -len, -radius, sides.getU0(), sides.getV0(), 0, 0, -1, light, col);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, -radius, -len, radius, sides.getU(textureWidth), sides.getV0(), 0, 0, 1, light, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, radius, -len, radius, sides.getU(2 * textureWidth), sides.getV0(), 0, 0, 1, light, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, radius, len, radius, sides.getU(2 * textureWidth), sides.getV1(), 0, 0, 1, light, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, -radius, len, radius, sides.getU(textureWidth), sides.getV1(), 0, 0, 1, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, -radius, -len, radius, CRRenderUtil.getScaledU(sides, textureWidth), sides.getV0(), 0, 0, 1, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, radius, -len, radius, CRRenderUtil.getScaledU(sides, 2 * textureWidth), sides.getV0(), 0, 0, 1, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, radius, len, radius, CRRenderUtil.getScaledU(sides, 2 * textureWidth), sides.getV1(), 0, 0, 1, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, -radius, len, radius, CRRenderUtil.getScaledU(sides, textureWidth), sides.getV1(), 0, 0, 1, light, col);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, -radius, -len, radius, sides.getU(3 * textureWidth), sides.getV0(), -1, 0, 0, light, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, -radius, len, radius, sides.getU(3 * textureWidth), sides.getV1(), -1, 0, 0, light, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, -radius, len, -radius, sides.getU(2 * textureWidth), sides.getV1(), -1, 0, 0, light, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, -radius, -len, -radius, sides.getU(2 * textureWidth), sides.getV0(), -1, 0, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, -radius, -len, radius, CRRenderUtil.getScaledU(sides, 3 * textureWidth), sides.getV0(), -1, 0, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, -radius, len, radius, CRRenderUtil.getScaledU(sides, 3 * textureWidth), sides.getV1(), -1, 0, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, -radius, len, -radius, CRRenderUtil.getScaledU(sides, 2 * textureWidth), sides.getV1(), -1, 0, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, -radius, -len, -radius, CRRenderUtil.getScaledU(sides, 2 * textureWidth), sides.getV0(), -1, 0, 0, light, col);
 
-		CRRenderUtil.addVertexBlock(builder, matrix, radius, len, -radius, sides.getU(3 * textureWidth), sides.getV1(), 1, 0, 0, light, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, radius, len, radius, sides.getU(4 * textureWidth), sides.getV1(), 1, 0, 0, light, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, radius, -len, radius, sides.getU(4 * textureWidth), sides.getV0(), 1, 0, 0, light, col);
-		CRRenderUtil.addVertexBlock(builder, matrix, radius, -len, -radius, sides.getU(3 * textureWidth), sides.getV0(), 1, 0, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, radius, len, -radius, CRRenderUtil.getScaledU(sides, 3 * textureWidth), sides.getV1(), 1, 0, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, radius, len, radius, CRRenderUtil.getScaledU(sides, 4 * textureWidth), sides.getV1(), 1, 0, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, radius, -len, radius, CRRenderUtil.getScaledU(sides, 4 * textureWidth), sides.getV0(), 1, 0, 0, light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, radius, -len, -radius, CRRenderUtil.getScaledU(sides, 3 * textureWidth), sides.getV0(), 1, 0, 0, light, col);
 	}
 
 	/**
@@ -622,12 +622,12 @@ public class CRModels{
 		final float top = mid + 1F / 16F;
 		//Texture coords
 		//Top & bottom
-		final float uStT = sprite.getU(1F);
-		final float vStT = sprite.getV(1F);
-		final float uEnT = sprite.getU(7F);
-		final float vEnT = sprite.getV(4F);
+		final float uStT = CRRenderUtil.getScaledU(sprite, 1F);
+		final float vStT = CRRenderUtil.getScaledV(sprite, 1F);
+		final float uEnT = CRRenderUtil.getScaledU(sprite, 7F);
+		final float vEnT = CRRenderUtil.getScaledV(sprite, 4F);
 
-		final float vEnS = sprite.getV(2);
+		final float vEnS = CRRenderUtil.getScaledV(sprite, 2);
 		//Top and bottom have tilted normals
 		Vec3 normal = CRRenderUtil.findNormal(new Vec3(-lenHalf, mid, edgeIn), new Vec3(lenHalf, bottom, edgeIn), new Vec3(-lenHalf, mid, edgeOut));
 

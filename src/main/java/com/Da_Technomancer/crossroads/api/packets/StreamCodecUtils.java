@@ -2,6 +2,9 @@ package com.Da_Technomancer.crossroads.api.packets;
 
 import com.mojang.datafixers.util.*;
 import io.netty.buffer.ByteBuf;
+import io.netty.handler.codec.DecoderException;
+import io.netty.handler.codec.EncoderException;
+import net.minecraft.network.VarInt;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
@@ -198,6 +201,62 @@ public class StreamCodecUtils{
 					result.put(key, value);
 				}
 				return result;
+			}
+		};
+	}
+
+	public static StreamCodec<ByteBuf, float[]> floatArrayStreamCodec(final int pMaxSize){
+		return new StreamCodec<ByteBuf, float[]>(){
+			public float[] decode(ByteBuf buf) {
+				int size = VarInt.read(buf);
+				if(size > pMaxSize){
+					throw new DecoderException("FloatArray with size " + size + " is bigger than allowed " + pMaxSize);
+				}else{
+					float[] result = new float[size];
+					for(int i = 0; i < size; i++){
+						result[i] = buf.readFloat();
+					}
+					return result;
+				}
+			}
+
+			public void encode(ByteBuf buf, float[] toEncode) {
+				if(toEncode.length > pMaxSize){
+					throw new EncoderException("FloatArray with size " + toEncode.length + " is bigger than allowed " + pMaxSize);
+				}else{
+					VarInt.write(buf, toEncode.length);
+					for(float f : toEncode){
+						buf.writeFloat(f);
+					}
+				}
+			}
+		};
+	}
+
+	public static StreamCodec<ByteBuf, int[]> intArrayStreamCodec(final int pMaxSize){
+		return new StreamCodec<ByteBuf, int[]>(){
+			public int[] decode(ByteBuf buf) {
+				int size = VarInt.read(buf);
+				if(size > pMaxSize){
+					throw new DecoderException("IntArray with size " + size + " is bigger than allowed " + pMaxSize);
+				}else{
+					int[] result = new int[size];
+					for(int i = 0; i < size; i++){
+						result[i] = buf.readInt();
+					}
+					return result;
+				}
+			}
+
+			public void encode(ByteBuf buf, int[] toEncode) {
+				if(toEncode.length > pMaxSize){
+					throw new EncoderException("IntArray with size " + toEncode.length + " is bigger than allowed " + pMaxSize);
+				}else{
+					VarInt.write(buf, toEncode.length);
+					for(int f : toEncode){
+						buf.writeInt(f);
+					}
+				}
 			}
 		};
 	}

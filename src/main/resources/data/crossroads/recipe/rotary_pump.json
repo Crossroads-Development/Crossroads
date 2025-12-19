@@ -17,7 +17,7 @@
 			"item": "crossroads:axle"
 		},
 		"G": {
-			"tag": "c:glass/colorless"
+			"tag": "c:glass_blocks/colorless"
 		}
 	}
 }

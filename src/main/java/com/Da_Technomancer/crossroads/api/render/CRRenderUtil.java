@@ -323,4 +323,54 @@ public class CRRenderUtil extends RenderUtil{
 			builder.addVertex(matrix.last().pose(), (float) (start.x() + offsetNext.x()), (float) (start.y() + offsetNext.y()), (float) (start.z() + offsetNext.z())).setColor(col[0], col[1], col[2], col[3]).setLight(light);
 		}
 	}
+
+	/**
+	 * Gets the interpolated U texture coordinate of a sprite, using funny old units
+	 * @see #getU
+	 * @param sprite Sprite to map coordinates of
+	 * @param sixteenths Fraction of the sprite to map to, in sixteenths (so 0 is start, 16 is end)
+	 * @return U coordinate of that point in the sprite
+	 * @deprecated Meant as an aide for porting. New code should use getU.
+	 */
+	@OnlyIn(Dist.CLIENT)
+	@Deprecated
+	public static float getScaledU(@Nonnull TextureAtlasSprite sprite, float sixteenths){
+		return getU(sprite, sixteenths / 16F);
+	}
+
+	/**
+	 * Gets the interpolated U texture coordinate of a sprite
+	 * @param sprite Sprite to map coordinates of
+	 * @param fraction In [0, 1], where 0 is the start of the sprite and 1 is the end.
+	 * @return Interpolated U texture coordinate, assuming this sprite is bound to the atlas
+	 */
+	@OnlyIn(Dist.CLIENT)
+	public static float getU(@Nonnull TextureAtlasSprite sprite, float fraction){
+		return sprite.getU(fraction);
+	}
+
+	/**
+	 * Gets the interpolated V texture coordinate of a sprite, using funny old units
+	 * @see #getV
+	 * @param sprite Sprite to map coordinates of
+	 * @param sixteenths Fraction of the sprite to map to, in sixteenths (so 0 is start, 16 is end)
+	 * @return V coordinate of that point in the sprite
+	 * @deprecated Meant as an aide for porting. New code should use getV.
+	 */
+	@OnlyIn(Dist.CLIENT)
+	@Deprecated
+	public static float getScaledV(@Nonnull TextureAtlasSprite sprite, float sixteenths){
+		return getV(sprite, sixteenths / 16F);
+	}
+
+	/**
+	 * Gets the interpolated V texture coordinate of a sprite
+	 * @param sprite Sprite to map coordinates of
+	 * @param fraction In [0, 1], where 0 is the start of the sprite and 1 is the end.
+	 * @return Interpolated V texture coordinate, assuming this sprite is bound to the atlas
+	 */
+	@OnlyIn(Dist.CLIENT)
+	public static float getV(@Nonnull TextureAtlasSprite sprite, float fraction){
+		return sprite.getV(fraction);
+	}
 }

@@ -12,42 +12,31 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 /**
  * Sends a Taylor series to the client. Used by Master Axes to reduce packet overhead
  */
-public record SendTaylorToClient(long timestamp, ArrayList<Float> terms, BlockPos pos) implements CustomPacketPayload{
+public record SendTaylorToClient(long timestamp, float[] terms, BlockPos pos) implements CustomPacketPayload{
 
 	public static final CustomPacketPayload.Type<SendTaylorToClient> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "send_taylor_client"));
 
 	public static final StreamCodec<ByteBuf, SendTaylorToClient> STREAM_CODEC = StreamCodec.composite(
 			ByteBufCodecs.VAR_LONG, SendTaylorToClient::timestamp,
-			ByteBufCodecs.collection(ArrayList::new, ByteBufCodecs.FLOAT), SendTaylorToClient::terms,
+			StreamCodecUtils.floatArrayStreamCodec(16), SendTaylorToClient::terms,
 			BlockPos.STREAM_CODEC, SendTaylorToClient::pos,
 			SendTaylorToClient::new
 	);
-
-	public SendTaylorToClient(long timestamp, float[] terms, BlockPos pos){
-		this(timestamp, new ArrayList(Arrays.asList(terms)), pos);
-	}
 
 	static void handlePacketClient(final SendTaylorToClient packet, final IPayloadContext context){
 		context.enqueueWork(() -> {
 			BlockEntity te = Minecraft.getInstance().level.getBlockEntity(packet.pos);
 			if(te instanceof ITaylorReceiver taylorReceiver){
-				float[] terms = new float[4];
-				for(int i = 0; i < 4; i++){
-					terms[i] = packet.terms.get(i);
-				}
-				taylorReceiver.receiveSeries(packet.timestamp, terms);
+				taylorReceiver.receiveSeries(packet.timestamp, packet.terms);
 			}
 		});
 	}
 
 	@Override
 	public Type<? extends CustomPacketPayload> type(){
-		return null;
+		return TYPE;
 	}
 }

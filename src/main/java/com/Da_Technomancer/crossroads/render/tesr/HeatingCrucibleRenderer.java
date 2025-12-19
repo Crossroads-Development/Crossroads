@@ -36,9 +36,9 @@ public class HeatingCrucibleRenderer implements BlockEntityRenderer<HeatingCruci
 		float xzEnd = 14F / 16F;
 		float height = (float) (2 + 4 * fullness) / 16F;
 
-		CRRenderUtil.addVertexBlock(builder, matrix, xzEnd, height, xzStart, sprite.getU(xzEnd * 16), sprite.getV(16 - (xzStart * 16)), 0, 1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, xzStart, height, xzStart, sprite.getU(xzStart * 16), sprite.getV(16 - (xzStart * 16)), 0, 1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, xzStart, height, xzEnd, sprite.getU(xzStart * 16), sprite.getV(16 - (xzEnd * 16)), 0, 1, 0, light);
-		CRRenderUtil.addVertexBlock(builder, matrix, xzEnd, height, xzEnd, sprite.getU(xzEnd * 16), sprite.getV(16 - (xzEnd * 16)), 0, 1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, xzEnd, height, xzStart, CRRenderUtil.getScaledU(sprite, xzEnd * 16), CRRenderUtil.getScaledV(sprite, 16 - (xzStart * 16)), 0, 1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, xzStart, height, xzStart, CRRenderUtil.getScaledU(sprite, xzStart * 16), CRRenderUtil.getScaledV(sprite, 16 - (xzStart * 16)), 0, 1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, xzStart, height, xzEnd, CRRenderUtil.getScaledU(sprite, xzStart * 16), CRRenderUtil.getScaledV(sprite, 16 - (xzEnd * 16)), 0, 1, 0, light);
+		CRRenderUtil.addVertexBlock(builder, matrix, xzEnd, height, xzEnd, CRRenderUtil.getScaledU(sprite, xzEnd * 16), CRRenderUtil.getScaledV(sprite, 16 - (xzEnd * 16)), 0, 1, 0, light);
 	}
 }

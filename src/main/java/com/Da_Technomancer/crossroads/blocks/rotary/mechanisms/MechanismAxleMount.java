@@ -112,7 +112,7 @@ public class MechanismAxleMount implements IMechanism<CRMaterialLibrary.GearMate
 
 			//Wall mount
 			matrix.translate(0, -0.5F / 16F, 0);
-			CRModels.drawBox(matrix, builder, combinedLight, matCol, 4F / 16F, 0.5F / 16F, 4F / 16F, sprite.getU0(), sprite.getV0(), sprite.getU(8), sprite.getV(8), sprite.getU(8), sprite.getV0(), sprite.getU1(), sprite.getV(2), sprite.getU(8), sprite.getV0(), sprite.getU1(), sprite.getV(2));
+			CRModels.drawBox(matrix, builder, combinedLight, matCol, 4F / 16F, 0.5F / 16F, 4F / 16F, sprite.getU0(), sprite.getV0(), CRRenderUtil.getScaledU(sprite, 8), CRRenderUtil.getScaledV(sprite, 8), CRRenderUtil.getScaledU(sprite, 8), sprite.getV0(), sprite.getU1(), CRRenderUtil.getScaledV(sprite, 2), CRRenderUtil.getScaledU(sprite, 8), sprite.getV0(), sprite.getU1(), CRRenderUtil.getScaledV(sprite, 2));
 		}else{
 			//The axle is pointing alongside this mount
 
@@ -137,11 +137,11 @@ public class MechanismAxleMount implements IMechanism<CRMaterialLibrary.GearMate
 
 			//Shaft
 			matrix.translate(0, -OCT_SCALE / 2F - ROD_HEIGHT / 2F, 0);
-			CRModels.drawBox(matrix, builder, combinedLight, matCol, 1F / 16F, ROD_HEIGHT / 2F, 1F / 16F, sprite.getU0(), sprite.getV0(), sprite.getU(8), sprite.getV(8), sprite.getU0(), sprite.getV(8), sprite.getU(2), sprite.getV1(), sprite.getU0(), sprite.getV(8), sprite.getU(2), sprite.getV1());
+			CRModels.drawBox(matrix, builder, combinedLight, matCol, 1F / 16F, ROD_HEIGHT / 2F, 1F / 16F, sprite.getU0(), sprite.getV0(), CRRenderUtil.getScaledU(sprite, 8), CRRenderUtil.getScaledV(sprite, 8), sprite.getU0(), CRRenderUtil.getScaledV(sprite, 8), CRRenderUtil.getScaledU(sprite, 2), sprite.getV1(), sprite.getU0(), CRRenderUtil.getScaledV(sprite, 8), CRRenderUtil.getScaledU(sprite, 2), sprite.getV1());
 
 			//Wall mount
 			matrix.translate(0, -ROD_HEIGHT / 2F - 1.5F / 16F, 0);
-			CRModels.drawBox(matrix, builder, combinedLight, matCol, 2F / 16F, 1.5F / 16F, 2F / 16F, sprite.getU0(), sprite.getV0(), sprite.getU(8), sprite.getV(8), sprite.getU(8), sprite.getV0(), sprite.getU1(), sprite.getV(2), sprite.getU(8), sprite.getV0(), sprite.getU1(), sprite.getV(2));
+			CRModels.drawBox(matrix, builder, combinedLight, matCol, 2F / 16F, 1.5F / 16F, 2F / 16F, sprite.getU0(), sprite.getV0(), CRRenderUtil.getScaledU(sprite, 8), CRRenderUtil.getScaledV(sprite, 8), CRRenderUtil.getScaledU(sprite, 8), sprite.getV0(), sprite.getU1(), CRRenderUtil.getScaledV(sprite, 2), CRRenderUtil.getScaledU(sprite, 8), sprite.getV0(), sprite.getU1(), CRRenderUtil.getScaledV(sprite, 2));
 		}
 	}
 

@@ -63,13 +63,13 @@ public class BeamCannonRenderer implements BlockEntityRenderer<BeamCannonTileEnt
 		float heightInner = 1F / 16F;
 		float uSt = bronzeSprite.getU0();
 		float uEn = bronzeSprite.getU1();
-		float uShort = bronzeSprite.getU(3);
+		float uShort = CRRenderUtil.getScaledU(bronzeSprite, 3);
 		float vSt = bronzeSprite.getV0();
-		float vHeight = bronzeSprite.getV(4);
-		float vRim = bronzeSprite.getV(1);
-		float vTopSt = bronzeSprite.getV(2);
-		float vTopEn = bronzeSprite.getV(3);
-		float vTopWidth = bronzeSprite.getV(10);
+		float vHeight = CRRenderUtil.getScaledV(bronzeSprite, 4);
+		float vRim = CRRenderUtil.getScaledV(bronzeSprite, 1);
+		float vTopSt = CRRenderUtil.getScaledV(bronzeSprite, 2);
+		float vTopEn = CRRenderUtil.getScaledV(bronzeSprite, 3);
+		float vTopWidth = CRRenderUtil.getScaledV(bronzeSprite, 10);
 
 		VertexConsumer builder = buffer.getBuffer(RenderType.solid());
 
@@ -161,14 +161,14 @@ public class BeamCannonRenderer implements BlockEntityRenderer<BeamCannonTileEnt
 		float barrelWidth = widthInner - 0.001F;
 		float barrelBottom = -1.5F / 16F;
 		float barrelTop = 33.5F / 16F;
-		float bUTopSt = barrelSprite.getU(8);
-		float bUTopEn = barrelSprite.getU(12);
-		float bVTopSt = barrelSprite.getV(0);
-		float bVTopEn = barrelSprite.getV(4);
-		float bUSideSt = barrelSprite.getU(0);
-		float bUSideEn = barrelSprite.getU(4);
-		float bVSideSt = barrelSprite.getV(16);
-		float bVSideEn = barrelSprite.getV(0);
+		float bUTopSt = CRRenderUtil.getScaledU(barrelSprite, 8);
+		float bUTopEn = CRRenderUtil.getScaledU(barrelSprite, 12);
+		float bVTopSt = CRRenderUtil.getScaledV(barrelSprite, 0);
+		float bVTopEn = CRRenderUtil.getScaledV(barrelSprite, 4);
+		float bUSideSt = CRRenderUtil.getScaledU(barrelSprite, 0);
+		float bUSideEn = CRRenderUtil.getScaledU(barrelSprite, 4);
+		float bVSideSt = CRRenderUtil.getScaledV(barrelSprite, 16);
+		float bVSideEn = CRRenderUtil.getScaledV(barrelSprite, 0);
 
 		//Bottom
 		CRRenderUtil.addVertexBlock(builder, matrix, -barrelWidth, barrelBottom, -barrelWidth, bUTopSt, bVTopSt, 0, -1, 0, light);

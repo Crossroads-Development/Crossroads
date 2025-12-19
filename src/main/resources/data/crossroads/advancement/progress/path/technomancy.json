@@ -1,5 +1,5 @@
 {
-	"parent": "crossroads:progress/path/alchemy",
+	"parent": "crossroads:progress/path/can_unlock_path",
 	"display": {
 		"icon": {
 			"id": "crossroads:gear_base",

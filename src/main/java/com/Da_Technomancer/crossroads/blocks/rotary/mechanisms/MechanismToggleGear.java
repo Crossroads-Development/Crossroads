@@ -169,10 +169,10 @@ public class MechanismToggleGear extends MechanismSmallGear{
 			float zFightOffset = 0.001F;//Vertical offset to prevent z-fighting
 			//Texture coords
 			float radiusT = radius * 16F;
-			float uSt = sprite.getU(8 - radiusT);
-			float uEn = sprite.getU(8 + radiusT);
-			float vSt = sprite.getV(8 - radiusT);
-			float vEn = sprite.getV(8 + radiusT);
+			float uSt = CRRenderUtil.getScaledU(sprite, 8 - radiusT);
+			float uEn = CRRenderUtil.getScaledU(sprite, 8 + radiusT);
+			float vSt = CRRenderUtil.getScaledV(sprite, 8 - radiusT);
+			float vEn = CRRenderUtil.getScaledV(sprite, 8 + radiusT);
 
 			CRRenderUtil.addVertexBlock(builder, matrix, -radius, top + zFightOffset, radius, uSt, vEn, 0, 1, 0, combinedLight, invertCol);
 			CRRenderUtil.addVertexBlock(builder, matrix, radius, top + zFightOffset, radius, uEn, vEn, 0, 1, 0, combinedLight, invertCol);

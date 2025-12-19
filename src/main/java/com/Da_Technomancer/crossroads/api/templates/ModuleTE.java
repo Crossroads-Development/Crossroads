@@ -15,7 +15,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -95,25 +94,22 @@ public abstract class ModuleTE extends BlockEntity implements ITickableTileEntit
 
 	public ModuleTE(BlockEntityType<?> type, BlockPos pos, BlockState state){
 		super(type, pos, state);
-		if(level instanceof ServerLevel){
-			if(useHeat()){
-				heatHandler = createHeatHandler();
+		if(useHeat()){
+			heatHandler = createHeatHandler();
 
-			}else{
-				heatHandler = null;
-			}
-			if(useRotary()){
-				axleHandler = createAxleHandler();
-			}else{
-				axleHandler = null;
-			}
-			if(fluids.length != 0){
-				globalFluidHandler = createGlobalFluidHandler();
-			}else{
-				globalFluidHandler = null;
-			}
+		}else{
+			heatHandler = null;
 		}
-
+		if(useRotary()){
+			axleHandler = createAxleHandler();
+		}else{
+			axleHandler = null;
+		}
+		if(fluids.length != 0){
+			globalFluidHandler = createGlobalFluidHandler();
+		}else{
+			globalFluidHandler = null;
+		}
 
 		Arrays.fill(fluids, FluidStack.EMPTY);
 	}

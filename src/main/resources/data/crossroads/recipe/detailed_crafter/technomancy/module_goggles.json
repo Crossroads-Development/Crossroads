@@ -14,7 +14,7 @@
 			"tag": "c:ingots/bronze"
 		},
 		"G": {
-			"tag": "c:glass/colorless"
+			"tag": "c:glass_blocks/colorless"
 		},
 		"C": {
 			"tag": "crossroads:ingots/copshowium"

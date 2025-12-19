@@ -80,18 +80,18 @@ public class CultivatorVatRenderer implements BlockEntityRenderer<CultivatorVatT
 
 			//Brain
 			float uTopMin = sprite.getU0();
-			float vTopMin = sprite.getV(8);
-			float uTopMax = sprite.getU(8);
+			float vTopMin = CRRenderUtil.getScaledV(sprite, 8);
+			float uTopMax = CRRenderUtil.getScaledU(sprite, 8);
 			float vTopMax = sprite.getV1();
-			float uBackMin = sprite.getU(8);
+			float uBackMin = CRRenderUtil.getScaledU(sprite, 8);
 			float vBackMin = sprite.getV0();
 			float uBackMax = sprite.getU1();
-			float vBackMax = sprite.getV(4);
-			float vFrontMin = sprite.getV(8);
-			float vFrontMax = sprite.getV(12);
+			float vBackMax = CRRenderUtil.getScaledV(sprite, 4);
+			float vFrontMin = CRRenderUtil.getScaledV(sprite, 8);
+			float vFrontMax = CRRenderUtil.getScaledV(sprite, 12);
 			float uSideMin = sprite.getU0();
-			float uSideMax = sprite.getU(8);
-			float vSideMin = sprite.getV(8);
+			float uSideMax = CRRenderUtil.getScaledU(sprite, 8);
+			float vSideMin = CRRenderUtil.getScaledV(sprite, 8);
 			float vSideMax = sprite.getV1();
 			CRModels.drawBox(matrix, builder, light, col, 0.5F, 0.25F, 0.5F, uTopMin, vTopMin, uTopMax, vTopMax, uBackMin, vBackMin, uBackMax, vBackMax, uSideMin, vSideMin, uSideMax, vSideMax);
 			//Front side (for a different texture on the front)
@@ -100,14 +100,14 @@ public class CultivatorVatRenderer implements BlockEntityRenderer<CultivatorVatT
 
 			//Nose
 			matrix.translate(1 / 16F, -0.25F, 0);
-			float nUTopMin = sprite.getU(2);
+			float nUTopMin = CRRenderUtil.getScaledU(sprite, 2);
 			float nVTopMin = sprite.getV0();
-			float nUTopMax = sprite.getU(3);
-			float nVTopMax = sprite.getV(1);
-			float nUSideMin = sprite.getU(1);
+			float nUTopMax = CRRenderUtil.getScaledU(sprite, 3);
+			float nVTopMax = CRRenderUtil.getScaledV(sprite, 1);
+			float nUSideMin = CRRenderUtil.getScaledU(sprite, 1);
 			float nVSideMin = nVTopMax;
 			float nUSideMax = nUTopMin;
-			float nVSideMax = sprite.getV(3);
+			float nVSideMax = CRRenderUtil.getScaledV(sprite, 3);
 			CRModels.drawBox(matrix, builder, light, col, 2F / 16F, 4F / 16F, 2F / 16F, nUTopMin, nVTopMin, nUTopMax, nVTopMax, nUSideMin, nVSideMin, nUSideMax, nVSideMax, nUSideMin, nVSideMin, nUSideMax, nVSideMax);
 		}
 	}

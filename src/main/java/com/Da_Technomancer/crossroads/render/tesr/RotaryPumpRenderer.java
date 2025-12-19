@@ -83,24 +83,24 @@ public class RotaryPumpRenderer implements BlockEntityRenderer<RotaryPumpTileEnt
 			float xEn = 12F / 16F;
 			float yEn;
 			float zEn = 10F / 16F;
-			float uSt = lText.getU(xSt * 16);
-			float uEn = lText.getU(xEn * 16);
+			float uSt = CRRenderUtil.getScaledU(lText, xSt * 16);
+			float uEn = CRRenderUtil.getScaledU(lText, xEn * 16);
 			float vSt;
 			float vEn;
 			if(completion > 0){
 				//Pumping up
 				ySt = -0.25F;
 				yEn = (8F / 16F - ySt) * completion + ySt;
-				vSt = lText.getV(16);
-				vEn = lText.getV(16 - (yEn - ySt) * 16);
+				vSt = CRRenderUtil.getScaledV(lText, 16);
+				vEn = CRRenderUtil.getScaledV(lText, 16 - (yEn - ySt) * 16);
 			}else{
 				//Pumping down
 				completion = -completion;//Now ranges from 0 to +1
 				yEn = 8F / 16F;
 				ySt = (-0.25F - yEn) * completion + yEn;
 				float vEnCoord = 16 - (yEn - -0.25F) * 16;
-				vSt = lText.getV((16 - vEnCoord) * completion + vEnCoord);
-				vEn = lText.getV(vEnCoord);
+				vSt = CRRenderUtil.getScaledV(lText, (16 - vEnCoord) * completion + vEnCoord);
+				vEn = CRRenderUtil.getScaledV(lText, vEnCoord);
 			}
 
 			//Draw liquid layer

@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.rotary.mechanisms;
 
 import com.Da_Technomancer.crossroads.api.CRCapabilities;
+import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.api.rotary.*;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.item_sets.GearFacade;
@@ -136,7 +137,7 @@ public class MechanismFacade implements IMechanism<GearFacade.FacadeBlock>{
 		//Render along the top
 		VertexConsumer builder = buffer.getBuffer(RenderType.translucent());
 		float antiZFightScale = 0.0001F * (1 + side.get3DDataValue());
-		CRModels.drawBox(matrix, builder, combinedLight, new int[] {255, 255, 255, 255}, 0.5F - antiZFightScale, 1F / 16F, 0.5F - antiZFightScale, sprite.getU0(), sprite.getV0(), sprite.getU1(), sprite.getV1(), sprite.getU0(), sprite.getV0(), sprite.getU1(), sprite.getV(2), sprite.getU0(), sprite.getV0(), sprite.getU1(), sprite.getV(2));
+		CRModels.drawBox(matrix, builder, combinedLight, new int[] {255, 255, 255, 255}, 0.5F - antiZFightScale, 1F / 16F, 0.5F - antiZFightScale, sprite.getU0(), sprite.getV0(), sprite.getU1(), sprite.getV1(), sprite.getU0(), sprite.getV0(), sprite.getU1(), CRRenderUtil.getScaledV(sprite, 2), sprite.getU0(), sprite.getV0(), sprite.getU1(), CRRenderUtil.getScaledV(sprite, 2));
 	}
 
 	@Override

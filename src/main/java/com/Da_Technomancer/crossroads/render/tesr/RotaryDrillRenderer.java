@@ -74,10 +74,10 @@ public class RotaryDrillRenderer implements BlockEntityRenderer<RotaryDrillTileE
 		float end = width / 2;
 
 		float uSt = sprite.getU0();
-		float uEn = sprite.getU(texWidth);
-		float uHe = sprite.getU(texHeight);
+		float uEn = CRRenderUtil.getScaledU(sprite, texWidth);
+		float uHe = CRRenderUtil.getScaledU(sprite, texHeight);
 		float vSt = sprite.getV0();
-		float vEn = sprite.getV(texWidth);
+		float vEn = CRRenderUtil.getScaledV(sprite, texWidth);
 //		float vHe = sprite.getInterpolatedV(texHeight);
 
 		//Top

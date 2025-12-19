@@ -523,6 +523,7 @@ public final class CRItems{
 		ItemProperties.register(separatedBloodSample, ResourceLocation.withDefaultNamespace("spoiled"), rottingPropertyGetter);
 		ItemProperties.register(potionExtension, ResourceLocation.withDefaultNamespace("spoiled"), rottingPropertyGetter);
 		ItemProperties.register(embryo, ResourceLocation.withDefaultNamespace("spoiled"), rottingPropertyGetter);
+		ItemProperties.register(shavedIce, ResourceLocation.withDefaultNamespace("spoiled"), rottingPropertyGetter);
 		//Syringe treatment
 		ItemPropertyFunction syringePropertyGetter = (ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity, int unmapped) -> syringe.isTreated(stack) ? 1 : 0;
 		ItemProperties.register(syringe, ResourceLocation.withDefaultNamespace("treated"), syringePropertyGetter);

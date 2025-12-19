@@ -76,40 +76,40 @@ public class GatewayControllerRenderer extends EntropyRenderer<GatewayController
 		//Texture UV coords
 		//Symbols are the 8 alignment icons. They are arranged in a column on the texture
 		final float symbolUSt = sprite.getU0();
-		final float symbolUEn = sprite.getU(2);
+		final float symbolUEn = CRRenderUtil.getScaledU(sprite, 2);
 		//Poly used for square and octagon
 		final float polyUSt = symbolUEn;
-		final float polyUEn = sprite.getU(12);
-		final float sqFrUSt = sprite.getU(4);
-		final float sqFrUEn = sprite.getU(10);
+		final float polyUEn = CRRenderUtil.getScaledU(sprite, 12);
+		final float sqFrUSt = CRRenderUtil.getScaledU(sprite, 4);
+		final float sqFrUEn = CRRenderUtil.getScaledU(sprite, 10);
 		final float sqFrVSt = sprite.getV0();
-		final float sqFrVEn = sprite.getV(2);
+		final float sqFrVEn = CRRenderUtil.getScaledV(sprite, 2);
 		final float sqInVSt = sqFrVEn;
-		final float sqInVEn = sprite.getV(4);
+		final float sqInVEn = CRRenderUtil.getScaledV(sprite, 4);
 		final float sqOutVSt = sqInVEn;
-		final float sqOutVEn = sprite.getV(6);
-		final float octFrUSt = sprite.getU(3);
-		final float octFrUEn = sprite.getU(11);
+		final float sqOutVEn = CRRenderUtil.getScaledV(sprite, 6);
+		final float octFrUSt = CRRenderUtil.getScaledU(sprite, 3);
+		final float octFrUEn = CRRenderUtil.getScaledU(sprite, 11);
 		final float octFrVSt = sqOutVEn;
-		final float octFrVEn = sprite.getV(8);
+		final float octFrVEn = CRRenderUtil.getScaledV(sprite, 8);
 		final float octInVSt = octFrVEn;
-		final float octInVEn = sprite.getV(10);
+		final float octInVEn = CRRenderUtil.getScaledV(sprite, 10);
 		final float octOutVSt = octInVEn;
-		final float octOutVEn = sprite.getV(12);
+		final float octOutVEn = CRRenderUtil.getScaledV(sprite, 12);
 		final float triVSt = octOutVEn;
 		final float triVEn = sprite.getV1();
-		final float triFrUEn = sprite.getU(6);
+		final float triFrUEn = CRRenderUtil.getScaledU(sprite, 6);
 		final float triTopUSt = triFrUEn;
-		final float triTopUEn = sprite.getU(13F / 2F);//Free me from texture mapping purgatory
+		final float triTopUEn = CRRenderUtil.getScaledU(sprite, 13F / 2F);//Free me from texture mapping purgatory
 		final float triFrUMid = (polyUSt + triTopUSt) / 2F;
 		final float triEdgeUSt = triTopUEn;
-		final float triEdgeUEn = sprite.getU(7);
-		final float portalUSt = sprite.getU(12);
+		final float triEdgeUEn = CRRenderUtil.getScaledU(sprite, 7);
+		final float portalUSt = CRRenderUtil.getScaledU(sprite, 12);
 		final float portalUEn = sprite.getU1();
 		final float portalTexRad = .051F * (sprite.getU1() - sprite.getU0());//half the side length of the regular octagon
 		final float portalUMid1 = (portalUSt + portalUEn) / 2F - portalTexRad;
 		final float portalUMid2 = portalUMid1 + 2F * portalTexRad;
-		final float portalVSt = sprite.getV(4 * ((int) (frame.getLevel().getGameTime() / 5L) % 4));
+		final float portalVSt = CRRenderUtil.getScaledV(sprite, 4 * ((int) (frame.getLevel().getGameTime() / 5L) % 4));
 		final float portalVEn = portalVSt + (sprite.getV1() - sprite.getV0()) * 0.25F;
 		final float portalVMid1 = (portalVSt + portalVEn) / 2F - portalTexRad;
 		final float portalVMid2 = portalVMid1 + 2F * portalTexRad;
@@ -353,11 +353,11 @@ public class GatewayControllerRenderer extends EntropyRenderer<GatewayController
 	}
 
 	private float getIconVSt(TextureAtlasSprite sprite, int index){
-		return sprite.getV(index * 2);
+		return CRRenderUtil.getScaledV(sprite, index * 2);
 	}
 
 	private float getIconVEn(TextureAtlasSprite sprite, int index){
-		return sprite.getV((index + 1) * 2);
+		return CRRenderUtil.getScaledV(sprite, (index + 1) * 2);
 	}
 
 	@Override

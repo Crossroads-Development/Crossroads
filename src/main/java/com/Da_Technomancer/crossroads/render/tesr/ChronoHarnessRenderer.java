@@ -58,7 +58,7 @@ public class ChronoHarnessRenderer extends EntropyRenderer<ChronoHarnessTileEnti
 		float minY = 2F / 16F;
 		float maxY = 14F / 16F;
 
-		float uEn = sprite.getU(2 * rad * 16);
+		float uEn = CRRenderUtil.getScaledU(sprite, 2 * rad * 16);
 
 		CRRenderUtil.addVertexBlock(builder, matrix, x - rad, minY, z - rad, sprite.getU0(), sprite.getV0(), 0, 0, -1, light);
 		CRRenderUtil.addVertexBlock(builder, matrix, x - rad, maxY, z - rad, sprite.getU0(), sprite.getV1(), 0, 0, -1, light);

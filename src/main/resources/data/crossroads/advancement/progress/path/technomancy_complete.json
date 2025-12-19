@@ -1,5 +1,5 @@
 {
-	"parent": "crossroads:progress/technomancy",
+	"parent": "crossroads:progress/path/technomancy",
 	"display": {
 		"icon": {
 			"id": "dirt"

@@ -11,7 +11,7 @@
 	],
 	"key": {
 		"G": {
-			"tag": "c:glass/colorless"
+			"tag": "c:glass_blocks/colorless"
 		},
 		"Q": {
 			"tag": "crossroads:gems/pure_quartz"

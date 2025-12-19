@@ -52,7 +52,7 @@ public class HamsterWheelRenderer implements BlockEntityRenderer<HamsterWheelTil
 		float xRad = .025F;
 		float yRad = .035F;
 		float zRad = .03125F;
-		float sideUEn = sprite.getU(8);
+		float sideUEn = CRRenderUtil.getScaledU(sprite, 8);
 		int[] col = {255, 255, 255, 255};
 
 		for(int i = 0; i < 2; i++){

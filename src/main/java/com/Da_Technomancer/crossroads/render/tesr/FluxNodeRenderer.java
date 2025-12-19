@@ -138,73 +138,73 @@ public class FluxNodeRenderer extends EntropyRenderer<FluxNodeTileEntity>{
 
 //		buf.begin(VertexFormat.Mode.QUADS, DefaultVertexFormats.POSITION_TEX);
 
-		builder.addVertex(matrix.last().pose(), outer, outer, edge).setColor(255, 255, 255, 255).setUv(sprite.getU(texWidth), sprite.getV(0)).setLight(light).setNormal(matrix.last(), 0, 0, 1);
-		builder.addVertex(matrix.last().pose(), -outer, outer, edge).setColor(255, 255, 255, 255).setUv(sprite.getU(0), sprite.getV(0)).setLight(light).setNormal(matrix.last(), 0, 0, 1);
-		builder.addVertex(matrix.last().pose(), -outer, inner, edge).setColor(255, 255, 255, 255).setUv(sprite.getU(0), sprite.getV(innerTex)).setLight(light).setNormal(matrix.last(), 0, 0, 1);
-		builder.addVertex(matrix.last().pose(), outer, inner, edge).setColor(255, 255, 255, 255).setUv(sprite.getU(texWidth), sprite.getV(innerTex)).setLight(light).setNormal(matrix.last(), 0, 0, 1);
+		builder.addVertex(matrix.last().pose(), outer, outer, edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, texWidth), CRRenderUtil.getScaledV(sprite, 0)).setLight(light).setNormal(matrix.last(), 0, 0, 1);
+		builder.addVertex(matrix.last().pose(), -outer, outer, edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, 0), CRRenderUtil.getScaledV(sprite, 0)).setLight(light).setNormal(matrix.last(), 0, 0, 1);
+		builder.addVertex(matrix.last().pose(), -outer, inner, edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, 0), CRRenderUtil.getScaledV(sprite, innerTex)).setLight(light).setNormal(matrix.last(), 0, 0, 1);
+		builder.addVertex(matrix.last().pose(), outer, inner, edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, texWidth), CRRenderUtil.getScaledV(sprite, innerTex)).setLight(light).setNormal(matrix.last(), 0, 0, 1);
 //		buf.pos(outer, outer, edge).tex(texWidth, 0);
 //		buf.pos(-outer, outer, edge).tex(0, 0);
 //		buf.pos(-outer, inner, edge).tex(0, innerTex);
 //		buf.pos(outer, inner, edge).tex(texWidth, innerTex);
 
-		builder.addVertex(matrix.last().pose(), outer, outer, -edge).setColor(255, 255, 255, 255).setUv(sprite.getU(texWidth), sprite.getV(0)).setLight(light).setNormal(matrix.last(), 0, 0, -1);
-		builder.addVertex(matrix.last().pose(), outer, inner, -edge).setColor(255, 255, 255, 255).setUv(sprite.getU(texWidth), sprite.getV(innerTex)).setLight(light).setNormal(matrix.last(), 0, 0, -1);
-		builder.addVertex(matrix.last().pose(), -outer, inner, -edge).setColor(255, 255, 255, 255).setUv(sprite.getU(0), sprite.getV(innerTex)).setLight(light).setNormal(matrix.last(), 0, 0, -1);
-		builder.addVertex(matrix.last().pose(), -outer, outer, -edge).setColor(255, 255, 255, 255).setUv(sprite.getU(0), sprite.getV(0)).setLight(light).setNormal(matrix.last(), 0, 0, -1);
+		builder.addVertex(matrix.last().pose(), outer, outer, -edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, texWidth), CRRenderUtil.getScaledV(sprite, 0)).setLight(light).setNormal(matrix.last(), 0, 0, -1);
+		builder.addVertex(matrix.last().pose(), outer, inner, -edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, texWidth), CRRenderUtil.getScaledV(sprite, innerTex)).setLight(light).setNormal(matrix.last(), 0, 0, -1);
+		builder.addVertex(matrix.last().pose(), -outer, inner, -edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, 0), CRRenderUtil.getScaledV(sprite, innerTex)).setLight(light).setNormal(matrix.last(), 0, 0, -1);
+		builder.addVertex(matrix.last().pose(), -outer, outer, -edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, 0), CRRenderUtil.getScaledV(sprite, 0)).setLight(light).setNormal(matrix.last(), 0, 0, -1);
 //		buf.pos(outer, outer, -edge).tex(texWidth, 0);
 //		buf.pos(outer, inner, -edge).tex(texWidth, innerTex);
 //		buf.pos(-outer, inner, -edge).tex(0, innerTex);
 //		buf.pos(-outer, outer, -edge).tex(0, 0);
 
-		builder.addVertex(matrix.last().pose(), outer, -outer, edge).setColor(255, 255, 255, 255).setUv(sprite.getU(texWidth), sprite.getV(0)).setLight(light).setNormal(matrix.last(), 0, 0, 1);
-		builder.addVertex(matrix.last().pose(), outer, -inner, edge).setColor(255, 255, 255, 255).setUv(sprite.getU(texWidth), sprite.getV(innerTex)).setLight(light).setNormal(matrix.last(), 0, 0, 1);
-		builder.addVertex(matrix.last().pose(), -outer, -inner, edge).setColor(255, 255, 255, 255).setUv(sprite.getU(0), sprite.getV(innerTex)).setLight(light).setNormal(matrix.last(), 0, 0, 1);
-		builder.addVertex(matrix.last().pose(), -outer, -outer, edge).setColor(255, 255, 255, 255).setUv(sprite.getU(0), sprite.getV(0)).setLight(light).setNormal(matrix.last(), 0, 0, 1);
+		builder.addVertex(matrix.last().pose(), outer, -outer, edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, texWidth), CRRenderUtil.getScaledV(sprite, 0)).setLight(light).setNormal(matrix.last(), 0, 0, 1);
+		builder.addVertex(matrix.last().pose(), outer, -inner, edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, texWidth), CRRenderUtil.getScaledV(sprite, innerTex)).setLight(light).setNormal(matrix.last(), 0, 0, 1);
+		builder.addVertex(matrix.last().pose(), -outer, -inner, edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, 0), CRRenderUtil.getScaledV(sprite, innerTex)).setLight(light).setNormal(matrix.last(), 0, 0, 1);
+		builder.addVertex(matrix.last().pose(), -outer, -outer, edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, 0), CRRenderUtil.getScaledV(sprite, 0)).setLight(light).setNormal(matrix.last(), 0, 0, 1);
 //		buf.pos(outer, -outer, edge).tex(texWidth, 0);
 //		buf.pos(outer, -inner, edge).tex(texWidth, innerTex);
 //		buf.pos(-outer, -inner, edge).tex(0, innerTex);
 //		buf.pos(-outer, -outer, edge).tex(0, 0);
 
-		builder.addVertex(matrix.last().pose(), outer, -outer, -edge).setColor(255, 255, 255, 255).setUv(sprite.getU(texWidth), sprite.getV(0)).setLight(light).setNormal(matrix.last(), 0, 0, -1);
-		builder.addVertex(matrix.last().pose(), -outer, -outer, -edge).setColor(255, 255, 255, 255).setUv(sprite.getU(0), sprite.getV(0)).setLight(light).setNormal(matrix.last(), 0, 0, -1);
-		builder.addVertex(matrix.last().pose(), -outer, -inner, -edge).setColor(255, 255, 255, 255).setUv(sprite.getU(0), sprite.getV(innerTex)).setLight(light).setNormal(matrix.last(), 0, 0, -1);
-		builder.addVertex(matrix.last().pose(), outer, -inner, -edge).setColor(255, 255, 255, 255).setUv(sprite.getU(texWidth), sprite.getV(innerTex)).setLight(light).setNormal(matrix.last(), 0, 0, -1);
+		builder.addVertex(matrix.last().pose(), outer, -outer, -edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, texWidth), CRRenderUtil.getScaledV(sprite, 0)).setLight(light).setNormal(matrix.last(), 0, 0, -1);
+		builder.addVertex(matrix.last().pose(), -outer, -outer, -edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, 0), CRRenderUtil.getScaledV(sprite, 0)).setLight(light).setNormal(matrix.last(), 0, 0, -1);
+		builder.addVertex(matrix.last().pose(), -outer, -inner, -edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, 0), CRRenderUtil.getScaledV(sprite, innerTex)).setLight(light).setNormal(matrix.last(), 0, 0, -1);
+		builder.addVertex(matrix.last().pose(), outer, -inner, -edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, texWidth), CRRenderUtil.getScaledV(sprite, innerTex)).setLight(light).setNormal(matrix.last(), 0, 0, -1);
 //		buf.pos(outer, -outer, -edge).tex(texWidth, 0);
 //		buf.pos(-outer, -outer, -edge).tex(0, 0);
 //		buf.pos(-outer, -inner, -edge).tex(0, innerTex);
 //		buf.pos(outer, -inner, -edge).tex(texWidth, innerTex);
 
-		builder.addVertex(matrix.last().pose(), outer, inner, edge).setColor(255, 255, 255, 255).setUv(sprite.getU(0), sprite.getV(innerTex)).setLight(light).setNormal(matrix.last(), 0, 0, 1);
-		builder.addVertex(matrix.last().pose(), inner, inner, edge).setColor(255, 255, 255, 255).setUv(sprite.getU(innerTex), sprite.getV(innerTex)).setLight(light).setNormal(matrix.last(), 0, 0, 1);
-		builder.addVertex(matrix.last().pose(), inner, -inner, edge).setColor(255, 255, 255, 255).setUv(sprite.getU(innerTex), sprite.getV(texWidth - innerTex)).setLight(light).setNormal(matrix.last(), 0, 0, 1);
-		builder.addVertex(matrix.last().pose(), outer, -inner, edge).setColor(255, 255, 255, 255).setUv(sprite.getU(0), sprite.getV(texWidth - innerTex)).setLight(light).setNormal(matrix.last(), 0, 0, 1);
+		builder.addVertex(matrix.last().pose(), outer, inner, edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, 0), CRRenderUtil.getScaledV(sprite, innerTex)).setLight(light).setNormal(matrix.last(), 0, 0, 1);
+		builder.addVertex(matrix.last().pose(), inner, inner, edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, innerTex), CRRenderUtil.getScaledV(sprite, innerTex)).setLight(light).setNormal(matrix.last(), 0, 0, 1);
+		builder.addVertex(matrix.last().pose(), inner, -inner, edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, innerTex), CRRenderUtil.getScaledV(sprite, texWidth - innerTex)).setLight(light).setNormal(matrix.last(), 0, 0, 1);
+		builder.addVertex(matrix.last().pose(), outer, -inner, edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, 0), CRRenderUtil.getScaledV(sprite, texWidth - innerTex)).setLight(light).setNormal(matrix.last(), 0, 0, 1);
 //		buf.pos(outer, inner, edge).tex(0, innerTex);
 //		buf.pos(inner, inner, edge).tex(innerTex, innerTex);
 //		buf.pos(inner, -inner, edge).tex(innerTex, texWidth - innerTex);
 //		buf.pos(outer, -inner, edge).tex(0, texWidth - innerTex);
 
-		builder.addVertex(matrix.last().pose(), outer, inner, -edge).setColor(255, 255, 255, 255).setUv(sprite.getU(0), sprite.getV(innerTex)).setLight(light).setNormal(matrix.last(), 0, 0, -1);
-		builder.addVertex(matrix.last().pose(), outer, -inner, -edge).setColor(255, 255, 255, 255).setUv(sprite.getU(0), sprite.getV(texWidth - innerTex)).setLight(light).setNormal(matrix.last(), 0, 0, -1);
-		builder.addVertex(matrix.last().pose(), inner, -inner, -edge).setColor(255, 255, 255, 255).setUv(sprite.getU(innerTex), sprite.getV(texWidth - innerTex)).setLight(light).setNormal(matrix.last(), 0, 0, -1);
-		builder.addVertex(matrix.last().pose(), inner, inner, -edge).setColor(255, 255, 255, 255).setUv(sprite.getU(innerTex), sprite.getV(innerTex)).setLight(light).setNormal(matrix.last(), 0, 0, -1);
+		builder.addVertex(matrix.last().pose(), outer, inner, -edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, 0), CRRenderUtil.getScaledV(sprite, innerTex)).setLight(light).setNormal(matrix.last(), 0, 0, -1);
+		builder.addVertex(matrix.last().pose(), outer, -inner, -edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, 0), CRRenderUtil.getScaledV(sprite, texWidth - innerTex)).setLight(light).setNormal(matrix.last(), 0, 0, -1);
+		builder.addVertex(matrix.last().pose(), inner, -inner, -edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, innerTex), CRRenderUtil.getScaledV(sprite, texWidth - innerTex)).setLight(light).setNormal(matrix.last(), 0, 0, -1);
+		builder.addVertex(matrix.last().pose(), inner, inner, -edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, innerTex), CRRenderUtil.getScaledV(sprite, innerTex)).setLight(light).setNormal(matrix.last(), 0, 0, -1);
 //		buf.pos(outer, inner, -edge).tex(0, innerTex);
 //		buf.pos(outer, -inner, -edge).tex(0, texWidth - innerTex);
 //		buf.pos(inner, -inner, -edge).tex(innerTex, texWidth - innerTex);
 //		buf.pos(inner, inner, -edge).tex(innerTex, innerTex);
 
-		builder.addVertex(matrix.last().pose(), -outer, inner, edge).setColor(255, 255, 255, 255).setUv(sprite.getU(0), sprite.getV(innerTex)).setLight(light).setNormal(matrix.last(), 0, 0, 1);
-		builder.addVertex(matrix.last().pose(), -outer, -inner, edge).setColor(255, 255, 255, 255).setUv(sprite.getU(0), sprite.getV(texWidth - innerTex)).setLight(light).setNormal(matrix.last(), 0, 0, 1);
-		builder.addVertex(matrix.last().pose(), -inner, -inner, edge).setColor(255, 255, 255, 255).setUv(sprite.getU(innerTex), sprite.getV(texWidth - innerTex)).setLight(light).setNormal(matrix.last(), 0, 0, 1);
-		builder.addVertex(matrix.last().pose(), -inner, inner, edge).setColor(255, 255, 255, 255).setUv(sprite.getU(innerTex), sprite.getV(innerTex)).setLight(light).setNormal(matrix.last(), 0, 0, 1);
+		builder.addVertex(matrix.last().pose(), -outer, inner, edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, 0), CRRenderUtil.getScaledV(sprite, innerTex)).setLight(light).setNormal(matrix.last(), 0, 0, 1);
+		builder.addVertex(matrix.last().pose(), -outer, -inner, edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, 0), CRRenderUtil.getScaledV(sprite, texWidth - innerTex)).setLight(light).setNormal(matrix.last(), 0, 0, 1);
+		builder.addVertex(matrix.last().pose(), -inner, -inner, edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, innerTex), CRRenderUtil.getScaledV(sprite, texWidth - innerTex)).setLight(light).setNormal(matrix.last(), 0, 0, 1);
+		builder.addVertex(matrix.last().pose(), -inner, inner, edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, innerTex), CRRenderUtil.getScaledV(sprite, innerTex)).setLight(light).setNormal(matrix.last(), 0, 0, 1);
 //		buf.pos(-outer, inner, edge).tex(0, innerTex);
 //		buf.pos(-outer, -inner, edge).tex(0, texWidth - innerTex);
 //		buf.pos(-inner, -inner, edge).tex(innerTex, texWidth - innerTex);
 //		buf.pos(-inner, inner, edge).tex(innerTex, innerTex);
 
-		builder.addVertex(matrix.last().pose(), -outer, inner, -edge).setColor(255, 255, 255, 255).setUv(sprite.getU(0), sprite.getV(innerTex)).setLight(light).setNormal(matrix.last(), 0, 0, -1);
-		builder.addVertex(matrix.last().pose(), -inner, inner, -edge).setColor(255, 255, 255, 255).setUv(sprite.getU(innerTex), sprite.getV(innerTex)).setLight(light).setNormal(matrix.last(), 0, 0, -1);
-		builder.addVertex(matrix.last().pose(), -inner, -inner, -edge).setColor(255, 255, 255, 255).setUv(sprite.getU(innerTex), sprite.getV(texWidth - innerTex)).setLight(light).setNormal(matrix.last(), 0, 0, -1);
-		builder.addVertex(matrix.last().pose(), -outer, -inner, -edge).setColor(255, 255, 255, 255).setUv(sprite.getU(0), sprite.getV(texWidth - innerTex)).setLight(light).setNormal(matrix.last(), 0, 0, -1);
+		builder.addVertex(matrix.last().pose(), -outer, inner, -edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, 0), CRRenderUtil.getScaledV(sprite, innerTex)).setLight(light).setNormal(matrix.last(), 0, 0, -1);
+		builder.addVertex(matrix.last().pose(), -inner, inner, -edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, innerTex), CRRenderUtil.getScaledV(sprite, innerTex)).setLight(light).setNormal(matrix.last(), 0, 0, -1);
+		builder.addVertex(matrix.last().pose(), -inner, -inner, -edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, innerTex), CRRenderUtil.getScaledV(sprite, texWidth - innerTex)).setLight(light).setNormal(matrix.last(), 0, 0, -1);
+		builder.addVertex(matrix.last().pose(), -outer, -inner, -edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, 0), CRRenderUtil.getScaledV(sprite, texWidth - innerTex)).setLight(light).setNormal(matrix.last(), 0, 0, -1);
 //		buf.pos(-outer, inner, -edge).tex(0, innerTex);
 //		buf.pos(-inner, inner, -edge).tex(innerTex, innerTex);
 //		buf.pos(-inner, -inner, -edge).tex(innerTex, texWidth - innerTex);
@@ -212,37 +212,37 @@ public class FluxNodeRenderer extends EntropyRenderer<FluxNodeTileEntity>{
 
 		//Outer rim
 
-		builder.addVertex(matrix.last().pose(), -outer, -outer, -edge).setColor(255, 255, 255, 255).setUv(sprite.getU(texWidth), sprite.getV(0)).setLight(light).setNormal(matrix.last(), 0, -1, 0);
-		builder.addVertex(matrix.last().pose(), outer, -outer, -edge).setColor(255, 255, 255, 255).setUv(sprite.getU(texWidth), sprite.getV(texWidth)).setLight(light).setNormal(matrix.last(), 0, -1, 0);
-		builder.addVertex(matrix.last().pose(), outer, -outer, edge).setColor(255, 255, 255, 255).setUv(sprite.getU(edgeEnd), sprite.getV(texWidth)).setLight(light).setNormal(matrix.last(), 0, -1, 0);
-		builder.addVertex(matrix.last().pose(), -outer, -outer, edge).setColor(255, 255, 255, 255).setUv(sprite.getU(edgeEnd), sprite.getV(0)).setLight(light).setNormal(matrix.last(), 0, -1, 0);
+		builder.addVertex(matrix.last().pose(), -outer, -outer, -edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, texWidth), CRRenderUtil.getScaledV(sprite, 0)).setLight(light).setNormal(matrix.last(), 0, -1, 0);
+		builder.addVertex(matrix.last().pose(), outer, -outer, -edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, texWidth), CRRenderUtil.getScaledV(sprite, texWidth)).setLight(light).setNormal(matrix.last(), 0, -1, 0);
+		builder.addVertex(matrix.last().pose(), outer, -outer, edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, edgeEnd), CRRenderUtil.getScaledV(sprite, texWidth)).setLight(light).setNormal(matrix.last(), 0, -1, 0);
+		builder.addVertex(matrix.last().pose(), -outer, -outer, edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, edgeEnd), CRRenderUtil.getScaledV(sprite, 0)).setLight(light).setNormal(matrix.last(), 0, -1, 0);
 //		buf.pos(-outer, -outer, -edge).tex(texWidth, 0);
 //		buf.pos(outer, -outer, -edge).tex(texWidth, texWidth);
 //		buf.pos(outer, -outer, edge).tex(edgeEnd, texWidth);
 //		buf.pos(-outer, -outer, edge).tex(edgeEnd, 0);
 
-		builder.addVertex(matrix.last().pose(), -outer, outer, -edge).setColor(255, 255, 255, 255).setUv(sprite.getU(texWidth), sprite.getV(0)).setLight(light).setNormal(matrix.last(), 0, 1, 0);
-		builder.addVertex(matrix.last().pose(), -outer, outer, edge).setColor(255, 255, 255, 255).setUv(sprite.getU(edgeEnd), sprite.getV(0)).setLight(light).setNormal(matrix.last(), 0, 1, 0);
-		builder.addVertex(matrix.last().pose(), outer, outer, edge).setColor(255, 255, 255, 255).setUv(sprite.getU(edgeEnd), sprite.getV(texWidth)).setLight(light).setNormal(matrix.last(), 0, 1, 0);
-		builder.addVertex(matrix.last().pose(), outer, outer, -edge).setColor(255, 255, 255, 255).setUv(sprite.getU(texWidth), sprite.getV(texWidth)).setLight(light).setNormal(matrix.last(), 0, 1, 0);
+		builder.addVertex(matrix.last().pose(), -outer, outer, -edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, texWidth), CRRenderUtil.getScaledV(sprite, 0)).setLight(light).setNormal(matrix.last(), 0, 1, 0);
+		builder.addVertex(matrix.last().pose(), -outer, outer, edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, edgeEnd), CRRenderUtil.getScaledV(sprite, 0)).setLight(light).setNormal(matrix.last(), 0, 1, 0);
+		builder.addVertex(matrix.last().pose(), outer, outer, edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, edgeEnd), CRRenderUtil.getScaledV(sprite, texWidth)).setLight(light).setNormal(matrix.last(), 0, 1, 0);
+		builder.addVertex(matrix.last().pose(), outer, outer, -edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, texWidth), CRRenderUtil.getScaledV(sprite, texWidth)).setLight(light).setNormal(matrix.last(), 0, 1, 0);
 //		buf.pos(-outer, outer, -edge).tex(texWidth, 0);
 //		buf.pos(-outer, outer, edge).tex(edgeEnd, 0);
 //		buf.pos(outer, outer, edge).tex(edgeEnd, texWidth);
 //		buf.pos(outer, outer, -edge).tex(texWidth, texWidth);
 
-		builder.addVertex(matrix.last().pose(), -outer, -outer, -edge).setColor(255, 255, 255, 255).setUv(sprite.getU(texWidth), sprite.getV(0)).setLight(light).setNormal(matrix.last(), -1, 0, 0);
-		builder.addVertex(matrix.last().pose(), -outer, -outer, edge).setColor(255, 255, 255, 255).setUv(sprite.getU(edgeEnd), sprite.getV(0)).setLight(light).setNormal(matrix.last(), -1, 0, 0);
-		builder.addVertex(matrix.last().pose(), -outer, outer, edge).setColor(255, 255, 255, 255).setUv(sprite.getU(edgeEnd), sprite.getV(texWidth)).setLight(light).setNormal(matrix.last(), -1, 0, 0);
-		builder.addVertex(matrix.last().pose(), -outer, outer, -edge).setColor(255, 255, 255, 255).setUv(sprite.getU(texWidth), sprite.getV(texWidth)).setLight(light).setNormal(matrix.last(), -1, 0, 0);
+		builder.addVertex(matrix.last().pose(), -outer, -outer, -edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, texWidth), CRRenderUtil.getScaledV(sprite, 0)).setLight(light).setNormal(matrix.last(), -1, 0, 0);
+		builder.addVertex(matrix.last().pose(), -outer, -outer, edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, edgeEnd), CRRenderUtil.getScaledV(sprite, 0)).setLight(light).setNormal(matrix.last(), -1, 0, 0);
+		builder.addVertex(matrix.last().pose(), -outer, outer, edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, edgeEnd), CRRenderUtil.getScaledV(sprite, texWidth)).setLight(light).setNormal(matrix.last(), -1, 0, 0);
+		builder.addVertex(matrix.last().pose(), -outer, outer, -edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, texWidth), CRRenderUtil.getScaledV(sprite, texWidth)).setLight(light).setNormal(matrix.last(), -1, 0, 0);
 //		buf.pos(-outer, -outer, -edge).tex(texWidth, 0);
 //		buf.pos(-outer, -outer, edge).tex(edgeEnd, 0);
 //		buf.pos(-outer, outer, edge).tex(edgeEnd, texWidth);
 //		buf.pos(-outer, outer, -edge).tex(texWidth, texWidth);
 
-		builder.addVertex(matrix.last().pose(), outer, -outer, -edge).setColor(255, 255, 255, 255).setUv(sprite.getU(texWidth), sprite.getV(0)).setLight(light).setNormal(matrix.last(), 1, 0, 0);
-		builder.addVertex(matrix.last().pose(), outer, outer, -edge).setColor(255, 255, 255, 255).setUv(sprite.getU(texWidth), sprite.getV(texWidth)).setLight(light).setNormal(matrix.last(), 1, 0, 0);
-		builder.addVertex(matrix.last().pose(), outer, outer, edge).setColor(255, 255, 255, 255).setUv(sprite.getU(edgeEnd), sprite.getV(texWidth)).setLight(light).setNormal(matrix.last(), 1, 0, 0);
-		builder.addVertex(matrix.last().pose(), outer, -outer, edge).setColor(255, 255, 255, 255).setUv(sprite.getU(edgeEnd), sprite.getV(0)).setLight(light).setNormal(matrix.last(), 1, 0, 0);
+		builder.addVertex(matrix.last().pose(), outer, -outer, -edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, texWidth), CRRenderUtil.getScaledV(sprite, 0)).setLight(light).setNormal(matrix.last(), 1, 0, 0);
+		builder.addVertex(matrix.last().pose(), outer, outer, -edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, texWidth), CRRenderUtil.getScaledV(sprite, texWidth)).setLight(light).setNormal(matrix.last(), 1, 0, 0);
+		builder.addVertex(matrix.last().pose(), outer, outer, edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, edgeEnd), CRRenderUtil.getScaledV(sprite, texWidth)).setLight(light).setNormal(matrix.last(), 1, 0, 0);
+		builder.addVertex(matrix.last().pose(), outer, -outer, edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, edgeEnd), CRRenderUtil.getScaledV(sprite, 0)).setLight(light).setNormal(matrix.last(), 1, 0, 0);
 //		buf.pos(outer, -outer, -edge).tex(texWidth, 0);
 //		buf.pos(outer, outer, -edge).tex(texWidth, texWidth);
 //		buf.pos(outer, outer, edge).tex(edgeEnd, texWidth);
@@ -250,37 +250,37 @@ public class FluxNodeRenderer extends EntropyRenderer<FluxNodeTileEntity>{
 
 		//Inner rim
 
-		builder.addVertex(matrix.last().pose(), -inner, -inner, -edge).setColor(255, 255, 255, 255).setUv(sprite.getU(texWidth), sprite.getV(0)).setLight(light).setNormal(matrix.last(), 0, -1, 0);
-		builder.addVertex(matrix.last().pose(), -inner, -inner, edge).setColor(255, 255, 255, 255).setUv(sprite.getU(edgeEnd), sprite.getV(0)).setLight(light).setNormal(matrix.last(), 0, -1, 0);
-		builder.addVertex(matrix.last().pose(), inner, -inner, edge).setColor(255, 255, 255, 255).setUv(sprite.getU(edgeEnd), sprite.getV(texWidth - innerTex)).setLight(light).setNormal(matrix.last(), 0, -1, 0);
-		builder.addVertex(matrix.last().pose(), inner, -inner, -edge).setColor(255, 255, 255, 255).setUv(sprite.getU(texWidth), sprite.getV(texWidth - innerTex)).setLight(light).setNormal(matrix.last(), 0, -1, 0);
+		builder.addVertex(matrix.last().pose(), -inner, -inner, -edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, texWidth), CRRenderUtil.getScaledV(sprite, 0)).setLight(light).setNormal(matrix.last(), 0, -1, 0);
+		builder.addVertex(matrix.last().pose(), -inner, -inner, edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, edgeEnd), CRRenderUtil.getScaledV(sprite, 0)).setLight(light).setNormal(matrix.last(), 0, -1, 0);
+		builder.addVertex(matrix.last().pose(), inner, -inner, edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, edgeEnd), CRRenderUtil.getScaledV(sprite, texWidth - innerTex)).setLight(light).setNormal(matrix.last(), 0, -1, 0);
+		builder.addVertex(matrix.last().pose(), inner, -inner, -edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, texWidth), CRRenderUtil.getScaledV(sprite, texWidth - innerTex)).setLight(light).setNormal(matrix.last(), 0, -1, 0);
 //		buf.pos(-inner, -inner, -edge).tex(texWidth, 0);
 //		buf.pos(-inner, -inner, edge).tex(edgeEnd, 0);
 //		buf.pos(inner, -inner, edge).tex(edgeEnd, texWidth - innerTex);
 //		buf.pos(inner, -inner, -edge).tex(texWidth, texWidth - innerTex);
 
-		builder.addVertex(matrix.last().pose(), -inner, inner, -edge).setColor(255, 255, 255, 255).setUv(sprite.getU(texWidth), sprite.getV(0)).setLight(light).setNormal(matrix.last(), 0, 1, 0);
-		builder.addVertex(matrix.last().pose(), inner, inner, -edge).setColor(255, 255, 255, 255).setUv(sprite.getU(texWidth), sprite.getV(texWidth - innerTex)).setLight(light).setNormal(matrix.last(), 0, 1, 0);
-		builder.addVertex(matrix.last().pose(), inner, inner, edge).setColor(255, 255, 255, 255).setUv(sprite.getU(edgeEnd), sprite.getV(texWidth - innerTex)).setLight(light).setNormal(matrix.last(), 0, 1, 0);
-		builder.addVertex(matrix.last().pose(), -inner, inner, edge).setColor(255, 255, 255, 255).setUv(sprite.getU(edgeEnd), sprite.getV(0)).setLight(light).setNormal(matrix.last(), 0, 1, 0);
+		builder.addVertex(matrix.last().pose(), -inner, inner, -edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, texWidth), CRRenderUtil.getScaledV(sprite, 0)).setLight(light).setNormal(matrix.last(), 0, 1, 0);
+		builder.addVertex(matrix.last().pose(), inner, inner, -edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, texWidth), CRRenderUtil.getScaledV(sprite, texWidth - innerTex)).setLight(light).setNormal(matrix.last(), 0, 1, 0);
+		builder.addVertex(matrix.last().pose(), inner, inner, edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, edgeEnd), CRRenderUtil.getScaledV(sprite, texWidth - innerTex)).setLight(light).setNormal(matrix.last(), 0, 1, 0);
+		builder.addVertex(matrix.last().pose(), -inner, inner, edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, edgeEnd), CRRenderUtil.getScaledV(sprite, 0)).setLight(light).setNormal(matrix.last(), 0, 1, 0);
 //		buf.pos(-inner, inner, -edge).tex(texWidth, 0);
 //		buf.pos(inner, inner, -edge).tex(texWidth, texWidth - innerTex);
 //		buf.pos(inner, inner, edge).tex(edgeEnd, texWidth - innerTex);
 //		buf.pos(-inner, inner, edge).tex(edgeEnd, 0);
 
-		builder.addVertex(matrix.last().pose(), -inner, -inner, -edge).setColor(255, 255, 255, 255).setUv(sprite.getU(texWidth), sprite.getV(0)).setLight(light).setNormal(matrix.last(), -1, 0, 0);
-		builder.addVertex(matrix.last().pose(), -inner, inner, -edge).setColor(255, 255, 255, 255).setUv(sprite.getU(texWidth), sprite.getV(texWidth - innerTex)).setLight(light).setNormal(matrix.last(), -1, 0, 0);
-		builder.addVertex(matrix.last().pose(), -inner, inner, edge).setColor(255, 255, 255, 255).setUv(sprite.getU(edgeEnd), sprite.getV(texWidth - innerTex)).setLight(light).setNormal(matrix.last(), -1, 0, 0);
-		builder.addVertex(matrix.last().pose(), -inner, -inner, edge).setColor(255, 255, 255, 255).setUv(sprite.getU(edgeEnd), sprite.getV(0)).setLight(light).setNormal(matrix.last(), -1, 0, 0);
+		builder.addVertex(matrix.last().pose(), -inner, -inner, -edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, texWidth), CRRenderUtil.getScaledV(sprite, 0)).setLight(light).setNormal(matrix.last(), -1, 0, 0);
+		builder.addVertex(matrix.last().pose(), -inner, inner, -edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, texWidth), CRRenderUtil.getScaledV(sprite, texWidth - innerTex)).setLight(light).setNormal(matrix.last(), -1, 0, 0);
+		builder.addVertex(matrix.last().pose(), -inner, inner, edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, edgeEnd), CRRenderUtil.getScaledV(sprite, texWidth - innerTex)).setLight(light).setNormal(matrix.last(), -1, 0, 0);
+		builder.addVertex(matrix.last().pose(), -inner, -inner, edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, edgeEnd), CRRenderUtil.getScaledV(sprite, 0)).setLight(light).setNormal(matrix.last(), -1, 0, 0);
 //		buf.pos(-inner, -inner, -edge).tex(texWidth, 0);
 //		buf.pos(-inner, inner, -edge).tex(texWidth, texWidth - innerTex);
 //		buf.pos(-inner, inner, edge).tex(edgeEnd, texWidth - innerTex);
 //		buf.pos(-inner, -inner, edge).tex(edgeEnd, 0);
 
-		builder.addVertex(matrix.last().pose(), inner, -inner, -edge).setColor(255, 255, 255, 255).setUv(sprite.getU(texWidth), sprite.getV(0)).setLight(light).setNormal(matrix.last(), 1, 0, 0);
-		builder.addVertex(matrix.last().pose(), inner, -inner, edge).setColor(255, 255, 255, 255).setUv(sprite.getU(edgeEnd), sprite.getV(0)).setLight(light).setNormal(matrix.last(), 1, 0, 0);
-		builder.addVertex(matrix.last().pose(), inner, inner, edge).setColor(255, 255, 255, 255).setUv(sprite.getU(edgeEnd), sprite.getV(texWidth - innerTex)).setLight(light).setNormal(matrix.last(), 1, 0, 0);
-		builder.addVertex(matrix.last().pose(), inner, inner, -edge).setColor(255, 255, 255, 255).setUv(sprite.getU(texWidth), sprite.getV(texWidth - innerTex)).setLight(light).setNormal(matrix.last(), 1, 0, 0);
+		builder.addVertex(matrix.last().pose(), inner, -inner, -edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, texWidth), CRRenderUtil.getScaledV(sprite, 0)).setLight(light).setNormal(matrix.last(), 1, 0, 0);
+		builder.addVertex(matrix.last().pose(), inner, -inner, edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, edgeEnd), CRRenderUtil.getScaledV(sprite, 0)).setLight(light).setNormal(matrix.last(), 1, 0, 0);
+		builder.addVertex(matrix.last().pose(), inner, inner, edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, edgeEnd), CRRenderUtil.getScaledV(sprite, texWidth - innerTex)).setLight(light).setNormal(matrix.last(), 1, 0, 0);
+		builder.addVertex(matrix.last().pose(), inner, inner, -edge).setColor(255, 255, 255, 255).setUv(CRRenderUtil.getScaledU(sprite, texWidth), CRRenderUtil.getScaledV(sprite, texWidth - innerTex)).setLight(light).setNormal(matrix.last(), 1, 0, 0);
 //		buf.pos(inner, -inner, -edge).tex(texWidth, 0);
 //		buf.pos(inner, -inner, edge).tex(edgeEnd, 0);
 //		buf.pos(inner, inner, edge).tex(edgeEnd, texWidth - innerTex);

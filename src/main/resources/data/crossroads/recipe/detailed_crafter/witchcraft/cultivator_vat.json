@@ -18,7 +18,7 @@
 			"item": "crossroads:fluid_tube"
 		},
 		"G": {
-			"tag": "c:glass/colorless"
+			"tag": "c:glass_blocks/colorless"
 		},
 		"L": {
 			"item": "minecraft:redstone_lamp"

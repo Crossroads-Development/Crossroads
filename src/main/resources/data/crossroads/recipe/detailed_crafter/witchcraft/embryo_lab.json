@@ -18,7 +18,7 @@
 			"tag": "crossroads:atmos_antenna"
 		},
 		"G": {
-			"tag": "c:glass/colorless"
+			"tag": "c:glass_blocks/colorless"
 		}
 	}
 }

@@ -1,5 +1,5 @@
 {
-	"parent": "crossroads:root",
+	"parent": "crossroads:progress/path/can_unlock_path",
 	"display": {
 		"icon": {
 			"id": "crossroads:florence_flask_glass",

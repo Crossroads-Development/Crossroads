@@ -59,7 +59,7 @@ public class BloodCentrifugeRenderer implements BlockEntityRenderer<BloodCentrif
 
 		//Draw sample 'holder'
 		matrix.translate(0, 0.4F, 0);
-		CRModels.drawBox(matrix, builder, combinedLight, new int[] {tinCol.getRed(), tinCol.getGreen(), tinCol.getBlue(), tinCol.getAlpha()}, supportWid, supportHeight, supportLen, sSprite.getU0(), sSprite.getV0(), sSprite.getU(supportWid * 32F), sSprite.getV(supportLen * 32F), sSprite.getU0(), sSprite.getV0(), sSprite.getU(supportLen * 32F), sSprite.getV(supportHeight * 32F), sSprite.getU0(), sSprite.getV0(), sSprite.getU(supportWid * 32F), sSprite.getV(supportHeight * 32F));
+		CRModels.drawBox(matrix, builder, combinedLight, new int[] {tinCol.getRed(), tinCol.getGreen(), tinCol.getBlue(), tinCol.getAlpha()}, supportWid, supportHeight, supportLen, sSprite.getU0(), sSprite.getV0(), CRRenderUtil.getScaledU(sSprite, supportWid * 32F), CRRenderUtil.getScaledV(sSprite, supportLen * 32F), sSprite.getU0(), sSprite.getV0(), CRRenderUtil.getScaledU(sSprite, supportLen * 32F), CRRenderUtil.getScaledV(sSprite, supportHeight * 32F), sSprite.getU0(), sSprite.getV0(), CRRenderUtil.getScaledU(sSprite, supportWid * 32F), CRRenderUtil.getScaledV(sSprite, supportHeight * 32F));
 
 		//Draw sample(s), if present
 		for(int i = 0; i < sampleCount; i++){

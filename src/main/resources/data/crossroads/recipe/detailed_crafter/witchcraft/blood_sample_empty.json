@@ -14,7 +14,7 @@
 			"tag": "c:strings"
 		},
 		"G": {
-			"tag": "c:glass/colorless"
+			"tag": "c:glass_blocks/colorless"
 		},
 		"P": {
 			"item": "minecraft:paper"
