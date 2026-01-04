@@ -1,8 +1,8 @@
 {
-	"parent": "crossroads:progress/path/technomancy",
+	"parent": "crossroads:progress/misc/distant_golem",
 	"display": {
 		"icon": {
-			"id": "dirt"
+			"id": "minecraft:beacon"
 		},
 		"title": {
 			"translate": "crossroads.advancement.path.technomancy_complete"
@@ -14,8 +14,17 @@
 		"announce_to_chat": true
 	},
 	"criteria": {
-		"command": {
-			"trigger": "minecraft:impossible"
+		"golem_built": {
+			"trigger": "crossroads:golem_built",
+			"conditions": {
+				"min_distance": 100,
+				"beam_source_type": "beam_cannon"
+			}
 		}
-	}
+	},
+	"requirements": [
+		[
+			"golem_built"
+		]
+	]
 }

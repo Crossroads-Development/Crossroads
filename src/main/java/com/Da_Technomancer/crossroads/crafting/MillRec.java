@@ -43,7 +43,7 @@ public class MillRec implements IOptionalRecipe<RecipeInput>{
 		group = name;
 		ingr = input;
 		outputs = output;
-		this.active = false;
+		this.active = true;
 	}
 
 	/**

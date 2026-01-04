@@ -1,0 +1,33 @@
+{
+	"parent": "crossroads:progress/misc/steam_boiler",
+	"display": {
+		"icon": {
+			"id": "crossroads:radiator"
+		},
+		"title": {
+			"translate": "crossroads.advancement.radiator"
+		},
+		"description": {
+			"translate": "crossroads.advancement.radiator.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"has_item": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "crossroads:radiator"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_item"
+		]
+	]
+}

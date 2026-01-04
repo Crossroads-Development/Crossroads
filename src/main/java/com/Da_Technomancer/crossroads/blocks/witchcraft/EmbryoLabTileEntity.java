@@ -84,18 +84,16 @@ public class EmbryoLabTileEntity extends InventoryTE implements INBTReceiver, II
 	}
 
 	public ItemStack addItem(ItemStack stack){
-		if(stack.getItem() == CRItems.separatedBloodSample && template == null){
+		if(stack.getItem() instanceof BloodSample && template == null){
 			//Add blood to an empty lab
-			EntityTemplate bloodTemplate = BloodSample.getEntityTypeData(stack);
 
 //			//Check if the entity is on the blacklist. If so, refuse to add it
 //			if(EntityTemplate.isCloningForbidden(bloodTemplate.entityID())){
 //				return stack;
 //			}
-
-			template = bloodTemplate.withQuality(IPerishable.isSpoiled(stack, level) ? 0 : 20);
-
+			template = BloodSample.getAdjustedTemplate(stack, level);
 			level.setBlockAndUpdate(worldPosition, getBlockState().setValue(CRProperties.ACTIVE, true));
+			stack.shrink(1);
 			setChanged();
 			syncTemplate();
 			return new ItemStack(CRItems.bloodSampleEmpty);
@@ -124,6 +122,7 @@ public class EmbryoLabTileEntity extends InventoryTE implements INBTReceiver, II
 						modiferMap.put(modifierType, modifier);
 					}
 					template = template.withModifiers(modiferMap);
+					stack.shrink(1);
 					setChanged();
 					syncTemplate();
 					return rec.assemble(this, level.registryAccess());
@@ -139,11 +138,11 @@ public class EmbryoLabTileEntity extends InventoryTE implements INBTReceiver, II
 					stack.shrink(1);
 					setChanged();
 					syncTemplate();
-					return stack;
+					return ItemStack.EMPTY;
 				}
 			}
 		}
-		return stack;
+		return ItemStack.EMPTY;
 	}
 
 	@Override

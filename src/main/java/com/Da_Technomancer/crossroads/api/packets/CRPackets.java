@@ -31,6 +31,7 @@ public class CRPackets{
 		registrar.playToClient(SendIntArrayToClient.TYPE, SendIntArrayToClient.STREAM_CODEC, SendIntArrayToClient::handlePacketClient);
 		registrar.playToClient(CreateParticlesOnClient.TYPE, CreateParticlesOnClient.STREAM_CODEC, CreateParticlesOnClient::handlePacketClient);
 		registrar.playToClient(SendCompassTargetToClient.TYPE, SendCompassTargetToClient.STREAM_CODEC, SendCompassTargetToClient::handlePacketClient);
+		registrar.playToServer(SendPathUnlockToServer.TYPE, SendPathUnlockToServer.STREAM_CODEC, SendPathUnlockToServer::handlePacketServer);
 	}
 
 	public static void sendPacketAround(Level world, BlockPos pos, CustomPacketPayload payload){

@@ -60,6 +60,7 @@ public class HydroponicsTroughTileEntity extends InventoryTE implements IFluidCa
 	 * Does not stores seeds that plants subclasses of CropsBlock, FlowerBlock, or TallFlowerBlock- those are handled automatically
 	 * However, if a CropsBlock/FlowerBlock/TallFlowerBlock seed is added to this map, it will override the default behaviour
 	 *
+	 * TODO make this a datapack
 	 * Format: {key: Seed item; value: [needsLight, growthStages, [products]]}
 	 * Other mods can modify this map; If they do, make sure the keyset is the same on the client and server side (values are irrelevant on the client)
 	 */

@@ -1,0 +1,29 @@
+{
+	"parent": "crossroads:progress/misc/flux_sink",
+	"display": {
+		"icon": {
+			"id": "crossroads:gateway_frame"
+		},
+		"title": {
+			"translate": "crossroads.advancement.gateway_travel"
+		},
+		"description": {
+			"translate": "crossroads.advancement.gateway_travel.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"travel": {
+			"trigger": "crossroads:gateway_travel",
+			"conditions": {
+
+			}
+		}
+	},
+	"requirements": [
+		[
+			"travel"
+		]
+	]
+}

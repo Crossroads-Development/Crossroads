@@ -1,0 +1,41 @@
+{
+	"parent": "crossroads:progress/root",
+	"display": {
+		"icon": {
+			"id": "crossroads:heat_cable_wool"
+		},
+		"title": {
+			"translate": "crossroads.advancement.heat_cables"
+		},
+		"description": {
+			"translate": "crossroads.advancement.heat_cables.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"has_item": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": [
+							"crossroads:heat_cable_ceramic",
+							"crossroads:heat_cable_densus",
+							"crossroads:heat_cable_dirt",
+							"crossroads:heat_cable_ice",
+							"crossroads:heat_cable_obsidian",
+							"crossroads:heat_cable_slime",
+							"crossroads:heat_cable_wool"
+						]
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_item"
+		]
+	]
+}

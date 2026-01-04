@@ -1,0 +1,33 @@
+{
+	"parent": "crossroads:progress/misc/embryo_lab",
+	"display": {
+		"icon": {
+			"id": "crossroads:incubator"
+		},
+		"title": {
+			"translate": "crossroads.advancement.incubator"
+		},
+		"description": {
+			"translate": "crossroads.advancement.incubator.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"has_item": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "crossroads:incubator"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_item"
+		]
+	]
+}

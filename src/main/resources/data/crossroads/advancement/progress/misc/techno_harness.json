@@ -1,0 +1,36 @@
+{
+	"parent": "crossroads:progress/misc/flux_sink",
+	"display": {
+		"icon": {
+			"id": "crossroads:beacon_harness"
+		},
+		"title": {
+			"translate": "crossroads.advancement.techno_harness"
+		},
+		"description": {
+			"translate": "crossroads.advancement.techno_harness.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"has_item": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": [
+							"crossroads:beacon_harness",
+							"crossroads:chrono_harness"
+						]
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_item"
+		]
+	]
+}

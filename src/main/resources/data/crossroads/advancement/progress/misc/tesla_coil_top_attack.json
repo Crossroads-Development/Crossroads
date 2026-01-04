@@ -1,0 +1,33 @@
+{
+	"parent": "crossroads:progress/path/alchemy",
+	"display": {
+		"icon": {
+			"id": "crossroads:tesla_coil_top_attack"
+		},
+		"title": {
+			"translate": "crossroads.advancement.tesla_coil_top_attack"
+		},
+		"description": {
+			"translate": "crossroads.advancement.tesla_coil_top_attack.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"has_item": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "crossroads:tesla_coil_top_attack"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_item"
+		]
+	]
+}

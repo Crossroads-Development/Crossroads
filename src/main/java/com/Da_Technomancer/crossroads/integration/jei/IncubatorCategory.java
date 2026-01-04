@@ -31,7 +31,7 @@ public class IncubatorCategory implements IRecipeCategory<IncubatorRec>{
 	protected IncubatorCategory(IGuiHelper guiHelper){
 		back = guiHelper.createBlankDrawable(180, 100);
 		slot = guiHelper.getSlotDrawable();
-		arrowStatic = guiHelper.createDrawable(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/gui/container/incubator_gui.png"), 43, 35, 54, 10);
+		arrowStatic = guiHelper.createDrawable(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/gui/container/incubator_gui.png"), 61, 35, 54, 10);
 		arrow = guiHelper.createAnimatedDrawable(guiHelper.createDrawable(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/gui/container/incubator_gui.png"), 176, 0, 54, 10), 40, IDrawableAnimated.StartDirection.LEFT, false);
 		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(CRBlocks.incubator, 1));
 	}

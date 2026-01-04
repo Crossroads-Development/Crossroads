@@ -13,8 +13,6 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
@@ -230,11 +228,6 @@ public class DetailedCrafterContainer extends RecipeBookMenu<CraftingInput, Craf
 			outInv.setItem(0, itemstack);
 			serverplayerentity.connection.send(new ClientboundContainerSetSlotPacket(containerId, incrementStateId(), 0, itemstack));
 		}
-	}
-
-	private void playUnlockSound(){
-		//TODO
-		world.playSound(player, player.blockPosition(), SoundEvents.PLAYER_LEVELUP, SoundSource.PLAYERS, 2, 0);
 	}
 
 	private static RecipeHolder<? extends CraftingRecipe> getMatchedRecipe(Player thePlayer, CraftingContainer craftMatrix){

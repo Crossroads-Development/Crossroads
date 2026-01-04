@@ -16,18 +16,20 @@ import net.neoforged.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
+import java.util.List;
 
 public class AdvancementTracker{
 
 	private static final HashMap<String, Boolean> progressMap = new HashMap<>(32);
 
 	/**
-	 * Tracks Crossroads advancements in the crossroads/advancements/progress/ directory. Crossroads advancements outside this directory are untracked.
+	 * Tracks Crossroads advancements in the crossroads/advancements/progress/alignment and crossroads/advancements/progress/path directories. Crossroads advancements outside this directory are untracked.
 	 * Required for hasAdvancement() to work on the client side
 	 * Usually called in init() in relevant screens
 	 */
 	@OnlyIn(Dist.CLIENT)
 	public static void listen(){
+		Listener.INSTANCE.onAdvancementsCleared();
 		Minecraft.getInstance().player.connection.getAdvancements().setListener(Listener.INSTANCE);
 	}
 
@@ -36,7 +38,7 @@ public class AdvancementTracker{
 	}
 
 	private static boolean shouldTrackLocation(String id){
-		return id.startsWith("progress");
+		return (id.startsWith("progress/alignment") || (id.startsWith("progress/path"))) && !id.contains(":");
 	}
 
 	/**

@@ -1,0 +1,33 @@
+{
+	"parent": "crossroads:progress/misc/incubator",
+	"display": {
+		"icon": {
+			"id": "crossroads:blood_centrifuge"
+		},
+		"title": {
+			"translate": "crossroads.advancement.blood_centrifuge"
+		},
+		"description": {
+			"translate": "crossroads.advancement.blood_centrifuge.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"has_item": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "crossroads:blood_centrifuge"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_item"
+		]
+	]
+}

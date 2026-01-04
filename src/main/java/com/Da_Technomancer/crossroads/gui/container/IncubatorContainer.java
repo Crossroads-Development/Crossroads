@@ -22,8 +22,8 @@ public class IncubatorContainer extends MachineContainer<IncubatorTileEntity>{
 
 	@Override
 	protected void addSlots(){
-		addSlot(new StrictSlot(te, 0, 26, 23));//Input 1
-		addSlot(new StrictSlot(te, 1, 26, 41));//Input 2
-		addSlot(new OutputSlot(te, 2, 98, 32));//Output
+		addSlot(new StrictSlot(te, 0, 44, 23));//Input 1
+		addSlot(new StrictSlot(te, 1, 44, 41));//Input 2
+		addSlot(new OutputSlot(te, 2, 116, 32));//Output
 	}
 }

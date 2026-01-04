@@ -25,7 +25,7 @@ public record PatientEntityModifier(int complexity, int soulComplexity) implemen
 		return entity;
 	}
 
-	private static final Component NAME = Component.translatable("ent_mod.patient").withStyle(MiscUtil.TT_DYNAMIC);
+	private static final Component NAME = Component.translatable("ent_mod.patient");
 
 	@Override
 	public Component getName(@Nullable EntityType<?> entityType, @Nullable Level level){

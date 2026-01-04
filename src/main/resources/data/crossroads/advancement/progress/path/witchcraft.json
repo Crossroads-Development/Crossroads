@@ -1,5 +1,5 @@
 {
-	"parent": "crossroads:progress/path/can_unlock_path",
+	"parent": "crossroads:progress/misc/detailed_crafter",
 	"display": {
 		"icon": {
 			"id": "crossroads:syringe",

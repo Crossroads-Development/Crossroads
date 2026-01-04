@@ -40,7 +40,7 @@ public class EmbryoLabScreen extends MachineScreen<EmbryoLabContainer, EmbryoLab
 			te.template.addTooltip(lines, te.getLevel());
 			int yOffset = 0;
 			for(Component line : lines){
-				for(FormattedCharSequence formattedcharsequence : font.split(line, 30)){
+				for(FormattedCharSequence formattedcharsequence : font.split(line, 150)){
 					matrix.drawString(font, formattedcharsequence, 8, 25 + yOffset, 0x404040, false);
 					yOffset += 9;
 				}

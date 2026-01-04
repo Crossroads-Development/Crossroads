@@ -1,8 +1,8 @@
 {
-	"parent": "crossroads:progress/path/witchcraft",
+	"parent": "crossroads:progress/misc/perfect_clone",
 	"display": {
 		"icon": {
-			"id": "dirt"
+			"id": "minecraft:beacon"
 		},
 		"title": {
 			"translate": "crossroads.advancement.path.witchcraft_complete"
@@ -14,8 +14,17 @@
 		"announce_to_chat": true
 	},
 	"criteria": {
-		"command": {
-			"trigger": "minecraft:impossible"
+		"clone": {
+			"trigger": "crossroads:clone_spawned",
+			"conditions": {
+				"min_quality": 100,
+				"viable": "viable"
+			}
 		}
-	}
+	},
+	"requirements": [
+		[
+			"clone"
+		]
+	]
 }

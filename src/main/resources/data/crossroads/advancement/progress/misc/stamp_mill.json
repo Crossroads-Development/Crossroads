@@ -1,0 +1,49 @@
+{
+	"parent": "crossroads:progress/misc/master_axis",
+	"display": {
+		"icon": {
+			"id": "crossroads:ore_gravel",
+			"components": {
+				"crossroads:material": "gold"
+			}
+		},
+		"title": {
+			"translate": "crossroads.advancement.stamp_mill"
+		},
+		"description": {
+			"translate": "crossroads.advancement.stamp_mill.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"has_item_mill": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "crossroads:stamp_mill"
+					}
+				]
+			}
+		},
+		"has_item_furn": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "crossroads:blast_furnace"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_item_mill"
+		],
+		[
+			"has_item_furn"
+		]
+	]
+}

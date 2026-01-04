@@ -6,7 +6,6 @@ import com.Da_Technomancer.crossroads.api.rotary.IAxleCapable;
 import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.api.witchcraft.EntityTemplate;
-import com.Da_Technomancer.crossroads.api.witchcraft.IPerishable;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.BloodCentrifugeContainer;
@@ -89,7 +88,7 @@ public class BloodCentrifugeTileEntity extends InventoryTE implements IAxleCapab
 				int qualityChange = Math.max(0, (int) Math.round(MAX_ADDED_QUALITY * (1D - (deviation / REQUIRED) / MAXIMUM_AVG_DEVIATION)));
 				for(int i = 0; i < 2; i++){
 					if(!inventory[i].isEmpty()){
-						EntityTemplate template = BloodSample.getEntityTypeData(inventory[i]);
+						EntityTemplate template = BloodSample.getBaseTemplate(inventory[i]);
 						//Sets the output to a copy of the input with the item as a separated blood sample instead of normal blood sample
 						//Has to copy spoil time, template, any other data
 						inventory[2 + i] = inventory[i].transmuteCopy(CRItems.separatedBloodSample);
@@ -176,7 +175,7 @@ public class BloodCentrifugeTileEntity extends InventoryTE implements IAxleCapab
 	@Override
 	@Nullable
 	public IAxleHandler getAxleHandler(Direction dir){
-		if(dir == Direction.UP){
+		if(dir == Direction.UP || dir == null){
 			return axleHandler;
 		}
 		return null;

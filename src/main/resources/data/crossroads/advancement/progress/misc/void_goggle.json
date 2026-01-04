@@ -1,0 +1,42 @@
+{
+	"parent": "crossroads:progress/misc/bobo_rod",
+	"display": {
+		"icon": {
+			"id": "crossroads:module_goggles"
+		},
+		"title": {
+			"translate": "crossroads.advancement.void_goggle"
+		},
+		"description": {
+			"translate": "crossroads.advancement.void_goggle.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true,
+		"hidden": true
+	},
+	"criteria": {
+		"has_item": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": [
+							"crossroads:module_goggles",
+							"crossroads:module_goggles_reinforced"
+						],
+						"predicates": {
+							"crossroads:goggle_lens": {
+								"lens": "void"
+							}
+						}
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_item"
+		]
+	]
+}

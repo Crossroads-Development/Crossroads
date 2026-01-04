@@ -87,7 +87,7 @@ public class BeamToolOverlay implements LayeredDraw.Layer{
 				builder.addVertex(matrix.last().pose(), 117, 0, -3).setUv(1, 0);
 				builder.addVertex(matrix.last().pose(), 0, 0, -3).setUv(0, 0);
 
-				byte[] settings = BeamUsingItem.getSetting(mainStack);
+				int[] settings = BeamUsingItem.getSetting(mainStack);
 				for(int i = 0; i < 4; i++){
 					float fullness = (float) settings[i] / 8;
 					int extension = (int) (72 * fullness);

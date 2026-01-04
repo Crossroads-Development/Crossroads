@@ -1,0 +1,33 @@
+{
+	"parent": "crossroads:progress/path/witchcraft",
+	"display": {
+		"icon": {
+			"id": "crossroads:embryo_lab"
+		},
+		"title": {
+			"translate": "crossroads.advancement.embryo_lab"
+		},
+		"description": {
+			"translate": "crossroads.advancement.embryo_lab.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"has_item": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "crossroads:embryo_lab"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_item"
+		]
+	]
+}

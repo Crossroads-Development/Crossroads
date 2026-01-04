@@ -1,0 +1,33 @@
+{
+	"parent": "crossroads:progress/misc/prac_stone",
+	"display": {
+		"icon": {
+			"id": "crossroads:solid_voltus"
+		},
+		"title": {
+			"translate": "crossroads.advancement.solid_voltus"
+		},
+		"description": {
+			"translate": "crossroads.advancement.solid_voltus.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"has_item": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "crossroads:solid_voltus"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_item"
+		]
+	]
+}

@@ -1,0 +1,34 @@
+{
+	"parent": "crossroads:progress/misc/bobo_rod",
+	"display": {
+		"icon": {
+			"id": "crossroads:maxwell_demon"
+		},
+		"title": {
+			"translate": "crossroads.advancement.maxwell_demon"
+		},
+		"description": {
+			"translate": "crossroads.advancement.maxwell_demon.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true,
+		"hidden": true
+	},
+	"criteria": {
+		"has_item": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "crossroads:maxwell_demon"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_item"
+		]
+	]
+}

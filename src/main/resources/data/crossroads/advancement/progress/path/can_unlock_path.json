@@ -1,14 +1,14 @@
 {
-	"parent": "crossroads:progress/alignment/light",
+	"parent": "crossroads:progress/alignment/all_colors",
 	"display": {
 		"icon": {
-			"id": "crossroads:color_chart"
+			"id": "minecraft:beacon"
 		},
 		"title": {
-			"translate": "crossroads.advancement.align.all_color"
+			"translate": "crossroads.advancement.path.can_unlock"
 		},
 		"description": {
-			"translate": "crossroads.advancement.align.all_color.desc"
+			"translate": "crossroads.advancement.path.can_unlock.desc"
 		},
 		"frame": "challenge",
 		"announce_to_chat": true

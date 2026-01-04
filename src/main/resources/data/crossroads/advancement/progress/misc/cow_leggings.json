@@ -1,0 +1,34 @@
+{
+	"parent": "crossroads:progress/misc/bobo_rod",
+	"display": {
+		"icon": {
+			"id": "crossroads:cow_leggings"
+		},
+		"title": {
+			"translate": "crossroads.advancement.cow_leggings"
+		},
+		"description": {
+			"translate": "crossroads.advancement.cow_leggings.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true,
+		"hidden": true
+	},
+	"criteria": {
+		"has_item": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "crossroads:cow_leggings"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_item"
+		]
+	]
+}

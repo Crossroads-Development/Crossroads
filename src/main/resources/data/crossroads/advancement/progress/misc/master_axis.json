@@ -1,0 +1,36 @@
+{
+	"parent": "crossroads:progress/root",
+	"display": {
+		"icon": {
+			"id": "crossroads:gear_base",
+			"components": {
+				"crossroads:material": "gold"
+			}
+		},
+		"title": {
+			"translate": "crossroads.advancement.master_axis"
+		},
+		"description": {
+			"translate": "crossroads.advancement.master_axis.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"has_item": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "crossroads:master_axis"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_item"
+		]
+	]
+}

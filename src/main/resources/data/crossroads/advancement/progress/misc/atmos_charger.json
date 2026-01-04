@@ -1,0 +1,33 @@
+{
+	"parent": "crossroads:progress/path/alchemy",
+	"display": {
+		"icon": {
+			"id": "crossroads:atmos_charger"
+		},
+		"title": {
+			"translate": "crossroads.advancement.atmos_charger"
+		},
+		"description": {
+			"translate": "crossroads.advancement.atmos_charger.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"has_item": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "crossroads:atmos_charger"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_item"
+		]
+	]
+}

@@ -1,5 +1,5 @@
 {
-	"parent": "crossroads:progress/alignment/void",
+	"parent": "crossroads:progress/alignment/potential_void",
 	"display": {
 		"icon": {
 			"id": "crossroads:pure_quartz"
@@ -12,7 +12,7 @@
 		},
 		"frame": "goal",
 		"announce_to_chat": false,
-		"hidden": "true"
+		"hidden": true
 	},
 	"criteria": {
 		"expansion": {

@@ -1,0 +1,33 @@
+{
+	"parent": "crossroads:progress/misc/copshowium",
+	"display": {
+		"icon": {
+			"id": "crossroads:flux_sink"
+		},
+		"title": {
+			"translate": "crossroads.advancement.flux_sink"
+		},
+		"description": {
+			"translate": "crossroads.advancement.flux_sink.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"has_item": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "crossroads:flux_sink"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_item"
+		]
+	]
+}

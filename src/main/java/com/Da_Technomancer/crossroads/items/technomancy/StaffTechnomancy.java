@@ -24,6 +24,7 @@ import net.minecraft.world.phys.Vec3;
 public class StaffTechnomancy extends BeamUsingItem{
 
 	private static final int MAX_RANGE = 64;
+	public static final String BEAM_SOURCE_TYPE = "technomancy_staff";
 
 	public StaffTechnomancy(){
 		super(new Properties().stacksTo(1).attributes(ItemAttributeModifiers.builder()
@@ -50,7 +51,7 @@ public class StaffTechnomancy extends BeamUsingItem{
 	public void onUseTick(Level world, LivingEntity player, ItemStack stack, int count){
 		if(!world.isClientSide && player.isAlive() && (getUseDuration(stack, player) - count) % BeamUtil.BEAM_TIME == 0){
 			ItemStack cage = CurioHelper.getEquipped(CRItems.beamCage, player);//player.getHeldItem(player.getActiveHand() == Hand.MAIN_HAND ? Hand.OFF_HAND : Hand.MAIN_HAND);
-			byte[] setting = getSetting(stack);
+			int[] setting = getSetting(stack);
 			BeamUnit cageBeam = BeamCage.getStored(cage);
 			if(setting[0] <= cageBeam.getEnergy() && setting[1] <= cageBeam.getPotential() && setting[2] <= cageBeam.getStability() && setting[3] <= cageBeam.getVoid() && setting[0] + setting[1] + setting[2] + setting[3] != 0){
 				//Handle beam consumption
@@ -62,7 +63,7 @@ public class StaffTechnomancy extends BeamUsingItem{
 				Vec3 start = new Vec3(player.getX() - (heldOffset * Math.cos(Math.toRadians(player.getYRot()))), player.getY() + player.getEyeHeight() + 0.4D, player.getZ() - (heldOffset * Math.sin(Math.toRadians(player.getYRot()))));
 
 				Vec3 ray = player.getLookAngle();
-				BeamHit beamHitResult = BeamUtil.rayTraceBeams(mag, world, start, player.getEyePosition(1), ray, player, null, MAX_RANGE, false);
+				BeamHit beamHitResult = BeamUtil.rayTraceBeams(mag, world, start, player.getEyePosition(1), ray, player, null, MAX_RANGE, new BeamHit.BeamSource(BEAM_SOURCE_TYPE, true, false, null, null, player));
 //				Direction effectDir = beamHitResult.getDirection();
 
 //				double[] end = new double[] {player.getPosX(), player.getEyeHeight() + player.getPosY(), player.getPosZ()};

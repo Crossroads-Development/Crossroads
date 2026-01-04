@@ -164,7 +164,6 @@ public class DetailedAutoCrafter extends CrafterBlock{
 
 	@Override
 	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
-		//TODO
 		tooltip.add(Component.translatable("tt.crossroads.detailed_auto_crafter.basic"));
 		tooltip.add(Component.translatable("tt.crossroads.detailed_auto_crafter.sigil"));
 		tooltip.add(Component.translatable("tt.crossroads.detailed_auto_crafter.quip").setStyle(MiscUtil.TT_QUIP));

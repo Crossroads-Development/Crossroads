@@ -1,0 +1,33 @@
+{
+	"parent": "crossroads:progress/path/can_unlock_path",
+	"display": {
+		"icon": {
+			"id": "crossroads:detailed_crafter"
+		},
+		"title": {
+			"translate": "crossroads.advancement.detailed_crafter"
+		},
+		"description": {
+			"translate": "crossroads.advancement.detailed_crafter.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"has_item": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "crossroads:detailed_crafter"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_item"
+		]
+	]
+}

@@ -1,0 +1,33 @@
+{
+	"parent": "crossroads:progress/root",
+	"display": {
+		"icon": {
+			"id": "crossroads:bobo_rod"
+		},
+		"title": {
+			"translate": "crossroads.advancement.bobo_rod"
+		},
+		"description": {
+			"translate": "crossroads.advancement.bobo_rod.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"has_item": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "crossroads:bobo_rod"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_item"
+		]
+	]
+}

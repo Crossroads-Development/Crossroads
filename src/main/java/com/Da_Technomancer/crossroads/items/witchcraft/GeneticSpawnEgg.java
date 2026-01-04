@@ -35,9 +35,6 @@ import java.util.Objects;
 
 public class GeneticSpawnEgg extends Item{
 
-	private static final String KEY = "cr_genetics";
-
-
 	public GeneticSpawnEgg(){
 		super(new Item.Properties());
 		String name = "spawn_egg";

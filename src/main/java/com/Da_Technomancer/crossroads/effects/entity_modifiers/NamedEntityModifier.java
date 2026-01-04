@@ -6,6 +6,7 @@ import com.Da_Technomancer.crossroads.api.witchcraft.IEntityModifierType;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -24,7 +25,7 @@ public record NamedEntityModifier(int complexity, int soulComplexity, String nam
 	public static final IEntityModifierType<NamedEntityModifier> TYPE_INSTANCE = new SimpleEntityModifierType<>("named", NamedEntityModifier::new, CODEC, STREAM_CODEC);
 
 	public NamedEntityModifier(ItemStack craftingStack, int complexity, int soulComplexity){
-		this(complexity, soulComplexity, craftingStack.getDisplayName().getString());
+		this(complexity, soulComplexity, craftingStack.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty()).getString());
 	}
 
 	@Override

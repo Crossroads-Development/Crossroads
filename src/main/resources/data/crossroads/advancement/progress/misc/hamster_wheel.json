@@ -1,0 +1,34 @@
+{
+	"parent": "crossroads:progress/misc/bobo_rod",
+	"display": {
+		"icon": {
+			"id": "crossroads:hamster_wheel"
+		},
+		"title": {
+			"translate": "crossroads.advancement.hamster_wheel"
+		},
+		"description": {
+			"translate": "crossroads.advancement.hamster_wheel.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true,
+		"hidden": true
+	},
+	"criteria": {
+		"has_item": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "crossroads:hamster_wheel"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_item"
+		]
+	]
+}

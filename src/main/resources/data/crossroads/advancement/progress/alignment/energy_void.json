@@ -12,7 +12,7 @@
 		},
 		"frame": "goal",
 		"announce_to_chat": false,
-		"hidden": "true"
+		"hidden": true
 	},
 	"criteria": {
 		"energy": {

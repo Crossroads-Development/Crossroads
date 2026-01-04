@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.api.packets;
 
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.api.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamUsingItem;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -11,11 +12,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public record SendBeamItemToServer(byte[] newSetting) implements CustomPacketPayload{
+public record SendBeamItemToServer(BeamUnit newSetting) implements CustomPacketPayload{
 	public static final CustomPacketPayload.Type<SendBeamItemToServer> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "send_beam_item_server"));
 
 	public static final StreamCodec<ByteBuf, SendBeamItemToServer> STREAM_CODEC = StreamCodec.composite(
-			ByteBufCodecs.BYTE_ARRAY, SendBeamItemToServer::newSetting,
+			BeamUnit.STREAM_CODEC, SendBeamItemToServer::newSetting,
 			SendBeamItemToServer::new
 	);
 

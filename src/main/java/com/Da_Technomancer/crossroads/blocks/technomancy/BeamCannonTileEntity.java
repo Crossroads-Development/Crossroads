@@ -32,6 +32,7 @@ public class BeamCannonTileEntity extends AbstractCannonTileEntity implements IB
 	public static final BlockEntityType<BeamCannonTileEntity> TYPE = CRTileEntity.createType(BeamCannonTileEntity::new, CRBlocks.beamCannon);
 
 	public static final int RANGE = 256;
+	public static final String BEAM_SOURCE_TYPE = "beam_cannon";
 
 	//Once again, I find myself wishing java allowed multiple super classes
 	//Because we need the cannon stuff, so we have to re-implement all the beam logic
@@ -88,7 +89,7 @@ public class BeamCannonTileEntity extends AbstractCannonTileEntity implements IB
 				upShift.mul(3.5F / 16F);
 				Vec3 rayTraceSt = Vec3.atCenterOf(worldPosition).add(upShift.x(), upShift.y(), upShift.z());
 
-				BeamHit beamHitResult = BeamUtil.rayTraceBeams(out, level, rayTraceSt, rayTraceSt, rayVec3, null, worldPosition, RANGE, false);
+				BeamHit beamHitResult = BeamUtil.rayTraceBeams(out, level, rayTraceSt, rayTraceSt, rayVec3, null, worldPosition, RANGE, new BeamHit.BeamSource(BEAM_SOURCE_TYPE, true, false, level, worldPosition, null));
 				BlockPos endPos = beamHitResult.getPos();
 				if(endPos != null){//Should always be true
 					outLength = (float) beamHitResult.getHitPos().distanceTo(rayTraceSt);

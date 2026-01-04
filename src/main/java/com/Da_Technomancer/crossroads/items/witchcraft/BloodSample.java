@@ -16,6 +16,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.ResolvableProfile;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.SkullBlockEntity;
 
 import javax.annotation.Nonnull;
@@ -26,6 +27,7 @@ import java.util.UUID;
 public class BloodSample extends Item implements IPerishable{
 
 	private static final long LIFETIME = 20 * 60 * 60 * 2;
+	private static final int FRESHNESS_BONUS = 20;
 
 	public BloodSample(){
 		this("blood_sample");
@@ -42,8 +44,23 @@ public class BloodSample extends Item implements IPerishable{
 		return stack;
 	}
 
-	public static EntityTemplate getEntityTypeData(ItemStack stack){
+	/**
+	 * @see #getAdjustedTemplate
+	 * @param stack Itemstack with the blood sample (or centrifuged blood sample)
+	 * @return The template stored on the stack, before any adjustment for freshness
+	 */
+	public static EntityTemplate getBaseTemplate(ItemStack stack){
 		return stack.getOrDefault(CRItems.GENETICS_DATA, EntityTemplate.DEFAULT);
+	}
+
+	public static EntityTemplate getAdjustedTemplate(ItemStack stack, Level world){
+		//Blood samples have +20 quality for fresh samples
+		//This isn't handled natively in the template, so we have to special-case anything reading the quality of a blood sample (or centrifuged blood sample)
+		EntityTemplate template = getBaseTemplate(stack);
+		if(!IPerishable.isSpoiled(stack, world)){
+			template = template.withQuality(template.quality() + FRESHNESS_BONUS);
+		}
+		return template;
 	}
 
 	@Override
@@ -61,7 +78,7 @@ public class BloodSample extends Item implements IPerishable{
 		if(this != CRItems.separatedBloodSample){
 			tooltip.add(Component.translatable("tt.crossroads.blood_sample.craft"));
 		}
-		EntityTemplate template = getEntityTypeData(stack);
+		EntityTemplate template = getAdjustedTemplate(stack, context.level());
 		template.addTooltip(tooltip, context.level());
 		IPerishable.addTooltip(stack, context.level(), tooltip);
 	}

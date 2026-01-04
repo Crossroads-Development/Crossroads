@@ -7,6 +7,7 @@ import com.Da_Technomancer.crossroads.crafting.CRItemTags;
 import com.Da_Technomancer.crossroads.effects.goggles_effects.EmeraldGoggleEffect;
 import com.Da_Technomancer.crossroads.effects.goggles_effects.QuartzGoggleEffect;
 import com.Da_Technomancer.crossroads.effects.goggles_effects.RubyGoggleEffect;
+import com.mojang.serialization.Codec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.StringRepresentable;
@@ -35,6 +36,8 @@ public enum EnumGoggleLenses implements StringRepresentable{
 	QUARTZ(CRItemTags.GEMS_PURE_QUARTZ, "_quartz", new QuartzGoggleEffect(), null, false),
 	AMETHYST(Tags.Items.GEMS_AMETHYST, "_amethyst", IGoggleEffect.EMPTY, () -> Keys.controlZoom, true),//Empty effect, the actual effect is done through EventHandlerClient::viewZoom
 	VOID(CRItemTags.GEMS_VOID, "_void", IGoggleEffect.EMPTY, () -> Keys.controlVoid, true);//Empty effect, the actual effect is done through EventHandlers that check for the void lens.
+
+	public static final Codec<EnumGoggleLenses> CODEC = StringRepresentable.fromEnum(EnumGoggleLenses::values);
 
 	private final TagKey<Item> item;
 	private final String texturePath;

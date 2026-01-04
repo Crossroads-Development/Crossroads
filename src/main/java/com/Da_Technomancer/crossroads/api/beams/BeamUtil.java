@@ -16,7 +16,6 @@ import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -117,11 +116,12 @@ public class BeamUtil{
 	 * @param startPos The starting point of the beam
 	 * @param dir Direction of the beam path of travel
 	 * @param maxRange The maximum range of the beam
-	 * @param sensitive Whether to use sensitive block collision
+	 * @param beamSource Source of the beam
 	 * @return BeamHit describing where the beam would hit
 	 */
 	@Nonnull
-	public static BeamHit rayTraceBeamSimple(@Nonnull BeamUnit beam, Level world, BlockPos startPos, Direction dir, int maxRange, boolean sensitive){
+	public static BeamHit rayTraceBeamSimple(@Nonnull BeamUnit beam, Level world, BlockPos startPos, Direction dir, int maxRange, BeamHit.BeamSource beamSource){
+		assert !beamSource.isEntitySensitive(); // Not currently supported by this method
 		BlockPos checkPos = startPos;
 		BlockState checkState = Blocks.AIR.defaultBlockState();
 		for(int i = 1; i <= maxRange; i++){
@@ -135,11 +135,11 @@ public class BeamUtil{
 //			}
 
 			//Check for collision or machine receiving beams
-			if(i == maxRange || solidToBeams(checkState, world, checkPos, dir, beam.getPower(), sensitive) || world.getCapability(CRCapabilities.BEAM_CAPABILITY, checkPos, dir.getOpposite()) != null){
-				return new BeamHit((ServerLevel) world, checkPos, dir.getOpposite(), checkState, beam);
+			if(i == maxRange || solidToBeams(checkState, world, checkPos, dir, beam.getPower(), beamSource.isBlockSensitive()) || world.getCapability(CRCapabilities.BEAM_CAPABILITY, checkPos, dir.getOpposite()) != null){
+				return new BeamHit((ServerLevel) world, checkPos, dir.getOpposite(), checkState, beam, beamSource);
 			}
 		}
-		return new BeamHit((ServerLevel) world, checkPos, dir.getOpposite(), checkState, beam);
+		return new BeamHit((ServerLevel) world, checkPos, dir.getOpposite(), checkState, beam, beamSource);
 	}
 
 	/**
@@ -153,11 +153,11 @@ public class BeamUtil{
 	 * @param excludedEntity An entity to ignore collisions with (null for none)
 	 * @param ignorePos A block position to ignore block collisions with (null for none)
 	 * @param maxRange The maximum range of the beam
-	 * @param sensitive Whether to use sensitive block collision
+	 * @param beamSource Source of the beam
 	 * @return BeamHit describing where the beam would hit
 	 */
 	@Nonnull
-	public static BeamHit rayTraceBeams(@Nonnull BeamUnit beam, Level world, Vec3 startPos, Vec3 endSourcePos, Vec3 ray, @Nullable Entity excludedEntity, @Nullable BlockPos ignorePos, double maxRange, boolean sensitive){
+	public static BeamHit rayTraceBeams(@Nonnull BeamUnit beam, Level world, Vec3 startPos, Vec3 endSourcePos, Vec3 ray, @Nullable Entity excludedEntity, @Nullable BlockPos ignorePos, double maxRange, BeamHit.BeamSource beamSource){
 		final double stepSize = CRConfig.beamRaytraceStep.get();
 		final double halfStep = stepSize / 2D;
 		Direction collisionDir = Direction.getNearest(ray.x, ray.y, ray.z);//Used for beam collision detection
@@ -182,25 +182,27 @@ public class BeamUtil{
 			}
 
 			//Check for entity collisions
-			List<Entity> ents = world.getEntities(excludedEntity, new AABB(end[0] - halfStep, end[1] - halfStep, end[2] - halfStep, end[0] + halfStep, end[1] + halfStep, end[2] + halfStep), BEAM_COLLIDE_ENTITY);
-			if(!ents.isEmpty()){
-				Vec3 entVec = ents.get(0).position();
-				//Vector component of entity position (relative to beam source) onto beam ray direction, added back to beam source position
-				//Gives the point on the beam-path line closest to the entity (the hitVec isn't necessarily on the actual line of the beam)
-				Vec3 lineVec = startPos.add(ray.scale(entVec.subtract(startPos).dot(ray)));
-				end[0] = lineVec.x;
-				end[1] = lineVec.y;
-				end[2] = lineVec.z;
-				return new BeamHit((ServerLevel) world, endPos.immutable(), effectDir, state, beam, ray, new Vec3(end[0], end[1], end[2]));
+			if(beamSource.isEntitySensitive()){
+				List<Entity> ents = world.getEntities(excludedEntity, new AABB(end[0] - halfStep, end[1] - halfStep, end[2] - halfStep, end[0] + halfStep, end[1] + halfStep, end[2] + halfStep), BEAM_COLLIDE_ENTITY);
+				if(!ents.isEmpty()){
+					Vec3 entVec = ents.get(0).position();
+					//Vector component of entity position (relative to beam source) onto beam ray direction, added back to beam source position
+					//Gives the point on the beam-path line closest to the entity (the hitVec isn't necessarily on the actual line of the beam)
+					Vec3 lineVec = startPos.add(ray.scale(entVec.subtract(startPos).dot(ray)));
+					end[0] = lineVec.x;
+					end[1] = lineVec.y;
+					end[2] = lineVec.z;
+					return new BeamHit((ServerLevel) world, endPos.immutable(), effectDir, state, beam, ray, new Vec3(end[0], end[1], end[2]), beamSource);
+				}
 			}
 
 			//Check for block collisions
 			//Speed things up a bit by not rechecking blocks
 			if(didPosChange && !world.isOutsideBuildHeight(endPos) && !endPos.equals(ignorePos)){
-				if(solidToBeams(state, world, endPos, collisionDir, beam.getPower(), sensitive)){
+				if(solidToBeams(state, world, endPos, collisionDir, beam.getPower(), beamSource.isBlockSensitive())){
 					//Note: this VoxelShape has no offset
 					//Sensitive collision uses a full block shape to guarantee collision
-					VoxelShape shape = sensitive ? Shapes.block() : state.getBlockSupportShape(world, endPos);
+					VoxelShape shape = beamSource.isBlockSensitive() ? Shapes.block() : state.getBlockSupportShape(world, endPos);
 					BlockHitResult res = shape.clip(startPos, new Vec3(end[0] + ray.x, end[1] + ray.y, end[2] + ray.z), endPos);
 					if(res != null){
 						Vec3 hitVec = res.getLocation();
@@ -208,12 +210,12 @@ public class BeamUtil{
 						end[1] = hitVec.y;
 						end[2] = hitVec.z;
 						effectDir = res.getDirection();
-						return new BeamHit((ServerLevel) world, endPos.immutable(), effectDir, state, beam, ray, new Vec3(end[0], end[1], end[2]));
+						return new BeamHit((ServerLevel) world, endPos.immutable(), effectDir, state, beam, ray, new Vec3(end[0], end[1], end[2]), beamSource);
 					}
 				}
 			}
 		}
 
-		return new BeamHit((ServerLevel) world, endPos.immutable(), effectDir, state, beam, ray, new Vec3(end[0], end[1], end[2]));
+		return new BeamHit((ServerLevel) world, endPos.immutable(), effectDir, state, beam, ray, new Vec3(end[0], end[1], end[2]), beamSource);
 	}
 }

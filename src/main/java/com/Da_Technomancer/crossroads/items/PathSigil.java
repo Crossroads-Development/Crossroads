@@ -43,9 +43,9 @@ public class PathSigil extends Item{
 		if(stack.has(CRItems.SIGIL_RECIPE_DATA)){
 			DetailedCrafterRecipeReference recipe = stack.get(CRItems.SIGIL_RECIPE_DATA);
 			if(recipe.craftedItem != null){
-				tooltip.add(Component.translatable("tt.crossroads.path_sigil.item").append(MiscUtil.asMutable(recipe.craftedItem.getDescription()).withStyle(MiscUtil.TT_DYNAMIC)));
+				tooltip.add(Component.translatable("tt.crossroads.path_sigil.item").append(MiscUtil.asMutable(recipe.craftedItem.getDescription())));
 			}else{
-				tooltip.add(Component.translatable("tt.crossroads.path_sigil.item").append(Component.literal(recipe.craftedItemID.toString()).withStyle(MiscUtil.TT_DYNAMIC)));
+				tooltip.add(Component.translatable("tt.crossroads.path_sigil.item").append(Component.literal(recipe.craftedItemID.toString())));
 			}
 			tooltip.add(Component.translatable("tt.crossroads.path_sigil.desc.forget"));
 		}

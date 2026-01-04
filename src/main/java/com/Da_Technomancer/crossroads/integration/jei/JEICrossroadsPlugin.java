@@ -26,10 +26,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeManager;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.*;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -119,9 +116,10 @@ public class JEICrossroadsPlugin implements IModPlugin{
 		registration.addRecipes(RecipeTypes.ANVIL, anvilRecipes);
 	}
 
-	private static <T extends Recipe<?>> List<T> getRecipes(RecipeManager manage, RecipeType<T> type){
+	private static <I extends RecipeInput, T extends Recipe<I>> List<T> getRecipes(RecipeManager manage, RecipeType<T> type){
 		//Filter to recipes of the passed type, and check that they're enabled if they're IOptionalRecipe
-		return manage.getRecipes().parallelStream().map(RecipeHolder::value).filter(rec -> rec.getType() == type && (!(rec instanceof IOptionalRecipe) || ((IOptionalRecipe<?>) rec).isEnabled())).map(recipe -> (T) recipe).collect(Collectors.toList());
+		return manage.getAllRecipesFor(type).parallelStream().map(RecipeHolder::value).filter(rec -> !(rec instanceof IOptionalRecipe<?> optRecipe) || optRecipe.isEnabled()).collect(Collectors.toList());
+//		return manage.getRecipes().parallelStream().map(RecipeHolder::value).filter(rec -> rec.getType() == type && (!(rec instanceof IOptionalRecipe) || ((IOptionalRecipe<?>) rec).isEnabled())).map(recipe -> (T) recipe).collect(Collectors.toList());
 	}
 
 	@Override

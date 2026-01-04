@@ -1,5 +1,5 @@
 {
-	"parent": "crossroads:progress/root",
+	"parent": "crossroads:progress/misc/beam_extractor",
 	"display": {
 		"icon": {
 			"id": "minecraft:diamond"

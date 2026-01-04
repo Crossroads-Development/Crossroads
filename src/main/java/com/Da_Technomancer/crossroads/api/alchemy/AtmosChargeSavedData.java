@@ -2,9 +2,11 @@ package com.Da_Technomancer.crossroads.api.alchemy;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.advancements.AtmosChargeTrigger;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.storage.DimensionDataStorage;
@@ -30,6 +32,10 @@ public class AtmosChargeSavedData extends SavedData{
 		if(newCharge != data.atmosCharge){
 			data.atmosCharge = newCharge;
 			data.setDirty();
+			//Advancement check
+			for(ServerPlayer player : w.players()){
+				AtmosChargeTrigger.INSTANCE.trigger(player, 100 * newCharge / getCapacity());
+			}
 		}
 	}
 

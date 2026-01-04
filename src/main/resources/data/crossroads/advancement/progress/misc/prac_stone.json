@@ -1,0 +1,33 @@
+{
+	"parent": "crossroads:progress/misc/phil_stone",
+	"display": {
+		"icon": {
+			"id": "crossroads:prac_stone"
+		},
+		"title": {
+			"translate": "crossroads.advancement.prac_stone"
+		},
+		"description": {
+			"translate": "crossroads.advancement.prac_stone.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"has_item": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "crossroads:prac_stone"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_item"
+		]
+	]
+}

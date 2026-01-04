@@ -79,7 +79,7 @@ public class DetailedCrafterRec extends ShapedRecipe implements IOptionalRecipe<
 								ShapedRecipePattern.MAP_CODEC.forGetter(p_311733_ -> p_311733_.pattern),
 								ItemStack.STRICT_CODEC.fieldOf("result").forGetter(DetailedCrafterRec::getResultItem),
 								Codec.BOOL.optionalFieldOf("show_notification", true).forGetter(DetailedCrafterRec::showNotification),
-								StringRepresentable.fromEnum(EnumPath::values).fieldOf("path").forGetter(DetailedCrafterRec::getPath)
+								EnumPath.CODEC.fieldOf("path").forGetter(DetailedCrafterRec::getPath)
 							).apply(p_340778_, DetailedCrafterRec::new));
 			StreamCodec<RegistryFriendlyByteBuf, DetailedCrafterRec> streamCodec = StreamCodec.of(Serializer::toNetwork, Serializer::fromNetwork);
 			DetailedCrafterRec disabledRec = new DetailedCrafterRec();

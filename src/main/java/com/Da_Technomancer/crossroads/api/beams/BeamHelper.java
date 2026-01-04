@@ -15,6 +15,8 @@ import java.awt.*;
  */
 public class BeamHelper{
 
+	public static final String BEAM_SOURCE_TYPE = "machine_generic";
+
 	protected final Direction dir;
 	protected final BlockPos pos;
 
@@ -34,7 +36,7 @@ public class BeamHelper{
 	 * @return Whether the rendered beam has changed and a new update packet needs to be sent
 	 */
 	public boolean emit(@Nonnull BeamUnit mag, Level world){
-		BeamHit beamHit = BeamUtil.rayTraceBeamSimple(mag, world, pos, dir, BeamUtil.MAX_DISTANCE, false);
+		BeamHit beamHit = BeamUtil.rayTraceBeamSimple(mag, world, pos, dir, BeamUtil.MAX_DISTANCE, new BeamHit.BeamSource(BEAM_SOURCE_TYPE, false, false, world, pos, null));
 		int newDist = beamHit.getPos().distManhattan(pos);
 
 //		Moved to BeamEffect::performTransmute

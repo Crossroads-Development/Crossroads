@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.api.witchcraft;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.EventHandlerCommon;
+import com.Da_Technomancer.crossroads.advancements.CloneSpawnedTrigger;
 import com.Da_Technomancer.crossroads.api.LazyCache;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
@@ -22,10 +23,12 @@ import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.effect.MobEffect;
@@ -168,7 +171,7 @@ public record EntityTemplate(@Nonnull ResourceLocation entityID, @Nonnull LazyCa
 		final EntityType<?> entityType = getEntityType();
 		//Main line with entity name, complexity, soul complexity, quality
 		tooltips.add(Component.translatable("tt.crossroads.boilerplate.entity_template.desc1")
-				.append(MiscUtil.asMutable(entityType == null ? Component.literal(entityID.toString()) : entityType.getDescription())).withStyle(MiscUtil.TT_DYNAMIC)
+				.append(MiscUtil.asMutable(entityType == null ? Component.literal(entityID.toString()) : entityType.getDescription()))
 				.append(Component.translatable("tt.crossroads.boilerplate.entity_template.desc2", totalComplexity(), totalSoulComplexity(), quality())));
 		//Modifiers
 		if(!modifiers.isEmpty()){
@@ -240,12 +243,19 @@ public record EntityTemplate(@Nonnull ResourceLocation entityID, @Nonnull LazyCa
 			if(mobHealthPenalty < 0){
 				entity.getAttributes().getInstance(Attributes.MAX_HEALTH).addPermanentModifier(new AttributeModifier(HEALTH_PENALTY_ATTRIBUTE, mobHealthPenalty, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
 			}
+			entity.heal(entity.getMaxHealth());//Heal up to max health
 		}
 		//Save the original EntityTemplate in the entity
 		created.getPersistentData().put(TEMPLATE_KEY, template.serializeNBT(world.registryAccess()));
 		if(isNonViable){
 			created.hurt(CRMobDamage.damageSource(CRMobDamage.NON_VIABLE, world), 1);
 		}
+
+		if(player instanceof ServerPlayer serverPlayer){
+			//Advancement check
+			CloneSpawnedTrigger.INSTANCE.trigger(serverPlayer, template, isNonViable);
+		}
+
 		return created;
 	}
 

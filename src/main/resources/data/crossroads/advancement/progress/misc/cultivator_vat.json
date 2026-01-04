@@ -1,0 +1,33 @@
+{
+	"parent": "crossroads:progress/misc/incubator",
+	"display": {
+		"icon": {
+			"id": "crossroads:cultivator_vat"
+		},
+		"title": {
+			"translate": "crossroads.advancement.cultivator_vat"
+		},
+		"description": {
+			"translate": "crossroads.advancement.cultivator_vat.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"has_item": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "crossroads:cultivator_vat"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_item"
+		]
+	]
+}

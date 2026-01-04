@@ -1,0 +1,33 @@
+{
+	"parent": "crossroads:progress/path/witchcraft",
+	"display": {
+		"icon": {
+			"id": "crossroads:blood_beam_linker"
+		},
+		"title": {
+			"translate": "crossroads.advancement.blood_beam_linker"
+		},
+		"description": {
+			"translate": "crossroads.advancement.blood_beam_linker.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"has_item": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "crossroads:blood_beam_linker"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_item"
+		]
+	]
+}

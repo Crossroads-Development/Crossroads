@@ -1,0 +1,33 @@
+{
+	"parent": "crossroads:progress/misc/master_axis",
+	"display": {
+		"icon": {
+			"id": "crossroads:water_centrifuge"
+		},
+		"title": {
+			"translate": "crossroads.advancement.water_centrifuge"
+		},
+		"description": {
+			"translate": "crossroads.advancement.water_centrifuge.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"has_item": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "crossroads:water_centrifuge"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_item"
+		]
+	]
+}

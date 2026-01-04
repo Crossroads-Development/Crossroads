@@ -1,0 +1,33 @@
+{
+	"parent": "crossroads:progress/misc/phil_stone",
+	"display": {
+		"icon": {
+			"id": "crossroads:densus_plate"
+		},
+		"title": {
+			"translate": "crossroads.advancement.densus_plate"
+		},
+		"description": {
+			"translate": "crossroads.advancement.densus_plate.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"has_item": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "crossroads:densus_plate"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_item"
+		]
+	]
+}

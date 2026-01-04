@@ -1,0 +1,37 @@
+{
+	"parent": "crossroads:progress/path/technomancy",
+	"display": {
+		"icon": {
+			"id": "crossroads:ingot_copshowium"
+		},
+		"title": {
+			"translate": "crossroads.advancement.ingot_copshowium"
+		},
+		"description": {
+			"translate": "crossroads.advancement.ingot_copshowium.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"has_item": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": [
+							"crossroads:ingot_copshowium",
+							"crossroads:nugget_copshowium",
+							"crossroads:block_copshowium"
+						]
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_item"
+		]
+	]
+}

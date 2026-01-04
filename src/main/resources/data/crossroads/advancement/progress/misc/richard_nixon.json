@@ -1,0 +1,30 @@
+{
+	"parent": "crossroads:progress/misc/bobo_rod",
+	"display": {
+		"icon": {
+			"id": "crossroads:heat_cable_dirt"
+		},
+		"title": {
+			"translate": "crossroads.advancement.richard_nixon"
+		},
+		"description": {
+			"translate": "crossroads.advancement.richard_nixon.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true,
+		"hidden": true
+	},
+	"criteria": {
+		"nixon": {
+			"trigger": "crossroads:dirt_cable",
+			"conditions": {
+				"effect_id": 4
+			}
+		}
+	},
+	"requirements": [
+		[
+			"nixon"
+		]
+	]
+}

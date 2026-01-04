@@ -1,0 +1,63 @@
+{
+	"parent": "crossroads:progress/misc/bobo_rod",
+	"display": {
+		"icon": {
+			"id": "crossroads:fat_feeder"
+		},
+		"title": {
+			"translate": "crossroads.advancement.fat_feeder_bobo"
+		},
+		"description": {
+			"translate": "crossroads.advancement.fat_feeder_bobo.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true,
+		"hidden": true
+	},
+	"criteria": {
+		"fat_feeder": {
+			"trigger": "minecraft:placed_block",
+			"conditions": {
+				"location": [
+					{
+						"block": "crossroads:fat_feeder"
+					},
+					{
+						"condition": "minecraft:location_check",
+						"offsetY": -1,
+						"predicate": {
+							"block": {
+								"blocks": "#c:storage_blocks/emerald"
+							}
+						}
+					}
+				]
+			}
+		},
+		"emerald_block": {
+			"trigger": "minecraft:placed_block",
+			"conditions": {
+				"location": [
+					{
+						"block": "#c:storage_blocks/emerald"
+					},
+					{
+						"condition": "minecraft:location_check",
+						"offsetY": 1,
+						"predicate": {
+							"block": {
+								"blocks": "crossroads:fat_feeder"
+							}
+						}
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"fat_feeder",
+			"emerald_block"
+		]
+	]
+}

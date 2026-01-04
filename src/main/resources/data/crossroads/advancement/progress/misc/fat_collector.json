@@ -1,0 +1,33 @@
+{
+	"parent": "crossroads:progress/misc/heat_source",
+	"display": {
+		"icon": {
+			"id": "crossroads:fat_collector"
+		},
+		"title": {
+			"translate": "crossroads.advancement.fat_collector"
+		},
+		"description": {
+			"translate": "crossroads.advancement.fat_collector.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"has_item": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "crossroads:fat_collector"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_item"
+		]
+	]
+}

@@ -5,6 +5,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -57,16 +60,19 @@ public class BeamHit{
 	 */
 	private final BeamUnit beamUnit;
 
-	public BeamHit(@Nonnull ServerLevel world, @Nonnull BlockPos pos, @Nonnull Direction direction, @Nullable BlockState endState, @Nonnull BeamUnit beamUnit){
+	private final BeamSource beamSource;
+
+	public BeamHit(@Nonnull ServerLevel world, @Nonnull BlockPos pos, @Nonnull Direction direction, @Nullable BlockState endState, @Nonnull BeamUnit beamUnit, BeamSource beamSource){
 		this.world = world;
 		this.pos = pos;
 		this.direction = direction;
 		this.endState = endState;
 		this.beamUnit = beamUnit;
+		this.beamSource = beamSource;
 	}
 
-	public BeamHit(@Nonnull ServerLevel world, @Nonnull BlockPos pos, @Nonnull Direction direction, @Nullable BlockState endState, @Nonnull BeamUnit beamUnit, @Nonnull Vec3 ray, @Nonnull Vec3 hitPos){
-		this(world, pos, direction, endState, beamUnit);
+	public BeamHit(@Nonnull ServerLevel world, @Nonnull BlockPos pos, @Nonnull Direction direction, @Nullable BlockState endState, @Nonnull BeamUnit beamUnit, @Nonnull Vec3 ray, @Nonnull Vec3 hitPos, BeamSource beamSource){
+		this(world, pos, direction, endState, beamUnit, beamSource);
 		this.ray = ray;
 		this.hitPos = hitPos;
 	}
@@ -109,6 +115,10 @@ public class BeamHit{
 			hitPos = Vec3.atCenterOf(pos);
 		}
 		return hitPos;
+	}
+
+	public BeamSource getBeamSource(){
+		return beamSource;
 	}
 
 	/**
@@ -200,5 +210,21 @@ public class BeamHit{
 			return handler;
 		}
 		return null;
+	}
+
+	/**
+	 * Contains information about the source of a beam effect
+	 * @param name The 'type' of the beam source- may be to enable special mechanics or advancements
+	 * @param isEntitySensitive Whether this is a sensitive beam source that collides with entities
+	 * @param isBlockSensitive Whether this is a sensitive beam source that collides with blocks regardless of hitbox
+	 * @param level World of the block (not player!) shooting the beam. Null if N/A.
+	 * @param srcPos Position of the block shooting the beam. Null if N/A.
+	 * @param srcPlayer The player (or other entity) shooting the beam. Null if N/A.
+	 */
+	public static record BeamSource(String name, boolean isEntitySensitive, boolean isBlockSensitive, @Nullable Level level, @Nullable BlockPos srcPos, @Nullable LivingEntity srcPlayer){
+
+		public boolean isType(String typeName){
+			return name.equals(typeName);
+		}
 	}
 }

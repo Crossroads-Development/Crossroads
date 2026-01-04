@@ -31,7 +31,7 @@ import java.util.UUID;
 
 public record ImprintingEntityModifier(int complexity, int soulComplexity, ResolvableProfile owner) implements IEntityModifier{
 
-	private static final ResolvableProfile FALLBACK_PROFILE = new ResolvableProfile(new GameProfile(UUID.randomUUID(), "missingno"));
+	private static final ResolvableProfile FALLBACK_PROFILE = new ResolvableProfile(new GameProfile(UUID.randomUUID(), "Use player blood sample"));
 
 	private static final Codec<IEntityModifier> CODEC = RecordCodecBuilder.create(instance -> instance.group(Codec.INT.fieldOf("complexity").forGetter(IEntityModifier::complexity), Codec.INT.fieldOf("soul_complexity").forGetter(IEntityModifier::soulComplexity), ResolvableProfile.CODEC.fieldOf("profile").forGetter((IEntityModifier entMod) -> entMod instanceof ImprintingEntityModifier imEntMod ? imEntMod.owner() : FALLBACK_PROFILE)).apply(instance, ImprintingEntityModifier::new));
 	private static final StreamCodec<ByteBuf, IEntityModifier> STREAM_CODEC = StreamCodec.composite(ByteBufCodecs.VAR_INT, IEntityModifier::complexity, ByteBufCodecs.VAR_INT, IEntityModifier::soulComplexity, ResolvableProfile.STREAM_CODEC, (IEntityModifier entMod) -> entMod instanceof ImprintingEntityModifier imEntMod ? imEntMod.owner() : FALLBACK_PROFILE, ImprintingEntityModifier::new);

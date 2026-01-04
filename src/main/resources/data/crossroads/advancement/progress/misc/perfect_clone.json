@@ -1,0 +1,30 @@
+{
+	"parent": "crossroads:progress/misc/blood_centrifuge",
+	"display": {
+		"icon": {
+			"id": "crossroads:embryo"
+		},
+		"title": {
+			"translate": "crossroads.advancement.perfect_clone"
+		},
+		"description": {
+			"translate": "crossroads.advancement.perfect_clone.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"clone": {
+			"trigger": "crossroads:clone_spawned",
+			"conditions": {
+				"min_quality": 100,
+				"viable": "viable"
+			}
+		}
+	},
+	"requirements": [
+		[
+			"clone"
+		]
+	]
+}

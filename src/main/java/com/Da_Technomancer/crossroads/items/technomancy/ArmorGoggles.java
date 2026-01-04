@@ -13,7 +13,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ExtraCodecs;
-import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
@@ -106,7 +105,7 @@ public class ArmorGoggles extends TechnomancyArmor implements ICreativeTabPopula
 	 */
 	public static record LensesSet(Object2BooleanMap<EnumGoggleLenses> lenses){
 
-		public static final Codec<LensesSet> CODEC = ExtraCodecs.object2BooleanMap(StringRepresentable.fromEnum(EnumGoggleLenses::values)).xmap(LensesSet::new, LensesSet::lenses);
+		public static final Codec<LensesSet> CODEC = ExtraCodecs.object2BooleanMap(EnumGoggleLenses.CODEC).xmap(LensesSet::new, LensesSet::lenses);
 		public static final StreamCodec<ByteBuf, LensesSet> STREAM_CODEC = new StreamCodec<ByteBuf, LensesSet>(){
 			@Override
 			public LensesSet decode(ByteBuf byteBuf){

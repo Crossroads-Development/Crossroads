@@ -58,7 +58,7 @@ import java.util.Random;
 
 public class EventHandlerClient{
 
-	@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD, modid = Crossroads.MODID, value = Dist.CLIENT)
+	@EventBusSubscriber(modid = Crossroads.MODID, value = Dist.CLIENT)
 	public static class CRModEventsClient{
 
 		@SubscribeEvent
@@ -134,12 +134,12 @@ public class EventHandlerClient{
 				//Lookup the mob's vanilla egg, copy the colors
 				//If it doesn't have an egg, fallback to defaults
 				if(stack.getItem() instanceof GeneticSpawnEgg){
-					EntityTemplate template = ((GeneticSpawnEgg) stack.getItem()).getEntityTypeData(stack);
+					EntityTemplate template = GeneticSpawnEgg.getEntityTypeData(stack);
 					EntityType<?> type = template.getEntityType();
 					if(type != null){
 						SpawnEggItem vanillaEgg = DeferredSpawnEggItem.byId(type);
 						if(vanillaEgg != null){
-							return vanillaEgg.getColor(tintIndex);
+							return 0xFF000000 | vanillaEgg.getColor(tintIndex);
 						}
 					}
 				}

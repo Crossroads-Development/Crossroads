@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads;
 
-import com.Da_Technomancer.crossroads.advancements.BeamAlignmentTrigger;
+import com.Da_Technomancer.crossroads.advancements.*;
 import com.Da_Technomancer.crossroads.ambient.particles.CRParticles;
 import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
 import com.Da_Technomancer.crossroads.api.CRCapabilities;
@@ -36,6 +36,7 @@ import com.Da_Technomancer.essentials.api.ReflectionUtil;
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import it.unimi.dsi.fastutil.objects.Object2BooleanMaps;
 import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
+import net.minecraft.advancements.critereon.ItemSubPredicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
@@ -100,7 +101,7 @@ import java.util.function.Supplier;
 
 public class EventHandlerCommon{
 
-	@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD, modid = Crossroads.MODID)
+	@EventBusSubscriber()
 	public static class CRModEventsCommon{
 
 		@SuppressWarnings("unused")
@@ -230,6 +231,15 @@ public class EventHandlerCommon{
 
 			e.register(Registries.TRIGGER_TYPE, helper -> {
 				registerThing(helper, "beam_alignment", BeamAlignmentTrigger.INSTANCE);
+				registerThing(helper, "golem_built", GolemBuiltTrigger.INSTANCE);
+				registerThing(helper, "clone_spawned", CloneSpawnedTrigger.INSTANCE);
+				registerThing(helper, "gateway_travel", GatewayTravelTrigger.INSTANCE);
+				registerThing(helper, "dirt_cable", DirtCableTrigger.INSTANCE);
+				registerThing(helper, "atmos_charge", AtmosChargeTrigger.INSTANCE);
+			});
+
+			e.register(Registries.ITEM_SUB_PREDICATE_TYPE, helper -> {
+				registerThing(helper, "goggle_lens", new ItemSubPredicate.Type<>(ItemGoggleLensPredicate.CODEC));
 			});
 		}
 

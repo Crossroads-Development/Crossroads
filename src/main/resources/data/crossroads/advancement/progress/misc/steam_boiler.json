@@ -1,0 +1,33 @@
+{
+	"parent": "crossroads:progress/misc/heat_cables",
+	"display": {
+		"icon": {
+			"id": "crossroads:steam_boiler"
+		},
+		"title": {
+			"translate": "crossroads.advancement.steam_boiler"
+		},
+		"description": {
+			"translate": "crossroads.advancement.steam_boiler.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"has_item": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "crossroads:steam_boiler"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_item"
+		]
+	]
+}

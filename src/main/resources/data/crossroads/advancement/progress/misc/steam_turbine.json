@@ -1,0 +1,33 @@
+{
+	"parent": "crossroads:progress/misc/steam_boiler",
+	"display": {
+		"icon": {
+			"id": "crossroads:steam_turbine"
+		},
+		"title": {
+			"translate": "crossroads.advancement.steam_turbine"
+		},
+		"description": {
+			"translate": "crossroads.advancement.steam_turbine.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"has_item": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "crossroads:steam_turbine"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_item"
+		]
+	]
+}

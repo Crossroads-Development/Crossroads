@@ -1,0 +1,33 @@
+{
+	"parent": "crossroads:progress/misc/master_axis",
+	"display": {
+		"icon": {
+			"id": "crossroads:wind_turbine"
+		},
+		"title": {
+			"translate": "crossroads.advancement.wind_turbine"
+		},
+		"description": {
+			"translate": "crossroads.advancement.wind_turbine.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"has_item": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "crossroads:wind_turbine"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_item"
+		]
+	]
+}

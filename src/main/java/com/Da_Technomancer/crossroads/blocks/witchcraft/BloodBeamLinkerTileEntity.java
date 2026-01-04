@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.blocks.witchcraft;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.beams.*;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
@@ -24,7 +23,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-
 import net.neoforged.neoforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
@@ -34,6 +32,7 @@ import java.util.UUID;
 public class BloodBeamLinkerTileEntity extends InventoryTE implements IBeamCapable, IItemCapable{
 
 	public static final BlockEntityType<BloodBeamLinkerTileEntity> TYPE = CRTileEntity.createType(BloodBeamLinkerTileEntity::new, CRBlocks.bloodBeamLinker);
+	public static final String BEAM_SOURCE_TYPE = "blood_beam_linker";
 
 	//Prevents accepting 2 beams in one cycle
 	private long lastActiveBeamCycle = -1;
@@ -137,7 +136,7 @@ public class BloodBeamLinkerTileEntity extends InventoryTE implements IBeamCapab
 					//Base the alignment/effect on the full incoming beam, but only transmit the power-limited version
 					EnumBeamAlignments align;
 					boolean voidBeam = beamIn.isVoidVariant();
-					;
+
 					int beamPower = Math.min(Math.min(beamIn.getPower(), CRConfig.maximumBloodLinkerPower.get()), BeamUtil.MAX_EFFECT_POWER);
 					BeamUnit toTransmit;
 					if(spoiledBeam){
@@ -157,7 +156,7 @@ public class BloodBeamLinkerTileEntity extends InventoryTE implements IBeamCapab
 						align = beamIn.getAlignment();
 						toTransmit = new BeamUnit(MiscUtil.withdrawExact(beamIn.getValues(), beamPower));
 					}
-					BeamHit hit = new BeamHit(serverLevel, target.blockPosition(), beamHitIn.getDirection(), null, toTransmit, beamHitIn.getRay(), target.position());
+					BeamHit hit = new BeamHit(serverLevel, target.blockPosition(), beamHitIn.getDirection(), null, toTransmit, beamHitIn.getRay(), target.position(), new BeamHit.BeamSource(BEAM_SOURCE_TYPE, true, false, level, worldPosition, null));
 					align.getEffect().doBeamEffect(align, voidBeam, beamPower, hit);
 				}
 			}
@@ -165,7 +164,7 @@ public class BloodBeamLinkerTileEntity extends InventoryTE implements IBeamCapab
 
 		@Override
 		public void setBeam(@Nonnull BeamUnit mag){
-			setBeam(mag, new BeamHit((ServerLevel) level, worldPosition, Direction.UP, null, mag));
+			setBeam(mag, new BeamHit((ServerLevel) level, worldPosition, Direction.UP, null, mag, new BeamHit.BeamSource(BEAM_SOURCE_TYPE, true, false, level, worldPosition, null)));
 		}
 	}
 }

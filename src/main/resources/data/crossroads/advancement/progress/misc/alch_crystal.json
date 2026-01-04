@@ -1,0 +1,33 @@
+{
+	"parent": "crossroads:progress/path/alchemy",
+	"display": {
+		"icon": {
+			"id": "crossroads:alch_crystal"
+		},
+		"title": {
+			"translate": "crossroads.advancement.alch_crystal"
+		},
+		"description": {
+			"translate": "crossroads.advancement.alch_crystal.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"has_item": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "crossroads:alch_crystal"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_item"
+		]
+	]
+}

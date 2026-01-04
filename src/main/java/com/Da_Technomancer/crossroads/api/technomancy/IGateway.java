@@ -1,6 +1,8 @@
 package com.Da_Technomancer.crossroads.api.technomancy;
 
 import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.advancements.GatewayTravelTrigger;
+import com.Da_Technomancer.crossroads.api.AdvancementTracker;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.templates.IInfoTE;
 import com.Da_Technomancer.crossroads.entity.EntityGhostMarker;
@@ -96,6 +98,7 @@ public interface IGateway extends IInfoTE{
 			}
 			play.setYHeadRot(prevHeadYaw + yawRotation);
 			play.setDeltaMovement(prevVelocity.yRot(yawRotation));
+			GatewayTravelTrigger.INSTANCE.trigger(play);//Advancement
 		}else{
 			Vec3 prevVelocity = e.getDeltaMovement();
 			if(target == e.level()){

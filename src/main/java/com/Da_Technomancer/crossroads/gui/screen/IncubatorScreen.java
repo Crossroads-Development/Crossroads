@@ -22,7 +22,7 @@ public class IncubatorScreen extends MachineScreen<IncubatorContainer, Incubator
 	protected void renderBg(GuiGraphics matrix, float partialTicks, int mouseX, int mouseY){
 		matrix.blit(TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
 
-		matrix.blit(TEXTURE, leftPos + 43, topPos + 35, 176, 0, menu.progressRef.get() * 54 / IncubatorTileEntity.REQUIRED, 10);
+		matrix.blit(TEXTURE, leftPos + 61, topPos + 35, 176, 0, menu.progressRef.get() * 54 / IncubatorTileEntity.REQUIRED, 10);
 
 		super.renderBg(matrix, partialTicks, mouseX, mouseY);
 	}
@@ -40,19 +40,22 @@ public class IncubatorScreen extends MachineScreen<IncubatorContainer, Incubator
 			//Special overlay in the middle
 			rawTemp = Math.max(0, Math.min(rawTemp, 99_999));
 			boolean inRange = rawTemp >= 1000 * IncubatorTileEntity.MIN_TEMP && rawTemp <= IncubatorTileEntity.MAX_TEMP * 1000;
+			int xOffset = 24;
 			for(int i = 0; i < 6; i++){
 				String charStr;
 				int color;
 				if(i == 3){
 					charStr = ".";
 					color = 0;
+					xOffset -= 4;
 				}else{
 					int digit = rawTemp % 10;
 					rawTemp /= 10;
 					charStr = "" + digit;
-					color = digit == 3 && inRange ? 0x00FF00 : 0xA00000;
+					color = digit == 3 && inRange ? 0x00AF00 : 0xA00000;
+					xOffset -= 8;
 				}
-				matrix.drawString(font, charStr, imageWidth / 2 + (2 - i) * 8, 6, color, false);
+				matrix.drawString(font, charStr, imageWidth / 2 + xOffset, 6, color, false);
 			}
 		}
 	}
@@ -65,8 +68,8 @@ public class IncubatorScreen extends MachineScreen<IncubatorContainer, Incubator
 		if(menu.timeRef != null){
 			int total = menu.timeRef.get();
 			int minutes = total / 60;
-			int seconds = total %= 60;
-			float fractionOfBaseTime = (float) total / IncubatorTileEntity.REQUIRED;
+			int seconds = total % 60;
+			float fractionOfBaseTime = (float) total * 20 / IncubatorTileEntity.REQUIRED;
 			int color = fractionOfBaseTime < 0.2 ? 0x0000A0 : fractionOfBaseTime < 0.4 ? 0x00A000 : fractionOfBaseTime < 0.8 ? 0xA0A000 : fractionOfBaseTime < 1 ? 0xA00800 : 0xA00000;
 			String s = MiscUtil.localize("container.crossroads.incubator.time", minutes, seconds);
 			matrix.drawString(font, s, imageWidth / 2 - font.width(s) / 2, 16, color, false);

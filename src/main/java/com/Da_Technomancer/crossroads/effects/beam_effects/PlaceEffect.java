@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.effects.beam_effects;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.advancements.GolemBuiltTrigger;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.beams.BeamHit;
 import com.Da_Technomancer.crossroads.api.beams.EnumBeamAlignments;
@@ -9,15 +10,18 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.CarvedPumpkinBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -26,11 +30,12 @@ import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
 
 import java.util.List;
+import java.util.UUID;
 
 public class PlaceEffect extends BeamEffect{
 
 	public static FakePlayer getBlockFakePlayer(ServerLevel world){
-		GameProfile fakePlayerProfile = new GameProfile(null, Crossroads.MODID + "-block-fake-player-" + MiscUtil.getDimensionName(world));
+		GameProfile fakePlayerProfile = new GameProfile(UUID.randomUUID(), Crossroads.MODID + "-block-fake-player-" + MiscUtil.getDimensionName(world));
 		return FakePlayerFactory.get(world, fakePlayerProfile);
 	}
 
@@ -45,7 +50,12 @@ public class PlaceEffect extends BeamEffect{
 				double range = Math.sqrt(power);
 				List<ItemEntity> items = beamHit.getNearbyEntities(ItemEntity.class, range, null);
 				if(items.size() != 0){
-					FakePlayer placer = getBlockFakePlayer(beamHit.getWorld());
+					ServerPlayer placer;
+					if(beamHit.getBeamSource().srcPlayer() instanceof ServerPlayer player){
+						placer = player;
+					}else{
+						placer = getBlockFakePlayer(beamHit.getWorld());
+					}
 					for(ItemEntity ent : items){
 						ItemStack stack = ent.getItem();
 						if(!stack.isEmpty() && stack.getItem() instanceof BlockItem){
@@ -56,12 +66,12 @@ public class PlaceEffect extends BeamEffect{
 								BlockPos pos = ent.blockPosition();
 								BlockState worldState = beamHit.getWorld().getBlockState(pos);
 								if(worldState.canBeReplaced(context) && state.canSurvive(beamHit.getWorld(), pos)){
-									tryPlace(state, beamHit.getWorld(), pos, worldState, placer, stack, ent);
+									tryPlace(state, beamHit.getWorld(), pos, worldState, placer, stack, ent, beamHit);
 								}else{
 									pos = pos.above();
 									worldState = beamHit.getWorld().getBlockState(pos);
 									if(worldState.canBeReplaced(context) && state.canSurvive(beamHit.getWorld(), pos)){
-										tryPlace(state, beamHit.getWorld(), pos, worldState, placer, stack, ent);
+										tryPlace(state, beamHit.getWorld(), pos, worldState, placer, stack, ent, beamHit);
 									}
 								}
 							}
@@ -72,7 +82,25 @@ public class PlaceEffect extends BeamEffect{
 		}
 	}
 
-	private void tryPlace(BlockState state, Level world, BlockPos pos, BlockState existingState, FakePlayer placer, ItemStack stack, ItemEntity ent){
+	private void tryPlace(BlockState state, Level world, BlockPos pos, BlockState existingState, LivingEntity placer, ItemStack stack, ItemEntity ent, BeamHit beamHit){
+		//Advancement check
+		if(state.getBlock() instanceof CarvedPumpkinBlock pumpkinBlock && pumpkinBlock.canSpawnGolem(world, pos)){
+			BeamHit.BeamSource source = beamHit.getBeamSource();
+			ServerPlayer responsiblePlayer = source.srcPlayer() instanceof ServerPlayer ? (ServerPlayer) source.srcPlayer() : null;
+			Level srcLevel = source.level() == null ? responsiblePlayer == null ? world : responsiblePlayer.level() : source.level();
+			final BlockPos srcPos = source.srcPos();
+			final int range = srcLevel != world ? Integer.MAX_VALUE : srcPos != null ? (int) pos.distSqr(srcPos) : responsiblePlayer != null ? (int) pos.distToCenterSqr(responsiblePlayer.position()) : -1;
+			if(range >= 0){
+				if(responsiblePlayer != null){
+					//Award the one named player the advancement
+					GolemBuiltTrigger.INSTANCE.trigger(responsiblePlayer, range, source.name());
+				}else if(srcPos != null){
+					//Award advancement to all players stood near the source block
+					srcLevel.players().stream().filter(worldPlayer -> srcPos.distToCenterSqr(worldPlayer.position()) < 30).forEach(worldPlayer -> GolemBuiltTrigger.INSTANCE.trigger((ServerPlayer) worldPlayer, range, source.name()));
+				}
+			}
+		}
+
 		world.setBlockAndUpdate(pos, state);
 		state.getBlock().setPlacedBy(world, pos, existingState, placer, stack);
 		SoundType soundtype = state.getBlock().getSoundType(state, world, pos, placer);

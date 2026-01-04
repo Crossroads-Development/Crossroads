@@ -99,9 +99,16 @@ public class EmbryoLab extends TEBlock implements IReadable{
 
 				ItemStack heldCopy = held.copy();
 				ItemStack result = ((EmbryoLabTileEntity) te).addItem(held);
-				//If the stack changed, assume we did something and shouldn't open the UI
-				if(!held.isEmpty() && (!BlockUtil.sameItem(result, heldCopy) || result.getCount() != heldCopy.getCount())){
-					playerIn.setItemInHand(hand, result);
+				//Add result item
+				if(!result.isEmpty()){
+					if(held.isEmpty()){
+						playerIn.setItemInHand(hand, result);
+					}else{
+						playerIn.addItem(result);
+					}
+				}
+				//If inventory changed, assume we did something and shouldn't open the UI
+				if(!result.isEmpty() || held.getCount() != heldCopy.getCount()){
 					return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
 				}
 			}

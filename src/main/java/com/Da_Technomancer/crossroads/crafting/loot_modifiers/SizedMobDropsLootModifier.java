@@ -23,8 +23,6 @@ import javax.annotation.Nonnull;
 
 public class SizedMobDropsLootModifier extends LootModifier{
 
-	//TODO test
-
 	protected static final MapCodec<SizedMobDropsLootModifier> MAP_CODEC = RecordCodecBuilder.mapCodec(inst -> codecStart(inst)
 			.and(inst.group(Codec.BOOL.optionalFieldOf("active", true).forGetter(SizedMobDropsLootModifier::isActive),
 					Codec.BOOL.fieldOf("can_scale_up").forGetter(SizedMobDropsLootModifier::canScaleUp),
@@ -100,6 +98,12 @@ public class SizedMobDropsLootModifier extends LootModifier{
 							if(newCount == 0){
 								generatedLoot.remove(i--);
 							}else{
+								//When increasing size of drops, need to split it into stacks
+								final int maxStackSize = generated.getMaxStackSize();
+								while(newCount > maxStackSize){
+									generatedLoot.add(i++, generated.copyWithCount(maxStackSize));
+									newCount -= maxStackSize;
+								}
 								generated.setCount(newCount);
 							}
 						}

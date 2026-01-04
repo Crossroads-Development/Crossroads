@@ -1,0 +1,130 @@
+{
+	"parent": "crossroads:progress/alignment/light",
+	"display": {
+		"icon": {
+			"id": "crossroads:color_chart"
+		},
+		"title": {
+			"translate": "crossroads.advancement.align.all_color"
+		},
+		"description": {
+			"translate": "crossroads.advancement.align.all_color.desc"
+		},
+		"frame": "challenge",
+		"announce_to_chat": false
+	},
+	"criteria": {
+		"charge": {
+			"trigger": "crossroads:beam_alignment",
+			"conditions": {
+				"alignment": "charge",
+				"void": "any"
+			}
+		},
+		"enchantment": {
+			"trigger": "crossroads:beam_alignment",
+			"conditions": {
+				"alignment": "enchantment",
+				"void": "any"
+			}
+		},
+		"energy": {
+			"trigger": "crossroads:beam_alignment",
+			"conditions": {
+				"alignment": "energy",
+				"void": "any"
+			}
+		},
+		"equilibrium": {
+			"trigger": "crossroads:beam_alignment",
+			"conditions": {
+				"alignment": "equilibrium",
+				"void": "any"
+			}
+		},
+		"expansion": {
+			"trigger": "crossroads:beam_alignment",
+			"conditions": {
+				"alignment": "expansion",
+				"void": "any"
+			}
+		},
+		"fusion": {
+			"trigger": "crossroads:beam_alignment",
+			"conditions": {
+				"alignment": "fusion",
+				"void": "any"
+			}
+		},
+		"light": {
+			"trigger": "crossroads:beam_alignment",
+			"conditions": {
+				"alignment": "light",
+				"void": "any"
+			}
+		},
+		"potential": {
+			"trigger": "crossroads:beam_alignment",
+			"conditions": {
+				"alignment": "potential",
+				"void": "any"
+			}
+		},
+		"rift": {
+			"trigger": "crossroads:beam_alignment",
+			"conditions": {
+				"alignment": "rift",
+				"void": "any"
+			}
+		},
+		"stability": {
+			"trigger": "crossroads:beam_alignment",
+			"conditions": {
+				"alignment": "stability",
+				"void": "any"
+			}
+		},
+		"time": {
+			"trigger": "crossroads:beam_alignment",
+			"conditions": {
+				"alignment": "time",
+				"void": "any"
+			}
+		}
+	},
+	"requirements": [
+		[
+			"charge"
+		],
+		[
+			"enchantment"
+		],
+		[
+			"energy"
+		],
+		[
+			"equilibrium"
+		],
+		[
+			"expansion"
+		],
+		[
+			"fusion"
+		],
+		[
+			"light"
+		],
+		[
+			"potential"
+		],
+		[
+			"rift"
+		],
+		[
+			"stability"
+		],
+		[
+			"time"
+		]
+	]
+}

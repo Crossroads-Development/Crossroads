@@ -1,0 +1,39 @@
+{
+	"parent": "crossroads:progress/path/witchcraft",
+	"display": {
+		"icon": {
+			"id": "crossroads:soul_cluster"
+		},
+		"title": {
+			"translate": "crossroads.advancement.transient_potion"
+		},
+		"description": {
+			"translate": "crossroads.advancement.transient_potion.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"has_item": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "crossroads:potion",
+						"predicates": {
+							"minecraft:potion_contents": [
+								"crossroads:transient",
+								"crossroads:long_transient"
+							]
+						}
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_item"
+		]
+	]
+}

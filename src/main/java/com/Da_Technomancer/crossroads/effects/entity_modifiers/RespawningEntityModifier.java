@@ -64,7 +64,7 @@ public record RespawningEntityModifier(int complexity, int soulComplexity) imple
 		return entity;
 	}
 
-	private static final Component NAME = Component.translatable("ent_mod.respawning").withStyle(MiscUtil.TT_DYNAMIC);
+	private static final Component NAME = Component.translatable("ent_mod.respawning");
 
 	@Override
 	public Component getName(@Nullable EntityType<?> entityType, @Nullable Level level){

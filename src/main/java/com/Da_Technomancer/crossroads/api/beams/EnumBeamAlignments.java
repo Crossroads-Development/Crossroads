@@ -42,10 +42,10 @@ public enum EnumBeamAlignments implements StringRepresentable{
 	private final Color mid;
 	private final int range;
 
-	public static Codec<EnumBeamAlignments> CODEC = StringRepresentable.fromEnum(EnumBeamAlignments::values);
+	public static final Codec<EnumBeamAlignments> CODEC = StringRepresentable.fromEnum(EnumBeamAlignments::values);
 	
-	public static StreamCodec<RegistryFriendlyByteBuf, EnumBeamAlignments> STREAM_CODEC
-			= ByteBufCodecs.fromCodecWithRegistries(StringRepresentable.fromEnum(EnumBeamAlignments::values));
+	public static final StreamCodec<RegistryFriendlyByteBuf, EnumBeamAlignments> STREAM_CODEC
+			= ByteBufCodecs.fromCodecWithRegistries(CODEC);
 
 	EnumBeamAlignments(BeamEffect eff, Color cent, int range){
 		this.effect = eff;

@@ -1,0 +1,35 @@
+{
+	"parent": "crossroads:progress/misc/flux_sink",
+	"display": {
+		"icon": {
+			"id": "crossroads:temporal_accelerator"
+		},
+		"title": {
+			"translate": "crossroads.advancement.temporal_accelerator"
+		},
+		"description": {
+			"translate": "crossroads.advancement.temporal_accelerator.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"has_item": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": [
+							"crossroads:temporal_accelerator"
+						]
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_item"
+		]
+	]
+}

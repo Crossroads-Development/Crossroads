@@ -1,0 +1,29 @@
+{
+	"parent": "crossroads:progress/misc/atmos_charger",
+	"display": {
+		"icon": {
+			"id": "minecraft:creeper_head"
+		},
+		"title": {
+			"translate": "crossroads.advancement.atmos_charge_consequences"
+		},
+		"description": {
+			"translate": "crossroads.advancement.atmos_charge_consequences.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"charged": {
+			"trigger": "crossroads:atmos_charge",
+			"conditions": {
+				"min_charge_pct": 90
+			}
+		}
+	},
+	"requirements": [
+		[
+			"charged"
+		]
+	]
+}

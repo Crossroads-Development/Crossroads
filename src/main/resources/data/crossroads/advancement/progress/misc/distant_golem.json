@@ -1,0 +1,30 @@
+{
+	"parent": "crossroads:progress/path/technomancy",
+	"display": {
+		"icon": {
+			"id": "minecraft:carved_pumpkin"
+		},
+		"title": {
+			"translate": "crossroads.advancement.distant_golem"
+		},
+		"description": {
+			"translate": "crossroads.advancement.distant_golem.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"golem_built": {
+			"trigger": "crossroads:golem_built",
+			"conditions": {
+				"min_distance": 100,
+				"beam_source_type": "beam_cannon"
+			}
+		}
+	},
+	"requirements": [
+		[
+			"golem_built"
+		]
+	]
+}

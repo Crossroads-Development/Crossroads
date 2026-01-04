@@ -1,9 +1,11 @@
 package com.Da_Technomancer.crossroads.effects.overheat_effects;
 
+import com.Da_Technomancer.crossroads.advancements.DirtCableTrigger;
 import com.Da_Technomancer.crossroads.blocks.heat.HeatInsulators;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.animal.Pufferfish;
@@ -13,6 +15,7 @@ import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.Random;
@@ -75,6 +78,11 @@ public class DirtEffect implements HeatInsulators.IOverheatEffect{
 				lightning.moveTo(Vec3.atBottomCenterOf(pos));
 				worldIn.addFreshEntity(lightning);
 				break;
+		}
+
+		//Advancement trigger
+		for(ServerPlayer player : worldIn.getEntitiesOfClass(ServerPlayer.class, AABB.ofSize(pos.getCenter(), 17.0, 17.0, 17.0))){
+			DirtCableTrigger.INSTANCE.trigger(player, effect);
 		}
 	}
 }

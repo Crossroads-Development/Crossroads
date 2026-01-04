@@ -84,7 +84,7 @@ public class SpringGun extends ProjectileWeaponItem implements WindingTableTileE
 		double wind = getWindLevel(stack);
 		double maxWind = getMaxWind();
 		appendTooltip(stack, tooltip, flag);
-		tooltip.add(Component.translatable("tt.crossroads.spring_gun.winding", CRConfig.formatVal(calcDamage(wind)), CRConfig.formatVal(calcDamage(maxWind))));
+		tooltip.add(Component.translatable("tt.crossroads.spring_gun.winding", Math.round(calcDamage(wind)), Math.round(calcDamage(maxWind))));
 		tooltip.add(Component.translatable("tt.crossroads.spring_gun.desc"));
 		tooltip.add(Component.translatable("tt.crossroads.spring_gun.quip").setStyle(MiscUtil.TT_QUIP));
 	}

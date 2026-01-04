@@ -36,11 +36,6 @@ public final class MiscUtil{
 	 * A common style applied to "quip" lines in tooltips
 	 */
 	public static final Style TT_QUIP = ConfigUtil.TT_QUIP;
-	/**
-	 * A common style applied to parameter values in tooltips
-	 * Equivalent string formatting code is '§e' and reset '§r'
-	 */
-	public static final Style TT_DYNAMIC = Style.EMPTY.applyFormat(ChatFormatting.YELLOW);
 
 	//Useful flags for Level::setBlock
 	public static final int BLOCK_FLAG_UPDATE = 1;

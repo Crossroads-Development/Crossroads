@@ -1,0 +1,33 @@
+{
+	"parent": "crossroads:progress/misc/incubator",
+	"display": {
+		"icon": {
+			"id": "crossroads:potion_extension"
+		},
+		"title": {
+			"translate": "crossroads.advancement.potion_extension"
+		},
+		"description": {
+			"translate": "crossroads.advancement.potion_extension.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"has_item": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "crossroads:potion_extension"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_item"
+		]
+	]
+}

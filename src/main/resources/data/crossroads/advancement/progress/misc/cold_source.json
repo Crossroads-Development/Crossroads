@@ -1,0 +1,36 @@
+{
+	"parent": "crossroads:progress/misc/heat_cables",
+	"display": {
+		"icon": {
+			"id": "crossroads:icebox"
+		},
+		"title": {
+			"translate": "crossroads.advancement.cold_source"
+		},
+		"description": {
+			"translate": "crossroads.advancement.cold_source.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"has_item": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": [
+							"crossroads:icebox",
+							"crossroads:salt_reactor"
+						]
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_item"
+		]
+	]
+}

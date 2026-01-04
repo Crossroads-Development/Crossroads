@@ -1,0 +1,33 @@
+{
+	"parent": "crossroads:progress/misc/master_axis",
+	"display": {
+		"icon": {
+			"id": "crossroads:shaved_ice"
+		},
+		"title": {
+			"translate": "crossroads.advancement.shaved_ice"
+		},
+		"description": {
+			"translate": "crossroads.advancement.shaved_ice.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"eaten": {
+			"trigger": "minecraft:consume_item",
+			"conditions": {
+				"items": [
+					{
+						"items": "crossroads:shaved_ice"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"eaten"
+		]
+	]
+}

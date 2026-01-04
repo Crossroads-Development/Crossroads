@@ -36,7 +36,7 @@ import java.util.Optional;
 
 public class IncubatorTileEntity extends InventoryTE implements IHeatCapable, IItemCapable{
 
-	public static final int REQUIRED = 60 * 20;//Total required progress for one operation, 1min
+	public static final int REQUIRED = 3 * 60 * 20;//Total required progress for one operation, 3min
 	public static final int MIN_TEMP = 30;//Minimum operating temp
 	public static final int MAX_TEMP = 40;//Maximum operating temp
 	public static final int LUCKY_DIGIT = 3;
@@ -81,12 +81,12 @@ public class IncubatorTileEntity extends InventoryTE implements IHeatCapable, II
 
 		boolean validRecipe = false;
 
-		if(!inventory[0].isEmpty() && !inventory[1].isEmpty()){
-			if(IPerishable.isSpoiled(inventory[0], level)){
+		for(int i = 0; i < 2; i++){
+			if(!inventory[i].isEmpty() && IPerishable.isSpoiled(inventory[i], level)){
 				if(inventory[2].isEmpty()){
-					//Eject the invalid input item, including spoiled embryos
-					inventory[2] = inventory[0];
-					inventory[0] = ItemStack.EMPTY;
+					//Eject any spoiled ingredients
+					inventory[2] = inventory[i];
+					inventory[i] = ItemStack.EMPTY;
 					setChanged();
 				}
 				return;

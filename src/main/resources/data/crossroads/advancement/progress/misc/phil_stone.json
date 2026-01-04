@@ -1,0 +1,33 @@
+{
+	"parent": "crossroads:progress/misc/alch_crystal",
+	"display": {
+		"icon": {
+			"id": "crossroads:phil_stone"
+		},
+		"title": {
+			"translate": "crossroads.advancement.phil_stone"
+		},
+		"description": {
+			"translate": "crossroads.advancement.phil_stone.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"has_item": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "crossroads:phil_stone"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_item"
+		]
+	]
+}

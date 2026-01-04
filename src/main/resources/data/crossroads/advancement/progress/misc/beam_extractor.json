@@ -1,0 +1,33 @@
+{
+	"parent": "crossroads:progress/root",
+	"display": {
+		"icon": {
+			"id": "crossroads:beam_extractor"
+		},
+		"title": {
+			"translate": "crossroads.advancement.beam_extractor"
+		},
+		"description": {
+			"translate": "crossroads.advancement.beam_extractor.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"has_item": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "crossroads:beam_extractor"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_item"
+		]
+	]
+}

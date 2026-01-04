@@ -43,11 +43,12 @@ public class BeamReflectorSensitiveTileEntity extends BeamReflectorTileEntity{
 		@Override
 		public boolean emit(@Nonnull BeamUnit mag, Level world){
 			BeamHit beamHit;
+			BeamHit.BeamSource beamSource = new BeamHit.BeamSource(BEAM_SOURCE_TYPE, true, true, world, pos, null);
 			if(mag.isEmpty()){
 				//Optimization: skip full raytracing for empty beams, and fallback to normal block-collision only
-				beamHit = BeamUtil.rayTraceBeamSimple(mag, world, pos, dir, BeamUtil.MAX_DISTANCE, true);
+				beamHit = BeamUtil.rayTraceBeamSimple(mag, world, pos, dir, BeamUtil.MAX_DISTANCE, beamSource);
 			}else{
-				beamHit = BeamUtil.rayTraceBeams(mag, world, startVec, startVec, rayVec, null, pos, BeamUtil.MAX_DISTANCE, true);
+				beamHit = BeamUtil.rayTraceBeams(mag, world, startVec, startVec, rayVec, null, pos, BeamUtil.MAX_DISTANCE, beamSource);
 			}
 
 

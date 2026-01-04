@@ -1,0 +1,37 @@
+{
+	"parent": "crossroads:progress/misc/heat_cables",
+	"display": {
+		"icon": {
+			"id": "crossroads:firebox"
+		},
+		"title": {
+			"translate": "crossroads.advancement.heat_source"
+		},
+		"description": {
+			"translate": "crossroads.advancement.heat_source.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"has_item": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": [
+							"crossroads:firebox",
+							"crossroads:solar_heater",
+							"crossroads:fluid_cooling_chamber"
+						]
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_item"
+		]
+	]
+}
