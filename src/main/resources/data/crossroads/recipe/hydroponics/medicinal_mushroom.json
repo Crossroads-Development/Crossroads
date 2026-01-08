@@ -1,0 +1,12 @@
+{
+	"type": "crossroads:hydroponics",
+	"input": {
+		"item": "crossroads:medicinal_mushroom"
+	},
+	"output": {
+		"id": "crossroads:medicinal_mushroom",
+		"count": 1
+	},
+	"growth_stages": 4,
+	"needs_light": false
+}

@@ -1,0 +1,11 @@
+{
+	"type": "crossroads:hydroponics",
+	"input": {
+		"item": "melon_seeds"
+	},
+	"output": {
+		"id": "melon_slice",
+		"count": 4
+	},
+	"growth_stages": 7
+}

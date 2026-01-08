@@ -1,0 +1,11 @@
+{
+	"type": "crossroads:hydroponics",
+	"input": {
+		"item": "pumpkin_seeds"
+	},
+	"output": {
+		"id": "pumpkin",
+		"count": 1
+	},
+	"growth_stages": 7
+}

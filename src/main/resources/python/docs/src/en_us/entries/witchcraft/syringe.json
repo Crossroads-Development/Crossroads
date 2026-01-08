@@ -33,6 +33,7 @@
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:syringe" : 0
+		"crossroads:syringe" : 0,
+		"crossroads:potion_extension": 1
 	}
 }

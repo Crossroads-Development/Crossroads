@@ -1,0 +1,12 @@
+{
+	"type": "crossroads:hydroponics",
+	"input": {
+		"item": "crossroads:wheezewort_seeds"
+	},
+	"output": {
+		"id": "crossroads:wheezewort_seeds",
+		"count": 1
+	},
+	"growth_stages": 15,
+	"needs_light": false
+}

@@ -6,9 +6,9 @@ import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.templates.InventoryTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
+import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.gui.container.HydroponicsTroughContainer;
-import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.essentials.api.BlockUtil;
 import com.Da_Technomancer.essentials.api.IFluidCapable;
 import com.Da_Technomancer.essentials.api.IItemCapable;
@@ -26,27 +26,23 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.FlowerBlock;
 import net.minecraft.world.level.block.TallFlowerBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
-
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
-import org.apache.commons.lang3.tuple.Triple;
 
 import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class HydroponicsTroughTileEntity extends InventoryTE implements IFluidCapable, IItemCapable{
 
@@ -55,39 +51,8 @@ public class HydroponicsTroughTileEntity extends InventoryTE implements IFluidCa
 	private static final int CAPACITY = 8000;
 	public static final int SOLUTION_DRAIN_INTERVAL = 4;
 
-	/**
-	 * Stores all the crop types that can be made in the Hydroponics Trough
-	 * Does not stores seeds that plants subclasses of CropsBlock, FlowerBlock, or TallFlowerBlock- those are handled automatically
-	 * However, if a CropsBlock/FlowerBlock/TallFlowerBlock seed is added to this map, it will override the default behaviour
-	 *
-	 * TODO make this a datapack
-	 * Format: {key: Seed item; value: [needsLight, growthStages, [products]]}
-	 * Other mods can modify this map; If they do, make sure the keyset is the same on the client and server side (values are irrelevant on the client)
-	 */
-	public static final HashMap<Item, Triple<Boolean, Integer, ItemStack[]>> CROPS = new HashMap<>();
-
-	static{
-		CROPS.put(Items.CACTUS, Triple.of(true, 2, new ItemStack[] {new ItemStack(Items.CACTUS)}));
-		CROPS.put(Items.SUGAR_CANE, Triple.of(true, 2, new ItemStack[] {new ItemStack(Items.SUGAR_CANE)}));
-		CROPS.put(Items.MELON_SEEDS, Triple.of(true, 7, new ItemStack[] {new ItemStack(Items.MELON_SLICE, 4)}));
-		CROPS.put(Items.PUMPKIN_SEEDS, Triple.of(true, 7, new ItemStack[] {new ItemStack(Items.PUMPKIN)}));
-		CROPS.put(Items.SEA_PICKLE, Triple.of(false, 7, new ItemStack[] {new ItemStack(Items.SEA_PICKLE)}));
-		CROPS.put(Items.SWEET_BERRIES, Triple.of(true, 2, new ItemStack[] {new ItemStack(Items.SWEET_BERRIES)}));
-		CROPS.put(Items.NETHER_WART, Triple.of(false, 3, new ItemStack[] {new ItemStack(Items.NETHER_WART, 2)}));
-		CROPS.put(Items.SEAGRASS, Triple.of(false, 7, new ItemStack[] {new ItemStack(Items.SEAGRASS)}));
-		CROPS.put(Items.KELP, Triple.of(false, 3, new ItemStack[] {new ItemStack(Items.KELP)}));
-		CROPS.put(Items.BROWN_MUSHROOM, Triple.of(false, 5, new ItemStack[] {new ItemStack(Items.BROWN_MUSHROOM)}));
-		CROPS.put(Items.RED_MUSHROOM, Triple.of(false, 5, new ItemStack[] {new ItemStack(Items.RED_MUSHROOM)}));
-		CROPS.put(Items.CRIMSON_FUNGUS, Triple.of(false, 5, new ItemStack[] {new ItemStack(Items.CRIMSON_FUNGUS)}));
-		CROPS.put(Items.WARPED_FUNGUS, Triple.of(false, 5, new ItemStack[] {new ItemStack(Items.WARPED_FUNGUS)}));
-		CROPS.put(Items.LILY_PAD, Triple.of(true, 7, new ItemStack[] {new ItemStack(Items.LILY_PAD)}));
-		CROPS.put(CRBlocks.medicinalMushroom.asItem(), Triple.of(false, 5, new ItemStack[] {new ItemStack(CRBlocks.medicinalMushroom)}));
-		CROPS.put(CRBlocks.petrolCactus.asItem(), Triple.of(true, 2, new ItemStack[] {new ItemStack(CRBlocks.petrolCactus)}));
-		CROPS.put(CRItems.wheezewortSeeds, Triple.of(false, 15, new ItemStack[] {new ItemStack(CRItems.wheezewortSeeds)}));
-	}
-
 	private int progress = 0;
-
+	private HydroponicsRecGeneric recipeCache = null;
 	private final IItemHandler itemHandler = new ItemHandler();
 
 	public HydroponicsTroughTileEntity(BlockPos pos, BlockState state){
@@ -113,39 +78,47 @@ public class HydroponicsTroughTileEntity extends InventoryTE implements IFluidCa
 		if(fluids[0].isEmpty()){
 			return 0;
 		}
-		Triple<Boolean, Integer, ItemStack[]> crop = getCrop(inventory[0]);
+		HydroponicsRecGeneric crop = getCrop(inventory[0]);
 		if(crop != null){
-			boolean needsLight = crop.getLeft();
+			boolean needsLight = crop.needsLight();
 			return !needsLight || MiscUtil.getLight(level, worldPosition) >= 9 ? CRConfig.hydroponicsMult.get() : 0;
 		}
 		return 0;
 	}
 
 	@Nullable
-	private Triple<Boolean, Integer, ItemStack[]> getCrop(ItemStack seeds){
-		Item item = seeds.getItem();
-		Triple<Boolean, Integer, ItemStack[]> mapped = CROPS.get(item);
-		if(mapped != null){
-			return mapped;
+	private HydroponicsRecGeneric getCrop(ItemStack seeds){
+		if(recipeCache != null && recipeCache.getIngredient().test(seeds)){
+			return recipeCache;
 		}
-		//Handle seeds for CropsBlock & FlowerBlock
-		if(item instanceof BlockItem){
-			Block block = ((BlockItem) item).getBlock();
-			if(block instanceof CropBlock crop){
-				if(level.isClientSide()){
-					return Triple.of(true, crop.getMaxAge(), new ItemStack[0]);//We can't get the drops on the client, but we don't need to
+
+		recipeCache = level.getRecipeManager().getAllRecipesFor(CRRecipes.HYDROPONIC_TROUGH_TYPE).stream().map(RecipeHolder::value).filter(rec -> rec.getIngredient().test(seeds)).findAny().orElse(null);
+		if(recipeCache == null){
+			//Handle seeds for CropsBlock & FlowerBlock
+			Item item = seeds.getItem();
+			if(item instanceof BlockItem bItem){
+				Block block = bItem.getBlock();
+				switch(block){
+					case CropBlock crop -> {
+						if(level.isClientSide()){
+							recipeCache = new HydroponicsRecRecord(Ingredient.of(item), true, crop.getMaxAge(), List.of());//We can't get the drops on the client, but we don't need to
+						}else{
+							List<ItemStack> drops = crop.getStateForAge(crop.getMaxAge()).getDrops(new LootParams.Builder((ServerLevel) level).withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(worldPosition)).withParameter(LootContextParams.TOOL, new ItemStack(Items.IRON_HOE)));
+							recipeCache = new HydroponicsRecRecord(Ingredient.of(item), true, crop.getMaxAge(), drops);
+						}
+					}
+					case FlowerBlock flowerBlock ->
+							recipeCache = new HydroponicsRecRecord(Ingredient.of(item), true, 2, List.of(new ItemStack(item)));
+					case TallFlowerBlock tallFlowerBlock ->
+							recipeCache = new HydroponicsRecRecord(Ingredient.of(item), true, 2, List.of(new ItemStack(item)));
+					default -> {
+						recipeCache = null;
+					}
 				}
-				List<ItemStack> drops = crop.getStateForAge(crop.getMaxAge()).getDrops(new LootParams.Builder((ServerLevel) level).withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(worldPosition)).withParameter(LootContextParams.TOOL, new ItemStack(Items.IRON_HOE)));
-				return Triple.of(true, crop.getMaxAge(), drops.toArray(new ItemStack[0]));
-			}
-			if(block instanceof FlowerBlock){
-				return Triple.of(true, 2, new ItemStack[] {new ItemStack(seeds.getItem())});
-			}
-			if(block instanceof TallFlowerBlock){
-				return Triple.of(true, 2, new ItemStack[] {new ItemStack(seeds.getItem())});
 			}
 		}
-		return null;
+
+		return recipeCache;
 	}
 
 	@Override
@@ -166,30 +139,29 @@ public class HydroponicsTroughTileEntity extends InventoryTE implements IFluidCa
 	}
 
 	public int getProgressBar(){
-		Triple<Boolean, Integer, ItemStack[]> product = getCrop(inventory[0]);
+		HydroponicsRecGeneric product = getCrop(inventory[0]);
 		if(product == null){
 			return 0;
 		}else{
 			//Because the maximum progress can vary based on crop type, we get the progress as the percentage complete
-			int maxProg = product.getMiddle();
+			int maxProg = product.getGrowthStages();
 			return 100 * progress / maxProg;
 		}
 	}
 
 	public void performGrowth(){
 		if(!level.isClientSide()){
-			Triple<Boolean, Integer, ItemStack[]> product = getCrop(inventory[0]);
+			HydroponicsRecGeneric product = getCrop(inventory[0]);
 			if(product == null){
 				progress = 0;
 			}else{
-				int maxProg = product.getMiddle();
+				int maxProg = product.getGrowthStages();
 				progress += getGrowthMult();
 				while(progress >= maxProg){
 					progress -= maxProg;
 					//Produce drops
 					//We make a list of copies of the itemstacks; we modify these stacks, so we need to copy.
-					//We convert to a list simply because it is more convenient when we're using a stream anyway
-					List<ItemStack> drops = Arrays.stream(product.getRight()).map(ItemStack::copy).collect(Collectors.toList());
+					List<ItemStack> drops = product.getOutputs().stream().map(ItemStack::copy).toList();
 					for(ItemStack drop : drops){
 						for(int i = 1; i < inventory.length; i++){//Skip slot 1, which is the seed
 							ItemStack current = inventory[i];
@@ -295,5 +267,34 @@ public class HydroponicsTroughTileEntity extends InventoryTE implements IFluidCa
 	@Override
 	public AbstractContainerMenu createMenu(int id, Inventory playerInventory, Player playerEntity){
 		return new HydroponicsTroughContainer(id, playerInventory, createContainerBuf());
+	}
+
+	public static interface HydroponicsRecGeneric{
+
+		Ingredient getIngredient();
+
+		boolean needsLight();
+
+		int getGrowthStages();
+
+		List<ItemStack> getOutputs();
+	}
+
+	public static record HydroponicsRecRecord(Ingredient ing, boolean needsLight, int growthStages, List<ItemStack> output) implements HydroponicsRecGeneric{
+
+		@Override
+		public Ingredient getIngredient(){
+			return ing;
+		}
+
+		@Override
+		public int getGrowthStages(){
+			return growthStages;
+		}
+
+		@Override
+		public List<ItemStack> getOutputs(){
+			return output;
+		}
 	}
 }

@@ -1,0 +1,12 @@
+{
+	"type": "crossroads:hydroponics",
+	"input": {
+		"item": "red_mushroom"
+	},
+	"output": {
+		"id": "red_mushroom",
+		"count": 1
+	},
+	"growth_stages": 5,
+	"needs_light": false
+}

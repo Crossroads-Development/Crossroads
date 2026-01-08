@@ -1,0 +1,12 @@
+{
+	"type": "crossroads:hydroponics",
+	"input": {
+		"item": "brown_mushroom"
+	},
+	"output": {
+		"id": "brown_mushroom",
+		"count": 1
+	},
+	"growth_stages": 5,
+	"needs_light": false
+}

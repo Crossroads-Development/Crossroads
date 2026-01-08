@@ -1,5 +1,5 @@
 {
-	"parent": "crossroads:progress/misc/phil_stone",
+	"parent": "crossroads:progress/misc/bedrock_dust",
 	"display": {
 		"icon": {
 			"id": "crossroads:densus_plate"

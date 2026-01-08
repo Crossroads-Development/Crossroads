@@ -1,0 +1,12 @@
+{
+	"type": "crossroads:hydroponics",
+	"input": {
+		"item": "nether_wart"
+	},
+	"output": {
+		"id": "nether_wart",
+		"count": 2
+	},
+	"growth_stages": 3,
+	"needs_light": false
+}

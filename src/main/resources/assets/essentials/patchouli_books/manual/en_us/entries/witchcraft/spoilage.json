@@ -1,7 +1,7 @@
 {
 	"category": "essentials:witchcraft",
 	"name": "Spoilage",
-	"icon": "crossroads:cold_storage",
+	"icon": "crossroads:shaved_ice",
 	"sortnum": 0,
 	"priority": false,
 	"advancement": "crossroads:progress/path/witchcraft",
@@ -11,7 +11,7 @@
 			"type": "patchouli:spotlight",
 			"title": "Spoilage",
 			"item": "crossroads:cold_storage",
-			"text": "Several witchcraft ingredients will <thing>spoil/$ once a certain amount of time has passed since creation. <thing>Spoiled/$ items are less effective or useless. Items will continue to <thing>spoil/$ in unloaded chunks unless preserved.$(br2)There are several ways to prevent <thing>spoilage/$.$(br2)"
+			"text": "Some types of items will <thing>spoil/$ once a certain amount of time has passed since creation. For example, <item>Shaved Ice/$. <thing>Spoiled/$ items are less effective or useless. Items will continue to <thing>spoil/$ in unloaded chunks unless preserved.$(br2)There are several ways to prevent <thing>spoilage/$.$(br2)"
 		},
 		{
 			"type": "patchouli:spotlight",

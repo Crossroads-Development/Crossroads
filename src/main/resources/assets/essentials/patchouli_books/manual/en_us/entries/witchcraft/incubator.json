@@ -11,18 +11,19 @@
 			"type": "patchouli:spotlight",
 			"title": "Incubator",
 			"item": "crossroads:incubator",
-			"text": "The <item>incubator/$ has two purposes. It can create <item>genetic plasmids/$, which are used with the <item>$(l:essentials:witchcraft/syringe#potions)syringe/$, and it can create <item>spawn eggs/$ from <item>$(l:essentials:witchcraft/cloning#process)embryos/$, making it the final stage of the <thing>$(l:essentials:witchcraft/cloning)cloning process/$.$(br2)To create <item>genetic plasmids/$, it uses 1 <item>mutagen/$ and 1 (vanilla chicken) egg. <item>Genetic plasmids/$ will spoil after "
+			"text": "The <item>incubator/$ has two purposes. It can create <item>$(l:essentials:witchcraft/syringe#potions)genetic plasmids/$, and it can create <item>spawn eggs/$ from <item>$(l:essentials:witchcraft/cloning#process)embryos/$, making it the final stage of the <thing>$(l:essentials:witchcraft/cloning)cloning process/$.$(br2)To create <item>genetic plasmids/$, it uses 1 <item>mutagen/$ and 1 (vanilla chicken) egg. <item>Genetic plasmids/$ will spoil after 30 minutes.$(br2)To create <item>spawn "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "30 minutes.$(br2)To create <item>spawn eggs/$, it uses 1 (<thing>$(l:essentials:witchcraft/spoilage)non-spoiled/$) <item>$(l:essentials:witchcraft/cloning#process)embryo/$ and 1 (vanilla chicken) egg.$(br2)The process can take anywhere from 1 minutes to 20 minutes- and 20 minutes might be enough time to <thing>$(l:essentials:witchcraft/spoilage)spoil/$ the <item>$(l:essentials:witchcraft/cloning#process)embryo/$. The rate it works at is based on the <thing>$(l:essentials:intro/heat)temperature/$. It connects to <thing>$(l:essentials:intro/heat)heat cables/$ on any side.$(br2)The <item>incubator/$ doesn't use heat, but should be kept within 10°C of "
+			"text": "<item>eggs/$, it uses 1 (<thing>$(l:essentials:witchcraft/spoilage)non-spoiled/$) <item>$(l:essentials:witchcraft/cloning#process)embryo/$ and 1 (vanilla chicken) egg.$(br2)The process can take a long time- potentially long enough for the ingredients to <thing>$(l:essentials:witchcraft/spoilage)spoil/$. The rate it works at is based on the <thing>$(l:essentials:intro/heat)temperature/$. It connects to <thing>$(l:essentials:intro/heat)heat cables/$ on any side.$(br2)The <item>incubator/$ doesn't use heat, but wants to be as close to 33.333°C as possible. The more times the digit 3 appears in the <thing>$(l:essentials:intro/heat)temperature"
 		},
 		{
 			"type": "patchouli:text",
-			"text": "the target <thing>$(l:essentials:intro/heat)temperature/$. While within 10°C of the target <thing>$(l:essentials:intro/heat)temperature/$, it takes 1 minute. While outside that range, it works at a twentieth the speed. The target <thing>$(l:essentials:intro/heat)temperature/$ is randomized every time the <item>incubator/$ finishes a crafting operation, but will always be within 35-140°C.$(br2)<thing>$(l:essentials/circuits)Circuits/$ read the current target <thing>$(l:essentials:intro/heat)temperature/$, in degrees C.$(br2)"
+			"text": "<thing>$(l:essentials:intro/heat)/$, the faster it goes. It also adds <thing>$(l:essentials:witchcraft/cloning#attributes)quality/$ to creates clones- the less time it took to craft, the more it adds."
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:incubator": 0
+		"crossroads:incubator": 0,
+		"crossroads:spawn_egg": 0
 	}
 }

@@ -1,0 +1,12 @@
+{
+	"type": "crossroads:hydroponics",
+	"input": {
+		"item": "crimson_fungus"
+	},
+	"output": {
+		"id": "crimson_fungus",
+		"count": 1
+	},
+	"growth_stages": 5,
+	"needs_light": false
+}

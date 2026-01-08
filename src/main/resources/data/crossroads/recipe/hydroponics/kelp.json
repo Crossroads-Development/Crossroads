@@ -1,0 +1,12 @@
+{
+	"type": "crossroads:hydroponics",
+	"input": {
+		"item": "kelp"
+	},
+	"output": {
+		"id": "kelp",
+		"count": 1
+	},
+	"growth_stages": 3,
+	"needs_light": false
+}

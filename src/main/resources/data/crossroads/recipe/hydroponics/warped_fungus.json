@@ -1,0 +1,12 @@
+{
+	"type": "crossroads:hydroponics",
+	"input": {
+		"item": "warped_fungus"
+	},
+	"output": {
+		"id": "warped_fungus",
+		"count": 1
+	},
+	"growth_stages": 5,
+	"needs_light": false
+}

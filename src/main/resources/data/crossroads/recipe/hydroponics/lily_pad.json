@@ -1,0 +1,11 @@
+{
+	"type": "crossroads:hydroponics",
+	"input": {
+		"item": "lily_pad"
+	},
+	"output": {
+		"id": "lily_pad",
+		"count": 1
+	},
+	"growth_stages": 7
+}

@@ -1,14 +1,14 @@
 {
-	"parent": "crossroads:progress/misc/bedrock_dust",
+	"parent": "crossroads:progress/misc/phil_stone",
 	"display": {
 		"icon": {
-			"id": "crossroads:prac_stone"
+			"id": "crossroads:bedrock_dust"
 		},
 		"title": {
-			"translate": "crossroads.advancement.prac_stone"
+			"translate": "crossroads.advancement.bedrock_dust"
 		},
 		"description": {
-			"translate": "crossroads.advancement.prac_stone.desc"
+			"translate": "crossroads.advancement.bedrock_dust.desc"
 		},
 		"frame": "task",
 		"announce_to_chat": true
@@ -19,7 +19,7 @@
 			"conditions": {
 				"items": [
 					{
-						"items": "crossroads:prac_stone"
+						"items": "crossroads:bedrock_dust"
 					}
 				]
 			}

@@ -5,7 +5,7 @@
 	"sortnum": 1,
 	"priority": false,
 	"advancement": "crossroads:progress/alignment/charge",
-	"read_by_default": true,
+	"read_by_default": "true",
 	"pages": [
 		{
 			"type": "patchouli:spotlight",

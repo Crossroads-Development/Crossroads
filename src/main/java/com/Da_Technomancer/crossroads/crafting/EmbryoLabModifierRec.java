@@ -237,6 +237,20 @@ public class EmbryoLabModifierRec implements IOptionalRecipe<RecipeInput>{
 								Pair.of(Attributes.SAFE_FALL_DISTANCE, new AttributeModifier(modLoc, 1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
 								Pair.of(Attributes.JUMP_STRENGTH, new AttributeModifier(modLoc, -.33, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
 								Pair.of(Attributes.STEP_HEIGHT, new AttributeModifier(modLoc, -0.5, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
+						},
+						{
+								Pair.of(Attributes.SCALE, new AttributeModifier(modLoc, -.5, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
+								Pair.of(Attributes.MAX_HEALTH, new AttributeModifier(modLoc, -.5, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
+								Pair.of(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(modLoc, -(1 - 1/Math.pow(2, 3)), AttributeModifier.Operation.ADD_VALUE)),
+								Pair.of(Attributes.ATTACK_DAMAGE, new AttributeModifier(modLoc, -.5, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
+								Pair.of(Attributes.ATTACK_KNOCKBACK, new AttributeModifier(modLoc, -.5, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
+								Pair.of(Attributes.ATTACK_SPEED, new AttributeModifier(modLoc, .33, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
+								Pair.of(Attributes.ENTITY_INTERACTION_RANGE, new AttributeModifier(modLoc, -.5, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
+								Pair.of(Attributes.BLOCK_INTERACTION_RANGE, new AttributeModifier(modLoc, -.5, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
+								Pair.of(Attributes.FALL_DAMAGE_MULTIPLIER, new AttributeModifier(modLoc, -.5, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
+								Pair.of(Attributes.SAFE_FALL_DISTANCE, new AttributeModifier(modLoc, 2, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
+								Pair.of(Attributes.JUMP_STRENGTH, new AttributeModifier(modLoc, -.5, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
+								Pair.of(Attributes.STEP_HEIGHT, new AttributeModifier(modLoc, -0.5, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
 						}
 				}));
 		modLoc = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "ent_mod.semi_aquatic");

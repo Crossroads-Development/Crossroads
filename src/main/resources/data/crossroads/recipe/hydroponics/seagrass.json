@@ -1,0 +1,12 @@
+{
+	"type": "crossroads:hydroponics",
+	"input": {
+		"item": "seagrass"
+	},
+	"output": {
+		"id": "seagrass",
+		"count": 1
+	},
+	"growth_stages": 7,
+	"needs_light": false
+}

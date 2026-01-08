@@ -30,6 +30,7 @@ public final class CRRecipes{
 	public static RecipeSerializer<?> EMBRYO_LAB_MORPH_SERIAL = null;
 	public static RecipeSerializer<?> EMBRYO_LAB_MODIFIER_SERIAL = null;
 	public static RecipeSerializer<?> INCUBATOR_SERIAL = null;
+	public static RecipeSerializer<?> HYDROPONICS_TROUGH_SERIAL = null;
 
 	public static final RecipeType<MillRec> MILL_TYPE = RecipeType.simple(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "mill"));
 	public static final RecipeType<StampMillRec> STAMP_MILL_TYPE = RecipeType.simple(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "stamp_mill"));
@@ -51,6 +52,7 @@ public final class CRRecipes{
 	public static final RecipeType<EmbryoLabMorphRec> EMBRYO_LAB_MORPH_TYPE = RecipeType.simple(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "embryo_lab_morph"));
 	public static final RecipeType<EmbryoLabModifierRec> EMBRYO_LAB_MODIFIER_TYPE = RecipeType.simple(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "embryo_lab_modifier"));
 	public static final RecipeType<IncubatorRec> INCUBATOR_TYPE = RecipeType.simple(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "incubator"));
+	public static final RecipeType<HydroponicTroughRec> HYDROPONIC_TROUGH_TYPE = RecipeType.simple(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "hydroponics"));
 
 	private static boolean hasInit = false;
 
@@ -80,6 +82,7 @@ public final class CRRecipes{
 		toRegisterType.put("embryo_lab_morph", EMBRYO_LAB_MORPH_TYPE);
 		toRegisterType.put("embryo_lab_modifier", EMBRYO_LAB_MODIFIER_TYPE);
 		toRegisterType.put("incubator", INCUBATOR_TYPE);
+		toRegisterType.put("hydroponics", HYDROPONIC_TROUGH_TYPE);
 
 		STAMP_MILL_SERIAL = MiscUtil.putReturn(toRegisterSerializer, "stamp_mill", new SingleIngrRecipe.SingleRecipeSerializer<>(StampMillRec::new, new StampMillRec()));
 		MILL_SERIAL = MiscUtil.putReturn(toRegisterSerializer, "mill", new MillRec.Serializer());
@@ -101,6 +104,7 @@ public final class CRRecipes{
 		EMBRYO_LAB_MORPH_SERIAL = MiscUtil.putReturn(toRegisterSerializer, "embryo_lab_morph", new EmbryoLabMorphRec.Serializer());
 		EMBRYO_LAB_MODIFIER_SERIAL = MiscUtil.putReturn(toRegisterSerializer, "embryo_lab_modifier", new EmbryoLabModifierRec.Serializer());
 		INCUBATOR_SERIAL = MiscUtil.putReturn(toRegisterSerializer, "incubator", new IncubatorRec.Serializer());
+		HYDROPONICS_TROUGH_SERIAL = MiscUtil.putReturn(toRegisterSerializer, "hydroponics", new HydroponicTroughRec.Serializer());
 	}
 
 	public static final HashMap<String, RecipeSerializer<?>> toRegisterSerializer = new HashMap<>();

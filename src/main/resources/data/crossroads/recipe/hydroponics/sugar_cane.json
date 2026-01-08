@@ -1,0 +1,11 @@
+{
+	"type": "crossroads:hydroponics",
+	"input": {
+		"item": "sugar_cane"
+	},
+	"output": {
+		"id": "sugar_cane",
+		"count": 1
+	},
+	"growth_stages": 2
+}

@@ -1,5 +1,5 @@
 {
-	"parent": "crossroads:progress/misc/distant_golem",
+	"parent": "crossroads:progress/misc/gateway_travel",
 	"display": {
 		"icon": {
 			"id": "minecraft:beacon"
@@ -14,17 +14,16 @@
 		"announce_to_chat": true
 	},
 	"criteria": {
-		"golem_built": {
-			"trigger": "crossroads:golem_built",
+		"travel": {
+			"trigger": "crossroads:gateway_travel",
 			"conditions": {
-				"min_distance": 100,
-				"beam_source_type": "beam_cannon"
+
 			}
 		}
 	},
 	"requirements": [
 		[
-			"golem_built"
+			"travel"
 		]
 	]
 }

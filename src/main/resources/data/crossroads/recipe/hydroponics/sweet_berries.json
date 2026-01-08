@@ -1,0 +1,11 @@
+{
+	"type": "crossroads:hydroponics",
+	"input": {
+		"item": "sweet_berries"
+	},
+	"output": {
+		"id": "sweet_berries",
+		"count": 1
+	},
+	"growth_stages": 2
+}

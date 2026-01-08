@@ -1,0 +1,11 @@
+{
+	"type": "crossroads:hydroponics",
+	"input": {
+		"item": "cactus"
+	},
+	"output": {
+		"id": "cactus",
+		"count": 1
+	},
+	"growth_stages": 2
+}

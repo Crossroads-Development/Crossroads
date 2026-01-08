@@ -1,0 +1,12 @@
+{
+	"type": "crossroads:hydroponics",
+	"input": {
+		"item": "sea_pickle"
+	},
+	"output": {
+		"id": "sea_pickle",
+		"count": 1
+	},
+	"growth_stages": 7,
+	"needs_light": false
+}

@@ -1,0 +1,68 @@
+{
+	"category": "essentials:witchcraft",
+	"format": 2,
+	"name": "Traits",
+	"icon": "crossroads:mutagen",
+	"sortnum": 0,
+	"priority": false,
+	"advancement": "crossroads:progress/path/witchcraft",
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "patchouli:spotlight",
+			"title": "Traits",
+			"item": "crossroads:mutagen",
+			"text": "When creating a fresh <item>embryo/$ in the <item>$(l:essentials:witchcraft/embryo_lab)Life-Spark Capsule/$, you can add extra ingredients to give the new life special <thing>traits/$. Adding <thing>traits/$ may add or reduce the complexity (or require adding a soul). You can see the list of traits in a recipe browser."
+		},
+		{
+			"type": "patchouli:text",
+			"anchor": "large",
+			"text": "<thing>Large/$ clones will be physically bigger, stronger, and slower. Bigger animals and mobs give more stuff when killed. <thing>Large/$ can be added up to three times for even larger clones."
+		},
+		{
+			"type": "patchouli:text",
+			"anchor": "little",
+			"text": "<thing>Little/$ clones will be physically smaller, weaker, and faster. Smaller animals and mobs drop less stuff when killed. <thing>Little/$ can be added twice for even smaller clones."
+		},
+		{
+			"type": "patchouli:text",
+			"anchor": "nimble",
+			"text": "<thing>Nimble/$ clones move faster and jump higher. <thing>Nimble/$ can be added twice for even more agile clones."
+		},
+		{
+			"type": "patchouli:text",
+			"anchor": "reincarnating",
+			"text": "<thing>Reincarnating/$ clones will come back from the dead when killed, respawning 30 seconds after being killed with full health. However, if killed again within 30 seconds of coming back, they stay dead forever. If killed with <thing>$(l:essentials:witchcraft/souls#transient)soul transience/$, they stay dead forever. Sometimes they just decide death is better (5% chance) and stay dead forever. They drop loot every time they are killed."
+		},
+		{
+			"type": "patchouli:text",
+			"anchor": "imprinted",
+			"text": "<thing>Imprinted/$ clones will spawn already tamed by the player whose <item>Blood Sample/$ was used to add the <thing>imprinted/$ trait. This only works for clones of tameable creatures."
+		},
+		{
+			"type": "patchouli:text",
+			"anchor": "named",
+			"text": "<thing>Named/$ clones will spawn already named with the name on the name tag used to add the <thing>named/$ trait."
+		},
+		{
+			"type": "patchouli:text",
+			"anchor": "patient",
+			"text": "<thing>Patient/$ clones will never despawn."
+		},
+		{
+			"type": "patchouli:text",
+			"anchor": "semi-aquatic",
+			"text": "<thing>Semi-aquatic/$ clones are good swimmers and can hold their breath underwater for a very long time. However, they more vulnerable to fire."
+		},
+		{
+			"type": "patchouli:text",
+			"anchor": "inbred",
+			"text": "<thing>Inbred/$ clones have terrible stats and their life is pain. But hey, lower complexity!"
+		},
+		{
+			"type": "patchouli:text",
+			"anchor": "anti-grav",
+			"text": "<thing>Gravity-Defying/$ clones only experience 10% of normal gravity. They make good mounts."
+		}
+	]
+}
