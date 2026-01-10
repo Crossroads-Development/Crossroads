@@ -31,10 +31,12 @@ public class CRRenderTypes extends RenderType{
 	public static final ResourceLocation HAMSTER_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "models/hamster");
 	public static final ResourceLocation GEAR_8_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "models/gear_oct");
 	public static final ResourceLocation GEAR_8_RIM_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "models/gear_oct_rim");
+	public static final ResourceLocation GEAR_8_MILLED_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "models/gear_8_milled");
 	public static final ResourceLocation GEAR_8_TOOTH_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "models/gear_oct_tooth");
 	public static final ResourceLocation GEAR_24_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "models/gear_24");
 	public static final ResourceLocation GEAR_24_RIM_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "models/gear_24_rim");
 	public static final ResourceLocation GEAR_24_TOOTH_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "models/gear_24_tooth");
+	public static final ResourceLocation GEAR_24_MILLED_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "models/gear_24_milled");
 	public static final ResourceLocation CLUTCH_END_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "models/clutch_end");
 	public static final ResourceLocation CLUTCH_SIDE_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "models/clutch_side");
 	public static final ResourceLocation CLUTCH_SIDE_INVERTED_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "models/clutch_side_inv");

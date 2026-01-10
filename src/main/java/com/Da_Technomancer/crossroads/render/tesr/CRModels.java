@@ -464,6 +464,488 @@ public class CRModels{
 		draw8Core(builder, matrix, color, color, light, sprite, spriteRim);
 	}
 
+	private static final CRRenderUtil.Vertex[] MILLED_8_GEAR_TOP_OCT_VERTICES = new CRRenderUtil.Vertex[8];
+	private static final CRRenderUtil.Vertex[] MILLED_8_GEAR_BOTTOM_OCT_VERTICES = new CRRenderUtil.Vertex[8];
+	private static final CRRenderUtil.Vertex[] MILLED_8_GEAR_OUTER_EDGE_VERTICES = new CRRenderUtil.Vertex[32];
+	private static final CRRenderUtil.Vertex[] MILLED_8_GEAR_INNER_EDGE_VERTICES = new CRRenderUtil.Vertex[32];
+	private static final CRRenderUtil.Vertex[] MILLED_8_GEAR_TOP_RIM_VERTICES = new CRRenderUtil.Vertex[32];
+	private static final CRRenderUtil.Vertex[] MILLED_8_GEAR_BOTTOM_RIM_VERTICES = new CRRenderUtil.Vertex[32];
+
+	static{
+		//The way I do TESR rendering tends to horrify people,
+		//However, I refuse to learn
+		//throw enough trigonometry at it, and we can precalculate the coordinates of every vertex on an icositetragon
+
+
+		// Small 8 sided gears, milled design
+
+		//length of the outer octagon, measured between parallel faces
+		final float scale = 14F / 16F;
+		final float lHalf = scale / 2;
+		final float innerLHalf = scale * 7F/16F;//Number picked for aesthetics
+		final float height = 2F / 16F * scale;
+		final float topY = height / 2F;//Half of height
+		final float bottomY = -topY;
+		final float zFightOffset = 0.001F;
+		final float recessY = topY - scale / 32F;
+		final double halfAngleTheta = 2D * Math.PI / 8D * 0.5D;
+		final float outerEdgeLengthHalf = (float) (lHalf * Math.tan(halfAngleTheta));
+		final float innerEdgeLengthHalf = (float) (innerLHalf * Math.tan(halfAngleTheta));
+		final double encircledRadiusOuter = lHalf / Math.cos(halfAngleTheta);
+		final double encircledRadiusInner = innerLHalf / Math.cos(halfAngleTheta);
+		//My uv coords are a bit scuffed since everything is mapped onto one texture file (gear_8_milled.png)
+		final float uScale = 1F/3F / scale;//Units in u space equivalent to 1 unit of length in x,y,z space
+		final float vScale = 1F/2F / scale;//Units in v space equivalent to 1 unit of length in x,y,z space
+		final float topUCenter = 1F/6F;
+		final float topVCenter = 1F/4F;
+		final float bottomUCenter = topUCenter;
+		final float bottomVCenter = 3F/4F;
+		final float rimUCenter = 5F/6F;
+		final float rimUOuterOffset = outerEdgeLengthHalf * uScale;
+		final float rimUInnerOffset = innerEdgeLengthHalf * uScale;
+		final float outerEdgeUCenter = 1/2F;
+		final float outerEdgeUOffset = rimUOuterOffset;
+		final float innerEdgeUCenter = outerEdgeUCenter;
+		final float innerEdgeUOffset = rimUInnerOffset;
+
+		for(int i = 0; i < 8; i++){
+			//Each iteration is one point of the octagon and associated faces. Doesn't include the prongs
+
+			final double theta = halfAngleTheta * (1 + 2*i);
+			final double nextTheta = halfAngleTheta * (3 + 2*i);
+			final float xOuter = (float) (encircledRadiusOuter * Math.cos(theta));
+			final float nextXOuter = (float) (encircledRadiusOuter * Math.cos(nextTheta));
+			final float zOuter = (float) (encircledRadiusOuter * Math.sin(theta));
+			final float nextZOuter = (float) (encircledRadiusOuter * Math.sin(nextTheta));
+			final float xInner = (float) (encircledRadiusInner * Math.cos(theta));
+			final float nextXInner = (float) (encircledRadiusInner * Math.cos(nextTheta));
+			final float zInner = (float) (encircledRadiusInner * Math.sin(theta));
+			final float nextZInner = (float) (encircledRadiusInner * Math.sin(nextTheta));
+			final float rimVStart = (i+1)/16F;
+			final float rimVEnd = i/16F;
+			final float outerEdgeVBottom = rimVStart;
+			final float outerEdgeVTop = rimVEnd;
+			final float innerEdgeVBottom = i/16F + 0.5F + (topY - recessY) * vScale;
+			final float innerEdgeVTop = i/16F + 0.5F;
+			final float edgeNormalX = (float) Math.cos((theta + nextTheta) / 2D);//Facing away from origin
+			final float edgeNormalZ = (float) Math.sin((theta + nextTheta) / 2D);//Facing away from origin
+
+			//Order the quads so the faces render the right way round
+			MILLED_8_GEAR_TOP_OCT_VERTICES[7 - i] = new CRRenderUtil.Vertex(xInner, recessY, zInner, topUCenter + xInner*uScale, topVCenter + zInner*vScale, 0, 1, 0);
+			MILLED_8_GEAR_BOTTOM_OCT_VERTICES[i] = new CRRenderUtil.Vertex(xOuter, bottomY, zOuter, bottomUCenter + xOuter*uScale, bottomVCenter + zOuter*vScale, 0, -1, 0);
+			MILLED_8_GEAR_TOP_RIM_VERTICES[4 * i] = new CRRenderUtil.Vertex(xInner, topY, zInner, rimUCenter + rimUInnerOffset, rimVStart, 0, 1, 0);
+			MILLED_8_GEAR_TOP_RIM_VERTICES[4 * i + 1] = new CRRenderUtil.Vertex(nextXInner, topY, nextZInner, rimUCenter - rimUInnerOffset, rimVStart, 0, 1, 0);
+			MILLED_8_GEAR_TOP_RIM_VERTICES[4 * i + 2] = new CRRenderUtil.Vertex(nextXOuter, topY, nextZOuter, rimUCenter - rimUOuterOffset, rimVEnd, 0, 1, 0);
+			MILLED_8_GEAR_TOP_RIM_VERTICES[4 * i + 3] = new CRRenderUtil.Vertex(xOuter, topY, zOuter, rimUCenter + rimUOuterOffset, rimVEnd, 0, 1, 0);
+			MILLED_8_GEAR_BOTTOM_RIM_VERTICES[4 * i + 3] = new CRRenderUtil.Vertex(xInner, bottomY - zFightOffset, zInner, rimUCenter + rimUInnerOffset, rimVStart, 0, 1, 0);
+			MILLED_8_GEAR_BOTTOM_RIM_VERTICES[4 * i + 2] = new CRRenderUtil.Vertex(nextXInner, bottomY - zFightOffset, nextZInner, rimUCenter - rimUInnerOffset, rimVStart, 0, 1, 0);
+			MILLED_8_GEAR_BOTTOM_RIM_VERTICES[4 * i + 1] = new CRRenderUtil.Vertex(nextXOuter, bottomY - zFightOffset, nextZOuter, rimUCenter - rimUOuterOffset, rimVEnd, 0, 1, 0);
+			MILLED_8_GEAR_BOTTOM_RIM_VERTICES[4 * i] = new CRRenderUtil.Vertex(xOuter, bottomY - zFightOffset, zOuter, rimUCenter + rimUOuterOffset, rimVEnd, 0, 1, 0);
+			MILLED_8_GEAR_OUTER_EDGE_VERTICES[4 * i] = new CRRenderUtil.Vertex(xOuter, topY + zFightOffset, zOuter, outerEdgeUCenter - outerEdgeUOffset, outerEdgeVTop, edgeNormalX, 0, edgeNormalZ);
+			MILLED_8_GEAR_OUTER_EDGE_VERTICES[4 * i + 1] = new CRRenderUtil.Vertex(nextXOuter, topY + zFightOffset, nextZOuter, outerEdgeUCenter + outerEdgeUOffset, outerEdgeVTop, edgeNormalX, 0, edgeNormalZ);
+			MILLED_8_GEAR_OUTER_EDGE_VERTICES[4 * i + 2] = new CRRenderUtil.Vertex(nextXOuter, bottomY - zFightOffset, nextZOuter, outerEdgeUCenter + outerEdgeUOffset, outerEdgeVBottom, edgeNormalX, 0, edgeNormalZ);
+			MILLED_8_GEAR_OUTER_EDGE_VERTICES[4 * i + 3] = new CRRenderUtil.Vertex(xOuter, bottomY - zFightOffset, zOuter, outerEdgeUCenter - outerEdgeUOffset, outerEdgeVBottom, edgeNormalX, 0, edgeNormalZ);
+
+			MILLED_8_GEAR_INNER_EDGE_VERTICES[4 * i + 3] = new CRRenderUtil.Vertex(xInner, topY + zFightOffset, zInner, innerEdgeUCenter - innerEdgeUOffset, innerEdgeVTop, -edgeNormalX, 0, -edgeNormalZ);
+			MILLED_8_GEAR_INNER_EDGE_VERTICES[4 * i + 2] = new CRRenderUtil.Vertex(nextXInner, topY + zFightOffset, nextZInner, innerEdgeUCenter + innerEdgeUOffset, innerEdgeVTop, -edgeNormalX, 0, -edgeNormalZ);
+			MILLED_8_GEAR_INNER_EDGE_VERTICES[4 * i + 1] = new CRRenderUtil.Vertex(nextXInner, recessY, nextZInner, innerEdgeUCenter + innerEdgeUOffset, innerEdgeVBottom, -edgeNormalX, 0, -edgeNormalZ);
+			MILLED_8_GEAR_INNER_EDGE_VERTICES[4 * i] = new CRRenderUtil.Vertex(xInner, recessY, zInner, innerEdgeUCenter - innerEdgeUOffset, innerEdgeVBottom, -edgeNormalX, 0, -edgeNormalZ);
+		}
+	}
+
+	private static final CRRenderUtil.Vertex[] MILLED_24_GEAR_HUB_OCT_VERTICES = new CRRenderUtil.Vertex[24];
+	private static final CRRenderUtil.Vertex[] MILLED_24_GEAR_TOP_OCT_VERTICES = new CRRenderUtil.Vertex[24];
+	private static final CRRenderUtil.Vertex[] MILLED_24_GEAR_BOTTOM_OCT_VERTICES = new CRRenderUtil.Vertex[24];
+	private static final CRRenderUtil.Vertex[] MILLED_24_GEAR_OUTER_EDGE_VERTICES = new CRRenderUtil.Vertex[96];
+	private static final CRRenderUtil.Vertex[] MILLED_24_GEAR_INNER_EDGE_VERTICES = new CRRenderUtil.Vertex[96];
+	private static final CRRenderUtil.Vertex[] MILLED_24_GEAR_HUB_EDGE_VERTICES = new CRRenderUtil.Vertex[96];
+	private static final CRRenderUtil.Vertex[] MILLED_24_GEAR_TOP_RIM_VERTICES = new CRRenderUtil.Vertex[96];
+	private static final CRRenderUtil.Vertex[] MILLED_24_GEAR_BOTTOM_RIM_VERTICES = new CRRenderUtil.Vertex[96];
+
+	static{
+		//The way I do TESR rendering tends to horrify people,
+		//However, I refuse to learn
+		//throw enough trigonometry at it, and we can precalculate the coordinates of every vertex on an icositetragon
+
+
+		// Large 24 sided gears, milled design
+
+		final float scale = 14F / 16F;
+		//half the length of the outer octagon, measured between parallel faces
+		final float lHalf = 3F / 2F - scale / 16F;
+		final float innerLHalf = lHalf - scale / 16F;//Number picked for aesthetics
+		final float hubLHalf = scale * 14F / 16F;//Number picked for aesthetics
+		final float height = 2F / 16F * scale;
+		final float topY = height / 2F;//Half of height
+		final float bottomY = -topY;
+		final float zFightOffset = 0.001F;
+		final float recessY = topY - scale / 32F;
+		final double halfAngleTheta = 2D * Math.PI / 24D * 0.5D;
+		final double encircledRadiusOuter = lHalf / Math.cos(halfAngleTheta);
+		final double encircledRadiusInner = innerLHalf / Math.cos(halfAngleTheta);
+		final double encircledRadiusHub = hubLHalf / Math.cos(halfAngleTheta);
+		final float outerEdgeLengthHalf = (float) (lHalf * Math.tan(halfAngleTheta));
+		final float innerEdgeLengthHalf = (float) (innerLHalf * Math.tan(halfAngleTheta));
+		final float hubEdgeLengthHalf = (float) (hubLHalf * Math.tan(halfAngleTheta));
+		//My uv coords are a bit scuffed since everything is mapped onto one texture file (gear_24_milled.png)
+		final float uScale = 1F/12F / scale;//Units in u space equivalent to 1 unit of length in x,y,z space
+		final float vScale = 1F/12F / scale;//Units in v space equivalent to 1 unit of length in x,y,z space
+		final float topUCenter = 1F/6F;
+		final float topVCenter = 1F/6F;
+		final float bottomUCenter = topUCenter;
+		final float bottomVCenter = 1F/2F;
+		final float hubUCenter = topUCenter;
+		final float hubVCenter = 5F/6F;
+		final float rimUCenter = 5F/6F;
+		final float rimUOuterOffset = outerEdgeLengthHalf * uScale;
+		final float rimUInnerOffset = innerEdgeLengthHalf * uScale;
+		final float outerEdgeUCenter = 1/2F;
+		final float outerEdgeUOffset = rimUOuterOffset;
+		final float innerEdgeUCenter = outerEdgeUCenter;
+		final float innerEdgeUOffset = rimUInnerOffset;
+		final float hubEdgeUCenter = outerEdgeUCenter;
+		final float hubEdgeUOffset = hubEdgeLengthHalf * uScale;
+
+		for(int i = 0; i < 24; i++){
+			//Each iteration is one point of the octagon and associated faces. Doesn't include the prongs
+
+			final double theta = halfAngleTheta * (1 + 2*i);
+			final double nextTheta = halfAngleTheta * (3 + 2*i);
+			final float xOuter = (float) (encircledRadiusOuter * Math.cos(theta));
+			final float nextXOuter = (float) (encircledRadiusOuter * Math.cos(nextTheta));
+			final float zOuter = (float) (encircledRadiusOuter * Math.sin(theta));
+			final float nextZOuter = (float) (encircledRadiusOuter * Math.sin(nextTheta));
+			final float xInner = (float) (encircledRadiusInner * Math.cos(theta));
+			final float nextXInner = (float) (encircledRadiusInner * Math.cos(nextTheta));
+			final float zInner = (float) (encircledRadiusInner * Math.sin(theta));
+			final float nextZInner = (float) (encircledRadiusInner * Math.sin(nextTheta));
+			final float xHub = (float) (encircledRadiusHub * Math.cos(theta));
+			final float nextXHub = (float) (encircledRadiusHub * Math.cos(nextTheta));
+			final float zHub = (float) (encircledRadiusHub * Math.sin(theta));
+			final float nextZHub = (float) (encircledRadiusHub * Math.sin(nextTheta));
+			final float rimVStart = (i+1)/72F;
+			final float rimVEnd = i/72F;
+			final float outerEdgeVBottom = rimVStart;
+			final float outerEdgeVTop = rimVEnd;
+			final float innerEdgeVBottom = i/72F + 1F/3F + (topY - recessY) * vScale;
+			final float innerEdgeVTop = i/72F + 1F/3F;
+			final float hubEdgeVBottom = i/72F + 2F/3F + (topY - recessY) * vScale;
+			final float hubEdgeVTop = i/72F + 2F/3F;
+			final float edgeNormalX = (float) Math.cos((theta + nextTheta) / 2D);//Facing away from origin
+			final float edgeNormalZ = (float) Math.sin((theta + nextTheta) / 2D);//Facing away from origin
+
+			//Order the quads so the faces render the right way round
+			MILLED_24_GEAR_TOP_OCT_VERTICES[23 - i] = new CRRenderUtil.Vertex(xInner, recessY, zInner, topUCenter + xInner*uScale, topVCenter + zInner*vScale, 0, 1, 0);
+			MILLED_24_GEAR_BOTTOM_OCT_VERTICES[i] = new CRRenderUtil.Vertex(xOuter, bottomY, zOuter, bottomUCenter + xOuter*uScale, bottomVCenter + zOuter*vScale, 0, -1, 0);
+			MILLED_24_GEAR_TOP_RIM_VERTICES[4 * i] = new CRRenderUtil.Vertex(xInner, topY, zInner, rimUCenter + rimUInnerOffset, rimVStart, 0, 1, 0);
+			MILLED_24_GEAR_TOP_RIM_VERTICES[4 * i + 1] = new CRRenderUtil.Vertex(nextXInner, topY, nextZInner, rimUCenter - rimUInnerOffset, rimVStart, 0, 1, 0);
+			MILLED_24_GEAR_TOP_RIM_VERTICES[4 * i + 2] = new CRRenderUtil.Vertex(nextXOuter, topY, nextZOuter, rimUCenter - rimUOuterOffset, rimVEnd, 0, 1, 0);
+			MILLED_24_GEAR_TOP_RIM_VERTICES[4 * i + 3] = new CRRenderUtil.Vertex(xOuter, topY, zOuter, rimUCenter + rimUOuterOffset, rimVEnd, 0, 1, 0);
+			MILLED_24_GEAR_BOTTOM_RIM_VERTICES[4 * i + 3] = new CRRenderUtil.Vertex(xInner, bottomY - zFightOffset, zInner, rimUCenter + rimUInnerOffset, rimVStart, 0, 1, 0);
+			MILLED_24_GEAR_BOTTOM_RIM_VERTICES[4 * i + 2] = new CRRenderUtil.Vertex(nextXInner, bottomY - zFightOffset, nextZInner, rimUCenter - rimUInnerOffset, rimVStart, 0, 1, 0);
+			MILLED_24_GEAR_BOTTOM_RIM_VERTICES[4 * i + 1] = new CRRenderUtil.Vertex(nextXOuter, bottomY - zFightOffset, nextZOuter, rimUCenter - rimUOuterOffset, rimVEnd, 0, 1, 0);
+			MILLED_24_GEAR_BOTTOM_RIM_VERTICES[4 * i] = new CRRenderUtil.Vertex(xOuter, bottomY - zFightOffset, zOuter, rimUCenter + rimUOuterOffset, rimVEnd, 0, 1, 0);
+			MILLED_24_GEAR_OUTER_EDGE_VERTICES[4 * i] = new CRRenderUtil.Vertex(xOuter, topY + zFightOffset, zOuter, outerEdgeUCenter - outerEdgeUOffset, outerEdgeVTop, edgeNormalX, 0, edgeNormalZ);
+			MILLED_24_GEAR_OUTER_EDGE_VERTICES[4 * i + 1] = new CRRenderUtil.Vertex(nextXOuter, topY + zFightOffset, nextZOuter, outerEdgeUCenter + outerEdgeUOffset, outerEdgeVTop, edgeNormalX, 0, edgeNormalZ);
+			MILLED_24_GEAR_OUTER_EDGE_VERTICES[4 * i + 2] = new CRRenderUtil.Vertex(nextXOuter, bottomY - zFightOffset, nextZOuter, outerEdgeUCenter + outerEdgeUOffset, outerEdgeVBottom, edgeNormalX, 0, edgeNormalZ);
+			MILLED_24_GEAR_OUTER_EDGE_VERTICES[4 * i + 3] = new CRRenderUtil.Vertex(xOuter, bottomY - zFightOffset, zOuter, outerEdgeUCenter - outerEdgeUOffset, outerEdgeVBottom, edgeNormalX, 0, edgeNormalZ);
+			MILLED_24_GEAR_INNER_EDGE_VERTICES[4 * i + 3] = new CRRenderUtil.Vertex(xInner, topY + zFightOffset, zInner, innerEdgeUCenter - innerEdgeUOffset, innerEdgeVTop, -edgeNormalX, 0, -edgeNormalZ);
+			MILLED_24_GEAR_INNER_EDGE_VERTICES[4 * i + 2] = new CRRenderUtil.Vertex(nextXInner, topY + zFightOffset, nextZInner, innerEdgeUCenter + innerEdgeUOffset, innerEdgeVTop, -edgeNormalX, 0, -edgeNormalZ);
+			MILLED_24_GEAR_INNER_EDGE_VERTICES[4 * i + 1] = new CRRenderUtil.Vertex(nextXInner, recessY, nextZInner, innerEdgeUCenter + innerEdgeUOffset, innerEdgeVBottom, -edgeNormalX, 0, -edgeNormalZ);
+			MILLED_24_GEAR_INNER_EDGE_VERTICES[4 * i] = new CRRenderUtil.Vertex(xInner, recessY, zInner, innerEdgeUCenter - innerEdgeUOffset, innerEdgeVBottom, -edgeNormalX, 0, -edgeNormalZ);
+			MILLED_24_GEAR_HUB_EDGE_VERTICES[4 * i] = new CRRenderUtil.Vertex(xHub, topY + zFightOffset, zHub, hubEdgeUCenter - hubEdgeUOffset, hubEdgeVTop, edgeNormalX, 0, edgeNormalZ);
+			MILLED_24_GEAR_HUB_EDGE_VERTICES[4 * i + 1] = new CRRenderUtil.Vertex(nextXHub, topY + zFightOffset, nextZHub, hubEdgeUCenter + hubEdgeUOffset, hubEdgeVTop, edgeNormalX, 0, edgeNormalZ);
+			MILLED_24_GEAR_HUB_EDGE_VERTICES[4 * i + 2] = new CRRenderUtil.Vertex(nextXHub, recessY, nextZHub, hubEdgeUCenter + hubEdgeUOffset, hubEdgeVBottom, edgeNormalX, 0, edgeNormalZ);
+			MILLED_24_GEAR_HUB_EDGE_VERTICES[4 * i + 3] = new CRRenderUtil.Vertex(xHub, recessY, zHub, hubEdgeUCenter - hubEdgeUOffset, hubEdgeVBottom, edgeNormalX, 0, edgeNormalZ);
+			MILLED_24_GEAR_HUB_OCT_VERTICES[23 - i] = new CRRenderUtil.Vertex(xHub, topY, zHub, hubUCenter + xHub*uScale, hubVCenter + zHub*vScale, 0, 1, 0);
+		}
+	}
+
+
+	/**
+	 * Draws an 8 sided gear, at the normal scale
+	 * Draws centered at the current position
+	 * @param matrix The reference matrix
+	 * @param builder A vertex builder with BLOCK vertex buffer format
+	 * @param color The color to shade by, as a size 4 array
+	 * @param light The combined light value
+	 * @param zFightFactor Value very close to 1. Adjacent gears with different zFightFactors will not have z-fighting
+	 */
+	public static void draw8GearMilled(PoseStack matrix, VertexConsumer builder, int[] color, int light, float zFightFactor){
+		final TextureAtlasSprite spriteMain = CRRenderUtil.getTextureSprite(CRRenderTypes.GEAR_8_MILLED_TEXTURE);
+		final TextureAtlasSprite spriteTooth = CRRenderUtil.getTextureSprite(CRRenderTypes.GEAR_8_TOOTH_TEXTURE);
+
+		//Split octagons into 3 quads each
+		CRRenderUtil.addVertexBlock(builder, matrix, spriteMain, MILLED_8_GEAR_TOP_OCT_VERTICES[0], light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, spriteMain, MILLED_8_GEAR_TOP_OCT_VERTICES[1], light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, spriteMain, MILLED_8_GEAR_TOP_OCT_VERTICES[2], light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, spriteMain, MILLED_8_GEAR_TOP_OCT_VERTICES[3], light, color);
+		//
+		CRRenderUtil.addVertexBlock(builder, matrix, spriteMain, MILLED_8_GEAR_TOP_OCT_VERTICES[0], light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, spriteMain, MILLED_8_GEAR_TOP_OCT_VERTICES[3], light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, spriteMain, MILLED_8_GEAR_TOP_OCT_VERTICES[4], light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, spriteMain, MILLED_8_GEAR_TOP_OCT_VERTICES[7], light, color);
+		//
+		CRRenderUtil.addVertexBlock(builder, matrix, spriteMain, MILLED_8_GEAR_TOP_OCT_VERTICES[4], light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, spriteMain, MILLED_8_GEAR_TOP_OCT_VERTICES[5], light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, spriteMain, MILLED_8_GEAR_TOP_OCT_VERTICES[6], light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, spriteMain, MILLED_8_GEAR_TOP_OCT_VERTICES[7], light, color);
+		//
+		CRRenderUtil.addVertexBlock(builder, matrix, spriteMain, MILLED_8_GEAR_BOTTOM_OCT_VERTICES[0], light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, spriteMain, MILLED_8_GEAR_BOTTOM_OCT_VERTICES[1], light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, spriteMain, MILLED_8_GEAR_BOTTOM_OCT_VERTICES[2], light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, spriteMain, MILLED_8_GEAR_BOTTOM_OCT_VERTICES[3], light, color);
+		//
+		CRRenderUtil.addVertexBlock(builder, matrix, spriteMain, MILLED_8_GEAR_BOTTOM_OCT_VERTICES[0], light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, spriteMain, MILLED_8_GEAR_BOTTOM_OCT_VERTICES[3], light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, spriteMain, MILLED_8_GEAR_BOTTOM_OCT_VERTICES[4], light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, spriteMain, MILLED_8_GEAR_BOTTOM_OCT_VERTICES[7], light, color);
+		//
+		CRRenderUtil.addVertexBlock(builder, matrix, spriteMain, MILLED_8_GEAR_BOTTOM_OCT_VERTICES[4], light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, spriteMain, MILLED_8_GEAR_BOTTOM_OCT_VERTICES[5], light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, spriteMain, MILLED_8_GEAR_BOTTOM_OCT_VERTICES[6], light, color);
+		CRRenderUtil.addVertexBlock(builder, matrix, spriteMain, MILLED_8_GEAR_BOTTOM_OCT_VERTICES[7], light, color);
+
+
+		for(CRRenderUtil.Vertex vertex : MILLED_8_GEAR_TOP_RIM_VERTICES){
+			CRRenderUtil.addVertexBlock(builder, matrix, spriteMain, vertex, light, color);
+		}
+		for(CRRenderUtil.Vertex vertex : MILLED_8_GEAR_BOTTOM_RIM_VERTICES){
+			CRRenderUtil.addVertexBlock(builder, matrix, spriteMain, vertex, light, color);
+		}
+		for(CRRenderUtil.Vertex vertex : MILLED_8_GEAR_OUTER_EDGE_VERTICES){
+			CRRenderUtil.addVertexBlock(builder, matrix, spriteMain, vertex, light, color);
+		}
+		for(CRRenderUtil.Vertex vertex : MILLED_8_GEAR_INNER_EDGE_VERTICES){
+			CRRenderUtil.addVertexBlock(builder, matrix, spriteMain, vertex, light, color);
+		}
+
+		//Prongs
+		//Given the option of hand coding 8 orientations for each 5 sided prong or using matrix transformations and a loop, I took the path of sanity retention
+		final float prongWidthHalf = 2F / 16F;
+		final Quaternionf rotation = Axis.YP.rotationDegrees(360F / 8F);
+		final float extend = 10F / 16F;
+		final float topP = 1F / 16F * zFightFactor;
+		final float bottomP = -topP;
+
+		//Texture coords
+		//top is u=0px->3px, v=0px->2px
+		//bottom is u=3px->6px, v=0px->2px
+		//tip is u=0px->3px, v=2px->4px
+		//left is u=0px->2px, v=4px->6px
+		//right is u=2px->4px, v=4px->6px
+
+		final float scale = 14F / 16F;
+		final float radius = 8F / 16F;
+		final float uSt = spriteTooth.getU0();
+		final float uMidTop = CRRenderUtil.getU(spriteTooth, 2 * prongWidthHalf);
+		final float uEndTop = CRRenderUtil.getU(spriteTooth, 4 * prongWidthHalf);
+		final float uEndTip = uMidTop;
+		final float uMidSide = CRRenderUtil.getU(spriteTooth, (extend - radius));
+		final float uEndSide = CRRenderUtil.getU(spriteTooth, 2 * (extend - radius));
+		final float vStTop = spriteTooth.getV0();
+		final float vEndTop = CRRenderUtil.getV(spriteTooth, 2 / 16F);
+		final float vStTip = vEndTop;
+		final float vEndTip = CRRenderUtil.getV(spriteTooth, 4 / 16F);
+		final float vStSide = vEndTip;
+		final float vEndSide = CRRenderUtil.getV(spriteTooth, 6 / 16F);
+
+		matrix.pushPose();
+		matrix.scale(scale, scale, scale);
+		for(int i = 0; i < 8; i++){
+			//Tip
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomP, prongWidthHalf, uSt, vEndTip, 1, 0, 0, light, color);
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomP, -prongWidthHalf, uEndTip, vEndTip, 1, 0, 0, light, color);
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, topP, -prongWidthHalf, uEndTip, vStTip, 1, 0, 0, light, color);
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, topP, prongWidthHalf, uSt, vStTip, 1, 0, 0, light, color);
+			//Side
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomP, -prongWidthHalf, uMidSide, vStSide, 0, 0, -1, light, color);
+			CRRenderUtil.addVertexBlock(builder, matrix, radius, bottomP, -prongWidthHalf, uMidSide, vEndSide, 0, 0, -1, light, color);
+			CRRenderUtil.addVertexBlock(builder, matrix, radius, topP, -prongWidthHalf, uSt, vEndSide, 0, 0, -1, light, color);
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, topP, -prongWidthHalf, uSt, vStSide, 0, 0, -1, light, color);
+			//Side
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, topP, prongWidthHalf, uMidSide, vStSide, 0, 0, 1, light, color);
+			CRRenderUtil.addVertexBlock(builder, matrix, radius, topP, prongWidthHalf, uMidSide, vEndSide, 0, 0, 1, light, color);
+			CRRenderUtil.addVertexBlock(builder, matrix, radius, bottomP, prongWidthHalf, uEndSide, vEndSide, 0, 0, 1, light, color);
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomP, prongWidthHalf, uEndSide, vStSide, 0, 0, 1, light, color);
+			//Top
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, topP, -prongWidthHalf, uSt, vStTop, 0, 1, 0, light, color);
+			CRRenderUtil.addVertexBlock(builder, matrix, radius, topP, -prongWidthHalf, uSt, vEndTop, 0, 1, 0, light, color);
+			CRRenderUtil.addVertexBlock(builder, matrix, radius, topP, prongWidthHalf, uMidTop, vEndTop, 0, 1, 0, light, color);
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, topP, prongWidthHalf, uMidTop, vStTop, 0, 1, 0, light, color);
+			//Bottom
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomP, prongWidthHalf, uEndTop, vStTop, 0, -1, 0, light, color);
+			CRRenderUtil.addVertexBlock(builder, matrix, radius, bottomP, prongWidthHalf, uEndTop, vEndTop, 0, -1, 0, light, color);
+			CRRenderUtil.addVertexBlock(builder, matrix, radius, bottomP, -prongWidthHalf, uMidTop, vEndTop, 0, -1, 0, light, color);
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomP, -prongWidthHalf, uMidTop, vStTop, 0, -1, 0, light, color);
+
+			matrix.mulPose(rotation);
+		}
+
+		matrix.popPose();
+	}
+
+	private static void draw24Poly(final VertexConsumer builder, final PoseStack matrix, final TextureAtlasSprite sprite, final int light, final int[] col, CRRenderUtil.Vertex[] vertices){
+		CRRenderUtil.addVertexBlock(builder, matrix, sprite, vertices[0], light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, sprite, vertices[1], light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, sprite, vertices[2], light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, sprite, vertices[3], light, col);
+
+		CRRenderUtil.addVertexBlock(builder, matrix, sprite, vertices[0], light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, sprite, vertices[3], light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, sprite, vertices[4], light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, sprite, vertices[23], light, col);
+
+		CRRenderUtil.addVertexBlock(builder, matrix, sprite, vertices[4], light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, sprite, vertices[5], light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, sprite, vertices[22], light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, sprite, vertices[23], light, col);
+
+		CRRenderUtil.addVertexBlock(builder, matrix, sprite, vertices[5], light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, sprite, vertices[6], light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, sprite, vertices[21], light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, sprite, vertices[22], light, col);
+
+		CRRenderUtil.addVertexBlock(builder, matrix, sprite, vertices[6], light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, sprite, vertices[7], light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, sprite, vertices[20], light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, sprite, vertices[21], light, col);
+
+		CRRenderUtil.addVertexBlock(builder, matrix, sprite, vertices[7], light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, sprite, vertices[8], light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, sprite, vertices[19], light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, sprite, vertices[20], light, col);
+
+		CRRenderUtil.addVertexBlock(builder, matrix, sprite, vertices[8], light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, sprite, vertices[9], light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, sprite, vertices[18], light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, sprite, vertices[19], light, col);
+
+		CRRenderUtil.addVertexBlock(builder, matrix, sprite, vertices[9], light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, sprite, vertices[10], light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, sprite, vertices[17], light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, sprite, vertices[18], light, col);
+
+		CRRenderUtil.addVertexBlock(builder, matrix, sprite, vertices[10], light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, sprite, vertices[11], light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, sprite, vertices[16], light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, sprite, vertices[17], light, col);
+
+		CRRenderUtil.addVertexBlock(builder, matrix, sprite, vertices[11], light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, sprite, vertices[12], light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, sprite, vertices[15], light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, sprite, vertices[16], light, col);
+
+		CRRenderUtil.addVertexBlock(builder, matrix, sprite, vertices[12], light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, sprite, vertices[13], light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, sprite, vertices[14], light, col);
+		CRRenderUtil.addVertexBlock(builder, matrix, sprite, vertices[15], light, col);
+	}
+
+	/**
+	 * Draws a 24 sided gear, at the same scale as a normal small gear.
+	 * This needs to be scaled x3 horizontally for most uses
+	 * Draws centered at the current position
+	 * @param matrix The matrix to render relative to, will not be modified
+	 * @param buffer A generic buffer
+	 * @param light The combined light value
+	 * @param color The color to shade this by
+	 * @param zFightFactor Value very close to 1. Adjacent gears with different zFightFactors will not have z-fighting
+	 */
+	public static void draw24GearMilled(PoseStack matrix, MultiBufferSource buffer, int light, Color color, float zFightFactor){
+		VertexConsumer builder = buffer.getBuffer(RenderType.solid());
+		final TextureAtlasSprite spriteMain = CRRenderUtil.getTextureSprite(CRRenderTypes.GEAR_24_MILLED_TEXTURE);
+		int[] col = CRRenderUtil.convertColor(color);
+
+		for(CRRenderUtil.Vertex vertex : MILLED_24_GEAR_BOTTOM_RIM_VERTICES){
+			CRRenderUtil.addVertexBlock(builder, matrix, spriteMain, vertex, light, col);
+		}
+		for(CRRenderUtil.Vertex vertex : MILLED_24_GEAR_TOP_RIM_VERTICES){
+			CRRenderUtil.addVertexBlock(builder, matrix, spriteMain, vertex, light, col);
+		}
+		for(CRRenderUtil.Vertex vertex : MILLED_24_GEAR_INNER_EDGE_VERTICES){
+			CRRenderUtil.addVertexBlock(builder, matrix, spriteMain, vertex, light, col);
+		}
+		for(CRRenderUtil.Vertex vertex : MILLED_24_GEAR_HUB_EDGE_VERTICES){
+			CRRenderUtil.addVertexBlock(builder, matrix, spriteMain, vertex, light, col);
+		}
+		for(CRRenderUtil.Vertex vertex : MILLED_24_GEAR_OUTER_EDGE_VERTICES){
+			CRRenderUtil.addVertexBlock(builder, matrix, spriteMain, vertex, light, col);
+		}
+		draw24Poly(builder, matrix, spriteMain, light, col, MILLED_24_GEAR_BOTTOM_OCT_VERTICES);
+		draw24Poly(builder, matrix, spriteMain, light, col, MILLED_24_GEAR_TOP_OCT_VERTICES);
+		draw24Poly(builder, matrix, spriteMain, light, col, MILLED_24_GEAR_HUB_OCT_VERTICES);
+
+
+		//Prongs
+
+		//Work at a scale such that 1/16 distance in vertex space is 1/16 of the texture file
+		//1 distance in vertex space is 21/8 distance in the world
+		//(1px in the world ~= 1/64 of a block in vertex space)
+		float pixelScale = 7F / 8F * 4F;
+
+		matrix.scale(pixelScale, pixelScale, pixelScale);
+
+		float extend = radius_24 + 2F / 64F;
+		float topProng = 1F / 64F * zFightFactor;
+		float bottomProng = -topProng;
+		float prongWidthHalf = 2F / 64F;
+
+		Quaternionf rotation = Axis.YP.rotationDegrees(15);
+
+		TextureAtlasSprite spriteTooth = CRRenderUtil.getTextureSprite(CRRenderTypes.GEAR_24_TOOTH_TEXTURE);
+
+		//Texture coords
+		//top is u=0px->3px, v=0px->2px
+		//bottom is u=3px->6px, v=0px->2px
+		//tip is u=0px->3px, v=2px->4px
+		//left is u=0px->2px, v=4px->6px
+		//right is u=2px->4px, v=4px->6px
+
+		float uSt = spriteTooth.getU0();
+		float uMidTop = CRRenderUtil.getScaledU(spriteTooth, 2 * 16 * prongWidthHalf * 4);
+		float uEndTop = CRRenderUtil.getScaledU(spriteTooth, 4 * 16 * prongWidthHalf * 4);
+		float uEndTip = uMidTop;
+		float uMidSide = CRRenderUtil.getScaledU(spriteTooth, 16 * (extend - radius_24));
+		float uEndSide = CRRenderUtil.getScaledU(spriteTooth, 2 * 16 * (extend - radius_24));
+		float vStTop = spriteTooth.getV0();
+		float vEndTop = CRRenderUtil.getScaledV(spriteTooth, 2);
+		float vStTip = vEndTop;
+		float vEndTip = CRRenderUtil.getScaledV(spriteTooth, 4);
+		float vStSide = vEndTip;
+		float vEndSide = CRRenderUtil.getScaledV(spriteTooth, 6);
+
+		for(int i = 0; i < 24; i++){
+			matrix.mulPose(rotation);//15 deg
+
+			//Tip
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomProng, prongWidthHalf, uSt, vEndTip, 1, 0, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomProng, -prongWidthHalf, uEndTip, vEndTip, 1, 0, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, topProng, -prongWidthHalf, uEndTip, vStTip, 1, 0, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, topProng, prongWidthHalf, uSt, vStTip, 1, 0, 0, light, col);
+			//Side
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomProng, -prongWidthHalf, uMidSide, vStSide, 0, 0, -1, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, radius_24, bottomProng, -prongWidthHalf, uMidSide, vEndSide, 0, 0, -1, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, radius_24, topProng, -prongWidthHalf, uSt, vEndSide, 0, 0, -1, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, topProng, -prongWidthHalf, uSt, vStSide, 0, 0, -1, light, col);
+			//Side
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, topProng, prongWidthHalf, uMidSide, vStSide, 0, 0, 1, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, radius_24, topProng, prongWidthHalf, uMidSide, vEndSide, 0, 0, 1, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, radius_24, bottomProng, prongWidthHalf, uEndSide, vEndSide, 0, 0, 1, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomProng, prongWidthHalf, uEndSide, vStSide, 0, 0, 1, light, col);
+			//Top
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, topProng, -prongWidthHalf, uSt, vStTop, 0, 1, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, radius_24, topProng, -prongWidthHalf, uSt, vEndTop, 0, 1, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, radius_24, topProng, prongWidthHalf, uMidTop, vEndTop, 0, 1, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, topProng, prongWidthHalf, uMidTop, vStTop, 0, 1, 0, light, col);
+			//Bottom
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomProng, prongWidthHalf, uEndTop, vStTop, 0, -1, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, radius_24, bottomProng, prongWidthHalf, uEndTop, vEndTop, 0, -1, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, radius_24, bottomProng, -prongWidthHalf, uMidTop, vEndTop, 0, -1, 0, light, col);
+			CRRenderUtil.addVertexBlock(builder, matrix, extend, bottomProng, -prongWidthHalf, uMidTop, vStTop, 0, -1, 0, light, col);
+		}
+	}
+
 	/**
 	 * Draws an 8 sided gear, at the normal scale
 	 * Draws centered at the current position
@@ -666,10 +1148,10 @@ public class CRModels{
 	/**
 	 * Generates a suitable 'z-fight-factor' based on position, a value very close to 1 which has slightly different values for adjacent block positions and discriminators
 	 * @param pos A block position
-	 * @param discriminator Value within -9 to 9 inclusive. Use 0 if not necessary
-	 * @return A suitable z-fight-factor, within 0.99 to 1.01
+	 * @param discriminator Value within 0 to 9 inclusive. Use 0 if not necessary
+	 * @return A suitable z-fight-factor, within [0.99, 1)
 	 */
 	public static float generateZFightFactor(BlockPos pos, int discriminator){
-		return 1F + 0.001F * ((pos.getX() + pos.getY() + pos.getZ()) % 10) + 0.0001F * discriminator;
+		return 1F - 0.001F * (1 + Math.abs((pos.getX() + pos.getY() + pos.getZ()) % 9)) - 0.0001F * discriminator;
 	}
 }

@@ -151,6 +151,19 @@ public class CRRenderUtil extends RenderUtil{
 	}
 
 	/**
+	 * Adds a vertex to the builder using the BLOCK vertex format
+	 * @param builder The active builder
+	 * @param matrix The reference matrix
+	 * @param vertex The vertex to add
+	 * @param light The light value
+	 * @param col A size 4 array (r, g, b, a) defining the color, scale [0, 255]
+	 */
+	@OnlyIn(Dist.CLIENT)
+	public static void addVertexBlock(VertexConsumer builder, PoseStack matrix, TextureAtlasSprite sprite, Vertex vertex, int light, int[] col){
+		builder.addVertex(matrix.last().pose(), vertex.x, vertex.y, vertex.z).setColor(col[0], col[1], col[2], col[3]).setUv(vertex.u(sprite), vertex.v(sprite)).setLight(light).setNormal(matrix.last(), vertex.normalX, vertex.normalY, vertex.normalZ);
+	}
+
+	/**
 	 * Adds a vertex to the builder using the ENTITY vertex format
 	 * @param builder The active builder
 	 * @param matrix The reference matrix
@@ -372,5 +385,17 @@ public class CRRenderUtil extends RenderUtil{
 	@OnlyIn(Dist.CLIENT)
 	public static float getV(@Nonnull TextureAtlasSprite sprite, float fraction){
 		return sprite.getV(fraction);
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	public record Vertex(float x, float y, float z, float spriteU, float spriteV, float normalX, float normalY, float normalZ){
+
+		public float u(@Nonnull TextureAtlasSprite sprite){
+			return getU(sprite, spriteU);
+		}
+
+		public float v(@Nonnull TextureAtlasSprite sprite){
+			return getV(sprite, spriteV);
+		}
 	}
 }

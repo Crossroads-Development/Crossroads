@@ -94,8 +94,8 @@ public class MechanismSmallGear implements IMechanism<CRMaterialLibrary.GearMate
 
 		Level world = te.getLevel();
 		BlockPos sidePos = te.getBlockPos().relative(side);
-		BlockState sideState = te.getLevel().getBlockState(sidePos);
-		BlockEntity sideTE = te.getLevel().getBlockEntity(sidePos);
+//		BlockState sideState = te.getLevel().getBlockState(sidePos);
+//		BlockEntity sideTE = te.getLevel().getBlockEntity(sidePos);
 		for(int i = 0; i < 6; i++){
 			if(i != side.get3DDataValue() && i != side.getOpposite().get3DDataValue()){
 				Direction facing = Direction.from3DDataValue(i);
@@ -172,6 +172,13 @@ public class MechanismSmallGear implements IMechanism<CRMaterialLibrary.GearMate
 		float angle = handler.getAngle(partialTicks);
 		matrix.translate(0, -0.4375D, 0);
 		matrix.mulPose(Axis.YP.rotationDegrees(-(float) RotaryUtil.getCCWSign(side) * angle));
+
+		//TODO test
+		if(mat instanceof CRMaterialLibrary.GearMaterial gearMat && gearMat.getSaveName().equals("tin")){
+			CRModels.draw8GearMilled(matrix, buffer.getBuffer(RenderType.solid()), CRRenderUtil.convertColor(mat instanceof CRMaterialLibrary.GearMaterial ? ((CRMaterialLibrary.GearMaterial) mat).getColor() : Color.WHITE), combinedLight, CRModels.generateZFightFactor(te.getBlockPos(), side == null ? 0 : side.ordinal()));
+			return;
+		}
+
 		CRModels.draw8Gear(matrix, buffer.getBuffer(RenderType.solid()), CRRenderUtil.convertColor(mat instanceof CRMaterialLibrary.GearMaterial ? ((CRMaterialLibrary.GearMaterial) mat).getColor() : Color.WHITE), combinedLight, CRModels.generateZFightFactor(te.getBlockPos(), side == null ? 0 : side.ordinal()));
 	}
 
