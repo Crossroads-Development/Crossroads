@@ -23,7 +23,6 @@ import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Style;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
@@ -38,6 +37,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.apache.commons.lang3.tuple.Pair;
@@ -96,25 +96,28 @@ public record EntityTemplate(@Nonnull ResourceLocation entityID, @Nonnull LazyCa
 		return entityType.get();
 	}
 
-	private int baseComplexity(){
+	private static int baseComplexity(ResourceLocation entityID, @Nullable EntityType<?> entityType){
 		//TODO balance
 		if(isCloningForbidden(entityID)){
 			return 999;
 		}
-		EntityType<?> entType = getEntityType();
-		if(entType == null){
+		if(entityType == null){
 			return 999;
 		}
-		if(CraftingUtil.tagContains(EventHandlerCommon.GHOST_MOB, entType)){
+		if(CraftingUtil.tagContains(EventHandlerCommon.GHOST_MOB, entityType)){
 			return 0;
 		}
-		if(CraftingUtil.tagContains(EventHandlerCommon.HUMANOID_MOB, entType)){
+		if(CraftingUtil.tagContains(EventHandlerCommon.HUMANOID_MOB, entityType)){
 			return 50;
 		}
-		if(CraftingUtil.tagContains(EntityTypeTags.UNDEAD, entType)){
+		if(CraftingUtil.tagContains(EntityTypeTags.UNDEAD, entityType)){
 			return 10;
 		}
 		return 40;
+	}
+
+	private int baseComplexity(){
+		return baseComplexity(entityID, getEntityType());
 	}
 
 	public int totalComplexity(){
@@ -194,8 +197,7 @@ public record EntityTemplate(@Nonnull ResourceLocation entityID, @Nonnull LazyCa
 
 	private static final ResourceLocation HEALTH_PENALTY_ATTRIBUTE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "degraded_clone");
 
-	@Nullable
-	public static Entity spawnEntityFromTemplate(EntityTemplate template, ServerLevel world, BlockPos pos, MobSpawnType reason, boolean offset, boolean unmapped, @Nullable Component customName, @Nullable Player player){
+	public static Entity createEntityFromTemplate(EntityTemplate template, ServerLevel world, BlockPos pos, MobSpawnType reason, boolean shouldOffsetY, boolean shouldOffsetYMore, @Nullable Component customName){
 		//Check if the entity is on the blacklist. If so, refuse to spawn
 		ResourceLocation entityRegistryName = template.entityID();
 		if(isCloningForbidden(entityRegistryName)){
@@ -225,7 +227,7 @@ public record EntityTemplate(@Nonnull ResourceLocation entityID, @Nonnull LazyCa
 		//Don't pass the itemstack to the spawn method
 		//That parameter is designed for the vanilla spawn egg NBT structure, which we don't use
 		//We have to adjust the mob manually after spawning as a result
-		Entity created = type.spawn(world, null, player, pos, reason, offset, unmapped);
+		Entity created = type.create(world, null, pos, reason, shouldOffsetY, shouldOffsetYMore);
 		if(created == null){
 			return null;
 		}
@@ -251,11 +253,20 @@ public record EntityTemplate(@Nonnull ResourceLocation entityID, @Nonnull LazyCa
 			created.hurt(CRMobDamage.damageSource(CRMobDamage.NON_VIABLE, world), 1);
 		}
 
-		if(player instanceof ServerPlayer serverPlayer){
-			//Advancement check
-			CloneSpawnedTrigger.INSTANCE.trigger(serverPlayer, template, isNonViable);
-		}
+		return created;
+	}
 
+	@Nullable
+	public static Entity spawnEntityFromTemplate(EntityTemplate template, ServerLevel world, BlockPos pos, MobSpawnType reason, boolean shouldOffsetY, boolean shouldOffsetYMore, @Nullable Component customName, @Nullable Player player){
+		Entity created = createEntityFromTemplate(template, world, pos, reason, shouldOffsetY, shouldOffsetYMore, customName);
+		if(created != null){
+			world.addFreshEntityWithPassengers(created);
+			if(player instanceof ServerPlayer serverPlayer){
+				//Advancement check
+				boolean isNonViable = created instanceof Slime slimeEntity && slimeEntity.getMaxHealth() <= 0.001F;
+				CloneSpawnedTrigger.INSTANCE.trigger(serverPlayer, template, isNonViable);
+			}
+		}
 		return created;
 	}
 
@@ -294,10 +305,16 @@ public record EntityTemplate(@Nonnull ResourceLocation entityID, @Nonnull LazyCa
 //		return template;
 		Tag savedTemplateData = source.getPersistentData().get(TEMPLATE_KEY);
 		if(savedTemplateData != null){
-			return deserializeNBT(source.registryAccess(), savedTemplateData).withQuality(0);
+			//This entity was originally a clone - use the saved template
+			return deserializeNBT(source.registryAccess(), savedTemplateData);
 		}
+		//Make a generic template that matches the entity
 		ResourceLocation entityName = MiscUtil.getRegistryName(source.getType(), BuiltInRegistries.ENTITY_TYPE);
-		return new EntityTemplate(entityName, 0, new HashMap<>(0));
+		return new EntityTemplate(entityName, baseComplexity(entityName, source.getType()), new HashMap<>(0));
+	}
+
+	public static boolean isEntityModified(LivingEntity source){
+		return source.getPersistentData().contains(TEMPLATE_KEY);
 	}
 
 	public static boolean isCloningForbidden(ResourceLocation entityName){

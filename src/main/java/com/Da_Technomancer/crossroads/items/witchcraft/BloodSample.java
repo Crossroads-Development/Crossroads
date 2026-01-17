@@ -39,7 +39,7 @@ public class BloodSample extends Item implements IPerishable{
 	}
 
 	public ItemStack withEntityData(ItemStack stack, LivingEntity source){
-		stack.set(CRItems.GENETICS_DATA, EntityTemplate.getTemplateFromEntity(source));
+		stack.set(CRItems.GENETICS_DATA, EntityTemplate.getTemplateFromEntity(source).withQuality(0));
 		stack.set(CRItems.ENTITY_SOURCE_DATA, EntitySourceData.create(source));
 		return stack;
 	}

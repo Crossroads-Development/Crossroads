@@ -6,11 +6,15 @@ import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
 import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
 import com.Da_Technomancer.crossroads.api.CRReflection;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.alchemy.AtmosChargeSavedData;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.crossroads.api.technomancy.EnumGoggleLenses;
 import com.Da_Technomancer.crossroads.api.technomancy.RespawnInventorySavedData;
+import com.Da_Technomancer.crossroads.api.witchcraft.EntityTemplate;
+import com.Da_Technomancer.crossroads.api.witchcraft.IEntityModifier;
+import com.Da_Technomancer.crossroads.api.witchcraft.IEntityModifierType;
 import com.Da_Technomancer.crossroads.api.witchcraft.IPerishable;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
@@ -94,9 +98,7 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.neoforged.neoforge.registries.RegisterEvent;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Supplier;
 
 public class EventHandlerCommon{
@@ -705,6 +707,47 @@ public class EventHandlerCommon{
 					IPerishable.getAndInitSpoilTime(brain, ent.level());
 					e.getDrops().add(new ItemEntity(ent.level(), ent.getX(), ent.getY(), ent.getZ(), brain));
 				}
+			}
+		}
+	}
+
+	@SubscribeEvent()
+	@SuppressWarnings("unused")
+	public void appendDrops(BabyEntitySpawnEvent e){
+		//Cloned animals which have children pass down their traits to their kids
+
+		AgeableMob child = e.getChild();
+		if(child != null && !e.isCanceled() && (EntityTemplate.isEntityModified(e.getParentA()) || EntityTemplate.isEntityModified(e.getParentB()))){
+			//Traits are going to be a random blend of the two parents
+			EntityTemplate templateA = EntityTemplate.getTemplateFromEntity(e.getParentA());
+			EntityTemplate templateB = EntityTemplate.getTemplateFromEntity(e.getParentB());
+			Map<IEntityModifierType<?>, IEntityModifier> parentAModifiers = templateA.modifiers();
+			Map<IEntityModifierType<?>, IEntityModifier> parentBModifiers = templateB.modifiers();
+			Set<IEntityModifierType<?>> possibleModifierTypes = parentAModifiers.keySet();
+			possibleModifierTypes.addAll(parentBModifiers.keySet());
+			Map<IEntityModifierType<?>, IEntityModifier> childModifiers = new HashMap<>();
+			Random rand = new Random();
+			for(IEntityModifierType<?> modifierType : possibleModifierTypes){
+				IEntityModifier modA = parentAModifiers.get(modifierType);
+				IEntityModifier modB = parentBModifiers.get(modifierType);
+				if(modA == null && modB == null){
+					continue;
+				}
+				if(modA != null ^ modB != null){
+					//Only one parent has a trait for this. 50% chance to pass it on
+					if(rand.nextBoolean()){
+						childModifiers.put(modifierType, modA == null ? modB : modA);
+					}
+				}else{
+					//Both parents have some version of this trait. Combine them for the offspring
+					childModifiers.put(modifierType, modifierType.mergeModifiers(modA, modB));
+				}
+			}
+			EntityTemplate childTemplate = new EntityTemplate(MiscUtil.getRegistryName(child.getType(), Registries.ENTITY_TYPE), (templateA.quality() + templateB.quality()) / 2, childModifiers);
+			Entity newChild = EntityTemplate.createEntityFromTemplate(childTemplate, (ServerLevel)  (e.getParentA().level()), child.blockPosition(), MobSpawnType.BREEDING, true, false, null);
+			if(newChild instanceof AgeableMob newChildAgeable){
+				newChildAgeable.setAge(child.getAge());
+				e.setChild(newChildAgeable);
 			}
 		}
 	}
