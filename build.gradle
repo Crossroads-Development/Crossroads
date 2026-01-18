@@ -84,6 +84,7 @@ repositories {
 	maven { url "https://maven.blamejared.com" } //Patchouli, JEI
 //	maven {url "https://tehnut.info/maven"} //hwyla
 	maven {url "https://maven.theillusivec4.top/"} //Curios
+//  maven {url "https://api.modrinth.com/maven"} //Shaders
 	maven {
 		//Registrate
 		name "tterrag maven"
@@ -133,6 +134,11 @@ dependencies {
 
 	compileOnly(fg.deobf("vazkii.patchouli:Patchouli:$patchouli_version-FORGE:api"))
 	runtimeOnly(fg.deobf("vazkii.patchouli:Patchouli:$patchouli_version-FORGE"))
+
+    //Shaders
+//  runtimeOnly(fg.deobf("maven.modrinth:embeddium:UTbfe5d1"))
+//  runtimeOnly(fg.deobf("maven.modrinth:oculus:iQ1SwGc3"))
+//  runtimeOnly(fg.deobf("maven.modrinth:euphoria-patches:28xfmkAk"))
 
 	//No special CR integration for hwayla- only used for testing, so no compile inclusion needed
 //	runtimeOnly(fg.deobf("mcp.mobius.waila:Hwyla:$hwyla_version"))
