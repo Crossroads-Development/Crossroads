@@ -199,6 +199,7 @@ public class CRRenderUtil extends RenderUtil{
 	 * @param u The u coord of this vertex texture mapping
 	 * @param v The v coord of this vertex texture mapping
 	 * @param col A size 4 array (r, g, b, a) defining the color, scale [0, 255]
+     * @param uv2 An integer defining the light to render the vertex at (usually RenderUtil.BRIGHT_LIGHT, see Essentials)
 	 */
 	@OnlyIn(Dist.CLIENT)
 	public static void addVertexPosColTexLight(VertexConsumer builder, PoseStack matrix, float x, float y, float z, float u, float v, int[] col, int uv2){
