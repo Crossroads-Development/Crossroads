@@ -21,7 +21,6 @@ import com.Da_Technomancer.crossroads.items.technomancy.ArmorPropellerPack;
 import com.Da_Technomancer.crossroads.items.technomancy.BeamUsingItem;
 import com.Da_Technomancer.crossroads.items.witchcraft.GeneticSpawnEgg;
 import com.Da_Technomancer.crossroads.render.BeamToolOverlay;
-import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.crossroads.render.MultiLineMessageOverlay;
 import com.Da_Technomancer.crossroads.render.tesr.CRRendererRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -72,12 +71,6 @@ public class EventHandlerClient{
 		public static void registerRenderers(EntityRenderersEvent.RegisterRenderers e){
 			CRRendererRegistry.registerBlockRenderer(e);
 			CREntities.clientInit(e);
-		}
-
-		@SuppressWarnings("unused")
-		@SubscribeEvent
-		public static void registerShaders(RegisterShadersEvent e){
-			CRRenderTypes.registerShaders(e);
 		}
 
 		@SuppressWarnings("unused")

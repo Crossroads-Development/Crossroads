@@ -1,9 +1,11 @@
 package com.Da_Technomancer.crossroads.render.tesr;
 
 import com.Da_Technomancer.crossroads.api.CRProperties;
+import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.witchcraft.AutoInjectorTileEntity;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
+import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.Da_Technomancer.essentials.api.ConfigUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -43,35 +45,35 @@ public class AutoInjectorRenderer implements BlockEntityRenderer<AutoInjectorTil
 			matrix.pushPose();
 			matrix.translate(0, radius + 0.5D - 0.001D, 0);
 
-			overlayBuilder.addVertex(matrix.last().pose(), -radius, -radius, -radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(0, 0);
-			overlayBuilder.addVertex(matrix.last().pose(), radius, -radius, -radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(8, 0);
-			overlayBuilder.addVertex(matrix.last().pose(), radius, -radius, radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(8, 8);
-			overlayBuilder.addVertex(matrix.last().pose(), -radius, -radius, radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(0, 8);
+			overlayBuilder.addVertex(matrix.last().pose(), -radius, -radius, -radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(0, 0).setLight(CRRenderUtil.BRIGHT_LIGHT);
+			overlayBuilder.addVertex(matrix.last().pose(), radius, -radius, -radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(8, 0).setLight(CRRenderUtil.BRIGHT_LIGHT);
+			overlayBuilder.addVertex(matrix.last().pose(), radius, -radius, radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(8, 8).setLight(CRRenderUtil.BRIGHT_LIGHT);
+			overlayBuilder.addVertex(matrix.last().pose(), -radius, -radius, radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(0, 8).setLight(CRRenderUtil.BRIGHT_LIGHT);
 
-			overlayBuilder.addVertex(matrix.last().pose(), -radius, radius, -radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(0, 0);
-			overlayBuilder.addVertex(matrix.last().pose(), radius, radius, -radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(8, 0);
-			overlayBuilder.addVertex(matrix.last().pose(), radius, radius, radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(8, 8);
-			overlayBuilder.addVertex(matrix.last().pose(), -radius, radius, radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(0, 8);
+			overlayBuilder.addVertex(matrix.last().pose(), -radius, radius, -radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(0, 0).setLight(CRRenderUtil.BRIGHT_LIGHT);
+			overlayBuilder.addVertex(matrix.last().pose(), radius, radius, -radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(8, 0).setLight(CRRenderUtil.BRIGHT_LIGHT);
+			overlayBuilder.addVertex(matrix.last().pose(), radius, radius, radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(8, 8).setLight(CRRenderUtil.BRIGHT_LIGHT);
+			overlayBuilder.addVertex(matrix.last().pose(), -radius, radius, radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(0, 8).setLight(CRRenderUtil.BRIGHT_LIGHT);
 
-			overlayBuilder.addVertex(matrix.last().pose(), radius, -radius, -radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(0, 0);
-			overlayBuilder.addVertex(matrix.last().pose(), radius, radius, -radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(8, 0);
-			overlayBuilder.addVertex(matrix.last().pose(), radius, radius, radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(8, 8);
-			overlayBuilder.addVertex(matrix.last().pose(), radius, -radius, radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(0, 8);
+			overlayBuilder.addVertex(matrix.last().pose(), radius, -radius, -radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(0, 0).setLight(CRRenderUtil.BRIGHT_LIGHT);
+			overlayBuilder.addVertex(matrix.last().pose(), radius, radius, -radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(8, 0).setLight(CRRenderUtil.BRIGHT_LIGHT);
+			overlayBuilder.addVertex(matrix.last().pose(), radius, radius, radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(8, 8).setLight(CRRenderUtil.BRIGHT_LIGHT);
+			overlayBuilder.addVertex(matrix.last().pose(), radius, -radius, radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(0, 8).setLight(CRRenderUtil.BRIGHT_LIGHT);
 
-			overlayBuilder.addVertex(matrix.last().pose(), -radius, -radius, -radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(0, 0);
-			overlayBuilder.addVertex(matrix.last().pose(), -radius, radius, -radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(8, 0);
-			overlayBuilder.addVertex(matrix.last().pose(), -radius, radius, radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(8, 8);
-			overlayBuilder.addVertex(matrix.last().pose(), -radius, -radius, radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(0, 8);
+			overlayBuilder.addVertex(matrix.last().pose(), -radius, -radius, -radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(0, 0).setLight(CRRenderUtil.BRIGHT_LIGHT);
+			overlayBuilder.addVertex(matrix.last().pose(), -radius, radius, -radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(8, 0).setLight(CRRenderUtil.BRIGHT_LIGHT);
+			overlayBuilder.addVertex(matrix.last().pose(), -radius, radius, radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(8, 8).setLight(CRRenderUtil.BRIGHT_LIGHT);
+			overlayBuilder.addVertex(matrix.last().pose(), -radius, -radius, radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(0, 8).setLight(CRRenderUtil.BRIGHT_LIGHT);
 
-			overlayBuilder.addVertex(matrix.last().pose(), -radius, -radius, -radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(0, 0);
-			overlayBuilder.addVertex(matrix.last().pose(), radius, -radius, -radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(8, 0);
-			overlayBuilder.addVertex(matrix.last().pose(), radius, radius, -radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(8, 8);
-			overlayBuilder.addVertex(matrix.last().pose(), -radius, radius, -radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(0, 8);
+			overlayBuilder.addVertex(matrix.last().pose(), -radius, -radius, -radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(0, 0).setLight(CRRenderUtil.BRIGHT_LIGHT);
+			overlayBuilder.addVertex(matrix.last().pose(), radius, -radius, -radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(8, 0).setLight(CRRenderUtil.BRIGHT_LIGHT);
+			overlayBuilder.addVertex(matrix.last().pose(), radius, radius, -radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(8, 8).setLight(CRRenderUtil.BRIGHT_LIGHT);
+			overlayBuilder.addVertex(matrix.last().pose(), -radius, radius, -radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(0, 8).setLight(CRRenderUtil.BRIGHT_LIGHT);
 
-			overlayBuilder.addVertex(matrix.last().pose(), -radius, -radius, radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(0, 0);
-			overlayBuilder.addVertex(matrix.last().pose(), radius, -radius, radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(8, 0);
-			overlayBuilder.addVertex(matrix.last().pose(), radius, radius, radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(8, 8);
-			overlayBuilder.addVertex(matrix.last().pose(), -radius, radius, radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(0, 8);
+			overlayBuilder.addVertex(matrix.last().pose(), -radius, -radius, radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(0, 0).setLight(CRRenderUtil.BRIGHT_LIGHT);
+			overlayBuilder.addVertex(matrix.last().pose(), radius, -radius, radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(8, 0).setLight(CRRenderUtil.BRIGHT_LIGHT);
+			overlayBuilder.addVertex(matrix.last().pose(), radius, radius, radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(8, 8).setLight(CRRenderUtil.BRIGHT_LIGHT);
+			overlayBuilder.addVertex(matrix.last().pose(), -radius, radius, radius).setColor(overlayCol[0], overlayCol[1], overlayCol[2], overlayCol[3]).setUv(0, 8).setLight(CRRenderUtil.BRIGHT_LIGHT);
 
 			matrix.popPose();
 		}
