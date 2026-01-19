@@ -3,6 +3,7 @@ package com.Da_Technomancer.crossroads.render.tesr;
 import com.Da_Technomancer.crossroads.api.technomancy.IFluxLink;
 import com.Da_Technomancer.crossroads.render.CRRenderTypes;
 import com.Da_Technomancer.essentials.render.LinkLineRenderer;
+import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -77,10 +78,10 @@ public class EntropyRenderer<T extends BlockEntity & IFluxLink> extends LinkLine
 					float sideRad = ((i + j + k) % 3) * 0.007F + 0.005F;
 					float pieceLen = 0.3F + ((i + j * 3 + k * 2) % 4) * 0.05F;
 					int[] color = ((i + j * 2 + k) % 7) == 0 ? new int[] {255, 255, 255, 64} : new int[] {0, 0, 0, 255};
-					entropyBuilder.vertex(matrix.last().pose(), radius, k * unitLen + lenOffset, -sideRad).color(color[0], color[1], color[2], color[3]).uv(0, 0).endVertex();
-					entropyBuilder.vertex(matrix.last().pose(), radius, k * unitLen + lenOffset, sideRad).color(color[0], color[1], color[2], color[3]).uv(0, 1).endVertex();
-					entropyBuilder.vertex(matrix.last().pose(), radius, k * unitLen + pieceLen + lenOffset, sideRad).color(color[0], color[1], color[2], color[3]).uv(1, 1).endVertex();
-					entropyBuilder.vertex(matrix.last().pose(), radius, k * unitLen + pieceLen + lenOffset, -sideRad).color(color[0], color[1], color[2], color[3]).uv(1, 0).endVertex();
+					entropyBuilder.vertex(matrix.last().pose(), radius, k * unitLen + lenOffset, -sideRad).color(color[0], color[1], color[2], color[3]).uv(0, 0).uv2(CRRenderUtil.BRIGHT_LIGHT).endVertex();
+					entropyBuilder.vertex(matrix.last().pose(), radius, k * unitLen + lenOffset, sideRad).color(color[0], color[1], color[2], color[3]).uv(0, 1).uv2(CRRenderUtil.BRIGHT_LIGHT).endVertex();
+					entropyBuilder.vertex(matrix.last().pose(), radius, k * unitLen + pieceLen + lenOffset, sideRad).color(color[0], color[1], color[2], color[3]).uv(1, 1).uv2(CRRenderUtil.BRIGHT_LIGHT).endVertex();
+					entropyBuilder.vertex(matrix.last().pose(), radius, k * unitLen + pieceLen + lenOffset, -sideRad).color(color[0], color[1], color[2], color[3]).uv(1, 0).uv2(CRRenderUtil.BRIGHT_LIGHT).endVertex();
 				}
 				matrix.popPose();
 			}

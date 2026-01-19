@@ -37,54 +37,54 @@ public class BeamRenderer<T extends BlockEntity & IBeamRenderTE> implements Bloc
 	 * @param width The width of the beam, in blocks
 	 * @param color The beam color
 	 */
-	public static void drawBeam(PoseStack matrix, VertexConsumer builder, float length, float width, Color color){
-		final float BEAM_SIDE_U = 0;
-		final float BEAM_END_U = 0.5F;
-		final float BEAM_V_STOP = 0.5F;
-		
-		float halfWidth = width / 2F;
-		int[] col = {color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()};
-		float endV = length / 2;//V-coord for the far edge of the sides
+    public static void drawBeam(PoseStack matrix, VertexConsumer builder, float length, float width, Color color){
+        final float BEAM_SIDE_U = 0;
+        final float BEAM_END_U = 0.5F;
+        final float BEAM_V_STOP = 0.5F;
 
-		Matrix4f lastMatrix = matrix.last().pose();
+        float halfWidth = width / 2F;
+        int[] col = {color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()};
+        float endV = length / 2;//V-coord for the far edge of the sides
 
-		//Sides
-		//-X
-		builder.vertex(lastMatrix, -halfWidth, 0, -halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_SIDE_U, 0).endVertex();
-		builder.vertex(lastMatrix, -halfWidth, length, -halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_SIDE_U, endV).endVertex();
-		builder.vertex(lastMatrix, -halfWidth, length, halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_END_U, endV).endVertex();
-		builder.vertex(lastMatrix, -halfWidth, 0, halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_END_U, 0).endVertex();
-		//+X
-		builder.vertex(lastMatrix, halfWidth, 0, -halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_SIDE_U, 0).endVertex();
-		builder.vertex(lastMatrix, halfWidth, length, -halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_SIDE_U, endV).endVertex();
-		builder.vertex(lastMatrix, halfWidth, length, halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_END_U, endV).endVertex();
-		builder.vertex(lastMatrix, halfWidth, 0, halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_END_U, 0).endVertex();
-		//-Z
-		builder.vertex(lastMatrix, -halfWidth, 0, -halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_SIDE_U, 0).endVertex();
-		builder.vertex(lastMatrix, -halfWidth, length, -halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_SIDE_U, endV).endVertex();
-		builder.vertex(lastMatrix, halfWidth, length, -halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_END_U, endV).endVertex();
-		builder.vertex(lastMatrix, halfWidth, 0, -halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_END_U, 0).endVertex();
-		//+Z
-		builder.vertex(lastMatrix, -halfWidth, 0, halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_SIDE_U, 0).endVertex();
-		builder.vertex(lastMatrix, -halfWidth, length, halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_SIDE_U, endV).endVertex();
-		builder.vertex(lastMatrix, halfWidth, length, halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_END_U, endV).endVertex();
-		builder.vertex(lastMatrix, halfWidth, 0, halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_END_U, 0).endVertex();
+        Matrix4f lastMatrix = matrix.last().pose();
 
-		//Near end
-		builder.vertex(lastMatrix, -halfWidth, 0, -halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_END_U, 0).endVertex();
-		builder.vertex(lastMatrix, -halfWidth, 0, halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_END_U, BEAM_V_STOP).endVertex();
-		builder.vertex(lastMatrix, halfWidth, 0, halfWidth).color(col[0], col[1], col[2], col[3]).uv(1, BEAM_V_STOP).endVertex();
-		builder.vertex(lastMatrix, halfWidth, 0, -halfWidth).color(col[0], col[1], col[2], col[3]).uv(1, 0).endVertex();
-		//Far end
-		builder.vertex(lastMatrix, -halfWidth, length, -halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_END_U, 0).endVertex();
-		builder.vertex(lastMatrix, -halfWidth, length, halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_END_U, BEAM_V_STOP).endVertex();
-		builder.vertex(lastMatrix, halfWidth, length, halfWidth).color(col[0], col[1], col[2], col[3]).uv(1, BEAM_V_STOP).endVertex();
-		builder.vertex(lastMatrix, halfWidth, length, -halfWidth).color(col[0], col[1], col[2], col[3]).uv(1, 0).endVertex();
-	}
+        //Sides
+        //-X
+        builder.vertex(lastMatrix, -halfWidth, 0, -halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_SIDE_U, 0).uv2(CRRenderUtil.BRIGHT_LIGHT).endVertex();
+        builder.vertex(lastMatrix, -halfWidth, length, -halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_SIDE_U, endV).uv2(CRRenderUtil.BRIGHT_LIGHT).endVertex();
+        builder.vertex(lastMatrix, -halfWidth, length, halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_END_U, endV).uv2(CRRenderUtil.BRIGHT_LIGHT).endVertex();
+        builder.vertex(lastMatrix, -halfWidth, 0, halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_END_U, 0).uv2(CRRenderUtil.BRIGHT_LIGHT).endVertex();
+        //+X
+        builder.vertex(lastMatrix, halfWidth, 0, -halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_SIDE_U, 0).uv2(CRRenderUtil.BRIGHT_LIGHT).endVertex();
+        builder.vertex(lastMatrix, halfWidth, length, -halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_SIDE_U, endV).uv2(CRRenderUtil.BRIGHT_LIGHT).endVertex();
+        builder.vertex(lastMatrix, halfWidth, length, halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_END_U, endV).uv2(CRRenderUtil.BRIGHT_LIGHT).endVertex();
+        builder.vertex(lastMatrix, halfWidth, 0, halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_END_U, 0).uv2(CRRenderUtil.BRIGHT_LIGHT).endVertex();
+        //-Z
+        builder.vertex(lastMatrix, -halfWidth, 0, -halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_SIDE_U, 0).uv2(CRRenderUtil.BRIGHT_LIGHT).endVertex();
+        builder.vertex(lastMatrix, -halfWidth, length, -halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_SIDE_U, endV).uv2(CRRenderUtil.BRIGHT_LIGHT).endVertex();
+        builder.vertex(lastMatrix, halfWidth, length, -halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_END_U, endV).uv2(CRRenderUtil.BRIGHT_LIGHT).endVertex();
+        builder.vertex(lastMatrix, halfWidth, 0, -halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_END_U, 0).uv2(CRRenderUtil.BRIGHT_LIGHT).endVertex();
+        //+Z
+        builder.vertex(lastMatrix, -halfWidth, 0, halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_SIDE_U, 0).uv2(CRRenderUtil.BRIGHT_LIGHT).endVertex();
+        builder.vertex(lastMatrix, -halfWidth, length, halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_SIDE_U, endV).uv2(CRRenderUtil.BRIGHT_LIGHT).endVertex();
+        builder.vertex(lastMatrix, halfWidth, length, halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_END_U, endV).uv2(CRRenderUtil.BRIGHT_LIGHT).endVertex();
+        builder.vertex(lastMatrix, halfWidth, 0, halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_END_U, 0).uv2(CRRenderUtil.BRIGHT_LIGHT).endVertex();
+
+        //Near end
+        builder.vertex(lastMatrix, -halfWidth, 0, -halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_END_U, 0).uv2(CRRenderUtil.BRIGHT_LIGHT).endVertex();
+        builder.vertex(lastMatrix, -halfWidth, 0, halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_END_U, BEAM_V_STOP).uv2(CRRenderUtil.BRIGHT_LIGHT).endVertex();
+        builder.vertex(lastMatrix, halfWidth, 0, halfWidth).color(col[0], col[1], col[2], col[3]).uv(1, BEAM_V_STOP).uv2(CRRenderUtil.BRIGHT_LIGHT).endVertex();
+        builder.vertex(lastMatrix, halfWidth, 0, -halfWidth).color(col[0], col[1], col[2], col[3]).uv(1, 0).uv2(CRRenderUtil.BRIGHT_LIGHT).endVertex();
+        //Far end
+        builder.vertex(lastMatrix, -halfWidth, length, -halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_END_U, 0).uv2(CRRenderUtil.BRIGHT_LIGHT).endVertex();
+        builder.vertex(lastMatrix, -halfWidth, length, halfWidth).color(col[0], col[1], col[2], col[3]).uv(BEAM_END_U, BEAM_V_STOP).uv2(CRRenderUtil.BRIGHT_LIGHT).endVertex();
+        builder.vertex(lastMatrix, halfWidth, length, halfWidth).color(col[0], col[1], col[2], col[3]).uv(1, BEAM_V_STOP).uv2(CRRenderUtil.BRIGHT_LIGHT).endVertex();
+        builder.vertex(lastMatrix, halfWidth, length, -halfWidth).color(col[0], col[1], col[2], col[3]).uv(1, 0).uv2(CRRenderUtil.BRIGHT_LIGHT).endVertex();
+    }
 
 	@Override
 	public void render(T beam, float partialTicks, PoseStack matrix, MultiBufferSource buffer, int combinedLight, int combinedOverlay){
-		int[] packets = beam.getRenderedBeams();
+        int[] packets = beam.getRenderedBeams();
 
 		matrix.pushPose();
 		matrix.translate(0.5, 0.5, 0.5);
@@ -107,6 +107,7 @@ public class BeamRenderer<T extends BlockEntity & IBeamRenderTE> implements Bloc
 				matrix.pushPose();
 				matrix.mulPose(Direction.from3DDataValue(dir).getRotation());
 				matrix.mulPose(verticalRot);
+                //drawBeam(matrix, builder, length, width, trip.getLeft());
 				drawBeam(matrix, builder, length, width, trip.getLeft());
 
 				matrix.popPose();
