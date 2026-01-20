@@ -1,7 +1,7 @@
 {
 	"type": "crossroads:alchemy",
 	"category": "elemental",
-	"data": "rift",
+	"beam_element": "rift",
 	"catalyst": "practitioner",
 	"charged": true,
 	"reagents": [

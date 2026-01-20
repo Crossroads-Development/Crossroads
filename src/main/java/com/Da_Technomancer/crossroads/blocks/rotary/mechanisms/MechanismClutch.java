@@ -59,6 +59,11 @@ public class MechanismClutch extends MechanismAxle{
 	}
 
 	@Override
+	public boolean shouldUpdateCircuitReaders(IMechanismProperty mat, Direction.Axis axis, double energy, double speed, MechanismTileEntity te){
+		return true;//Possible optimization: only needs to update when speed changes
+	}
+
+	@Override
 	public boolean hasCap(BlockCapability<?, ?> cap, Direction capSide, IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis, MechanismTileEntity te){
 		return cap == CRCapabilities.AXLE_CAPABILITY && side == null && capSide.getAxis() == axis && (te.redstoneIn != 0 ^ inverted || capSide.getAxisDirection() == Direction.AxisDirection.NEGATIVE);
 	}

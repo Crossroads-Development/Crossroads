@@ -249,6 +249,11 @@ public class MechanismTileEntity extends BlockEntity implements ITickableTileEnt
 			}
 			updateMembers = false;
 		}
+
+		if(members[6] != null && getAxleAxis() != null && members[6].shouldUpdateCircuitReaders(mats[6], getAxleAxis(), energy[6], axleHandlers[6].getSpeed(), this)){
+			//Need to update comparators/circuit readers
+			level.updateNeighbourForOutputSignal(worldPosition, getBlockState().getBlock());
+		}
 	}
 
 	public void updateRedstone(){

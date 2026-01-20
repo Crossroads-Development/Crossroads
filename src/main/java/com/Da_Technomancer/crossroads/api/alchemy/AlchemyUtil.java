@@ -207,7 +207,8 @@ public class AlchemyUtil{
 			return biomeTemp;
 		}
 
-		double temp = reagentFluid.getFluidType().getTemperature();
+		//Fluid temperature properties are kind of meaningless, but sometimes roughly correspond to a number in Kelvin
+		double temp = HeatUtil.toCelcius(reagentFluid.getFluidType().getTemperature());
 		if(legal.test(temp)){
 			return temp;
 		}
@@ -216,13 +217,13 @@ public class AlchemyUtil{
 		if(legal.test(temp)){
 			return temp;
 		}
-		//100*C above the melting point
-		temp = Math.min(HeatUtil.ABSOLUTE_ZERO, reagent.getMeltingPoint()) + 100;
+		//20*C above the melting point
+		temp = Math.max(HeatUtil.ABSOLUTE_ZERO, reagent.getMeltingPoint()) + 20;
 		if(legal.test(temp)){
 			return temp;
 		}
 		//The exact melting point
-		return Math.min(HeatUtil.ABSOLUTE_ZERO, reagent.getMeltingPoint());
+		return Math.max(HeatUtil.ABSOLUTE_ZERO, reagent.getMeltingPoint());
 	}
 
 	private static class QueuedEffect{

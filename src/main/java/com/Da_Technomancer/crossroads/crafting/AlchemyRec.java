@@ -168,7 +168,7 @@ public class AlchemyRec implements IOptionalRecipe<RecipeInput>{
 		int content = reags.getTotalQty();
 
 		//Elemental reactions have special handling
-		if(type == Type.ELEMENTAL){
+		if(type == Type.ELEMENTAL || type == Type.ELEMENTAL_DESTRUCTIVE){
 			if(alignment == EnumBeamAlignments.getAlignment(new BeamUnit(reags.getQty(EnumReagents.PHELOSTOGEN.id()), reags.getQty(EnumReagents.AETHER.id()), reags.getQty(EnumReagents.ADAMANT.id()), 0))){
 				int created = 0;
 				created += reags.getQty(EnumReagents.PHELOSTOGEN.id());
@@ -180,6 +180,11 @@ public class AlchemyRec implements IOptionalRecipe<RecipeInput>{
 
 				for(ReagentStack reag : getProducts()){
 					reags.addReagent(reag.getType(), created * reag.amount(), reags.getTempC());
+				}
+
+				if(created > 0 && type == Type.ELEMENTAL_DESTRUCTIVE){
+					chamb.destroyChamber(Math.min(MAX_BLAST, data * created));
+					chamb.addVisualEffect(ParticleTypes.SMOKE, 0, 0, 0);
 				}
 
 				return created > 0;
@@ -379,7 +384,8 @@ public class AlchemyRec implements IOptionalRecipe<RecipeInput>{
 		NORMAL(),
 		PRECISE(),//Destroys the chamber if proportions aren't exact
 		DESTRUCTIVE(),//Destroys the chamber
-		ELEMENTAL();//Practitioner stone tier elemental reagent
+		ELEMENTAL(),//Practitioner stone tier elemental reagent
+		ELEMENTAL_DESTRUCTIVE;//Practitioner stone tier elemental reagent, but just destroys it
 
 		@Override
 		public String getSerializedName(){

@@ -4,9 +4,9 @@ import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.electric.IEnergyCapable;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
+import com.Da_Technomancer.crossroads.api.templates.IInfoTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
-import com.Da_Technomancer.crossroads.items.LeydenJar;
 import com.Da_Technomancer.essentials.api.BlockUtil;
 import com.Da_Technomancer.essentials.api.IItemCapable;
 import com.Da_Technomancer.essentials.api.IItemStorage;
@@ -17,21 +17,25 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Containers;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 
-public class TeslaCoilTileEntity extends BlockEntity implements ITickableTileEntity, ILongReceiver, IItemStorage, IEnergyCapable, IItemCapable{
+public class TeslaCoilTileEntity extends BlockEntity implements ITickableTileEntity, ILongReceiver, IItemStorage, IEnergyCapable, IItemCapable, IInfoTE{
 
 	public static final BlockEntityType<TeslaCoilTileEntity> TYPE = CRTileEntity.createType(TeslaCoilTileEntity::new, CRBlocks.teslaCoil);
 
@@ -41,15 +45,27 @@ public class TeslaCoilTileEntity extends BlockEntity implements ITickableTileEnt
 	public boolean redstone = false;
 	private ItemStack battery = ItemStack.EMPTY;
 
-	private IEnergyStorage energyHandlerIn = new EnergyHandlerIn();
-	private IEnergyStorage energyHandlerOut = new EnergyHandlerOut();
-	private IItemHandler itemHandler = new ItemHandler();
+	private final IEnergyStorage energyHandlerIn = new EnergyHandlerIn();
+	private final IEnergyStorage energyHandlerOut = new EnergyHandlerOut();
+	private final IItemHandler itemHandler = new ItemHandler();
 
 	public TeslaCoilTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state);
 	}
 
 	private IEnergyStorage stackEnergyHandler;
+
+	@Override
+	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
+		IEnergyStorage stored = getBatteryHandler();
+		if(stored != null){
+			if(hasJar()){
+				chat.add(Component.translatable("tt.crossroads.tesla_coil.battery_augmented", stored.getEnergyStored(), stored.getMaxEnergyStored()));
+			}else{
+				chat.add(Component.translatable("tt.crossroads.tesla_coil.battery_charging", stored.getEnergyStored(), stored.getMaxEnergyStored()));
+			}
+		}
+	}
 
 	@Nullable
 	private IEnergyStorage getBatteryHandler(){
@@ -63,14 +79,15 @@ public class TeslaCoilTileEntity extends BlockEntity implements ITickableTileEnt
 	}
 
 	private boolean hasJar(){
-		return battery.getItem() instanceof LeydenJar;
+		IEnergyStorage energyHandler = getBatteryHandler();
+		return energyHandler != null && energyHandler.canReceive() && energyHandler.canExtract();
 	}
 
 	public int getTotalFE(){
 		if(level.isClientSide){
 			return storedSelf;
 		}
-		if(hasJar()){
+		if(hasJar()){//Note that non-'jar type' batteries don't get their storage merged with the tesla coil
 			return storedSelf + getBatteryHandler().getEnergyStored();
 		}
 		return storedSelf;
@@ -111,18 +128,20 @@ public class TeslaCoilTileEntity extends BlockEntity implements ITickableTileEnt
 			return;
 		}
 		IEnergyStorage handler = getBatteryHandler();
-		if(hasJar() && handler != null){
+		if(handler != null && hasJar()){
 			int handlerFE = handler.getEnergyStored();
 			if(handlerFE > totalFE){
 				handler.extractEnergy(handlerFE - totalFE, false);
 				storedSelf = 0;
 			}else{
-				totalFE -= handlerFE;
-				totalFE -= handler.receiveEnergy(totalFE, false);
-				storedSelf = totalFE;
+//				totalFE -= handlerFE;
+				int selfFE = totalFE - handlerFE;
+				selfFE -= handler.receiveEnergy(selfFE, false);
+				storedSelf = selfFE;
 			}
 		}else if(handler != null && handler.canReceive()){
-			totalFE -= handler.receiveEnergy(totalFE - handler.getEnergyStored(), false);
+			//Note that in this case, totalFE doesn't include FE already stored in the jar
+			totalFE -= handler.receiveEnergy(totalFE, false);
 			storedSelf = totalFE;
 		}else{
 			storedSelf = totalFE;

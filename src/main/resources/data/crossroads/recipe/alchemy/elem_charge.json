@@ -1,7 +1,7 @@
 {
 	"type": "crossroads:alchemy",
 	"category": "elemental",
-	"data": "charge",
+	"beam_element": "charge",
 	"catalyst": "practitioner",
 	"charged": true,
 	"reagents": [

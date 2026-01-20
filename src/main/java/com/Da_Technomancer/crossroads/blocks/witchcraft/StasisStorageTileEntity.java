@@ -61,22 +61,26 @@ public class StasisStorageTileEntity extends InventoryTE implements IBeamCapable
 		setChanged();
 	}
 
+	//Called whenever a TileEntity is loaded
 	@Override
-	public void onLoad(){
-		super.onLoad();
-		//While this block is unloaded, the gametime has still been advancing,
-		//so the stored items have decayed without this block countering that
-		//When we reload, we do a single large freeze operation to account for time spent unloaded, plus a small extra as a buffer
-		long gameTime = level.getGameTime();
-		if(gameTime > lastTick){
-			for(ItemStack stack : inventory){
-				if(stack.getItem() instanceof IPerishable perishable){
-					IPerishable.setSpoilTime(stack, IPerishable.getAndInitSpoilTime(stack, level) + gameTime - lastTick + 1, 0);
+	public void clearRemoved(){
+		super.clearRemoved();
+		//Server side only
+		if(!level.isClientSide()){
+			//While this block is unloaded, the gametime has still been advancing,
+			//so the stored items have decayed without this block countering that
+			//When we reload, we do a single large freeze operation to account for time spent unloaded, plus a small extra as a buffer
+			long gameTime = level.getGameTime();
+
+			if(gameTime > lastTick && lastTick != 0){
+				for(ItemStack stack : inventory){
+					if(stack.getItem() instanceof IPerishable){
+						IPerishable.setSpoilTime(stack, IPerishable.getAndInitSpoilTime(stack, level) + gameTime - lastTick + 5, 0);
+					}
 				}
 			}
+			lastTick = gameTime;
 		}
-		lastTick = gameTime;
-//		setChanged(); Note to self: Calling setChanged() in onLoad() freezes the loading process; bad
 	}
 
 	@Override

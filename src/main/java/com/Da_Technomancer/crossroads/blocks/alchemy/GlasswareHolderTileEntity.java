@@ -72,6 +72,12 @@ public class GlasswareHolderTileEntity extends ReagentHolderTE implements IHeatC
 	}
 
 	@Override
+	public void setBlockState(BlockState stateIn){
+		super.setBlockState(stateIn);
+		glassType = null;
+	}
+
+	@Override
 	protected boolean useCableHeat(){
 		return true;
 	}
