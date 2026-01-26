@@ -1,11 +1,13 @@
 package com.Da_Technomancer.crossroads.entity.mob_effects;
 
 import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -18,51 +20,42 @@ import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Blocks;
+import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
-import java.util.HashMap;
 import java.util.List;
 
 public class CRPotions{
 
-	public static final HashMap<String, MobEffect> toRegisterEffect = new HashMap<>(4);
-	public static final HashMap<String, Potion> toRegisterPotion = new HashMap<>();
+	public static final DeferredRegister<MobEffect> MOB_EFFECTS = DeferredRegister.create(Registries.MOB_EFFECT, Crossroads.MODID);
+	public static final DeferredRegister<Potion> POTIONS = DeferredRegister.create(Registries.POTION, Crossroads.MODID);
 
 	//We assume any effect on a mob over this duration was originally a permanent effect; this is not a flawless method
 	public static final int PERM_EFFECT_CUTOFF = Integer.MAX_VALUE / 4;
 
-	public static final Holder<MobEffect> SEDATION_EFFECT = registerMobEffect("sedation", new Sedation());
-	public static final Holder<MobEffect> CURATIVE_EFFECT = registerMobEffect("curative", new Curative());
+	public static final Holder<MobEffect> SEDATION_EFFECT = MOB_EFFECTS.register("sedation", Sedation::new);
+	public static final Holder<MobEffect> CURATIVE_EFFECT = MOB_EFFECTS.register("curative", Curative::new);
 	/**
 	 * @deprecated Use a penalty to the MAX_HEALTH attribute instead. See EntityTemplate for an example.
 	 */
 	@Deprecated
-	public static final Holder<MobEffect> HEALTH_PENALTY_EFFECT = registerMobEffect("health_penalty", new HealthPenalty());
-	public static final Holder<MobEffect> TRANSIENT_EFFECT = registerMobEffect("transient", new Transient());
+	public static final Holder<MobEffect> HEALTH_PENALTY_EFFECT = MOB_EFFECTS.register("health_penalty", HealthPenalty::new);
+	public static final Holder<MobEffect> TRANSIENT_EFFECT = MOB_EFFECTS.register("transient", Transient::new);
 
-	public static final Holder<Potion> POTION_SEDATION = registerPotion("sedation", "sedation", new MobEffectInstance(SEDATION_EFFECT, 3600));
-	public static final Holder<Potion> POTION_SEDATION_LONG = registerPotion("long_sedation", "sedation", new MobEffectInstance(SEDATION_EFFECT, 9600));
-	public static final Holder<Potion> POTION_CURATIVE = registerPotion("curative", "curative", new MobEffectInstance(CURATIVE_EFFECT, 1));
-	public static final Holder<Potion> POTION_NAUSEA = registerPotion("nausea", "nausea", new MobEffectInstance(MobEffects.CONFUSION, 3600));
-	public static final Holder<Potion> POTION_NAUSEA_LONG = registerPotion("long_nausea", "nausea", new MobEffectInstance(MobEffects.CONFUSION, 9600));
-	public static final Holder<Potion> POTION_BLINDNESS = registerPotion("blindness", "blindness", new MobEffectInstance(MobEffects.BLINDNESS, 3600));
-	public static final Holder<Potion> POTION_BLINDNESS_LONG = registerPotion("long_blindness", "blindness", new MobEffectInstance(MobEffects.BLINDNESS, 9600));
-	public static final Holder<Potion> POTION_TRANSIENT = registerPotion("transient", "transient", new MobEffectInstance(TRANSIENT_EFFECT, 3600));
-	public static final Holder<Potion> POTION_TRANSIENT_LONG = registerPotion("long_transient", "transient", new MobEffectInstance(TRANSIENT_EFFECT, 9600));
+	public static final Holder<Potion> POTION_SEDATION = POTIONS.register("sedation", () -> new Potion("sedation", new MobEffectInstance(SEDATION_EFFECT, 3600)));
+	public static final Holder<Potion> POTION_SEDATION_LONG = POTIONS.register("long_sedation", () -> new Potion("sedation", new MobEffectInstance(SEDATION_EFFECT, 9600)));
+	public static final Holder<Potion> POTION_CURATIVE = POTIONS.register("curative", () -> new Potion("curative", new MobEffectInstance(CURATIVE_EFFECT, 1)));
+	public static final Holder<Potion> POTION_NAUSEA = POTIONS.register("nausea", () -> new Potion("nausea", new MobEffectInstance(MobEffects.CONFUSION, 3600)));
+	public static final Holder<Potion> POTION_NAUSEA_LONG = POTIONS.register("long_nausea", () -> new Potion("nausea", new MobEffectInstance(MobEffects.CONFUSION, 9600)));
+	public static final Holder<Potion> POTION_BLINDNESS = POTIONS.register("blindness", () -> new Potion("blindness", new MobEffectInstance(MobEffects.BLINDNESS, 3600)));
+	public static final Holder<Potion> POTION_BLINDNESS_LONG = POTIONS.register("long_blindness", () -> new Potion("blindness", new MobEffectInstance(MobEffects.BLINDNESS, 9600)));
+	public static final Holder<Potion> POTION_TRANSIENT = POTIONS.register("transient", () -> new Potion("transient", new MobEffectInstance(TRANSIENT_EFFECT, 3600)));
+	public static final Holder<Potion> POTION_TRANSIENT_LONG = POTIONS.register("long_transient", () -> new Potion("transient", new MobEffectInstance(TRANSIENT_EFFECT, 9600)));
 
-	public static void init(){
-		//No-op
-	}
-
-	private static <T extends MobEffect> Holder<T> registerMobEffect(String regName, T effect){
-		toRegisterEffect.put(regName, effect);
-		return Holder.direct(effect);
-	}
-
-	private static Holder<Potion> registerPotion(String regName, String potionName, MobEffectInstance... effectInstance){
-		Potion potion = new Potion(potionName, effectInstance);
-		toRegisterPotion.put(regName, potion);
-		return Holder.direct(potion);
+	public static void init(IEventBus bus){
+		MOB_EFFECTS.register(bus);
+		POTIONS.register(bus);
 	}
 
 	public static void registerPotionRecipes(RegisterBrewingRecipesEvent e){

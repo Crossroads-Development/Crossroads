@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads;
 
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
+import com.Da_Technomancer.crossroads.entity.mob_effects.CRPotions;
 import com.Da_Technomancer.crossroads.gui.container.CRContainers;
 import com.Da_Technomancer.crossroads.integration.CRIntegration;
 import com.Da_Technomancer.crossroads.items.CRItems;
@@ -30,6 +31,7 @@ public final class Crossroads{
 
 		CRBlocks.init(bus);
 		CRItems.init(bus);
+		CRPotions.init(bus);
 		CRContainers.init(bus);
 		CRConfig.init(modContainer);
 	}

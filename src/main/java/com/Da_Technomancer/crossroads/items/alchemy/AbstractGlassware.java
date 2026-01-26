@@ -104,7 +104,7 @@ public abstract class AbstractGlassware extends Item{
 	/**
 	 * Call this as little as possible. 
 	 * @param stack The stack to store the reagents to
-	 * @param reagents The reagents to store
+	 * @param reagents The reagents to store - DO NOT modify this map after passing to setReagents
 	 */
 	public void setReagents(ItemStack stack, ReagentMap reagents){
 		stack.set(CRItems.REAGENT_DATA, reagents);
@@ -114,6 +114,7 @@ public abstract class AbstractGlassware extends Item{
 	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
 		tooltip.add(Component.translatable("tt.crossroads.boilerplate.alchemy_capacity", getCapacity()));
 		if(!stack.has(CRItems.REAGENT_DATA)){
+			tooltip.add(Component.translatable("tt.crossroads.boilerplate.alchemy_empty"));
 			return;
 		}
 		ReagentMap stored = getReagents(stack);

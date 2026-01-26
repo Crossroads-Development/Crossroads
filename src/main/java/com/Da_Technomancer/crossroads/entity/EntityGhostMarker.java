@@ -67,17 +67,21 @@ public class EntityGhostMarker extends Entity{
 
 	@Override
 	protected void readAdditionalSaveData(CompoundTag nbt){
-		time = nbt.getLong("time");
-		if(nbt.contains("data")){
-			data = nbt.getCompound("data");
+		entityData.set(MARKER_TYPE, nbt.getString("cr_marker_type"));
+		entityData.set(LIFESPAN, nbt.getInt("cr_lifespan"));
+		time = nbt.getLong("cr_time");
+		if(nbt.contains("cr_data")){
+			data = nbt.getCompound("cr_data");
 		}
 	}
 
 	@Override
 	protected void addAdditionalSaveData(CompoundTag nbt){
-		nbt.putLong("time", time);
+		nbt.putString("cr_marker_type", entityData.get(MARKER_TYPE));
+		nbt.putInt("cr_lifespan", entityData.get(LIFESPAN));
+		nbt.putLong("cr_time", time);
 		if(data != null){
-			nbt.put("data", data);
+			nbt.put("cr_data", data);
 		}
 	}
 

@@ -193,10 +193,12 @@ public class EntityFlyingMachine extends Entity{
 	@Override
 	public void readAdditionalSaveData(CompoundTag nbt){
 		damage = nbt.getInt("dam");
+		entityData.set(GRAV_PLATE_ANGLE, nbt.getFloat("grav_angle"));
 	}
 
 	@Override
 	public void addAdditionalSaveData(CompoundTag nbt){
 		nbt.putInt("dam", damage);
+		nbt.putFloat("grav_angle", entityData.get(GRAV_PLATE_ANGLE));
 	}
 }

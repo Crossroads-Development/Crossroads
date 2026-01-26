@@ -55,6 +55,6 @@ public record SendIntArrayToClient(byte id, int[] message, BlockPos pos) impleme
 
 	@Override
 	public Type<? extends CustomPacketPayload> type(){
-		return null;
+		return TYPE;
 	}
 }

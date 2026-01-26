@@ -117,7 +117,7 @@ public class GlasswareHolderTileEntity extends ReagentHolderTE implements IHeatC
 				return ItemStack.EMPTY;
 		}
 
-		((AbstractGlassware) (out.getItem())).setReagents(out, contents);
+		((AbstractGlassware) (out.getItem())).setReagents(out, contents.copy());
 		return out;
 	}
 

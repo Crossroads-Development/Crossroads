@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.alchemy.AlchemyUtil;
 import com.Da_Technomancer.crossroads.api.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.items.CRItems;
+import com.Da_Technomancer.essentials.api.BlockUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -26,7 +27,7 @@ public class EntityShell extends ThrowableProjectile implements ItemSupplier{
 
 	public static EntityType<EntityShell> type;
 
-	private static final EntityDataAccessor<ItemStack> item = SynchedEntityData.defineId(EntityShell.class, EntityDataSerializers.ITEM_STACK);
+	private static final EntityDataAccessor<ItemStack> ITEM = SynchedEntityData.defineId(EntityShell.class, EntityDataSerializers.ITEM_STACK);
 
 	private ReagentMap contents;//Technically redundant with the itemstack in data manager, but meh
 
@@ -37,13 +38,13 @@ public class EntityShell extends ThrowableProjectile implements ItemSupplier{
 	public EntityShell(Level worldIn, ReagentMap contents, ItemStack stack){
 		this(type, worldIn);
 		this.contents = contents;
-		entityData.set(item, stack);
+		entityData.set(ITEM, stack);
 	}
 
 	public EntityShell(Level worldIn, LivingEntity throwerIn, ReagentMap contents, ItemStack stack){
 		super(type, throwerIn, worldIn);
 		this.contents = contents;
-		entityData.set(item, stack);
+		entityData.set(ITEM, stack);
 	}
 
 	@Override
@@ -110,13 +111,16 @@ public class EntityShell extends ThrowableProjectile implements ItemSupplier{
 
 	@Override
 	protected void defineSynchedData(SynchedEntityData.Builder builder){
-		builder.define(item, new ItemStack(CRItems.shellGlass));
+		builder.define(ITEM, new ItemStack(CRItems.shellGlass));
 	}
 
 	@Override
 	public void readAdditionalSaveData(CompoundTag nbt){
 		super.readAdditionalSaveData(nbt);
 		contents = ReagentMap.readFromNBT(nbt);
+		if(nbt.contains("cr_shell_item")){
+			entityData.set(ITEM, BlockUtil.nbtToItemStack(nbt.getCompound("cr_shell_item"), level().registryAccess()));
+		}
 	}
 
 	@Override
@@ -125,10 +129,14 @@ public class EntityShell extends ThrowableProjectile implements ItemSupplier{
 		if(contents != null){
 			contents.write(nbt);
 		}
+		ItemStack stack = entityData.get(ITEM);
+		if(!stack.isEmpty()){
+			nbt.put("cr_shell_item", BlockUtil.stackToNBT(stack, level().registryAccess()));
+		}
 	}
 
 	@Override
 	public ItemStack getItem(){
-		return entityData.get(item);
+		return entityData.get(ITEM);
 	}
 }

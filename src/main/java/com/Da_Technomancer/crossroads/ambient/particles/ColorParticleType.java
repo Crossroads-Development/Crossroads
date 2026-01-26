@@ -13,12 +13,12 @@ public class ColorParticleType extends ParticleType<ColorParticleData>{
 
 	@Override
 	public MapCodec<ColorParticleData> codec(){
-		return ColorParticleData.codec;
+		return ColorParticleData.CODEC;
 	}
 
 	@Override
 	public StreamCodec<? super RegistryFriendlyByteBuf, ColorParticleData> streamCodec(){
-		return null;
+		return ColorParticleData.STREAM_CODEC;
 	}
 
 }

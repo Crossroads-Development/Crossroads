@@ -121,8 +121,8 @@ public class GlasswareHolder extends BaseEntityBlock{
 	public ItemInteractionResult useItemOn(ItemStack held, BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		if(!worldIn.isClientSide){
 			BlockEntity te = worldIn.getBlockEntity(pos);
-			if(te instanceof GlasswareHolderTileEntity){
-				playerIn.setItemInHand(hand, ((GlasswareHolderTileEntity) te).rightClickWithItem(playerIn.getItemInHand(hand), playerIn.isShiftKeyDown(), playerIn, hand));
+			if(te instanceof GlasswareHolderTileEntity holderTE){
+				playerIn.setItemInHand(hand, holderTE.rightClickWithItem(playerIn.getItemInHand(hand), playerIn.isShiftKeyDown(), playerIn, hand));
 			}
 		}
 		return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);

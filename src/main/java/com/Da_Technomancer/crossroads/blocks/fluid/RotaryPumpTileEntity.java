@@ -34,6 +34,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
@@ -232,7 +233,7 @@ public class RotaryPumpTileEntity extends InventoryTE implements INBTReceiver, I
 			return state;
 		}else if(block == Blocks.LAVA_CAULDRON){
 			return Blocks.CAULDRON.defaultBlockState();
-		}else if(block instanceof LiquidBlock lblock && lblock.fluid.isSource(world.getFluidState(targetPos))){
+		}else if(block instanceof LiquidBlock && state.getFluidState().isSource()){
 			//Normal fluids
 			return Blocks.AIR.defaultBlockState();
 		}else if(block instanceof SimpleWaterloggedBlock && state.hasProperty(BlockStateProperties.WATERLOGGED) && state.getValue(BlockStateProperties.WATERLOGGED)){
@@ -250,7 +251,7 @@ public class RotaryPumpTileEntity extends InventoryTE implements INBTReceiver, I
 			return new FluidStack(Fluids.WATER, 1000);
 		}else if(block == Blocks.LAVA_CAULDRON){
 			return new FluidStack(Fluids.LAVA, 1000);
-		}else if(block instanceof LiquidBlock lblock && lblock.fluid.isSource(world.getFluidState(targetPos))){
+		}else if(block instanceof LiquidBlock lblock && state.getFluidState().isSource()){
 			//Normal fluids
 			Fluid fluid = lblock.fluid.getSource();
 			return new FluidStack(fluid, 1000);

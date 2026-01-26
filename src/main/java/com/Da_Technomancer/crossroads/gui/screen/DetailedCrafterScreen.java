@@ -49,7 +49,7 @@ public class DetailedCrafterScreen extends AbstractContainerScreen<DetailedCraft
 			canUnlockPath = EnumPath.canUnlock(Minecraft.getInstance().player);
 		}
 
-		renderBackground(matrix, mouseX, mouseY, partialTicks);
+		//renderBackground(matrix, mouseX, mouseY, partialTicks);
 		super.render(matrix, mouseX, mouseY, partialTicks);
 		renderTooltip(matrix, mouseX, mouseY);
 

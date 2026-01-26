@@ -62,6 +62,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.horse.SkeletonHorse;
+import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.player.Player;
@@ -89,6 +90,7 @@ import net.neoforged.neoforge.event.AnvilUpdateEvent;
 import net.neoforged.neoforge.event.VanillaGameEvent;
 import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
+import net.neoforged.neoforge.event.entity.EntityMobGriefingEvent;
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.level.ExplosionEvent;
@@ -160,15 +162,6 @@ public class EventHandlerCommon{
 
 			e.register(Registries.SOUND_EVENT, helper -> {
 				registerAll(helper, CRSounds.soundsToRegister);
-			});
-
-			e.register(Registries.MOB_EFFECT, helper -> {
-				registerAll(helper, CRPotions.toRegisterEffect);
-			});
-
-			e.register(Registries.POTION, helper -> {
-				CRPotions.init();
-				registerAll(helper, CRPotions.toRegisterPotion);
 			});
 
 			e.register(Registries.PARTICLE_TYPE, helper -> {
@@ -576,6 +569,25 @@ public class EventHandlerCommon{
 			}
 		}
 		world.getProfiler().pop();
+	}
+
+	@SubscribeEvent
+	@SuppressWarnings("unused")
+	public void stopWitherGrief(EntityMobGriefingEvent e){
+		//Equilibrium beams cancel explosions, including block destruction attack by withers
+		if(e.getEntity() instanceof WitherBoss wither && wither.level() instanceof ServerLevel world){
+			world.getProfiler().push(Crossroads.MODNAME + ": Explosion modification");
+			for(Entity ent : world.getAllEntities()){
+				if(ent instanceof EntityGhostMarker mark){
+					if(mark.getMarkerType() == EntityGhostMarker.EnumMarkerType.EQUILIBRIUM && mark.data != null && mark.position().subtract(wither.position()).length() <= mark.data.getInt("range")){
+						e.setCanGrief(false);
+						world.getProfiler().pop();
+						return;
+					}
+				}
+			}
+			world.getProfiler().pop();
+		}
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGH)

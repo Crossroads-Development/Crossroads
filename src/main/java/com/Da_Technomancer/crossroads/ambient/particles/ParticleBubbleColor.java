@@ -62,7 +62,7 @@ public class ParticleBubbleColor extends TextureSheetParticle{
 		@Nullable
 		@Override
 		public Particle createParticle(ColorParticleData typeIn, ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed){
-			return new ParticleBubbleColor(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, typeIn.getColor(), sprite);
+			return new ParticleBubbleColor(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, typeIn.color(), sprite);
 		}
 	}
 }

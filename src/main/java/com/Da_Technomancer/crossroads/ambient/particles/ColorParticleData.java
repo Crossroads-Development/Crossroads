@@ -1,41 +1,35 @@
 package com.Da_Technomancer.crossroads.ambient.particles;
 
+import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 
 import java.awt.*;
 
-public class ColorParticleData implements ParticleOptions{
+public record ColorParticleData(ParticleType<ColorParticleData> type, Color color) implements ParticleOptions{
 
-	protected static final MapCodec<ColorParticleData> codec = RecordCodecBuilder.mapCodec((instance) -> instance.group(Codec.BYTE.fieldOf("type").forGetter(ColorParticleData::getTypeID), Codec.BYTE.fieldOf("r").forGetter((ColorParticleData data) -> (byte) data.getColor().getRed()), Codec.BYTE.fieldOf("g").forGetter((ColorParticleData data) -> (byte) data.getColor().getGreen()), Codec.BYTE.fieldOf("b").forGetter((ColorParticleData data) -> (byte) data.getColor().getBlue()), Codec.BYTE.fieldOf("a").forGetter((ColorParticleData data) -> (byte) data.getColor().getAlpha())).apply(instance, ColorParticleData::new));
-
-	private final ParticleType<ColorParticleData> type;
-	private final Color col;
-
-	private ColorParticleData(byte typeID, byte r, byte g, byte b, byte a){
-		this(getTypeFromID(typeID), new Color(r, g, b, a));
-	}
-
-	public ColorParticleData(ParticleType<ColorParticleData> type, Color col){
-		this.type = type;
-		this.col = col;
-	}
-
-	public Color getColor(){
-		return col;
-	}
+	public static final MapCodec<ColorParticleData> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
+			Codec.BYTE.xmap(ColorParticleData::getTypeFromID, ColorParticleData::getTypeID).fieldOf("type").forGetter(ColorParticleData::type),
+			CraftingUtil.COLOR_CODEC.fieldOf("color").forGetter(ColorParticleData::color)
+	).apply(instance, ColorParticleData::new));
+	public static final StreamCodec<? super RegistryFriendlyByteBuf, ColorParticleData> STREAM_CODEC = StreamCodec.composite(
+			ByteBufCodecs.BYTE.map(ColorParticleData::getTypeFromID, ColorParticleData::getTypeID), ColorParticleData::type,
+			CraftingUtil.COLOR_STREAM_CODEC, ColorParticleData::color,
+			ColorParticleData::new
+	);
 
 	@Override
 	public ParticleType<?> getType(){
 		return type;
 	}
 
-	private byte getTypeID(){
-		//Used to allow the codec to encode which particle type this is
-		//A bad workaround for a new system (codec) which is poorly understood and seems to be coded like one of those bad calculators that checks for every possible (hard coded) input
+	private static byte getTypeID(ParticleType<ColorParticleData> type){
 		if(type == CRParticles.COLOR_GAS){
 			return 0;
 		}else if(type == CRParticles.COLOR_LIQUID){
@@ -50,17 +44,12 @@ public class ColorParticleData implements ParticleOptions{
 	}
 
 	private static ParticleType<ColorParticleData> getTypeFromID(byte id){
-		switch(id){
-			case 0:
-				return CRParticles.COLOR_GAS;
-			case 1:
-				return CRParticles.COLOR_LIQUID;
-			case 2:
-				return CRParticles.COLOR_SOLID;
-			case 3:
-				return CRParticles.COLOR_FLAME;
-			default:
-				return CRParticles.COLOR_SPLASH;
-		}
+		return switch(id){
+			case 0 -> CRParticles.COLOR_GAS;
+			case 1 -> CRParticles.COLOR_LIQUID;
+			case 2 -> CRParticles.COLOR_SOLID;
+			case 3 -> CRParticles.COLOR_FLAME;
+			default -> CRParticles.COLOR_SPLASH;
+		};
 	}
 }
