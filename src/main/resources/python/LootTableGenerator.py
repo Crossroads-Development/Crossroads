@@ -6,15 +6,17 @@ import os
 
 
 def writeGem(file, blockName, gemName):
-    file.write(
-        '{\n\t"type": "minecraft:block",\n\t"pools": [\n\t\t{\n\t\t\t"rolls": 1,\n\t\t\t"entries": [\n\t\t\t\t{\n\t\t\t\t\t"type": "minecraft:alternatives",\n\t\t\t\t\t"children": [\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\t"type": "minecraft:item",\n\t\t\t\t\t\t\t"conditions": [\n\t\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t\t"condition": "minecraft:match_tool",\n\t\t\t\t\t\t\t\t\t"predicate": {\n\t\t\t\t\t\t\t\t\t\t"enchantments": [\n\t\t\t\t\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t\t\t\t\t"enchantment": "minecraft:silk_touch",\n\t\t\t\t\t\t\t\t\t\t\t\t"levels": {\n\t\t\t\t\t\t\t\t\t\t\t\t\t"min": 1\n\t\t\t\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t\t\t]\n\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t],\n\t\t\t\t\t\t\t"name": "'
-    )
-    file.write(blockName)
-    file.write(
-        '"\n\t\t\t\t\t\t},\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\t"type": "minecraft:item",\n\t\t\t\t\t\t\t"functions": [\n\t\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t\t"function": "minecraft:apply_bonus",\n\t\t\t\t\t\t\t\t\t"enchantment": "minecraft:fortune",\n\t\t\t\t\t\t\t\t\t"formula": "minecraft:ore_drops"\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t\t"function": "minecraft:explosion_decay"\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t],\n\t\t\t\t\t\t\t"name": "'
-    )
-    file.write(gemName)
-    file.write('"\n\t\t\t\t\t\t}\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t]\n\t\t}\n\t]\n}')
+	# Special loot table for two tall plants. From a template file
+	with open(templatePath + "gem_ore.json", "r") as template:
+		lines = template.readlines()
+		template.seek(0)
+		lines = [
+			line.replace("<BLOCK>", blockName).replace(
+				"<ITEM>", gemName
+			)
+			for line in lines
+		]
+		file.writelines(lines)
 
 
 def writeMetalOre(file, blockName, rawName):

@@ -1,13 +1,9 @@
 package com.Da_Technomancer.crossroads.effects.beam_effects;
 
-import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.api.CRReflection;
 import com.Da_Technomancer.crossroads.api.beams.BeamHit;
-import com.Da_Technomancer.crossroads.api.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.api.beams.BeamUtil;
 import com.Da_Technomancer.crossroads.api.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.api.technomancy.FluxUtil;
-import com.Da_Technomancer.essentials.api.ReflectionUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.GameRules;
@@ -18,13 +14,11 @@ import net.minecraft.world.level.chunk.LevelChunk;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.lang.reflect.Field;
-import java.util.HashMap;
 import java.util.Map;
 
 public class TimeEffect extends BeamEffect{
 
-	private static final Field chunkTickerField = ReflectionUtil.reflectField(CRReflection.CHUNK_TICKER_MAP);
+//	private static final Field chunkTickerField = ReflectionUtil.reflectField(CRReflection.CHUNK_TICKER_MAP);
 
 	@Override
 	public void doBeamEffect(EnumBeamAlignments align, boolean voi, int power, BeamHit beamHit){
@@ -67,14 +61,15 @@ public class TimeEffect extends BeamEffect{
 
 	@Nonnull
 	public static Map<BlockPos, ? extends TickingBlockEntity> getChunkTickers(Level world, ChunkPos chunkPos){
-		if(chunkTickerField != null){
+//		if(chunkTickerField != null){
 			LevelChunk chunk = world.getChunk(chunkPos.x, chunkPos.z);
-			try{
-				return (Map<BlockPos, ? extends TickingBlockEntity>) chunkTickerField.get(chunk);
-			}catch(IllegalAccessException | ClassCastException e){
-				Crossroads.logger.catching(e);
-			}
-		}
-		return new HashMap<>(0);//Empty map to not return null
+			return chunk.tickersInLevel;
+//			try{
+//				return (Map<BlockPos, ? extends TickingBlockEntity>) chunkTickerField.get(chunk);
+//			}catch(IllegalAccessException | ClassCastException e){
+//				Crossroads.logger.catching(e);
+//			}
+//		}
+//		return new HashMap<>(0);//Empty map to not return null
 	}
 }

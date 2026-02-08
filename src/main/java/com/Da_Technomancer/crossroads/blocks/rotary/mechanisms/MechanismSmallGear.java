@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.blocks.rotary.mechanisms;
 
 import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
-import com.Da_Technomancer.crossroads.api.MathUtil;
+import com.Da_Technomancer.essentials.api.MathUtil;
 import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.api.rotary.*;
 import com.Da_Technomancer.crossroads.items.CRItems;
@@ -173,13 +173,7 @@ public class MechanismSmallGear implements IMechanism<CRMaterialLibrary.GearMate
 		matrix.translate(0, -0.4375D, 0);
 		matrix.mulPose(Axis.YP.rotationDegrees(-(float) RotaryUtil.getCCWSign(side) * angle));
 
-		//TODO test
-		if(mat instanceof CRMaterialLibrary.GearMaterial gearMat && gearMat.getSaveName().equals("tin")){
-			CRModels.draw8GearMilled(matrix, buffer.getBuffer(RenderType.solid()), CRRenderUtil.convertColor(mat instanceof CRMaterialLibrary.GearMaterial ? ((CRMaterialLibrary.GearMaterial) mat).getColor() : Color.WHITE), combinedLight, CRModels.generateZFightFactor(te.getBlockPos(), side == null ? 0 : side.ordinal()));
-			return;
-		}
-
-		CRModels.draw8Gear(matrix, buffer.getBuffer(RenderType.solid()), CRRenderUtil.convertColor(mat instanceof CRMaterialLibrary.GearMaterial ? ((CRMaterialLibrary.GearMaterial) mat).getColor() : Color.WHITE), combinedLight, CRModels.generateZFightFactor(te.getBlockPos(), side == null ? 0 : side.ordinal()));
+		CRModels.draw8GearMilled(matrix, buffer.getBuffer(RenderType.solid()), CRRenderUtil.convertColor(mat instanceof CRMaterialLibrary.GearMaterial ? ((CRMaterialLibrary.GearMaterial) mat).getColor() : Color.WHITE), combinedLight, CRModels.generateZFightFactor(te.getBlockPos(), side == null ? 0 : side.ordinal()));
 	}
 
 	@Override

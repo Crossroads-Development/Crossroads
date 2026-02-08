@@ -24,6 +24,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -33,7 +34,8 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 
 	public static final BlockEntityType<HeatCableTileEntity> TYPE = CRTileEntity.createType(HeatCableTileEntity::new, CRBlocks.HEAT_CABLES.values().toArray(new HeatCable[0]));
 
-	protected final IHeatHandler[] neighCache = new IHeatHandler[] {null, null, null, null, null, null};
+	//Cache of neighboring optionals
+	private final BlockCapabilityCache<IHeatHandler, Direction>[] otherHandlers = new BlockCapabilityCache[6];
 	protected HeatInsulators insulator;
 	protected boolean[] matches = new boolean[6];
 	protected EnumTransferMode[] modes = ConduitBlock.IConduitTE.genModeArray(EnumTransferMode.BOTH);
@@ -61,6 +63,16 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 		return biomeTempCache;
 	}
 
+	private void initHandlerCache(){
+		if(level instanceof ServerLevel sLevel && otherHandlers[0] == null){
+			for(int i = 0; i < 6; i++){
+				Direction dir = Direction.from3DDataValue(i);
+				BlockPos relPos = worldPosition.relative(dir);
+				otherHandlers[i] = BlockCapabilityCache.create(CRCapabilities.HEAT_CAPABILITY, sLevel, relPos, dir.getOpposite(), () -> !this.isRemoved(), () -> {});
+			}
+		}
+	}
+
 	@Override
 	protected HeatHandler createHeatHandler(){
 		return new CableHeatHandler();
@@ -82,13 +94,8 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 			if(locked(side.get3DDataValue())){
 				continue;
 			}
-			IHeatHandler otherHeatHandler = neighCache[side.get3DDataValue()];
-			if(neighCache[side.get3DDataValue()] == null){
-				BlockPos relPos = worldPosition.relative(side);
-				otherHeatHandler = level.getCapability(CRCapabilities.HEAT_CAPABILITY, relPos, side.getOpposite());
-				neighCache[side.get3DDataValue()] = otherHeatHandler;
-			}
-
+			initHandlerCache();
+			IHeatHandler otherHeatHandler = otherHandlers[side.get3DDataValue()].getCapability();
 			if(otherHeatHandler != null){
 				temp += otherHeatHandler.getTemp();
 //				handler.addHeat(-handler.getTemp());

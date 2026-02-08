@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.blocks.rotary.mechanisms;
 
 import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
-import com.Da_Technomancer.crossroads.api.MathUtil;
+import com.Da_Technomancer.essentials.api.MathUtil;
 import com.Da_Technomancer.crossroads.api.rotary.*;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.render.tesr.CRModels;

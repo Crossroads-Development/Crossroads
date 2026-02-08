@@ -214,7 +214,7 @@ public abstract class ModuleTE extends BlockEntity implements ITickableTileEntit
 			if(tank < 0){
 				//Try each tank, stop when reaching the first one that allows this fluid
 				for(int i = 0; i < fluids.length; i++){
-					if(!resource.isEmpty() && isFluidValid(i, resource) && (fluids[i].isEmpty() || fluids[i].equals(resource))){
+					if(!resource.isEmpty() && isFluidValid(i, resource) && (fluids[i].isEmpty() || BlockUtil.sameFluid(fluids[i], resource))){
 						int change = Math.min(fluidProps[i].capacity - fluids[i].getAmount(), resource.getAmount());
 						if(action == FluidAction.EXECUTE && change > 0){
 							int prevAmount = fluids[i].getAmount();
@@ -226,7 +226,7 @@ public abstract class ModuleTE extends BlockEntity implements ITickableTileEntit
 					}
 				}
 			}else{
-				if(!resource.isEmpty() && isFluidValid(tank, resource) && (fluids[tank].isEmpty() || FluidStack.isSameFluidSameComponents(fluids[tank], resource))){
+				if(!resource.isEmpty() && isFluidValid(tank, resource) && (fluids[tank].isEmpty() || BlockUtil.sameFluid(fluids[tank], resource))){
 					int change = Math.min(fluidProps[tank].capacity - fluids[tank].getAmount(), resource.getAmount());
 					if(action == FluidAction.EXECUTE && change >= 0){
 						int prevAmount = fluids[tank].getAmount();
@@ -251,7 +251,7 @@ public abstract class ModuleTE extends BlockEntity implements ITickableTileEntit
 			if(tank < 0){
 				//Try each tank, stop when reaching the first one that allows this fluid
 				for(int i = 0; i < fluids.length; i++){
-					if(fluidProps[i].canDrain && FluidStack.isSameFluidSameComponents(resource, fluids[i])){
+					if(fluidProps[i].canDrain && BlockUtil.sameFluid(fluids[i], resource)){
 						int change = Math.min(fluids[i].getAmount(), resource.getAmount());
 
 						if(action == FluidAction.EXECUTE && change >= 0){
@@ -265,7 +265,7 @@ public abstract class ModuleTE extends BlockEntity implements ITickableTileEntit
 				}
 
 				return FluidStack.EMPTY;
-			}else if(fluidProps[tank].canDrain && resource.equals(fluids[tank])){
+			}else if(fluidProps[tank].canDrain && BlockUtil.sameFluid(fluids[tank], resource)){
 				int change = Math.min(fluids[tank].getAmount(), resource.getAmount());
 
 				if(action == FluidAction.EXECUTE){

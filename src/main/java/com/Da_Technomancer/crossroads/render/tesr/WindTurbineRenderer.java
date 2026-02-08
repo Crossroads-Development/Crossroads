@@ -80,7 +80,7 @@ public class WindTurbineRenderer implements BlockEntityRenderer<WindTurbineTileE
 		//Blades
 		for(int i = 0; i < 4; i++){
 			int rawCol = DyeColor.values()[bladeCols[i]].getTextureDiffuseColor();
-			int[] col = {FastColor.ABGR32.red(rawCol), FastColor.ABGR32.green(rawCol), FastColor.ABGR32.blue(rawCol), 255};
+			int[] col = {FastColor.ARGB32.red(rawCol), FastColor.ARGB32.green(rawCol), FastColor.ARGB32.blue(rawCol), 255};
 
 //			//Center cap (wood)
 //			CRRenderUtil.addVertexBlock(builder, matrix, -0.25F, 0.25F, 0.5F, sprite.getMinU(), sprite.getInterpolatedV(4), 0, 1, 0, light);

@@ -2,7 +2,7 @@ package com.Da_Technomancer.crossroads.gui.screen;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.api.MathUtil;
+import com.Da_Technomancer.essentials.api.MathUtil;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.crossroads.api.templates.MachineScreen;

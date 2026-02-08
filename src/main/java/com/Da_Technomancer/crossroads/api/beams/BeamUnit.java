@@ -1,6 +1,6 @@
 package com.Da_Technomancer.crossroads.api.beams;
 
-import com.Da_Technomancer.crossroads.api.MathUtil;
+import com.Da_Technomancer.essentials.api.MathUtil;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;

@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.items;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.EventHandlerCommon;
-import com.Da_Technomancer.crossroads.api.CRReflection;
 import com.Da_Technomancer.crossroads.api.EnumPath;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.alchemy.ReagentMap;
@@ -19,7 +18,6 @@ import com.Da_Technomancer.crossroads.items.alchemy.*;
 import com.Da_Technomancer.crossroads.items.item_sets.*;
 import com.Da_Technomancer.crossroads.items.technomancy.*;
 import com.Da_Technomancer.crossroads.items.witchcraft.*;
-import com.Da_Technomancer.essentials.api.ReflectionUtil;
 import com.mojang.serialization.Codec;
 import net.minecraft.Util;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -51,11 +49,9 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.RegisterEvent;
-import org.apache.logging.log4j.Level;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.lang.reflect.Field;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -266,7 +262,7 @@ public final class CRItems{
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<MerchantOffers>> VILLAGER_TRADES_DATA = DATA_COMPONENTS.registerComponentType("cr_trades", builder -> builder.persistent(MerchantOffers.CODEC).networkSynchronized(MerchantOffers.STREAM_CODEC));
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<WindingTableTileEntity.WindingStatus>> WINDING_DATA = DATA_COMPONENTS.registerComponentType("winding_energy", builder -> builder.persistent(WindingTableTileEntity.WindingStatus.CODEC).networkSynchronized(WindingTableTileEntity.WindingStatus.STREAM_CODEC));
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<Double>> TEMPERATURE_DATA = DATA_COMPONENTS.registerComponentType("temperature", builder -> builder.persistent(Codec.DOUBLE).networkSynchronized(ByteBufCodecs.DOUBLE));
-	public static final DeferredHolder<DataComponentType<?>, DataComponentType<FluidStack>> FLUID_DATA = DATA_COMPONENTS.registerComponentType("fluid", builder -> builder.persistent(FluidStack.CODEC).networkSynchronized(FluidStack.STREAM_CODEC));
+	public static final DeferredHolder<DataComponentType<?>, DataComponentType<FluidStack>> FLUID_DATA = DATA_COMPONENTS.registerComponentType("fluid", builder -> builder.persistent(FluidStack.OPTIONAL_CODEC).networkSynchronized(FluidStack.OPTIONAL_STREAM_CODEC));
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<PathSigil.DetailedCrafterRecipeReference>> SIGIL_RECIPE_DATA = DATA_COMPONENTS.registerComponentType("sigil_recipe", builder -> builder.persistent(PathSigil.DetailedCrafterRecipeReference.CODEC).networkSynchronized(PathSigil.DetailedCrafterRecipeReference.STREAM_CODEC));
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<BloodSample.EntitySourceData>> ENTITY_SOURCE_DATA = DATA_COMPONENTS.registerComponentType("entity_source", builder -> builder.persistent(BloodSample.EntitySourceData.CODEC).networkSynchronized(BloodSample.EntitySourceData.STREAM_CODEC));
 
@@ -546,18 +542,18 @@ public final class CRItems{
 	 * @param items All items to override the dispenser behaviour for
 	 */
 	private static void registerDispenserOverride(OptionalDispenseItemBehavior overrideBehaviour, Item... items){
-		final Field DISPENSER_MAP = ReflectionUtil.reflectField(CRReflection.DISPENSER_BEHAVIOR_MAP);
-		Map<Item, DispenseItemBehavior> DISPENSER_REGISTRY;
-		if(DISPENSER_MAP != null){
-			try{
-				DISPENSER_REGISTRY = (Map<Item, DispenseItemBehavior>) DISPENSER_MAP.get(null);
-			}catch(IllegalAccessException | ClassCastException e){
-				DISPENSER_REGISTRY = new HashMap<>(0);
-				Crossroads.logger.log(Level.ERROR, "Failed to register a dispenser override", e);
-			}
-		}else{
-			DISPENSER_REGISTRY = new HashMap<>(0);
-		}
+//		final Field DISPENSER_MAP = ReflectionUtil.reflectField(CRReflection.DISPENSER_BEHAVIOR_MAP);
+		final Map<Item, DispenseItemBehavior> DISPENSER_REGISTRY = DispenserBlock.DISPENSER_REGISTRY;
+//		if(DISPENSER_MAP != null){
+//			try{
+//				DISPENSER_REGISTRY = (Map<Item, DispenseItemBehavior>) DISPENSER_MAP.get(null);
+//			}catch(IllegalAccessException | ClassCastException e){
+//				DISPENSER_REGISTRY = new HashMap<>(0);
+//				Crossroads.logger.log(Level.ERROR, "Failed to register a dispenser override", e);
+//			}
+//		}else{
+//			DISPENSER_REGISTRY = new HashMap<>(0);
+//		}
 		for(Item item : items){
 			DispenserBlock.registerBehavior(item, new FallbackDispenseBehaviour(overrideBehaviour, DISPENSER_REGISTRY.get(item)));
 		}

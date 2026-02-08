@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.items;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
+import com.Da_Technomancer.crossroads.blocks.rotary.WindTurbineTileEntity;
 import com.Da_Technomancer.crossroads.blocks.rotary.WindingTableTileEntity;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -57,14 +58,12 @@ public class Whirligig extends Item implements WindingTableTileEntity.IWindableI
 		//Starts using the item if there is sufficient charge
 		ItemStack held = playerIn.getItemInHand(handIn);
 		double wind = getWindLevel(held);
-		if(wind > 0 || murderEasterEgg.equals(playerIn.getGameProfile().getName())){
+		if(wind > 0 || WindTurbineTileEntity.murderEasterEgg.equals(playerIn.getGameProfile().getName())){
 			playerIn.startUsingItem(handIn);
 			return InteractionResultHolder.success(held);
 		}
 		return InteractionResultHolder.fail(held);
 	}
-
-	private static final String murderEasterEgg = "Talcosa";
 
 	@Override
 	public void onUseTick(Level world, LivingEntity player, ItemStack stack, int count){
@@ -72,7 +71,7 @@ public class Whirligig extends Item implements WindingTableTileEntity.IWindableI
 		if(!world.isClientSide()){
 			double wind = getWindLevel(stack);
 
-			if(player instanceof Player && murderEasterEgg.equals(((Player) player).getGameProfile().getName()))
+			if(player instanceof Player && WindTurbineTileEntity.murderEasterEgg.equals(((Player) player).getGameProfile().getName()))
 			//Semi-apology for the easter egg that instakills a certain player if they touch a wind turbine where they still get windmill-murked, but also don't need to charge whirligigs
 			{
 				wind = Math.max(wind, 8);

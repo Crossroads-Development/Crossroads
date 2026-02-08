@@ -1,20 +1,15 @@
 package com.Da_Technomancer.crossroads.render.tesr;
 
-import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
-import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.rotary.LargeGearMasterTileEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.world.phys.AABB;
-
-import java.awt.*;
 
 public class LargeGearRenderer implements BlockEntityRenderer<LargeGearMasterTileEntity>{
 
@@ -36,15 +31,10 @@ public class LargeGearRenderer implements BlockEntityRenderer<LargeGearMasterTil
 		matrix.mulPose(facing.getOpposite().getRotation());
 
 		matrix.mulPose(Axis.YP.rotationDegrees(handler.getAngle(partialTicks) * dirMult));
-		//TODO test
-		if(gear.getMember().getSaveName().equals("tin")){
-			matrix.pushPose();
-			matrix.translate(0, -0.4375D, 0);
-			CRModels.draw24GearMilled(matrix, buffer, combinedLight, gear.getMember().getColor(), CRModels.generateZFightFactor(gear.getBlockPos(), 0));
-			matrix.popPose();
-		}else{
-			CRModels.draw24Gear(matrix, buffer, combinedLight, gear.getMember().getColor(), CRModels.generateZFightFactor(gear.getBlockPos(), 0));
-		}
+		matrix.pushPose();
+		matrix.translate(0, -0.4375D, 0);
+		CRModels.draw24GearMilled(matrix, buffer, combinedLight, gear.getMember().getColor(), CRModels.generateZFightFactor(gear.getBlockPos(), 0));
+		matrix.popPose();
 		CRModels.drawAxle(matrix, buffer, combinedLight, gear.getMember().getColor());
 //
 //		if(gear.isRenderedOffset()){

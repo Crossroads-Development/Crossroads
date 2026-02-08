@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.fluid;
 
+import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.api.templates.ConduitBlock;
@@ -327,6 +328,9 @@ public class FluidTubeTileEntity extends BlockEntity implements ITickableTileEnt
 	@Override
 	@Nullable
 	public IFluidHandler getFluidHandler(Direction direction){
+		if(direction == null){
+			return innerHandlerIns;
+		}
 		if(canConnect(direction)){
 			return switch(modes[direction.get3DDataValue()]){
 				case INPUT -> inHandlerIns;
@@ -359,12 +363,13 @@ public class FluidTubeTileEntity extends BlockEntity implements ITickableTileEnt
 	@Override
 	public boolean hasMatch(int side, EnumTransferMode mode){
 		Direction face = Direction.from3DDataValue(side);
-		BlockEntity neighTE = level.getBlockEntity(worldPosition.relative(face));
-		if(neighTE != null){
-			IFluidHandler opt = level.getCapability(Capabilities.FluidHandler.BLOCK, neighTE.getBlockPos(), face.getOpposite());
-			return opt != null;
-		}
-		return false;
+		return level.getCapability(Capabilities.FluidHandler.BLOCK, worldPosition.relative(face), face.getOpposite()) != null;
+//		BlockEntity neighTE = level.getBlockEntity(worldPosition.relative(face));
+//		if(neighTE != null){
+//			IFluidHandler opt = level.getCapability(Capabilities.FluidHandler.BLOCK, neighTE.getBlockPos(), face.getOpposite());
+//			return opt != null;
+//		}
+//		return false;
 	}
 
 	/**

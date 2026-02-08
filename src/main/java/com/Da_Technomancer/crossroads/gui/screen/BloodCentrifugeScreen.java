@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.gui.screen;
 
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.api.MathUtil;
+import com.Da_Technomancer.essentials.api.MathUtil;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.templates.MachineScreen;
 import com.Da_Technomancer.crossroads.blocks.witchcraft.BloodCentrifugeTileEntity;

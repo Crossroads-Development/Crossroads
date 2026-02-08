@@ -1,6 +1,5 @@
 package com.Da_Technomancer.crossroads.effects.alchemy_effects;
 
-import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.api.CRReflection;
 import com.Da_Technomancer.crossroads.api.alchemy.EnumMatterPhase;
 import com.Da_Technomancer.crossroads.api.alchemy.IAlchEffect;
@@ -15,12 +14,9 @@ import net.minecraft.world.entity.monster.ZombieVillager;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class DisinfectAlchemyEffect implements IAlchEffect{
-
-	private static final Method villConv = ReflectionUtil.reflectMethod(CRReflection.CURE_ZOMBIE);
 
 	@Override
 	public void doEffect(Level world, BlockPos pos, int amount, EnumMatterPhase phase, ReagentMap reags){
@@ -28,12 +24,8 @@ public class DisinfectAlchemyEffect implements IAlchEffect{
 			e.removeEffect(MobEffects.POISON);
 			e.removeEffect(MobEffects.HUNGER);
 
-			if(e instanceof ZombieVillager && villConv != null){
-				try{
-					villConv.invoke(e, null, 4000);
-				}catch(IllegalAccessException | InvocationTargetException err){
-					Crossroads.logger.error("An error occurred while disinfecting a zombie villager. Report to mod author", err);
-				}
+			if(e instanceof ZombieVillager zomVill){
+				zomVill.startConverting(null, 4000);
 			}
 		}
 	}

@@ -1,23 +1,18 @@
 package com.Da_Technomancer.crossroads.api.heat;
 
 import com.Da_Technomancer.crossroads.CRConfig;
-import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.api.CRReflection;
-import com.Da_Technomancer.crossroads.api.MathUtil;
-import com.Da_Technomancer.essentials.api.ReflectionUtil;
+import com.Da_Technomancer.essentials.api.MathUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.List;
 
 public class HeatUtil{
 
-	private static final Method GET_BIOME_TEMPERATURE_NO_CACHE = ReflectionUtil.reflectMethod(CRReflection.BIOME_TEMPERATURE_NO_CACHE);
+//	private static final Method GET_BIOME_TEMPERATURE_NO_CACHE = ReflectionUtil.reflectMethod(CRReflection.BIOME_TEMPERATURE_NO_CACHE);
 
 	/**
 	 * Absolute zero in degrees C
@@ -79,17 +74,17 @@ public class HeatUtil{
 		}
 		Holder<Biome> biomeHolder = world.getBiome(pos);
 		Biome biome = biomeHolder.value();
-		double rawTemp;
-		if(GET_BIOME_TEMPERATURE_NO_CACHE != null){
-			try{
-				rawTemp = (float) GET_BIOME_TEMPERATURE_NO_CACHE.invoke(biome, pos);
-			}catch(IllegalAccessException | InvocationTargetException | ClassCastException e){
-				Crossroads.logger.catching(e);
-				rawTemp = biome.getBaseTemperature();
-			}
-		}else{
-			rawTemp = biome.getBaseTemperature();
-		}
+		double rawTemp = biome.getHeightAdjustedTemperature(pos);
+//		if(GET_BIOME_TEMPERATURE_NO_CACHE != null){
+//			try{
+//				rawTemp = (float) GET_BIOME_TEMPERATURE_NO_CACHE.invoke(biome, pos);
+//			}catch(IllegalAccessException | InvocationTargetException | ClassCastException e){
+//				Crossroads.logger.catching(e);
+//				rawTemp = biome.getBaseTemperature();
+//			}
+//		}else{
+//			rawTemp = biome.getBaseTemperature();
+//		}
 
 		//This formula was derived with the power of wikipedia and excel spreadsheets to compare biome temperatures to actual real world temperatures.
 		//Most people probably wouldn't care if I'd just pulled it out of my *rse, but I made an effort and I want someone to know this. Appreciate it. Please?

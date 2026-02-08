@@ -18,6 +18,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.animal.Fox;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -43,7 +44,7 @@ public record ImprintingEntityModifier(int complexity, int soulComplexity, Resol
 		this(complexity, soulComplexity, stack.has(CRItems.ENTITY_SOURCE_DATA) ? stack.get(CRItems.ENTITY_SOURCE_DATA).playerProfile().orElse(FALLBACK_PROFILE) : FALLBACK_PROFILE);
 	}
 
-	private static final Method OFFSPRING_SPAWNING_METHOD = ReflectionUtil.reflectMethod(CRReflection.FOX_TRUSTED_UUID);
+//	private static final Method OFFSPRING_SPAWNING_METHOD = ReflectionUtil.reflectMethod(CRReflection.FOX_TRUSTED_UUID);
 
 	@Override
 	public Entity apply(Entity entity){
@@ -86,13 +87,14 @@ public record ImprintingEntityModifier(int complexity, int soulComplexity, Resol
 				horse.setTamed(true);
 			}
 		}
-		if(tamingUUID != null && entity instanceof Mob mob && OFFSPRING_SPAWNING_METHOD != null){
+		if(tamingUUID != null && entity instanceof Fox mob){
 			//As of vanilla MC1.16.5, this is literally only applicable to foxes
-			try{
-				OFFSPRING_SPAWNING_METHOD.invoke(mob, tamingUUID);
-			}catch(IllegalAccessException | InvocationTargetException e){
-				Crossroads.logger.catching(e);
-			}
+			mob.addTrustedUUID(tamingUUID);
+//			try{
+//				OFFSPRING_SPAWNING_METHOD.invoke(mob, tamingUUID);
+//			}catch(IllegalAccessException | InvocationTargetException e){
+//				Crossroads.logger.catching(e);
+//			}
 		}
 
 		return entity;

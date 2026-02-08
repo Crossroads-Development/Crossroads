@@ -57,6 +57,8 @@ neoForge {
 	// Specify the version of NeoForge to use.
 	version = project.neo_version
 
+	accessTransformers = List.of('src/main/resources/META-INF/accesstransformer.cfg')
+
 	parchment {
 		mappingsVersion = project.parchment_mappings_version
 		minecraftVersion = project.parchment_minecraft_version
@@ -154,7 +156,7 @@ dependencies {
 		implementation "curse.maven:essentials-293752:$essentials_file_id"
 	}else{
 		//When setting up a dev environment for Crossroads, make sure to have an essentials jar in a folder called "libs", in the same parent folder as "src"
-		implementation "com.technomancer.essentials:essentials-$essentials_version:dev"
+		implementation "com.technomancer.essentials:essentials-$essentials_version"
 	}
 
 	//Compile against APIs

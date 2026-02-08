@@ -5,7 +5,6 @@ import com.Da_Technomancer.crossroads.ambient.particles.CRParticles;
 import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
 import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
-import com.Da_Technomancer.crossroads.api.CRReflection;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.alchemy.AtmosChargeSavedData;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
@@ -36,7 +35,6 @@ import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.technomancy.ArmorGoggles;
 import com.Da_Technomancer.crossroads.items.technomancy.TechnomancyArmor;
 import com.Da_Technomancer.crossroads.world.CRWorldGen;
-import com.Da_Technomancer.essentials.api.ReflectionUtil;
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import it.unimi.dsi.fastutil.objects.Object2BooleanMaps;
 import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
@@ -99,7 +97,6 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.neoforged.neoforge.registries.RegisterEvent;
 
-import java.lang.reflect.Method;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -323,8 +320,8 @@ public class EventHandlerCommon{
 	//	//The main and sub keys allow differentiating between entities with updateBlocked due to crossroads, and updateBlocked due to other mods. In effect, it is a preemptive compatibility bugfix
 //	protected static final String MAIN_KEY = "cr_pause";
 //	protected static final String SUB_KEY = "cr_pause_prior";
-	private static final Method getLoadedChunks = ReflectionUtil.reflectMethod(CRReflection.LOADED_CHUNKS);
-	private static final Method adjustPosForLightning = ReflectionUtil.reflectMethod(CRReflection.LIGHTNING_POS);
+//	private static final Method getLoadedChunks = ReflectionUtil.reflectMethod(CRReflection.LOADED_CHUNKS);
+//	private static final Method adjustPosForLightning = ReflectionUtil.reflectMethod(CRReflection.LIGHTNING_POS);
 
 	@SubscribeEvent
 	@SuppressWarnings({"unused", "unchecked"})
@@ -377,12 +374,12 @@ public class EventHandlerCommon{
 		if(!level.isClientSide && (CRConfig.atmosEffect.get() & 1) == 1){
 			level.getProfiler().push(Crossroads.MODNAME + ": Overcharge lightning effects");
 			float chargeLevel = (float) AtmosChargeSavedData.getCharge((ServerLevel) level) / (float) AtmosChargeSavedData.getCapacity();
-			if(chargeLevel > 0.5F && getLoadedChunks != null){
+			if(chargeLevel > 0.5F){
 				//1.14
 				//Very similar to vanilla logic in ServerWorld::tickEnvironment as called by ServerChunkProvider::tickChunks
 				//Re-implemented due to the vanilla methods doing far more than just lightning
 				try{
-					Iterable<ChunkHolder> iterable = (Iterable<ChunkHolder>) getLoadedChunks.invoke(((ServerChunkCache) level.getChunkSource()).chunkMap);
+					Iterable<ChunkHolder> iterable = ((ServerChunkCache) level.getChunkSource()).chunkMap.getChunks();
 					for(ChunkHolder holder : iterable){
 						ChunkResult<LevelChunk> opt = holder.getEntityTickingChunkFuture().getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK);
 						if(opt.isSuccess()){
@@ -392,10 +389,7 @@ public class EventHandlerCommon{
 								int j = chunkPos.getMinBlockZ();
 								if(level.random.nextInt(350_000 - (int) (300_000F * chargeLevel)) == 0){//The vanilla default is 1/100_000; atmos charging ranges from 1/200_000 to 1/50_000
 									BlockPos strikePos = level.getBlockRandomPos(i, 0, j, 15);
-									if(adjustPosForLightning != null){
-										//This is a minor detail of the implementation- we only do it if the reflection worked
-										strikePos = (BlockPos) adjustPosForLightning.invoke(level, strikePos);//Vanilla lightning logic is evil- if there's a nearby entity (including players), hit them instead of the random block
-									}
+									strikePos = ((ServerLevel) level).findLightningTargetAround(strikePos);//Vanilla lightning logic is evil- if there's a nearby entity (including players), hit them instead of the random block
 									DifficultyInstance difficulty = level.getCurrentDifficultyAt(strikePos);
 									//There's a config for this because at high atmos levels, it can quickly get annoying to have a world flooded with skeleton horses
 									boolean spawnHorsemen = CRConfig.atmosLightningHorsemen.get() && level.getGameRules().getBoolean(GameRules.RULE_DOMOBSPAWNING) && level.random.nextDouble() < difficulty.getEffectiveDifficulty() * 0.01D;

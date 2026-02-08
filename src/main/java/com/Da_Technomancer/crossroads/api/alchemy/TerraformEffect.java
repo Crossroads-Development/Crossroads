@@ -1,13 +1,11 @@
 package com.Da_Technomancer.crossroads.api.alchemy;
 
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.api.CRReflection;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.crossroads.api.packets.SendBiomeUpdateToClient;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.alchemy.ReactiveSpotTileEntity;
-import com.Da_Technomancer.essentials.api.ReflectionUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.QuartPos;
@@ -29,7 +27,6 @@ import net.minecraft.world.level.chunk.PalettedContainer;
 import net.minecraft.world.level.chunk.PalettedContainerRO;
 
 import javax.annotation.Nullable;
-import java.lang.reflect.Field;
 
 public abstract class TerraformEffect implements IAlchEffect{
 
@@ -122,7 +119,7 @@ public abstract class TerraformEffect implements IAlchEffect{
 		}
 	}
 
-	private static final Field BIOME_SEED = ReflectionUtil.reflectField(CRReflection.BIOME_SEED);
+//	private static final Field BIOME_SEED = ReflectionUtil.reflectField(CRReflection.BIOME_SEED);
 
 	@Nullable
 	public static Holder<Biome> getBiomeHolder(Level world, ResourceLocation registryID){
@@ -163,15 +160,15 @@ public abstract class TerraformEffect implements IAlchEffect{
 		//There's a weird formula to convert between world coordinates and the coordinates used to store biomes
 		//Based on BiomeManager::getBiome
 
-		long biomeZoomSeed = 0;
-		if(BIOME_SEED != null){
-			try{
-				biomeZoomSeed = (long) BIOME_SEED.get(world.getBiomeManager());
-			}catch(IllegalAccessException | ClassCastException e){
-				e.printStackTrace();
-				//We can proceed without the seed- however, all biome placement positions will be slightly inaccurate
-			}
-		}
+		long biomeZoomSeed = world.getBiomeManager().biomeZoomSeed;
+//		if(BIOME_SEED != null){
+//			try{
+//				biomeZoomSeed = (long) BIOME_SEED.get(world.getBiomeManager());
+//			}catch(IllegalAccessException | ClassCastException e){
+//				e.printStackTrace();
+//				//We can proceed without the seed- however, all biome placement positions will be slightly inaccurate
+//			}
+//		}
 
 		int i = x - 2;
 		int j = y - 2;
