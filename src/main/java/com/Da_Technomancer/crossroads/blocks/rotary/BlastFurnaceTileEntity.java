@@ -125,7 +125,7 @@ public class BlastFurnaceTileEntity extends InventoryTE implements IAxleCapable,
 			return;
 		}
 		BlastFurnaceRec recipe = recOpt.get().value();
-		if(carbon < recipe.getSlag() || inventory[2].getCount() + recipe.getSlag() > CRItems.slag.getMaxStackSize(inventory[2]) || (!fluids[0].isEmpty() && (!BlockUtil.sameFluid(recipe.getOutput(), fluids[0]) || fluidProps[0].capacity < fluids[0].getAmount() + recipe.getOutput().getAmount()))){
+		if(carbon < recipe.getSlag() || (!inventory[2].isEmpty() && inventory[2].getCount() + recipe.getSlag() > inventory[2].getMaxStackSize()) || (!fluids[0].isEmpty() && (!BlockUtil.sameFluid(recipe.getOutput(), fluids[0]) || fluidProps[0].capacity < fluids[0].getAmount() + recipe.getOutput().getAmount()))){
 			//The fluid and slag outputs need to fit, and we need enough carbon
 			progress = 0;
 			updateWorldState(false);
