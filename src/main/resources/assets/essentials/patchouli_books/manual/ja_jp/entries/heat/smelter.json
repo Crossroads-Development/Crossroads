@@ -1,0 +1,23 @@
+{
+	"category": "essentials:heat",
+	"name": "精錬炉",
+	"icon": "crossroads:heating_chamber",
+	"sortnum": 0,
+	"priority": false,
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "patchouli:spotlight",
+			"title": "精錬炉",
+			"item": "crossroads:heating_chamber",
+			"text": "<item>精錬炉/$ は、熱を動力とするかまどです。稼働には200°C以上の温度が必要で、200°Cを超えている間は、稼働中でなくても常に一定量の熱を消費します。$(br2)温度が高いほど製錬速度が速くなりますが、その分熱の消費も早くなります。ただし、変換効率は変わりません。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "最低稼働温度でも、通常のかまどより速く動作します。<item>$(l:essentials:heat/cable)耐熱ケーブル/$ は上面に接続できます。$(br2)また、<thing>$(l:essentials/circuits)回路/$ を使用すると、アイテム入力スロットの満タン度を0〜15の値として計測できます。$(br2)"
+		}
+	],
+	"extra_recipe_mappings": {
+		"crossroads:heating_chamber": 0
+	}
+}

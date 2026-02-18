@@ -1,0 +1,27 @@
+{
+	"category": "essentials:intro",
+	"name": "液体の入門編",
+	"icon": "crossroads:fluid_tube",
+	"sortnum": 3,
+	"priority": true,
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "patchouli:spotlight",
+			"title": "液体の入門編",
+			"item": "crossroads:fluid_tube",
+			"text": "Crossroadsの<thing>液体/$は、他modと同じように動作し、<item>$(l:essentials:fluid/pipe)チューブ/$で輸送させたり、<item>$(l:essentials:fluid/tank)タンク/$に貯蔵したりできます。Crossroadsの代表的な液体は次の通りです。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "<thing>蒸留水/$: <thing>$(l:essentials:fluid/steam)蒸気/$を生産するために使われ、純水として扱われる。<thing>蒸気/$: <thing>$(l:essentials:fluid/boiler)蒸気炉/$で生産し、<thing>$(l:essentials:heat/radiator)熱や<thing>$(l:essentials:rotary/steam_turbine)回転力/$に変換できます。$(br2)<thing>汚水/$: 機械からの副産物。<item>$(l:essentials:fluid/centrifuge)水遠心分離機/$でリサイクル可能です。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "<thing>液体脂肪/$: 液体化した食料。<item>$(l:essentials:fluid/fat_collector)脂肪抽出機/$ で採取し、<item>$(l:essentials:fluid/fat_feeder)脂肪供給機/$  で与え、<item>$(l:essentials:fluid/fat_congealer)脂肪凝縮機/$ で固体にできます。$(br2)<thing>溶融金属/$: 基本的な金属が液体になったもの。<item>$(l:essentials:heat/fcc)液体冷却装置/$でインゴットに固化できます。$(br2)"
+		}
+	],
+	"extra_recipe_mappings": {
+		"crossroads:fluid_tube": 0
+	}
+}

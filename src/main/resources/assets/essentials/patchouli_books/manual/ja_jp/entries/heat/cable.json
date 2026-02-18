@@ -1,0 +1,46 @@
+{
+	"category": "essentials:heat",
+	"name": "耐熱ケーブル",
+	"icon": "crossroads:heat_cable_wool",
+	"sortnum": 0,
+	"priority": false,
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "patchouli:spotlight",
+			"title": "耐熱ケーブル",
+			"item": "crossroads:heat_cable_wool",
+			"text": "<item>耐熱ケーブル/$ は、隣接しているブロック同士の温度を均一にして熱を伝達します。$(br2)ただし、<item>耐熱ケーブル/$ が<thing>融解温度/$ を超えると破損し、ケーブル間では、発生させている熱と同じくらいの熱を消費しないと、ケーブルが溶けてしまいます。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "<item>耐熱ケーブル/$ には <thing>熱損失/$ があり、毎tick <thing>環境温度/$ のほうに温度が変化する。$(br2)ケーブルにはいろいろな種類があり、<thing>融点/$ や <thing>熱損失/$ がそれぞれ違います。"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "おすすめはセラミック製や黒曜石製などですが、お急ぎであれば羊毛製も使用できます。ただし、氷のケーブルは <thing>熱損失/$ がほぼゼロですが、0°Cで溶けてしまいます。$(br2)ケーブル同士の接続はレンチで切ったり、鉄・ダイヤモンド・ネザークォーツで右クリックすると見た目を変更できます。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "さらに <item>レッドストーン式耐熱ケーブル/$ も存在し、レッドストーン信号を受けている時のみ他のケーブルや機械と接続します。$(br2)Shift+レンチでレッドストーン動作を反転できます。$(l:essentials/circuits#reader)回路/$ は温度を計測できます。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "<bobo>$(l:essentials:intro/welcome#bobo)b0b0 hInT tIME!/$<bobo>$(br2)<bobo>w00l-shhmool! uSE dA l00tbok$ hoTPipe coAt!! MUD! dIRT! s0ILE! gROUND!$(br2)<bobo>mEltY MellTY to wIN @ PRIZE!/$$(br2)"
+		}
+	],
+	"extra_recipe_mappings": {
+		"crossroads:heat_cable_wool": 0,
+		"crossroads:heat_cable_slime": 0,
+		"crossroads:heat_cable_ice": 0,
+		"crossroads:heat_cable_obsidian": 0,
+		"crossroads:heat_cable_ceramic": 0,
+		"crossroads:heat_cable_densus": 0,
+		"crossroads:redstone_heat_cable_wool": 0,
+		"crossroads:redstone_heat_cable_slime": 0,
+		"crossroads:redstone_heat_cable_ice": 0,
+		"crossroads:redstone_heat_cable_obsidian": 0,
+		"crossroads:redstone_heat_cable_ceramic": 0,
+		"crossroads:redstone_heat_cable_densus": 0
+	}
+}

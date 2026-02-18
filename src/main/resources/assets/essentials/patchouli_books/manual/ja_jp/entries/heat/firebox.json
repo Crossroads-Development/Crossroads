@@ -1,0 +1,23 @@
+{
+	"category": "essentials:heat",
+	"name": "ファイアボックス",
+	"icon": "crossroads:firebox",
+	"sortnum": 0,
+	"priority": false,
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "patchouli:spotlight",
+			"title": "ファイアボックス",
+			"item": "crossroads:firebox",
+			"text": "<item>ファイアボックス/$ は、燃料から熱を生成する一番手っ取り早い方法です。かまどで使える燃料を使用して、一定速度で熱を生成します。$(br2)燃料はかまどで使用するときより4倍長持ちします。（コンフィグで変更可能、ツールチップを参照）$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "1アイテムにつき最大64000tickまで燃え続けます。（石炭ブロックや昆布ブロックに相当し、溶岩入りバケツよりは短めです。コンフィグで変更可能）$(br2)上面には <item>$(l:essentials:heat/cable)耐熱ケーブル/$ を接続できます。また、<thing>$(l:essentials/circuits#reader)信号検出回路/$ を使うと、入力スロットの満タン度を計測できます。$(br2)"
+		}
+	],
+	"extra_recipe_mappings": {
+		"crossroads:firebox": 0
+	}
+}

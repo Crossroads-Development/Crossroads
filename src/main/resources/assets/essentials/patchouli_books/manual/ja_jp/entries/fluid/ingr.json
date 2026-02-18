@@ -1,0 +1,37 @@
+{
+	"category": "essentials:fluid",
+	"name": "その他もろもろ",
+	"icon": "crossroads:slag",
+	"sortnum": 0,
+	"priority": false,
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "patchouli:spotlight",
+			"title": "その他もろもろ",
+			"item": "crossroads:slag",
+			"text": "Crossroadsでは、新素材や副産物が追加されます。ここでは特に重要なものを紹介します。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "<item>塩/$: クラフト素材のひとつで、一部の機械で<thing>$(l:essentials:fluid/centrifuge)生産/$ したり<thing>$(l:essentials:heat/salt_reactor)消費/$ されたりします。さらに、<item>塩ブロック/$ に加工することもでき、設置すると周囲の植物を枯らし、スライムとクリーパーが触れると即死します。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "<item>鉱滓/$: <thing>$(l:essentials:rotary/blast)鉱石三倍化/$ の過程で生産される副産物で、骨粉のように使えるたり、レシピにも活用できます。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "<item>高純度クォーツ/$: <thing>$(l:essentials:intro/beam)ビーム/$ 関連のアイテムのクラフトで使用できます。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "<bobo>p0ISON POTATO!: mUCH iMPORTANT FOR $(l:essentials:intro/welcome#bobo)b0B0 tings!/$$(br2)"
+		}
+	],
+	"extra_recipe_mappings": {
+		"crossroads:slag": 2,
+		"crossroads:dust_salt": 1,
+		"crossroads:block_salt": 1
+	}
+}

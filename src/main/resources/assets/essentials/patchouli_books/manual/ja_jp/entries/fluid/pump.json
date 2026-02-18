@@ -1,0 +1,27 @@
+{
+	"category": "essentials:fluid",
+	"name": "回転式ポンプ",
+	"icon": "crossroads:rotary_pump",
+	"sortnum": 0,
+	"priority": false,
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "patchouli:spotlight",
+			"title": "回転式ポンプ",
+			"item": "crossroads:rotary_pump",
+			"text": "<item>回転式ポンプ/$ は、<thing>$(l:essentials:intro/rotary)回転エネルギー/$ で動作する液体ポンプです。ワールドの流体源を汲み上げてパイプへ送ったり、逆にパイプから液体をワールドに設置したりできます。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "ただし、吸い上げ・設置できるのは<em>真下の1ブロックだけ/$です。そのため、湖や池の水抜きには向かず、主に水の収集に適しています。$(br2)この装置は回転方向によって動作が変わります。正方向に回転している場合は、ワールドから液体を汲み上げてパイプへ送り、逆方向に回転している場合は、パイプから液体をワールドに設置します。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "また、満たされた大釜からも液体を汲み上げることもでき、水入りの大釜の場合<em>大釜内の水は消費されません/$。これにより、ネザーでの無限水源が実現します。$(br2)上部に<thing>歯車または軸/$ を接続して動作します。回転速度が高いほど動作が速くなり、消費エネルギーは(2 × 回転速度[rad/s]) J/t、バケツ1杯あたりの汲み上げに必要なエネルギーは100Jです。$(br2)"
+		}
+	],
+	"extra_recipe_mappings": {
+		"crossroads:rotary_pump": 0
+	}
+}
