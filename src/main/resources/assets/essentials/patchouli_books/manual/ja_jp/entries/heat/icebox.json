@@ -1,0 +1,27 @@
+{
+	"category": "essentials:heat",
+	"name": "アイスボックス",
+	"icon": "crossroads:icebox",
+	"sortnum": 0,
+	"priority": false,
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "patchouli:spotlight",
+			"title": "アイスボックス",
+			"item": "crossroads:icebox",
+			"text": "<item>アイスボックス/$ は、冷却をする一番手っ取り早い方法です。<item>$(l:essentials:heat/firebox)ファイアボックス/$ の冷却版であり、冷たいアイテムを燃料にすることで一定速度で冷却を行います。ただし、温度を -20°C より下げることはできません。$(br2)上面には <item>$(l:essentials:heat/cable)耐熱ケーブル/$ を接続できます。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "代表的な燃料は、雪玉、雪、氷 です。(質が低い順)質が高い燃料ほど長持ちします。$(br2)また、<thing>$(l:essentials/circuits#reader)信号検出回路/$ を使うと、入力スロットの満タン度を計測できます。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "<bobo>hEY! YOU! lUKE! lISTEN! iTS mE,, $(l:essentials:intro/welcome#bobo)BOBO/$<bobo>!$(br2)<bobo>sTEAL h(IS/ER/??/¿¿) LOOK! gET sPECIAL pROTECT! LETHER + too more things!$(br2)<bobo>4 wATER! sqUIb jUiCE + water meat!$(br2)<bobo>4 FYRE! BAKON~ fIRE DUST!$(br2)<bobo>4 pOISON! STAKE an' malk!$(br2)<bobo>4 gravIty! fEATHER aND bIG SWAMP LEAF!/$$(br2)"
+		}
+	],
+	"extra_recipe_mappings": {
+		"crossroads:icebox": 0
+	}
+}

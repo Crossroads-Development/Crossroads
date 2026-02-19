@@ -1,0 +1,27 @@
+{
+	"category": "essentials:heat",
+	"name": "太陽光集熱器",
+	"icon": "crossroads:solar_heater",
+	"sortnum": 0,
+	"priority": false,
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "patchouli:spotlight",
+			"title": "太陽光集熱器",
+			"item": "crossroads:solar_heater",
+			"text": "<item>太陽光集熱器/$ は、太陽光から熱を生み出すソーラーパネルです。$(br2)日中かつ晴天時に直射日光を受けると、<item>太陽光集熱器/$ はゆっくりと一定速度で熱を生成し、最高で 325°C まで温度が上昇します。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "この温度ではハイテクな機械を稼働させるには不十分ですが、$(l:essentials:heat/smelter)製錬/$ や <thing>$(l:essentials:intro/fluid)蒸気生成/$ には利用できます。$(br2)また、生成した <thing>$(l:essentials:intro/fluid)蒸気/$ を<item>$(l:essentials:heat/radiator)暖房機/$ を使って熱に変換することで、温度制限を実質回避することができます。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "<item>太陽光集熱器/$ を左右にある銅色の接続口を通じて、熱を共有します。銅色の接続口は<item>$(l:essentials:heat/cable)耐熱ケーブル/$ も接続できます。$(br2)また、<item>$(l:essentials:heat/reserve)蓄熱器/$ と組み合わせることで、日中に発生した熱を夜に使うことための蓄熱ができます。$(br2)"
+		}
+	],
+	"extra_recipe_mappings": {
+		"crossroads:solar_heater": 0
+	}
+}

@@ -1,0 +1,27 @@
+{
+	"category": "essentials:heat",
+	"name": "暖房機",
+	"icon": "crossroads:radiator",
+	"sortnum": 0,
+	"priority": false,
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "patchouli:spotlight",
+			"title": "暖房機",
+			"item": "crossroads:radiator",
+			"text": "<item>暖房機/$は、<thing>蒸気/$(l:essentials:intro/fluid)から熱を生み出す装置です。$(br2)蒸気を入力すると上面と下面から蒸留水が出力されます。また、側面には<item>耐熱ケーブル/$(l:essentials:heat/cable)を接続できます。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "蒸気の消費量と同量の蒸留水が生産されます。$(br2)熱生成速度や蒸気消費量は、$(l:essentials/wrench)レンチ/$ で右クリックして調整できます。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "<thing>$(l:essentials:intro/fluid)蒸気/$ は暖房機と同じ比率で <thing>熱/$ を使って作られるため、この暖房機は主に熱を遠くまで運ぶ用途や、より高温に到達させる用途に向いています。$(br2)<thing>$(l:essentials:intro/fluid)蒸気/$ は100°C程度の低温でも生成可能ですが、<item>暖房機/$ には最大温度が存在しません。$(br2)"
+		}
+	],
+	"extra_recipe_mappings": {
+		"crossroads:radiator": 0
+	}
+}

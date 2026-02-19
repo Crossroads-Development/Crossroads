@@ -1,0 +1,27 @@
+{
+	"category": "essentials:fluid",
+	"name": "蒸気炉",
+	"icon": "crossroads:steam_boiler",
+	"sortnum": 0,
+	"priority": false,
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "patchouli:spotlight",
+			"title": "蒸気炉",
+			"item": "crossroads:steam_boiler",
+			"text": "<item>蒸気炉/$ は、<thing>$(l:essentials:intro/heat)熱/$ と水を使って <thing>$(l:essentials:intro/fluid)蒸気/$ を生産します。また、水を使うと副産物で <item>塩/$ が生産されますが、<thing>$(l:essentials:intro/fluid)蒸留水/$ を使うと発生しません。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "最低温度は100°C。温度が高いほど蒸気の生産速度が上がります（効率は一定）。下面には <item>$(l:essentials:heat/cable)耐熱ケーブル/$ 用接続点、側面には水/蒸留水入力口、上面には蒸気排出口があります。$(br2)通常の水を使用して発生した<item>塩/$ はパイプやホッパーで取り出すことができず、放置すると <item>炉/$ が詰まってしまいます。そのため、自動化するには <thing>$(l:essentials:intro/fluid)蒸留水/$ を使用したほうがいいです。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "生産された<thing>$(l:essentials:intro/fluid)蒸気/$ は、<item>$(l:essentials:heat/radiator)熱/$ や <item>$(l:essentials:rotary/turbine)回転力/$ として発電に利用できます。この際、使用した液体が何であれ<thing>$(l:essentials:intro/fluid)蒸留水/$ が生産されます。$(br2)"
+		}
+	],
+	"extra_recipe_mappings": {
+		"crossroads:steam_boiler": 0
+	}
+}

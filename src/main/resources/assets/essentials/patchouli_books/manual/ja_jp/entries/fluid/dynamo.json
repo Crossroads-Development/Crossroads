@@ -1,0 +1,42 @@
+{
+	"category": "essentials:fluid",
+	"name": "発電機",
+	"icon": "crossroads:dynamo",
+	"sortnum": 0,
+	"priority": false,
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "patchouli:spotlight",
+			"title": "発電機",
+			"item": "crossroads:dynamo",
+			"text": "<item>発電機/$ は、<thing>$(l:essentials:intro/rotary)回転エネルギー/$ から <thing>Forge Energy (FE)/$ を生産します。$(br2)回転が速いほど多くの電力を生み出しますが、その分だけ多くの回転エネルギーを消費します（変換効率は一定です）。FEは、軸とは反対側の面から出力されます。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "<item>$(l:essentials:fluid/tesla)テスラコイル/$ を使えば、送電ができます。まあCrossroadsで使うことはあまりないんですけどね。$(br2)"
+		},
+		{
+			"type": "patchouli:spotlight",
+			"anchor": "lightning_rod",
+			"item": "crossroads:lightning_rod_extension",
+			"text": "<item>避雷針の延長パーツ/$ は主に装飾用ですが、バニラの避雷針を延長できます。$(br2)先端に雷が当たると接続された避雷針全体が帯電し、通常の <item>避雷針/$ と同じくレッドストーン信号を出力します。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": ""
+		},
+		{
+			"type": "patchouli:text",
+			"text": "<bobo>top O' da mourning 2 ya! $(l:essentials:intro/welcome#bobo)iTT\"S ME, bOBO!/$<bobo>$(br2)<bobo>mEE no liik wether. iT neVER be da waY I WANT! dIS WHY EYE INTRODUUS dA rAIN ID0L! sIMPLY h0ld &nd d0 a RAIN DANCE*, an BAM! rAIN! wANT rAIN gONE? dO oPPOSITE 0f RAIN DANCE*! BAM!$(br2)<bobo>maKE wid grae dull rock, BLUE shiny rok, smidge o' gOLD!$(br2)<bobo>*Note: Performing a Rain "
+		},
+		{
+			"type": "patchouli:text",
+			"text": "<bobo><bobo><bobo><bobo>Dance may trigger 'sticky keys'. Terms and conditions apply. By performing a rain dance, you waive your right to your soul.$(br2)"
+		}
+	],
+	"extra_recipe_mappings": {
+		"crossroads:dynamo": 0,
+		"crossroads:lightning_rod_extension": 0
+	}
+}

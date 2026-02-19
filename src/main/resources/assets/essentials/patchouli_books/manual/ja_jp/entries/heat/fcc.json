@@ -1,0 +1,23 @@
+{
+	"category": "essentials:heat",
+	"name": "液体冷却装置",
+	"icon": "crossroads:fluid_cooling_chamber",
+	"sortnum": 0,
+	"priority": false,
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "patchouli:spotlight",
+			"title": "液体冷却装置",
+			"item": "crossroads:fluid_cooling_chamber",
+			"text": "<item>液体冷却装置/$ は、液体をアイテムへ変換する装置です。この装置は、液体ごとに設定された最大耐熱温度以下でのみ稼働します。$(br2)液体ごとに最大稼働温度が設定されており、液体を冷やしてアイテムを生産すると熱が発生します。<item>$(l:essentials:heat/cable)耐熱ケーブル/$ は上面に接続できます。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "生成された熱は一定速度で放出され、すべての熱が放出されるまで続きます。一部の液体（例：溶岩）を使うと、熱源として利用することも可能です。$(br2)主な用途は、氷の製造および溶融金属を冷やしてインゴットへ戻すことなどです。$(br2)"
+		}
+	],
+	"extra_recipe_mappings": {
+		"crossroads:fluid_cooling_chamber": 0
+	}
+}

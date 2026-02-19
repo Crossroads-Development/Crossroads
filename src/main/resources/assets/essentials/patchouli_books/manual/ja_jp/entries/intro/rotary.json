@@ -1,0 +1,33 @@
+{
+	"category": "essentials:intro",
+	"name": "回転エネルギーの入門編",
+	"icon": "crossroads:gear_base",
+	"sortnum": 2,
+	"priority": true,
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "patchouli:spotlight",
+			"title": "回転エネルギーの入門編",
+			"item": "crossroads:gear_base",
+			"text": "<thing>回転エネルギー（Rotary）/$はCrossroadsにおける基本的なエネルギーで<thing>$(l:essentials:intro/heat)熱エネルギー/$ と並んで序盤に扱うことになるエネルギーです。回転エネルギーは、<item>歯車/$ や <item>軸/$ などを用いて伝達できます。複雑そうに聞こえるかもしれませんが、やってみると簡単です。歯車や軸には、重要なパラメーターがあります。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "慣性モーメント (Moment of Inertia): ‘I’ で表され、歯車の「重さ」を表し、重いほどIが大きくなり、速く回転させるのが難しくなります。$(br2)速度 (Speed): ‘ω’ で表され、単位は「rad/s（ラジアン毎秒）」で、回転が速いほどradが大きくなります。負の値は時計回り、正の値は反時計回りです。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "エネルギー (Energy): ‘E’ で表され、単位は「ジュール」で、回転速度や慣性モーメントが大きいほどエネルギーも増加します。(式：E = Iω²/2)$(br2)出力 (Power): 「J/s（ジュール毎秒）」で表され、エネルギーの変化率ですが、機械側では使用されない変化確認用の値です。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "歯車には <thing>速度/$ に比例して<thing>出力損失 (power loss)/$ が発生します。毎tickごとに一定量の<thing>エネルギー/$ が減少するため、継続的に動力を供給する必要があります。$(br2)損失量は、平均回転速度 ω に対して「−ω² J/tm」で決まり、歯車の数に依存しません。(コンフィグで変更可)。機械は動作ごとに<thing>エネルギー/$ を消費し、最低限の <thing>速度/$ が必要です。速度が高いほど処理速度も上がります。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "<item>$(l:essentials:rotary/gear_base)歯車/$ や <item>$(l:essentials:rotary/gear_base)軸/$ を組み合わせることでエネルギーを伝達でき、小さな歯車を <item>$(l:essentials:rotary/gear_large)大きな歯車/$ の隣に置くと、大きな歯車は小さいものよりもゆっくり回転します。$(br2)すべての歯車・軸接続には、必ず <item>$(l:essentials:rotary/axis)主軸/$ を接続する必要があります。これがないと、動作しません。$(br2)"
+		}
+	],
+	"extra_recipe_mappings": {}
+}

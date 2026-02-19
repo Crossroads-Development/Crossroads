@@ -1,0 +1,32 @@
+{
+	"category": "essentials:fluid",
+	"name": "液体チューブ",
+	"icon": "crossroads:fluid_tube",
+	"sortnum": 0,
+	"priority": false,
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "patchouli:spotlight",
+			"title": "液体チューブ",
+			"item": "crossroads:fluid_tube",
+			"text": "<item>液体チューブ/$ は、液体を輸送するための基本的な手段で、容量と最大輸送量はバケツ2杯分あります。\n<item>液体チューブ/$ は隣接する液体インベントリ、機械、パイプ、タンクに自動接続し、液体を両方に輸送できます。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "各チューブの接続部は、<item>$(l:essentials/wrench)レンチ/$ を使ってモードを切り替えることができます。接続には4つのモードがあり、入力、出力、ロック、共有。$(br2)入力/出力モードでは液体を出し入れできます。ロックは接続を無効にし、共有では他のパイプや<item>$(l:essentials:fluid/tank)タンク/$（他modのタンク含む）と中身を等しく分け合います。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "<item>レッドストーン式液体チューブ/$ は、レッドストーン信号が入力されている間のみ隣接ブロックに接続・輸送を行います。レンチでShift + 右クリックすることで、信号動作を反転(信号がないときに動作) できます。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "<bobo>hAPPY $(l:essentials:intro/welcome#bobo)BOBO/$<bobo> dAY!$(br2)<bobo>u cAN usE a TUBE to MAKE a VACUUM HOPPPER! alSo da HOPPER &nd s0me cLOTH!$(br2)<bobo>bOBO AWAY!/$$(br2)"
+		}
+	],
+	"extra_recipe_mappings": {
+		"crossroads:fluid_tube": 0,
+		"crossroads:redstone_fluid_tube": 2
+	}
+}
