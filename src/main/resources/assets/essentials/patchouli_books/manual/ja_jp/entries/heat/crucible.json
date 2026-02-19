@@ -1,0 +1,23 @@
+{
+	"category": "essentials:heat",
+	"name": "工業用坩堝",
+	"icon": "crossroads:heating_crucible",
+	"sortnum": 0,
+	"priority": false,
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "patchouli:spotlight",
+			"title": "工業用坩堝",
+			"item": "crossroads:heating_crucible",
+			"text": "<item>工業用坩堝/$ は、熱でアイテムを液体へ変換する機械です。この機械は 1000°C 以上で稼働します。$(br2)1000°Cを超えると常に熱を消費しますが、温度が高いほど処理速度が上がり、その分熱の消費も早くなります。ただし、変換効率は変わりません。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "<item>$(l:essentials:heat/cable)耐熱ケーブル/$ やパイプは、上面以外のすべての面に接続できます。また、アイテムはどの面からでも投入可能です。$(br2)主な使い道は、溶岩の生成や金属の溶融。鉱石を溶かせばインゴット2個分の溶融金属ができ、それを<item>$(l:essentials:heat/fcc)液体冷却装置/$ で冷やすとインゴットに戻せます。$(br2)"
+		}
+	],
+	"extra_recipe_mappings": {
+		"crossroads:heating_crucible": 0
+	}
+}

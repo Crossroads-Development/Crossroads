@@ -1,0 +1,25 @@
+{
+	"category": "essentials:intro",
+	"name": "熱の入門編",
+	"icon": "crossroads:firebox",
+	"sortnum": 1,
+	"priority": true,
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "patchouli:spotlight",
+			"title": "熱の入門編",
+			"item": "crossroads:firebox",
+			"text": "<thing>熱/$ はCrossroadsにおける基本的なエネルギーで、最初に触れるであろう概念です。熱は、製錬・溶融・調理などに使用でき、熱を伝達するすべての機械には <thing>温度/$ が設定されています。$(br2)たいていの機械は特定の温度以上でなければ動作せず、一部は低温を維持する必要があるものもあります。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "温度が高いほど処理速度が上がりますが、熱の消費が激しいです。熱を伝達するには、<item>$(l:essentials:heat/cable)耐熱ケーブル/$ を使う必要があり、接続された機械同士で温度を均等にしてくれます。$(br2)ちなみに、温度を <em>絶対零度より下/$ には下げられません。<thing>絶対零度/$ は -273°C です。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "<bobo>1tz-A-MEEE,,, B0BO!$(br2)<bobo>$(l:essentials:intro/welcome#bobo)rEMEMbER/$<bobo>?!$(br2)e<bobo>tRee tingz &nd OFFRING! deez tings:;:$(br2)<bobo>glow dUst!$(br2)<bobo>fR3sh bAKEd bRED!$(br2)<bobo>aLLIUM jOOs!$(br2)<bobo>g0TTa g0 FAST!!!/$$(br2)"
+		}
+	],
+	"extra_recipe_mappings": {}
+}

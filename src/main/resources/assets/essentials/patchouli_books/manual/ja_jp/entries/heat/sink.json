@@ -1,0 +1,27 @@
+{
+	"category": "essentials:heat",
+	"name": "放熱器",
+	"icon": "crossroads:heat_sink",
+	"sortnum": 0,
+	"priority": false,
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "patchouli:spotlight",
+			"title": "放熱器",
+			"item": "crossroads:heat_sink",
+			"text": "<item>放熱器/$ は、熱（または冷気）を高速で放出する装置です。$(br2)レンチ$(l:essentials/wrench)/$ で放熱速度を調整でき、設定した速度で、温度を環境温度へと近づけます。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "Create Mod が導入されている場合、<item>放熱器/$ は Create のボイラー用の熱源として利用でき、Crossroads の熱を使って Create の回転エネルギーに変換できます。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "ボイラー熱源の強さは、放熱器の温度と放熱速度によって決まり。$(br2)「Warm」（火相当）: 50°C 以上、かつ 5°C/t 以上$(br2)「Burning」（燃料入りブレイズバーナー相当）: 100°C 以上、かつ 10°C/t 以上$(br2)「Blazing」（ブレイズケーキ使用時のブレイズバーナー相当）: 5000°C 以上、かつ 25°C/t 以上$(br2)"
+		}
+	],
+	"extra_recipe_mappings": {
+		"crossroads:heat_sink": 0
+	}
+}

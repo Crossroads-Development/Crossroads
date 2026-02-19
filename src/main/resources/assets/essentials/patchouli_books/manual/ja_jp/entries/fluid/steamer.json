@@ -1,0 +1,23 @@
+{
+	"category": "essentials:fluid",
+	"name": "蒸し機",
+	"icon": "crossroads:steamer",
+	"sortnum": 0,
+	"priority": false,
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "patchouli:spotlight",
+			"title": "蒸し機",
+			"item": "crossroads:steamer",
+			"text": "<item>蒸し機/$ は、 <thing>$(l:essentials:intro/fluid)蒸気/$ を動力にする機械です。$(br2)1アイテムあたり50tick(1秒間に4個)のペースで食べ物を調理できます。稼働時は1tickあたり200mBの<thing>$(l:essentials:intro/fluid)蒸気/$ を消費し、同量の<thing>$(l:essentials:intro/fluid)蒸留水/$ を生産します。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "<thing>$(l:essentials:intro/fluid)蒸気/$ は側面と底面から入力でき、<thing>$(l:essentials:intro/fluid)蒸留水/$ は上面と底面から取り出せます。$(br2)"
+		}
+	],
+	"extra_recipe_mappings": {
+		"crossroads:steamer": 0
+	}
+}

@@ -1,0 +1,31 @@
+{
+	"category": "essentials:fluid",
+	"name": "テスラコイル",
+	"icon": "crossroads:tesla_coil",	
+	"sortnum": 0,
+	"priority": false,
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "patchouli:spotlight",
+			"title": "テスラコイル",
+			"item": "crossroads:tesla_coil",
+			"text": "<item>テスラコイル/$ は、<thing>Forge Energy（FE）/$ を伝達するための装置です。$(br2)この装置は「本体」と「送電部」の2つの部品で構成されています。<thing>テスラコイルの本体/$ は機械と接続でき、FEを送受信します。<em>青い面/$ と下面からFEを受け取り、<em>オレンジの面/$ からFEを出力します。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "<item>テスラコイルの送電部 /$は、本体の上に設置して、複数のテスラコイルにFEを送受信できます。$(br2)<item>$(l:essentials/linking_tool)ペアリングツール/$ で送信元と送信先の <item>テスラコイルの送電部/$ を接続すると送受信できるようになります。この方法でFEを送信すると、ある程度のエネルギー損失が発生しますが、送電部を改良することで防げます。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "レッドストーン信号が入力されている間は、FE出力は停止します。これは、送電部からの出力も本体からの出力も停止されます。<thing>$(l:essentials/circuits#reader)信号検出回路/$ はFE蓄電量を計測できます。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "<item>ライデン瓶/$ は「バッテリー」のようなもので、<item>テスラコイルの本体/$ に取り付けてFE容量を増やすことができます。$(br2)また、<item>テスラコイルの本体/$ は他のmodのバッテリーや電気系アイテムで充電できます。"
+		}
+	],
+	"extra_recipe_mappings": {
+		"crossroads:tesla_coil": 0
+	}
+}

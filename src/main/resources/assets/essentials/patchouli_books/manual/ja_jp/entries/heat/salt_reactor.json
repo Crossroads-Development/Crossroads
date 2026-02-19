@@ -1,0 +1,23 @@
+{
+	"category": "essentials:heat",
+	"name": "塩反応炉",
+	"icon": "crossroads:salt_reactor",
+	"sortnum": 0,
+	"priority": false,
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "patchouli:spotlight",
+			"title": "塩反応炉",
+			"item": "crossroads:salt_reactor",
+			"text": "<item>塩反応炉/$ は、$(l:essentials:heat/icebox)低温-20°C以下/$ の冷却を可能にする装置です。$(br2)この装置は <thing>$(l:essentials:fluid/centrifuge)塩と蒸留水/$ を消費します。塩1個あたり蒸留水200mBを消費し、使用した蒸留水200mBごとに通常の水200mBを生産します。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "塩1個の燃焼時間は20tick (レッドストーンtickで10tick=1秒)です。$(br2)<item>塩反応炉/$ は、理論上 <thing>絶対零度/$ まで冷却できます。<item>$(l:essentials:heat/cable)耐熱ケーブル/$ は下面に接続でき、水と蒸留水の入出力パイプはどの面にも接続できます。$(br2)"
+		}
+	],
+	"extra_recipe_mappings": {
+		"crossroads:salt_reactor": 0
+	}
+}

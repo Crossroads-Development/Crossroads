@@ -1,0 +1,27 @@
+{
+	"category": "essentials:fluid",
+	"name": "鉱石洗浄機",
+	"icon": "crossroads:ore_cleanser",
+	"sortnum": 0,
+	"priority": false,
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "patchouli:spotlight",
+			"title": "鉱石洗浄機",
+			"item": "crossroads:ore_cleanser",
+			"text": "<item>鉱石洗浄機/$ は、鉱石3倍化で使える<em> 中間処理装置/$ です。$(br2)<thing>$(l:essentials:intro/fluid)蒸気/$ で、<item>$(l:essentials:rotary/stamp)粉砕機/$ から得られる<item>金属の原石紛/$ を <item>金属の凝縮紛/$ に変換し、副産物で <thing>$(l:essentials:intro/fluid)汚水/$ を排出します。この工程を加えると、<item>$(l:essentials:rotary/blast)工業用溶鉱炉/$ で使う炭素の量を減らすことができます。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "1回の処理で250mBの<thing>$(l:essentials:intro/fluid)蒸気/$ を消費し、250mBの <thing>$(l:essentials:intro/fluid)汚水/$ を生産します。生産された汚水は、<item>$(l:essentials:fluid/centrifuge)水遠心分離機/$ にてリサイクル可能です。$(br2)<thing>$(l:essentials/circuits#reader)信号検出回路/$ によって、入力スロットの満タン度を計測できます。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "<bobo>Bobojour! Glüten tag! Comichiewa! iT's $(l:essentials:intro/welcome#bobo)BOBO/$<bobo> tIME!$(br2)<bobo>i haz plumping tiP!!$(br2)<bobo>black shiny rock, plumbinG, spoonge!$(br2)<bobo>boqr AWAY/$$(br2)"
+		}
+	],
+	"extra_recipe_mappings": {
+		"crossroads:ore_cleanser": 0
+	}
+}

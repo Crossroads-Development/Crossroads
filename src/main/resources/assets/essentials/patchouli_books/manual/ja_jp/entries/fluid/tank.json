@@ -1,0 +1,19 @@
+{
+	"category": "essentials:fluid",
+	"name": "液体タンク",
+	"icon": "crossroads:fluid_tank",
+	"sortnum": 0,
+	"priority": false,
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "patchouli:spotlight",
+			"title": "液体タンク",
+			"item": "crossroads:fluid_tank",
+			"text": "<item>液体タンク/$ は、一般的なタンクです。どの面からでも液体を入出力でき、破壊しても中身は保持されます。$(br2)最大でバケツ16杯分の液体を貯蔵でき、コンパレーターや<thing>$(l:essentials/circuits)信号検出回路/$ でタンクの液体量をmb単位で読み取れます。タンクの最大容量は16,000mBです。$(br2)"
+		}
+	],
+	"extra_recipe_mappings": {
+		"crossroads:fluid_tank": 0
+	}
+}

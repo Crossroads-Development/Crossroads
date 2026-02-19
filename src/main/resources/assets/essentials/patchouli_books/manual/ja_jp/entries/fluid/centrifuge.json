@@ -1,0 +1,27 @@
+{
+	"category": "essentials:fluid",
+	"name": "水遠心分離機",
+	"icon": "crossroads:water_centrifuge",
+	"sortnum": 0,
+	"priority": false,
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "patchouli:spotlight",
+			"title": "水遠心分離機",
+			"item": "crossroads:water_centrifuge",
+			"text": "<item>水遠心分離機/$ は、通常の水から<thing>$(l:essentials:intro/fluid)蒸留水/$ と <item>塩/$ を生産します。また、<thing>$(l:essentials:intro/fluid)汚水/$ をリサイクルし、<thing>$(l:essentials:intro/fluid)蒸留水/$ とランダムに得られる副産物（JEIを参照）に変換することができます。$(br2)上面には <thing>$(l:essentials:intro/rotary)歯車/軸/$ の接続点があり、<item>$(l:essentials:fluid/pipe)液体チューブ/$ はどの面にも接続できます。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "稼働させるには、<thing>$(l:essentials:intro/rotary)回転速度/$ が最低0.5rad/sに達している必要があります。速度が0.5rad/sに達するたびに1回の処理が行われ、次の処理では歯車が反対に回転している必要があります。$(br2)つまり、この装置を稼働させ続けるには、歯車/軸の回転を毎回切り替える必要があるということです。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "なお、<item>水遠心分離機/$ の回転速度には上限がありません。$(br2)出力先(液体かアイテム)のどちらかが満杯になっても<item>水遠心分離機/$ は動作し続け、出力先に収まらないアイテムは <em>破棄されるため注意してください/$。$(br2)"
+		}
+	],
+	"extra_recipe_mappings": {
+		"crossroads:water_centrifuge": 0
+	}
+}

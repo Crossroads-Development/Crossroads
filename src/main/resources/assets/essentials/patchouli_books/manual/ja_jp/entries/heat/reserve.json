@@ -1,0 +1,23 @@
+{
+	"category": "essentials:heat",
+	"name": "蓄熱器",
+	"icon": "crossroads:heat_reservoir",
+	"sortnum": 0,
+	"priority": false,
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "patchouli:spotlight",
+			"title": "蓄熱器",
+			"item": "crossroads:heat_reservoir",
+			"text": "<item>蓄熱器/$ は、いわば「熱のバッテリー」のような装置です。温度変化はとてもゆるやかで、数分から数時間にわたって温度変化がなだらかになります。$(br2)<item>$(l:essentials:heat/cable)耐熱ケーブル/$ は全ての面に接続できます。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "<item>蓄熱器/$ は破壊しても温度を保持します。$(br2)<item>$(l:essentials:heat/solar)太陽光集熱器/$ と組み合わせることで、日中に発生した熱を夜に使うことための蓄熱ができます。$(br2)"
+		}
+	],
+	"extra_recipe_mappings": {
+		"crossroads:heat_reservoir": 0
+	}
+}

@@ -1,0 +1,31 @@
+{
+	"category": "essentials:intro",
+	"name": "ようこそ！",
+	"icon": "minecraft:paper",
+	"sortnum": 0,
+	"priority": true,
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "patchouli:spotlight",
+			"title": "ようこそ！",
+			"item": "minecraft:paper",
+			"text": "Crossroadsようこそ！この本は、CrossroadsおよびEssentialsの両方を解説するガイドブックです（Essentialsカテゴリもご覧ください）。$(br2)Crossroadsは自動化がテーマのmod。追加されるツールを使えば、ほとんどの要素を自動化できます。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "これらツールはシンプルですが、組み合わせると複雑なシステムを構築することもできます。最初はルーブ・ゴールド・バーグ・マシン的な装置を作るのがおすすめです！$(br2)このチャプターでは、mod内のさまざまなシステムを広く紹介します。初心者の方にも理解しやすい内容になっており、書かれている情報はそれぞれのガイドカテゴリにも含まれていますが、このチャプターからが理解しやすいでしょう。$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "質問・提案・バグ報告は$(l:https://discord.gg/6g47knp)Discord/$、 または$(l:https://github.com/Da-Technomancer/Crossroads/)Github/$ で受け付けています。$(br2)Crossroadsには多くのエネルギーとシステムがあり、進行に応じて多くの要素が解放されていきます。最初は、$(l:essentials:intro/heat)熱/$ から始めるのがいいですよ！$(br2)"
+		},
+		{
+			"type": "patchouli:spotlight",
+			"anchor": "bobo",
+			"item": "crossroads:bobo_rod",
+			"text": "<bobo>hOI!!! i'm bOBO!!   i n0 sTuf! mAnY stUph!   mAKE MY ROD! uSE WITH Ɛ tINGS! aND THE OfFeRiNg!! tO MAKE A SPECIAL TING!   uSE R0D oN TRHEE THINGS ON GROUND wih OFFERING!!¡  0nLY gud OFFERING ise POISONOUS POTATOE!!¡   BOBO AWAY!!/$$(br2)"
+		}
+	],
+	"extra_recipe_mappings": {}
+}
