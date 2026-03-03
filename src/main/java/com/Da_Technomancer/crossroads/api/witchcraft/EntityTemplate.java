@@ -97,7 +97,6 @@ public record EntityTemplate(@Nonnull ResourceLocation entityID, @Nonnull LazyCa
 	}
 
 	private static int baseComplexity(ResourceLocation entityID, @Nullable EntityType<?> entityType){
-		//TODO balance
 		if(isCloningForbidden(entityID)){
 			return 999;
 		}

@@ -69,7 +69,6 @@ public class MultiLineMessageOverlay implements LayeredDraw.Layer{
 //							throw new RuntimeException(e);
 //						}
 //					}
-//					TODO test
 					guiGraphics.drawStringWithBackdrop(font, activeComponent, -font.width(activeComponent) / 2, offset, font.width(activeComponent), WHITE | (opacity << 24));
 //					guiGraphics.drawString(font, activeComponent.getVisualOrderText(), -font.width(activeComponent) / 2, offset, WHITE | (opacity << 24), true);
 //					font.drawShadow(poseStack, activeComponent.getVisualOrderText(), -font.width(activeComponent) / 2, offset, WHITE | (opacity << 24));

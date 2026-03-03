@@ -574,7 +574,7 @@ public class CRModels{
 		//half the length of the outer octagon, measured between parallel faces
 		final float lHalf = 3F / 2F - scale / 16F;
 		final float innerLHalf = lHalf - scale / 16F;//Number picked for aesthetics
-		final float hubLHalf = scale * 14F / 16F;//Number picked for aesthetics
+		final float hubLHalf = innerLHalf - scale * 2F / 16F;//Number picked for aesthetics
 		final float height = 2F / 16F * scale;
 		final float topY = height / 2F;//Half of height
 		final float bottomY = -topY;
