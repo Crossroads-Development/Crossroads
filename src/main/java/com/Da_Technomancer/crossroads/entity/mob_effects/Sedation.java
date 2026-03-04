@@ -95,7 +95,7 @@ public class Sedation extends MobEffect{
 
 	public static void checkForEffectEnd(LivingEntity entity, MobEffectInstance endedEffect){
 		//Called by event handlers
-		if(endedEffect.is(CRPotions.SEDATION_EFFECT)){
+		if(endedEffect != null && endedEffect.is(CRPotions.SEDATION_EFFECT)){
 			if(canSedationApplyFully(entity) && entity instanceof Mob mob){
 				mob.setNoAi(false);
 				mob.getPersistentData().putBoolean(SEDATION_KEY, false);
