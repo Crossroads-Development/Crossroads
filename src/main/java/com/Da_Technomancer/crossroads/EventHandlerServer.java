@@ -5,7 +5,8 @@ import net.neoforged.fml.common.EventBusSubscriber;
 
 public class EventHandlerServer{
 
-	@EventBusSubscriber(modid = Crossroads.MODID, value = Dist.DEDICATED_SERVER)
+//	Keep commented until we need an event handler
+//	@EventBusSubscriber(modid = Crossroads.MODID, value = Dist.DEDICATED_SERVER)
 	public static class CRModEventsServer{
 
 	}

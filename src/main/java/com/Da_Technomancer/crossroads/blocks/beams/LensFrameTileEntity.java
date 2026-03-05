@@ -107,8 +107,7 @@ public class LensFrameTileEntity extends BeamRenderTE implements INBTReceiver, C
 	@Nullable
 	public BeamLensRec getCurrRec(){
 		if(!recipeCheck){
-			RecipeInput input = null;
-			Optional<RecipeHolder<BeamLensRec>> rec = level.getRecipeManager().getRecipeFor(CRRecipes.BEAM_LENS_TYPE, input, level);
+			Optional<RecipeHolder<BeamLensRec>> rec = level.getRecipeManager().getRecipeFor(CRRecipes.BEAM_LENS_TYPE, this, level);
 			currRec = rec.orElse(null) == null ? null : rec.get().value();
 			recipeCheck = true;
 		}

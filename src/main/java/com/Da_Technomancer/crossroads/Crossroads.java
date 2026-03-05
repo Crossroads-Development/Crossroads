@@ -49,6 +49,7 @@ public final class Crossroads{
 	}
 
 	private void serverInit(FMLDedicatedServerSetupEvent e){
-		NeoForge.EVENT_BUS.register(new EventHandlerServer());
+//		Keep commented until we need an event handler
+//		NeoForge.EVENT_BUS.register(new EventHandlerServer());
 	}
 }
