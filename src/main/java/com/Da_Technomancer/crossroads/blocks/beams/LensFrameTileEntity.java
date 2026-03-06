@@ -38,7 +38,7 @@ public class LensFrameTileEntity extends BeamRenderTE implements INBTReceiver, C
 
 	private Direction.Axis axis = null;
 	private BeamLensRec currRec;
-	private boolean recipeCheck;
+	private boolean recipeValid;
 	private int lastRedstone;
 	private ItemStack lensItem = ItemStack.EMPTY;
 
@@ -77,6 +77,7 @@ public class LensFrameTileEntity extends BeamRenderTE implements INBTReceiver, C
 	public void setLensItem(ItemStack lens){
 		lensItem = lens;
 		setChanged();
+		recipeValid = false;
 		if(level != null && !level.isClientSide){
 			//Update on the client
 			CRPackets.sendPacketAround(level, worldPosition, new SendNBTToTE(BlockUtil.stackToNBT(lens, level.registryAccess()), worldPosition));
@@ -106,10 +107,10 @@ public class LensFrameTileEntity extends BeamRenderTE implements INBTReceiver, C
 
 	@Nullable
 	public BeamLensRec getCurrRec(){
-		if(!recipeCheck){
+		if(!recipeValid){
 			Optional<RecipeHolder<BeamLensRec>> rec = level.getRecipeManager().getRecipeFor(CRRecipes.BEAM_LENS_TYPE, this, level);
 			currRec = rec.orElse(null) == null ? null : rec.get().value();
-			recipeCheck = true;
+			recipeValid = true;
 		}
 		return currRec;
 	}
@@ -168,7 +169,7 @@ public class LensFrameTileEntity extends BeamRenderTE implements INBTReceiver, C
 	@Override
 	public void containerChanged(Container changedInv){
 		setChanged();
-		recipeCheck = false;
+		recipeValid = false;
 	}
 
 	private int needUpdateBeamRender = 0;

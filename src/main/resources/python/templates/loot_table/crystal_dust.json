@@ -26,7 +26,7 @@
 									}
 								}
 							],
-							"name": "crossroads:redstone_crystal"
+							"name": "<BLOCK>"
 						},
 						{
 							"type": "minecraft:item",
@@ -59,7 +59,7 @@
 									"function": "minecraft:explosion_decay"
 								}
 							],
-							"name": "minecraft:redstone"
+							"name": "<ITEM>"
 						}
 					]
 				}

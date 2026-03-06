@@ -17,11 +17,9 @@
 		"eaten": {
 			"trigger": "minecraft:consume_item",
 			"conditions": {
-				"item": [
-					{
-						"items": "crossroads:shaved_ice"
-					}
-				]
+				"item": {
+					"items": "crossroads:shaved_ice"
+				}
 			}
 		}
 	},

@@ -5,7 +5,6 @@ import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.DetailedCrafterRec;
-import com.Da_Technomancer.essentials.api.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.Registries;
@@ -29,8 +28,6 @@ import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.List;
-
-import static net.neoforged.neoforge.common.CommonHooks.setCraftingPlayer;
 
 
 public class DetailedCrafterContainer extends RecipeBookMenu<CraftingInput, CraftingRecipe>{
@@ -251,30 +248,65 @@ public class DetailedCrafterContainer extends RecipeBookMenu<CraftingInput, Craf
 
 		@Override
 		public void onTake(Player thePlayer, ItemStack stack){
-			checkTakeAchievements(stack);
-			setCraftingPlayer(thePlayer);
+			this.checkTakeAchievements(stack);
+			CraftingInput.Positioned craftinginput$positioned = craftMatrix.asPositionedCraftInput();
+			CraftingInput craftinginput = craftinginput$positioned.input();
+			int i = craftinginput$positioned.left();
+			int j = craftinginput$positioned.top();
+			net.neoforged.neoforge.common.CommonHooks.setCraftingPlayer(thePlayer);
 			RecipeHolder<? extends CraftingRecipe> recipeOpt = getMatchedRecipe(thePlayer, craftMatrix);
 			if(recipeOpt != null){
-				//Remove items if there is a matching recipe
-				NonNullList<ItemStack> remaining = recipeOpt.value().getRemainingItems(craftMatrix.asCraftInput());
-				for(int i = 0; i < remaining.size(); i++){
-					craftMatrix.removeItem(i, 1);//Consume crafting ingredients
+				NonNullList<ItemStack> nonnulllist = recipeOpt.value().getRemainingItems(craftinginput);
 
-					ItemStack remainStack = remaining.get(i);
-					ItemStack invStack = craftMatrix.getItem(i);
-					//Return any remaining items (ex. empty buckets)
-					if(!remainStack.isEmpty()){
-						if(invStack.isEmpty()){
-							craftMatrix.setItem(i, remaining.get(i));//Put it back into the crafting slot if it's empty
-						}else if(BlockUtil.sameItem(invStack, remainStack)){
-							invStack.grow(remainStack.getCount());//Try stacking it into the crafting slot
-							craftMatrix.setItem(i, invStack);
-						}else if(!thePlayer.getInventory().add(remainStack)){//Try returning it to the player inventory
-							thePlayer.drop(remainStack, false);//Drop it as an item into the world
+				for(int k = 0; k < craftinginput.height(); k++){
+					for(int l = 0; l < craftinginput.width(); l++){
+						int i1 = l + i + (k + j) * craftMatrix.getWidth();
+						ItemStack itemstack = craftMatrix.getItem(i1);
+						ItemStack itemstack1 = nonnulllist.get(l + k * craftinginput.width());
+						if(!itemstack.isEmpty()){
+							craftMatrix.removeItem(i1, 1);
+							itemstack = craftMatrix.getItem(i1);
+						}
+
+						if(!itemstack1.isEmpty()){
+							if(itemstack.isEmpty()){
+								craftMatrix.setItem(i1, itemstack1);
+							}else if(ItemStack.isSameItemSameComponents(itemstack, itemstack1)){
+								itemstack1.grow(itemstack.getCount());
+								craftMatrix.setItem(i1, itemstack1);
+							}else if(!thePlayer.getInventory().add(itemstack1)){
+								thePlayer.drop(itemstack1, false);
+							}
 						}
 					}
 				}
 			}
+			net.neoforged.neoforge.common.CommonHooks.setCraftingPlayer(null);
+
+//			checkTakeAchievements(stack);
+//			setCraftingPlayer(thePlayer);
+//			RecipeHolder<? extends CraftingRecipe> recipeOpt = getMatchedRecipe(thePlayer, craftMatrix);
+//			if(recipeOpt != null){
+//				//Remove items if there is a matching recipe
+//				NonNullList<ItemStack> remaining = recipeOpt.value().getRemainingItems(craftMatrix.asCraftInput());
+//				for(int i = 0; i < remaining.size(); i++){
+//					craftMatrix.removeItem(i, 1);//Consume crafting ingredients
+//
+//					ItemStack remainStack = remaining.get(i);
+//					ItemStack invStack = craftMatrix.getItem(i);
+//					//Return any remaining items (ex. empty buckets)
+//					if(!remainStack.isEmpty()){
+//						if(invStack.isEmpty()){
+//							craftMatrix.setItem(i, remaining.get(i));//Put it back into the crafting slot if it's empty
+//						}else if(BlockUtil.sameItem(invStack, remainStack)){
+//							invStack.grow(remainStack.getCount());//Try stacking it into the crafting slot
+//							craftMatrix.setItem(i, invStack);
+//						}else if(!thePlayer.getInventory().add(remainStack)){//Try returning it to the player inventory
+//							thePlayer.drop(remainStack, false);//Drop it as an item into the world
+//						}
+//					}
+//				}
+//			}
 
 //			return stack;
 		}
