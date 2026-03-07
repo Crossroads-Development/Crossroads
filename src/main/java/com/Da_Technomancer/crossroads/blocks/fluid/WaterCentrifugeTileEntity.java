@@ -72,7 +72,7 @@ public class WaterCentrifugeTileEntity extends InventoryTE implements IAxleCapab
 			neg = !neg;
 			//Handle direction switching regardless of whether crafting occurred
 
-			Optional<RecipeHolder<CentrifugeRec>> recOpt = level.getRecipeManager().getRecipeFor(CRRecipes.CENTRIFUGE_TYPE, this, level);
+			Optional<RecipeHolder<CentrifugeRec>> recOpt = level.getRecipeManager().getAllRecipesFor(CRRecipes.CENTRIFUGE_TYPE).stream().filter(holder -> holder.value().matches(this, level)).findFirst();
 			if(recOpt.isPresent() && !fluids[0].isEmpty()){
 				RecipeHolder<CentrifugeRec> rec = recOpt.get();
 				//The recipe matches() method checks inputs- those being valid is a given

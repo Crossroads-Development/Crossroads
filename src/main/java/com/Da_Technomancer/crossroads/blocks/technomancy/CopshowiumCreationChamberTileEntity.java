@@ -224,7 +224,7 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 				fluids[1] = FluidStack.EMPTY;
 				setChanged();
 			}else if((!CRConfig.cccRequireTime.get() || align == EnumBeamAlignments.TIME) && !fluids[0].isEmpty()){
-				Optional<RecipeHolder<CopshowiumRec>> recOpt = level.getRecipeManager().getRecipeFor(CRRecipes.COPSHOWIUM_TYPE, CopshowiumCreationChamberTileEntity.this, level);
+				Optional<RecipeHolder<CopshowiumRec>> recOpt = level.getRecipeManager().getAllRecipesFor(CRRecipes.COPSHOWIUM_TYPE).stream().filter(copshowiumRecRecipeHolder -> copshowiumRecRecipeHolder.value().matches(CopshowiumCreationChamberTileEntity.this, level)).findFirst();
 				if(recOpt.isPresent()){
 					CopshowiumRec rec = recOpt.get().value();
 					int created = (int) (fluids[0].getAmount() * rec.getMult());
