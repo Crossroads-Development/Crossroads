@@ -302,8 +302,9 @@ public class CRRenderUtil extends RenderUtil{
 
 	/**
 	 * Draws a long, thin triangular prism '3d line'
-	 * Expects the buffer to be drawing in QUADS mode, DefaultVertexFormats.POSITION
-	 * @param builder A builder with QUADS mode in DefaultVertexFormats.POSITION_COLOR_LIGHTMAP
+	 * Expects the buffer to be drawing in QUADS mode
+	 * Texture coordinates will be generic (not well mapped)
+	 * @param builder A builder with QUADS mode in DefaultVertexFormats.POSITION_COLOR_TEX_LIGHTMAP
 	 * @param matrix Matrix translated to world origin (0, 0, 0). Will not be modified
 	 * @param start Vector position to start from
 	 * @param end Vector position to end at
@@ -332,10 +333,10 @@ public class CRRenderUtil extends RenderUtil{
 		for(int i = 0; i < 3; i++){
 			Vec3 offsetPrev = perpVec[i];
 			Vec3 offsetNext = perpVec[(i + 1) % perpVec.length];
-			builder.addVertex(matrix.last().pose(), (float) (start.x() + offsetPrev.x()), (float) (start.y() + offsetPrev.y()), (float) (start.z() + offsetPrev.z())).setColor(col[0], col[1], col[2], col[3]).setLight(light);
-			builder.addVertex(matrix.last().pose(), (float) (end.x() + offsetPrev.x()), (float) (end.y() + offsetPrev.y()), (float) (end.z() + offsetPrev.z())).setColor(col[0], col[1], col[2], col[3]).setLight(light);
-			builder.addVertex(matrix.last().pose(), (float) (end.x() + offsetNext.x()), (float) (end.y() + offsetNext.y()), (float) (end.z() + offsetNext.z())).setColor(col[0], col[1], col[2], col[3]).setLight(light);
-			builder.addVertex(matrix.last().pose(), (float) (start.x() + offsetNext.x()), (float) (start.y() + offsetNext.y()), (float) (start.z() + offsetNext.z())).setColor(col[0], col[1], col[2], col[3]).setLight(light);
+			builder.addVertex(matrix.last().pose(), (float) (start.x() + offsetPrev.x()), (float) (start.y() + offsetPrev.y()), (float) (start.z() + offsetPrev.z())).setColor(col[0], col[1], col[2], col[3]).setUv(0, 0).setLight(light);
+			builder.addVertex(matrix.last().pose(), (float) (end.x() + offsetPrev.x()), (float) (end.y() + offsetPrev.y()), (float) (end.z() + offsetPrev.z())).setColor(col[0], col[1], col[2], col[3]).setUv(1, 0).setLight(light);
+			builder.addVertex(matrix.last().pose(), (float) (end.x() + offsetNext.x()), (float) (end.y() + offsetNext.y()), (float) (end.z() + offsetNext.z())).setColor(col[0], col[1], col[2], col[3]).setUv(1, 1).setLight(light);
+			builder.addVertex(matrix.last().pose(), (float) (start.x() + offsetNext.x()), (float) (start.y() + offsetNext.y()), (float) (start.z() + offsetNext.z())).setColor(col[0], col[1], col[2], col[3]).setUv(0, 1).setLight(light);
 		}
 	}
 
