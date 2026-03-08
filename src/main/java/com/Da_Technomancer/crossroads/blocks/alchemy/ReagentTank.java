@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.api.alchemy.IReagent;
 import com.Da_Technomancer.crossroads.api.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import com.Da_Technomancer.essentials.api.redstone.IReadable;
 import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
@@ -12,7 +13,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -22,7 +22,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.RenderShape;
@@ -90,11 +89,7 @@ public class ReagentTank extends BaseEntityBlock implements IReadable{
 	 */
 	@Nonnull
 	public static ReagentMap getReagents(ItemStack stack){
-		CompoundTag nbt = null;
-		if(stack.has(DataComponents.BLOCK_ENTITY_DATA)){
-			nbt = stack.get(DataComponents.BLOCK_ENTITY_DATA).copyTag();
-		}
-		return ReagentMap.readFromNBT(nbt);
+		return stack.getOrDefault(CRItems.REAGENT_DATA, new ReagentMap());
 	}
 
 	/**
@@ -105,7 +100,7 @@ public class ReagentTank extends BaseEntityBlock implements IReadable{
 	public static void setReagents(ItemStack stack, ReagentMap reagents){
 		CompoundTag nbt = new CompoundTag();
 		reagents.write(nbt);
-		stack.set(DataComponents.BLOCK_ENTITY_DATA, CustomData.of(nbt));
+		stack.set(CRItems.REAGENT_DATA, reagents);
 	}
 
 	@Override
@@ -141,9 +136,9 @@ public class ReagentTank extends BaseEntityBlock implements IReadable{
 	@Override
 	public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder){
 		BlockEntity te = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
-		if(te instanceof ReagentTankTileEntity){
+		if(te instanceof ReagentTankTileEntity rtte && !rtte.getMap().isEmpty()){
 			ItemStack drop = new ItemStack(this.asItem(), 1);
-			setReagents(drop, ((ReagentTankTileEntity) te).getMap());
+			setReagents(drop, rtte.getMap());
 			return Lists.newArrayList(drop);
 		}
 		return super.getDrops(state, builder);

@@ -2,11 +2,13 @@ package com.Da_Technomancer.crossroads.blocks.fluid;
 
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.items.CRItems;
+import com.Da_Technomancer.essentials.api.BlockUtil;
 import com.Da_Technomancer.essentials.api.redstone.IReadable;
 import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import com.google.common.collect.Lists;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -52,7 +54,7 @@ public class FluidTank extends BaseEntityBlock implements IReadable{
 
 	@Override
 	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
-		FluidStack fStack = getFluidOnItem(stack);
+		FluidStack fStack = getFluidOnItem(stack, context.level());
 		if(!fStack.isEmpty()){
 			tooltip.add(Component.translatable("tt.crossroads.fluid_tank", fStack.getAmount(), fStack.getHoverName().getString()));
 		}
@@ -61,23 +63,23 @@ public class FluidTank extends BaseEntityBlock implements IReadable{
 	@Override
 	public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder){
 		BlockEntity te = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
-		if(te instanceof FluidTankTileEntity ftte){
+		if(te instanceof FluidTankTileEntity ftte && !ftte.getContent().isEmpty()){
 			ItemStack drop = new ItemStack(this.asItem(), 1);
-			drop.set(CRItems.FLUID_DATA, ftte.getContent());
+			drop.set(CRItems.FLUID_DATA, BlockUtil.stackToNBT(ftte.getContent(), builder.getLevel().registryAccess()));
 			return Lists.newArrayList(drop);
 		}
 		return super.getDrops(state, builder);
 	}
 
-	private FluidStack getFluidOnItem(ItemStack stack){
-		return stack.getOrDefault(CRItems.FLUID_DATA, FluidStack.EMPTY);
+	private FluidStack getFluidOnItem(ItemStack stack, Level world){
+		return BlockUtil.nbtToFluidStack(stack.getOrDefault(CRItems.FLUID_DATA, new CompoundTag()), world.registryAccess());
 	}
 
 	@Override
 	public void setPlacedBy(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack){
 		if(stack.has(CRItems.FLUID_DATA)){
 			FluidTankTileEntity te = (FluidTankTileEntity) world.getBlockEntity(pos);
-			te.setContent(getFluidOnItem(stack));
+			te.setContent(getFluidOnItem(stack, world));
 		}
 	}
 

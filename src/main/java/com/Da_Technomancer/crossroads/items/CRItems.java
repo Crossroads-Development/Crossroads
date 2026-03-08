@@ -31,6 +31,7 @@ import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.ResourceLocation;
@@ -45,7 +46,6 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.DeferredSpawnEggItem;
-import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.RegisterEvent;
@@ -262,7 +262,7 @@ public final class CRItems{
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<MerchantOffers>> VILLAGER_TRADES_DATA = DATA_COMPONENTS.registerComponentType("cr_trades", builder -> builder.persistent(MerchantOffers.CODEC).networkSynchronized(MerchantOffers.STREAM_CODEC));
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<WindingTableTileEntity.WindingStatus>> WINDING_DATA = DATA_COMPONENTS.registerComponentType("winding_energy", builder -> builder.persistent(WindingTableTileEntity.WindingStatus.CODEC).networkSynchronized(WindingTableTileEntity.WindingStatus.STREAM_CODEC));
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<Double>> TEMPERATURE_DATA = DATA_COMPONENTS.registerComponentType("temperature", builder -> builder.persistent(Codec.DOUBLE).networkSynchronized(ByteBufCodecs.DOUBLE));
-	public static final DeferredHolder<DataComponentType<?>, DataComponentType<FluidStack>> FLUID_DATA = DATA_COMPONENTS.registerComponentType("fluid", builder -> builder.persistent(FluidStack.OPTIONAL_CODEC).networkSynchronized(FluidStack.OPTIONAL_STREAM_CODEC));
+	public static final DeferredHolder<DataComponentType<?>, DataComponentType<CompoundTag>> FLUID_DATA = DATA_COMPONENTS.registerComponentType("fluid", builder -> builder.persistent(CompoundTag.CODEC).networkSynchronized(ByteBufCodecs.COMPOUND_TAG));
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<PathSigil.DetailedCrafterRecipeReference>> SIGIL_RECIPE_DATA = DATA_COMPONENTS.registerComponentType("sigil_recipe", builder -> builder.persistent(PathSigil.DetailedCrafterRecipeReference.CODEC).networkSynchronized(PathSigil.DetailedCrafterRecipeReference.STREAM_CODEC));
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<BloodSample.EntitySourceData>> ENTITY_SOURCE_DATA = DATA_COMPONENTS.registerComponentType("entity_source", builder -> builder.persistent(BloodSample.EntitySourceData.CODEC).networkSynchronized(BloodSample.EntitySourceData.STREAM_CODEC));
 
