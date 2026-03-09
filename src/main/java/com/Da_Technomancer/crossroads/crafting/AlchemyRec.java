@@ -344,7 +344,7 @@ public class AlchemyRec implements IOptionalRecipe<RecipeInput>{
 					Codec.BOOL.optionalFieldOf("charged", false).forGetter(AlchemyRec::charged),
 					//There are two different fields using "data"- mutually exclusive on decode, but not sure if that works on encode
 					Codec.FLOAT.lenientOptionalFieldOf("data", 0F).forGetter(AlchemyRec::getData),
-					StringRepresentable.fromEnum(EnumBeamAlignments::values).lenientOptionalFieldOf("data", EnumBeamAlignments.NO_MATCH).forGetter(AlchemyRec::getAlignment)
+					StringRepresentable.fromEnum(EnumBeamAlignments::values).lenientOptionalFieldOf("beam_element", EnumBeamAlignments.NO_MATCH).forGetter(AlchemyRec::getAlignment)
 			).apply(instance, AlchemyRec::new));
 			CODEC = IOptionalRecipe.codecWithDisable(codec, disabledRec);
 

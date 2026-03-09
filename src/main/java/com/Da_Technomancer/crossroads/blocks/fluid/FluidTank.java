@@ -72,6 +72,9 @@ public class FluidTank extends BaseEntityBlock implements IReadable{
 	}
 
 	private FluidStack getFluidOnItem(ItemStack stack, Level world){
+		if(world == null){
+			return FluidStack.EMPTY;
+		}
 		return BlockUtil.nbtToFluidStack(stack.getOrDefault(CRItems.FLUID_DATA, new CompoundTag()), world.registryAccess());
 	}
 
