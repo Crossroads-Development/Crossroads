@@ -40,7 +40,6 @@ public enum EnumGoggleLenses implements StringRepresentable{
 	public static final Codec<EnumGoggleLenses> CODEC = StringRepresentable.fromEnum(EnumGoggleLenses::values);
 
 	private final TagKey<Item> item;
-	private final String texturePath;
 	private final IGoggleEffect effect;
 	//This is a supplier to allow lazy-loading the keys, which may not be registered at initialization time
 	@Nullable
@@ -50,7 +49,6 @@ public enum EnumGoggleLenses implements StringRepresentable{
 
 	EnumGoggleLenses(TagKey<Item> item, String texturePath, IGoggleEffect effect, @Nullable Supplier<IKeyMappingExtension> toggleKey, boolean requireEnable){
 		this.item = item;
-		this.texturePath = texturePath;
 		this.effect = effect;
 		this.key = toggleKey;
 		this.requireEnable = requireEnable;

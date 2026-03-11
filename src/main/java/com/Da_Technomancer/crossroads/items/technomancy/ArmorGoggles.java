@@ -109,20 +109,26 @@ public class ArmorGoggles extends TechnomancyArmor implements ICreativeTabPopula
 		public static final StreamCodec<ByteBuf, LensesSet> STREAM_CODEC = new StreamCodec<ByteBuf, LensesSet>(){
 			@Override
 			public LensesSet decode(ByteBuf byteBuf){
-				Object2BooleanMap<EnumGoggleLenses> map = new Object2BooleanOpenHashMap<>();
+				byte size = byteBuf.readByte();
+				Object2BooleanMap<EnumGoggleLenses> map = new Object2BooleanOpenHashMap<>(size);
 				EnumGoggleLenses[] lensValues = EnumGoggleLenses.values();
-				try{
-					while(byteBuf.isReadable(2)){
-						map.put(lensValues[byteBuf.readByte()], byteBuf.readBoolean());
+				for(byte i = 0; i < size; i++){
+					byte index = byteBuf.readByte();
+					boolean hasLens = byteBuf.readBoolean();
+					try{
+						map.put(lensValues[index], hasLens);
+					}catch(IndexOutOfBoundsException e){
+						Crossroads.logger.error(String.format("Error decoding ByteBuffer [%1$s] for LensesSet codec", byteBuf.toString()), e);
+						byteBuf.readerIndex(byteBuf.readerIndex() + 2 * (size - i - 1));//Skip ahead in the reader index as if we read properly
+						return new LensesSet(map);
 					}
-				}catch(IndexOutOfBoundsException e){
-					Crossroads.logger.error(String.format("Error decoding ByteBuffer [%1$s] for LensesSet codec", byteBuf.toString()), e);
 				}
 				return new LensesSet(map);
 			}
 
 			@Override
 			public void encode(ByteBuf byteBuf, LensesSet lensesSet){
+				byteBuf.writeByte(lensesSet.lenses.size());
 				for(Map.Entry<EnumGoggleLenses, Boolean> entries : lensesSet.lenses.object2BooleanEntrySet()){
 					byteBuf.writeByte(entries.getKey().ordinal());
 					byteBuf.writeBoolean(entries.getValue());
