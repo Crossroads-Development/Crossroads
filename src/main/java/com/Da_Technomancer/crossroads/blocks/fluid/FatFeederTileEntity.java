@@ -56,7 +56,7 @@ public class FatFeederTileEntity extends InventoryTE implements IFluidCapable{
 
 		//Player feeding
 		float gain = (float) Math.abs(fluids[0].getAmount() - fluidProps[0].capacity / 2) / (float) (fluidProps[0].capacity / 2);
-		;
+
 		int range = Math.round((1F - gain) * (MAX_RANGE - MIN_RANGE) + MIN_RANGE);
 		List<Player> players = level.getEntitiesOfClass(Player.class, AABB.encapsulatingFullBlocks(worldPosition.subtract(new Vec3i(range, range, range)), worldPosition.offset(new Vec3i(range, range, range))), EntitySelector.ENTITY_STILL_ALIVE);
 		for(Player play : players){
@@ -67,12 +67,7 @@ public class FatFeederTileEntity extends InventoryTE implements IFluidCapable{
 			}
 			fluids[0].shrink(added * CRConfig.fatPerValue.get());
 			int hungerAdded = Math.min(20 - food.getFoodLevel(), added);
-			//The way saturation is coded is weird (defined relative to hunger), and the best way to do this is through nbt.
-			CompoundTag nbt = new CompoundTag();
-			food.addAdditionalSaveData(nbt);
-			nbt.putInt("foodLevel", hungerAdded + food.getFoodLevel());
-			nbt.putFloat("foodSaturationLevel", Math.min(20F - food.getSaturationLevel(), added - hungerAdded) + food.getSaturationLevel());
-			food.readAdditionalSaveData(nbt);
+			food.setFoodLevel(hungerAdded + food.getFoodLevel());
 			setChanged();
 		}
 

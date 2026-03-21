@@ -55,8 +55,7 @@ public class FatCollectorTileEntity extends InventoryTE implements IHeatCapable,
 
 		FoodProperties food;
 		if(tier != -1 && !inventory[0].isEmpty() && (food = inventory[0].getFoodProperties(null)) != null){
-			//I don't know why vanilla multiplies saturation by 2, but it does
-			int liqAm = Math.min(food.nutrition() + (int) (food.nutrition() * food.saturation() * 2F), fluidProps[0].capacity);
+			int liqAm = Math.min(food.nutrition() + Math.round(food.saturation()), fluidProps[0].capacity / CRConfig.fatPerValue.get());
 			double heatUse = ((double) liqAm) * USE_PER_VALUE;
 			liqAm *= CRConfig.fatPerValue.get();
 			liqAm *= EFFICIENCY[tier];

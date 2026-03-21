@@ -24,6 +24,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -192,15 +193,16 @@ public class BrewingVatTileEntity extends InventoryTE implements IHeatCapable, I
 			return false;
 		}
 		if(index == 0){
-			return level.potionBrewing().isPotionIngredient(stack);
+			return level.potionBrewing().isIngredient(stack);
 		}
 		if(index > 0 && index < 4){
-			if(stack.getCount() > 1){
-				//BrewingRecipeRegistry.isValidInput only passes if the stacksize is 1
-				stack = stack.copy();
-				stack.setCount(1);
-			}
-			return level.potionBrewing().isContainerIngredient(stack);
+//			if(stack.getCount() > 1){
+//				//BrewingRecipeRegistry.isValidInput only passes if the stacksize is 1
+//				stack = stack.copy();
+//				stack.setCount(1);
+//			}
+//			return level.potionBrewing().isContainerIngredient(stack);
+			return level.potionBrewing().isInput(stack) || stack.is(Items.GLASS_BOTTLE);
 		}
 		return false;
 	}

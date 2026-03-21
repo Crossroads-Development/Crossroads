@@ -36,11 +36,6 @@ public class CRPotions{
 
 	public static final Holder<MobEffect> SEDATION_EFFECT = MOB_EFFECTS.register("sedation", Sedation::new);
 	public static final Holder<MobEffect> CURATIVE_EFFECT = MOB_EFFECTS.register("curative", Curative::new);
-	/**
-	 * @deprecated Use a penalty to the MAX_HEALTH attribute instead. See EntityTemplate for an example.
-	 */
-	@Deprecated
-	public static final Holder<MobEffect> HEALTH_PENALTY_EFFECT = MOB_EFFECTS.register("health_penalty", HealthPenalty::new);
 	public static final Holder<MobEffect> TRANSIENT_EFFECT = MOB_EFFECTS.register("transient", Transient::new);
 
 	public static final Holder<Potion> POTION_SEDATION = POTIONS.register("sedation", () -> new Potion("sedation", new MobEffectInstance(SEDATION_EFFECT, 3600)));
@@ -93,7 +88,7 @@ public class CRPotions{
 			//Confirm the effect isn't blacklisted
 			ResourceLocation effectRegistryName = MiscUtil.getRegistryName(effect.getEffect().value(), BuiltInRegistries.MOB_EFFECT);
 			List<? extends String> blacklist = CRConfig.permanentEffectBlacklist.get();
-			return blacklist.stream().noneMatch(entry -> ResourceLocation.withDefaultNamespace(entry).equals(effectRegistryName));
+			return blacklist.stream().noneMatch(entry -> ResourceLocation.parse(entry).equals(effectRegistryName));
 		}
 		return false;
 	}
@@ -126,7 +121,7 @@ public class CRPotions{
 	 */
 	public static boolean applyAsPermanent(LivingEntity target, MobEffectInstance toApply){
 		if(canBeAppliedPermanentlyToTarget(target, toApply)){
-			boolean limitPower = toApply.getEffect() != CRPotions.HEALTH_PENALTY_EFFECT && CRConfig.limitPermanentPotionStrength.get();
+			boolean limitPower = CRConfig.limitPermanentPotionStrength.get();
 
 			//'Permanent' is actually maximum duration, which is ~3.4 years ingame
 			target.addEffect(new MobEffectInstance(toApply.getEffect(), Integer.MAX_VALUE, limitPower ? Math.min(toApply.getAmplifier(), 0) : toApply.getAmplifier(), toApply.isAmbient(), CRConfig.permanentPotionParticles.get() && toApply.isVisible(), toApply.showIcon()));
