@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.items.witchcraft;
 
 import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.api.witchcraft.IPerishable;
 import com.Da_Technomancer.crossroads.entity.CRMobDamage;
 import com.Da_Technomancer.crossroads.entity.mob_effects.CRPotions;
@@ -9,11 +10,15 @@ import com.Da_Technomancer.crossroads.items.alchemy.PoisonVodka;
 import com.Da_Technomancer.essentials.api.BlockUtil;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -30,6 +35,8 @@ import java.util.List;
 public class Syringe extends Item{
 
 	public static final HashMap<Item, SyringeExtension> SYRINGE_ITEM_EFFECTS = new HashMap<>(6);
+
+	public static final ResourceLocation HEALTH_PENALTY_ATTRIBUTE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "perma_effect");
 
 	private static void populateSyringeMap(){
 		//Be careful about when this is called, that the item references are initialized beforehand
@@ -71,10 +78,15 @@ public class Syringe extends Item{
 							target.addEffect(new MobEffectInstance(effect.getEffect(), effect.getDuration(), (int) Math.round(effect.getAmplifier() * multiplier), effect.isAmbient(), effect.isVisible(), effect.showIcon()));
 						}else if(CRPotions.applyAsPermanent(target, effect) && penalty > 0){
 							//Make permanent, apply a penalty
-							MobEffectInstance penaltyEffect = target.getEffect(CRPotions.HEALTH_PENALTY_EFFECT);
-							int prevPenaltyIntensity = penaltyEffect != null ? penaltyEffect.getAmplifier() : -1;
-							penaltyEffect = new MobEffectInstance(CRPotions.HEALTH_PENALTY_EFFECT, Integer.MAX_VALUE, (penalty - 1) + (prevPenaltyIntensity + 1));
-							CRPotions.applyAsPermanent(target, penaltyEffect);
+							AttributeInstance maxHealthAttribute = target.getAttributes().getInstance(Attributes.MAX_HEALTH);
+							if(maxHealthAttribute != null){
+								double currentPenalty = Math.abs(maxHealthAttribute.hasModifier(HEALTH_PENALTY_ATTRIBUTE) ? maxHealthAttribute.getModifier(HEALTH_PENALTY_ATTRIBUTE).amount() : 0);
+								maxHealthAttribute.addOrReplacePermanentModifier(new AttributeModifier(HEALTH_PENALTY_ATTRIBUTE, -(currentPenalty + penalty), AttributeModifier.Operation.ADD_VALUE));
+//							MobEffectInstance penaltyEffect = target.getEffect(CRPotions.HEALTH_PENALTY_EFFECT);
+//							int prevPenaltyIntensity = penaltyEffect != null ? penaltyEffect.getAmplifier() : -1;
+//							penaltyEffect = new MobEffectInstance(CRPotions.HEALTH_PENALTY_EFFECT, Integer.MAX_VALUE, (penalty - 1) + (prevPenaltyIntensity + 1));
+//							CRPotions.applyAsPermanent(target, penaltyEffect);
+							}
 						}
 					}
 				}else{

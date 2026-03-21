@@ -33,7 +33,7 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "with milk or a $(l:essentials:witchcraft/medicinal_mushroom#neutralization)neutralization potion/$ as usual.$(br2)<item>Genetic plasmids/$ will $(l:essentials:witchcraft/spoilage)spoil/$ after 30 minutes.$(br2)"
+			"text": "with $(l:essentials:witchcraft/medicinal_mushroom#neutralization)neutralization potion/$ as usual.$(br2)<item>Genetic plasmids/$ will $(l:essentials:witchcraft/spoilage)spoil/$ after 30 minutes.$(br2)"
 		},
 		{
 			"type": "patchouli:spotlight",
