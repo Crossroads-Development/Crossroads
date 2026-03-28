@@ -1,7 +1,9 @@
 package com.Da_Technomancer.crossroads.ambient.sounds;
 
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.crossroads.api.packets.SafeCallable;
+import com.Da_Technomancer.crossroads.api.packets.SendOptionalSoundToClient;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -44,6 +46,23 @@ public class CRSounds{
 	 */
 	public static void playSoundServer(Level world, BlockPos pos, SoundEvent sound, SoundSource category, float volume, float pitch){
 		world.playSound(null, pos, sound, category, volume, pitch);
+	}
+
+	/**
+	 * Plays a sounds to all nearby players who meet a specific condition when called on the virtual server
+	 * Does nothing when called on the virtual client
+	 * @param world The world to play the sound in
+	 * @param pos The position to play the sound at. Plays from the center of the blockspace
+	 * @param sound Sound to play
+	 * @param category Sound category, for volume settings
+	 * @param volume Volume multiplier, multiplied with event volume and clamped within [0, 1] after multiplying
+	 * @param pitch Pitch multiplier, multiplied with event pitch and clamped within [0.5, 2] after multiplying
+	 * @param soundCondition Condition the player must meet (evaluated on the client side) to have the sound played
+	 */
+	public static void playSoundServer(Level world, BlockPos pos, SoundEvent sound, SoundSource category, float volume, float pitch, SendOptionalSoundToClient.SoundCondition soundCondition){
+		if(!world.isClientSide){
+			CRPackets.sendPacketAround(world, pos, new SendOptionalSoundToClient(pos, sound, category, volume, pitch, soundCondition), sound.getRange(volume));
+		}
 	}
 
 	/**
