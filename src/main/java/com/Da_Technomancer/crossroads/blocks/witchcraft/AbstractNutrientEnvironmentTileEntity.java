@@ -61,7 +61,9 @@ public abstract class AbstractNutrientEnvironmentTileEntity extends InventoryTE{
 	public void serverTick(){
 		super.serverTick();
 		long gameTime = level.getGameTime();
-		if(gameTime > lastTick && canCultivate()){
+		long timeSinceLastTick = gameTime - lastTick;
+
+		if(timeSinceLastTick > 0 && canCultivate()){
 			for(int cultivated : cultivatedSlots){
 				ItemStack stack = inventory[cultivated];
 				if(stack.getItem() instanceof ICultivatable item){
@@ -71,7 +73,7 @@ public abstract class AbstractNutrientEnvironmentTileEntity extends InventoryTE{
 						fluids[nutrientTankIndex].shrink(1);
 					}
 					//Update the item
-					item.cultivate(stack, level, 1);
+					item.cultivate(stack, level, timeSinceLastTick);
 				}
 			}
 		}
@@ -80,25 +82,6 @@ public abstract class AbstractNutrientEnvironmentTileEntity extends InventoryTE{
 	}
 
 	protected abstract int getPassiveNutrientDrainInterval();
-
-	@Override
-	public void onLoad(){
-		super.onLoad();
-		//While this block is unloaded, the gametime has still been advancing,
-		//so the stored items have decayed without this block countering that
-		//When we reload, we do a single large freeze operation to account for time spent unloaded, plus a small extra as a buffer
-		long gameTime = level.getGameTime();
-		if(gameTime > lastTick){
-			for(int cultivated : cultivatedSlots){
-				ItemStack stack = inventory[cultivated];
-				if(stack.getItem() instanceof ICultivatable){
-					((ICultivatable) stack.getItem()).cultivate(stack, level, gameTime - lastTick + 1);
-				}
-			}
-		}
-		lastTick = gameTime;
-//		setChanged(); Note to self: Calling setChanged() in onLoad() freezes the loading process; bad
-	}
 
 	@Override
 	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){

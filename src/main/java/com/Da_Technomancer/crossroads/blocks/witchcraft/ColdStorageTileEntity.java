@@ -62,11 +62,13 @@ public class ColdStorageTileEntity extends InventoryTE implements IHeatCapable, 
 		double preTemp = temp;
 		double biomeTemp = getBiomeTemp();
 
+		long timeSinceLastTick = gameTime - lastTick;
+
 		for(ItemStack stack : inventory){
 			if(stack.getItem() instanceof IPerishable){
-				if(gameTime != lastTick){
+				if(timeSinceLastTick > 0){
 					//Don't allow tick accelerating this step, or the life span of the contents will actually increase
-					((IPerishable) stack.getItem()).freeze(stack, level, preTemp, 1);
+					((IPerishable) stack.getItem()).freeze(stack, level, preTemp, timeSinceLastTick);
 				}
 
 				if(temp < biomeTemp){
@@ -76,27 +78,6 @@ public class ColdStorageTileEntity extends InventoryTE implements IHeatCapable, 
 		}
 		lastTick = gameTime;
 		setChanged();
-	}
-	//Called whenever a BlockEntity is loaded
-	@Override
-	public void clearRemoved(){
-		super.clearRemoved();
-		//Server side only
-		if(!level.isClientSide()){
-			//While this block is unloaded, the gametime has still been advancing,
-			//so the stored items have decayed without this block countering that
-			//When we reload, we do a single large freeze operation to account for time spent unloaded, plus a small extra as a buffer
-			long gameTime = level.getGameTime();
-
-			if(gameTime > lastTick && lastTick != 0){
-				for(ItemStack stack : inventory){
-					if(stack.getItem() instanceof IPerishable perishable){
-						perishable.freeze(stack, level, temp, gameTime - lastTick + 5);
-					}
-				}
-			}
-			lastTick = gameTime;
-		}
 	}
 
 	@Override

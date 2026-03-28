@@ -19,6 +19,8 @@ crash-reports/
 /classes/
 /net/
 /testing/
+/.vscode/
+/.eclipse/
 
 # File Extensions
 *.psd

@@ -48,39 +48,19 @@ public class StasisStorageTileEntity extends InventoryTE implements IBeamCapable
 
 		long gameTime = level.getGameTime();
 
-		if(gameTime != lastTick){
+		long timeSinceLastTick = gameTime - lastTick;
+
+		if(timeSinceLastTick > 0){
 			//Don't allow tick accelerating this step, or the life span of the contents will actually increase
 			for(ItemStack stack : inventory){
 				if(stack.getItem() instanceof IPerishable perishable){
 					//We reverse the age, without freezing, to prevent damage of ICultivatable
-					IPerishable.setSpoilTime(stack, IPerishable.getAndInitSpoilTime(stack, level) + 1, 0);
+					IPerishable.setSpoilTime(stack, IPerishable.getAndInitSpoilTime(stack, level) + timeSinceLastTick, 0);
 				}
 			}
 		}
 		lastTick = gameTime;
 		setChanged();
-	}
-
-	//Called whenever a TileEntity is loaded
-	@Override
-	public void clearRemoved(){
-		super.clearRemoved();
-		//Server side only
-		if(!level.isClientSide()){
-			//While this block is unloaded, the gametime has still been advancing,
-			//so the stored items have decayed without this block countering that
-			//When we reload, we do a single large freeze operation to account for time spent unloaded, plus a small extra as a buffer
-			long gameTime = level.getGameTime();
-
-			if(gameTime > lastTick && lastTick != 0){
-				for(ItemStack stack : inventory){
-					if(stack.getItem() instanceof IPerishable){
-						IPerishable.setSpoilTime(stack, IPerishable.getAndInitSpoilTime(stack, level) + gameTime - lastTick + 5, 0);
-					}
-				}
-			}
-			lastTick = gameTime;
-		}
 	}
 
 	@Override
