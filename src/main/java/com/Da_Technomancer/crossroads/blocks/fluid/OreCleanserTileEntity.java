@@ -111,6 +111,7 @@ public class OreCleanserTileEntity extends InventoryTE implements IFluidCapable,
 			}else{
 				inventory[1].grow(created.getCount());
 			}
+			progress = 0;
 		}else{
 			progress = 0;
 		}
