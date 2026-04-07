@@ -2,9 +2,11 @@ package com.Da_Technomancer.crossroads.blocks.electric;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.CRProperties;
+import com.Da_Technomancer.crossroads.api.CircuitUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.api.ConfigUtil;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.redstone.IReadable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -32,7 +34,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class Dynamo extends BaseEntityBlock{
+public class Dynamo extends BaseEntityBlock implements IReadable{
 
 	private static final VoxelShape[] SHAPES = new VoxelShape[2];
 	static{
@@ -94,5 +96,23 @@ public class Dynamo extends BaseEntityBlock{
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder){
 		builder.add(CRProperties.HORIZ_FACING);
+	}
+
+	@Override
+	public float read(Level level, BlockPos blockPos, BlockState blockState){
+		if(level.getBlockEntity(blockPos) instanceof DynamoTileEntity dynamoTE){
+			return dynamoTE.getLastAddedFE();
+		}
+		return 0;
+	}
+
+	@Override
+	public boolean hasAnalogOutputSignal(BlockState pState){
+		return true;
+	}
+
+	@Override
+	public int getAnalogOutputSignal(BlockState pState, Level pLevel, BlockPos pPos){
+		return CircuitUtil.clampToVanilla(read(pLevel, pPos, pState));
 	}
 }
