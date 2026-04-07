@@ -2,15 +2,16 @@ package com.Da_Technomancer.crossroads.blocks.electric;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.CRProperties;
+import com.Da_Technomancer.crossroads.api.CircuitUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.essentials.api.ConfigUtil;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.redstone.IReadable;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -35,7 +36,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class Dynamo extends BaseEntityBlock{
+public class Dynamo extends BaseEntityBlock implements IReadable{
 
 	private static final VoxelShape[] SHAPES = new VoxelShape[2];
 
@@ -103,5 +104,23 @@ public class Dynamo extends BaseEntityBlock{
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder){
 		builder.add(CRProperties.HORIZ_FACING);
+	}
+
+	@Override
+	public float read(Level level, BlockPos blockPos, BlockState blockState){
+		if(level.getBlockEntity(blockPos) instanceof DynamoTileEntity dynamoTE){
+			return dynamoTE.getLastAddedFE();
+		}
+		return 0;
+	}
+
+	@Override
+	protected boolean hasAnalogOutputSignal(BlockState pState){
+		return true;
+	}
+
+	@Override
+	protected int getAnalogOutputSignal(BlockState pState, Level pLevel, BlockPos pPos){
+		return CircuitUtil.clampToVanilla(read(pLevel, pPos, pState));
 	}
 }

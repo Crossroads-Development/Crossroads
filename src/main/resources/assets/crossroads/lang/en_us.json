@@ -486,6 +486,7 @@
 	"tt.crossroads.wind_turbine.limits": "Useless above %1$frad/s; Comparators read power output",
 	"tt.crossroads.dynamo.power": "Produces: %1$fFE/J",
 	"tt.crossroads.dynamo.usage": "Consumes: -%1$dω J/t",
+	"tt.crossroads.dynamo.fe_info": "Generating +%3$d/%4$dFE/t - Charge: %1$d/%2$dFE",
 	"tt.crossroads.fat_collector.tier": "%1$d%% efficiency when above %2$d°C",
 	"tt.crossroads.edible_blob.food": "Hunger: %1$d",
 	"tt.crossroads.edible_blob.sat": "Saturation: %1$d",
