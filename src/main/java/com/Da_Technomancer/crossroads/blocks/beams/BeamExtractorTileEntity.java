@@ -107,7 +107,7 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements RecipeInput
 	@Nullable
 	@Override
 	public IItemHandler getItemHandler(Direction direction){
-		if(facing != getFacing()){
+		if(direction != getFacing()){
 			return itemHandler;
 		}
 		return null;
