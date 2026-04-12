@@ -2,7 +2,7 @@
 	"parent": "crossroads:progress/misc/phil_stone",
 	"display": {
 		"icon": {
-			"id": "crossroads:bedrock_dust"
+			"id": "crossroads:dust_bedrock"
 		},
 		"title": {
 			"translate": "crossroads.advancement.bedrock_dust"
@@ -19,7 +19,7 @@
 			"conditions": {
 				"items": [
 					{
-						"items": "crossroads:bedrock_dust"
+						"items": "crossroads:dust_bedrock"
 					}
 				]
 			}

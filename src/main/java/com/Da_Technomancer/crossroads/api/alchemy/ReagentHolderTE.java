@@ -112,18 +112,19 @@ public abstract class ReagentHolderTE extends BlockEntity implements ITickableTi
 		}
 
 		int total = 0;
+		int extraLines = 0;
 		for(IReagent type : contents.keySetReag()){
 			int qty = contents.getQty(type);
 			if(qty > 0){
 				total++;
-				if(total <= 4){
-					chat.add(Component.translatable("tt.crossroads.boilerplate.alchemy_content", type.getName(), qty));
-				}else{
-					break;
-				}
+				chat.add(Component.translatable("tt.crossroads.boilerplate.alchemy_content", type.getName(), qty));
 			}
 		}
-		if(total > 4){
+		if(total > 5){
+			//Only display the first 4, then combine the rest into one line
+			for(int i = 0; i < total - 4; i++){
+				chat.removeLast();
+			}
 			chat.add(Component.translatable("tt.crossroads.boilerplate.alchemy_excess", total - 4));
 		}
 	}
