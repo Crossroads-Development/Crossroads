@@ -3,11 +3,14 @@ package com.Da_Technomancer.crossroads.integration.jei;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.alchemy.IReagent;
+import com.Da_Technomancer.crossroads.api.crafting.FluidIngredient;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.google.common.collect.ImmutableList;
 import mezz.jei.api.constants.VanillaTypes;
+import mezz.jei.api.gui.builder.IIngredientAcceptor;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
@@ -23,7 +26,9 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.material.Fluid;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -97,11 +102,25 @@ public class ReagInfoCategory implements IRecipeCategory<IReagent>{
 			TagKey<Item> jeiSolids = recipe.getJEISolids();
 			Ingredient itemForm = Ingredient.of(jeiSolids);
 			if(!itemForm.isEmpty()){
-				builder.addSlot(RecipeIngredientRole.INPUT, 19, 1).addIngredients(itemForm);
+				builder.addSlot(RecipeIngredientRole.INPUT, 21, 3).addIngredients(itemForm);
 				builder.addInvisibleIngredients(RecipeIngredientRole.OUTPUT).addIngredients(itemForm);
 			}
 		}catch(Exception e){
 			Crossroads.logger.error(String.format("Failed to load item form of reagent %1$s for JEI integration", recipe.getName()));
+		}
+
+		FluidIngredient fluidForm = recipe.getFluid();
+		int fluidQty = recipe.getFluidQty();
+		Collection<Fluid> fluidForms = fluidForm.getMatchedFluids();
+		if(!fluidForms.isEmpty() && fluidQty > 0){
+			IRecipeSlotBuilder fluidInputSlotBuilder = builder.addSlot(RecipeIngredientRole.INPUT, 39, 3);
+			fluidInputSlotBuilder.setFluidRenderer(1, false, 16, 16);
+			IIngredientAcceptor<?> fluidOutputSlotBuilder = builder.addInvisibleIngredients(RecipeIngredientRole.OUTPUT);
+			//Might have multiple matched fluid types - put them all in the same slot
+			for(Fluid fluid : fluidForms){
+				fluidInputSlotBuilder.addFluidStack(fluid, fluidQty);
+				fluidOutputSlotBuilder.addFluidStack(fluid, fluidQty);
+			}
 		}
 	}
 }
