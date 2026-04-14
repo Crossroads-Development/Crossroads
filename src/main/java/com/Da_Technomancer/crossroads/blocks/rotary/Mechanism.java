@@ -191,9 +191,14 @@ public class Mechanism extends BaseEntityBlock implements IReadable{
 			return;
 		}
 
+		Direction.Axis axleAxis = te.getAxleAxis();
+		if(axleAxis != null && !RotaryUtil.couldMechanismExistAtLocation(worldIn, pos, null, axleAxis, te.members[6])){
+			popResource(worldIn, pos, te.members[6].getDrop(te.mats[6]));
+			te.setMechanism(6, null, null, null, false);
+		}
 		for(Direction side : Direction.values()){
 			IMechanism<?> mechanism = te.members[side.get3DDataValue()];
-			if(mechanism != null && mechanism.requiresSupport() && !RotaryUtil.solidToGears(worldIn, pos.relative(side), side.getOpposite())){
+			if(mechanism != null && !RotaryUtil.couldMechanismExistAtLocation(worldIn, pos, side, null, mechanism)){
 				popResource(worldIn, pos, mechanism.getDrop(te.mats[side.get3DDataValue()]));
 				te.setMechanism(side.get3DDataValue(), null, null, null, false);
 			}

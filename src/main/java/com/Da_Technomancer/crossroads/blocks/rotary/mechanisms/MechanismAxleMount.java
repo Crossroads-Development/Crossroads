@@ -25,7 +25,6 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;

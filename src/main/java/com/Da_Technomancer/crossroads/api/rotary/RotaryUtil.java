@@ -8,6 +8,8 @@ import com.Da_Technomancer.crossroads.api.packets.SendMasterKeyToClient;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.rotary.LargeGearMaster;
 import com.Da_Technomancer.crossroads.blocks.rotary.LargeGearSlave;
+import com.Da_Technomancer.crossroads.blocks.rotary.mechanisms.MechanismSmallGear;
+import com.Da_Technomancer.crossroads.blocks.rotary.mechanisms.MechanismTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -19,7 +21,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.checkerframework.checker.units.qual.N;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -28,6 +32,7 @@ public class RotaryUtil{
 	/**
 	 * The masterKey is a way of tracking when Master Axes should regenerate/recheck their networks
 	 * Master axes are allowed to ignore this, but it allows for significant optimizations by reducing unnecessary checks, as it will be incremented every time a gear/component is broken/updated
+	 * TODO: Risk of introducing a race-condition: This is a static field being accessed by both client and server side. This specific case hasn't caused any issues in the past, but bad practice nonetheless
 	 */
 	private static int masterKey = 1;
 
@@ -146,13 +151,19 @@ public class RotaryUtil{
 	 * @param side The side the gear will be placed against
 	 * @return Whether it should be solid to small gears
 	 */
-	public static boolean solidToGears(Level world, BlockPos pos, Direction side){
+	public static boolean solidToGears(Level world, BlockPos pos, @Nonnull Direction side){
 		//The current definition of "solid":
 		//Block collision shape contains the 2x2 of pixels in the center of the face in side
 		//And block is not the back of a large gear or leaves
 		BlockState state = world.getBlockState(pos);
 		if(state.getBlock() instanceof LargeGearSlave || (state.getBlock() instanceof LargeGearMaster && side != state.getValue(CRProperties.FACING).getOpposite())){
 			return false;
+		}
+		if(state.getBlock() == CRBlocks.mechanism && world.getBlockEntity(pos) instanceof MechanismTileEntity mte){
+			if(mte.getAxleAxis() != side.getAxis() && mte.members[side.get3DDataValue()] instanceof MechanismSmallGear){
+				//Intended to prevent the case of two back-to-back floating small gears supporting eachother
+				return false;
+			}
 		}
 		if(state.is(BlockTags.LEAVES)){
 			return false;//Vanilla convention has leaves as non-solid
@@ -163,6 +174,37 @@ public class RotaryUtil{
 		//Projections are cached by default, so this operation is fast
 		//We have a reference anchor shape, which should fit neatly inside the projected shape if this is a solid surface
 		return !Shapes.joinIsNotEmpty(state.getCollisionShape(world, pos).getFaceShape(side), GEAR_ANCHOR_SHAPE, BooleanOp.ONLY_SECOND);
+	}
+
+	/**
+	 * For an IMechanism, checks whether it would be structurally stable (ie, wouldn't pop off for lack of support) at a given location
+	 * Returns the same result regardless of whether the mechanism currently exists at that location
+	 * @param world The World
+	 * @param pos The block's position
+	 * @param side The side of the mechanism. Null for axial slot
+	 * @param selfAxleAxis The axis if this is an axle-slot mechanism. Null for non-null side, non-null otherwise.
+	 * @return Whether it would be allowed to stay at that location
+	 */
+	public static boolean couldMechanismExistAtLocation(Level world, BlockPos pos, @Nullable Direction side, @Nullable Direction.Axis selfAxleAxis, IMechanism<?> proposedMechanism){
+		assert (side == null) != (selfAxleAxis == null);
+		if(selfAxleAxis != null){
+			//Currently, axles have no support requirements
+			return true;
+		}else{
+			if(!proposedMechanism.requiresSupport()){
+				return true;
+			}
+			BlockPos supportingPos = pos.relative(side);
+			if(solidToGears(world, supportingPos, side.getOpposite())){
+				//Supported by being placed on solid block
+				return true;
+			}
+			if(world.getBlockEntity(pos) instanceof MechanismTileEntity mte && mte.getAxleAxis() == side.getAxis()){
+				//Supported by being on the end of an axle inside the same blockspace
+				return true;
+			}
+			return false;
+		}
 	}
 
 	/**

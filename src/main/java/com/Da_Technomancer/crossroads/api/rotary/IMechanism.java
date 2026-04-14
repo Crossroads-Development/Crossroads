@@ -11,7 +11,6 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -131,7 +130,7 @@ public interface IMechanism<T extends IMechanismProperty>{
 	}
 
 	/**
-	 * @return Whether this mechanism should break if on a side without a supporting block
+	 * @return Whether this mechanism should break if on a side without a supporting block or connected axle
 	 */
 	default boolean requiresSupport(){
 		return true;

@@ -102,8 +102,8 @@ public class HeatCable extends ConduitBlock<EnumTransferMode>{
 	}
 
 	@Override
-	protected EnumTransferMode cycleMode(EnumTransferMode prev){
-		return prev.isConnection() ? EnumTransferMode.NONE : EnumTransferMode.BOTH;
+	protected EnumTransferMode cycleMode(EnumTransferMode prev, boolean sneakModes){
+		return sneakModes ? prev.isConnection() ? EnumTransferMode.NONE : EnumTransferMode.BOTH : prev;
 	}
 
 	@Override

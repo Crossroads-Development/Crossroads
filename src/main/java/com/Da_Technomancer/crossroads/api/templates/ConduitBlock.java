@@ -125,9 +125,10 @@ public abstract class ConduitBlock<T extends Comparable<T>> extends BaseEntityBl
 	 * Determines what the next connection mode should be
 	 * Used for wrench adjusting
 	 * @param prev The previous mode
+	 * @param sneakModes Whether player is sneaking to skip to other modes
 	 * @return The next connection mode on this side
 	 */
-	protected abstract T cycleMode(T prev);
+	protected abstract T cycleMode(T prev, boolean sneakModes);
 
 	@Override
 	@SuppressWarnings("unchecked")
@@ -192,7 +193,7 @@ public abstract class ConduitBlock<T extends Comparable<T>> extends BaseEntityBl
 	@Override
 	public ItemInteractionResult useItemOn(ItemStack held, BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
 		//Handle wrenching
-		if(playerIn != null && !playerIn.isCrouching()){
+		if(playerIn != null){
 			if(held.isEmpty()){
 				return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 			}
@@ -202,35 +203,47 @@ public abstract class ConduitBlock<T extends Comparable<T>> extends BaseEntityBl
 					return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
 				}
 
-				final double SIZE = getSize();
 				IConduitTE<T> cte = (IConduitTE<T>) te;
-				int face;
-				final double margin = 0.005D;
-				Vec3 hitVec = hit.getLocation().subtract(pos.getX(), pos.getY(), pos.getZ());
-				if(hitVec.y < SIZE - margin){
-					face = 0;//Down
-				}else if(hitVec.y - margin > 1F - (float) SIZE){
-					face = 1;//Up
-				}else if(hitVec.x < (float) SIZE - margin){
-					face = 4;//West
-				}else if(hitVec.x - margin > 1F - (float) SIZE){
-					face = 5;//East
-				}else if(hitVec.z < (float) SIZE - margin){
-					face = 2;//North
-				}else if(hitVec.z - margin > 1F - (float) SIZE){
-					face = 3;//South
-				}else{
-					face = hit.getDirection().get3DDataValue();
-				}
+				int face = hitSide(hit, pos);
 
 //				Property<T> prop = getSideProp()[face];
-				T newVal = cycleMode(cte.getModes()[face]);
+				T newVal = cycleMode(cte.getModes()[face], playerIn.isCrouching());
 				cte.setData(face, cte.hasMatch(face, newVal), newVal);
 				onAdjusted(worldIn, pos, state, Direction.from3DDataValue(face), newVal, cte);
 				return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
 			}
 		}
 		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+	}
+
+	protected boolean didHitCore(BlockHitResult hit, BlockPos pos){
+		final double SIZE = getSize();
+		final double margin = 0.005D;
+		Vec3 hitVec = hit.getLocation().subtract(pos.getX(), pos.getY(), pos.getZ());
+		return hitVec.x > SIZE - margin && hitVec.x < 1D - SIZE + margin && hitVec.y > SIZE - margin && hitVec.y < 1D - SIZE + margin && hitVec.z > SIZE - margin && hitVec.z < 1D - SIZE + margin;
+	}
+
+	protected int hitSide(BlockHitResult hit, BlockPos pos){
+		final double SIZE = getSize();
+		final double margin = 0.005D;
+		int face;
+		Vec3 hitVec = hit.getLocation().subtract(pos.getX(), pos.getY(), pos.getZ());
+		if(hitVec.y < SIZE - margin){
+			face = 0;//Down
+		}else if(hitVec.y - margin > 1D - SIZE){
+			face = 1;//Up
+		}else if(hitVec.x < SIZE - margin){
+			face = 4;//West
+		}else if(hitVec.x - margin > 1D - SIZE){
+			face = 5;//East
+		}else if(hitVec.z < SIZE - margin){
+			face = 2;//North
+		}else if(hitVec.z - margin > 1D - SIZE){
+			face = 3;//South
+		}else{
+			face = hit.getDirection().get3DDataValue();
+		}
+		return face;
 	}
 
 	protected void onAdjusted(Level world, BlockPos pos, BlockState newState, Direction facing, T newVal, @Nullable IConduitTE<T> te){

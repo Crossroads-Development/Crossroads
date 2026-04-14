@@ -59,18 +59,20 @@ public class FluidTube extends ConduitBlock<EnumTransferMode>{
 	}
 
 	@Override
-	protected EnumTransferMode cycleMode(EnumTransferMode prev){
-		switch(prev){
-			case INPUT:
-				return EnumTransferMode.OUTPUT;
-			case OUTPUT:
+	protected EnumTransferMode cycleMode(EnumTransferMode prev, boolean sneakModes){
+		if(sneakModes){
+			if(prev == EnumTransferMode.NONE){
 				return EnumTransferMode.BOTH;
-			case BOTH:
+			}else{
 				return EnumTransferMode.NONE;
-			case NONE:
-			default:
-				return EnumTransferMode.INPUT;
+			}
 		}
+		return switch(prev){
+			case INPUT -> EnumTransferMode.OUTPUT;
+			case OUTPUT -> EnumTransferMode.INPUT;
+			case BOTH -> EnumTransferMode.INPUT;
+			case NONE -> EnumTransferMode.NONE;
+		};
 	}
 
 	@Override

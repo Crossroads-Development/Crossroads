@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.ambient.particles.CRParticles;
 import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.alchemy.EnumTransferMode;
+import com.Da_Technomancer.essentials.api.ConfigUtil;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import com.Da_Technomancer.essentials.api.redstone.IReadable;
 import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
@@ -63,22 +64,24 @@ public class RedstoneHeatCable extends HeatCable implements IReadable{
 
 	@Override
 	public ItemInteractionResult useItemOn(ItemStack held, BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
-		//Invert when sneak-wrenching
-		if(playerIn != null && hand != null && playerIn.isCrouching()){
-			BlockEntity te = worldIn.getBlockEntity(pos);
-			if(te instanceof RedstoneHeatCableTileEntity cableTE){
-				boolean inverted = !cableTE.isInverted();
-				cableTE.setInverted(inverted);
-				if(inverted){
-					MiscUtil.displayMessage(playerIn, Component.translatable("tt.crossroads.redstone_heat_cable.wrench.invert"));
-				}else{
-					MiscUtil.displayMessage(playerIn, Component.translatable("tt.crossroads.redstone_heat_cable.wrench.uninvert"));
-				}
-				neighborChanged(state, worldIn, pos, this, pos, false);
+		//Invert by wrenching a non-connected side
+		if(playerIn != null && !playerIn.isCrouching() && ConfigUtil.isWrench(held) && worldIn.getBlockEntity(pos) instanceof RedstoneHeatCableTileEntity cableTE && didHitCore(hit, pos)){
+			boolean inverted = !cableTE.isInverted();
+			cableTE.setInverted(inverted);
+			if(inverted){
+				MiscUtil.displayMessage(playerIn, Component.translatable("tt.crossroads.redstone_heat_cable.wrench.invert"));
+			}else{
+				MiscUtil.displayMessage(playerIn, Component.translatable("tt.crossroads.redstone_heat_cable.wrench.uninvert"));
 			}
+			neighborChanged(state, worldIn, pos, this, pos, false);
 			return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
 		}
-		return super.useItemOn(held, state, worldIn, pos, playerIn, hand, hit);
+
+		if(state.getValue(CRProperties.REDSTONE_BOOL) && ConfigUtil.isWrench(playerIn.getItemInHand(hand))){
+			//Fallback on normal wrench behavior, but can only adjust connections while 'powered'
+			return super.useItemOn(held, state, worldIn, pos, playerIn, hand, hit);
+		}
+		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 	}
 
 	@Override

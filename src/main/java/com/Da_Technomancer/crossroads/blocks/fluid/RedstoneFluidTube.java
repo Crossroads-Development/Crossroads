@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
+import com.Da_Technomancer.essentials.api.ConfigUtil;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
@@ -12,7 +13,6 @@ import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -111,22 +111,24 @@ public class RedstoneFluidTube extends FluidTube{
 
 	@Override
 	public ItemInteractionResult useItemOn(ItemStack held, BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
-		//Invert when sneak-wrenching
-		if(playerIn != null && hand != null && playerIn.isCrouching()){
-			BlockEntity te = worldIn.getBlockEntity(pos);
-			if(te instanceof RedstoneFluidTubeTileEntity cableTE){
-				boolean inverted = !cableTE.isInverted();
-				cableTE.setInverted(inverted);
-				if(inverted){
-					MiscUtil.displayMessage(playerIn, Component.translatable("tt.crossroads.redstone_fluid_tube.wrench.invert"));
-				}else{
-					MiscUtil.displayMessage(playerIn, Component.translatable("tt.crossroads.redstone_fluid_tube.wrench.uninvert"));
-				}
-				neighborChanged(state, worldIn, pos, this, pos, false);
+		//Invert by wrenching a non-connected side
+		if(playerIn != null && !playerIn.isCrouching() && ConfigUtil.isWrench(held) && worldIn.getBlockEntity(pos) instanceof RedstoneFluidTubeTileEntity cableTE && didHitCore(hit, pos)){
+			boolean inverted = !cableTE.isInverted();
+			cableTE.setInverted(inverted);
+			if(inverted){
+				MiscUtil.displayMessage(playerIn, Component.translatable("tt.crossroads.redstone_fluid_tube.wrench.invert"));
+			}else{
+				MiscUtil.displayMessage(playerIn, Component.translatable("tt.crossroads.redstone_fluid_tube.wrench.uninvert"));
 			}
+			neighborChanged(state, worldIn, pos, this, pos, false);
 			return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
 		}
-		return super.useItemOn(held, state, worldIn, pos, playerIn, hand, hit);
+
+		if(state.getValue(CRProperties.REDSTONE_BOOL) && ConfigUtil.isWrench(playerIn.getItemInHand(hand))){
+			//Fallback on normal wrench behavior, but can only adjust connections while 'powered'
+			return super.useItemOn(held, state, worldIn, pos, playerIn, hand, hit);
+		}
+		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 	}
 
 	@Override

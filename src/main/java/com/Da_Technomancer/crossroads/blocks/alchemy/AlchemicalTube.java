@@ -61,16 +61,16 @@ public class AlchemicalTube extends ConduitBlock<EnumTransferMode>{
 	}
 
 	@Override
-	protected EnumTransferMode cycleMode(EnumTransferMode prev){
-		switch(prev){
-			case NONE:
-				return EnumTransferMode.INPUT;
-			case INPUT:
-				return EnumTransferMode.OUTPUT;
-			case OUTPUT:
-			default:
-				return EnumTransferMode.NONE;
+	protected EnumTransferMode cycleMode(EnumTransferMode prev, boolean sneakModes){
+		if(sneakModes){
+			return prev == EnumTransferMode.NONE ? EnumTransferMode.INPUT : EnumTransferMode.NONE;
 		}
+		return switch(prev){
+			case NONE -> EnumTransferMode.NONE;
+			case INPUT -> EnumTransferMode.OUTPUT;
+			case OUTPUT ->  EnumTransferMode.INPUT;
+			default -> EnumTransferMode.NONE;
+		};
 	}
 
 	@Override
