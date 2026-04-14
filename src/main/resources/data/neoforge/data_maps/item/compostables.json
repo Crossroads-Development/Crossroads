@@ -1,0 +1,11 @@
+{
+	"replace": false,
+	"values": {
+		"crossroads:wheezewort_seeds": {
+			"chance": 0.85
+		},
+		"crossroads:medicinal_mushroom": {
+			"chance": 0.65
+		}
+	}
+}

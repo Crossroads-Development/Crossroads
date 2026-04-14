@@ -1044,6 +1044,7 @@
 	"effect.terraform_jungle": "Create Jungle",
 	"effect.terraform_end": "Create End",
 	"effect.terraform_flower_forest": "Create Flower Forest",
+	"effect.hydrate": "Hydrate (liquid only)",
 
 	"ent_mod.respawning": "Reincarnating",
 	"ent_mod.patient": "Patient",

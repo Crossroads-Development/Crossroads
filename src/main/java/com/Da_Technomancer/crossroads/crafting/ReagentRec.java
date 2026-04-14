@@ -354,7 +354,7 @@ public class ReagentRec implements Recipe<RecipeInput>, IReagent{
 	}
 
 	private static final HashMap<String, Function<Integer, Integer>> flameRadiusMap = new HashMap<>(5);
-	private static final HashMap<String, IAlchEffect> effectMap = new HashMap<>(19);
+	private static final HashMap<String, IAlchEffect> effectMap = new HashMap<>(20);
 
 	/**
 	 * Adds a new alchemy effect, which reagents can use by setting their effect to the passed id
@@ -403,6 +403,7 @@ public class ReagentRec implements Recipe<RecipeInput>, IReagent{
 		registerEffect("terraform_jungle", new JungleTerraformEffect());
 		registerEffect("terraform_end", new EndTerraformEffect());
 		registerEffect("terraform_flower_forest", new FlowerForestTerraformEffect());
+		registerEffect("hydrate", new HydrateEffect());
 	}
 
 	private enum ContainRequirements implements StringRepresentable{

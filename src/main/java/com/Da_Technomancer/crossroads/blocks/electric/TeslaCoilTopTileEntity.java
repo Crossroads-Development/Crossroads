@@ -31,7 +31,7 @@ import java.util.Set;
 
 public class TeslaCoilTopTileEntity extends BlockEntity implements IInfoTE, ILinkTE{
 
-	public static final BlockEntityType<TeslaCoilTopTileEntity> TYPE = CRTileEntity.createType(TeslaCoilTopTileEntity::new, CRBlocks.teslaCoilTopAttack, CRBlocks.teslaCoilTopDecorative, CRBlocks.teslaCoilTopDistance, CRBlocks.teslaCoilTopEfficiency, CRBlocks.teslaCoilTopNormal);
+	public static final BlockEntityType<TeslaCoilTopTileEntity> TYPE = CRTileEntity.createType(TeslaCoilTopTileEntity::new, CRBlocks.teslaCoilTopAttack, CRBlocks.teslaCoilTopDecorative, CRBlocks.teslaCoilTopDistance, CRBlocks.teslaCoilTopEfficiency, CRBlocks.teslaCoilTopNormal, CRBlocks.teslaCoilTopIntensity);
 
 	public static final int[] COLOR_CODES = {0xFFECCFFF, 0xFFFCDFFF, 0xFFFFFAFF};
 	private static final int[] ATTACK_COLOR_CODES = {0xFFFFCCCC, 0xFFFFFFCC, 0xFFFFFAFA};

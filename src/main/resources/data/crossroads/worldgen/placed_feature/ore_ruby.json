@@ -7,7 +7,7 @@
 		},
 		{
 			"type": "minecraft:count",
-			"count": 100
+			"count": 150
 		},
 		{
 			"type": "minecraft:in_square"
@@ -15,12 +15,12 @@
 		{
 			"type": "minecraft:height_range",
 			"height": {
-				"type": "uniform",
+				"type": "trapezoid",
 				"min_inclusive": {
 					"absolute": 2
 				},
 				"max_inclusive": {
-					"absolute": 117
+					"absolute": 100
 				}
 			}
 		}
