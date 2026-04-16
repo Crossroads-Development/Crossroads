@@ -252,6 +252,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, 
 
 	@Override
 	public void receiveLong(byte identifier, long message, @Nullable ServerPlayer serverPlayerEntity){
+		super.receiveLong(identifier, message, serverPlayerEntity);
 		fluxHelper.receiveLong(identifier, message, serverPlayerEntity);
 	}
 
