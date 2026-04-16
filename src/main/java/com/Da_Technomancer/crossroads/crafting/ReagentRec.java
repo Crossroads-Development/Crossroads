@@ -31,6 +31,7 @@ import net.minecraft.world.level.Level;
 import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -68,6 +69,20 @@ public class ReagentRec implements Recipe<RecipeInput>, IReagent{
 		this.flameFunction = flameRadiusMap.getOrDefault(flameName, flameRadiusMap.get("none"));
 		this.flame = flameFunction != flameRadiusMap.get("none");
 		ReagentManager.updateReagent(this);
+	}
+
+	@Override
+	public boolean equals(Object o){
+		if(o == null || getClass() != o.getClass()){
+			return false;
+		}
+		ReagentRec that = (ReagentRec) o;
+		return Objects.equals(id, that.id);
+	}
+
+	@Override
+	public int hashCode(){
+		return Objects.hashCode(id);
 	}
 
 	@Override

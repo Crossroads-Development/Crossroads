@@ -20,6 +20,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Containers;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -93,7 +94,7 @@ public class TeslaCoilTileEntity extends BlockEntity implements ITickableTileEnt
 		return storedSelf;
 	}
 
-	protected ItemStack removeBattery(){
+	private ItemStack removeBattery(){
 		if(!battery.isEmpty()){
 			ItemStack result = battery;
 			battery = ItemStack.EMPTY;
@@ -105,7 +106,7 @@ public class TeslaCoilTileEntity extends BlockEntity implements ITickableTileEnt
 		return ItemStack.EMPTY;
 	}
 
-	protected ItemStack addBattery(ItemStack newBattery){
+	private ItemStack addBattery(ItemStack newBattery){
 		if(battery.isEmpty() && newBattery.getCapability(Capabilities.EnergyStorage.ITEM) != null){
 			battery = newBattery.split(1);
 			stackEnergyHandler = null;
@@ -115,6 +116,30 @@ public class TeslaCoilTileEntity extends BlockEntity implements ITickableTileEnt
 			return newBattery;
 		}
 		return newBattery;
+	}
+
+	protected void swapBattery(ItemStack newBattery, Player player, InteractionHand hand){
+		//For players clicking the tesla coil with a held 'battery' item or an empty hand
+		if(newBattery.isEmpty()){
+			player.setItemInHand(hand, removeBattery());
+			return;
+		}
+		if(newBattery.getCapability(Capabilities.EnergyStorage.ITEM) != null){
+			if(battery.isEmpty()){
+				player.setItemInHand(hand, addBattery(newBattery));
+			}else{
+				//Need to swap out existing battery
+				ItemStack removedBattery = removeBattery();
+				player.setItemInHand(hand, addBattery(newBattery));
+				if(player.getItemInHand(hand).isEmpty()){
+					player.setItemInHand(hand, removedBattery);
+				}else{
+					if(!player.addItem(removedBattery)){
+						player.drop(removedBattery, true, false);
+					}
+				}
+			}
+		}
 	}
 
 	public void setTotalFE(int totalFE){

@@ -1,5 +1,7 @@
 package com.Da_Technomancer.crossroads.api.alchemy;
 
+import net.minecraft.core.Direction;
+
 public enum EnumMatterPhase{
 
 	//Order affects rendering in ReagentRenderer
@@ -29,5 +31,9 @@ public enum EnumMatterPhase{
 
 	public boolean flowsDown(){
 		return flows && flowsDown;
+	}
+
+	public boolean canFlow(Direction toDirection){
+		return flows() && (toDirection != Direction.UP || flowsUp) && (toDirection != Direction.DOWN || flowsDown);
 	}
 }

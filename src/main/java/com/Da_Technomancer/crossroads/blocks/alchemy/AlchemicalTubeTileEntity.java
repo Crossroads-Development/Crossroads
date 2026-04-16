@@ -77,7 +77,7 @@ public class AlchemicalTubeTileEntity extends ReagentHolderTE implements Conduit
 		//Check for a neighbor w/ an alchemy reagent handler of a compatible channel
 		IChemicalHandler otherChemHandler;
 
-		return neighTE != null && (otherChemHandler = level.getCapability(CRCapabilities.CHEMICAL_CAPABILITY, neighTE.getBlockPos(), face.getOpposite())) != null && otherChemHandler.getChannel(opposite).connectsWith(getChannel()) && otherChemHandler.getMode(opposite).connectsWith(mode);
+		return neighTE != null && (otherChemHandler = level.getCapability(CRCapabilities.CHEMICAL_CAPABILITY, neighTE.getBlockPos(), face.getOpposite())) != null && otherChemHandler.getChannel(opposite).connectsWith(getChannel()) /*&& otherChemHandler.getMode(opposite).connectsWith(mode)*/;
 	}
 
 	@Nonnull
@@ -109,7 +109,7 @@ public class AlchemicalTubeTileEntity extends ReagentHolderTE implements Conduit
 
 				EnumContainerType otherChannel = otherChemHandler.getChannel(side.getOpposite());
 				EnumTransferMode otherMode = otherChemHandler.getMode(side.getOpposite());
-				if(!channel.connectsWith(otherChannel) || !modes[i].connectsWith(otherMode)){
+				if(!channel.connectsWith(otherChannel)/* || !modes[i].connectsWith(otherMode)*/){
 					setData(i, false, modes[i]);
 					continue;
 				}

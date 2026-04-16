@@ -12,7 +12,6 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -113,11 +112,7 @@ public class TeslaCoil extends TEBlock implements IReadable{
 		}
 
 		if(!worldIn.isClientSide && worldIn.getBlockEntity(pos) instanceof TeslaCoilTileEntity te){
-			if(heldItem.isEmpty()){
-				playerIn.setItemInHand(hand, te.removeBattery());
-			}else{
-				playerIn.setItemInHand(hand, te.addBattery(heldItem));
-			}
+			te.swapBattery(heldItem, playerIn, hand);
 		}
 		return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
 	}

@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
-import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.CRCapabilities;
+import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.alchemy.*;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -14,13 +14,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-
 import org.apache.commons.lang3.tuple.Pair;
-
-
 import org.joml.Vector3f;
 
 import javax.annotation.Nullable;
+import java.util.function.Function;
 
 public class FlowLimiterTileEntity extends ReagentHolderTE{
 
@@ -79,34 +77,28 @@ public class FlowLimiterTileEntity extends ReagentHolderTE{
 		for(int i = 0; i < 6; i++){
 			if(modes[i].isOutput()){
 				Direction side = Direction.from3DDataValue(i);
-				BlockPos adj = worldPosition.relative(side);
-				IChemicalHandler otherChemHandler;
-				if(contents.getTotalQty() <= 0 || (otherChemHandler = level.getCapability(CRCapabilities.CHEMICAL_CAPABILITY, adj, side.getOpposite())) == null){
+				Direction opposite = side.getOpposite();
+				IChemicalHandler otherHandler;
+				if(contents.getTotalQty() <= 0 || (otherHandler = level.getCapability(CRCapabilities.CHEMICAL_CAPABILITY, worldPosition.relative(side), side.getOpposite())) == null){
 					continue;
 				}
 
-				EnumContainerType otherChannel = otherChemHandler.getChannel(side.getOpposite());
-				EnumTransferMode otherMode = otherChemHandler.getMode(side.getOpposite());
+				EnumContainerType otherChannel = otherHandler.getChannel(opposite);
+				EnumTransferMode otherMode = otherHandler.getMode(opposite);
 				if(!channel.connectsWith(otherChannel) || !modes[i].connectsWith(otherMode)){
 					continue;
 				}
 
-				int limit = LIMITS[limitIndex];
-				ReagentMap transferReag = new ReagentMap();
-				for(IReagent type : contents.keySetReag()){
-					int qty = contents.getQty(type);
-					int specificLimit = Math.min(qty, limit - otherChemHandler.getContent(type));
-					if(specificLimit > 0){
-						transferReag.transferReagent(type, specificLimit, contents);
+				//Implements the custom flow limiting behavior
+				final int limit = LIMITS[limitIndex];
+				final Function<IReagent, Integer> flowLimits = (IReagent reagent) -> {
+					if(!reagent.getPhase(correctTemp()).canFlow(side)){
+						return 0;
 					}
-				}
 
-				boolean changed = otherChemHandler.insertReagents(transferReag, side.getOpposite(), chemHandler);
-				for(IReagent type : transferReag.keySetReag()){
-					contents.transferReagent(type, transferReag.getQty(type), transferReag);
-				}
-
-				if(changed){
+					return limit - otherHandler.getContent(reagent);
+				};
+				if(otherHandler.insertReagents(contents, opposite, chemHandler, flowLimits)){
 					lastActTick = worldTick;
 					correctReag();
 					setChanged();

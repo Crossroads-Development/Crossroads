@@ -39,7 +39,7 @@ public class ReagentMap extends HashMap<String, Integer>{
 	}
 
 	public void transferReagent(String id, int amount, ReagentMap srcMap){
-		amount = Math.min(amount, srcMap.getQty(id));
+		amount = Math.max(0, Math.min(amount, srcMap.getQty(id)));
 
 		addReagent(id, amount, srcMap.getTempC());
 		srcMap.removeReagent(id, amount);
@@ -259,6 +259,23 @@ public class ReagentMap extends HashMap<String, Integer>{
 			keySetCache = entrySet().stream().filter((entry) -> entry.getValue() > 0).map(Entry::getKey).map(ReagentManager::getReagent).filter(Objects::nonNull).collect(Collectors.toSet());
 		}
 		return keySetCache;
+	}
+
+	/**
+	 * @return Number of reagent types present in non-zero quantity
+	 */
+	public int keySetSize(){
+		return keySetReag().size();
+	}
+
+	/**
+	 * @deprecated as a warning - check whether you should be using keySetSize for your application
+	 * @return Size of the underlying map, including entries with empty values
+	 */
+	@Deprecated(forRemoval = false)
+	@Override
+	public int size(){
+		return super.size();
 	}
 
 	public ReagentMap copy(){

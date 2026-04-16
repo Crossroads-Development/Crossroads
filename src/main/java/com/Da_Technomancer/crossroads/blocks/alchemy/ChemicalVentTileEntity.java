@@ -1,6 +1,5 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
-import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.alchemy.*;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
@@ -14,9 +13,9 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-
 import javax.annotation.Nullable;
 import java.util.HashSet;
+import java.util.function.Function;
 
 public class ChemicalVentTileEntity extends BlockEntity implements ITickableTileEntity, IChemicalCapable{
 
@@ -91,25 +90,12 @@ public class ChemicalVentTileEntity extends BlockEntity implements ITickableTile
 		}
 
 		@Override
-		public boolean insertReagents(ReagentMap reag, Direction side, IChemicalHandler caller, boolean ignorePhase){
-			double callerTemp = reag.getTempK();
-
-			HashSet<String> validIds = new HashSet<>(4);
-
-			for(IReagent type : reag.keySetReag()){
-				ReagentStack r = reag.getStack(type);
-				if(!r.isEmpty()){
-					EnumMatterPhase phase = type.getPhase(HeatUtil.toCelcius(callerTemp));
-					if(ignorePhase || (phase.flows() && (side != Direction.UP || phase.flowsDown()) && (side != Direction.DOWN || phase.flowsUp()))){
-						validIds.add(type.getID());
-					}
-				}
-			}
-
+		public boolean insertReagents(ReagentMap reag, Direction side, IChemicalHandler caller, Function<IReagent, Integer> maximumTransferQuantities){
 			boolean acted = false;
-			for(String id : validIds){
-				int moved = reag.getQty(id);
-				if(moved != 0){
+			HashSet<IReagent> reagentTypes = new HashSet<>(reag.keySetReag());
+			for(IReagent id : reagentTypes){
+				int moved = Math.min(reag.getQty(id), maximumTransferQuantities.apply(id));
+				if(moved > 0){
 					reags.transferReagent(id, moved, reag);
 					acted = true;
 				}

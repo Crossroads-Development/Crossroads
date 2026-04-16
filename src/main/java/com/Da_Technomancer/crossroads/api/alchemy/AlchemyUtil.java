@@ -14,10 +14,15 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Random;
+import java.util.Set;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class AlchemyUtil{
@@ -53,9 +58,9 @@ public class AlchemyUtil{
 		int[] liqCol = new int[4];
 		int[] gasCol = new int[4];
 
-		ArrayList<QueuedEffect> effectsSol = new ArrayList<>(reags.size());
-		ArrayList<QueuedEffect> effectsLiq = new ArrayList<>(reags.size());
-		ArrayList<QueuedEffect> effectsGas = new ArrayList<>(reags.size());
+		ArrayList<QueuedEffect> effectsSol = new ArrayList<>(reags.keySetSize());
+		ArrayList<QueuedEffect> effectsLiq = new ArrayList<>(reags.keySetSize());
+		ArrayList<QueuedEffect> effectsGas = new ArrayList<>(reags.keySetSize());
 
 		double tempC = reags.getTempC();
 		for(IReagent reag : reags.keySetReag()){
@@ -226,20 +231,113 @@ public class AlchemyUtil{
 		return Math.max(HeatUtil.ABSOLUTE_ZERO, reagent.getMeltingPoint());
 	}
 
-	private static class QueuedEffect{
-
-		private final IAlchEffect effect;
-		private final int qty;
-
-		private QueuedEffect(@Nullable IAlchEffect effect, int qty){
-			this.effect = effect;
-			this.qty = qty;
-		}
+	private record QueuedEffect(@Nullable IAlchEffect effect, int qty){
 
 		private void perform(Level world, BlockPos pos, ReagentMap reags, EnumMatterPhase phase){
 			if(effect != null){
 				effect.doEffect(world, pos, qty, phase, reags);
 			}
 		}
+	}
+
+	private static final Random RANDOM = new Random();
+
+	/**
+	 * Transfers some of the stored reagents from one map to another. Meant for conduit transfers.
+	 * For more precise control of the choice of reagents to be transferred, see MiscUtil::withdrawExact
+	 * @param source Source reagent map. Will be modified.
+	 * @param destination Destination reagent map. Will be modified.
+	 * @param toTransferMax Maximum total amount of reagent to be transferred
+	 * @param maxAllowedTransferOfType Function providing maximum quantity of a given reagent type we're allowed to transfer, on a per-type basis. Separate limit from toTransferMax (which applies to the total)- the more limiting of the two will be enforced. Use Integer.MAX_VALUE for no limit. Negative values treated equivalent to 0.
+	 * @return Total quantity that was actually transferred
+	 */
+	public static int transferSomeReagents(ReagentMap source, ReagentMap destination, int toTransferMax, Function<IReagent, Integer> maxAllowedTransferOfType){
+		Set<IReagent> sourceKeySet = source.keySetReag();
+		if(sourceKeySet.isEmpty() || toTransferMax <= 0){
+			return 0;
+		}
+		// Optimization for a very common case: Source is size 1
+		if(sourceKeySet.size() == 1){
+			for(IReagent reag : sourceKeySet){
+				//Only one reag type
+				int toTransfer = Math.min(source.getQty(reag), Math.min(toTransferMax, maxAllowedTransferOfType.apply(reag)));
+				destination.transferReagent(reag, toTransfer, source);
+				return toTransfer;
+			}
+		}
+
+		//Optimization for a very common case: toTransferMax is 1
+		if(toTransferMax == 1){
+			//Build a map of reagents we can transfer
+			ArrayList<Pair<IReagent, Integer>> transferLimits = new ArrayList<>(sourceKeySet.size());//Per-reagent limits on transfer
+			int totalWeight = 0;//For weighted-random selection from transferLimits map. Weights are the transfer limit value
+			for(IReagent reag : sourceKeySet){
+				int perReagLimit = Math.min(source.getQty(reag), maxAllowedTransferOfType.apply(reag));
+				if(perReagLimit > 0){
+					transferLimits.add(Pair.of(reag, perReagLimit));
+					totalWeight += perReagLimit;
+				}
+			}
+			//Can't transfer more than the total transfer limits of the available reagents
+			toTransferMax = Math.min(toTransferMax, totalWeight);
+			assert toTransferMax == 0 || toTransferMax == 1;
+			//Randomly select a unit to transfer
+			if(toTransferMax == 1){
+				//Pick a reagent type to transfer at random, selection weighted by allowed transfer quantity
+				int selection = RANDOM.nextInt(totalWeight);
+				for(Pair<IReagent, Integer> transferEntry : transferLimits){
+					selection -= transferEntry.getRight();
+					if(selection < 0){
+						//Transfer 1 unit of this reagent and re-roll
+						destination.transferReagent(transferEntry.getLeft(), 1, source);
+//						//Update the transfer limits table, as we've depleted amount available by 1
+//						int prevLimit = transferLimits.get(transferEntry);
+//						int newLimit = Math.min(prevLimit, source.getQty(transferEntry));
+//						if(newLimit < prevLimit){
+//							totalWeight -= prevLimit - newLimit;
+//							transferLimits.replace(transferEntry, newLimit);
+//						}
+						break;
+					}
+				}
+				return 1;
+			}
+			return 0;
+		}
+
+		//Full algorithm
+		//Build a map of reagents we can transfer
+		LinkedHashMap<IReagent, Integer> transferLimits = new LinkedHashMap<>(sourceKeySet.size());//Per-reagent limits on transfer, actively updated.
+		int totalWeight = 0;//For weighted-random selection from transferLimits map. Weights are the transfer limit value
+		for(IReagent reag : sourceKeySet){
+			int perReagLimit = Math.min(source.getQty(reag), maxAllowedTransferOfType.apply(reag));
+			if(perReagLimit > 0){
+				transferLimits.put(reag, perReagLimit);
+				totalWeight += perReagLimit;
+			}
+		}
+		//Can't transfer more than the total transfer limits of the available reagents
+		toTransferMax = Math.min(toTransferMax, totalWeight);
+		//Transfer is done 1 randomly-selected unit at a time (not very efficient, but as of writing, there are literally 0 use-cases that transfer more than 1 unit total anyway, so doesn't matter)
+		for(int i = 0; i < toTransferMax; i++){
+			//Pick a reagent type to transfer at random, selection weighted by allowed transfer quantity
+			int selection = RANDOM.nextInt(totalWeight);
+			for(IReagent transferEntry : transferLimits.sequencedKeySet()){
+				selection -= transferLimits.get(transferEntry);
+				if(selection < 0){
+					//Transfer 1 unit of this reagent and re-roll
+					destination.transferReagent(transferEntry, 1, source);
+					//Update the transfer limits table, as we've depleted amount available by 1
+					int prevLimit = transferLimits.get(transferEntry);
+					int newLimit = Math.min(prevLimit, source.getQty(transferEntry));
+					if(newLimit < prevLimit){
+						totalWeight -= prevLimit - newLimit;
+						transferLimits.replace(transferEntry, newLimit);
+					}
+					break;
+				}
+			}
+		}
+		return toTransferMax;
 	}
 }

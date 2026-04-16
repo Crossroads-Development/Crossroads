@@ -1,7 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 import com.Da_Technomancer.crossroads.CRConfig;
-import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.alchemy.*;
 import com.Da_Technomancer.crossroads.api.electric.IEnergyCapable;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
@@ -19,12 +18,12 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.function.Function;
 
 public class VoltusGeneratorTileEntity extends BlockEntity implements ITickableTileEntity, IInfoTE, IChemicalCapable, IEnergyCapable{
 
@@ -160,17 +159,16 @@ public class VoltusGeneratorTileEntity extends BlockEntity implements ITickableT
 		}
 
 		@Override
-		public boolean insertReagents(ReagentMap reag, Direction side, IChemicalHandler caller, boolean ignorePhase){
+		public boolean insertReagents(ReagentMap reag, Direction side, IChemicalHandler caller, Function<IReagent, Integer> maximumTransferQuantities){
 			//Only allows insertion of voltus
-			if(voltusAmount >= VOLTUS_CAPACITY || reag.getQty(EnumReagents.ELEM_CHARGE.id()) == 0){
-				return false;
+			int moved = Math.min(Math.min(reag.getQty(EnumReagents.ELEM_CHARGE.id()), VOLTUS_CAPACITY - voltusAmount), maximumTransferQuantities.apply(ReagentManager.getReagent(EnumReagents.ELEM_CHARGE.id())));
+			if(moved > 0){
+				voltusAmount += moved;
+				reag.removeReagent(EnumReagents.ELEM_CHARGE.id(), moved);
+				setChanged();
+				return true;
 			}
-
-			int moved = Math.min(reag.getQty(EnumReagents.ELEM_CHARGE.id()), VOLTUS_CAPACITY - voltusAmount);
-			voltusAmount += moved;
-			reag.removeReagent(EnumReagents.ELEM_CHARGE.id(), moved);
-			setChanged();
-			return true;
+			return false;
 		}
 
 		@Override
