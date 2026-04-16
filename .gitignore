@@ -19,6 +19,7 @@ crash-reports/
 /screenshots/
 /classes/
 /net/
+/.vscode
 
 # File Extensions
 *.psd
