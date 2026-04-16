@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
 import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
 import com.Da_Technomancer.crossroads.api.CRReflection;
 import com.Da_Technomancer.crossroads.api.Capabilities;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.alchemy.AtmosChargeSavedData;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
 import com.Da_Technomancer.crossroads.api.technomancy.EnumGoggleLenses;
@@ -28,7 +29,9 @@ import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.technomancy.TechnomancyArmor;
 import com.Da_Technomancer.crossroads.world.CRWorldGen;
+import com.Da_Technomancer.essentials.api.ConfigUtil;
 import com.Da_Technomancer.essentials.api.ReflectionUtil;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
@@ -73,9 +76,11 @@ import net.minecraftforge.event.VanillaGameEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.level.ExplosionEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.eventbus.api.Event.Result;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
@@ -479,6 +484,17 @@ public class EventHandlerCommon{
 		//Provides immunity from magma block damage and fall damage when wearing enviro_boots
 		if((e.getSource().is(DamageTypes.HOT_FLOOR) || e.getSource().is(DamageTypeTags.IS_FALL)) && e.getEntity().getItemBySlot(EquipmentSlot.FEET).getItem() == CRItems.armorEnviroBoots){
 			e.setCanceled(true);
+		}
+	}
+	@SubscribeEvent
+	public void allowWrenchWithSneakOffhand(PlayerInteractEvent.RightClickBlock e){
+		//Let me explain what the heck this does:
+		//So default vanilla behavior is that shift-right-clicking with an item in your main hand lets the block react to the item
+		//BUT if you shift right click with an item in your main hand, but with ANY item in your off-hand, the block doesn't get a chance to react at all
+		//Which is really annoying, because a lot of CR machines need to be adjusted by shift-right-clicking with a wrench, and that doesn't work if you also use your offhand for stuff
+		//So this specifically allows shift-right-click wrenching CR blocks to still work when you have something in your offhand
+		if(ConfigUtil.isWrench(e.getItemStack()) && MiscUtil.getRegistryName(e.getLevel().getBlockState(e.getPos()).getBlock(), Registries.BLOCK).getNamespace().equals(Crossroads.MODID)){
+			e.setUseBlock(Result.ALLOW);
 		}
 	}
 

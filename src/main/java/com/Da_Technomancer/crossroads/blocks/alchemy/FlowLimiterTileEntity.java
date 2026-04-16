@@ -18,6 +18,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import org.apache.commons.lang3.tuple.Pair;
 import org.joml.Vector3f;
+import java.util.function.Function;
 
 public class FlowLimiterTileEntity extends ReagentHolderTE{
 
@@ -77,34 +78,31 @@ public class FlowLimiterTileEntity extends ReagentHolderTE{
 			if(modes[i].isOutput()){
 				Direction side = Direction.from3DDataValue(i);
 				BlockEntity te = level.getBlockEntity(worldPosition.relative(side));
+				Direction opposite = side.getOpposite();
+
 				LazyOptional<IChemicalHandler> otherOpt;
-				if(contents.getTotalQty() <= 0 || te == null || !(otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())).isPresent()){
+				if(contents.getTotalQty() <= 0 || te == null || !(otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, opposite)).isPresent()){
 					continue;
 				}
+
 				IChemicalHandler otherHandler = otherOpt.orElseThrow(NullPointerException::new);
 
-				EnumContainerType otherChannel = otherHandler.getChannel(side.getOpposite());
-				EnumTransferMode otherMode = otherHandler.getMode(side.getOpposite());
+				EnumContainerType otherChannel = otherHandler.getChannel(opposite);
+				EnumTransferMode otherMode = otherHandler.getMode(opposite);
 				if(!channel.connectsWith(otherChannel) || !modes[i].connectsWith(otherMode)){
 					continue;
 				}
 
-				int limit = LIMITS[limitIndex];
-				ReagentMap transferReag = new ReagentMap();
-				for(IReagent type : contents.keySetReag()){
-					int qty = contents.getQty(type);
-					int specificLimit = Math.min(qty, limit - otherHandler.getContent(type));
-					if(specificLimit > 0){
-						transferReag.transferReagent(type, specificLimit, contents);
+				//Implements the custom flow limiting behavior
+				final int limit = LIMITS[limitIndex];
+				final Function<IReagent, Integer> flowLimits = (IReagent reagent) -> {
+					if(!reagent.getPhase(correctTemp()).canFlow(side)){
+						return 0;
 					}
-				}
 
-				boolean changed = otherHandler.insertReagents(transferReag, side.getOpposite(), handler);
-				for(IReagent type : transferReag.keySetReag()){
-					contents.transferReagent(type, transferReag.getQty(type), transferReag);
-				}
-
-				if(changed){
+					return limit - otherHandler.getContent(reagent);
+				};
+				if(otherHandler.insertReagents(contents, opposite, handler, flowLimits)){
 					lastActTick = worldTick;
 					correctReag();
 					setChanged();

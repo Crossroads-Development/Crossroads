@@ -28,6 +28,7 @@ import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.function.Function;
 
 public class ReagentRec implements Recipe<Container>, IReagent{
@@ -71,7 +72,21 @@ public class ReagentRec implements Recipe<Container>, IReagent{
 	}
 
 	@Override
-	public boolean matches(Container inv, Level worldIn){
+	public boolean equals(Object o){
+		if(o == null || getClass() != o.getClass()){
+			return false;
+		}
+		ReagentRec that = (ReagentRec) o;
+		return Objects.equals(id, that.id);
+	}
+
+	@Override
+	public int hashCode(){
+		return Objects.hashCode(id);
+	}
+
+	@Override
+	public boolean matches(Container input, Level worldIn){
 		return true;
 	}
 

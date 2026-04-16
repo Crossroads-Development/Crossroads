@@ -34,7 +34,7 @@ public enum EnumTransferMode implements StringRepresentable{
 
 	public boolean connectsWith(EnumTransferMode otherMode){
 		if(this == otherMode){
-			return false;
+			return false;//Also prevents 'generic' BOTH connections connecting to one-another- i.e., vessels can't connect to vessels, only to conduits
 		}
 		return switch(otherMode){
 			case NONE -> false;

@@ -23,6 +23,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.IEnergyStorage;
 
 import java.util.ArrayList;
+import java.util.function.Function;
 
 public class VoltusGeneratorTileEntity extends BlockEntity implements ITickableTileEntity, IInfoTE{
 
@@ -166,17 +167,16 @@ public class VoltusGeneratorTileEntity extends BlockEntity implements ITickableT
 		}
 
 		@Override
-		public boolean insertReagents(ReagentMap reag, Direction side, IChemicalHandler caller, boolean ignorePhase){
+		public boolean insertReagents(ReagentMap reag, Direction side, IChemicalHandler caller, Function<IReagent, Integer> maximumTransferQuantities){
 			//Only allows insertion of voltus
-			if(voltusAmount >= VOLTUS_CAPACITY || reag.getQty(EnumReagents.ELEM_CHARGE.id()) == 0){
-				return false;
+			int moved = Math.min(Math.min(reag.getQty(EnumReagents.ELEM_CHARGE.id()), VOLTUS_CAPACITY - voltusAmount), maximumTransferQuantities.apply(ReagentManager.getReagent(EnumReagents.ELEM_CHARGE.id())));
+			if(moved > 0){
+				voltusAmount += moved;
+				reag.removeReagent(EnumReagents.ELEM_CHARGE.id(), moved);
+				setChanged();
+				return true;
 			}
-
-			int moved = Math.min(reag.getQty(EnumReagents.ELEM_CHARGE.id()), VOLTUS_CAPACITY - voltusAmount);
-			voltusAmount += moved;
-			reag.removeReagent(EnumReagents.ELEM_CHARGE.id(), moved);
-			setChanged();
-			return true;
+			return false;
 		}
 
 		@Override

@@ -16,6 +16,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 
 import java.util.HashSet;
+import java.util.function.Function;
 
 public class ChemicalVentTileEntity extends BlockEntity implements ITickableTileEntity{
 
@@ -99,25 +100,12 @@ public class ChemicalVentTileEntity extends BlockEntity implements ITickableTile
 		}
 
 		@Override
-		public boolean insertReagents(ReagentMap reag, Direction side, IChemicalHandler caller, boolean ignorePhase){
-			double callerTemp = reag.getTempK();
-
-			HashSet<String> validIds = new HashSet<>(4);
-
-			for(IReagent type : reag.keySetReag()){
-				ReagentStack r = reag.getStack(type);
-				if(!r.isEmpty()){
-					EnumMatterPhase phase = type.getPhase(HeatUtil.toCelcius(callerTemp));
-					if(ignorePhase || (phase.flows() && (side != Direction.UP || phase.flowsDown()) && (side != Direction.DOWN || phase.flowsUp()))){
-						validIds.add(type.getID());
-					}
-				}
-			}
-
+		public boolean insertReagents(ReagentMap reag, Direction side, IChemicalHandler caller, Function<IReagent, Integer> maximumTransferQuantities){
 			boolean acted = false;
-			for(String id : validIds){
-				int moved = reag.getQty(id);
-				if(moved != 0){
+			HashSet<IReagent> reagentTypes = new HashSet<>(reag.keySetReag());
+			for(IReagent id : reagentTypes){
+				int moved = Math.min(reag.getQty(id), maximumTransferQuantities.apply(id));
+				if(moved > 0){
 					reags.transferReagent(id, moved, reag);
 					acted = true;
 				}

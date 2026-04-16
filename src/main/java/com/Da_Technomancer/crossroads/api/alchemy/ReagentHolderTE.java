@@ -46,6 +46,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -176,7 +177,7 @@ public abstract class ReagentHolderTE extends BlockEntity implements ITickableTi
 			}
 
 			for(IReagent type : toRemove){
-				contents.remove(type);
+				contents.remove(type.getID());
 			}
 		}
 
@@ -222,20 +223,21 @@ public abstract class ReagentHolderTE extends BlockEntity implements ITickableTi
 		for(int i = 0; i < 6; i++){
 			if(modes[i].isOutput()){
 				Direction side = Direction.from3DDataValue(i);
+				Direction opposite = side.getOpposite();
 				BlockEntity te = level.getBlockEntity(worldPosition.relative(side));
 				LazyOptional<IChemicalHandler> otherOpt;
-				if(contents.getTotalQty() <= 0 || te == null || !(otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())).isPresent()){
+				if(contents.getTotalQty() <= 0 || te == null || !(otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, opposite)).isPresent()){
 					continue;
 				}
 				IChemicalHandler otherHandler = otherOpt.orElseThrow(NullPointerException::new);
 
-				EnumContainerType otherChannel = otherHandler.getChannel(side.getOpposite());
-				EnumTransferMode otherMode = otherHandler.getMode(side.getOpposite());
+				EnumContainerType otherChannel = otherHandler.getChannel(opposite);
+				EnumTransferMode otherMode = otherHandler.getMode(opposite);
 				if(!channel.connectsWith(otherChannel) || !modes[i].connectsWith(otherMode)){
 					continue;
 				}
 
-				if(otherHandler.insertReagents(contents, side.getOpposite(), handler, ignorePhase)){
+				if(otherHandler.insertReagents(contents, opposite, handler, ignorePhase)){
 					lastActTick = worldTick;
 					correctReag();
 					setChanged();
@@ -452,40 +454,14 @@ public abstract class ReagentHolderTE extends BlockEntity implements ITickableTi
 		}
 
 		@Override
-		public boolean insertReagents(ReagentMap reag, Direction side, IChemicalHandler caller, boolean ignorePhase){
+		public boolean insertReagents(ReagentMap reag, Direction side, @Nonnull IChemicalHandler caller, Function<IReagent, Integer> maximumTransferQuantities){
 			if(getMode(side).isInput() && (transferCapacity() != 1 || lastActTick != level.getGameTime())){
 				int space = getTransferCapacity() - contents.getTotalQty();
 				if(space <= 0){
 					return false;
 				}
-				double callerTemp = reag.getTempC();
-				boolean changed = false;
-
-				//Map the movable reags to an int array of quantities so we can use the relevant MiscUtil method
-				IReagent[] mapping = new IReagent[reag.size()];
-				int[] preQty = new int[mapping.length];
-				int index = 0;
-				for(IReagent type : reag.keySetReag()){
-					mapping[index] = type;
-					ReagentStack r = reag.getStack(type);
-					EnumMatterPhase phase;
-					if(!r.isEmpty() && (ignorePhase || (phase = type.getPhase(callerTemp)).flows() && (side != Direction.UP || phase.flowsDown()) && (side != Direction.DOWN || phase.flowsUp()))){
-						preQty[index] = r.getAmount();
-					}else{
-						preQty[index] = 0;//Set the pre-qty to 0 to indicate no transfer of that type is allowed
-					}
-					index++;
-				}
-
-				//Use the MiscUtil method
-				int[] toTrans = MiscUtil.withdrawExact(preQty, space);
-				for(int i = 0; i < toTrans.length; i++){
-					if(toTrans[i] > 0){
-						//Transfer each reagent individually, in qty calculated by withdrawExact
-						changed = true;
-						contents.transferReagent(mapping[i], toTrans[i], reag);
-					}
-				}
+				int moved = AlchemyUtil.transferSomeReagents(reag, contents, space, maximumTransferQuantities);
+				boolean changed = moved > 0;
 
 				if(changed){
 					dirtyReag = true;
