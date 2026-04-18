@@ -98,7 +98,11 @@ public abstract class AbstractGlassware extends Item{
 	 */
 	@Nonnull
 	public ReagentMap getReagents(ItemStack stack){
-		return stack.getOrDefault(CRItems.REAGENT_DATA, new ReagentMap()).copy();
+		ReagentMap result = stack.get(CRItems.REAGENT_DATA);
+		if(result == null){
+			return new ReagentMap();
+		}
+		return result.copy();
 	}
 
 	/**
@@ -107,7 +111,11 @@ public abstract class AbstractGlassware extends Item{
 	 * @param reagents The reagents to store - DO NOT modify this map after passing to setReagents
 	 */
 	public void setReagents(ItemStack stack, ReagentMap reagents){
-		stack.set(CRItems.REAGENT_DATA, reagents);
+		if(reagents.isEmpty()){
+			stack.remove(CRItems.REAGENT_DATA);
+		}else{
+			stack.set(CRItems.REAGENT_DATA, reagents);
+		}
 	}
 
 	@Override

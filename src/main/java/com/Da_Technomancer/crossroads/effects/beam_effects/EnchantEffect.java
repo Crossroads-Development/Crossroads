@@ -28,7 +28,7 @@ public class EnchantEffect extends BeamEffect{
 	@Override
 	public void doBeamEffect(EnumBeamAlignments align, boolean voi, int power, BeamHit beamHit){
 		if(!performTransmute(align, voi, power, beamHit)){
-			int range = (int) Math.sqrt(power) / 2;
+			final int range = 3;
 			List<ItemEntity> items = beamHit.getNearbyEntities(ItemEntity.class, range, null);
 			if(voi){
 				if(!items.isEmpty()){
@@ -46,14 +46,9 @@ public class EnchantEffect extends BeamEffect{
 				for(ItemEntity ent : items){
 					ItemStack entStack = ent.getItem();
 
-					if(entStack.isEnchanted()){
+					if(entStack.isEnchanted() || entStack.is(Items.ENCHANTED_BOOK)){
 						//Skip already enchanted items
 						continue;
-					}
-
-					ItemStack created = entStack.split(1);
-					if(entStack.isEmpty()){
-						ent.remove(Entity.RemovalReason.DISCARDED);
 					}
 
 					RandomSource random = beamHit.getWorld().getRandom();
@@ -68,14 +63,23 @@ public class EnchantEffect extends BeamEffect{
 					if(allowedEnchantSet.isEmpty()){
 						return;//Something is wrong
 					}
-					List<EnchantmentInstance> ench = EnchantmentHelper.selectEnchantment(random, created, Math.min(power, 45), allowedEnchantSet.get().stream());
-					if(created.is(Items.BOOK) && ench.size() > 1){
-						ench.remove(random.nextInt(ench.size()));
-					}
-
+					List<EnchantmentInstance> ench = EnchantmentHelper.selectEnchantment(random, entStack, Math.min(power, 45), allowedEnchantSet.get().stream());
 					if(ench.isEmpty()){
 						//Skip non-enchantable items
 						continue;
+					}
+
+					ItemStack created = entStack.split(1);//Shrinks the entity stack by 1
+					if(entStack.isEmpty()){
+						ent.remove(Entity.RemovalReason.DISCARDED);
+					}
+
+					if(created.is(Items.BOOK)){
+						created = new ItemStack(Items.ENCHANTED_BOOK, 1);
+						if(ench.size() > 1){
+							//Vanilla behavior when enchanting books is to put on 1 fewer enchantments
+							ench.remove(random.nextInt(ench.size()));
+						}
 					}
 
 					if(CRConfig.enchantDestruction.get() && beamHit.getWorld().random.nextInt(100) < power){
@@ -83,13 +87,6 @@ public class EnchantEffect extends BeamEffect{
 						beamHit.getWorld().addParticle(ParticleTypes.SMOKE, ent.getX(), ent.getY(), ent.getZ(), 0, 0, 0);
 						beamHit.getWorld().playSound(null, ent.getX(), ent.getY(), ent.getZ(), SoundEvents.REDSTONE_TORCH_BURNOUT, SoundSource.BLOCKS, 1, 1);
 						return;
-					}
-
-					if(created.getItem() == Items.BOOK){
-						created = new ItemStack(Items.ENCHANTED_BOOK, 1);
-						if(ench.size() > 1){
-							ench.remove(0);//Vanilla behavior when enchanting books is to put on 1 fewer enchantments
-						}
 					}
 
 					created = created.getItem().applyEnchantments(created, ench);

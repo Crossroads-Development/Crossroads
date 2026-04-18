@@ -14,19 +14,23 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "the mode. Each connection has 4 modes: Input, Output, Locked, and Share. Input or Output modes only input/output fluid with a neighbor, Locked will be disconnected, and Share only applies to other pipes and <item>$(l:essentials:fluid/tank)tanks/$ (including tanks from other mods). In Share mode, pipes will balance their contents to be the same % fullness.$(br2)"
+			"text": "the mode. Shift-click to connect/disconnect, regular-click to change flow direction. Each connection has 4 modes: Input, Output, Locked, and Share. Input or Output modes only input/output fluid with a neighbor, Locked will be disconnected, and Share only applies to other pipes and <item>$(l:essentials:fluid/tank)tanks/$ (including tanks from other mods). In Share mode, pipes will balance their contents to be the "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "There are also <item>redstone fluid tubes/$, which will only connect to/transfer with their neighbors at all while they have a redstone signal; invert the redstone by shift-clicking with a wrench.$(br2)"
+			"text": "same % fullness.$(br2)"
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<bobo>hAPPY $(l:essentials:intro/welcome#bobo)BOBO/$<bobo> dAY!$(br2)<bobo>u cAN usE a TUBE to MAKE a VACUUM HOPPPER! alSo da HOPPER &nd s0me cLOTH!$(br2)<bobo>bOBO AWAY!/$$(br2)"
+			"text": "There are also <item>redstone fluid tubes/$, which will only connect to/transfer with their neighbors at all while they have a redstone signal; invert the redstone by regular-clicking the center with a wrench.$(br2)"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "<bobo>Bobojour! Glüten tag! Comichiewa! iT's $(l:essentials:intro/welcome#bobo)BOBO/$<bobo>u cAN usE a TUBE to MAKE a VACUUM HOPPPER! alSo da HOPPER &nd s0me cLOTH!$(br2)<bobo>bOBO AWAY!/$$(br2)"
 		}
 	],
 	"extra_recipe_mappings": {
 		"crossroads:fluid_tube": 0,
-		"crossroads:redstone_fluid_tube": 2
+		"crossroads:redstone_fluid_tube": 3
 	}
 }

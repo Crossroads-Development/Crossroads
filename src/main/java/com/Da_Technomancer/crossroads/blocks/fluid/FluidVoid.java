@@ -60,6 +60,7 @@ public class FluidVoid extends BaseEntityBlock implements ICustomItemBlock{
 
 	@Override
 	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
+		tooltip.add(Component.translatable("tt.crossroads.fluid_void.desc"));
 		tooltip.add(Component.translatable("tt.crossroads.fluid_void.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 }

@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"result": {
+		"id": "crossroads:fluid_void",
+		"count": 1
+	},
+	"pattern": [
+		"O|O",
+		"|S|",
+		"O|O"
+	],
+	"key": {
+		"O": {
+			"tag": "c:ingots/tin"
+		},
+		"|": {
+			"item": "crossroads:fluid_tube"
+		},
+		"S": {
+			"item": "minecraft:sponge"
+		}
+	}
+}

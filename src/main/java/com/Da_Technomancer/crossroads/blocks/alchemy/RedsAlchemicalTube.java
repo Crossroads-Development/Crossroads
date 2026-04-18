@@ -1,14 +1,17 @@
 package com.Da_Technomancer.crossroads.blocks.alchemy;
 
 import com.Da_Technomancer.crossroads.api.CRProperties;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.alchemy.EnumTransferMode;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
+import com.Da_Technomancer.crossroads.blocks.fluid.RedstoneFluidTubeTileEntity;
 import com.Da_Technomancer.essentials.api.ConfigUtil;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -48,7 +51,21 @@ public class RedsAlchemicalTube extends AlchemicalTube{
 
 	@Override
 	public ItemInteractionResult useItemOn(ItemStack held, BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
+		//Invert by wrenching a non-connected side
+		if(playerIn != null && !playerIn.isCrouching() && ConfigUtil.isWrench(held) && worldIn.getBlockEntity(pos) instanceof RedsAlchemicalTubeTileEntity cableTE && didHitCore(hit, pos)){
+			boolean inverted = !cableTE.isInverted();
+			cableTE.setInverted(inverted);
+			if(inverted){
+				MiscUtil.displayMessage(playerIn, Component.translatable("tt.crossroads.reds_alch_tube.wrench.invert"));
+			}else{
+				MiscUtil.displayMessage(playerIn, Component.translatable("tt.crossroads.reds_alch_tube.wrench.uninvert"));
+			}
+			neighborChanged(state, worldIn, pos, this, pos, false);
+			return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
+		}
+
 		if(state.getValue(CRProperties.REDSTONE_BOOL) && ConfigUtil.isWrench(playerIn.getItemInHand(hand))){
+			//Fallback on normal wrench behavior, but can only adjust connections while 'powered'
 			return super.useItemOn(held, state, worldIn, pos, playerIn, hand, hit);
 		}
 		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
@@ -56,8 +73,13 @@ public class RedsAlchemicalTube extends AlchemicalTube{
 
 	@Override
 	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving){
-		boolean isPowered = worldIn.hasNeighborSignal(pos);
-		if(isPowered != state.getValue(CRProperties.REDSTONE_BOOL)){
+		boolean inverted = false;
+		if(worldIn.getBlockEntity(pos) instanceof RedsAlchemicalTubeTileEntity cableTE){
+			inverted = cableTE.isInverted();
+		}
+		boolean isPowered = worldIn.hasNeighborSignal(pos) != inverted;
+		boolean statePowered = state.getValue(CRProperties.REDSTONE_BOOL);
+		if(isPowered != statePowered){
 			worldIn.setBlockAndUpdate(pos, state.setValue(CRProperties.REDSTONE_BOOL, isPowered));
 		}
 	}

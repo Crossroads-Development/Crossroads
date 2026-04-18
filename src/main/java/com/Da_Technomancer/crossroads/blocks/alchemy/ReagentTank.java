@@ -89,7 +89,7 @@ public class ReagentTank extends BaseEntityBlock implements IReadable{
 	 */
 	@Nonnull
 	public static ReagentMap getReagents(ItemStack stack){
-		return stack.getOrDefault(CRItems.REAGENT_DATA, new ReagentMap());
+		return stack.getOrDefault(CRItems.REAGENT_DATA, new ReagentMap()).copy();
 	}
 
 	/**
@@ -98,9 +98,13 @@ public class ReagentTank extends BaseEntityBlock implements IReadable{
 	 * @param reagents The reagents to store
 	 */
 	public static void setReagents(ItemStack stack, ReagentMap reagents){
-		CompoundTag nbt = new CompoundTag();
-		reagents.write(nbt);
-		stack.set(CRItems.REAGENT_DATA, reagents);
+		if(reagents.isEmpty()){
+			stack.remove(CRItems.REAGENT_DATA);
+		}else{
+			CompoundTag nbt = new CompoundTag();
+			reagents.write(nbt);
+			stack.set(CRItems.REAGENT_DATA, reagents);
+		}
 	}
 
 	@Override

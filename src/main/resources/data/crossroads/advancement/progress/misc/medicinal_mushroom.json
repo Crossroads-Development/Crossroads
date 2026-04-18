@@ -1,0 +1,33 @@
+{
+	"parent": "crossroads:progress/path/witchcraft",
+	"display": {
+		"icon": {
+			"id": "crossroads:medicinal_mushroom"
+		},
+		"title": {
+			"translate": "crossroads.advancement.medicinal_mushroom"
+		},
+		"description": {
+			"translate": "crossroads.advancement.medicinal_mushroom.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"has_item": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "crossroads:medicinal_mushroom"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_item"
+		]
+	]
+}

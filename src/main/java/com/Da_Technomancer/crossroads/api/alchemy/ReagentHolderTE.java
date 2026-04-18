@@ -373,7 +373,7 @@ public abstract class ReagentHolderTE extends BlockEntity implements ITickableTi
 			IReagent typeProduced = ReagentManager.findReagentForItem(stack.getItem());
 			if(typeProduced != null && contents.getTotalQty() < transferCapacity()){
 				out.shrink(1);
-				contents.addReagent(typeProduced, 1, AlchemyUtil.getInputItemTemp(typeProduced, getBiomeTemp()));
+				contents.addReagent(typeProduced, 1, AlchemyUtil.getInputItemTemp(typeProduced, getBiomeTemp(), contents));
 			}
 		}
 
@@ -551,7 +551,8 @@ public abstract class ReagentHolderTE extends BlockEntity implements ITickableTi
 						return 0;
 					}
 					if(action.execute()){
-						contents.addReagent(id, toFillReag, AlchemyUtil.getInputFluidTemp(reag, getBiomeTemp()));
+						contents.addReagent(id, toFillReag, AlchemyUtil.getInputFluidTemp(reag, getBiomeTemp(), contents));
+						dirtyReag = true;
 						setChanged();
 					}
 					return toFillReag * reag.getFluidQty();
@@ -577,6 +578,7 @@ public abstract class ReagentHolderTE extends BlockEntity implements ITickableTi
 						//It isn't necessary to modify tank as we normally would, as it's only a conversion and modifying the reagent is sufficient
 						if(action.execute()){
 							contents.removeReagent(id, reagQtyDrained);
+							dirtyReag = true;
 							setChanged();
 						}
 						return resource;
@@ -602,6 +604,7 @@ public abstract class ReagentHolderTE extends BlockEntity implements ITickableTi
 					if(action.execute()){
 						String id = ReagentManager.getFluidReags().get(i);
 						contents.removeReagent(id, drained / ReagentManager.getReagent(id).getFluidQty());
+						dirtyReag = true;
 						setChanged();
 					}
 					return tank;
@@ -654,7 +657,7 @@ public abstract class ReagentHolderTE extends BlockEntity implements ITickableTi
 					}
 					int trans = Math.max(0, Math.min(stack.getCount(), transferCapacity() - contents.getTotalQty()));
 					if(!simulate){
-						contents.addReagent(reag, trans, AlchemyUtil.getInputItemTemp(reag, getBiomeTemp()));
+						contents.addReagent(reag, trans, AlchemyUtil.getInputItemTemp(reag, getBiomeTemp(), contents));
 						dirtyReag = true;
 						setChanged();
 					}

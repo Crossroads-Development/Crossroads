@@ -1,0 +1,33 @@
+{
+	"parent": "crossroads:progress/path/witchcraft",
+	"display": {
+		"icon": {
+			"id": "crossroads:wheezewort_seeds"
+		},
+		"title": {
+			"translate": "crossroads.advancement.wheezewort"
+		},
+		"description": {
+			"translate": "crossroads.advancement.wheezewort.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"has_item": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "crossroads:wheezewort_seeds"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_item"
+		]
+	]
+}

@@ -186,23 +186,27 @@ public class AlchemyUtil{
 	 * For an item being converted into a reagent, calculates the temperature the newly created reagent should be considered to be
 	 * @param reagent The reagent being added
 	 * @param biomeTemp Ambient biome temperature, in Celcius
+	 * @param currReagents Current stored reagents (will not be modified)
 	 * @return Reagent temperature, in Celcius
 	 */
-	public static double getInputItemTemp(IReagent reagent, double biomeTemp){
+	public static double getInputItemTemp(IReagent reagent, double biomeTemp, ReagentMap currReagents){
 		double melting = reagent.getMeltingPoint();
 		if(biomeTemp < melting){
 			return biomeTemp;
+		}else if(!currReagents.isEmpty() && currReagents.getTempC() < melting){
+			return Math.max(melting - 10D, currReagents.getTempC());
 		}else{
-			return Math.max(melting - 100D, HeatUtil.ABSOLUTE_ZERO);
+			return Math.max(melting - 10D, HeatUtil.ABSOLUTE_ZERO);
 		}
 	}
 
 	/**
 	 * For a (forge-style) fluid converted into a reagent, calculates the temperature the newly created reagent should be considered to be
 	 * @param biomeTemp Ambient biome temperature, in Celcius
+	 * @param currReagents Current stored reagents (will not be modified)
 	 * @return Reagent temperature, in Celcius
 	 */
-	public static double getInputFluidTemp(IReagent reagent, double biomeTemp){
+	public static double getInputFluidTemp(IReagent reagent, double biomeTemp, ReagentMap currReagents){
 		Predicate<Double> legal = (temp) -> temp >= reagent.getMeltingPoint() && temp < reagent.getBoilingPoint();
 		//Try the fluid's modder-defined temperature
 		Fluid reagentFluid = CraftingUtil.getPreferredEntry(reagent.getFluid().getMatchedFluids(), Registries.FLUID);
@@ -211,19 +215,21 @@ public class AlchemyUtil{
 			Crossroads.logger.warn("Reagent fluid temperature queried for invalid reagent: " + reagent.getID());
 			return biomeTemp;
 		}
-
-		//Fluid temperature properties are kind of meaningless, but sometimes roughly correspond to a number in Kelvin
-		double temp = HeatUtil.toCelcius(reagentFluid.getFluidType().getTemperature());
-		if(legal.test(temp)){
-			return temp;
-		}
 		//Check biome temperature
-		temp = biomeTemp;
+		double temp = biomeTemp;
 		if(legal.test(temp)){
 			return temp;
 		}
-		//20*C above the melting point
-		temp = Math.max(HeatUtil.ABSOLUTE_ZERO, reagent.getMeltingPoint()) + 20;
+		if(!currReagents.isEmpty() && legal.test(currReagents.getTempC())){
+			return currReagents.getTempC();
+		}
+		//Fluid temperature properties are kind of meaningless, but sometimes roughly correspond to a number in Kelvin
+		temp = HeatUtil.toCelcius(reagentFluid.getFluidType().getTemperature());
+		if(legal.test(temp)){
+			return temp;
+		}
+		//10*C above the melting point
+		temp = Math.max(HeatUtil.ABSOLUTE_ZERO, reagent.getMeltingPoint()) + 10;
 		if(legal.test(temp)){
 			return temp;
 		}

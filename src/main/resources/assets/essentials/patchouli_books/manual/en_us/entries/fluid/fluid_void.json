@@ -1,0 +1,19 @@
+{
+	"category": "essentials:fluid",
+	"name": "Fluid Void",
+	"icon": "crossroads:fluid_void",
+	"sortnum": 0,
+	"priority": false,
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "patchouli:spotlight",
+			"title": "Fluid Void",
+			"item": "crossroads:fluid_void",
+			"text": "<item>Fluid Voids/$ are a trash can for fluids. Any fluid piped into one will be deleted."
+		}
+	],
+	"extra_recipe_mappings": {
+		"crossroads:fluid_void": 0
+	}
+}

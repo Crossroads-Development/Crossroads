@@ -20,6 +20,12 @@ import java.util.stream.Collectors;
 
 public final class ReagentManager{
 
+	/**
+	 * TODO: Next time we do a big round of breaking changes, we need to overhaul this class
+	 * It is not thread-safe. Storing these registry-like maps in static fields does weird things in singleplayer,
+	 * because server-side and client-side are sharing a map, but have their own instances of each reagent
+	 */
+
 //	private static final HashMap<String, IReagent> REAGENTS = new HashMap<>(EnumReagents.values().length);
 	private static final ConcurrentHashMap<String, IReagent> REAGENTS = new ConcurrentHashMap<>(EnumReagents.values().length);
 //	private static final HashMap<IReagent, Predicate<Item>> REAGENT_FROM_ITEM = new HashMap<>();

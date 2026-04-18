@@ -2,7 +2,7 @@
 	"type": "minecraft:crafting_shaped",
 	"result": {
 		"id": "crossroads:fluid_tube",
-		"count": 10
+		"count": 12
 	},
 	"pattern": [
 		"***",

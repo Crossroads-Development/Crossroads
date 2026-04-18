@@ -18,7 +18,7 @@
 		"energy": {
 			"trigger": "crossroads:beam_alignment",
 			"conditions": {
-				"alignment": "enchantment",
+				"alignment": "energy",
 				"void": "true"
 			}
 		}

@@ -11,15 +11,15 @@
 			"type": "patchouli:spotlight",
 			"title": "Alignment: Enchantment",
 			"item": "crossroads:pure_quartz",
-			"text": "<thing>Enchantment/$ (light yellow) will enchant 1 item dropped in the world within range. They will be enchanted with a level equal to the beam <thing>power/$. If the beam <thing>power/$ >= 64, then it can get treasure enchantments (like Mending). The range is a radius of sqrt(<thing>power/$) / 2 blocks.$(br2)However, <em>any enchanted item "
+			"text": "<thing>Enchantment/$ (light yellow) will enchant 1 item dropped in the world within 3 blocks range. They will be enchanted with a level equal to the beam <thing>power/$. If the beam <thing>power/$ >= 64, then it can get treasure enchantments (like Mending).$(br2)However, <em>any enchanted item has a chance to be destroyed/$. When an "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<em>has a chance to be destroyed/$. When an item is enchanted by this beam, there is a (power)% chance to destroy the item. For example, a power 15 beam has a 15% chance to destroy the enchanted item. This can be disabled in the config.$(br2)This beam is very powerful, able to apply max level enchants (including mending) without costing XP.$(br2)"
+			"text": "item is enchanted by this beam, there is a (power)% chance to destroy the item. For example, a power 15 beam has a 15% chance to destroy the item and an 85% chance of enchanting it at level 15. This can be disabled in the config.$(br2)This beam is very powerful, able to apply max level enchants (including mending) without costing XP.$(br2)"
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<thing>Void-Enchantment/$ AKA <thing>Disenchantment/$ will disenchant (including removing curses) all items dropped in the world within range. The range is a radius of sqrt(<thing>power/$) / 2 blocks."
+			"text": "<thing>Void-Enchantment/$ AKA <thing>Disenchantment/$ will disenchant (including removing curses) all items dropped in the world within 3 blocks range."
 		}
 	],
 	"extra_recipe_mappings": {}

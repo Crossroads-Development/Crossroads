@@ -193,7 +193,7 @@ public class ReagentRec implements Recipe<RecipeInput>, IReagent{
 	 */
 	@Override
 	public ItemStack getStackFromReagent(ReagentStack reag){
-		if(!reag.isEmpty() && reag.getType() == this){
+		if(!reag.isEmpty() && this.equals(reag.getType())){
 			Item item = CraftingUtil.getTagEntry(solid);
 			if(item == null){
 				return ItemStack.EMPTY;

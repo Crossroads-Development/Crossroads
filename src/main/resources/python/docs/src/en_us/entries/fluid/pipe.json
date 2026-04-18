@@ -19,7 +19,7 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<bobo>hAPPY $(l:essentials:intro/welcome#bobo)BOBO/$<bobo> dAY!$(br2)<bobo>u cAN usE a TUBE to MAKE a VACUUM HOPPPER! alSo da HOPPER &nd s0me cLOTH!$(br2)<bobo>bOBO AWAY!/$$(br2)"
+			"text": "<bobo>Bobojour! Glüten tag! Comichiewa! iT's $(l:essentials:intro/welcome#bobo)BOBO/$<bobo>u cAN usE a TUBE to MAKE a VACUUM HOPPPER! alSo da HOPPER &nd s0me cLOTH!$(br2)<bobo>bOBO AWAY!/$$(br2)"
 		}
 	],
 	"extra_recipe_mappings": {

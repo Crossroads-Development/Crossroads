@@ -1,0 +1,33 @@
+{
+	"parent": "crossroads:progress/path/witchcraft",
+	"display": {
+		"icon": {
+			"id": "crossroads:petrol_cactus"
+		},
+		"title": {
+			"translate": "crossroads.advancement.petrol_cactus"
+		},
+		"description": {
+			"translate": "crossroads.advancement.petrol_cactus.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"has_item": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "crossroads:petrol_cactus"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_item"
+		]
+	]
+}
