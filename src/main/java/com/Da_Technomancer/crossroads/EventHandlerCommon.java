@@ -35,7 +35,9 @@ import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.items.technomancy.ArmorGoggles;
 import com.Da_Technomancer.crossroads.items.technomancy.TechnomancyArmor;
 import com.Da_Technomancer.crossroads.world.CRWorldGen;
+import com.Da_Technomancer.essentials.Essentials;
 import com.Da_Technomancer.essentials.api.ConfigUtil;
+import com.Da_Technomancer.essentials.items.ESItems;
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import it.unimi.dsi.fastutil.objects.Object2BooleanMaps;
 import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
@@ -799,7 +801,8 @@ public class EventHandlerCommon{
 		//BUT if you shift right click with an item in your main hand, but with ANY item in your off-hand, the block doesn't get a chance to react at all
 		//Which is really annoying, because a lot of CR machines need to be adjusted by shift-right-clicking with a wrench, and that doesn't work if you also use your offhand for stuff
 		//So this specifically allows shift-right-click wrenching CR blocks to still work when you have something in your offhand
-		if(ConfigUtil.isWrench(e.getItemStack()) && MiscUtil.getRegistryName(e.getLevel().getBlockState(e.getPos()).getBlock(), Registries.BLOCK).getNamespace().equals(Crossroads.MODID)){
+		String registryNamespace;
+		if((ConfigUtil.isWrench(e.getItemStack()) || e.getItemStack().is(ESItems.linkingTool)) && ((registryNamespace = MiscUtil.getRegistryName(e.getLevel().getBlockState(e.getPos()).getBlock(), Registries.BLOCK).getNamespace()).equals(Crossroads.MODID) || registryNamespace.equals(Essentials.MODID))){
 			e.setUseBlock(TriState.TRUE);
 		}
 	}

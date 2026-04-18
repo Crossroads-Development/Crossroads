@@ -20,10 +20,6 @@
 		{
 			"type": "patchouli:text",
 			"text": "A <item>Block of Cavorite/$ will block the effect of <item>density plates/$ from passing beyond it, and can be moved by pistons.$(br2)"
-		},
-		{
-			"type": "patchouli:text",
-			"text": "<bobo>$(l:essentials:intro/welcome#bobo)eye IZ bOqr!!/$<bobo> me hAs !!!!iMPOrtANT tINg~~~! mUcH heAT! mUCH c01D! dEFY hot/cold-o-dyanmics! 4 FREEE!!!$(br2)<bobo>reD METAL baAR!$(br2)<bobo>gRAV-IT-E SHALLN\"T PASS$(br2)<bobo>aND dA haRD BIT! yUM nuGGET sTACK iN ONE ITEM! dA STACK NUBMER oN 1 ITeM!/$$(br2)"
 		}
 	],
 	"extra_recipe_mappings": {

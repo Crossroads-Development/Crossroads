@@ -107,9 +107,9 @@ public class MechanismToggleGear extends MechanismSmallGear{
 						cogHandler.connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * handler.getRotationRatio(), .5D, side.getOpposite(), handler.renderOffset());
 					}
 
-					if((cogHandler = te.getLevel().getCapability(CRCapabilities.COG_CAPABILITY, diagPos, facing)) != null){
-						cogHandler.connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * rotRatioIn, .5D, side.getOpposite(), handler.renderOffset());
-					}
+//					if((cogHandler = te.getLevel().getCapability(CRCapabilities.COG_CAPABILITY, diagPos, facing)) != null){
+//						cogHandler.connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * rotRatioIn, .5D, side.getOpposite(), handler.renderOffset());
+//					}
 				}
 			}
 		}

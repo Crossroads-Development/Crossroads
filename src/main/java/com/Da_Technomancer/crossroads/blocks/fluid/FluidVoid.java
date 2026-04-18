@@ -1,17 +1,13 @@
 package com.Da_Technomancer.crossroads.blocks.fluid;
 
 import com.Da_Technomancer.crossroads.api.MiscUtil;
-import com.Da_Technomancer.crossroads.api.templates.ICustomItemBlock;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
-import com.Da_Technomancer.crossroads.items.CRItems;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.SoundType;
@@ -20,20 +16,14 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
-public class FluidVoid extends BaseEntityBlock implements ICustomItemBlock{
+public class FluidVoid extends BaseEntityBlock{
 
 	public FluidVoid(){
 		super(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_YELLOW).sound(SoundType.GRASS).strength(0.6F).sound(SoundType.GRASS));
 		String name = "fluid_void";
 		CRBlocks.queueForRegister(name, this);
-	}
-
-	@Override
-	public BlockItem createItemBlock(){
-		return new BlockItem(this, CRItems.baseItemProperties().rarity(CRItems.BOBO_RARITY));
 	}
 
 	@Override

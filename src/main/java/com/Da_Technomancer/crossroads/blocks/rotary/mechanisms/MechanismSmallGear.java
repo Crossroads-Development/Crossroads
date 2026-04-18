@@ -119,9 +119,9 @@ public class MechanismSmallGear implements IMechanism<CRMaterialLibrary.GearMate
 					cogHandler.connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * handler.getRotationRatio(), .5D, side.getOpposite(), handler.renderOffset());
 				}
 
-				if((cogHandler = world.getCapability(CRCapabilities.COG_CAPABILITY, diagPos, diagState, diagTE, facing)) != null){
-					cogHandler.connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * rotRatioIn, .5D, side.getOpposite(), handler.renderOffset());
-				}
+//				if((cogHandler = world.getCapability(CRCapabilities.COG_CAPABILITY, diagPos, diagState, diagTE, facing)) != null){
+//					cogHandler.connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * rotRatioIn, .5D, side.getOpposite(), handler.renderOffset());
+//				}
 			}
 		}
 

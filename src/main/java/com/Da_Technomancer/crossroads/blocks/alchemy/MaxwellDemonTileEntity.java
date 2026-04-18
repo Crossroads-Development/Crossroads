@@ -8,6 +8,9 @@ import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.api.templates.IInfoTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
+import com.Da_Technomancer.crossroads.blocks.fluid.FatFeederTileEntity;
+import com.Da_Technomancer.crossroads.items.CRItems;
+import com.Da_Technomancer.crossroads.items.EdibleBlob;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -15,6 +18,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -24,17 +28,20 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 //We can't use ModuleTE because this has 2 internal temperatures
-public class MaxwellDemonTileEntity extends BlockEntity implements ITickableTileEntity, IInfoTE, IHeatCapable{
+public class MaxwellDemonTileEntity extends BlockEntity implements ITickableTileEntity, IInfoTE, IHeatCapable, FatFeederTileEntity.IFeedableTE{
 
 	public static final BlockEntityType<MaxwellDemonTileEntity> TYPE = CRTileEntity.createType(MaxwellDemonTileEntity::new, CRBlocks.maxwellDemon);
 
 	public static final double MAX_TEMP = 2500;
 	public static final double MIN_TEMP = -200;
+	private static final int MAX_FEEDER_FAT = 200;//Fat-feeder limit, ignored for manual feeding
+	public static final int FAT_CONSUMPTION = 1;
 
 	private double tempUp = 0;
 	private double tempDown = 0;
 	private boolean init = false;
 	private double rate = -1;//Not saved/loaded to NBT, as we want this to regenerate on reload with the config
+	private int fat = 0;
 
 	public MaxwellDemonTileEntity(BlockPos blockPos, BlockState blockState){
 		super(TYPE, blockPos, blockState);
@@ -45,6 +52,7 @@ public class MaxwellDemonTileEntity extends BlockEntity implements ITickableTile
 		chat.add(Component.translatable("tt.crossroads.maxwell_demon.read_top", CRConfig.formatVal(tempUp)));
 		chat.add(Component.translatable("tt.crossroads.maxwell_demon.read_bottom", CRConfig.formatVal(tempDown)));
 		chat.add(Component.translatable("tt.crossroads.maxwell_demon.read_biome", CRConfig.formatVal(HeatUtil.convertBiomeTemp(level, worldPosition))));
+		chat.add(Component.translatable("tt.crossroads.maxwell_demon.fat", fat, FAT_CONSUMPTION, fat / FAT_CONSUMPTION / 20));
 	}
 
 	private void init(){
@@ -62,15 +70,20 @@ public class MaxwellDemonTileEntity extends BlockEntity implements ITickableTile
 	public void serverTick(){
 		init();
 
-		if(tempUp < MAX_TEMP){
-			tempUp = Math.min(MAX_TEMP, tempUp + rate);
-			setChanged();
-		}
-		if(tempDown > MIN_TEMP){
-			tempDown = Math.max(MIN_TEMP, tempDown - rate);
-			setChanged();
+		//Make heat / cold
+		if(fat > 0){
+			fat = Math.max(fat - FAT_CONSUMPTION, 0);
+			if(tempUp < MAX_TEMP){
+				tempUp = Math.min(MAX_TEMP, tempUp + rate);
+				setChanged();
+			}
+			if(tempDown > MIN_TEMP){
+				tempDown = Math.max(MIN_TEMP, tempDown - rate);
+				setChanged();
+			}
 		}
 
+		//Heat transfer
 		for(int i = 0; i < 2; i++){
 			Direction dir = Direction.from3DDataValue(i);
 
@@ -103,6 +116,7 @@ public class MaxwellDemonTileEntity extends BlockEntity implements ITickableTile
 		nbt.putBoolean("init_heat", init);
 		nbt.putDouble("temp_u", tempUp);
 		nbt.putDouble("temp_d", tempDown);
+		nbt.putInt("fat", fat);
 	}
 
 	@Override
@@ -111,6 +125,7 @@ public class MaxwellDemonTileEntity extends BlockEntity implements ITickableTile
 		init = nbt.getBoolean("init_heat");
 		tempUp = nbt.getDouble("temp_u");
 		tempDown = nbt.getDouble("temp_d");
+		fat = nbt.getInt("fat");
 	}
 
 	private final IHeatHandler heatHandlerUp = new HeatHandler(true);
@@ -125,6 +140,29 @@ public class MaxwellDemonTileEntity extends BlockEntity implements ITickableTile
 			return heatHandlerDown;
 		}
 		return null;
+	}
+
+	@Override
+	public int attemptFeed(int availableFat){
+		if(fat < MAX_FEEDER_FAT){
+			int fed = Math.min(MAX_FEEDER_FAT - fat, availableFat);
+			fat += fed;
+			setChanged();
+			return fed;
+		}
+		return 0;
+	}
+
+	public ItemStack feedItem(ItemStack toFeed){
+		if(toFeed.is(CRItems.edibleBlob) && fat == 0){
+			int fatEq = (EdibleBlob.getHealAmount(toFeed) + EdibleBlob.getTrueSat(toFeed)) * CRConfig.fatPerValue.getAsInt();
+			fat += fatEq;
+			setChanged();
+			toFeed = toFeed.copy();
+			toFeed.shrink(1);
+			return toFeed;
+		}
+		return toFeed;
 	}
 
 

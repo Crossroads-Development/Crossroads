@@ -1,16 +1,20 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
 import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
 import com.Da_Technomancer.crossroads.api.CRProperties;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.templates.ICustomItemBlock;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
+import com.Da_Technomancer.crossroads.blocks.alchemy.MaxwellDemonTileEntity;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.essentials.api.ConfigUtil;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -82,12 +86,24 @@ public class HamsterWheel extends BaseEntityBlock implements ICustomItemBlock{
 	}
 
 	@Override
-	public ItemInteractionResult useItemOn(ItemStack held, BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit){
-		if(ConfigUtil.isWrench(playerIn.getItemInHand(hand))){
-			if(!worldIn.isClientSide){
-				worldIn.setBlockAndUpdate(pos, state.setValue(CRProperties.HORIZ_FACING, state.getValue(CRProperties.HORIZ_FACING).getClockWise()));
+	public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit){
+		if(ConfigUtil.isWrench(player.getItemInHand(hand))){
+			if(!level.isClientSide){
+				level.setBlockAndUpdate(pos, state.setValue(CRProperties.HORIZ_FACING, state.getValue(CRProperties.HORIZ_FACING).getClockWise()));
 			}
-			return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
+			return ItemInteractionResult.sidedSuccess(level.isClientSide);
+		}
+		if(stack.is(CRItems.edibleBlob)){
+			if(!level.isClientSide && level.getBlockEntity(pos) instanceof HamsterWheelTileEntity te){
+				ItemStack result = te.feedItem(stack);
+				if(!result.equals(stack)){
+					CRSounds.playSoundServer(level, pos, SoundEvents.PANDA_EAT, SoundSource.PLAYERS, 0.8F, 1.5F);
+				}
+				if(!player.isCreative()){
+					player.setItemInHand(hand, result);
+				}
+			}
+			return ItemInteractionResult.sidedSuccess(level.isClientSide);
 		}
 		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 	}
@@ -110,6 +126,7 @@ public class HamsterWheel extends BaseEntityBlock implements ICustomItemBlock{
 	@Override
 	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
 		tooltip.add(Component.translatable("tt.crossroads.hamster_wheel.desc", CRConfig.hamsterPower.get()));
+		tooltip.add(Component.translatable("tt.crossroads.hamster_wheel.feed", MaxwellDemonTileEntity.FAT_CONSUMPTION));
 		tooltip.add(Component.translatable("tt.crossroads.hamster_wheel.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 }

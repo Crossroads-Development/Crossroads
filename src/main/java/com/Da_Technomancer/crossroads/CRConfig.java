@@ -184,8 +184,8 @@ public class CRConfig{
 		windingResist = serverBuilder.comment("Resistive power exerted by the Winding Table per speed of the wound item").defineInRange("winding_resist", 20D, 0D, 1_000D);
 		springGunCap = serverBuilder.comment("The maximum speed on a Spring Gun", "Higher maximum speeds increase maximum damage").defineInRange("spring_gun_cap", 10D, 1D, 100D);
 		lodestoneTurbinePower = serverBuilder.comment("The power produced by the Lodestone Turbine (in J/t)").defineInRange("lodestone_power", 15D, 0D, 100D);
-		hamsterPower = serverBuilder.comment("The power produced by the Hamster Wheel (in J/t)").defineInRange("hamster_power", 5D, 0D, 100D);
-		demonPower = serverBuilder.comment("The power produced by the Maxwell's Demon (both hot and cold, in degrees C/t)").defineInRange("demon_power", 5D, 0D, 100D);
+		hamsterPower = serverBuilder.comment("The power produced by the Hamster Wheel (in J/t)").defineInRange("hamster_power", 8D, 0D, 100D);
+		demonPower = serverBuilder.comment("The power produced by the Maxwell's Demon (both hot and cold, in degrees C/t)").defineInRange("demon_power", 20D, 0D, 100D);
 		fireboxCap = serverBuilder.comment("Maximum fuel burn time in the Firebox. Set to -1 to remove the limit").defineInRange("firebox_cap", 64_000, -1, Integer.MAX_VALUE);
 		fireboxFuelMult = serverBuilder.comment("Multiplier on fuel burn time for a Firebox compared to a furnace").defineInRange("firebox_fuel_mult", 4, 1, 100);
 		beamHeatMult = serverBuilder.comment("Temperature change from energy and cold beams, per unit power, applied every 4 ticks").defineInRange("beam_heat_mult", 100, 0, 1000);
