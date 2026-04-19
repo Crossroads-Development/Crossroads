@@ -46,7 +46,7 @@ public class CRCapabilities{
 				CRBlocks.firebox, CRBlocks.fluidCoolingChamber, CRBlocks.formulationVat, CRBlocks.heatingCrucible, CRBlocks.hydroponicsTrough, CRBlocks.icebox,
 				CRBlocks.incubator, CRBlocks.itemCannon, CRBlocks.lensFrame, CRBlocks.millstone, CRBlocks.oreCleanser, CRBlocks.reactionChamberGlass, CRBlocks.reactionChamberCrystal,
 				CRBlocks.saltReactor, CRBlocks.smelter, CRBlocks.stampMill, CRBlocks.stasisStorage, CRBlocks.steamer, CRBlocks.teslaCoil,
-				CRBlocks.waterCentrifuge, CRBlocks.windingTable);
+				CRBlocks.waterCentrifuge, CRBlocks.windingTable, CRBlocks.reagentTankCrystal, CRBlocks.reagentTankGlass);
 		e.registerBlock(Capabilities.FluidHandler.BLOCK, IFluidCapable.CAPABLE_PROVIDER, CRBlocks.blastFurnace, CRBlocks.copshowiumCreationChamber, CRBlocks.cultivatorVat, CRBlocks.fatCollector, CRBlocks.fatCongealer,
 				CRBlocks.fatFeeder, CRBlocks.fluidCoolingChamber, CRBlocks.fluidInjectorGlass, CRBlocks.fluidInjectorCrystal, CRBlocks.fluidTank, CRBlocks.fluidTube, CRBlocks.redstoneFluidTube, CRBlocks.fluidVoid,
 				CRBlocks.formulationVat, CRBlocks.heatingCrucible, CRBlocks.hydroponicsTrough, CRBlocks.oreCleanser, CRBlocks.radiator, CRBlocks.rotaryPump, CRBlocks.saltReactor, CRBlocks.steamBoiler,

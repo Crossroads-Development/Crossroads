@@ -47,7 +47,7 @@ public class ReactiveSpotTileEntity extends BlockEntity implements ITickableTile
 	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
 		super.loadAdditional(nbt, registries);
 		lifespan = nbt.getInt("lif");
-		Block b = BuiltInRegistries.BLOCK.get(ResourceLocation.withDefaultNamespace(nbt.getString("tar")));
+		Block b = BuiltInRegistries.BLOCK.get(ResourceLocation.parse(nbt.getString("tar")));
 		if(b == null){
 			target = Blocks.AIR.defaultBlockState();
 		}else{

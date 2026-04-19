@@ -19,7 +19,11 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "and negative speed are both fine).$(br2)The <thing>$(l:essentials:intro/rotary)rotary speed/$ doesn't need to be perfect, but the better it is, the more <thing>$(l:essentials:witchcraft/cloning#attributes)quality/$. $(br2)The created <item>centrifuged blood pouch/$ will <thing>$(l:essentials:witchcraft/spoilage)spoil/$ at the same time that the original <item>$(l:essentials:witchcraft/syringe#blood)blood pouches/$ would have (the <item>blood centrifuge/$ doesn't reset the <thing>$(l:essentials:witchcraft/spoilage)spoilage/$ timer).$(br2)<thing>$(l:essentials/circuits)Circuits/$ read the current target speed, in rad/s.$(br2)"
+			"text": "and negative speed are both fine).$(br2)The <thing>$(l:essentials:intro/rotary)rotary speed/$ doesn't need to be perfect, but the better it is, the more <thing>$(l:essentials:witchcraft/cloning#attributes)quality/$. Particularly bad efforts won't give any improvement at all. $(br2)The created <item>centrifuged blood pouch/$ will <thing>$(l:essentials:witchcraft/spoilage)spoil/$ at the same time that the original <item>$(l:essentials:witchcraft/syringe#blood)blood pouches/$ would have (the <item>blood centrifuge/$ doesn't reset the <thing>$(l:essentials:witchcraft/spoilage)spoilage/$ timer).$(br2)<thing>$(l:essentials/circuits)Circuits/$ read the current "
+		},
+		{
+			"type": "patchouli:text",
+			"text": "target speed, in rad/s.$(br2)"
 		}
 	],
 	"extra_recipe_mappings": {

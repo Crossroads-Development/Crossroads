@@ -734,7 +734,7 @@ public class EventHandlerCommon{
 			EntityTemplate templateB = EntityTemplate.getTemplateFromEntity(e.getParentB());
 			Map<IEntityModifierType<?>, IEntityModifier> parentAModifiers = templateA.modifiers();
 			Map<IEntityModifierType<?>, IEntityModifier> parentBModifiers = templateB.modifiers();
-			Set<IEntityModifierType<?>> possibleModifierTypes = parentAModifiers.keySet();
+			HashSet<IEntityModifierType<?>> possibleModifierTypes = new HashSet<>(parentAModifiers.keySet());
 			possibleModifierTypes.addAll(parentBModifiers.keySet());
 			Map<IEntityModifierType<?>, IEntityModifier> childModifiers = new HashMap<>();
 			Random rand = new Random();

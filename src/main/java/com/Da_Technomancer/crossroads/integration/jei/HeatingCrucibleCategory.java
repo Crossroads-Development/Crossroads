@@ -35,8 +35,8 @@ public class HeatingCrucibleCategory implements IRecipeCategory<CrucibleRec>{
 		back = guiHelper.createBlankDrawable(180, 100);
 		slot = guiHelper.getSlotDrawable();
 
-		arrowStatic = guiHelper.createDrawable(ResourceLocation.withDefaultNamespace("textures/gui/container/furnace.png"), 79, 35, 24, 17);
-		arrow = guiHelper.createAnimatedDrawable(guiHelper.createDrawable(ResourceLocation.withDefaultNamespace("textures/gui/container/furnace.png"), 176, 14, 24, 17), 40, IDrawableAnimated.StartDirection.LEFT, false);
+		arrowStatic = guiHelper.createDrawable(ResourceLocation.parse("textures/gui/container/furnace.png"), 79, 35, 24, 17);
+		arrow = guiHelper.createAnimatedDrawable(guiHelper.createDrawable(ResourceLocation.parse("textures/gui/container/furnace.png"), 176, 14, 24, 17), 40, IDrawableAnimated.StartDirection.LEFT, false);
 		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(CRBlocks.heatingCrucible, 1));
 		fluidOverlay = JEICrossroadsPlugin.createFluidOverlay(guiHelper);
 	}

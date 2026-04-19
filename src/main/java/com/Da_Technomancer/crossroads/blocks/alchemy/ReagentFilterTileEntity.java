@@ -137,7 +137,7 @@ public class ReagentFilterTileEntity extends ReagentHolderTE implements MenuProv
 	@Override
 	@Nullable
 	public IChemicalHandler getChemicalHandler(Direction dir){
-		if((facing == getFacing() || facing != null && facing.getAxis() == Direction.Axis.Y)){
+		if((dir == getFacing() || dir != null && dir.getAxis() == Direction.Axis.Y)){
 			return chemHandler;
 		}
 		return null;

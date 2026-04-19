@@ -79,7 +79,7 @@ public class ArmorEnviroBoots extends TechnomancyArmor{
 	@Override
 	public ItemAttributeModifiers getDefaultAttributeModifiers(){
 		if(expandedAttributeModifiers == null){
-			expandedAttributeModifiers = super.getDefaultAttributeModifiers().withModifierAdded(NeoForgeMod.SWIM_SPEED, new AttributeModifier(ResourceLocation.withDefaultNamespace("enchantment.depth_strider"), CRConfig.enviroBootDepth.get(), AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.FEET);
+			expandedAttributeModifiers = super.getDefaultAttributeModifiers().withModifierAdded(NeoForgeMod.SWIM_SPEED, new AttributeModifier(ResourceLocation.parse("enchantment.depth_strider"), CRConfig.enviroBootDepth.get(), AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.FEET);
 		}
 		return expandedAttributeModifiers;
 	}

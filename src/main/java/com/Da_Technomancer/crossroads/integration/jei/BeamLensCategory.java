@@ -35,7 +35,7 @@ public class BeamLensCategory implements IRecipeCategory<BeamLensRec>{
 		slot = guiHelper.getSlotDrawable();
 		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(CRBlocks.lensFrame, 1));
 
-		arrowStatic = guiHelper.createDrawable(ResourceLocation.withDefaultNamespace("textures/gui/container/furnace.png"), 79, 35, 24, 17);
+		arrowStatic = guiHelper.createDrawable(ResourceLocation.parse("textures/gui/container/furnace.png"), 79, 35, 24, 17);
 	}
 
 	@Override

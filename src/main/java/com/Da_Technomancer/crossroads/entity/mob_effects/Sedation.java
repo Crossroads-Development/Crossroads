@@ -47,7 +47,7 @@ public class Sedation extends MobEffect{
 
 			//Check against the blacklist
 			List<? extends String> blacklist = CRConfig.sedationBlacklist.get();
-			if(blacklist.stream().anyMatch(entry -> ResourceLocation.withDefaultNamespace(entry).equals(MiscUtil.getRegistryName(entity.getType(), BuiltInRegistries.ENTITY_TYPE)))){
+			if(blacklist.stream().anyMatch(entry -> ResourceLocation.parse(entry).equals(MiscUtil.getRegistryName(entity.getType(), BuiltInRegistries.ENTITY_TYPE)))){
 				return false;
 			}
 

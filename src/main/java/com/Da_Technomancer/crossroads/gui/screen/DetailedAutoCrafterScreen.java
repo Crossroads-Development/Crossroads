@@ -19,9 +19,9 @@ public class DetailedAutoCrafterScreen extends BlockMenuScreen<DetailedAutoCraft
 
 	//Based on CrafterScreen
 
-	private static final ResourceLocation DISABLED_SLOT_LOCATION_SPRITE = ResourceLocation.withDefaultNamespace("container/crafter/disabled_slot");
-	private static final ResourceLocation POWERED_REDSTONE_LOCATION_SPRITE = ResourceLocation.withDefaultNamespace("container/crafter/powered_redstone");
-	private static final ResourceLocation UNPOWERED_REDSTONE_LOCATION_SPRITE = ResourceLocation.withDefaultNamespace("container/crafter/unpowered_redstone");
+	private static final ResourceLocation DISABLED_SLOT_LOCATION_SPRITE = ResourceLocation.parse("container/crafter/disabled_slot");
+	private static final ResourceLocation POWERED_REDSTONE_LOCATION_SPRITE = ResourceLocation.parse("container/crafter/powered_redstone");
+	private static final ResourceLocation UNPOWERED_REDSTONE_LOCATION_SPRITE = ResourceLocation.parse("container/crafter/unpowered_redstone");
 	private static final ResourceLocation CONTAINER_LOCATION = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "textures/gui/container/detailed_auto_crafter.png");
 	private static final Component DISABLED_SLOT_TOOLTIP = Component.translatable("gui.togglable_slot");
 

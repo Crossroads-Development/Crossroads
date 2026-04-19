@@ -153,7 +153,7 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 
 		if(!player.level().isClientSide){
 			ServerPlayer playerServ = (ServerPlayer) player;
-			ResourceLocation targetDimension = ResourceLocation.withDefaultNamespace(data.dimension);
+			ResourceLocation targetDimension = ResourceLocation.parse(data.dimension);
 			ServerLevel targetWorld;//World we are recalling to. Almost always the same as current dimension. Null if something went wrong
 			if(targetDimension.equals(player.level().dimension().location())){
 				targetWorld = (ServerLevel) player.level();

@@ -467,7 +467,7 @@ public final class CRItems{
 	public static void clientInit(){
 		//Properties
 		//Whirligig rotation
-		ItemProperties.register(whirligig, ResourceLocation.withDefaultNamespace("angle"), (ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity, int unmapped) -> {
+		ItemProperties.register(whirligig, ResourceLocation.parse("angle"), (ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity, int unmapped) -> {
 			if(entity == null || entity.getUseItem() != stack){
 				return 0;
 			}
@@ -509,22 +509,22 @@ public final class CRItems{
 		});
 		//Technomancy armor
 		ItemPropertyFunction technoArmorPropertyGetter = (ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity, int unmapped) -> TechnomancyArmor.isReinforced(stack) ? 2F : 0F;
-		ItemProperties.register(armorGoggles, ResourceLocation.withDefaultNamespace("protection"), technoArmorPropertyGetter);
-		ItemProperties.register(propellerPack, ResourceLocation.withDefaultNamespace("protection"), technoArmorPropertyGetter);
-		ItemProperties.register(armorToolbelt, ResourceLocation.withDefaultNamespace("protection"), technoArmorPropertyGetter);
-		ItemProperties.register(armorEnviroBoots, ResourceLocation.withDefaultNamespace("protection"), technoArmorPropertyGetter);
+		ItemProperties.register(armorGoggles, ResourceLocation.parse("protection"), technoArmorPropertyGetter);
+		ItemProperties.register(propellerPack, ResourceLocation.parse("protection"), technoArmorPropertyGetter);
+		ItemProperties.register(armorToolbelt, ResourceLocation.parse("protection"), technoArmorPropertyGetter);
+		ItemProperties.register(armorEnviroBoots, ResourceLocation.parse("protection"), technoArmorPropertyGetter);
 		//Rotting samples
 		ItemPropertyFunction rottingPropertyGetter = (ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity, int unmapped) -> stack.getItem() instanceof IPerishable && IPerishable.isSpoiled(stack, world) ? 1F : 0F;
-		ItemProperties.register(bloodSample, ResourceLocation.withDefaultNamespace("spoiled"), rottingPropertyGetter);
-		ItemProperties.register(separatedBloodSample, ResourceLocation.withDefaultNamespace("spoiled"), rottingPropertyGetter);
-		ItemProperties.register(potionExtension, ResourceLocation.withDefaultNamespace("spoiled"), rottingPropertyGetter);
-		ItemProperties.register(embryo, ResourceLocation.withDefaultNamespace("spoiled"), rottingPropertyGetter);
-		ItemProperties.register(shavedIce, ResourceLocation.withDefaultNamespace("spoiled"), rottingPropertyGetter);
+		ItemProperties.register(bloodSample, ResourceLocation.parse("spoiled"), rottingPropertyGetter);
+		ItemProperties.register(separatedBloodSample, ResourceLocation.parse("spoiled"), rottingPropertyGetter);
+		ItemProperties.register(potionExtension, ResourceLocation.parse("spoiled"), rottingPropertyGetter);
+		ItemProperties.register(embryo, ResourceLocation.parse("spoiled"), rottingPropertyGetter);
+		ItemProperties.register(shavedIce, ResourceLocation.parse("spoiled"), rottingPropertyGetter);
 		//Syringe treatment
 		ItemPropertyFunction syringePropertyGetter = (ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity, int unmapped) -> syringe.isTreated(stack) ? 1 : 0;
-		ItemProperties.register(syringe, ResourceLocation.withDefaultNamespace("treated"), syringePropertyGetter);
+		ItemProperties.register(syringe, ResourceLocation.parse("treated"), syringePropertyGetter);
 		//Blood compass
-		ItemProperties.register(bloodCompass, ResourceLocation.withDefaultNamespace("angle"), new CompassItemPropertyFunction(bloodCompass::getTargetClient));
+		ItemProperties.register(bloodCompass, ResourceLocation.parse("angle"), new CompassItemPropertyFunction(bloodCompass::getTargetClient));
 	}
 
 	/**

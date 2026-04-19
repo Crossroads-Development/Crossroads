@@ -15,7 +15,7 @@ public class CRRenderTypes extends RenderType{
 
 	//Stitched to block atlas
 	public static final ResourceLocation WINDMILL_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "models/wind_turbine_blade");
-	public static final ResourceLocation DRILL_TEXTURE = ResourceLocation.withDefaultNamespace("block/iron_block");
+	public static final ResourceLocation DRILL_TEXTURE = ResourceLocation.parse("block/iron_block");
 	public static final ResourceLocation NODE_GIMBAL_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "models/gimbal");
 	public static final ResourceLocation COPSHOWIUM_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "block/block_copshowium");
 	public static final ResourceLocation QUARTZ_TEXTURE = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "block/block_pure_quartz");

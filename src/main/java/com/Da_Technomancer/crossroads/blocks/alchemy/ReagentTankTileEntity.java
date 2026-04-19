@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.alchemy.*;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
+import com.Da_Technomancer.essentials.api.IItemCapable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundSource;
@@ -19,11 +20,13 @@ import org.joml.Vector3f;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-public class ReagentTankTileEntity extends ReagentHolderTE{
+public class ReagentTankTileEntity extends ReagentHolderTE implements IItemCapable{
 
 	public static final BlockEntityType<ReagentTankTileEntity> TYPE = CRTileEntity.createType(ReagentTankTileEntity::new, CRBlocks.reagentTankGlass, CRBlocks.reagentTankCrystal);
 
 	public static final int CAPACITY = 1024;
+
+	private final IItemHandler itemHandler = new ItemHandler();
 
 	private static final Pair<Vector3f, Vector3f>[] RENDER_SHAPE = new Pair[] {Pair.of(new Vector3f(0.02F, 0.02F, 0.02F), new Vector3f(0.98F, 0.98F, 0.98F))};
 
@@ -114,5 +117,11 @@ public class ReagentTankTileEntity extends ReagentHolderTE{
 	@Nullable
 	public IChemicalHandler getChemicalHandler(Direction dir){
 		return chemHandler;
+	}
+
+	@Override
+	@Nullable
+	public IItemHandler getItemHandler(Direction direction){
+		return itemHandler;
 	}
 }

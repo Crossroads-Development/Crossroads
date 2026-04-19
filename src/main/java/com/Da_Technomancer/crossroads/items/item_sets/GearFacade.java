@@ -43,7 +43,7 @@ public class GearFacade extends Item{
 
 	public FacadeBlock getMaterial(ItemStack stack){
 		if(stack.has(CRItems.FACADE_BLOCK_DATA)){
-			return FacadeBlock.create(ResourceLocation.withDefaultNamespace(stack.get(CRItems.FACADE_BLOCK_DATA)));
+			return FacadeBlock.create(ResourceLocation.parse(stack.get(CRItems.FACADE_BLOCK_DATA)));
 		}
 		return FacadeBlock.create(BuiltInRegistries.BLOCK.getKey(Blocks.STONE_BRICKS));
 	}
@@ -191,7 +191,7 @@ public class GearFacade extends Item{
 				};
 			}
 
-			return create(ResourceLocation.withDefaultNamespace(nbt.getString("blockRegistryName")));
+			return create(ResourceLocation.parse(nbt.getString("blockRegistryName")));
 		}
 	}
 }

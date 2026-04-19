@@ -37,7 +37,6 @@ public class BloodCentrifugeTileEntity extends InventoryTE implements IAxleCapab
 	public static final double HIGH_SPEED = 10;
 	public static final int REQUIRED = 100;
 	public static final int INERTIA = 100;
-	private static final double MAXIMUM_AVG_DEVIATION = 2F;
 	public static final double MAX_ADDED_QUALITY = 50;
 
 	private int progress = 0;
@@ -85,7 +84,15 @@ public class BloodCentrifugeTileEntity extends InventoryTE implements IAxleCapab
 			deviation += Math.abs(Math.abs(axleHandler.getSpeed()) - targetSpeed);
 			progress++;
 			if(progress >= REQUIRED){
-				int qualityChange = Math.max(0, (int) Math.round(MAX_ADDED_QUALITY * (1D - (deviation / REQUIRED) / MAXIMUM_AVG_DEVIATION)));
+				final double avgDeviation = deviation / REQUIRED;
+				//This formula is a quadratic tuned for gameplay, not anything fundamental
+				//Basically, baring a redstone master axis, reducing avgDeviation using rotary setups gets increasingly difficult as it gets closer to zero
+				//So to not give diminishing returns for clever designs or high-effort builds, we rig the formula to award increasing amounts of quality points for finer-and-finer improvements (to a cap)
+				int qualityChange = (int) Math.ceil(MAX_ADDED_QUALITY * Math.max(0D, Math.min(1D, .125D * avgDeviation * avgDeviation - 0.8D * avgDeviation + 1.25D)));
+				if(avgDeviation > 3D){
+					//Since it's a quadratic, it can push back into the positives at extreme values, which is unwanted. Correct for this.
+					qualityChange = 0;
+				}
 				for(int i = 0; i < 2; i++){
 					if(!inventory[i].isEmpty()){
 						EntityTemplate template = BloodSample.getBaseTemplate(inventory[i]);
