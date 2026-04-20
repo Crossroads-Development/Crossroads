@@ -204,7 +204,7 @@ public class EventHandlerClient{
 		//Handles glow in the dark entities when wearing goggles
 		if(game.level.getGameTime() % 5 == 0){
 			ItemStack helmet = Minecraft.getInstance().player.getItemBySlot(EquipmentSlot.HEAD);
-			boolean doGlowing = helmet.getItem() == CRItems.armorGoggles && helmet.has(CRItems.GOGGLE_LENSES_DATA) && helmet.get(CRItems.GOGGLE_LENSES_DATA).lenses().getBoolean(EnumGoggleLenses.VOID);
+			boolean doGlowing = (helmet.getItem() == CRItems.armorGoggles || helmet.getItem() == CRItems.armorGogglesReinforced) && helmet.has(CRItems.GOGGLE_LENSES_DATA) && helmet.get(CRItems.GOGGLE_LENSES_DATA).lenses().getBoolean(EnumGoggleLenses.VOID);
 			for(Entity ent : game.level.entitiesForRendering()){
 				CompoundTag entNBT = ent.getPersistentData();
 				if(entNBT == null){
@@ -214,16 +214,16 @@ public class EventHandlerClient{
 
 				//The NBT shenanigans is to prevent this purely client side glowing effect from interfering with server-side glowing effects (such as being hit with the glowing arrow) when disabled
 				if(!entNBT.contains("cr_glow")){
-					ent.setGlowingTag(false);
+					ent.setSharedFlag(6, false);//Disable glowing the flag
 				}else{
 					entNBT.remove("cr_glow");
 				}
 
 				if(doGlowing){
-					if(ent.hasGlowingTag()){
+					if(ent.getSharedFlag(6)){//Check if currently glowing via the flag
 						entNBT.putBoolean("cr_glow", true);
 					}else{
-						ent.setGlowingTag(true);
+						ent.setSharedFlag(6, true);//Set glowing via the flag
 					}
 				}
 			}
@@ -418,18 +418,18 @@ public class EventHandlerClient{
 		if(!play.getMainHandItem().isEmpty()){
 			int key = Keys.isKeyActiveAndMatch(Keys.controlEnergy, e.getKey(), e.getScanCode()) ? 0 : Keys.isKeyActiveAndMatch(Keys.controlPotential, e.getKey(), e.getScanCode()) ? 1 : Keys.isKeyActiveAndMatch(Keys.controlStability, e.getKey(), e.getScanCode()) ? 2 : Keys.isKeyActiveAndMatch(Keys.controlVoid, e.getKey(), e.getScanCode()) ? 3 : -1;
 			ItemStack stack = play.getMainHandItem();
-			if(key != -1 && stack.getItem() instanceof BeamUsingItem){
-				((BeamUsingItem) stack.getItem()).adjustSetting(Minecraft.getInstance().player, stack, key, !play.isShiftKeyDown());
+			if(key != -1 && stack.getItem() instanceof BeamUsingItem beamItem){
+				beamItem.adjustSetting(Minecraft.getInstance().player, stack, key, !play.isShiftKeyDown());
 				return;
 			}
-		}else if(helmet.getItem() == CRItems.armorGoggles && helmet.has(CRItems.GOGGLE_LENSES_DATA)){
+		}else if((helmet.getItem() == CRItems.armorGoggles || helmet.getItem() == CRItems.armorGogglesReinforced) && helmet.has(CRItems.GOGGLE_LENSES_DATA)){
 			ArmorGoggles.LensesSet lensData = helmet.get(CRItems.GOGGLE_LENSES_DATA);
 			for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
 				KeyMapping key = Keys.asKeyMapping(lens.getKey());
 				if(key != null && key.consumeClick() && key.isDown() && lensData.lenses().containsKey(lens)){
 					boolean wasEnabled = lensData.lenses().getBoolean(lens);
 					CRSounds.playSoundClientLocal(play.level(), MiscUtil.blockPos(play.getX(), play.getEyeY(), play.getZ()), SoundEvents.SPYGLASS_USE, SoundSource.PLAYERS, 1.0F, 1.0F);
-					CRPackets.sendPacketToServer(new SendGoggleConfigureToServer(lens.toString(), !wasEnabled));
+					CRPackets.sendPacketToServer(new SendGoggleConfigureToServer(lens, !wasEnabled));
 					if(!wasEnabled || !lens.requireEnableKey()){
 						MiscUtil.displayMessage(play, Component.translatable("tt.crossroads.goggles.enabled"));
 					}else{
@@ -444,7 +444,7 @@ public class EventHandlerClient{
 		KeyMapping boostKey = Keys.asKeyMapping(Keys.boost);
 		if(boostKey != null && boostKey.consumeClick()){
 			ItemStack chestplate = play.getItemBySlot(EquipmentSlot.CHEST);
-			if(play.isFallFlying() && chestplate.getItem() == CRItems.propellerPack && CRItems.propellerPack.getWindLevel(chestplate) > 0){
+			if(play.isFallFlying() && chestplate.getItem() instanceof ArmorPropellerPack pack && pack.getWindLevel(chestplate) > 0){
 				CRPackets.sendPacketToServer(new SendElytraBoostToServer());
 				ArmorPropellerPack.applyMidairBoost(play);
 			}
@@ -463,7 +463,7 @@ public class EventHandlerClient{
 		//Zooms in the view to spyglass levels when the player is wearing goggles with the amethyst lens enabled
 		if(Minecraft.getInstance().options.getCameraType().isFirstPerson()){
 			ItemStack helmet = Minecraft.getInstance().player.getItemBySlot(EquipmentSlot.HEAD);
-			boolean doGoggleZoom = helmet.getItem() == CRItems.armorGoggles && helmet.has(CRItems.GOGGLE_LENSES_DATA) && helmet.get(CRItems.GOGGLE_LENSES_DATA).lenses().getBoolean(EnumGoggleLenses.AMETHYST);
+			boolean doGoggleZoom = (helmet.getItem() == CRItems.armorGoggles || helmet.getItem() == CRItems.armorGogglesReinforced) && helmet.has(CRItems.GOGGLE_LENSES_DATA) && helmet.get(CRItems.GOGGLE_LENSES_DATA).lenses().getBoolean(EnumGoggleLenses.AMETHYST);
 			if(doGoggleZoom){
 				final float scopingFOV = 0.1F;
 				e.setNewFovModifier((float) Mth.lerp(Minecraft.getInstance().options.fovEffectScale().get(), 1.0F, scopingFOV));

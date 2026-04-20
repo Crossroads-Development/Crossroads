@@ -31,6 +31,7 @@ public class EntityFlameCore extends Entity{
 
 	protected static final EntityDataAccessor<Integer> TIME_EXISTED = SynchedEntityData.defineId(EntityFlameCore.class, EntityDataSerializers.INT);
 	protected static final EntityDataAccessor<Integer> COLOR = SynchedEntityData.defineId(EntityFlameCore.class, EntityDataSerializers.INT);
+	protected static final EntityDataAccessor<Integer> MAX_RADIUS = SynchedEntityData.defineId(EntityFlameCore.class, EntityDataSerializers.INT);
 
 	/**
 	 * In order to avoid iterating over a large ReagentStack[] that is mostly empty several times a tick, this list is created to store all non-null reagent stacks
@@ -54,6 +55,7 @@ public class EntityFlameCore extends Entity{
 	public void setInitialValues(ReagentMap reags, int radius){
 		this.reags = reags == null ? new ReagentMap() : reags;
 		maxRadius = radius;
+		entityData.set(MAX_RADIUS, maxRadius);
 		CRSounds.playSoundServer(level(), blockPosition(), CRSounds.FIRE_SWELL, SoundSource.BLOCKS, 2F, 1F);
 	}
 
@@ -68,6 +70,7 @@ public class EntityFlameCore extends Entity{
 	protected void defineSynchedData(SynchedEntityData.Builder builder){
 		builder.define(TIME_EXISTED, 0);
 		builder.define(COLOR, Color.WHITE.getRGB());
+		builder.define(MAX_RADIUS, 0);
 	}
 
 	@Override
@@ -79,6 +82,7 @@ public class EntityFlameCore extends Entity{
 	@Override
 	public void readAdditionalSaveData(CompoundTag nbt){
 		maxRadius = nbt.getInt("rad");
+		entityData.set(MAX_RADIUS, maxRadius);
 		reags = ReagentMap.readFromNBT(nbt);
 		ticksExisted = nbt.getInt("life");
 		entityData.set(TIME_EXISTED, ticksExisted);
@@ -116,7 +120,7 @@ public class EntityFlameCore extends Entity{
 		//Radius is a slowing exponential curve with respect to time
 		//Velocity is scaled based on maximum radius to have total time linearly increase with maximum radius
 		//Chosen to create a cloud that expands quickly initially but slows down, and gives the player time to react at the larger scales
-		float velocityScaling = FLAME_VEL_BASE * CUTOFF_RATIO / (maxRadius == 0 ? 8F : maxRadius);
+		float velocityScaling = FLAME_VEL_BASE * CUTOFF_RATIO / (entityData.get(MAX_RADIUS) == 0 ? 8F : entityData.get(MAX_RADIUS));
 		return FLAME_VEL_BASE / velocityScaling * (1F - (float) Math.exp(-velocityScaling * ticksExisted));
 	}
 
@@ -167,7 +171,7 @@ public class EntityFlameCore extends Entity{
 			entityData.set(COLOR, col.getRGB());
 		}
 
-		final int distributedTime = 8;//Action is distributed to do 1/8 the block changes every tick instead of all of them every 8 ticks
+		final int distributedTime = 4;//Action is distributed to do 1/4 the block changes every tick instead of all of them every 4 ticks
 		int tickMod = ticksExisted % distributedTime;
 		int radius = getRadius(ticksExisted - tickMod);
 		BlockPos pos = new BlockPos((int) Math.round(getX()), (int) Math.round(getY()), (int) Math.round(getZ()));

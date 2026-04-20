@@ -4,7 +4,7 @@
 		"icon": {
 			"id": "crossroads:syringe",
 			"components": {
-				"extension_treated": true
+				"crossroads:extension_treated": true
 			}
 		},
 		"title": {

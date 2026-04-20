@@ -1,5 +1,5 @@
 {
-	"parent": "crossroads:progress/path/technomancy",
+	"parent": "crossroads:progress/misc/staff_technomancy",
 	"display": {
 		"icon": {
 			"id": "minecraft:carved_pumpkin"

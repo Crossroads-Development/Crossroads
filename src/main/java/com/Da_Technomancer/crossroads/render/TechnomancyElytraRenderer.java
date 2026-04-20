@@ -1,7 +1,7 @@
 package com.Da_Technomancer.crossroads.render;
 
 import com.Da_Technomancer.crossroads.Crossroads;
-import com.Da_Technomancer.crossroads.items.CRItems;
+import com.Da_Technomancer.crossroads.items.technomancy.ArmorPropellerPack;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
@@ -20,7 +20,7 @@ public class TechnomancyElytraRenderer<T extends LivingEntity, M extends EntityM
 
 	@Override
 	public boolean shouldRender(ItemStack stack, T entity){
-		return stack.getItem() == CRItems.propellerPack;
+		return stack.getItem() instanceof ArmorPropellerPack;
 	}
 
 	@Override

@@ -21,20 +21,23 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.checkerframework.checker.units.qual.N;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.BiFunction;
 
 public class RotaryUtil{
 
 	/**
-	 * The masterKey is a way of tracking when Master Axes should regenerate/recheck their networks
+	 * The master keys is a way of tracking when Master Axes should regenerate/recheck their networks
 	 * Master axes are allowed to ignore this, but it allows for significant optimizations by reducing unnecessary checks, as it will be incremented every time a gear/component is broken/updated
-	 * TODO: Risk of introducing a race-condition: This is a static field being accessed by both client and server side. This specific case hasn't caused any issues in the past, but bad practice nonetheless
+	 * We track one key per level, separate keys for virtual server vs virtual client
+	 * Values themselves are arbitrary; only whether the key has changed from a previous value is meaningful
 	 */
-	private static int masterKey = 1;
+	private static final ConcurrentHashMap<String, Integer> masterKeysServer = new ConcurrentHashMap<>(3);
+	private static final ConcurrentHashMap<String, Integer> masterKeysClient = new ConcurrentHashMap<>(1);
 
 	/**
 	 * Adds information about an axle handler to chat/tooltip
@@ -207,23 +210,40 @@ public class RotaryUtil{
 		}
 	}
 
+	private static final BiFunction<String, Integer, Integer> INCREMENT_FUNCTION = (key, oldValue) -> oldValue == null ? 1 : oldValue + 1;
+
 	/**
 	 * Increases the masterKey by one
 	 * @param sendPacket If true, sends a packet to the client forcing the masterKey to increase
 	 */
-	public static void increaseMasterKey(boolean sendPacket){
-		masterKey++;
-		if(sendPacket){
-			CRPackets.sendPacketToAll(new SendMasterKeyToClient(masterKey));
+	public static void increaseMasterKey(boolean sendPacket, Level world){
+		final String masterKeyLookup = world.dimension().location().toString();
+		if(world.isClientSide){
+			masterKeysClient.compute(masterKeyLookup, INCREMENT_FUNCTION);
+		}else{
+			int newValue = masterKeysServer.compute(masterKeyLookup, INCREMENT_FUNCTION);
+			if(sendPacket){
+				CRPackets.sendPacketToDimension(world, new SendMasterKeyToClient(newValue));
+			}
 		}
 	}
 
-	public static int getMasterKey(){
-		return masterKey;
+	public static int getMasterKey(Level world){
+		final String masterKeyLookup = world.dimension().location().toString();
+		if(world.isClientSide){
+			return masterKeysClient.getOrDefault(masterKeyLookup, 0);
+		}else{
+			return masterKeysServer.getOrDefault(masterKeyLookup, 0);
+		}
 	}
 
-	public static void setMasterKey(int masterKey){
-		RotaryUtil.masterKey = masterKey;
+	public static void setMasterKey(int masterKey, Level world){
+		final String masterKeyLookup = world.dimension().location().toString();
+		if(world.isClientSide){
+			masterKeysClient.put(masterKeyLookup, masterKey);
+		}else{
+			masterKeysServer.put(masterKeyLookup, masterKey);
+		}
 	}
 
 	/**

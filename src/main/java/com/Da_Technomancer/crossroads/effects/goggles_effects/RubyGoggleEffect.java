@@ -24,7 +24,7 @@ public class RubyGoggleEffect implements IGoggleEffect{
 
 	@Override
 	public void armorTick(Level world, Player player){
-		if(world.getGameTime() % 5 == 0){
+		if(world.getGameTime() % 2 == 0){
 			Entity entHit = null;
 			Vec3 start = new Vec3(player.getX() - Math.cos(Math.toRadians(player.getYHeadRot())) * 0.18D, player.getY() + player.getEyeHeight() + 0.03D, player.getZ() - Math.sin(Math.toRadians(player.getYHeadRot())) * 0.18D);
 			Vec3 end = start;
@@ -53,7 +53,7 @@ public class RubyGoggleEffect implements IGoggleEffect{
 				world.setBlockAndUpdate(endPos, Blocks.FIRE.defaultBlockState());
 			}
 
-			CRRenderUtil.addBeam(world, start.x, start.y, start.z, (int) Math.sqrt(end.distanceToSqr(start)), player.getXRot(), player.yHeadRot, (byte) 1, Color.RED.getRGB());
+			CRRenderUtil.addBeam(world, start.x, start.y, start.z, (int) Math.sqrt(end.distanceToSqr(start)), player.getXRot(), player.yHeadRot, (byte) 1, Color.RED.getRGB(), (byte) 3);
 		}
 	}
 }

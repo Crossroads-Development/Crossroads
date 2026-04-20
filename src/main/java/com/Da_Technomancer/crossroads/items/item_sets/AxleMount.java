@@ -81,7 +81,7 @@ public class AxleMount extends GearMatItem{
 					context.getItemInHand().shrink(1);
 				}
 
-				RotaryUtil.increaseMasterKey(!world.isClientSide);
+				RotaryUtil.increaseMasterKey(!world.isClientSide, world);
 			}else if(stateAtPlacement.canBeReplaced(new BlockPlaceContext(context))){
 				//No existing mechanism- we will create a new one
 				world.setBlock(placePos, CRBlocks.mechanism.defaultBlockState(), 3);
@@ -99,7 +99,7 @@ public class AxleMount extends GearMatItem{
 					context.getItemInHand().shrink(1);
 				}
 
-				RotaryUtil.increaseMasterKey(!world.isClientSide);
+				RotaryUtil.increaseMasterKey(!world.isClientSide, world);
 			}
 		}
 

@@ -8,6 +8,9 @@ import com.Da_Technomancer.crossroads.effects.goggles_effects.EmeraldGoggleEffec
 import com.Da_Technomancer.crossroads.effects.goggles_effects.QuartzGoggleEffect;
 import com.Da_Technomancer.crossroads.effects.goggles_effects.RubyGoggleEffect;
 import com.mojang.serialization.Codec;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.StringRepresentable;
@@ -38,6 +41,7 @@ public enum EnumGoggleLenses implements StringRepresentable{
 	VOID(CRItemTags.GEMS_VOID, "_void", IGoggleEffect.EMPTY, () -> Keys.controlVoid, true);//Empty effect, the actual effect is done through EventHandlers that check for the void lens.
 
 	public static final Codec<EnumGoggleLenses> CODEC = StringRepresentable.fromEnum(EnumGoggleLenses::values);
+	public static final StreamCodec<ByteBuf, EnumGoggleLenses> STREAM_CODEC = ByteBufCodecs.fromCodec(CODEC);
 
 	private final TagKey<Item> item;
 	private final IGoggleEffect effect;

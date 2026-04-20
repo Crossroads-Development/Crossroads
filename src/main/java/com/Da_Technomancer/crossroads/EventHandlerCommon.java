@@ -32,12 +32,11 @@ import com.Da_Technomancer.crossroads.entity.mob_effects.CRPotions;
 import com.Da_Technomancer.crossroads.entity.mob_effects.Sedation;
 import com.Da_Technomancer.crossroads.fluids.CRFluids;
 import com.Da_Technomancer.crossroads.items.CRItems;
+import com.Da_Technomancer.crossroads.items.technomancy.ArmorEnviroBoots;
 import com.Da_Technomancer.crossroads.items.technomancy.ArmorGoggles;
+import com.Da_Technomancer.crossroads.items.technomancy.ArmorToolbelt;
 import com.Da_Technomancer.crossroads.items.technomancy.TechnomancyArmor;
 import com.Da_Technomancer.crossroads.world.CRWorldGen;
-import com.Da_Technomancer.essentials.Essentials;
-import com.Da_Technomancer.essentials.api.ConfigUtil;
-import com.Da_Technomancer.essentials.items.ESItems;
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import it.unimi.dsi.fastutil.objects.Object2BooleanMaps;
 import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
@@ -87,7 +86,6 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
-import net.neoforged.neoforge.common.util.TriState;
 import net.neoforged.neoforge.event.AnvilUpdateEvent;
 import net.neoforged.neoforge.event.VanillaGameEvent;
 import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
@@ -95,7 +93,6 @@ import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.event.entity.EntityMobGriefingEvent;
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
-import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.level.ExplosionEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -233,6 +230,8 @@ public class EventHandlerCommon{
 				registerThing(helper, "gateway_travel", GatewayTravelTrigger.INSTANCE);
 				registerThing(helper, "dirt_cable", DirtCableTrigger.INSTANCE);
 				registerThing(helper, "atmos_charge", AtmosChargeTrigger.INSTANCE);
+				registerThing(helper, "potion_injected", PotionInjectedTrigger.INSTANCE);
+				registerThing(helper, "chemical_release", ChemicalReleaseTrigger.INSTANCE);
 			});
 
 			e.register(Registries.ITEM_SUB_PREDICATE_TYPE, helper -> {
@@ -452,7 +451,7 @@ public class EventHandlerCommon{
 			}
 
 			//Add lenses to goggles
-			if(inputLeft.getItem() == CRItems.armorGoggles){
+			if(inputLeft.getItem() == CRItems.armorGoggles || inputLeft.getItem() == CRItems.armorGogglesReinforced){
 				ArmorGoggles.LensesSet lenses = inputLeft.getOrDefault(CRItems.GOGGLE_LENSES_DATA, new ArmorGoggles.LensesSet(Object2BooleanMaps.emptyMap()));
 				for(EnumGoggleLenses lens : EnumGoggleLenses.values()){
 					if(lens.matchesRecipe(inputRight) && !lenses.lenses().containsKey(lens)){
@@ -520,7 +519,7 @@ public class EventHandlerCommon{
 	@SuppressWarnings("unused")
 	public void enviroBootsProtect(LivingDamageEvent.Pre e){
 		//Provides immunity from magma block damage and fall damage when wearing enviro_boots
-		if((e.getSource().is(DamageTypes.HOT_FLOOR) || e.getSource().is(DamageTypeTags.IS_FALL)) && e.getEntity().getItemBySlot(EquipmentSlot.FEET).getItem() == CRItems.armorEnviroBoots){
+		if((e.getSource().is(DamageTypes.HOT_FLOOR) || e.getSource().is(DamageTypeTags.IS_FALL)) && e.getEntity().getItemBySlot(EquipmentSlot.FEET).getItem() instanceof ArmorEnviroBoots){
 			e.setNewDamage(0);
 			return;
 		}
@@ -594,7 +593,7 @@ public class EventHandlerCommon{
 	public void savePlayerHotbar(LivingDeathEvent e){
 		try{
 			LivingEntity ent = e.getEntity();
-			if(ent instanceof Player player && !ent.getCommandSenderWorld().isClientSide && ent.getItemBySlot(EquipmentSlot.LEGS).getItem() == CRItems.armorToolbelt && !ent.getCommandSenderWorld().getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)){
+			if(ent instanceof Player player && !ent.getCommandSenderWorld().isClientSide && ent.getItemBySlot(EquipmentSlot.LEGS).getItem() instanceof ArmorToolbelt && !ent.getCommandSenderWorld().getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)){
 				ItemStack[] savedInv = new ItemStack[10];
 				//Hotbar
 				for(int i = 0; i < 9; i++){
@@ -792,18 +791,5 @@ public class EventHandlerCommon{
 	@SubscribeEvent
 	public void potionEffectRemoved(MobEffectEvent.Remove e){
 		Sedation.checkForEffectEnd(e.getEntity(), e.getEffectInstance());
-	}
-
-	@SubscribeEvent
-	public void allowWrenchWithSneakOffhand(PlayerInteractEvent.RightClickBlock e){
-		//Let me explain what the heck this does:
-		//So default vanilla behavior is that shift-right-clicking with an item in your main hand lets the block react to the item
-		//BUT if you shift right click with an item in your main hand, but with ANY item in your off-hand, the block doesn't get a chance to react at all
-		//Which is really annoying, because a lot of CR machines need to be adjusted by shift-right-clicking with a wrench, and that doesn't work if you also use your offhand for stuff
-		//So this specifically allows shift-right-click wrenching CR blocks to still work when you have something in your offhand
-		String registryNamespace;
-		if((ConfigUtil.isWrench(e.getItemStack()) || e.getItemStack().is(ESItems.linkingTool)) && ((registryNamespace = MiscUtil.getRegistryName(e.getLevel().getBlockState(e.getPos()).getBlock(), Registries.BLOCK).getNamespace()).equals(Crossroads.MODID) || registryNamespace.equals(Essentials.MODID))){
-			e.setUseBlock(TriState.TRUE);
-		}
 	}
 }

@@ -33,12 +33,12 @@ public class Sedation extends MobEffect{
 
 		//Also applies a slowness and mining fatigue effect
 		//These effects are meaningless to anything with AI disabled, but will do something to players
-		addAttributeModifier(Attributes.MOVEMENT_SPEED, MOVE_SPEED_MODIFIER_SEDATION_ID, -0.3D, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
-		addAttributeModifier(Attributes.ATTACK_SPEED, ATTACK_SPEED_MODIFIER_SEDATION_ID, -0.2D, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+		addAttributeModifier(Attributes.MOVEMENT_SPEED, MOVE_SPEED_MODIFIER_SEDATION_ID, -0.6D, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+		addAttributeModifier(Attributes.ATTACK_SPEED, ATTACK_SPEED_MODIFIER_SEDATION_ID, -0.6D, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
 	}
 
 	private static boolean canSedationApplyFully(LivingEntity entity){
-		if(entity instanceof Mob){
+		if(entity instanceof Mob mob){
 			//If the entity is already sedated, it must be sedatable
 			if(entity.getPersistentData().getBoolean(SEDATION_KEY)){
 				//We track if the AI was disabled by sedation (vs another source) using a flag in NBT
@@ -54,7 +54,7 @@ public class Sedation extends MobEffect{
 			//We can NOT fully sedate anything that already had the AI disabled due to something other than sedation
 			//Because we assume anything with the AI already disabled is supposed to remain that way
 			//We track if the AI was disabled by sedation (vs another source) using a flag in NBT, which is handled above
-			return !((Mob) entity).isNoAi();
+			return !mob.isNoAi();
 		}
 		return false;
 	}

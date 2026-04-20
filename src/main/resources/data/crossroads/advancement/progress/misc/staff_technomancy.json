@@ -1,0 +1,33 @@
+{
+	"parent": "crossroads:progress/misc/copshowium",
+	"display": {
+		"icon": {
+			"id": "crossroads:staff_technomancy"
+		},
+		"title": {
+			"translate": "crossroads.advancement.staff_technomancy"
+		},
+		"description": {
+			"translate": "crossroads.advancement.staff_technomancy.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"has_item": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "crossroads:staff_technomancy"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_item"
+		]
+	]
+}

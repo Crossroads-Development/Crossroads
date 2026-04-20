@@ -49,7 +49,7 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 	private final FluxHelper fluxHelper;
 
 	//Make the top handler an IFluidTank to allow pipes to do bi-directional stuff
-	private final IFluidHandler inputFluidHandler = new FluidHandler(0);
+	private final IFluidHandler inputFluidHandler = new FluidTankHandler(0);
 	private final IFluidHandler outputFluidHandler = new FluidHandler(1);
 	private final IBeamHandler beamHandler = new BeamHandler();
 

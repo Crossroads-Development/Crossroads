@@ -17,7 +17,7 @@ public abstract class TechnomancyArmor extends ArmorItem{
 	protected final boolean reinforced;
 
 	public TechnomancyArmor(ArmorItem.Type type, boolean reinforced){
-		super(reinforced ? CRItems.TECHNOMANCY_REINFORCED_ARMOR_MATERIAL : CRItems.TECHNOMANCY_ARMOR_MATERIAL, type, new Properties().stacksTo(1).fireResistant());
+		super(reinforced ? CRItems.TECHNOMANCY_REINFORCED_ARMOR_MATERIAL : CRItems.TECHNOMANCY_ARMOR_MATERIAL, type, new Properties().stacksTo(1).fireResistant().durability(type.getDurability(reinforced ? 37 : 15)));
 		this.armorType = type;
 		this.reinforced = reinforced;
 	}

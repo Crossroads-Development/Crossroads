@@ -106,23 +106,25 @@ public class EntityFlyingMachine extends Entity{
 				}
 				setDeltaMovement(vel[0], vel[1], vel[2]);
 			}
-		}else if(!level().isClientSide){
+		}else{
 			//When we have no rider, just go down
 			setAngle(0);
-			vel[1] -= ACCEL;
+			if(!level().isClientSide){
+				vel[1] -= ACCEL;
 
-			markHurt();
-			move(MoverType.SELF, getDeltaMovement());
+				markHurt();
+				move(MoverType.SELF, getDeltaMovement());
 
-			//Air resistance/friction
-			final double min = 0.003D;
-			for(int i = 0; i < 3; i++){
-				vel[i] *= 0.8D;
-				if(Math.abs(vel[i]) < min){
-					vel[i] = 0;
+				//Air resistance/friction
+				final double min = 0.003D;
+				for(int i = 0; i < 3; i++){
+					vel[i] *= 0.8D;
+					if(Math.abs(vel[i]) < min){
+						vel[i] = 0;
+					}
 				}
+				setDeltaMovement(vel[0], vel[1], vel[2]);
 			}
-			setDeltaMovement(vel[0], vel[1], vel[2]);
 		}
 
 		super.tick();
@@ -177,7 +179,7 @@ public class EntityFlyingMachine extends Entity{
 
 	@Override
 	protected Vec3 getPassengerAttachmentPoint(Entity pEntity, EntityDimensions pDimensions, float pPartialTick){
-		return super.getPassengerAttachmentPoint(pEntity, pDimensions, pPartialTick).add(0, 1.1D, 0);
+		return super.getPassengerAttachmentPoint(pEntity, pDimensions, pPartialTick).add(0, 0.05D, 0);
 	}
 
 	@Override

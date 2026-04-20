@@ -58,7 +58,7 @@ public class WindTurbine extends BaseEntityBlock implements IReadable{
 		if(ConfigUtil.isWrench(heldItem)){
 			if(!worldIn.isClientSide){
 				worldIn.setBlockAndUpdate(pos, state.setValue(CRProperties.HORIZ_FACING, state.getValue(CRProperties.HORIZ_FACING).getClockWise()));
-				RotaryUtil.increaseMasterKey(true);
+				RotaryUtil.increaseMasterKey(true, worldIn);
 			}
 			return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
 		}else if(CraftingUtil.tagContains(Tags.Items.DYES, heldItem.getItem())){

@@ -1,0 +1,36 @@
+{
+	"parent": "crossroads:progress/misc/flame_cloud_safety",
+	"display": {
+		"icon": {
+			"id": "crossroads:shell_cryst",
+			"components": {
+				"crossroads:reagents": {
+					"qty_hellfire": 1
+				}
+			}
+		},
+		"title": {
+			"translate": "crossroads.advancement.ignis_infernum"
+		},
+		"description": {
+			"translate": "crossroads.advancement.ignis_infernum.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"hellfire": {
+			"trigger": "crossroads:chemical_release",
+			"conditions": {
+				"required_reagents": [
+					"hellfire"
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"hellfire"
+		]
+	]
+}

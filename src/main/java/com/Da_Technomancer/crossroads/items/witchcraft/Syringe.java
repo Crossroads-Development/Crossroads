@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.items.witchcraft;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.advancements.PotionInjectedTrigger;
 import com.Da_Technomancer.crossroads.api.witchcraft.IPerishable;
 import com.Da_Technomancer.crossroads.entity.CRMobDamage;
 import com.Da_Technomancer.crossroads.entity.mob_effects.CRPotions;
@@ -11,6 +12,7 @@ import com.Da_Technomancer.essentials.api.BlockUtil;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -75,7 +77,11 @@ public class Syringe extends Item{
 					for(MobEffectInstance effect : potion.getAllEffects()){
 						if(effect.getEffect().value().isInstantenous()){
 							//Multiply intensity
-							target.addEffect(new MobEffectInstance(effect.getEffect(), effect.getDuration(), (int) Math.round(effect.getAmplifier() * multiplier), effect.isAmbient(), effect.isVisible(), effect.showIcon()));
+							MobEffectInstance appliedInstance = new MobEffectInstance(effect.getEffect(), effect.getDuration(), (int) Math.round(effect.getAmplifier() * multiplier), effect.isAmbient(), effect.isVisible(), effect.showIcon());
+							target.addEffect(appliedInstance);
+							if(user instanceof ServerPlayer sPlayer){
+								PotionInjectedTrigger.INSTANCE.trigger(sPlayer, appliedInstance.getEffect().value(), appliedInstance.getAmplifier(), false, target);
+							}
 						}else if(CRPotions.applyAsPermanent(target, effect) && penalty > 0){
 							//Make permanent, apply a penalty
 							AttributeInstance maxHealthAttribute = target.getAttributes().getInstance(Attributes.MAX_HEALTH);
@@ -86,6 +92,9 @@ public class Syringe extends Item{
 //							int prevPenaltyIntensity = penaltyEffect != null ? penaltyEffect.getAmplifier() : -1;
 //							penaltyEffect = new MobEffectInstance(CRPotions.HEALTH_PENALTY_EFFECT, Integer.MAX_VALUE, (penalty - 1) + (prevPenaltyIntensity + 1));
 //							CRPotions.applyAsPermanent(target, penaltyEffect);
+								if(user instanceof ServerPlayer sPlayer){
+									PotionInjectedTrigger.INSTANCE.trigger(sPlayer, effect.getEffect().value(), 1, true, target);
+								}
 							}
 						}
 					}
@@ -94,10 +103,17 @@ public class Syringe extends Item{
 						if(effect.getEffect().value().isInstantenous()){
 							//Multiply intensity
 							effect.getEffect().value().applyInstantenousEffect(user, user, target, (int) Math.round(effect.getAmplifier() * multiplier), 1);
+							if(user instanceof ServerPlayer sPlayer){
+								PotionInjectedTrigger.INSTANCE.trigger(sPlayer, effect.getEffect().value(), (int) Math.round(effect.getAmplifier() * multiplier), false, target);
+							}
 //						target.addEffect(new MobEffectInstance(effect.getEffect(), effect.getDuration(), (int) Math.round(effect.getAmplifier() * multiplier), effect.isAmbient(), effect.isVisible(), effect.showIcon()));
 						}else{
 							//Multiply duration
-							target.addEffect(new MobEffectInstance(effect.getEffect(), (int) Math.round(effect.getDuration() * multiplier), effect.getAmplifier(), effect.isAmbient(), effect.isVisible(), effect.showIcon()));
+							MobEffectInstance appliedInstance = new MobEffectInstance(effect.getEffect(), (int) Math.round(effect.getDuration() * multiplier), effect.getAmplifier(), effect.isAmbient(), effect.isVisible(), effect.showIcon());
+							target.addEffect(appliedInstance);
+							if(user instanceof ServerPlayer sPlayer){
+								PotionInjectedTrigger.INSTANCE.trigger(sPlayer, appliedInstance.getEffect().value(), appliedInstance.getAmplifier(), false, target);
+							}
 						}
 					}
 				}

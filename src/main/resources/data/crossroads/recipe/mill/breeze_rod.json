@@ -1,0 +1,10 @@
+{
+	"type": "crossroads:mill",
+	"input": {
+		"tag": "c:rods/breeze"
+	},
+	"output": {
+		"id": "wind_charge",
+		"count": 6
+	}
+}

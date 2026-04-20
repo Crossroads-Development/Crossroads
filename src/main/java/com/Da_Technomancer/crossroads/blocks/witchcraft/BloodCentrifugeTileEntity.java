@@ -85,14 +85,10 @@ public class BloodCentrifugeTileEntity extends InventoryTE implements IAxleCapab
 			progress++;
 			if(progress >= REQUIRED){
 				final double avgDeviation = deviation / REQUIRED;
-				//This formula is a quadratic tuned for gameplay, not anything fundamental
+				//This formula is tuned for gameplay, not anything fundamental
 				//Basically, baring a redstone master axis, reducing avgDeviation using rotary setups gets increasingly difficult as it gets closer to zero
 				//So to not give diminishing returns for clever designs or high-effort builds, we rig the formula to award increasing amounts of quality points for finer-and-finer improvements (to a cap)
-				int qualityChange = (int) Math.ceil(MAX_ADDED_QUALITY * Math.max(0D, Math.min(1D, .125D * avgDeviation * avgDeviation - 0.8D * avgDeviation + 1.25D)));
-				if(avgDeviation > 3D){
-					//Since it's a quadratic, it can push back into the positives at extreme values, which is unwanted. Correct for this.
-					qualityChange = 0;
-				}
+				int qualityChange = (int) Math.round(MAX_ADDED_QUALITY * Math.max(0D, Math.min(1D, avgDeviation < 0.1 ? 1D : 1.1D / avgDeviation - 0.3D)));
 				for(int i = 0; i < 2; i++){
 					if(!inventory[i].isEmpty()){
 						EntityTemplate template = BloodSample.getBaseTemplate(inventory[i]);

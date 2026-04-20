@@ -1,0 +1,47 @@
+{
+	"parent": "crossroads:progress/misc/potion_extension",
+	"display": {
+		"icon": {
+			"id": "minecraft:potion",
+			"components": {
+				"minecraft:potion_contents": {
+					"potion": "crossroads:sedation"
+				}
+			}
+		},
+		"title": {
+			"translate": "crossroads.advancement.perma_sedation"
+		},
+		"description": {
+			"translate": "crossroads.advancement.perma_sedation.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"statue": {
+			"trigger": "crossroads:potion_injected",
+			"conditions": {
+				"potion_effect": "effect.crossroads.sedation",
+				"require_permanent": true,
+				"target": [
+					{
+						"condition": "minecraft:inverted",
+						"term": {
+							"condition": "minecraft:entity_properties",
+							"entity": "this",
+							"predicate": {
+								"type": "minecraft:player"
+							}
+						}
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"statue"
+		]
+	]
+}

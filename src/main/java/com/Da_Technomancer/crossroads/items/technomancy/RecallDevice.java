@@ -106,7 +106,7 @@ public class RecallDevice extends Item implements WindingTableTileEntity.IWindab
 			//Player only sound for setting a position
 			player.playSound(SoundEvents.BELL_BLOCK, 2F, 1F);
 		}
-		return new RecallData(timestamp, playerName, dimension, posX, posY, posY, blockPos, yaw, yawHead, pitch, health, hunger, saturation, velX, velY, velZ);
+		return new RecallData(timestamp, playerName, dimension, posX, posY, posZ, blockPos, yaw, yawHead, pitch, health, hunger, saturation, velX, velY, velZ);
 	}
 
 	private void recall(@Nullable RecallData data, Player player, ItemStack held){

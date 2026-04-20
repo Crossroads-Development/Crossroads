@@ -507,12 +507,12 @@ public final class CRItems{
 			return angle;
 			*/
 		});
-		//Technomancy armor
-		ItemPropertyFunction technoArmorPropertyGetter = (ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity, int unmapped) -> TechnomancyArmor.isReinforced(stack) ? 2F : 0F;
-		ItemProperties.register(armorGoggles, ResourceLocation.parse("protection"), technoArmorPropertyGetter);
-		ItemProperties.register(propellerPack, ResourceLocation.parse("protection"), technoArmorPropertyGetter);
-		ItemProperties.register(armorToolbelt, ResourceLocation.parse("protection"), technoArmorPropertyGetter);
-		ItemProperties.register(armorEnviroBoots, ResourceLocation.parse("protection"), technoArmorPropertyGetter);
+//		//Technomancy armor
+//		ItemPropertyFunction technoArmorPropertyGetter = (ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity, int unmapped) -> TechnomancyArmor.isReinforced(stack) ? 2F : 0F;
+//		ItemProperties.register(armorGoggles, ResourceLocation.parse("protection"), technoArmorPropertyGetter);
+//		ItemProperties.register(propellerPack, ResourceLocation.parse("protection"), technoArmorPropertyGetter);
+//		ItemProperties.register(armorToolbelt, ResourceLocation.parse("protection"), technoArmorPropertyGetter);
+//		ItemProperties.register(armorEnviroBoots, ResourceLocation.parse("protection"), technoArmorPropertyGetter);
 		//Rotting samples
 		ItemPropertyFunction rottingPropertyGetter = (ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity, int unmapped) -> stack.getItem() instanceof IPerishable && IPerishable.isSpoiled(stack, world) ? 1F : 0F;
 		ItemProperties.register(bloodSample, ResourceLocation.parse("spoiled"), rottingPropertyGetter);

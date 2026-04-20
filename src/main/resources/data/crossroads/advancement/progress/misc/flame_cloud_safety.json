@@ -1,0 +1,46 @@
+{
+	"parent": "crossroads:progress/misc/phil_stone",
+	"display": {
+		"icon": {
+			"id": "crossroads:fire_detector"
+		},
+		"title": {
+			"translate": "crossroads.advancement.flame_cloud_safety"
+		},
+		"description": {
+			"translate": "crossroads.advancement.flame_cloud_safety.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"has_item_detect": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "crossroads:fire_detector"
+					}
+				]
+			}
+		},
+		"has_item_powder": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "crossroads:damping_powder"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_item_detect"
+		],
+		[
+			"has_item_powder"
+		]
+	]
+}

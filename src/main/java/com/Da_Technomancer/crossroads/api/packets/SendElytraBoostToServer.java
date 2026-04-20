@@ -28,8 +28,8 @@ public record SendElytraBoostToServer() implements CustomPacketPayload{
 		context.enqueueWork(() -> {
 			if(context.player() instanceof ServerPlayer sender){
 				ItemStack chestplate = sender.getItemBySlot(EquipmentSlot.CHEST);
-				if(sender.isFallFlying() && chestplate.getItem() == CRItems.propellerPack && CRItems.propellerPack.getWindLevel(chestplate) > 0){
-					CRItems.propellerPack.setWindLevel(chestplate, CRItems.propellerPack.getWindLevel(chestplate) - ArmorPropellerPack.WIND_PER_BOOST);
+				if(sender.isFallFlying() && chestplate.getItem() instanceof ArmorPropellerPack pack && pack.getWindLevel(chestplate) > 0){
+					pack.setWindLevel(chestplate, pack.getWindLevel(chestplate) - ArmorPropellerPack.WIND_PER_BOOST);
 					ArmorPropellerPack.applyMidairBoost(sender);
 				}
 			}

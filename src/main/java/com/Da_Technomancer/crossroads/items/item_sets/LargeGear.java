@@ -94,7 +94,7 @@ public class LargeGear extends GearMatItem{
 		}
 
 		//Notify the rotary system of a change
-		RotaryUtil.increaseMasterKey(false);
+		RotaryUtil.increaseMasterKey(false, world);
 
 		return InteractionResult.SUCCESS;
 	}

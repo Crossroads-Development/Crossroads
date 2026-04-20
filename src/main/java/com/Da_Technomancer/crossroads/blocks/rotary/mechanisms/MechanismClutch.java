@@ -49,7 +49,7 @@ public class MechanismClutch extends MechanismAxle{
 	public void onRedstoneChange(double prevValue, double newValue, IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis, double energy, double speed, MechanismTileEntity te){
 		if((newValue == 0) ^ (prevValue == 0)){
 			te.getLevel().playSound(null, te.getBlockPos(), SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.3F, (newValue != 0) ^ inverted ? 0.6F : 0.5F);
-			RotaryUtil.increaseMasterKey(true);
+			RotaryUtil.increaseMasterKey(true, te.getLevel());
 		}
 	}
 

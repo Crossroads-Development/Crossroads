@@ -41,8 +41,8 @@ public class HeatLimiterBasicTileEntity extends BlockEntity implements ITickable
 	public float setting = 0;
 	public String expression = "0";
 
-	private IHeatHandler heatHandlerIn = new HeatHandler(true);
-	private IHeatHandler heatHandlerOut = new HeatHandler(false);
+	private final IHeatHandler heatHandlerIn = new HeatHandler(true);
+	private final IHeatHandler heatHandlerOut = new HeatHandler(false);
 
 	public HeatLimiterBasicTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state);
@@ -111,6 +111,17 @@ public class HeatLimiterBasicTileEntity extends BlockEntity implements ITickable
 	}
 
 	@Override
+	public void setBlockState(BlockState pBlockState){
+		super.setBlockState(pBlockState);
+		//This is not, strictly speaking, optimized
+		//Pre MC1.21, default behavior for all TEs was that changing blockstate invalidated capability caches
+		//Post MC1.21, this is no longer the case, which opens up some opportunities for optimization
+		//But everything was written with the assumption of invalidation on state change,
+		//So anything other than re-implementing the old default is going to introduce a lot of new bugs
+		level.invalidateCapabilities(worldPosition);
+	}
+
+	@Override
 	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries){
 		super.saveAdditional(nbt, pRegistries);
 		nbt.putBoolean("init_heat", init);
@@ -128,13 +139,6 @@ public class HeatLimiterBasicTileEntity extends BlockEntity implements ITickable
 		heatOut = nbt.getDouble("heat_out");
 		setting = nbt.getFloat("setting");
 		expression = nbt.getString("expression");
-	}
-
-	@Override
-	public void setBlockState(BlockState stateIn){
-		super.setBlockState(stateIn);
-		heatHandlerIn = new HeatHandler(true);
-		heatHandlerOut = new HeatHandler(false);
 	}
 
 	@Override

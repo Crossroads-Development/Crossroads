@@ -123,7 +123,7 @@ public class Mechanism extends BaseEntityBlock implements IReadable{
 
 	@Override
 	public boolean onDestroyedByPlayer(BlockState state, Level worldIn, BlockPos pos, Player player, boolean willHarvest, FluidState fluid){
-		RotaryUtil.increaseMasterKey(false);
+		RotaryUtil.increaseMasterKey(false, worldIn);
 		return super.onDestroyedByPlayer(state, worldIn, pos, player, willHarvest, fluid);
 	}
 
@@ -180,7 +180,7 @@ public class Mechanism extends BaseEntityBlock implements IReadable{
 
 	@Override
 	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving){
-		RotaryUtil.increaseMasterKey(true);
+		RotaryUtil.increaseMasterKey(true, worldIn);
 
 		if(worldIn.isClientSide){
 			return;
@@ -252,7 +252,7 @@ public class Mechanism extends BaseEntityBlock implements IReadable{
 						worldIn.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
 					}
 				}
-				RotaryUtil.increaseMasterKey(!worldIn.isClientSide);
+				RotaryUtil.increaseMasterKey(!worldIn.isClientSide, worldIn);
 				return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
 			}
 

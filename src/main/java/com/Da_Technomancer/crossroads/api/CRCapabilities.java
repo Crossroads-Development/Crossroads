@@ -50,7 +50,7 @@ public class CRCapabilities{
 		e.registerBlock(Capabilities.FluidHandler.BLOCK, IFluidCapable.CAPABLE_PROVIDER, CRBlocks.blastFurnace, CRBlocks.copshowiumCreationChamber, CRBlocks.cultivatorVat, CRBlocks.fatCollector, CRBlocks.fatCongealer,
 				CRBlocks.fatFeeder, CRBlocks.fluidCoolingChamber, CRBlocks.fluidInjectorGlass, CRBlocks.fluidInjectorCrystal, CRBlocks.fluidTank, CRBlocks.fluidTube, CRBlocks.redstoneFluidTube, CRBlocks.fluidVoid,
 				CRBlocks.formulationVat, CRBlocks.heatingCrucible, CRBlocks.hydroponicsTrough, CRBlocks.oreCleanser, CRBlocks.radiator, CRBlocks.rotaryPump, CRBlocks.saltReactor, CRBlocks.steamBoiler,
-				CRBlocks.steamTurbine, CRBlocks.steamer, CRBlocks.waterCentrifuge);
+				CRBlocks.steamTurbine, CRBlocks.steamer, CRBlocks.waterCentrifuge, CRBlocks.hamsterWheel, CRBlocks.maxwellDemon);
 		e.registerBlock(IRedstoneHandler.REDS_HANDLER_BLOCK, IRedstoneCapable.CAPABLE_PROVIDER, CRBlocks.beamSiphon, CRBlocks.beamSplitter, CRBlocks.heatLimiterRedstone, CRBlocks.itemCannon, CRBlocks.redstoneAxis, CRBlocks.sequenceBox);
 		e.registerBlock(Capabilities.EnergyStorage.BLOCK, IEnergyCapable.CAPABLE_PROVIDER, CRBlocks.atmosCharger, CRBlocks.chargingStand, CRBlocks.chronoHarness, CRBlocks.dynamo, CRBlocks.lodestoneDynamo,
 				CRBlocks.reactionChamberGlass, CRBlocks.reactionChamberCrystal, CRBlocks.teslaCoil, CRBlocks.voltusGenerator);

@@ -49,6 +49,17 @@ public class DensusPlateTileEntity extends BlockEntity implements ITickableTileE
 	}
 
 	@Override
+	public void setBlockState(BlockState pBlockState){
+		super.setBlockState(pBlockState);
+		//This is not, strictly speaking, optimized
+		//Pre MC1.21, default behavior for all TEs was that changing blockstate invalidated capability caches
+		//Post MC1.21, this is no longer the case, which opens up some opportunities for optimization
+		//But everything was written with the assumption of invalidation on state change,
+		//So anything other than re-implementing the old default is going to introduce a lot of new bugs
+		level.invalidateCapabilities(worldPosition);
+	}
+
+	@Override
 	public void serverTick(){
 		Direction dir = getFacing().getOpposite();
 		boolean inverse = isAnti();

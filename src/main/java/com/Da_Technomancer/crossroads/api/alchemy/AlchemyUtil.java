@@ -2,6 +2,7 @@ package com.Da_Technomancer.crossroads.api.alchemy;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.advancements.ChemicalReleaseTrigger;
 import com.Da_Technomancer.crossroads.ambient.particles.CRParticles;
 import com.Da_Technomancer.crossroads.ambient.particles.ColorParticleData;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
@@ -10,6 +11,8 @@ import com.Da_Technomancer.crossroads.entity.EntityFlameCore;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -57,6 +60,7 @@ public class AlchemyUtil{
 		int[] solCol = new int[4];
 		int[] liqCol = new int[4];
 		int[] gasCol = new int[4];
+		int highestRange = 0;
 
 		ArrayList<QueuedEffect> effectsSol = new ArrayList<>(reags.keySetSize());
 		ArrayList<QueuedEffect> effectsLiq = new ArrayList<>(reags.keySetSize());
@@ -107,6 +111,7 @@ public class AlchemyUtil{
 
 		//The flame effect takes priority over normal effects
 		if(flameRange > 0){
+			highestRange = Math.max(highestRange, flameRange);
 			if(CRConfig.phelEffect.get()){
 				EntityFlameCore coreFlame = EntityFlameCore.type.create(world);
 				coreFlame.setPos(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
@@ -124,6 +129,7 @@ public class AlchemyUtil{
 			if(liqQty > 0){
 				effectsLiq.addAll(effectsSol);//Perform solid effects alongside liquid
 				int maxRange = getSplashRange(liqQty);
+				highestRange = Math.max(highestRange, maxRange);
 				liqCol[0] = (liqCol[0] + solCol[0]) / (liqQty + solQty);
 				liqCol[1] = (liqCol[1] + solCol[1]) / (liqQty + solQty);
 				liqCol[2] = (liqCol[2] + solCol[2]) / (liqQty + solQty);
@@ -147,6 +153,7 @@ public class AlchemyUtil{
 				}
 			}else if(solQty > 0){
 				//Perform solid independently
+				highestRange = Math.max(highestRange, 1);
 				solCol[0] /= solQty;
 				solCol[1] /= solQty;
 				solCol[2] /= solQty;
@@ -165,6 +172,7 @@ public class AlchemyUtil{
 				gasCol[2] /= gasQty;
 				gasCol[3] /= gasQty;
 				int maxRange = getGasRange(gasQty);
+				highestRange = Math.max(highestRange, maxRange);
 				for(int i = -maxRange; i <= maxRange; i++){
 					for(int j = -maxRange; j <= maxRange; j++){
 						for(int k = -maxRange; k <= maxRange; k++){
@@ -178,6 +186,14 @@ public class AlchemyUtil{
 						}
 					}
 				}
+			}
+		}
+
+		//Need to be quite generous on the range for this, given the tendency to stand WAY back from ex. ignis infernum
+		final int advancementRangeSqr = (int) Math.pow(highestRange * 1.5F + 20, 2);
+		for(Player player : world.players()){
+			if(!player.isSpectator() && player.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) < advancementRangeSqr && player instanceof ServerPlayer serverPlayer){
+				ChemicalReleaseTrigger.INSTANCE.trigger(serverPlayer, reags);
 			}
 		}
 	}

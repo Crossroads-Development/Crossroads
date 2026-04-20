@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.blocks.rotary.mechanisms;
 
 import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
-import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
 import com.Da_Technomancer.crossroads.api.CRCapabilities;
+import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
 import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.api.rotary.*;
 import com.Da_Technomancer.crossroads.items.CRItems;
@@ -19,11 +19,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.capabilities.BlockCapability;
-
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -41,7 +39,7 @@ public class MechanismToggleGear extends MechanismSmallGear{
 	public void onRedstoneChange(double prevValue, double newValue, IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis, double energy, double speed, MechanismTileEntity te){
 		if((newValue == 0) ^ (prevValue == 0)){
 			CRSounds.playSoundServer(te.getLevel(), te.getBlockPos(), SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.3F, (newValue != 0) ^ inverted ? 0.6F : 0.5F);
-			RotaryUtil.increaseMasterKey(true);
+			RotaryUtil.increaseMasterKey(true, te.getLevel());
 		}
 	}
 
@@ -77,54 +75,14 @@ public class MechanismToggleGear extends MechanismSmallGear{
 		handler.setRotRatio(rotRatioIn);
 		handler.setUpdateKey(key);
 
-		BlockEntity sideTE = te.getLevel().getBlockEntity(te.getBlockPos().relative(side));
-
 		//Don't connect via cogs if disabled
 		if((te.redstoneIn != 0) ^ inverted){
-			//Other internal gears
-			for(int i = 0; i < 6; i++){
-				if(i != side.get3DDataValue() && i != side.getOpposite().get3DDataValue() && te.members[i] != null && te.members[i].hasCap(CRCapabilities.COG_CAPABILITY, Direction.from3DDataValue(i), te.mats[i], Direction.from3DDataValue(i), te.getAxleAxis(), te)){
-					te.axleHandlers[i].propagate(masterIn, key, RotaryUtil.getDirSign(side, Direction.from3DDataValue(i)) * handler.getRotationRatio(), .5D, !handler.renderOffset());
-				}
-			}
-
-			for(int i = 0; i < 6; i++){
-				if(i != side.get3DDataValue() && i != side.getOpposite().get3DDataValue()){
-					Direction facing = Direction.from3DDataValue(i);
-					// Adjacent gears
-					BlockPos adjPos = te.getBlockPos().relative(facing);
-					ICogHandler cogHandler;
-					if((cogHandler = te.getLevel().getCapability(CRCapabilities.COG_CAPABILITY, adjPos, side)) != null){
-						cogHandler.connect(masterIn, key, -handler.getRotationRatio(), .5D, facing.getOpposite(), handler.renderOffset());
-					}else if((cogHandler = te.getLevel().getCapability(CRCapabilities.COG_CAPABILITY, adjPos, facing.getOpposite())) != null){
-							//Check for large gears
-						cogHandler.connect(masterIn, key, RotaryUtil.getDirSign(side, facing) * handler.getRotationRatio(), .5D, side, handler.renderOffset());
-					}
-
-					// Diagonal gears
-					BlockPos diagPos = te.getBlockPos().relative(facing).relative(side);
-					if((cogHandler = te.getLevel().getCapability(CRCapabilities.COG_CAPABILITY, diagPos, facing.getOpposite())) != null && RotaryUtil.canConnectThrough(te.getLevel(), te.getBlockPos().relative(facing), facing.getOpposite(), side)){
-						cogHandler.connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * handler.getRotationRatio(), .5D, side.getOpposite(), handler.renderOffset());
-					}
-
-//					if((cogHandler = te.getLevel().getCapability(CRCapabilities.COG_CAPABILITY, diagPos, facing)) != null){
-//						cogHandler.connect(masterIn, key, -RotaryUtil.getDirSign(side, facing) * rotRatioIn, .5D, side.getOpposite(), handler.renderOffset());
-//					}
-				}
-			}
+			propagateCogs(mat, side, axis, te, handler, masterIn, key, rotRatioIn, lastRadius);
 		}
 
 		//Connected block
-		if(sideTE != null){
-			IAxisHandler axisOpt = te.getLevel().getCapability(CRCapabilities.AXIS_CAPABILITY, sideTE.getBlockPos(), side.getOpposite());
-			if(axisOpt != null){
-				axisOpt.trigger(masterIn, key);
-			}
-			IAxleHandler axleOpt = te.getLevel().getCapability(CRCapabilities.AXLE_CAPABILITY, sideTE.getBlockPos(), side.getOpposite());
-			if(axleOpt != null){
-				axleOpt.propagate(masterIn, key, handler.getRotationRatio(), 0, handler.renderOffset());
-			}
-		}
+		BlockPos sidePos = te.getBlockPos().relative(side);
+		RotaryUtil.propagateAxially(te.getLevel(), sidePos, side.getOpposite(), handler, masterIn, key, handler.renderOffset());
 
 		//Axle slot
 		if(te.getAxleAxis() == side.getAxis() && te.members[6] != null && te.members[6].hasCap(CRCapabilities.AXLE_CAPABILITY, side, te.mats[6], null, te.getAxleAxis(), te)){

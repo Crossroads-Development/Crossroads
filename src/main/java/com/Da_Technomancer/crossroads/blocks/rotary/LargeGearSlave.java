@@ -101,7 +101,7 @@ public class LargeGearSlave extends BaseEntityBlock{
 
 	@Override
 	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving){
-		RotaryUtil.increaseMasterKey(true);
+		RotaryUtil.increaseMasterKey(true, worldIn);
 		super.neighborChanged(state, worldIn, pos, blockIn, fromPos, isMoving);
 	}
 

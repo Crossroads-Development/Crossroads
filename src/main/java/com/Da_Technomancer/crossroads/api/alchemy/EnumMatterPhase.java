@@ -1,8 +1,12 @@
 package com.Da_Technomancer.crossroads.api.alchemy;
 
+import com.mojang.serialization.Codec;
 import net.minecraft.core.Direction;
+import net.minecraft.util.StringRepresentable;
 
-public enum EnumMatterPhase{
+import java.util.Locale;
+
+public enum EnumMatterPhase implements StringRepresentable{
 
 	//Order affects rendering in ReagentRenderer
 
@@ -21,6 +25,8 @@ public enum EnumMatterPhase{
 		this.flowsDown = flowsDown;
 	}
 
+	public static final Codec<EnumMatterPhase> CODEC = StringRepresentable.fromEnum(EnumMatterPhase::values);
+
 	public boolean flows(){
 		return flows;
 	}
@@ -35,5 +41,10 @@ public enum EnumMatterPhase{
 
 	public boolean canFlow(Direction toDirection){
 		return flows() && (toDirection != Direction.UP || flowsUp) && (toDirection != Direction.DOWN || flowsDown);
+	}
+
+	@Override
+	public String getSerializedName(){
+		return name().toLowerCase(Locale.US);
 	}
 }

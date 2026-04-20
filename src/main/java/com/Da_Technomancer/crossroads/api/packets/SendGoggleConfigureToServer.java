@@ -26,11 +26,11 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import javax.annotation.Nullable;
 
-public record SendGoggleConfigureToServer(String lensName, boolean newSetting) implements CustomPacketPayload{
+public record SendGoggleConfigureToServer(EnumGoggleLenses lens, boolean newSetting) implements CustomPacketPayload{
 	public static final CustomPacketPayload.Type<SendGoggleConfigureToServer> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "send_goggle_configure_server"));
 
 	public static final StreamCodec<ByteBuf, SendGoggleConfigureToServer> STREAM_CODEC = StreamCodec.composite(
-			ByteBufCodecs.STRING_UTF8, SendGoggleConfigureToServer::lensName,
+			EnumGoggleLenses.STREAM_CODEC, SendGoggleConfigureToServer::lens,
 			ByteBufCodecs.BOOL, SendGoggleConfigureToServer::newSetting,
 			SendGoggleConfigureToServer::new
 	);
@@ -39,22 +39,15 @@ public record SendGoggleConfigureToServer(String lensName, boolean newSetting) i
 		context.enqueueWork(() -> {
 			if(context.player() instanceof ServerPlayer player){
 				ItemStack stack = player.getItemBySlot(EquipmentSlot.HEAD);
-				EnumGoggleLenses packetLens;
-				try{
-					packetLens = EnumGoggleLenses.valueOf(packet.lensName);
-				}catch(IllegalArgumentException e){
-					Crossroads.logger.error("Invalid goggles configuration packet received", e);
-					return;
-				}
 				ArmorGoggles.LensesSet lenses;
-				if(stack.getItem() == CRItems.armorGoggles && stack.has(CRItems.GOGGLE_LENSES_DATA) && (lenses = stack.get(CRItems.GOGGLE_LENSES_DATA)).lenses().containsKey(packetLens)){
-					if(EnumGoggleLenses.DIAMOND.toString().equals(packet.lensName)){
+				if((stack.getItem() == CRItems.armorGoggles || stack.getItem() == CRItems.armorGogglesReinforced) && stack.has(CRItems.GOGGLE_LENSES_DATA) && (lenses = stack.get(CRItems.GOGGLE_LENSES_DATA)).lenses().containsKey(packet.lens)){
+					if(EnumGoggleLenses.DIAMOND == packet.lens){
 //					StoreNBTToClient.syncNBTToClient(player);//Sync player path data to client
 						player.openMenu(GoggleProvider.INSTANCE, buf -> buf.writeBoolean(true));
 					}
-					if(packetLens.requireEnableKey()){
+					if(packet.lens.requireEnableKey()){
 						Object2BooleanMap<EnumGoggleLenses> newLenses = new Object2BooleanOpenHashMap<>(lenses.lenses());
-						newLenses.put(packetLens, packet.newSetting);
+						newLenses.put(packet.lens, packet.newSetting);
 						stack.set(CRItems.GOGGLE_LENSES_DATA, new ArmorGoggles.LensesSet(newLenses));
 					}
 				}

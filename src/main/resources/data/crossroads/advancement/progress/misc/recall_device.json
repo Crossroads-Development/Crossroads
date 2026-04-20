@@ -1,0 +1,33 @@
+{
+	"parent": "crossroads:progress/misc/copshowium",
+	"display": {
+		"icon": {
+			"id": "crossroads:recall_device"
+		},
+		"title": {
+			"translate": "crossroads.advancement.recall_device"
+		},
+		"description": {
+			"translate": "crossroads.advancement.recall_device.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"has_item": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "crossroads:recall_device"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_item"
+		]
+	]
+}

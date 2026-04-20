@@ -68,7 +68,7 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 			for(int i = 0; i < 6; i++){
 				Direction dir = Direction.from3DDataValue(i);
 				BlockPos relPos = worldPosition.relative(dir);
-				otherHandlers[i] = BlockCapabilityCache.create(CRCapabilities.HEAT_CAPABILITY, sLevel, relPos, dir.getOpposite(), () -> !this.isRemoved(), () -> {});
+				otherHandlers[i] = BlockCapabilityCache.create(CRCapabilities.HEAT_CAPABILITY, sLevel, relPos, dir.getOpposite());
 			}
 		}
 	}
@@ -90,11 +90,11 @@ public class HeatCableTileEntity extends ModuleTE implements ConduitBlock.ICondu
 
 		//Heat transfer
 		ArrayList<IHeatHandler> heatHandlers = new ArrayList<>(6);
+		initHandlerCache();
 		for(Direction side : Direction.values()){
 			if(locked(side.get3DDataValue())){
 				continue;
 			}
-			initHandlerCache();
 			IHeatHandler otherHeatHandler = otherHandlers[side.get3DDataValue()].getCapability();
 			if(otherHeatHandler != null){
 				temp += otherHeatHandler.getTemp();

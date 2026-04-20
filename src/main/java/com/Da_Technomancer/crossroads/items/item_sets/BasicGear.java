@@ -90,7 +90,7 @@ public class BasicGear extends GearMatItem{
 				return false;
 			}
 			mte.setMechanism(mechInd, mechanism, type, null, false);
-			RotaryUtil.increaseMasterKey(!world.isClientSide);
+			RotaryUtil.increaseMasterKey(!world.isClientSide, world);
 			//Consume an item
 			if(!world.isClientSide && (context.getPlayer() == null || !context.getPlayer().isCreative())){
 				context.getItemInHand().shrink(1);
@@ -106,7 +106,7 @@ public class BasicGear extends GearMatItem{
 				//Log an error
 				Crossroads.logger.error("Mechanism BlockEntity did not exist at gear placement; Report to mod author");
 			}
-			RotaryUtil.increaseMasterKey(!world.isClientSide);
+			RotaryUtil.increaseMasterKey(!world.isClientSide, world);
 			//Consume an item
 			if(!world.isClientSide && (context.getPlayer() == null || !context.getPlayer().isCreative())){
 				context.getItemInHand().shrink(1);

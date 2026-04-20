@@ -28,7 +28,7 @@ public class ColdStorageTileEntity extends InventoryTE implements IHeatCapable, 
 
 	public static final BlockEntityType<ColdStorageTileEntity> TYPE = CRTileEntity.createType(ColdStorageTileEntity::new, CRBlocks.coldStorage);
 
-	public static final double LOSS_PER_ITEM = 2;
+	public static final double LOSS_PER_ITEM = 0.25D;
 
 	private long lastTick;
 

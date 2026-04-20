@@ -61,6 +61,21 @@ public class CRRenderUtil extends RenderUtil{
 		CRPackets.sendPacketAround(world, MiscUtil.blockPos(x, y, z), new AddVisualToClient(nbt), CRConfig.effectPacketDistance.get());
 	}
 
+	public static void addBeam(Level world, double x, double y, double z, double length, float angleX, float angleY, byte width, int color, byte lifetime){
+		CompoundTag nbt = new CompoundTag();
+		nbt.putInt("id", 0);
+		nbt.putDouble("x", x);
+		nbt.putDouble("y", y);
+		nbt.putDouble("z", z);
+		nbt.putDouble("length", length);
+		nbt.putFloat("angle_x", angleX);
+		nbt.putFloat("angle_y", angleY);
+		nbt.putByte("width", width);
+		nbt.putInt("color", color);
+		nbt.putByte("lifetime", lifetime);
+		CRPackets.sendPacketAround(world, MiscUtil.blockPos(x, y, z), new AddVisualToClient(nbt), CRConfig.effectPacketDistance.get());
+	}
+
 	public static void addArc(Level world, Vec3 start, Vec3 end, int count, float diffusionRate, int color){
 		addArc(world, (float) start.x, (float) start.y, (float) start.z, (float) end.x, (float) end.y, (float) end.z, count, diffusionRate, color);
 	}

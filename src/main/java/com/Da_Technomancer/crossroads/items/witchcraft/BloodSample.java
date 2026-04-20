@@ -27,7 +27,7 @@ import java.util.UUID;
 public class BloodSample extends Item implements IPerishable{
 
 	private static final long LIFETIME = 20 * 60 * 60 * 2;
-	private static final int FRESHNESS_BONUS = 20;
+	private static final int FRESHNESS_BONUS = 25;
 
 	public BloodSample(){
 		this("blood_sample");

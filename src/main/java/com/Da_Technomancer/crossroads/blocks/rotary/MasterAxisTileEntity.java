@@ -121,6 +121,13 @@ public class MasterAxisTileEntity extends BlockEntity implements ITickableTileEn
 	public void setBlockState(BlockState stateIn){
 		super.setBlockState(stateIn);
 		disconnect();
+
+		//This is not, strictly speaking, optimized
+		//Pre MC1.21, default behavior for all TEs was that changing blockstate invalidated capability caches
+		//Post MC1.21, this is no longer the case, which opens up some opportunities for optimization
+		//But everything was written with the assumption of invalidation on state change,
+		//So anything other than re-implementing the old default is going to introduce a lot of new bugs
+		level.invalidateCapabilities(worldPosition);
 	}
 
 	public void disconnect(){
@@ -135,7 +142,7 @@ public class MasterAxisTileEntity extends BlockEntity implements ITickableTileEn
 			}
 		}
 		rotaryMembers.clear();
-		RotaryUtil.increaseMasterKey(false);
+		RotaryUtil.increaseMasterKey(false, level);
 		facing = null;
 	}
 
@@ -290,9 +297,10 @@ public class MasterAxisTileEntity extends BlockEntity implements ITickableTileEn
 			axisHandler.requestUpdate();
 		}
 
-		forceUpdate = RotaryUtil.getMasterKey() != lastKey;
+		int newMasterKey = RotaryUtil.getMasterKey(level);
+		forceUpdate = newMasterKey != lastKey;
 
-		lastKey = RotaryUtil.getMasterKey();
+		lastKey = newMasterKey;
 
 		if(!locked && !rotaryMembers.isEmpty()){
 			if(!level.isClientSide){

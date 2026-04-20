@@ -216,7 +216,7 @@ public class CRConfig{
 		allowOverflow = serverBuilder.comment("Destroy the CCC if Copshowium overfills the tank?", "Disabling this will make the CCC much easier to use").define("allow_overflow", true);
 		cccRequireTime = serverBuilder.comment("Does the CCC require specifically a Time beam?").define("ccc_req_time", true);
 		allowStatRecall = serverBuilder.comment("Should recalling restore previous health and hunger?", "Recommended to disable this for PvP").define("stat_recall", true);
-		recallTimeLimit = serverBuilder.comment("Maximum time duration for recalling, in seconds. Set to -1 to disable limit, 0 to disable recalling").defineInRange("time_recall", 60 * 5, -1, 60 * 60 * 24);
+		recallTimeLimit = serverBuilder.comment("Maximum time duration for recalling, in seconds. Set to -1 to disable limit, 0 to disable recalling").defineInRange("time_recall", 60 * 15, -1, 60 * 60 * 24);
 		lodestoneDynamo = serverBuilder.comment("Power output of the Lodestone Dynamo (in J/t)", "Set to 0 to disable the Lodestone Dynamo").defineInRange("lodestone_dynamo", 100, 0, 1_000);
 		beaconHarnessPower = serverBuilder.comment("Beam power output of the beacon harness").defineInRange("beacon_harness_power", 512, 8, 4096);
 		technoArmorReinforce = serverBuilder.comment("Allow adding Netherite armor to Technomancy armor?").define("techno_armor_reinforce", true);

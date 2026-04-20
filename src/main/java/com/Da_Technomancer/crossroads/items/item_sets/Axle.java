@@ -53,7 +53,7 @@ public class Axle extends GearMatItem{
 		if(te instanceof MechanismTileEntity){
 			MechanismTileEntity mte = (MechanismTileEntity) te;
 			if(mte.members[6] == null){
-				RotaryUtil.increaseMasterKey(true);
+				RotaryUtil.increaseMasterKey(true, world);
 				mte.setMechanism(6, mechanismToPlace(), type, side.getAxis(), false);
 				if(playerIn == null || !playerIn.isCreative()){
 					context.getItemInHand().shrink(1);
@@ -67,7 +67,7 @@ public class Axle extends GearMatItem{
 		if(te instanceof MechanismTileEntity){
 			MechanismTileEntity mte = (MechanismTileEntity) te;
 			if(mte.members[6] == null){
-				RotaryUtil.increaseMasterKey(true);
+				RotaryUtil.increaseMasterKey(true, world);
 				mte.setMechanism(6, mechanismToPlace(), type, side.getAxis(), false);
 				if(playerIn == null || !playerIn.isCreative()){
 					context.getItemInHand().shrink(1);
@@ -85,7 +85,7 @@ public class Axle extends GearMatItem{
 			world.setBlock(pos.relative(side), CRBlocks.mechanism.defaultBlockState(), 3);
 			te = world.getBlockEntity(pos.relative(side));
 			if(te instanceof MechanismTileEntity){
-				RotaryUtil.increaseMasterKey(true);
+				RotaryUtil.increaseMasterKey(true, world);
 				((MechanismTileEntity) te).setMechanism(6, mechanismToPlace(), type, side.getAxis(), true);
 			}
 		}
