@@ -395,8 +395,10 @@ public class MechanismTileEntity extends BlockEntity implements ITickableTileEnt
 		}
 
 		@Override
-		public void disconnect(){
-			axis = null;
+		public void disconnect(IAxisHandler disconnectingAxis){
+			if(disconnectingAxis == null || axis == disconnectingAxis){
+				axis = null;
+			}
 		}
 
 		@Override

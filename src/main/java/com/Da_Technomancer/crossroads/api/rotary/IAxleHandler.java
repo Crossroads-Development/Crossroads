@@ -1,12 +1,13 @@
 package com.Da_Technomancer.crossroads.api.rotary;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Gears and other rotary connectables use two capabilities, ICogHandler and IAxleHandler. 
  * The AxleHandler represents the core of the block, that can connect to machines and axles.
  * The CogHandler represents the part of the block able to connect to other blocks laterally, like the cogs of two gears meshing together.
- *
+ * <p>
  * In most cases, the AxleHandler and CogHandler are on the same side, though there are exceptions. Some blocks may only have one of them.
  */
 public interface IAxleHandler{
@@ -68,9 +69,10 @@ public interface IAxleHandler{
 	void propagate(@Nonnull IAxisHandler masterIn, byte key, double rotationRatioIn, double lastRadius, boolean renderOffset);
 
 	/**
-	 * Called by the controlling master axis when relinquishing control of this axle. Can be used along with propogate to determine if this axle is actively controlled by an axis
+	 * Called by the controlling master axis when relinquishing control of this axle. Can be used along with propagate to determine if this axle is actively controlled by an axis
+	 * @param disconnectingMaster The master axis to be disconnected. Only disconnect if this matches the currently connected axis. If this is null, always disconnect.
 	 */
-	default void disconnect(){
+	default void disconnect(@Nullable IAxisHandler disconnectingMaster){
 
 	}
 }

@@ -293,8 +293,10 @@ public class LargeGearMasterTileEntity extends BlockEntity implements ILongRecei
 		}
 
 		@Override
-		public void disconnect(){
-			axis = null;
+		public void disconnect(IAxisHandler disconnectingAxis){
+			if(disconnectingAxis == null || axis == disconnectingAxis){
+				axis = null;
+			}
 		}
 
 		@Override

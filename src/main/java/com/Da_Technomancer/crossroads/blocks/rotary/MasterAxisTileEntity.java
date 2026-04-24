@@ -132,7 +132,7 @@ public class MasterAxisTileEntity extends BlockEntity implements ITickableTileEn
 
 	public void disconnect(){
 		for(IAxleHandler axle : rotaryMembers){
-			axle.disconnect();
+			axle.disconnect(axisHandler);
 		}
 		for(int i = 0; i < 4; i++){
 			prevAngles[i] = 0;
@@ -400,7 +400,7 @@ public class MasterAxisTileEntity extends BlockEntity implements ITickableTileEn
 
 			memberCopy.removeAll(rotaryMembers);
 			for(IAxleHandler axle : memberCopy){
-				axle.disconnect();
+				axle.disconnect(axisHandler);
 			}
 			memberCopy = null;
 		}

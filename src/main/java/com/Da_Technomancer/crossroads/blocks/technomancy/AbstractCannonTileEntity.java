@@ -312,11 +312,15 @@ public abstract class AbstractCannonTileEntity extends BlockEntity implements IT
 		}
 
 		@Override
-		public void disconnect(){
+		public void disconnect(IAxisHandler disconnectingAxis){
 			if(altAxis){
-				sideAxleHandler.masterAxis = null;
+				if(disconnectingAxis == null || sideAxleHandler.masterAxis == disconnectingAxis){
+					sideAxleHandler.masterAxis = null;
+				}
 			}else{
-				masterAxis = null;
+				if(disconnectingAxis == null || masterAxis == disconnectingAxis){
+					masterAxis = null;
+				}
 			}
 		}
 

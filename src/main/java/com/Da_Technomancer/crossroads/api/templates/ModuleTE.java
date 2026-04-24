@@ -500,8 +500,10 @@ public abstract class ModuleTE extends BlockEntity implements ITickableTileEntit
 		}
 
 		@Override
-		public void disconnect(){
-			axis = null;
+		public void disconnect(IAxisHandler disconnectingAxis){
+			if(disconnectingAxis == null || axis == disconnectingAxis){
+				axis = null;
+			}
 		}
 	}
 }

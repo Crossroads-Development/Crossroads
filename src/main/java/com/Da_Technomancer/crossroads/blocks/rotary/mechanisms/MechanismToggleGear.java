@@ -108,46 +108,49 @@ public class MechanismToggleGear extends MechanismSmallGear{
 		}
 
 		IAxleHandler handler = te.axleHandlers[side.get3DDataValue()];
-		VertexConsumer builder = buffer.getBuffer(RenderType.solid());
+
 
 		matrix.mulPose(side.getOpposite().getRotation());//Apply orientation
 		float angle = handler.getAngle(partialTicks);
 		matrix.translate(0, -0.4375D, 0);
 		matrix.mulPose(Axis.YP.rotationDegrees(-(float) RotaryUtil.getCCWSign(side) * angle));
+		final float lHalf = 7F / 16F;//Half the side length of the octagon
 
-		TextureAtlasSprite sprite = CRRenderUtil.getTextureSprite(CRRenderTypes.GEAR_8_TEXTURE);
-		TextureAtlasSprite spriteRim = CRRenderUtil.getTextureSprite(CRRenderTypes.GEAR_8_RIM_TEXTURE);
-		float top = 0.0625F;
+		//Renders an extra layer over the regular gear model to indicate this is a toggle gear
+		VertexConsumer builderCutout = buffer.getBuffer(RenderType.cutout());
+		TextureAtlasSprite sprite = inverted ? CRRenderUtil.getTextureSprite(CRRenderTypes.GEAR_8_TOGGLE_INV_TEXTURE) : CRRenderUtil.getTextureSprite(CRRenderTypes.GEAR_8_TOGGLE_TEXTURE);
 
-		//If inverted, renders the core as red
-		if(inverted){
-			int[] invertCol = new int[] {255, 0, 0, 255};
+		float zFightOffset = 0.001F;//Vertical offset to prevent z-fighting
+		float recessY = (1F/8F - 1/16F) * lHalf;
+		float backY = (-1F/8F) * lHalf;
+		//Texture coords
+		float uSt = sprite.getU0();
+		float uEn = sprite.getU1();
+		float vSt = sprite.getV0();
+		float vEn = sprite.getV1();
+		final float halfSideWidth = lHalf;
+		int[] col = {255, 255, 255, 255};
+		//Front
+		CRRenderUtil.addVertexBlock(builderCutout, matrix, -halfSideWidth, recessY + zFightOffset, halfSideWidth, uSt, vEn, 0, 1, 0, combinedLight, col);
+		CRRenderUtil.addVertexBlock(builderCutout, matrix, halfSideWidth, recessY + zFightOffset, halfSideWidth, uEn, vEn, 0, 1, 0, combinedLight, col);
+		CRRenderUtil.addVertexBlock(builderCutout, matrix, halfSideWidth, recessY + zFightOffset, -halfSideWidth, uEn, vSt, 0, 1, 0, combinedLight, col);
+		CRRenderUtil.addVertexBlock(builderCutout, matrix, -halfSideWidth, recessY + zFightOffset, -halfSideWidth, uSt, vSt, 0, 1, 0, combinedLight, col);
 
-			float radius = 2F / 16F;
-			float zFightOffset = 0.001F;//Vertical offset to prevent z-fighting
-			//Texture coords
-			float radiusT = radius * 16F;
-			float uSt = CRRenderUtil.getScaledU(sprite, 8 - radiusT);
-			float uEn = CRRenderUtil.getScaledU(sprite, 8 + radiusT);
-			float vSt = CRRenderUtil.getScaledV(sprite, 8 - radiusT);
-			float vEn = CRRenderUtil.getScaledV(sprite, 8 + radiusT);
-
-			CRRenderUtil.addVertexBlock(builder, matrix, -radius, top + zFightOffset, radius, uSt, vEn, 0, 1, 0, combinedLight, invertCol);
-			CRRenderUtil.addVertexBlock(builder, matrix, radius, top + zFightOffset, radius, uEn, vEn, 0, 1, 0, combinedLight, invertCol);
-			CRRenderUtil.addVertexBlock(builder, matrix, radius, top + zFightOffset, -radius, uEn, vSt, 0, 1, 0, combinedLight, invertCol);
-			CRRenderUtil.addVertexBlock(builder, matrix, -radius, top + zFightOffset, -radius, uSt, vSt, 0, 1, 0, combinedLight, invertCol);
-		}
+		//Back
+		CRRenderUtil.addVertexBlock(builderCutout, matrix, -halfSideWidth, backY - zFightOffset, halfSideWidth, uSt, vEn, 0, 1, 0, combinedLight, col);
+		CRRenderUtil.addVertexBlock(builderCutout, matrix, -halfSideWidth, backY - zFightOffset, -halfSideWidth, uSt, vSt, 0, 1, 0, combinedLight, col);
+		CRRenderUtil.addVertexBlock(builderCutout, matrix, halfSideWidth, backY - zFightOffset, -halfSideWidth, uEn, vSt, 0, 1, 0, combinedLight, col);
+		CRRenderUtil.addVertexBlock(builderCutout, matrix, halfSideWidth, backY - zFightOffset, halfSideWidth, uEn, vEn, 0, 1, 0, combinedLight, col);
 
 		int[] color = CRRenderUtil.convertColor(mat instanceof CRMaterialLibrary.GearMaterial ? ((CRMaterialLibrary.GearMaterial) mat).getColor() : Color.WHITE);
 
+		VertexConsumer builder = buffer.getBuffer(RenderType.solid());
 		if(te.redstoneIn != 0 ^ inverted){
 			//Render normally when active
-			CRModels.draw8Gear(matrix, builder, color, combinedLight, CRModels.generateZFightFactor(te.getBlockPos(), side == null ? 0 : side.ordinal()));
+			CRModels.draw8GearMilled(matrix, builder, color, combinedLight, CRModels.generateZFightFactor(te.getBlockPos(), side == null ? 0 : side.ordinal()));
 		}else{
 			//Render without prongs
-			float lHalf = 7F / 16F;//Half the side length of the octagon
-			matrix.scale(2F * lHalf, 1, 2F * lHalf);
-			CRModels.draw8Core(builder, matrix, color, combinedLight, sprite, spriteRim);
+			CRModels.draw8CoreMilled(matrix, builder, color, combinedLight, CRModels.generateZFightFactor(te.getBlockPos(), side == null ? 0 : side.ordinal()));
 		}
 	}
 }
