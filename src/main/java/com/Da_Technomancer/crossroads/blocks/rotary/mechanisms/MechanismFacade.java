@@ -75,22 +75,11 @@ public class MechanismFacade implements IMechanism<GearFacade.FacadeBlock>{
 //			return;
 //		}
 
-//		handler.rotRatio = rotRatioIn;
+		handler.setRotRatio(rotRatioIn);
 		handler.setUpdateKey(key);
 
 		//Connected block
 		RotaryUtil.propagateAxially(te.getLevel(), te.getBlockPos().relative(side), side.getOpposite(), handler, masterIn, key, handler.renderOffset());
-
-//		if(sideTE != null){
-//			IAxisHandler axisOpt = sideTE.getCapability(CRCapabilities.AXIS_CAPABILITY, side.getOpposite());
-//			if(axisOpt.isPresent()){
-//				axisOpt.orElseThrow(NullPointerException::new).trigger(masterIn, key);
-//			}
-//			IAxleHandler axleOpt = sideTE.getCapability(CRCapabilities.AXLE_CAPABILITY, side.getOpposite());
-//			if(axleOpt.isPresent()){
-//				axleOpt.orElseThrow(NullPointerException::new).propagate(masterIn, key, rotRatioIn, 0, handler.renderOffset());
-//			}
-//		}
 
 		//Axle slot
 		if(te.getAxleAxis() == side.getAxis() && te.members[6] != null && te.members[6].hasCap(CRCapabilities.AXLE_CAPABILITY, side, te.mats[6], null, te.getAxleAxis(), te)){

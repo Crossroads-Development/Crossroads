@@ -142,10 +142,11 @@ public class ReagentMap extends HashMap<String, Integer>{
 		String strKey = null;
 		if(key instanceof IReagent){
 			reag = (IReagent) key;
+			strKey = reag.getID();
 		}else if(key instanceof String){
 			strKey = (String) key;
 		}
-		Integer qty = super.remove(key);
+		Integer qty = super.remove(strKey);
 		if(qty != null){
 			heat -= getTempK() * qty;
 			totalQty -= qty;

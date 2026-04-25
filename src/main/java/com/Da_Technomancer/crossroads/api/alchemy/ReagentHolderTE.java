@@ -24,6 +24,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -195,6 +197,7 @@ public abstract class ReagentHolderTE extends BlockEntity implements ITickableTi
 			}
 
 			for(IReagent type : toRemove){
+				CRSounds.playSoundServer(level, worldPosition, SoundEvents.APPLY_EFFECT_BAD_OMEN, SoundSource.BLOCKS, 1, 2);
 				contents.remove(type);
 			}
 		}

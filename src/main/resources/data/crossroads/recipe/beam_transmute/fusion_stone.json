@@ -5,8 +5,8 @@
 	"power": 8,
 	"input": [
 		{
-			"tag": "c:stones"
+			"block": "minecraft:stone"
 		}
 	],
-	"output": "minecraft:stone_bricks"
+	"output": "minecraft:deepslate"
 }

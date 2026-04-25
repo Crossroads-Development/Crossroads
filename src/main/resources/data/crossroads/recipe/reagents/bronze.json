@@ -1,0 +1,12 @@
+{
+	"type": "crossroads:reagents",
+	"id": "bronze",
+	"melting": 950,
+	"boiling": 2300,
+	"item": "c:nuggets/bronze",
+	"fluid": {
+		"tag": "c:molten_bronze"
+	},
+	"fluid_amount": 10,
+	"color": "DDA235"
+}

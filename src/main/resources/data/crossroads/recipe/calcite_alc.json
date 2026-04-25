@@ -1,0 +1,21 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"result": {
+		"id": "minecraft:calcite",
+		"count": 6
+	},
+	"ingredients": [
+		{
+			"tag": "c:dusts/alchemy_salt"
+		},
+		{
+			"item": "minecraft:bone_meal"
+		},
+		{
+			"tag": "c:cobblestones/normal"
+		},
+		{
+			"tag": "c:cobblestones/normal"
+		}
+	]
+}

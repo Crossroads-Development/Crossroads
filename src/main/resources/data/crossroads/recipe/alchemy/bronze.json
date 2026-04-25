@@ -1,0 +1,21 @@
+{
+	"type": "crossroads:alchemy",
+	"category": "normal",
+	"min_temp": 1000,
+	"reagents": [
+		{
+			"type": "copper",
+			"qty": 8
+		},
+		{
+			"type": "tin",
+			"qty": 1
+		}
+	],
+	"products": [
+		{
+			"type": "bronze",
+			"qty": 9
+		}
+	]
+}

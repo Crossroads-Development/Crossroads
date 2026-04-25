@@ -5,7 +5,10 @@
 	"power": 8,
 	"input": [
 		{
-			"tag": "minecraft:stone_bricks"
+			"block": "minecraft:deepslate"
+		},
+		{
+			"tag": "c:cobblestones/deepslate"
 		}
 	],
 	"output": "minecraft:stone"

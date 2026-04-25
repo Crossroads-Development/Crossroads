@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.rotary.IMechanism;
+import com.Da_Technomancer.crossroads.api.rotary.IMechanismProperty;
 import com.Da_Technomancer.crossroads.api.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.rotary.mechanisms.MechanismTileEntity;
@@ -81,8 +82,11 @@ public class BasicGear extends GearMatItem{
 	}
 
 	protected boolean tryPlacement(Level world, BlockPos pos, Direction side, CRMaterialLibrary.GearMaterial type, UseOnContext context){
+		return tryPlacement(world, pos, side, context, mechanismToPlace(), type);
+	}
+
+	public static boolean tryPlacement(Level world, BlockPos pos, Direction side, UseOnContext context, IMechanism<?> mechanism, IMechanismProperty type){
 		int mechInd = side.get3DDataValue();//Index this gear would be placed within the mechanism
-		IMechanism<?> mechanism = mechanismToPlace();
 		if(world.getBlockEntity(pos) instanceof MechanismTileEntity mte){
 			//Existing mechanism TE to expand
 			if(mte.members[mechInd] != null){

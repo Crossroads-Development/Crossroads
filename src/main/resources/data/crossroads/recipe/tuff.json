@@ -1,0 +1,21 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"result": {
+		"id": "minecraft:tuff",
+		"count": 4
+	},
+	"ingredients": [
+		{
+			"tag": "c:dusts/slag"
+		},
+		{
+			"tag": "c:dusts/slag"
+		},
+		{
+			"tag": "c:dusts/slag"
+		},
+		{
+			"tag": "c:cobblestones/normal"
+		}
+	]
+}

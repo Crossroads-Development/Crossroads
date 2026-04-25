@@ -72,7 +72,7 @@ public class AutoInjectorTileEntity extends InventoryTE implements IItemCapable{
 	}
 
 	public int getStoredEffectIndex(){
-		if(storedEffect.isBound()){
+		if(storedEffect != null && storedEffect.isBound()){
 			return BuiltInRegistries.MOB_EFFECT.getId(storedEffect.value());
 		}else{
 			return -1;

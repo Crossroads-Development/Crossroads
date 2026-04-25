@@ -5,7 +5,7 @@
 	"power": 1,
 	"input": [
 		{
-			"tag": "c:stones"
+			"block": "minecraft:stone"
 		}
 	],
 	"output": "minecraft:cobblestone"

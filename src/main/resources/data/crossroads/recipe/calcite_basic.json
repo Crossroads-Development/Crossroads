@@ -1,0 +1,21 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"result": {
+		"id": "minecraft:calcite",
+		"count": 4
+	},
+	"ingredients": [
+		{
+			"tag": "c:dusts/salt"
+		},
+		{
+			"item": "minecraft:bone_meal"
+		},
+		{
+			"item": "minecraft:diorite"
+		},
+		{
+			"item": "minecraft:diorite"
+		}
+	]
+}

@@ -17,11 +17,11 @@
 			"type": "patchouli:spotlight",
 			"anchor": "cold_storage",
 			"item": "crossroads:cold_storage",
-			"text": "The <item>Freezer Box/$ stops items from <thing>spoiling/$ by keeping them cold. It has 18 slots. Every item that <thing>spoils/$ has a freezing temperature, below which it won't spoil. While the <item>Freezer Box/$ is below that temperature, the item won't deteriorate towards <thing>spoiling/$. <item>$(l:essentials:heat/cable)Heat cables/$ connect to any side. It loses 2°C/t "
+			"text": "The <item>Freezer Box/$ stops items from <thing>spoiling/$ by keeping them cold. It has 18 slots. Every item that <thing>spoils/$ has a freezing temperature, below which it won't spoil. While the <item>Freezer Box/$ is below that temperature, the item won't deteriorate towards <thing>spoiling/$. <item>$(l:essentials:heat/cable)Heat cables/$ connect to any side. It loses cold "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "for every item stored, moving towards the air temperature.$(br2)Certain items (like <item>embryos/$) are damaged by being frozen- freezing still prevents them from <thing>spoiling/$, but will make them worse in other ways. Those items can be preserved using the <item>$(l:essentials:witchcraft/spoilage#cultivator_vat)nutrition vat/$ without issue.$(br2)<thing>$(l:essentials/circuits)Circuits/$ read the average remaining lifetime of all stored items, in seconds before they spoil. Already "
+			"text": "more for every item stored, moving towards the air temperature.$(br2)Certain items (like <item>embryos/$) are damaged by being frozen- freezing still prevents them from <thing>spoiling/$, but will make them worse in other ways. Those items can be preserved using the <item>$(l:essentials:witchcraft/spoilage#cultivator_vat)nutrition vat/$ without issue.$(br2)<thing>$(l:essentials/circuits)Circuits/$ read the average remaining lifetime of all stored items, in seconds before they spoil. Already "
 		},
 		{
 			"type": "patchouli:text",

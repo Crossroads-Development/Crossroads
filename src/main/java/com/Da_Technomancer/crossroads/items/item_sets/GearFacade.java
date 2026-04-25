@@ -82,59 +82,16 @@ public class GearFacade extends Item{
 
 		Direction side = context.getClickedFace();
 		BlockPos placePos = pos;//Where the gear will be placed
-		BlockEntity teAtPlacement = world.getBlockEntity(placePos);
 
-		if(teAtPlacement instanceof MechanismTileEntity){
-			//Try to place inside clicked mechanism
-			int mechInd = side.get3DDataValue();
-			MechanismTileEntity mte = (MechanismTileEntity) teAtPlacement;
-			if(mte.members[mechInd] == null){
-				//This spot is not already taken
-				mte.setMechanism(mechInd, mechanismToPlace(), type, null, false);
-
-				//Consume an item
-				if(!world.isClientSide && (playerIn == null || !playerIn.isCreative())){
-					context.getItemInHand().shrink(1);
-				}
-				return InteractionResult.SUCCESS;
-			}
+		if(BasicGear.tryPlacement(world, placePos, side, context, mechanismToPlace(), type)){
+			return InteractionResult.SUCCESS;
 		}
 
 		//Try to place in adjacent block
 		placePos = pos.relative(side);//Where the gear will be placed
-		BlockState stateAtPlacement = world.getBlockState(placePos);
-		teAtPlacement = world.getBlockEntity(placePos);
-		int mechInd = side.getOpposite().get3DDataValue();//Index this gear would be placed within the mechanism
-		if(teAtPlacement instanceof MechanismTileEntity){
-			//Existing mechanism TE to expand
-			MechanismTileEntity mte = (MechanismTileEntity) teAtPlacement;
-			if(mte.members[mechInd] != null){
-				//This spot is already taken
-				return InteractionResult.SUCCESS;
-			}
 
-			mte.setMechanism(mechInd, mechanismToPlace(), type, null, false);
-
-			//Consume an item
-			if(!world.isClientSide && (playerIn == null || !playerIn.isCreative())){
-				context.getItemInHand().shrink(1);
-			}
-		}else if(stateAtPlacement.canBeReplaced(new BlockPlaceContext(context))){
-			//No existing mechanism- we will create a new one
-			world.setBlock(placePos, CRBlocks.mechanism.defaultBlockState(), 3);
-
-			teAtPlacement = world.getBlockEntity(placePos);
-			if(teAtPlacement instanceof MechanismTileEntity){
-				((MechanismTileEntity) teAtPlacement).setMechanism(mechInd, mechanismToPlace(), type, null, true);
-			}else{
-				//Log an error
-				Crossroads.logger.error("Mechanism TileEntity did not exist at gear placement; Report to mod author");
-			}
-
-			//Consume an item
-			if(!world.isClientSide && (playerIn == null || !playerIn.isCreative())){
-				context.getItemInHand().shrink(1);
-			}
+		if(BasicGear.tryPlacement(world, placePos, side.getOpposite(), context, mechanismToPlace(), type)){
+			return InteractionResult.SUCCESS;
 		}
 
 		return InteractionResult.SUCCESS;
