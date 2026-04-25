@@ -1,7 +1,7 @@
 {
 	"type": "crossroads:fluid_cooling",
 	"fluid": "crossroads:distilled_water",
-	"fluid_amount": 1000,
+	"fluid_amount": 125,
 	"id": "packed_ice",
 	"max_temp": 0,
 	"temp_change": 15
