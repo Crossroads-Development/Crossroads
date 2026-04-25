@@ -1,0 +1,20 @@
+{
+	"type": "crossroads:alchemy",
+	"category": "normal",
+	"max_temp": -10,
+	"heat": -10,
+	"reagents": {
+		"type": "dirty_water",
+		"qty": 2
+	},
+	"products": [
+		{
+			"type": "water",
+			"qty": 2
+		},
+		{
+			"type": "slag",
+			"qty": 1
+		}
+	]
+}

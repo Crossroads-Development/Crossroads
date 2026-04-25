@@ -1,0 +1,21 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"result": {
+		"id": "minecraft:ochre_froglight",
+		"count": 1
+	},
+	"ingredients": [
+		{
+			"item": "minecraft:magma_cream"
+		},
+		{
+			"item": "crossroads:mushroom_dust"
+		},
+		{
+			"item": "crossroads:mushroom_dust"
+		},
+		{
+			"tag": "c:dyes/yellow"
+		}
+	]
+}

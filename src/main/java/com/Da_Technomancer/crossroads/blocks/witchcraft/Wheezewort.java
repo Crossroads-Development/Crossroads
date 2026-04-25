@@ -9,6 +9,7 @@ import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.heat.IHeatHandler;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
@@ -19,6 +20,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BonemealableBlock;
@@ -117,6 +119,16 @@ public class Wheezewort extends DoublePlantBlock implements BonemealableBlock{
 	@Override
 	public boolean isRandomlyTicking(BlockState state){
 		return state.getValue(CRProperties.AGE_3) != 3;
+	}
+
+	@Override
+	protected BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pFacingPos){
+		//Prevent it breaking the height-1 plant when there's a block above
+		if(pState.getValue(CRProperties.AGE_3) == 1 && pFacing == Direction.UP){
+			return pState;
+		}
+
+		return super.updateShape(pState, pFacing, pFacingState, pLevel, pCurrentPos, pFacingPos);
 	}
 
 	private void coldSpurt(ServerLevel world, BlockPos pos){

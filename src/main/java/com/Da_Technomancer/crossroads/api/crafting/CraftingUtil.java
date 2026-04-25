@@ -34,6 +34,17 @@ import java.util.stream.Collectors;
 
 public class CraftingUtil{
 
+	/**
+	 * Hexadecimal colors in RGB or ARGB.
+	 * Format for colors is fairly forgiving. Accepts (one letter is one hexadecimal character):
+	 * - AARRGGBB
+	 * - #AARRGGBB
+	 * - 0xAARRGGBB
+	 * - RRGGBB
+	 * - #RRGGBB
+	 * - 0xRRGGBB
+	 * Always encodes to AARRGGBB
+	 */
 	public static final Codec<Color> COLOR_CODEC = Codec.STRING.comapFlatMap(str -> {
 		str = str.toLowerCase();
 		//Trim off any leading # or 0x

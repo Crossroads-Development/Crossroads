@@ -2,6 +2,7 @@
 	"type": "crossroads:alchemy",
 	"category": "destructive",
 	"data": 4,
+	"heat": -200,
 	"reagents": [
 		{
 			"type": "philosopher"

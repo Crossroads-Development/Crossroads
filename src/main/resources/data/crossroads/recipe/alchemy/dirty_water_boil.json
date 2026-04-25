@@ -1,0 +1,27 @@
+{
+	"type": "crossroads:alchemy",
+	"category": "normal",
+	"min_temp": 120,
+	"reagents": {
+		"type": "dirty_water",
+		"qty": 32
+	},
+	"products": [
+		{
+			"type": "water",
+			"qty": 32
+		},
+		{
+			"type": "sulfur",
+			"qty": 8
+		},
+		{
+			"type": "redstone",
+			"qty": 1
+		},
+		{
+			"type": "salt",
+			"qty": 6
+		}
+	]
+}

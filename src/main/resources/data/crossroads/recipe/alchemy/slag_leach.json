@@ -1,12 +1,14 @@
 {
 	"type": "crossroads:alchemy",
 	"category": "normal",
-	"max_temp": 100,
-	"catalyst": "water",
-	"reagents": {
-		"type": "slag",
-		"qty": 2
-	},
+	"catalyst": "nitric_acid",
+	"max_temp": 80,
+	"reagents": [
+		{
+			"type": "slag",
+			"qty": 2
+		}
+	],
 	"products": [
 		{
 			"type": "sulfur",

@@ -23,7 +23,7 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<thing>reagents/$ that you will want a large supply of are: Distilled Water (or Packed Ice), Salt, Redstone Dust, and either Gunpowder or $(l:essentials:fluid/ingr)Slag/$.$(br2)"
+			"text": "<thing>reagents/$ that you'll want a large supply of are: Distilled Water (or Packed Ice), Salt, Redstone Dust, and either Gunpowder, Dirty Water, or $(l:essentials:fluid/ingr)Slag/$ for making sulfur.$(br2)"
 		},
 		{
 			"type": "patchouli:text",

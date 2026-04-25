@@ -6,6 +6,9 @@
 		},
 		"crossroads:medicinal_mushroom": {
 			"chance": 0.65
+		},
+		"crossroads:petrol_cactus": {
+			"chance": 0.5
 		}
 	}
 }

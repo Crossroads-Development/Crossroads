@@ -1,0 +1,31 @@
+{
+	"parent": "crossroads:progress/misc/chaos_rod",
+	"display": {
+		"icon": {
+			"id": "minecraft:feather"
+		},
+		"title": {
+			"translate": "crossroads.advancement.hopper_hawk"
+		},
+		"description": {
+			"translate": "crossroads.advancement.hopper_hawk.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true,
+		"hidden": true
+	},
+	"criteria": {
+		"clone": {
+			"trigger": "crossroads:clone_spawned",
+			"conditions": {
+				"entity_type": "crossroads:hopper_hawk",
+				"viable": "viable"
+			}
+		}
+	},
+	"requirements": [
+		[
+			"clone"
+		]
+	]
+}

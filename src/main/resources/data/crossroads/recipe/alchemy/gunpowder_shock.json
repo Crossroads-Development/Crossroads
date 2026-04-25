@@ -2,6 +2,7 @@
 	"type": "crossroads:alchemy",
 	"category": "destructive",
 	"charged": true,
+	"heat": -100,
 	"data": 0.2,
 	"reagents": {
 		"type": "gunpowder"

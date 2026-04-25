@@ -1,0 +1,16 @@
+{
+	"type": "crossroads:reagents",
+	"id": "dirty_water",
+	"melting": -10,
+	"boiling": "never",
+	"item": "crossroads:empty",
+	"fluid": {
+		"fluid": "crossroads:dirty_water"
+	},
+	"fluid_amount": 125,
+	"color": {
+		"base": "FF724A00",
+		"solid": "D0724A00"
+	},
+	"effect": "hydrate"
+}
