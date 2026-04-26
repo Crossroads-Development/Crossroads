@@ -21,6 +21,7 @@ crash-reports/
 /testing/
 /.vscode/
 /.eclipse/
+/__pycache__/
 
 # File Extensions
 *.psd
