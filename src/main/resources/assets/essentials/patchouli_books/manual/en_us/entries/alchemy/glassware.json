@@ -23,7 +23,7 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<Item>Florence Flasks/$ are for <thing>$(l:essentials:intro/alchemy)reactions/$. The automated version is <item>$(l:essentials:alchemy/vessel)reaction vessels/$. Unlike <item>phials and shells/$, <item>florence flasks/$ allow <thing>$(l:essentials:intro/alchemy)reactions/$. They can also be connected to <item>$(l:essentials:heat/cable)heat cables/$ on the bottom side when placed on a <item>glassware stand/$.$(br2)"
+			"text": "<item>Florence Flasks/$ are for <thing>$(l:essentials:intro/alchemy)reactions/$. The automated version is <item>$(l:essentials:alchemy/vessel)reaction vessels/$. Unlike <item>phials and shells/$, <item>florence flasks/$ allow <thing>$(l:essentials:intro/alchemy)reactions/$. They can also be connected to <item>$(l:essentials:heat/cable)heat cables/$ on the bottom side when placed on a <item>glassware stand/$.$(br2)"
 		},
 		{
 			"type": "patchouli:text",
