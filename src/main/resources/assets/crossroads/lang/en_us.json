@@ -1158,6 +1158,10 @@
 	"crossroads.jei.embryo_modifier.complexity.decrease": "Complexity %1$d",
 	"crossroads.jei.embryo_modifier.soul_complexity.increase": "Souls +%1$d",
 	"crossroads.jei.embryo_modifier.soul_complexity.decrease": "Souls %1$d",
+	"crossroads.jei.hydroponics_trough.cat_name": "Hydroponics Trough",
+	"crossroads.jei.hydroponics_trough.unknown_output": "Output Varies",
+	"crossroads.jei.hydroponics_trough.lighting.no_light": "Can grow in darkness",
+	"crossroads.jei.hydroponics_trough.lighting.light": "",
 
 	"crossroads.advancement.root": "Crossroads",
 	"crossroads.advancement.root.desc": "Welcome to Crossroads!",

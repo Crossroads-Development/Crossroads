@@ -18,10 +18,11 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HydroponicTroughRec implements HydroponicsTroughTileEntity.HydroponicsRecGeneric, IOptionalRecipe<RecipeInput>{
+public class HydroponicTroughRecDatagenerated implements HydroponicsTroughTileEntity.IHydroponicsRec, IOptionalRecipe<RecipeInput>{
 
 	/*
 	 * Plants that implement certain superclasses are handled automatically, and don't need JSON recipes made for them
@@ -35,7 +36,7 @@ public class HydroponicTroughRec implements HydroponicsTroughTileEntity.Hydropon
 	private final int growthStages;
 	private final boolean active;
 
-	private HydroponicTroughRec(){
+	private HydroponicTroughRecDatagenerated(){
 		group = "";
 		ingr = Ingredient.EMPTY;
 		outputs = List.of();
@@ -50,7 +51,7 @@ public class HydroponicTroughRec implements HydroponicsTroughTileEntity.Hydropon
 	 * @param input Input ingredient
 	 * @param output Maximum of 3 ItemStacks
 	 */
-	private HydroponicTroughRec(String name, Ingredient input, List<ItemStack> output, boolean needsLight, int growthStages){
+	private HydroponicTroughRecDatagenerated(String name, Ingredient input, List<ItemStack> output, boolean needsLight, int growthStages){
 		group = name;
 		ingr = input;
 		outputs = output;
@@ -59,7 +60,9 @@ public class HydroponicTroughRec implements HydroponicsTroughTileEntity.Hydropon
 		this.active = true;
 	}
 
-	public List<ItemStack> getOutputs(){
+	@Nullable
+	@Override
+	public List<ItemStack> getJeiOutputs(){
 		return outputs;
 	}
 
@@ -125,40 +128,40 @@ public class HydroponicTroughRec implements HydroponicsTroughTileEntity.Hydropon
 		return active;
 	}
 
-	public static class Serializer implements RecipeSerializer<HydroponicTroughRec>{
+	public static class Serializer implements RecipeSerializer<HydroponicTroughRecDatagenerated>{
 
 		static{
-			MapCodec<HydroponicTroughRec> codec = RecordCodecBuilder.mapCodec(instance -> instance.group(
-					CraftingUtil.recipeGroupFieldCodec().forGetter(HydroponicTroughRec::getGroup),
-					CraftingUtil.itemIngredientMapCodec("input", false).forGetter(HydroponicTroughRec::getIngredient),
-					CraftingUtil.singleOrListCodec(ItemStack.CODEC, 1, 4).fieldOf("output").forGetter(HydroponicTroughRec::getOutputs),
-					Codec.BOOL.optionalFieldOf("needs_light", true).forGetter(HydroponicTroughRec::needsLight),
-					Codec.INT.optionalFieldOf("growth_stages", 1).forGetter(HydroponicTroughRec::getGrowthStages)
-			).apply(instance, HydroponicTroughRec::new));
+			MapCodec<HydroponicTroughRecDatagenerated> codec = RecordCodecBuilder.mapCodec(instance -> instance.group(
+					CraftingUtil.recipeGroupFieldCodec().forGetter(HydroponicTroughRecDatagenerated::getGroup),
+					CraftingUtil.itemIngredientMapCodec("input", false).forGetter(HydroponicTroughRecDatagenerated::getIngredient),
+					CraftingUtil.singleOrListCodec(ItemStack.CODEC, 1, 4).fieldOf("output").forGetter(HydroponicTroughRecDatagenerated::getJeiOutputs),
+					Codec.BOOL.optionalFieldOf("needs_light", true).forGetter(HydroponicTroughRecDatagenerated::needsLight),
+					Codec.INT.optionalFieldOf("growth_stages", 1).forGetter(HydroponicTroughRecDatagenerated::getGrowthStages)
+			).apply(instance, HydroponicTroughRecDatagenerated::new));
 
-			StreamCodec<RegistryFriendlyByteBuf, HydroponicTroughRec> streamCodec = StreamCodec.composite(
-					ByteBufCodecs.STRING_UTF8, HydroponicTroughRec::getGroup,
-					Ingredient.CONTENTS_STREAM_CODEC, HydroponicTroughRec::getIngredient,
-					ByteBufCodecs.collection(ArrayList::new, ItemStack.STREAM_CODEC), HydroponicTroughRec::getOutputs,
-					ByteBufCodecs.BOOL, HydroponicTroughRec::needsLight,
-					ByteBufCodecs.VAR_INT, HydroponicTroughRec::getGrowthStages,
-					HydroponicTroughRec::new
+			StreamCodec<RegistryFriendlyByteBuf, HydroponicTroughRecDatagenerated> streamCodec = StreamCodec.composite(
+					ByteBufCodecs.STRING_UTF8, HydroponicTroughRecDatagenerated::getGroup,
+					Ingredient.CONTENTS_STREAM_CODEC, HydroponicTroughRecDatagenerated::getIngredient,
+					ByteBufCodecs.collection(ArrayList::new, ItemStack.STREAM_CODEC), HydroponicTroughRecDatagenerated::getJeiOutputs,
+					ByteBufCodecs.BOOL, HydroponicTroughRecDatagenerated::needsLight,
+					ByteBufCodecs.VAR_INT, HydroponicTroughRecDatagenerated::getGrowthStages,
+					HydroponicTroughRecDatagenerated::new
 			);
-			HydroponicTroughRec disabledRec = new HydroponicTroughRec();
+			HydroponicTroughRecDatagenerated disabledRec = new HydroponicTroughRecDatagenerated();
 			CODEC = IOptionalRecipe.codecWithDisable(codec, disabledRec);
 			STREAM_CODEC = IOptionalRecipe.codecWithDisable(streamCodec, disabledRec);
 		}
 
-		public static final MapCodec<HydroponicTroughRec> CODEC;
-		public static final StreamCodec<RegistryFriendlyByteBuf, HydroponicTroughRec> STREAM_CODEC;
+		public static final MapCodec<HydroponicTroughRecDatagenerated> CODEC;
+		public static final StreamCodec<RegistryFriendlyByteBuf, HydroponicTroughRecDatagenerated> STREAM_CODEC;
 
 		@Override
-		public MapCodec<HydroponicTroughRec> codec(){
+		public MapCodec<HydroponicTroughRecDatagenerated> codec(){
 			return CODEC;
 		}
 
 		@Override
-		public StreamCodec<RegistryFriendlyByteBuf, HydroponicTroughRec> streamCodec(){
+		public StreamCodec<RegistryFriendlyByteBuf, HydroponicTroughRecDatagenerated> streamCodec(){
 			return STREAM_CODEC;
 		}
 	}

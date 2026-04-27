@@ -16,6 +16,7 @@ import com.Da_Technomancer.essentials.api.redstone.RedstoneUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -41,18 +42,56 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class HydroponicsTroughTileEntity extends InventoryTE implements IFluidCapable, IItemCapable{
 
 	public static final BlockEntityType<HydroponicsTroughTileEntity> TYPE = CRTileEntity.createType(HydroponicsTroughTileEntity::new, CRBlocks.hydroponicsTrough);
 
+	private static boolean fallbackRecipesInitialized = false;
+	/* Flagging a risk with this implementation:
+	 * For actual mechanics, only server-side value matters here
+	 * But client-side will control what is shown in JEI
+	 * Everything with non-deterministic products should be using a subclass that doesn't show products to JEI,
+	 * but if we somehow get a different list between server-and-client side, there's currently no mechanism to rectify the discrepancy
+	 */
+	private static final ArrayList<IHydroponicsRec> fallbackRecipes = new ArrayList<>();
+
+	public static synchronized List<IHydroponicsRec> getFallbackRecipes(){
+		if(!fallbackRecipesInitialized){
+			fallbackRecipesInitialized = true;
+			for(Item item : BuiltInRegistries.ITEM){
+				// Build an explicit list of every item for which a fallback recipe exists
+				if(item instanceof BlockItem bItem){
+					Block block = bItem.getBlock();
+					switch(block){
+						case CropBlock crop -> {
+							fallbackRecipes.add(new HydroponicsRecLootTable(bItem, crop));
+						}
+						case FlowerBlock flowerBlock -> {
+							fallbackRecipes.add(new HydroponicsRecFixed(Ingredient.of(item), true, 2, List.of(new ItemStack(item))));
+						}
+						case TallFlowerBlock tallFlowerBlock -> {
+							fallbackRecipes.add(new HydroponicsRecFixed(Ingredient.of(item), true, 2, List.of(new ItemStack(item))));
+						}
+						default -> {
+
+						}
+					}
+				}
+			}
+		}
+		return fallbackRecipes;
+	}
+
 	private static final int CAPACITY = 8000;
 	public static final int SOLUTION_DRAIN_INTERVAL = 4;
 
 	private int progress = 0;
-	private HydroponicsRecGeneric recipeCache = null;
+	private IHydroponicsRec recipeCache = null;
 	private final IItemHandler itemHandler = new ItemHandler();
 
 	public HydroponicsTroughTileEntity(BlockPos pos, BlockState state){
@@ -78,7 +117,7 @@ public class HydroponicsTroughTileEntity extends InventoryTE implements IFluidCa
 		if(fluids[0].isEmpty()){
 			return 0;
 		}
-		HydroponicsRecGeneric crop = getCrop(inventory[0]);
+		IHydroponicsRec crop = getCrop(inventory[0]);
 		if(crop != null){
 			boolean needsLight = crop.needsLight();
 			return !needsLight || MiscUtil.getLight(level, worldPosition) >= 9 ? CRConfig.hydroponicsMult.get() : 0;
@@ -87,33 +126,17 @@ public class HydroponicsTroughTileEntity extends InventoryTE implements IFluidCa
 	}
 
 	@Nullable
-	private HydroponicsRecGeneric getCrop(ItemStack seeds){
+	private IHydroponicsRec getCrop(ItemStack seeds){
 		if(recipeCache != null && recipeCache.getIngredient().test(seeds)){
 			return recipeCache;
 		}
 
-		recipeCache = level.getRecipeManager().getAllRecipesFor(CRRecipes.HYDROPONIC_TROUGH_TYPE).stream().map(RecipeHolder::value).filter(rec -> rec.getIngredient().test(seeds)).findAny().orElse(null);
+		recipeCache = level.getRecipeManager().getAllRecipesFor(CRRecipes.HYDROPONIC_TROUGH_TYPE).stream().map(RecipeHolder::value).filter(rec -> rec.isEnabled() && rec.getIngredient().test(seeds)).findAny().orElse(null);
 		if(recipeCache == null){
-			//Handle seeds for CropsBlock & FlowerBlock
-			Item item = seeds.getItem();
-			if(item instanceof BlockItem bItem){
-				Block block = bItem.getBlock();
-				switch(block){
-					case CropBlock crop -> {
-						if(level.isClientSide()){
-							recipeCache = new HydroponicsRecRecord(Ingredient.of(item), true, crop.getMaxAge(), List.of());//We can't get the drops on the client, but we don't need to
-						}else{
-							List<ItemStack> drops = crop.getStateForAge(crop.getMaxAge()).getDrops(new LootParams.Builder((ServerLevel) level).withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(worldPosition)).withParameter(LootContextParams.TOOL, new ItemStack(Items.IRON_HOE)));
-							recipeCache = new HydroponicsRecRecord(Ingredient.of(item), true, crop.getMaxAge(), drops);
-						}
-					}
-					case FlowerBlock flowerBlock ->
-							recipeCache = new HydroponicsRecRecord(Ingredient.of(item), true, 2, List.of(new ItemStack(item)));
-					case TallFlowerBlock tallFlowerBlock ->
-							recipeCache = new HydroponicsRecRecord(Ingredient.of(item), true, 2, List.of(new ItemStack(item)));
-					default -> {
-						recipeCache = null;
-					}
+			for(IHydroponicsRec fallbackRec : getFallbackRecipes()){
+				if(fallbackRec.getIngredient().test(seeds)){
+					recipeCache = fallbackRec;
+					break;
 				}
 			}
 		}
@@ -124,6 +147,7 @@ public class HydroponicsTroughTileEntity extends InventoryTE implements IFluidCa
 	@Override
 	public void serverTick(){
 		super.serverTick();
+		//Creation of products is driven by random ticks - see performGrowth
 
 		if(isVenting()){
 			fluids[0] = FluidStack.EMPTY;
@@ -139,7 +163,7 @@ public class HydroponicsTroughTileEntity extends InventoryTE implements IFluidCa
 	}
 
 	public int getProgressBar(){
-		HydroponicsRecGeneric product = getCrop(inventory[0]);
+		IHydroponicsRec product = getCrop(inventory[0]);
 		if(product == null){
 			return 0;
 		}else{
@@ -151,7 +175,7 @@ public class HydroponicsTroughTileEntity extends InventoryTE implements IFluidCa
 
 	public void performGrowth(){
 		if(!level.isClientSide()){
-			HydroponicsRecGeneric product = getCrop(inventory[0]);
+			IHydroponicsRec product = getCrop(inventory[0]);
 			if(product == null){
 				progress = 0;
 			}else{
@@ -161,7 +185,7 @@ public class HydroponicsTroughTileEntity extends InventoryTE implements IFluidCa
 					progress -= maxProg;
 					//Produce drops
 					//We make a list of copies of the itemstacks; we modify these stacks, so we need to copy.
-					List<ItemStack> drops = product.getOutputs().stream().map(ItemStack::copy).toList();
+					List<ItemStack> drops = product.getOutputs((ServerLevel) level, worldPosition).stream().map(ItemStack::copy).toList();
 					for(ItemStack drop : drops){
 						for(int i = 1; i < inventory.length; i++){//Skip slot 1, which is the seed
 							ItemStack current = inventory[i];
@@ -269,7 +293,7 @@ public class HydroponicsTroughTileEntity extends InventoryTE implements IFluidCa
 		return new HydroponicsTroughContainer(id, playerInventory, createContainerBuf());
 	}
 
-	public static interface HydroponicsRecGeneric{
+	public static interface IHydroponicsRec{
 
 		Ingredient getIngredient();
 
@@ -277,10 +301,58 @@ public class HydroponicsTroughTileEntity extends InventoryTE implements IFluidCa
 
 		int getGrowthStages();
 
-		List<ItemStack> getOutputs();
+		/**
+		 * Get the actual outputs of the recipe. Can be randomized with each call.
+		 * @param world World
+		 * @param pos Position
+		 * @return Actual outputs
+		 */
+		@Nonnull
+		default List<ItemStack> getOutputs(ServerLevel world, BlockPos pos){
+			List<ItemStack> outputs = getJeiOutputs();
+			assert outputs != null;
+			return outputs;
+		}
+
+		/**
+		 * Gets the outputs to display in JEI. Should not vary between calls. If null, JEI will display a message that recipe outputs are randomized
+		 * @return List of outputs to be shown in JEI, or null
+		 */
+		@Nullable
+		List<ItemStack> getJeiOutputs();
 	}
 
-	public static record HydroponicsRecRecord(Ingredient ing, boolean needsLight, int growthStages, List<ItemStack> output) implements HydroponicsRecGeneric{
+	public static record HydroponicsRecLootTable(Ingredient ing, boolean needsLight, int growthStages, BlockState lootTableBlock) implements IHydroponicsRec{
+
+		public HydroponicsRecLootTable(Item seed, CropBlock crop){
+			this(Ingredient.of(seed), true, crop.getMaxAge(), crop.getStateForAge(crop.getMaxAge()));
+		}
+
+		@Override
+		public Ingredient getIngredient(){
+			return ing;
+		}
+
+		@Override
+		public int getGrowthStages(){
+			return growthStages;
+		}
+
+		@Nonnull
+		@Override
+		public List<ItemStack> getOutputs(ServerLevel world, BlockPos pos){
+			return lootTableBlock.getDrops(new LootParams.Builder(world).withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(pos)).withParameter(LootContextParams.TOOL, new ItemStack(Items.IRON_HOE)));
+		}
+
+		@Nullable
+		@Override
+		public List<ItemStack> getJeiOutputs(){
+			return null;//Not currently supported
+		}
+	}
+
+
+	public static record HydroponicsRecFixed(Ingredient ing, boolean needsLight, int growthStages, List<ItemStack> output) implements IHydroponicsRec{
 
 		@Override
 		public Ingredient getIngredient(){
@@ -293,7 +365,7 @@ public class HydroponicsTroughTileEntity extends InventoryTE implements IFluidCa
 		}
 
 		@Override
-		public List<ItemStack> getOutputs(){
+		public List<ItemStack> getJeiOutputs(){
 			return output;
 		}
 	}

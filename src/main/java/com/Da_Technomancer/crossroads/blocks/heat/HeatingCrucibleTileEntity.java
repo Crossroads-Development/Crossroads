@@ -38,7 +38,6 @@ import net.neoforged.neoforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 import java.awt.*;
-import java.util.Optional;
 
 public class HeatingCrucibleTileEntity extends InventoryTE implements INBTReceiver, IHeatCapable, IFluidCapable, IItemCapable{
 
@@ -48,6 +47,7 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements INBTReceiv
 	public static final int USAGE = 20;
 	public static final int REQUIRED = 1000;
 	private int progress = 0;
+	private CrucibleRec recipeCache = null;
 	/**
 	 * The fluid to be displayed for rendering in-world. Quantity is NOT synced; only type, NBT, empty or not empty
 	 * On server side, acts as a record of what was sent to client
@@ -100,12 +100,22 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements INBTReceiv
 		return activeText == null ? Color.WHITE : col == null ? Color.WHITE : new Color(col);
 	}
 
+	private CrucibleRec getCurrentRecipe(){
+		if(recipeCache != null && recipeCache.matches(this, level)){
+			return recipeCache;
+		}
+		recipeCache = level.getRecipeManager().getAllRecipesFor(CRRecipes.CRUCIBLE_TYPE).stream().map(RecipeHolder::value).filter(rec -> rec.matches(this, level)).findAny().orElse(null);
+		return recipeCache;
+	}
+
 	@Override
 	public void serverTick(){
 		super.serverTick();
 
 		if(level.getGameTime() % 2 == 0){
-			int fullness = Math.min(3, (int) Math.ceil((float) fluids[0].getAmount() * 3F / (float) fluidProps[0].capacity));
+			CrucibleRec recipe = getCurrentRecipe();
+
+			int fullness = Math.max(Math.min(3, (int) Math.ceil((float) fluids[0].getAmount() * 3F / (float) fluidProps[0].capacity)), recipe != null && progress > 0 ? 1 : 0);
 			BlockState state = getBlockState();
 			if(state.getBlock() != CRBlocks.heatingCrucible){
 				setRemoved();
@@ -116,8 +126,9 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements INBTReceiv
 				level.setBlock(worldPosition, state.setValue(CRProperties.FULLNESS, fullness), 18);
 			}
 
-			if(!BlockUtil.sameFluid(renderFluid, fluids[0])){
-				renderFluid = fluids[0].copy();
+			FluidStack renderFluidNew = fluids[0].isEmpty() && recipe != null ? recipe.getOutput() : fluids[0];
+			if(!BlockUtil.sameFluid(renderFluid, renderFluidNew)){
+				renderFluid = renderFluidNew.copy();
 				CompoundTag nbt = BlockUtil.stackToNBT(renderFluid, level.registryAccess());
 				nbt.putBoolean("render_fluid", true);
 				CRPackets.sendPacketAround(level, worldPosition, new SendNBTToTE(nbt, worldPosition));
@@ -133,9 +144,9 @@ public class HeatingCrucibleTileEntity extends InventoryTE implements INBTReceiv
 			}else{
 				progress = Math.min(REQUIRED, progress + USAGE * (tier + 1));
 				if(progress >= REQUIRED){
-					Optional<RecipeHolder<CrucibleRec>> recOpt = level.getRecipeManager().getRecipeFor(CRRecipes.CRUCIBLE_TYPE, this, level);
-					if(recOpt.isPresent()){
-						FluidStack created = recOpt.get().value().getOutput();
+					CrucibleRec recipe = getCurrentRecipe();
+					if(recipe != null){
+						FluidStack created = recipe.getOutput();
 						if(fluidProps[0].capacity - fluids[0].getAmount() >= created.getAmount() && (fluids[0].isEmpty() || BlockUtil.sameFluid(fluids[0], created))){
 							progress = 0;
 							if(fluids[0].isEmpty()){

@@ -5,6 +5,7 @@ import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
 import com.Da_Technomancer.crossroads.api.alchemy.ReagentManager;
 import com.Da_Technomancer.crossroads.api.crafting.IOptionalRecipe;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
+import com.Da_Technomancer.crossroads.blocks.witchcraft.HydroponicsTroughTileEntity;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.gui.container.DetailedAutoCrafterContainer;
 import com.Da_Technomancer.crossroads.gui.container.DetailedCrafterContainer;
@@ -67,6 +68,7 @@ public class JEICrossroadsPlugin implements IModPlugin{
 		registry.addRecipeCatalyst(new ItemStack(CRBlocks.incubator, 1), IncubatorCategory.TYPE);
 		registry.addRecipeCatalyst(new ItemStack(CRBlocks.embryoLab, 1), EmbryoModifierCategory.TYPE);
 		registry.addRecipeCatalyst(new ItemStack(CRItems.embryo, 1), EmbryoModifierCategory.TYPE);
+		registry.addRecipeCatalyst(new ItemStack(CRBlocks.hydroponicsTrough, 1), HydroponicsTroughCategory.TYPE);
 
 		//Add relevant crossroads machines to vanilla recipe types
 		registry.addRecipeCatalyst(new ItemStack(CRBlocks.smelter, 1), RecipeTypes.SMELTING);
@@ -105,6 +107,8 @@ public class JEICrossroadsPlugin implements IModPlugin{
 		registration.addRecipes(IceboxFuelCategory.TYPE, getRecipes(recipeManager, CRRecipes.COOLING_TYPE));
 		registration.addRecipes(IncubatorCategory.TYPE, getRecipes(recipeManager, CRRecipes.INCUBATOR_TYPE));
 		registration.addRecipes(EmbryoModifierCategory.TYPE, getRecipes(recipeManager, CRRecipes.EMBRYO_LAB_MODIFIER_TYPE));
+		registration.addRecipes(HydroponicsTroughCategory.TYPE, new ArrayList<>(getRecipes(recipeManager, CRRecipes.HYDROPONIC_TROUGH_TYPE)));
+		registration.addRecipes(HydroponicsTroughCategory.TYPE, HydroponicsTroughTileEntity.getFallbackRecipes());//Strictly speaking, the fallback recipes should have lower priority than the datagen
 
 		//Add anvil recipes for Technomancy items
 		IVanillaRecipeFactory vanillaFactory = registration.getVanillaRecipeFactory();
@@ -149,7 +153,8 @@ public class JEICrossroadsPlugin implements IModPlugin{
 				new IceboxFuelCategory(guiHelper),
 				new BeamLensCategory(guiHelper),
 				new IncubatorCategory(guiHelper),
-				new EmbryoModifierCategory(guiHelper)
+				new EmbryoModifierCategory(guiHelper),
+				new HydroponicsTroughCategory(guiHelper)
 		);
 	}
 
