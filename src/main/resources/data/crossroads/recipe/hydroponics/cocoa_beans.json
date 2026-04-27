@@ -1,0 +1,11 @@
+{
+	"type": "crossroads:hydroponics",
+	"input": {
+		"item": "cocoa_beans"
+	},
+	"output": {
+		"id": "cocoa_beans",
+		"count": 3
+	},
+	"growth_stages": 3
+}

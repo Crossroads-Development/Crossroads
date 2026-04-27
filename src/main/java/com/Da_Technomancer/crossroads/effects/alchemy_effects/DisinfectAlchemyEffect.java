@@ -36,7 +36,7 @@ public class DisinfectAlchemyEffect implements IAlchEffect{
 			world.setBlockAndUpdate(pos, Blocks.DIRT.defaultBlockState());
 		}else if(state.is(SMALL_MUSHROOMS)){
 			world.destroyBlock(pos, true);
-		}else if(state.is(BlockTags.NYLIUM)){
+		}else if(state.is(Blocks.CRIMSON_NYLIUM) || state.is(Blocks.WARPED_NYLIUM)){
 			world.setBlockAndUpdate(pos, Blocks.NETHERRACK.defaultBlockState());
 		}
 

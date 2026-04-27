@@ -6,7 +6,7 @@
 	},
 	"ingredients": [
 		{
-			"tag": "c:dusts/alchemy_salt"
+			"tag": "crossroads:dusts/alchemy_salt"
 		},
 		{
 			"item": "minecraft:bone_meal"

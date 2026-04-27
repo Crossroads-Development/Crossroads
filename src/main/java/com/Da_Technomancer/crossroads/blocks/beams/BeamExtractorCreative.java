@@ -30,7 +30,7 @@ import java.util.List;
 public class BeamExtractorCreative extends BeamBlock implements ICustomItemBlock{
 
 	public BeamExtractorCreative(){
-		super("beam_extractor_creative");
+		super("beam_extractor_creative", CRBlocks.getRockProperty().strength(5, 1200.0F));
 	}
 
 	@Override

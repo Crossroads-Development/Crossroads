@@ -12,6 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.phys.BlockHitResult;
@@ -21,7 +22,11 @@ import javax.annotation.Nullable;
 public abstract class BeamBlock extends TEBlock{
 
 	public BeamBlock(String name){
-		super(CRBlocks.getRockProperty());
+		this(name, CRBlocks.getRockProperty());
+	}
+
+	public BeamBlock(String name, BlockBehaviour.Properties prop){
+		super(prop);
 		CRBlocks.queueForRegister(name, this);
 	}
 

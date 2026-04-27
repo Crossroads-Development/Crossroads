@@ -29,7 +29,7 @@ import java.util.List;
 public class BeamExtractor extends BeamBlock{
 
 	public BeamExtractor(){
-		super("beam_extractor");
+		super("beam_extractor", CRBlocks.getRockProperty().strength(5, 1200.0F));
 	}
 
 	@Override

@@ -2,7 +2,7 @@
 	"type": "crossroads:bobo",
 	"output": {
 		"id": "crossroads:poison_vodka",
-		"count": 1
+		"count": 2
 	},
 	"input_a": [
 		{

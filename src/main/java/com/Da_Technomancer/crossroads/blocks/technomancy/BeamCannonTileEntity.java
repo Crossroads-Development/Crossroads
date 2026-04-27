@@ -89,7 +89,7 @@ public class BeamCannonTileEntity extends AbstractCannonTileEntity implements IB
 				upShift.mul(3.5F / 16F);
 				Vec3 rayTraceSt = Vec3.atCenterOf(worldPosition).add(upShift.x(), upShift.y(), upShift.z());
 
-				BeamHit beamHitResult = BeamUtil.rayTraceBeams(out, level, rayTraceSt, rayTraceSt, rayVec3, null, worldPosition, RANGE, new BeamHit.BeamSource(BEAM_SOURCE_TYPE, true, false, level, worldPosition, null));
+				BeamHit beamHitResult = BeamUtil.rayTraceBeams(out, level, rayTraceSt, rayTraceSt, rayVec3, null, worldPosition, RANGE, new BeamHit.BeamSource(BEAM_SOURCE_TYPE, true, true, level, worldPosition, null));
 				BlockPos endPos = beamHitResult.getPos();
 				if(endPos != null){//Should always be true
 					outLength = (float) beamHitResult.getHitPos().distanceTo(rayTraceSt);

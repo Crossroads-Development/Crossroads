@@ -22,7 +22,9 @@ public class EntityFlyingMachine extends Entity{
 
 	//In radians, 0 is down, pi/2 is forward
 	private static final EntityDataAccessor<Float> GRAV_PLATE_ANGLE = SynchedEntityData.defineId(EntityFlyingMachine.class, EntityDataSerializers.FLOAT);
-	private static final float ACCEL = 0.12F;
+	private static final float ACCEL = 0.09F;
+	private static final double DRAG = 0.025D;
+	private static final double FLOOR_DRAG = 0.8D;
 	private int damage = 0;
 
 	public EntityFlyingMachine(EntityType<EntityFlyingMachine> type, Level worldIn){
@@ -98,8 +100,9 @@ public class EntityFlyingMachine extends Entity{
 
 				//Air resistance/friction
 				final double min = 0.003D;
+				boolean onGround = onGround();
 				for(int i = 0; i < 3; i++){
-					vel[i] *= 0.8D;
+					vel[i] *= onGround ? 1D - FLOOR_DRAG : 1D - DRAG;
 					if(Math.abs(vel[i]) < min){
 						vel[i] = 0;
 					}
@@ -117,8 +120,9 @@ public class EntityFlyingMachine extends Entity{
 
 				//Air resistance/friction
 				final double min = 0.003D;
+				boolean onGround = onGround();
 				for(int i = 0; i < 3; i++){
-					vel[i] *= 0.8D;
+					vel[i] *= onGround ? 1D - FLOOR_DRAG : 1D - DRAG;
 					if(Math.abs(vel[i]) < min){
 						vel[i] = 0;
 					}
