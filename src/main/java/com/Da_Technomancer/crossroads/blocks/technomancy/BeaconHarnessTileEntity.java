@@ -49,11 +49,11 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, 
 	private int loadSafetyTime = 0;
 
 	//Flux related fields
-	private final FluxHelper fluxHelper;
+	private final SimpleFluxLink fluxHelper;
 
 	public BeaconHarnessTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state);
-		fluxHelper = new FluxHelper(TYPE, pos, state, this, Behaviour.SOURCE);
+		fluxHelper = new SimpleFluxLink(TYPE, pos, state, this, Behaviour.SOURCE);
 	}
 
 	@Override
@@ -162,6 +162,11 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, 
 		if(CRConfig.beaconHarnessLoadSafety.get()){
 			loadSafetyTime = LOOP_TIME;
 		}
+	}
+
+	@Override
+	public boolean isShutDown(){
+		return fluxHelper.isShutDown();
 	}
 
 	public boolean isSafetyPeriod(int cycles){

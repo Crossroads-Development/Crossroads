@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-public class TemporalAcceleratorTileEntity extends IFluxLink.FluxHelper implements IBeamCapable{
+public class TemporalAcceleratorTileEntity extends IFluxLink.SimpleFluxLink implements IBeamCapable{
 
 	public static final BlockEntityType<TemporalAcceleratorTileEntity> TYPE = CRTileEntity.createType(TemporalAcceleratorTileEntity::new, CRBlocks.temporalAccelerator);
 

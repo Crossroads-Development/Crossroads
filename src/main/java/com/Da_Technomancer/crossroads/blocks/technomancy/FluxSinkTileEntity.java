@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.blocks.technomancy;
 
+import com.Da_Technomancer.crossroads.advancements.FluxSinkOverloadTrigger;
 import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.crossroads.api.technomancy.FluxUtil;
@@ -19,16 +20,17 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-public class FluxSinkTileEntity extends IFluxLink.FluxHelper{
+public class FluxSinkTileEntity extends IFluxLink.SimpleFluxLink{
 
 	public static final BlockEntityType<FluxSinkTileEntity> TYPE = CRTileEntity.createType(FluxSinkTileEntity::new, CRBlocks.fluxSink);
 
-	private static final int CAPACITY = 256;
+	public static final int CAPACITY = 256;
 
 	private boolean running = false;
 	private long runningStartTime;//Used for rendering
@@ -69,6 +71,26 @@ public class FluxSinkTileEntity extends IFluxLink.FluxHelper{
 		}
 	}
 
+	@Override
+	public void serverTick(){
+		super.serverTick();
+		if(isShutDown()){
+			//Overfilled the flux sink - consequences now occur
+			level.destroyBlock(worldPosition, false);
+			FluxUtil.fluxEvent(level, worldPosition);
+			//Also destroy the beacon if there is one and trigger an explosion there
+			BlockPos beaconPos = getBeaconPosition();
+			if(beaconPos != null){
+				level.destroyBlock(beaconPos, false);
+				level.explode(null, beaconPos.getX() + 0.5D, beaconPos.getY() - 0.5D, beaconPos.getZ() + 0.5D, 4F, Level.ExplosionInteraction.TNT);
+			}
+
+			for(ServerPlayer player : level.getEntitiesOfClass(ServerPlayer.class, AABB.ofSize(worldPosition.getCenter(), 100, 100, 100))){
+				FluxSinkOverloadTrigger.INSTANCE.trigger(player);
+			}
+		}
+	}
+
 	private void consumeFlux(int fluxIn){
 		if(isRunning()){
 			int remainder = fluxIn - Math.min(CAPACITY, fluxIn);
@@ -76,6 +98,23 @@ public class FluxSinkTileEntity extends IFluxLink.FluxHelper{
 		}else{
 			this.flux += fluxIn;
 		}
+	}
+
+	@Nullable
+	private BlockPos getBeaconPosition(){
+		//Null if there is no valid beacon
+		//expects a beacon below it, with any number of air gaps
+		BlockPos.MutableBlockPos mutPos = new BlockPos.MutableBlockPos(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ());
+		do{
+			mutPos.move(Direction.DOWN);
+			BlockState state = level.getBlockState(mutPos);
+			if(state.getBlock() == Blocks.BEACON){
+				return mutPos.immutable();
+			}else if(!canBeaconBeamPass(state, level, mutPos)){
+				return null;
+			}
+		}while(mutPos.getY() > level.getMinBuildHeight());
+		return null;
 	}
 
 	/**
@@ -90,18 +129,7 @@ public class FluxSinkTileEntity extends IFluxLink.FluxHelper{
 		//We cache the value of whether this is running, and only recheck once every 5 seconds
 		if(level.getGameTime() % 100 == 0){
 			boolean prevRunning = running;
-			running = false;
-			//expects a beacon below it, with any number of air gaps
-			BlockPos.MutableBlockPos mutPos = new BlockPos.MutableBlockPos(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ());
-			do{
-				mutPos.move(Direction.DOWN);
-				BlockState state = level.getBlockState(mutPos);
-				if(state.getBlock() == Blocks.BEACON){
-					running = true;
-				}else if(!canBeaconBeamPass(state, level, mutPos)){
-					return false;
-				}
-			}while(!running && mutPos.getY() > level.getMinBuildHeight());
+			running = getBeaconPosition() != null;
 			if(prevRunning != running){
 				//Notify the clients
 				CRPackets.sendPacketAround(level, worldPosition, new SendLongToTE(1, running ? level.getGameTime() : 0, worldPosition));

@@ -61,7 +61,6 @@ public class CRConfig{
 	public static ModConfigSpec.IntValue gravRange;
 	public static ModConfigSpec.DoubleValue gravAccel;
 	public static ModConfigSpec.IntValue fePerEntropy;
-	public static ModConfigSpec.BooleanValue entropyDropBlock;
 	public static ModConfigSpec.BooleanValue rotateBeam;
 	public static ModConfigSpec.BooleanValue teTimeAccel;
 	public static ModConfigSpec.BooleanValue allowStatRecall;
@@ -97,7 +96,6 @@ public class CRConfig{
 	public static ModConfigSpec.IntValue enviroBootSoulSpeed;
 	public static ModConfigSpec.BooleanValue allowGateway;
 	public static ModConfigSpec.BooleanValue allowGatewayEntities;
-	public static ModConfigSpec.BooleanValue fluxSafeMode;
 	public static ModConfigSpec.BooleanValue undergroundLightning;
 	public static ModConfigSpec.BooleanValue cageMeterOverlay;
 	public static ModConfigSpec.DoubleValue beamRaytraceStep;
@@ -208,7 +206,6 @@ public class CRConfig{
 		serverBuilder.push(CAT_SPECIALIZATION);
 		multiPathMode = serverBuilder.comment("How multiple paths are unlocked", "Options are 'SINGLE' (only 1 allowed), 'UNLIMITED' (can unlock them all simultaneously), and 'SEQUENTIAL' (default, unlocking an additional path requires beating the previous path)").defineEnum("multi_path_mode", EnumPath.MultiPathMode.SEQUENTIAL);
 		serverBuilder.push(CAT_TECHNOMANCY);
-		entropyDropBlock = serverBuilder.comment("Whether Technomancy machines should drop an item when overloaded").define("drop_machine", false);
 		fluxEvent = serverBuilder.comment("Allow Temporal Entropy disasters from Technomancy?", "If disabled, disasters create a small explosion instead").define("flux_disaster", true);
 		fePerEntropy = serverBuilder.comment("FE equal to 1 Temporal Entropy").defineInRange("fe_per_entropy", 50, 1, Integer.MAX_VALUE);
 		teTimeAccel = serverBuilder.comment("Allow time acceleration of Tile Entities?", "Disabling this does not affect acceleration of normal entities or block ticks").define("te_accel", true);
@@ -227,7 +224,6 @@ public class CRConfig{
 		enviroBootSoulSpeed = serverBuilder.comment("Level of the All-Terrain Boots soul speed effect", "Set to 0 to disable").defineInRange("enviro_boot_soul", 3, 0, 10);
 		allowGateway = serverBuilder.comment("Whether Gateways can teleport entities at all").define("allow_gateway", true);
 		allowGatewayEntities = serverBuilder.comment("Whether Gateways can teleport entities that aren't players", "If false, players can still use Gateways").define("allow_gateway_ent", true);
-		fluxSafeMode = serverBuilder.comment("If enabled, machines will NOT break/explode/cause damage when overfilling on Temporal Entropy", "Machines which overfill on Temporal Entropy will shut down instead").define("flux_safe", false);
 		serverBuilder.pop();
 		serverBuilder.push(CAT_ALCHEMY);
 		phelEffect = serverBuilder.comment("Allow the full effect of Phelostogen?", "If disabled Phelostogen lights a single small fire instead").define("phel_effect", true);

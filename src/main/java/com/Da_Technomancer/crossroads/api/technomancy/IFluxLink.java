@@ -11,6 +11,7 @@ import com.Da_Technomancer.essentials.api.ILinkTE;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import com.Da_Technomancer.essentials.api.LinkHelper;
 import com.Da_Technomancer.essentials.api.packets.ILongReceiver;
+import com.Da_Technomancer.essentials.api.packets.SendLongToTE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -33,6 +34,8 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE, IIntArrayReceiver{
+
+	boolean isShutDown();
 
 	int getFlux();
 
@@ -66,7 +69,7 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE, IIntArrayRec
 	 * @return Whether this machine can currently accept flux
 	 */
 	default boolean allowAccepting(){
-		return true;
+		return !isShutDown();
 	}
 
 	/**
@@ -98,7 +101,7 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE, IIntArrayRec
 	 * @return Whether this block should render effects for being near the failure point
 	 */
 	default boolean renderFluxWarning(){
-		return false;
+		return isShutDown();
 	}
 
 	/**
@@ -129,7 +132,7 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE, IIntArrayRec
 	 * Can be used as either a superclass (extenders should pass null/themselves and their type to the constructor), or as an instantiated helper (instantiators should pass any non-null type and themselves to the constructor)
 	 * When used as a helper, calls to the IFluxLink & tick methods should be passed to this class, and read() & write() should call readData() and writeData()
 	 */
-	class FluxHelper extends BlockEntity implements ITickableTileEntity, IFluxLink{
+	public static class SimpleFluxLink extends BlockEntity implements ITickableTileEntity, IFluxLink{
 
 		private static final byte RENDER_ID = 6;
 
@@ -141,14 +144,14 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE, IIntArrayRec
 		public int flux = 0;
 		public long lastTick = 0;
 		protected Consumer<Integer> fluxTransferHandler;
-		private boolean shutDown = false;//Only used if safe mode is enabled in the config
+		private boolean shutDown = false;//Set on the server, will be kept updated on client
 		private int[] rendered = new int[0];
 
-		public FluxHelper(BlockEntityType<?> type, BlockPos pos, BlockState state, @Nullable BlockEntity owner, Behaviour behaviour){
+		public SimpleFluxLink(BlockEntityType<?> type, BlockPos pos, BlockState state, @Nullable BlockEntity owner, Behaviour behaviour){
 			this(type, pos, state, owner, behaviour, null);
 		}
 
-		public FluxHelper(BlockEntityType<?> type, BlockPos pos, BlockState state, @Nullable BlockEntity owner, Behaviour behaviour, @Nullable Consumer<Integer> fluxTransferHandler){
+		public SimpleFluxLink(BlockEntityType<?> type, BlockPos pos, BlockState state, @Nullable BlockEntity owner, Behaviour behaviour, @Nullable Consumer<Integer> fluxTransferHandler){
 			super(type, pos, state);
 			this.owner = owner == null ? this : owner;
 			this.behaviour = behaviour;
@@ -172,6 +175,7 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE, IIntArrayRec
 		public CompoundTag getUpdateTag(HolderLookup.Provider pRegistries){
 			CompoundTag nbt = super.getUpdateTag(pRegistries);
 			nbt.putIntArray("rendered_arcs", rendered);
+			nbt.putBoolean("shutdown", shutDown);
 			return nbt;
 		}
 
@@ -222,7 +226,12 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE, IIntArrayRec
 						fluxTransferHandler.accept(toTransfer);
 					}
 					owner.setChanged();
+					boolean wasShutdown = shutDown;
 					shutDown = FluxUtil.checkFluxOverload(this);
+					if(wasShutdown != shutDown){
+						// Update shutdown status on client
+						CRPackets.sendPacketAround(world, owner.getBlockPos(), new SendLongToTE(12, shutDown ? 1L : 0L, owner.getBlockPos()));
+					}
 				}
 			}
 		}
@@ -247,13 +256,9 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE, IIntArrayRec
 			}
 		}
 
+		@Override
 		public boolean isShutDown(){
 			return shutDown;
-		}
-
-		@Override
-		public boolean allowAccepting(){
-			return !isShutDown();
 		}
 
 		@Override
@@ -299,6 +304,9 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE, IIntArrayRec
 		@Override
 		public void receiveLong(byte id, long value, @Nullable ServerPlayer sender){
 			linkHelper.handleIncomingPacket(id, value);
+			if(id == 12 && owner.getLevel().isClientSide){
+				shutDown = value == 1;
+			}
 		}
 
 		@Override
@@ -320,7 +328,7 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE, IIntArrayRec
 
 		@Override
 		public boolean canLink(ILinkTE otherTE){
-			return otherTE instanceof IFluxLink && ((IFluxLink) otherTE).canAcceptLinks();
+			return otherTE instanceof IFluxLink otherLinkTE && otherLinkTE.canAcceptLinks();
 		}
 
 		@Override

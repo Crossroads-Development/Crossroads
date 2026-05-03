@@ -46,7 +46,7 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 	public static final int CAPACITY = 1_000;
 	public static final int FLUX_PER_INGOT = 4;
 
-	private final FluxHelper fluxHelper;
+	private final SimpleFluxLink fluxHelper;
 
 	//Make the top handler an IFluidTank to allow pipes to do bi-directional stuff
 	private final IFluidHandler inputFluidHandler = new FluidTankHandler(0);
@@ -55,7 +55,7 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 
 	public CopshowiumCreationChamberTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state, 0);
-		fluxHelper = new FluxHelper(TYPE, pos, state, this, Behaviour.SOURCE);
+		fluxHelper = new SimpleFluxLink(TYPE, pos, state, this, Behaviour.SOURCE);
 		fluidProps[0] = new TankProperty(CAPACITY, true, true, f -> true);//Input
 		fluidProps[1] = new TankProperty(CAPACITY, false, true);//Copshowium output
 		initFluidManagers();
@@ -125,6 +125,11 @@ public class CopshowiumCreationChamberTileEntity extends InventoryTE implements 
 	@Override
 	public boolean canAcceptLinks(){
 		return fluxHelper.canAcceptLinks();
+	}
+
+	@Override
+	public boolean isShutDown(){
+		return fluxHelper.isShutDown();
 	}
 
 	@Override

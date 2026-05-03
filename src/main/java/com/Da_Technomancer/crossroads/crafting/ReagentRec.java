@@ -395,7 +395,7 @@ public class ReagentRec implements Recipe<RecipeInput>, IReagent{
 	static{
 		registerFlameFormula("none", qty -> 0);
 		registerFlameFormula("small", qty -> Math.min(8, (int) Math.round(qty / 2D)));
-		registerFlameFormula("large", qty -> CRConfig.allowHellfire.get() ? Math.min(64, qty * 4) : Math.min(8, (int) Math.round(qty / 2D)));
+		registerFlameFormula("large", qty -> CRConfig.allowHellfire.get() ? Math.min(64, qty * 4) : Math.min(8, qty * 4));
 		registerFlameFormula("fixed_small", qty -> qty == 0 ? 0 : 8);//Constant 8 block range, regardless of quantity
 		registerFlameFormula("fixed_large", qty -> qty == 0 ? 0 : CRConfig.allowHellfire.get() ? 64 : 8);//Constant 64 block range, regardless of quantity
 

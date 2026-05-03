@@ -1,0 +1,30 @@
+{
+	"parent": "crossroads:progress/misc/flux_sink",
+	"display": {
+		"icon": {
+			"id": "crossroads:flux_sink"
+		},
+		"title": {
+			"translate": "crossroads.advancement.flux_sink_overload"
+		},
+		"description": {
+			"translate": "crossroads.advancement.flux_sink_overload.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true,
+		"hidden": true
+	},
+	"criteria": {
+		"overload": {
+			"trigger": "crossroads:flux_sink_overload",
+			"conditions": {
+
+			}
+		}
+	},
+	"requirements": [
+		[
+			"overload"
+		]
+	]
+}

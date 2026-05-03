@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class ChunkAcceleratorTileEntity extends IFluxLink.FluxHelper implements IBeamCapable{
+public class ChunkAcceleratorTileEntity extends IFluxLink.SimpleFluxLink implements IBeamCapable{
 
 	public static final BlockEntityType<ChunkAcceleratorTileEntity> TYPE = CRTileEntity.createType(ChunkAcceleratorTileEntity::new, CRBlocks.chunkAccelerator);
 

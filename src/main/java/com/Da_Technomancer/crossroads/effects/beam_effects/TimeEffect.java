@@ -4,6 +4,7 @@ import com.Da_Technomancer.crossroads.api.beams.BeamHit;
 import com.Da_Technomancer.crossroads.api.beams.BeamUtil;
 import com.Da_Technomancer.crossroads.api.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.api.technomancy.FluxUtil;
+import com.Da_Technomancer.crossroads.api.technomancy.IFluxLink;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.GameRules;
@@ -24,13 +25,16 @@ public class TimeEffect extends BeamEffect{
 	public void doBeamEffect(EnumBeamAlignments align, boolean voi, int power, BeamHit beamHit){
 		if(!performTransmute(align, voi, power, beamHit)){
 			if(voi){
-				FluxUtil.fluxEvent(beamHit.getWorld(), beamHit.getPos());
+				if(beamHit.getEndBlockEntity() instanceof IFluxLink fluxLink){
+					fluxLink.addFlux(power);
+				}else{
+					FluxUtil.fluxEvent(beamHit.getWorld(), beamHit.getPos(), power);
+				}
 			}else{
 				//Note that we only apply this effect once every BeamUtil.BEAM_TIME ticks; need to adjust applied affect to compensate
 				//Increase the odds that we apply, and once that caps out, increase number of extra ticks applied at a time
-				int cappedPower = Math.min(64, power);
-				int extraTicks = cappedPower * BeamUtil.BEAM_TIME / Math.min(64, cappedPower * BeamUtil.BEAM_TIME);
-				if(beamHit.getWorld().random.nextInt(64) < cappedPower * BeamUtil.BEAM_TIME){
+				int extraTicks = power * BeamUtil.BEAM_TIME / Math.min(64, power * BeamUtil.BEAM_TIME);
+				if(beamHit.getWorld().random.nextInt(64) < power * BeamUtil.BEAM_TIME){
 					TickingBlockEntity ticker = getTicker(beamHit.getWorld(), beamHit.getPos());
 					if(ticker != null){
 						for(int i = 0; i < extraTicks; i++){

@@ -33,7 +33,7 @@ public class BeamEffect{
 	 * Performs the beam effect. Call on the virtual server side only.
 	 * @param align This beam alignment
 	 * @param voi Whether this is a void variant
-	 * @param power Total beam power
+	 * @param power Total beam power. Value in range [0, BeamUtil.MAX_EFFECT_POWER]
 	 * @param beamHit Information about the collision point and path of the beam
 	 */
 	public void doBeamEffect(EnumBeamAlignments align, boolean voi, int power, BeamHit beamHit){
@@ -45,7 +45,7 @@ public class BeamEffect{
 	 * All beam effects should call this method first
 	 * @param align This beam alignment
 	 * @param voi Whether this is a void variant
-	 * @param power Total beam power
+	 * @param power Total beam power. Value in range [0, BeamUtil.MAX_EFFECT_POWER]
 	 * @param beamHit Information about the collision point and path of the beam
 	 * @return Whether this did anything (in which case, don't run the normal beam effect)
 	 */

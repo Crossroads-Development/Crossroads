@@ -107,6 +107,9 @@ public class FluxUtil{
 	 * @param fluxPerCycle Flux production. -1 to not display info about flux production
 	 */
 	public static void addFluxInfo(List<Component> tooltip, IFluxLink te, int fluxPerCycle){
+		if(te.isShutDown()){
+			tooltip.add(Component.translatable("tt.crossroads.boilerplate.flux.shutdown"));
+		}
 		if(fluxPerCycle < 0){
 			tooltip.add(Component.translatable("tt.crossroads.boilerplate.flux_simple", te.getReadingFlux(), te.getMaxFlux(), CRConfig.formatVal(100F * te.getReadingFlux() / te.getMaxFlux())));
 		}else{
@@ -141,22 +144,16 @@ public class FluxUtil{
 	}
 
 	/**
-	 * Checks whether flux is over the limit, and if so performs a flux event and destroys this block
+	 * Checks whether the machine should shut down due to flux going over the limit
 	 * @param te The machine to check
-	 * @return Whether this machine should shut down (flux > fluxLimit && safe mode enabled)
+	 * @return Whether this machine should shut down (starts at flux > fluxLimit)
 	 */
 	public static boolean checkFluxOverload(IFluxLink te){
-		if(te.getFlux() > te.getMaxFlux()){
-			if(CRConfig.fluxSafeMode.get()){
-				return true;
-			}
-			BlockEntity tileEntity = te.getTE();
-			Level world = tileEntity.getLevel();
-			BlockPos pos = tileEntity.getBlockPos();
-			world.destroyBlock(pos, CRConfig.entropyDropBlock.get());
-			fluxEvent(world, pos);
+		if(te.isShutDown()){
+			//One a TE is shut down, don't let it start up again until it fully clears out the flux
+			return te.getFlux() > 0;
 		}
-		return false;
+		return te.getFlux() > te.getMaxFlux();
 	}
 
 	public static InteractionResult handleFluxLinking(Level world, BlockPos pos, ItemStack stack, Player player){
@@ -170,32 +167,55 @@ public class FluxUtil{
 		return InteractionResult.PASS;
 	}
 
-	public static void fluxEvent(Level worldIn, BlockPos pos){
+	public static void fluxEvent(Level worldIn, BlockPos pos, int maxSeverity){
 		if(CRConfig.fluxEvent.get()){
 			//Create a random bad effect
-			int selector = (int) (Math.random() * 100);
+			//note maxSeverity 64 is a significant threshold - highest reachable by beams (i.e., worst event reachable by accident by someone who doesn't know what flux is)
+			int selector = Math.min(maxSeverity, (int) (Math.random() * 100));
 			if(selector < 50){
 				//Explode
-				//Equivalent to charged creeper explosion
-				worldIn.explode(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, 5, CRConfig.entropyDropBlock.get() ? Level.ExplosionInteraction.TNT : Level.ExplosionInteraction.MOB);
-			}else if(selector < 65){
-				//Alchemy phelostogen/voltus/salt cloud
-				ReagentMap map = new ReagentMap();
-				map.addReagent(EnumReagents.PHELOSTOGEN.id(), 16, 100);
-				map.addReagent(EnumReagents.ALCHEMICAL_SALT.id(), 4, 100);
-				map.addReagent(EnumReagents.ELEM_CHARGE.id(), 4, 100);
-				AlchemyUtil.releaseChemical(worldIn, pos, map);
-			}else if(selector < 72){
-				//Alchemy phelostogen/aether/salt cloud
+				//Radius 5 equivalent to charged creeper explosion
+				worldIn.explode(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, 3.5F + 2F * (selector / 50F), Level.ExplosionInteraction.MOB);
+			}else if(selector < 80){
+				//Random alchemy terraforming cloud - block change only, no destruction, placement, or biome changes
 				ReagentMap map = new ReagentMap();
 				map.addReagent(EnumReagents.PHELOSTOGEN.id(), 10, 100);
 				map.addReagent(EnumReagents.ALCHEMICAL_SALT.id(), 4, 100);
-				map.addReagent(EnumReagents.AETHER.id(), 4, 100);
+				map.addReagent(EnumReagents.SULFUR_DIOXIDE.id(), 4, 100);
+
+				switch(selector % 4){
+					//Pick which terraforming type to use
+					case 0 -> {
+						map.addReagent(EnumReagents.AETHER.id(), 4, 100);
+					}
+					case 1 -> {
+						map.addReagent(EnumReagents.ELEM_LIGHT.id(), 4, 100);
+					}
+					case 2 -> {
+						map.addReagent(EnumReagents.ELEM_RIFT.id(), 4, 100);
+					}
+					case 3 -> {
+						map.addReagent(EnumReagents.ELEM_EQUAL.id(), 4, 100);
+					}
+				}
+				if(selector > 70){
+					//Add dealing damage
+					map.addReagent(EnumReagents.ELEM_CHARGE.id(), 4, 100);
+				}
 				AlchemyUtil.releaseChemical(worldIn, pos, map);
-			}else{
-				//Alchemy pure-phelostogen cloud
+			}else if(selector < 95 || !CRConfig.allowHellfire.getAsBoolean()){
+				//Alchemy pure-phelostogen cloud + voltus
 				ReagentMap map = new ReagentMap();
 				map.addReagent(EnumReagents.PHELOSTOGEN.id(), 6, 100);
+				map.addReagent(EnumReagents.ELEM_CHARGE.id(), 4, 100);
+				AlchemyUtil.releaseChemical(worldIn, pos, map);
+			}else{
+				//Kill everything in a very large radius, but leave blocks unharmed
+				//Alchemy ignis infernum/voltus/salt cloud
+				ReagentMap map = new ReagentMap();
+				map.addReagent(EnumReagents.HELLFIRE.id(), 8, 100);
+				map.addReagent(EnumReagents.ALCHEMICAL_SALT.id(), 4, 100);
+				map.addReagent(EnumReagents.ELEM_CHARGE.id(), 4, 100);
 				AlchemyUtil.releaseChemical(worldIn, pos, map);
 			}
 		}else{
@@ -203,5 +223,9 @@ public class FluxUtil{
 			//equivalent to TNT explosion
 			worldIn.explode(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, 4, Level.ExplosionInteraction.TNT);
 		}
+	}
+
+	public static void fluxEvent(Level worldIn, BlockPos pos){
+		fluxEvent(worldIn, pos, 100);
 	}
 }

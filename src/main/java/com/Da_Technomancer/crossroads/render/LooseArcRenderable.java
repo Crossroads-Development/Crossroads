@@ -57,7 +57,7 @@ public class LooseArcRenderable implements IVisualEffect{
 				pitch = 1.5F;
 			}else{
 				soundEvent = CRSounds.ELECTRIC_SPARK;
-				volume = 0.2F;
+				volume = 0.1F;
 				pitch = 1F;
 			}
 			CRSounds.playSoundClientLocal(world, MiscUtil.blockPos((xSt + xEn) / 2F, (ySt + yEn) / 2F, (zSt + zEn) / 2F), soundEvent, SoundSource.BLOCKS, volume, pitch);

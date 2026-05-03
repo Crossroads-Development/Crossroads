@@ -21,11 +21,11 @@ import net.minecraft.world.phys.BlockHitResult;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-public class FluxNodeTileEntity extends IFluxLink.FluxHelper{
+public class FluxNodeTileEntity extends IFluxLink.SimpleFluxLink{
 
 	public static final BlockEntityType<FluxNodeTileEntity> TYPE = CRTileEntity.createType(FluxNodeTileEntity::new, CRBlocks.fluxNode);
 
-	private static final float SPIN_RATE = 3.6F;//For rendering
+	private static final float SPIN_RATE = 0.9F;//For rendering
 
 	private int entropyClient;//records what was last send to the client. Current value on the client side
 	private float angle;//for rendering
@@ -51,8 +51,13 @@ public class FluxNodeTileEntity extends IFluxLink.FluxHelper{
 	}
 
 	@Override
+	public int getMaxFlux(){
+		return 1024;
+	}
+
+	@Override
 	public boolean renderFluxWarning(){
-		return entropyClient + CRConfig.fluxNodeGain.get() * 4 >= getMaxFlux();
+		return entropyClient + CRConfig.fluxNodeGain.getAsInt() >= FluxSinkTileEntity.CAPACITY;
 	}
 
 	@Override

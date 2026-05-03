@@ -1,5 +1,5 @@
 {
-	"parent": "crossroads:progress/misc/bobo_rod",
+	"parent": "crossroads:progress/misc/stamp_mill",
 	"display": {
 		"icon": {
 			"id": "crossroads:fluid_void"
@@ -11,8 +11,7 @@
 			"translate": "crossroads.advancement.fluid_void.desc"
 		},
 		"frame": "task",
-		"announce_to_chat": true,
-		"hidden": true
+		"announce_to_chat": true
 	},
 	"criteria": {
 		"has_item": {

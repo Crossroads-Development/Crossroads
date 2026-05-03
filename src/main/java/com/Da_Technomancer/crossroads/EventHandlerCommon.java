@@ -232,6 +232,7 @@ public class EventHandlerCommon{
 				registerThing(helper, "atmos_charge", AtmosChargeTrigger.INSTANCE);
 				registerThing(helper, "potion_injected", PotionInjectedTrigger.INSTANCE);
 				registerThing(helper, "chemical_release", ChemicalReleaseTrigger.INSTANCE);
+				registerThing(helper, "flux_sink_overload", FluxSinkOverloadTrigger.INSTANCE);
 			});
 
 			e.register(Registries.ITEM_SUB_PREDICATE_TYPE, helper -> {

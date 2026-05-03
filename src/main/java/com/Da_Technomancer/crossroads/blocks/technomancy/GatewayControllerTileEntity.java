@@ -45,7 +45,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GatewayControllerTileEntity extends IFluxLink.FluxHelper implements IGateway, IBeamCapable, IAxleCapable{
+public class GatewayControllerTileEntity extends IFluxLink.SimpleFluxLink implements IGateway, IBeamCapable, IAxleCapable{
 
 	public static final BlockEntityType<GatewayControllerTileEntity> TYPE = CRTileEntity.createType(GatewayControllerTileEntity::new, CRBlocks.gatewayController);
 	public static final int INERTIA = 0;//Moment of inertia

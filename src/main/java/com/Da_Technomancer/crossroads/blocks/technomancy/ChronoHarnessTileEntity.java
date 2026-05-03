@@ -25,7 +25,7 @@ import net.neoforged.neoforge.energy.IEnergyStorage;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-public class ChronoHarnessTileEntity extends IFluxLink.FluxHelper implements IEnergyCapable{
+public class ChronoHarnessTileEntity extends IFluxLink.SimpleFluxLink implements IEnergyCapable{
 
 	public static final BlockEntityType<ChronoHarnessTileEntity> TYPE = CRTileEntity.createType(ChronoHarnessTileEntity::new, CRBlocks.chronoHarness);
 
@@ -83,6 +83,8 @@ public class ChronoHarnessTileEntity extends IFluxLink.FluxHelper implements IEn
 				addFlux(Math.round((float) curPower / CRConfig.fePerEntropy.get()));
 				setChanged();
 			}
+		}else{
+			curPower = 0;
 		}
 
 		if(((curPower == 0) ^ (clientCurPower == 0)) || Math.abs(curPower - clientCurPower) >= 10){
