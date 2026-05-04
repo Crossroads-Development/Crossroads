@@ -220,7 +220,7 @@ public class CRConfig{
 		technoArmorCost = serverBuilder.comment("Multiplier for XP levels to upgrade Technomancy armor").defineInRange("techno_armor_xp", 1, 0, 100);
 		fluxNodeGain = serverBuilder.comment("Temporal Entropy gained per Entropy Node when transferring", "Higher values are more difficult, and encourage using fewer node chains").defineInRange("entropy_node_gain", 2, 0, 64);
 		enviroBootDepth = serverBuilder.comment("Speed boost from All-Terrain Boots in water (swim speed boost)", "Set to 0 to disable").defineInRange("enviro_boot_depth", 3F, 0F, 100F);
-		enviroBootFrostWalk = serverBuilder.comment("Level of the All-Terrain Boots frost walker effect", "Higher levels increase freezing range", "Set to 0 to disable").defineInRange("enviro_boot_frost", 2, 0, 10);
+		enviroBootFrostWalk = serverBuilder.comment("Level of the All-Terrain Boots frost walker effect", "Higher levels increase freezing range", "Set to 0 to disable").defineInRange("enviro_boot_frost", 0, 0, 10);
 		enviroBootSoulSpeed = serverBuilder.comment("Level of the All-Terrain Boots soul speed effect", "Set to 0 to disable").defineInRange("enviro_boot_soul", 3, 0, 10);
 		allowGateway = serverBuilder.comment("Whether Gateways can teleport entities at all").define("allow_gateway", true);
 		allowGatewayEntities = serverBuilder.comment("Whether Gateways can teleport entities that aren't players", "If false, players can still use Gateways").define("allow_gateway_ent", true);

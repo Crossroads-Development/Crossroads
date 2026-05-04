@@ -70,7 +70,9 @@ public class ArmorEnviroBoots extends TechnomancyArmor{
 	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
 		super.appendHoverText(stack, context, tooltip, flag);
 		tooltip.add(Component.translatable("tt.crossroads.enviro_boots.desc"));
-		tooltip.add(Component.translatable("tt.crossroads.enviro_boots.frost"));
+		if(CRConfig.enviroBootFrostWalk.get() > 0){
+			tooltip.add(Component.translatable("tt.crossroads.enviro_boots.frost"));
+		}
 		tooltip.add(Component.translatable("tt.crossroads.enviro_boots.quip").setStyle(MiscUtil.TT_QUIP));
 	}
 

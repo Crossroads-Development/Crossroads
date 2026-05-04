@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.api.technomancy;
 
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.advancements.GatewayTravelTrigger;
-import com.Da_Technomancer.crossroads.api.AdvancementTracker;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.templates.IInfoTE;
 import com.Da_Technomancer.crossroads.entity.EntityGhostMarker;
@@ -54,11 +53,11 @@ public interface IGateway extends IInfoTE{
 	 * Teleports an entity to this gateway, and rotates/orients them
 	 * Virtual server side only
 	 * @param entity The entity to teleport
-	 * @param horizontalRelPos A value in [-1, 1] indicating position on the horizontal axis relative to the center
+	 * @param horizontalRelPos A value in [-1, 1] indicating position on the horizontal axis relative to the center, positive is to the right when facing source direction
 	 * @param verticalRelPos A value in [-1, 1] indicating position on the vertical axis relative to the center
-	 * @param sourceAxis The horizontal axis parallel to the plane of the source gateway
+	 * @param sourceDirection The horizontal direction of the source gateway
 	 */
-	void teleportEntity(Entity entity, float horizontalRelPos, float verticalRelPos, Direction.Axis sourceAxis);
+	void teleportEntity(Entity entity, float horizontalRelPos, float verticalRelPos, Direction sourceDirection);
 
 	/**
 	 * Dismantles the multiblock
@@ -97,7 +96,7 @@ public interface IGateway extends IInfoTE{
 				play.teleportTo(target, posX, posY, posZ, play.getViewYRot(1) + yawRotation, play.getViewXRot(1));
 			}
 			play.setYHeadRot(prevHeadYaw + yawRotation);
-			play.setDeltaMovement(prevVelocity.yRot(yawRotation));
+			play.setDeltaMovement(prevVelocity.yRot((float) Math.toRadians(-yawRotation)));
 			GatewayTravelTrigger.INSTANCE.trigger(play);//Advancement
 		}else{
 			Vec3 prevVelocity = e.getDeltaMovement();
@@ -120,7 +119,7 @@ public interface IGateway extends IInfoTE{
 				target.addDuringTeleport(e);
 				entity.remove(Entity.RemovalReason.CHANGED_DIMENSION);//Remove the copy in the source dimension
 			}
-			e.setDeltaMovement(prevVelocity.yRot(yawRotation));
+			e.setDeltaMovement(prevVelocity.yRot((float) Math.toRadians(-yawRotation)));
 		}
 
 		//Add a timestamp of when this entity was teleported by a gateway

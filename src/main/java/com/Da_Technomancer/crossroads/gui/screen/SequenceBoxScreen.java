@@ -67,9 +67,9 @@ public class SequenceBoxScreen extends AbstractContainerScreen<SequenceBoxContai
 		matrix.blit(BACKGROUND_TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
 
 		//Text bars
-		RenderSystem.setShaderTexture(0, SEARCH_BAR_TEXTURE);
+//		RenderSystem.setShaderTexture(0, SEARCH_BAR_TEXTURE);
 		for(EditBox bar : inputBars){
-			matrix.blit(BACKGROUND_TEXTURE, bar.getX() - 2, bar.getY() - 8, 0, 0, bar.getWidth(), 18, 144, 18);
+			matrix.blit(SEARCH_BAR_TEXTURE, bar.getX() - 2, bar.getY() - 8, 0, 0, bar.getWidth(), 18, 144, 18);
 		}
 	}
 

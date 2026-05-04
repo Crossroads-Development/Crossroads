@@ -36,7 +36,7 @@
 			"type": "patchouli:spotlight",
 			"anchor": "enviro_boots",
 			"item": "crossroads:enviro_boots",
-			"text": "<item>All-Terrain Boots/$ combine the Soul Speed, Feather Falling, Depth Strider, and Frost Walker enchantments into one item. None of the effects will consume durability, the depth strider effect is a general speed boost when swimming instead of only applying when walking, and the feather falling effect totally eliminates fall damage. The frost walker effect of freezing water only applies while sneaking.$(br2)"
+			"text": "<item>All-Terrain Boots/$ combine the Soul Speed, Feather Falling, and Depth Strider enchantments into one item. None of the effects will consume durability, the depth strider effect is a general speed boost when swimming instead of only applying when walking, and the feather falling effect totally eliminates fall damage.$(br2)"
 		},
 		{
 			"type": "patchouli:text",

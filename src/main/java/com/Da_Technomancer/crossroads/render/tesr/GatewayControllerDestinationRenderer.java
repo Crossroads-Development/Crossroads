@@ -12,8 +12,8 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.core.Direction;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 
 public class GatewayControllerDestinationRenderer implements BlockEntityRenderer<GatewayControllerDestinationTileEntity>{
@@ -32,7 +32,6 @@ public class GatewayControllerDestinationRenderer implements BlockEntityRenderer
 		}
 
 		float radius = frame.getSize() / 2F;
-		Direction.Axis plane = frame.getPlane();
 		boolean linked = frame.chevrons[frame.chevrons.length - 1] != null;//Whether this gateway is active and linked to another
 
 		//Define lighting based on the interior of the frame, as the frame itself is solid blocks
@@ -41,10 +40,8 @@ public class GatewayControllerDestinationRenderer implements BlockEntityRenderer
 		//Render everything about the center of the multiblock, so we can rotate
 		matrix.translate(0.5D, 1 - radius, 0.5D);
 
-		//Rotate to align with the frame if applicable
-		if(plane == Direction.Axis.Z){
-			matrix.mulPose(Axis.YP.rotationDegrees(90));
-		}
+		//Rotate to align with the frame
+		matrix.mulPose(Axis.YP.rotationDegrees(-frame.getFacing().toYRot()));
 
 		//From this point, the frame is in the X-Y rendering plane
 		matrix.scale(radius, radius, 1F);
@@ -81,6 +78,15 @@ public class GatewayControllerDestinationRenderer implements BlockEntityRenderer
 		final float sqInVEn = CRRenderUtil.getScaledV(sprite, 4);
 		final float sqOutVSt = sqInVEn;
 		final float sqOutVEn = CRRenderUtil.getScaledV(sprite, 6);
+		final float octOutVEn = CRRenderUtil.getScaledV(sprite, 12);
+		final float triVSt = octOutVEn;
+		final float triVEn = sprite.getV1();
+		final float triFrUEn = CRRenderUtil.getScaledU(sprite, 6);
+		final float triTopUSt = triFrUEn;
+		final float triTopUEn = CRRenderUtil.getScaledU(sprite, 13F / 2F);//Free me from texture mapping purgatory
+		final float triFrUMid = (polyUSt + triTopUSt) / 2F;
+		final float triEdgeUSt = triTopUEn;
+		final float triEdgeUEn = CRRenderUtil.getScaledU(sprite, 7);
 		final float portalUSt = CRRenderUtil.getScaledU(sprite, 12);
 		final float portalUEn = sprite.getU1();
 		final float portalTexRad = .051F * (sprite.getU1() - sprite.getU0());//half the side length of the regular octagon
@@ -128,6 +134,63 @@ public class GatewayControllerDestinationRenderer implements BlockEntityRenderer
 			matrix.mulPose(ringRotation);
 		}
 		matrix.popPose();
+
+		//Triangular selector
+		//Triangles rendered by duplicating a vertex on the quad
+
+		//Front
+		CRRenderUtil.addVertexBlock(builder, matrix, triLen, squareOut, triDepth, polyUSt, triVEn, 0, 0, 1, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, triLen, squareOut, triDepth, polyUSt, triVEn, 0, 0, 1, combinedLight);//duplicate
+		CRRenderUtil.addVertexBlock(builder, matrix, -triLen, squareOut, triDepth, triFrUEn, triVEn, 0, 0, 1, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, 0, squareIn, triDepth, triFrUMid, triVSt, 0, 0, 1, combinedLight);
+
+//		//Other front
+//		CRRenderUtil.addVertexBlock(builder, matrix, triLen, squareOut, -triDepth, polyUSt, triVEn, 0, 0, -1, combinedLight);
+//		CRRenderUtil.addVertexBlock(builder, matrix, triLen, squareOut, -triDepth, polyUSt, triVEn, 0, 0, -1, combinedLight);//duplicate
+//		CRRenderUtil.addVertexBlock(builder, matrix, 0, squareIn, -triDepth, triFrUMid, triVSt, 0, 0, -1, combinedLight);
+//		CRRenderUtil.addVertexBlock(builder, matrix, -triLen, squareOut, -triDepth, triFrUEn, triVEn, 0, 0, -1, combinedLight);
+
+		//Top
+		CRRenderUtil.addVertexBlock(builder, matrix, triLen, squareOut, triDepth, triTopUSt, triVSt, 0, 1, 0, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, triLen, squareOut, sqDepth, triTopUEn, triVSt, 0, 1, 0, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, -triLen, squareOut, sqDepth, triTopUEn, triVEn, 0, 1, 0, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, -triLen, squareOut, triDepth, triTopUSt, triVEn, 0, 1, 0, combinedLight);
+
+//		//Other top
+//		CRRenderUtil.addVertexBlock(builder, matrix, triLen, squareOut, -triDepth, triTopUSt, triVSt, 0, 1, 0, combinedLight);
+//		CRRenderUtil.addVertexBlock(builder, matrix, -triLen, squareOut, -triDepth, triTopUSt, triVEn, 0, 1, 0, combinedLight);
+//		CRRenderUtil.addVertexBlock(builder, matrix, -triLen, squareOut, -sqDepth, triTopUEn, triVEn, 0, 1, 0, combinedLight);
+//		CRRenderUtil.addVertexBlock(builder, matrix, triLen, squareOut, -sqDepth, triTopUEn, triVSt, 0, 1, 0, combinedLight);
+
+
+		//Triangular sides have non-trivial normals
+		Vec3 normalA = CRRenderUtil.findNormal(new Vec3(triLen, squareOut, triDepth), new Vec3(0, squareIn, triDepth), new Vec3(triLen, squareOut, sqDepth));
+		Vec3 normalB = CRRenderUtil.findNormal(new Vec3(-triLen, squareOut, triDepth), new Vec3(-triLen, squareOut, sqDepth), new Vec3(0, squareIn, triDepth));
+
+		//Side
+		CRRenderUtil.addVertexBlock(builder, matrix, triLen, squareOut, triDepth, triEdgeUSt, triVSt, (float) normalA.x, (float) normalA.y, (float) normalA.z, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, 0, squareIn, triDepth, triEdgeUSt, triVEn, (float) normalA.x, (float) normalA.y, (float) normalA.z, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, 0, squareIn, sqDepth, triEdgeUEn, triVEn, (float) normalA.x, (float) normalA.y, (float) normalA.z, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, triLen, squareOut, sqDepth, triEdgeUEn, triVSt, (float) normalA.x, (float) normalA.y, (float) normalA.z, combinedLight);
+
+		//Side
+		CRRenderUtil.addVertexBlock(builder, matrix, -triLen, squareOut, triDepth, triEdgeUSt, triVSt, (float) normalB.x, (float) normalB.y, (float) normalB.z, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, -triLen, squareOut, sqDepth, triEdgeUEn, triVSt, (float) normalB.x, (float) normalB.y, (float) normalB.z, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, 0, squareIn, sqDepth, triEdgeUEn, triVEn, (float) normalB.x, (float) normalB.y, (float) normalB.z, combinedLight);
+		CRRenderUtil.addVertexBlock(builder, matrix, 0, squareIn, triDepth, triEdgeUSt, triVEn, (float) normalB.x, (float) normalB.y, (float) normalB.z, combinedLight);
+
+//		//Side
+//		CRRenderUtil.addVertexBlock(builder, matrix, triLen, squareOut, -triDepth, triEdgeUSt, triVSt, (float) normalA.x, (float) normalA.y, (float) normalA.z, combinedLight);
+//		CRRenderUtil.addVertexBlock(builder, matrix, triLen, squareOut, -sqDepth, triEdgeUEn, triVSt, (float) normalA.x, (float) normalA.y, (float) normalA.z, combinedLight);
+//		CRRenderUtil.addVertexBlock(builder, matrix, 0, squareIn, -sqDepth, triEdgeUEn, triVEn, (float) normalA.x, (float) normalA.y, (float) normalA.z, combinedLight);
+//		CRRenderUtil.addVertexBlock(builder, matrix, 0, squareIn, -triDepth, triEdgeUSt, triVEn, (float) normalA.x, (float) normalA.y, (float) normalA.z, combinedLight);
+
+//		//Side
+//		CRRenderUtil.addVertexBlock(builder, matrix, -triLen, squareOut, -triDepth, triEdgeUSt, triVSt, (float) normalB.x, (float) normalB.y, (float) normalB.z, combinedLight);
+//		CRRenderUtil.addVertexBlock(builder, matrix, 0, squareIn, -triDepth, triEdgeUSt, triVEn, (float) normalB.x, (float) normalB.y, (float) normalB.z, combinedLight);
+//		CRRenderUtil.addVertexBlock(builder, matrix, 0, squareIn, -sqDepth, triEdgeUEn, triVEn, (float) normalB.x, (float) normalB.y, (float) normalB.z, combinedLight);
+//		CRRenderUtil.addVertexBlock(builder, matrix, -triLen, squareOut, -sqDepth, triEdgeUEn, triVSt, (float) normalB.x, (float) normalB.y, (float) normalB.z, combinedLight);
+
 
 		//Dialed icons
 		if(frame.chevrons[0] != null){

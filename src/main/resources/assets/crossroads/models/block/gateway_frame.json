@@ -2,10 +2,10 @@
 	"parent": "block/cube_all",
 	"textures": {
 		"north": "crossroads:block/gateway_frame_side",
-		"south": "crossroads:block/gateway_frame_side",
-		"east": "crossroads:block/gateway_frame_side",
-		"west": "crossroads:block/gateway_frame_side",
-		"up": "crossroads:block/gateway_frame_end",
+		"south": "crossroads:block/gateway_edge",
+		"east": "crossroads:block/gateway_edge",
+		"west": "crossroads:block/gateway_edge",
+		"up": "crossroads:block/gateway_edge",
 		"down": "crossroads:block/gateway_frame_end",
 		"particle": "crossroads:block/gateway_frame_side"
 	}

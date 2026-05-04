@@ -7,6 +7,7 @@ import com.Da_Technomancer.essentials.api.ConfigUtil;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
@@ -14,6 +15,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
@@ -35,7 +37,7 @@ public class GatewayControllerDestination extends BaseEntityBlock{
 		super(CRBlocks.getMetalProperty());
 		String name = "gateway_controller_destination";
 		CRBlocks.queueForRegister(name, this);
-		registerDefaultState(defaultBlockState().setValue(CRProperties.ACTIVE, false));
+		registerDefaultState(defaultBlockState().setValue(CRProperties.ACTIVE, false).setValue(CRProperties.HORIZ_FACING, Direction.NORTH));
 	}
 
 	@Nullable
@@ -48,6 +50,12 @@ public class GatewayControllerDestination extends BaseEntityBlock{
 	@Override
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> type){
 		return ITickableTileEntity.createTicker(type, GatewayControllerDestinationTileEntity.TYPE);
+	}
+
+	@Nullable
+	@Override
+	public BlockState getStateForPlacement(BlockPlaceContext context){
+		return defaultBlockState().setValue(CRProperties.HORIZ_FACING, context.getHorizontalDirection().getOpposite());
 	}
 
 	@Override
@@ -71,27 +79,46 @@ public class GatewayControllerDestination extends BaseEntityBlock{
 
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder){
-		builder.add(CRProperties.ACTIVE);//ACTIVE is whether this is formed into a multiblock
+		builder.add(CRProperties.ACTIVE, CRProperties.HORIZ_FACING);//ACTIVE is whether this is formed into a multiblock
 	}
 
 	@Override
 	public ItemInteractionResult useItemOn(ItemStack held, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult ray){
-		if(!state.getValue(CRProperties.ACTIVE) && ConfigUtil.isWrench(held)){
-			//Attempt to form the multiblock
-			BlockEntity te = world.getBlockEntity(pos);
-			if(te instanceof GatewayControllerDestinationTileEntity gte){
-				gte.assemble(player);
-				return ItemInteractionResult.sidedSuccess(world.isClientSide);
+		if(ConfigUtil.isWrench(held)){
+			if(player.isCrouching()){
+				//Attempt to form the multiblock
+				if(!state.getValue(CRProperties.ACTIVE)){
+					BlockEntity te = world.getBlockEntity(pos);
+					if(te instanceof GatewayControllerDestinationTileEntity gte){
+						gte.assemble(player);
+						return ItemInteractionResult.sidedSuccess(world.isClientSide);
+					}
+				}
+			}else{
+				//Rotate the block
+				if(state.getValue(CRProperties.ACTIVE)){
+					//Only swap the two valid orientations
+					if(!world.isClientSide){
+						world.setBlockAndUpdate(pos, state.setValue(CRProperties.HORIZ_FACING, state.getValue(CRProperties.HORIZ_FACING).getOpposite()));
+					}
+					return ItemInteractionResult.sidedSuccess(world.isClientSide);
+				}else{
+					if(!world.isClientSide){
+						world.setBlockAndUpdate(pos, state.cycle(CRProperties.HORIZ_FACING));
+					}
+					return ItemInteractionResult.sidedSuccess(world.isClientSide);
+				}
 			}
 		}
+
 		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 	}
 
 	@Override
 	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving){
 		BlockEntity te = world.getBlockEntity(pos);
-		if(newState.getBlock() != state.getBlock() && te instanceof IGateway){
-			((IGateway) te).dismantle();//Shutdown the multiblock
+		if(newState.getBlock() != state.getBlock() && te instanceof IGateway gte){
+			gte.dismantle();//Shutdown the multiblock
 		}
 		super.onRemove(state, world, pos, newState, isMoving);
 	}

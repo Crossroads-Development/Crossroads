@@ -28,11 +28,11 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<item>gateway edge/$, with the top center block replaced with a <item>gateway controller/$. The square must be an odd number of blocks long, at least 5x5 outside, one block depth, and the ring should have a width of (side length)/5 blocks (round down). So a 5x5, 7x7, or 9x9 ring has a 1 block thick ring, a 11x11 or 13x13 ring has a 2 block thick ring, etc. The multiblock is formed by right-clicking "
+			"text": "<item>gateway edge/$, with the top center block replaced with a <item>gateway controller/$. The <item>controller/$ has an orientation - it should be facing towards the exit. The square must be an odd number of blocks long, at least 5x5 outside, one block depth, and the ring should have a width of (side length)/5 blocks (round down). So a 5x5, 7x7, or 9x9 ring has a 1 block thick ring, a 11x11 or 13x13 "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "the <item>gateway controller/$ with a <item>$(l:essentials/wrench)wrench/$.$(br2)"
+			"text": "ring has a 2 block thick ring, etc. The multiblock is formed by shift-right-clicking the <item>gateway controller/$ with a <item>$(l:essentials/wrench)wrench/$.$(br2)"
 		},
 		{
 			"type": "patchouli:text",

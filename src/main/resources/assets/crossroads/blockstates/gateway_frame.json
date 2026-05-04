@@ -1,6 +1,12 @@
 {
 	"variants": {
-		"active=false": { "model": "crossroads:block/gateway_frame" },
-		"active=true": { "model": "crossroads:block/gateway_frame_empty" }
+		"active=false,horiz_facing=north": { "model": "crossroads:block/gateway_frame" },
+		"active=false,horiz_facing=south": { "model": "crossroads:block/gateway_frame", "y": 180 },
+		"active=false,horiz_facing=east": { "model": "crossroads:block/gateway_frame", "y": 90 },
+		"active=false,horiz_facing=west": { "model": "crossroads:block/gateway_frame", "y": 270 },
+		"active=true,horiz_facing=north": { "model": "crossroads:block/gateway_frame_empty" },
+		"active=true,horiz_facing=south": { "model": "crossroads:block/gateway_frame_empty" },
+		"active=true,horiz_facing=east": { "model": "crossroads:block/gateway_frame_empty" },
+		"active=true,horiz_facing=west": { "model": "crossroads:block/gateway_frame_empty" }
 	}
 }

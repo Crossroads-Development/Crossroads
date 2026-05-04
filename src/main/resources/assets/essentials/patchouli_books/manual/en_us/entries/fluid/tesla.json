@@ -10,7 +10,7 @@
 			"type": "patchouli:spotlight",
 			"title": "Tesla Coil",
 			"item": "crossroads:tesla_coil",
-			"text": "The <item>Tesla Coil/$ is a way of transmitting <thing>Forge Energy (FE)/$. There are two parts: The base and the top. The <item>Tesla Coil/$ (AKA the base) connects to machines and transfers FE. It accepts FE on the <em>blue/$ sides and bottom, and outputs FE on the <em>orange/$ side.$(br2)"
+			"text": "The <item>Tesla Coil/$ is a way of transmitting <thing>Forge Energy (FE)/$. There are two parts: The base and the top. The <item>Tesla Coil Base/$ connects to machines and transfers FE. It accepts FE on the <em>blue/$ sides and bottom, and outputs FE on the <em>orange/$ side. It can be used on its own without a top$(br2)"
 		},
 		{
 			"type": "patchouli:text",

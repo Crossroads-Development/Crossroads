@@ -85,7 +85,6 @@ public class CRRenderUtil extends RenderUtil{
 	}
 
 	public static void addArc(Level world, float xSt, float ySt, float zSt, float xEn, float yEn, float zEn, int count, float diffusionRate, byte lifespan, int color, boolean playSound){
-		boolean sound = playSound && CRConfig.electricSounds.get();
 		CompoundTag nbt = new CompoundTag();
 		nbt.putInt("id", 1);
 		nbt.putFloat("x", xSt);
@@ -101,7 +100,7 @@ public class CRRenderUtil extends RenderUtil{
 		nbt.putFloat("diffu", diffusionRate);
 		nbt.putInt("color", color);
 		nbt.putByte("lif", lifespan);
-		nbt.putBoolean("sound", sound);
+		nbt.putBoolean("sound", playSound);
 
 		//I have decided I hate this sound on loop
 		//world.playSound(null, xSt, ySt, zSt, SoundEvents.BLOCK_REDSTONE_TORCH_BURNOUT, SoundCategory.BLOCKS, 1F, 1.6F);

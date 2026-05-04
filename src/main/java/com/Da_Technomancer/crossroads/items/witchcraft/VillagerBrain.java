@@ -62,7 +62,7 @@ public class VillagerBrain extends Item implements ICultivatable{
 		MerchantOffer currentOffer = offers.get(tradeIndex);
 		//If this has been frozen, make the trade worse
 		if(wasFrozen(stack)){
-			currentOffer.setSpecialPriceDiff(4);
+			currentOffer.setSpecialPriceDiff(10);
 		}
 		return currentOffer;
 	}

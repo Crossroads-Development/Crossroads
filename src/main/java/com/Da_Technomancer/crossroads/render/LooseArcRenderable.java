@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.render;
 
+import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
@@ -46,14 +47,14 @@ public class LooseArcRenderable implements IVisualEffect{
 		this.color = color;
 		states = new Vec3[count][9];
 		this.lifeTime = lifespan;
-		if(sound){
+		if(sound && CRConfig.electricSounds.getAsBoolean()){
 			SoundEvent soundEvent;
 			float volume;
 			float pitch;
 			float arcLength = (Math.abs(zEn - zSt) + Math.abs(yEn - ySt) + Math.abs(xEn - xSt));//Done in taxicab distance, because it isn't that important
 			if(arcLength >= 1.1F){//Very short arcs use a sparking sound effect, longer arcs use a buzzing sound
 				soundEvent = CRSounds.ELECTRIC_ARC;
-				volume = Math.max(arcLength / 10F, 0.1F);//Longer arcs are louder
+				volume = Math.max(arcLength / 15F, 0.7F);//Longer arcs are louder
 				pitch = 1.5F;
 			}else{
 				soundEvent = CRSounds.ELECTRIC_SPARK;
