@@ -308,6 +308,7 @@ public class CRBlocks{
 	public static BloodBeamLinker bloodBeamLinker;
 	public static final DeferredHolder<MapCodec<? extends Block>, MapCodec<LightningRodExtension>> LIGHTNING_ROD_EXTENSION_TYPE = BLOCK_TYPES.register("lightning_rod_extension", singletonBlockType(LightningRodExtension::new));
 	public static LightningRodExtension lightningRodExtension;
+	public static BasicBlock blockCastIron;
 	//	public static final DeferredHolder<MapCodec<? extends Block>, MapCodec<BasicBlock>> BLOCK_TIN_TYPE = BLOCK_TYPES.register("block_tin", singletonBlockType(BasicBlock::new));
 	public static BasicBlock blockTin;
 	//	public static final DeferredHolder<MapCodec<? extends Block>, MapCodec<BasicBlock>> BLOCK_RAW_TIN_TYPE = BLOCK_TYPES.register("block_raw_tin", singletonBlockType(BasicBlock::new));
@@ -403,6 +404,7 @@ public class CRBlocks{
 		blockCopshowium = new BasicBlock("block_copshowium", getMetalProperty());
 		oreVoid = new BasicBlock("ore_void", getRockProperty().strength(3, 9));
 
+		blockCastIron = new BasicBlock("cast_iron_block", getMetalProperty());
 		masterAxis = new MasterAxis();
 		masterAxisCreative = new MasterAxisCreative();
 		millstone = new Millstone();

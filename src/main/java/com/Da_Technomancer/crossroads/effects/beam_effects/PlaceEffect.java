@@ -21,6 +21,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CarvedPumpkinBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -49,7 +50,7 @@ public class PlaceEffect extends BeamEffect{
 			}else{
 				double range = Math.sqrt(power);
 				List<ItemEntity> items = beamHit.getNearbyEntities(ItemEntity.class, range, null);
-				if(items.size() != 0){
+				if(!items.isEmpty()){
 					ServerPlayer placer;
 					if(beamHit.getBeamSource().srcPlayer() instanceof ServerPlayer player){
 						placer = player;
@@ -58,9 +59,9 @@ public class PlaceEffect extends BeamEffect{
 					}
 					for(ItemEntity ent : items){
 						ItemStack stack = ent.getItem();
-						if(!stack.isEmpty() && stack.getItem() instanceof BlockItem){
+						if(!stack.isEmpty() && stack.getItem() instanceof BlockItem bItem){
 							BlockPlaceContext context = new BlockPlaceContext(new UseOnContext(placer, InteractionHand.MAIN_HAND, new BlockHitResult(new Vec3(ent.getX(), ent.getY(), ent.getZ()), Direction.DOWN, ent.blockPosition(), false)));
-							BlockState state = ((BlockItem) stack.getItem()).getBlock().getStateForPlacement(context);
+							BlockState state = bItem.getBlock().getStateForPlacement(context);
 
 							if(state != null){
 								BlockPos pos = ent.blockPosition();
@@ -83,8 +84,10 @@ public class PlaceEffect extends BeamEffect{
 	}
 
 	private void tryPlace(BlockState state, Level world, BlockPos pos, BlockState existingState, LivingEntity placer, ItemStack stack, ItemEntity ent, BeamHit beamHit){
+		Block toPlaceBlock = state.getBlock();
+
 		//Advancement check
-		if(state.getBlock() instanceof CarvedPumpkinBlock pumpkinBlock && pumpkinBlock.canSpawnGolem(world, pos)){
+		if(toPlaceBlock instanceof CarvedPumpkinBlock pumpkinBlock && pumpkinBlock.canSpawnGolem(world, pos)){
 			BeamHit.BeamSource source = beamHit.getBeamSource();
 			ServerPlayer responsiblePlayer = source.srcPlayer() instanceof ServerPlayer ? (ServerPlayer) source.srcPlayer() : null;
 			Level srcLevel = source.level() == null ? responsiblePlayer == null ? world : responsiblePlayer.level() : source.level();
@@ -102,8 +105,8 @@ public class PlaceEffect extends BeamEffect{
 		}
 
 		world.setBlockAndUpdate(pos, state);
-		state.getBlock().setPlacedBy(world, pos, existingState, placer, stack);
-		SoundType soundtype = state.getBlock().getSoundType(state, world, pos, placer);
+		toPlaceBlock.setPlacedBy(world, pos, state, placer, stack);
+		SoundType soundtype = toPlaceBlock.getSoundType(state, world, pos, placer);
 		world.playSound(null, pos, soundtype.getPlaceSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
 		stack.shrink(1);
 		if(stack.getCount() <= 0){

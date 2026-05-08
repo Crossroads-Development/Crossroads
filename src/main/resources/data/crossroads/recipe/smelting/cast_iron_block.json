@@ -1,0 +1,11 @@
+{
+	"type": "minecraft:smelting",
+	"result": {
+		"id": "crossroads:cast_iron_block"
+	},
+	"ingredient": [
+		{
+			"tag": "c:storage_blocks/iron"
+		}
+	]
+}

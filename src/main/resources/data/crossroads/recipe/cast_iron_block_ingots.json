@@ -1,0 +1,12 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"result": {
+		"id": "minecraft:iron_ingot",
+		"count": 9
+	},
+	"ingredients": [
+		{
+			"item": "crossroads:cast_iron_block"
+		}
+	]
+}
