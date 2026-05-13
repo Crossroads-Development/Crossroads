@@ -10,6 +10,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.BlockItem;
@@ -51,8 +52,19 @@ public class PetrolCactus extends CactusBlock implements ICustomItemBlock{
 
 	@Override
 	protected boolean canSurvive(BlockState plant, LevelReader level, BlockPos pos){
-		BlockState soilState = level.getBlockState(pos.below());
-		return (soilState.is(this) || soilState.is(BlockTags.SAND)) && !level.getBlockState(pos.above()).liquid();
+		for(Direction direction : Direction.Plane.HORIZONTAL){
+			BlockState blockstate = level.getBlockState(pos.relative(direction));
+			if(blockstate.isSolid() || level.getFluidState(pos.relative(direction)).is(FluidTags.LAVA)){
+				return false;
+			}
+		}
+
+		BlockState blockstate1 = level.getBlockState(pos.below());
+		net.neoforged.neoforge.common.util.TriState soilDecision = blockstate1.canSustainPlant(level, pos.below(), Direction.UP, plant);
+		if(!soilDecision.isDefault()){
+			return soilDecision.isTrue();
+		}
+		return (blockstate1.is(this) || blockstate1.is(BlockTags.SAND)) && !level.getBlockState(pos.above()).liquid();
 	}
 
 	@Override
