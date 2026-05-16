@@ -56,8 +56,8 @@ public class Incubator extends TEBlock{
 	@Override
 	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
 		tooltip.add(Component.translatable("tt.crossroads.incubator.desc"));
-		tooltip.add(Component.translatable("tt.crossroads.incubator.heating", IncubatorTileEntity.MIN_TEMP, IncubatorTileEntity.MAX_TEMP, IncubatorTileEntity.TARGET_TEMP));
-		tooltip.add(Component.translatable("tt.crossroads.incubator.quality", IncubatorTileEntity.MAX_ADDED_QUALITY));
+		tooltip.add(Component.translatable("tt.crossroads.incubator.heating", IncubatorTileEntity.MIN_TEMP, IncubatorTileEntity.MAX_TEMP, IncubatorTileEntity.CONSUMED_HEAT));
+		tooltip.add(Component.translatable("tt.crossroads.incubator.quality", IncubatorTileEntity.MAX_ADDED_QUALITY, IncubatorTileEntity.TARGET_TEMP));
 	}
 
 	@Override

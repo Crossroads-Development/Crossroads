@@ -42,6 +42,7 @@ public class IncubatorTileEntity extends InventoryTE implements IHeatCapable, II
 	public static final int LUCKY_DIGIT = 3;
 	public static final String TARGET_TEMP = "33.333";
 	public static final int MAX_ADDED_QUALITY = 50;
+	public static final double CONSUMED_HEAT = 3;
 
 	private int time = 0;//in ticks
 	private int progress = 0;
@@ -137,6 +138,7 @@ public class IncubatorTileEntity extends InventoryTE implements IHeatCapable, II
 						inventory[1].shrink(1);
 						progress = 0;
 						time = 0;
+						temp -= CONSUMED_HEAT;
 					}
 				}
 				setChanged();
