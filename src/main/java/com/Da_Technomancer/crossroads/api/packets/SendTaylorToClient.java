@@ -28,7 +28,7 @@ public record SendTaylorToClient(long timestamp, float[] terms, BlockPos pos) im
 
 	static void handlePacketClient(final SendTaylorToClient packet, final IPayloadContext context){
 		context.enqueueWork(() -> {
-			BlockEntity te = Minecraft.getInstance().level.getBlockEntity(packet.pos);
+			BlockEntity te = SafeCallable.getClientWorld().getBlockEntity(packet.pos);
 			if(te instanceof ITaylorReceiver taylorReceiver){
 				taylorReceiver.receiveSeries(packet.timestamp, packet.terms);
 			}

@@ -1,7 +1,10 @@
 package com.Da_Technomancer.crossroads.api;
 
+import com.Da_Technomancer.crossroads.Crossroads;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 /**
@@ -35,5 +38,29 @@ public class LazyCache<T>{
 			valueSupplier = null;
 		}
 		return value;
+	}
+
+	private Object identityGet(){
+		try{
+			return get();
+		}catch(Exception e){
+			//Implies we tried valueSupplier.get() too early - define identity based on the value supplier itself
+			Crossroads.logger.error("Premature LazyCache identity fetching; report to mod author", e);
+			return valueSupplier;
+		}
+	}
+
+	@Override
+	public boolean equals(Object o){
+		if(o == null || getClass() != o.getClass()){
+			return false;
+		}
+		LazyCache<?> lazyCache = (LazyCache<?>) o;
+		return Objects.equals(identityGet(), lazyCache.identityGet());
+	}
+
+	@Override
+	public int hashCode(){
+		return Objects.hash(identityGet());
 	}
 }

@@ -73,8 +73,9 @@ public interface IGateway extends IInfoTE{
 	 * @param posY The desired entity Y position
 	 * @param posZ The desired entity Z position
 	 * @param yawRotation The amount (in degrees) to rotate the yaw of this entity
+	 * @param receivingAddress Address of the receiving gateway, if applicable
 	 */
-	static void teleportEntityTo(Entity e, ServerLevel target, double posX, double posY, double posZ, float yawRotation){
+	static void teleportEntityTo(Entity e, ServerLevel target, double posX, double posY, double posZ, float yawRotation, @Nullable GatewayAddress receivingAddress){
 		//Moves an entity to any position in any dimension
 
 		if(e instanceof ServerPlayer play){
@@ -129,9 +130,14 @@ public interface IGateway extends IInfoTE{
 		long worldTime = target.getGameTime();
 		eNBT.putString("cr_gateway_dim", dimName);
 		eNBT.putLong("cr_gateway_time", worldTime);
+		if(receivingAddress != null){
+			eNBT.putInt("cr_gateway_address", receivingAddress.serialize());
+		}else{
+			eNBT.remove("cr_gateway_address");
+		}
 	}
 
-	static boolean isAllowedToTeleport(Entity e, Level sourceWorld){
+	static boolean isAllowedToTeleport(Entity e, Level sourceWorld, @Nullable GatewayAddress sourceAddress){
 		if(!CRConfig.allowGateway.get()){
 			return false;
 		}
@@ -142,7 +148,13 @@ public interface IGateway extends IInfoTE{
 		CompoundTag nbt = e.getPersistentData();
 		String dimName = MiscUtil.getDimensionName(sourceWorld);
 		long worldTime = sourceWorld.getGameTime();
-		//Effective teleportation cooldown of 20*3 ticks = 3 seconds
-		return !nbt.getString("cr_gateway_dim").equals(dimName) || Math.abs(worldTime - nbt.getLong("cr_gateway_time")) >= 20 * 3;
+		//Effective teleportation cooldown of 10 seconds
+		final int COOLDOWN = 20 * 10;
+		//But we only apply a cooldown at all if they're trying to go through the same gateway they entered
+		if(sourceAddress != null && nbt.contains("cr_gateway_address")){
+			return !sourceAddress.equals(GatewayAddress.deserialize(nbt.getInt("cr_gateway_address"))) || !nbt.getString("cr_gateway_dim").equals(dimName) || Math.abs(worldTime - nbt.getLong("cr_gateway_time")) >= COOLDOWN;
+		}
+		//Missing gateway address info - apply cooldown universally
+		return !nbt.getString("cr_gateway_dim").equals(dimName) || Math.abs(worldTime - nbt.getLong("cr_gateway_time")) >= COOLDOWN;
 	}
 }

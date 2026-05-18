@@ -33,7 +33,7 @@ public record SendCompassTargetToClient(GlobalPos targetPos, UUID targetUUID) im
 
 	static void handlePacketClient(final SendCompassTargetToClient packet, final IPayloadContext context){
 		context.enqueueWork(() -> {
-			CRItems.bloodCompass.syncedEntity = new BloodCompass.EntitySyncRecord(packet.targetUUID, packet.targetPos, Minecraft.getInstance().level.getGameTime());
+			CRItems.bloodCompass.syncedEntity = new BloodCompass.EntitySyncRecord(packet.targetUUID, packet.targetPos, SafeCallable.getClientWorld().getGameTime());
 		});
 	}
 

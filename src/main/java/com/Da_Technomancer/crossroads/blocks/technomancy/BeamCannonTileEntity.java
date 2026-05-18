@@ -44,7 +44,7 @@ public class BeamCannonTileEntity extends AbstractCannonTileEntity implements IB
 	//Rendering data, records what was sent to the client on the server
 	public Color beamCol = Color.WHITE;
 	public int beamSize = 0;//This is the beam radius, not power
-	public int beamLength = 0;
+	public float beamLength = 0;
 
 	public BeamCannonTileEntity(BlockPos pos, BlockState state){
 		super(TYPE, pos, state);
@@ -92,7 +92,7 @@ public class BeamCannonTileEntity extends AbstractCannonTileEntity implements IB
 				BeamHit beamHitResult = BeamUtil.rayTraceBeams(out, level, rayTraceSt, rayTraceSt, rayVec3, null, worldPosition, RANGE, new BeamHit.BeamSource(BEAM_SOURCE_TYPE, true, true, level, worldPosition, null));
 				BlockPos endPos = beamHitResult.getPos();
 				if(endPos != null){//Should always be true
-					outLength = (float) beamHitResult.getHitPos().distanceTo(rayTraceSt);
+					outLength = (float) beamHitResult.getHitPos().distanceTo(rayTraceSt) + 0.5F;
 //					Direction effectDir = beamHitResult.getDirection();
 //					BlockEntity te = level.getBlockEntity(endPos);
 //					IBeamHandler opt;
@@ -112,15 +112,16 @@ public class BeamCannonTileEntity extends AbstractCannonTileEntity implements IB
 				}
 			}
 
-			if(!outCol.equals(beamCol) || BeamUtil.getBeamRadius(outPower) != beamSize || Math.abs(beamLength - outLength) >= 0.5F){
+			if(!outCol.equals(beamCol) || BeamUtil.getBeamRadius(outPower) != beamSize || Math.abs(beamLength - outLength) >= 1/32F){
 				beamCol = outCol;
 				beamSize = BeamUtil.getBeamRadius(outPower);
-				beamLength = Math.round(outLength);
+				final int lengthSignal = Math.round(Math.min(outLength, RANGE) * 16);//Encode to 1/16 block precision
+				beamLength = lengthSignal / 16F;
 				long packet = 0;
 				if(outPower != 0){
 					packet |= beamCol.getRGB() & 0xFFFFFF;//Encode color, Remove the alpha bits
 					packet |= ((beamSize - 1) & 0xF) << 24;//Encode beam radius
-					packet |= ((beamLength - 1) & 0xFFL) << 28L;
+					packet |= (lengthSignal & 0xFFFFL) << 28L;
 				}
 				CRPackets.sendPacketAround(level, worldPosition, new SendLongToTE(3, packet, worldPosition));
 			}
@@ -149,7 +150,7 @@ public class BeamCannonTileEntity extends AbstractCannonTileEntity implements IB
 			}else{
 				beamCol = Color.decode(Integer.toString((int) (value & 0xFFFFFFL)));
 				beamSize = (int) ((value >>> 24) & 0xF) + 1;
-				beamLength = (int) (value >>> 28) + 1;
+				beamLength = (int) (value >>> 28) / 16F;
 			}
 		}
 	}
@@ -162,7 +163,7 @@ public class BeamCannonTileEntity extends AbstractCannonTileEntity implements IB
 		queued[1] = BeamUnitStorage.readFromNBT("storage_1", nbt);
 		beamCol = new Color(nbt.getInt("color"));
 		beamSize = nbt.getInt("beam_size");
-		beamLength = nbt.getInt("beam_length");
+		beamLength = nbt.getFloat("beam_length");
 	}
 
 	@Override
@@ -173,7 +174,7 @@ public class BeamCannonTileEntity extends AbstractCannonTileEntity implements IB
 		queued[1].writeToNBT("storage_1", nbt);
 		nbt.putInt("color", beamCol.getRGB());
 		nbt.putInt("beam_size", beamSize);
-		nbt.putInt("beam_length", beamLength);
+		nbt.putFloat("beam_length", beamLength);
 	}
 
 	private final BeamHandler beamHandler = new BeamHandler();

@@ -37,13 +37,12 @@ public class BeamCannonRenderer implements BlockEntityRenderer<BeamCannonTileEnt
 
 		renderCannonModel(matrix, buffer, light, bronzeSprite, barrelSprite, te);
 
-		float barrelTop = 33.5F / 16F;
-
+		final float barrelTop = 33.5F / 16F;
 		//Render the beam
-		if(te.beamLength > 0){
+		if(te.beamLength > barrelTop){
 			VertexConsumer beamBuilder = buffer.getBuffer(CRRenderTypes.BEAM_TYPE);
 			matrix.translate(0, barrelTop, 0);
-			BeamRenderer.drawBeam(matrix, beamBuilder, 1 + Math.max(0, te.beamLength - (barrelTop + 3.5F / 16F)), te.beamSize / 8F / (float) Math.sqrt(2), te.beamCol);
+			BeamRenderer.drawBeam(matrix, beamBuilder, Math.max(0, te.beamLength - barrelTop), te.beamSize / 8F / (float) Math.sqrt(2), te.beamCol);
 		}
 
 		matrix.popPose();

@@ -24,7 +24,7 @@ public record SendMasterKeyToClient(int newKey) implements CustomPacketPayload{
 
 	static void handlePacketClient(final SendMasterKeyToClient packet, final IPayloadContext context){
 		context.enqueueWork(() -> {
-			RotaryUtil.setMasterKey(packet.newKey, Minecraft.getInstance().level);
+			RotaryUtil.setMasterKey(packet.newKey, SafeCallable.getClientWorld());
 		});
 	}
 

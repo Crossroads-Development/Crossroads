@@ -171,7 +171,7 @@ public abstract class GatewayControllerAbstractTileEntity extends BlockEntity im
 		Vec3 centerPos = new Vec3(worldPosition.getX() + 0.5D, worldPosition.getY() - (size-2D) / 2D , worldPosition.getZ() + 0.5D);
 		float scalingRadius = (size - 2) / 2F;
 		Direction facing = getFacing();
-		IGateway.teleportEntityTo(entity, (ServerLevel) level, centerPos.x + scalingRadius * horizontalRelPos * facing.getStepZ(), centerPos.y + scalingRadius * verticalRelPos, centerPos.z - scalingRadius * horizontalRelPos * facing.getStepX(), 180 - (sourceDirection.toYRot() - facing.toYRot()));
+		IGateway.teleportEntityTo(entity, (ServerLevel) level, centerPos.x + scalingRadius * horizontalRelPos * facing.getStepZ(), centerPos.y + scalingRadius * verticalRelPos, centerPos.z - scalingRadius * horizontalRelPos * facing.getStepX(), 180 - (sourceDirection.toYRot() - facing.toYRot()), address);
 		playTPEffect(level, entity.getX(), entity.getY(), entity.getZ());
 	}
 
@@ -351,7 +351,7 @@ public abstract class GatewayControllerAbstractTileEntity extends BlockEntity im
 			AABB area = AABB.encapsulatingFullBlocks(worldPosition.below(1).relative(horiz, -size / 2), worldPosition.below(size - 2).relative(horiz, size / 2));
 			//We use the timeUntilPortal field in Entity to not spam TP entities between two portals
 			//This is both not what it's for, and exactly what it's for
-			List<Entity> entities = level.getEntitiesOfClass(Entity.class, area, EntitySelector.ENTITY_STILL_ALIVE.and(e -> IGateway.isAllowedToTeleport(e, level)));
+			List<Entity> entities = level.getEntitiesOfClass(Entity.class, area, EntitySelector.ENTITY_STILL_ALIVE.and(e -> IGateway.isAllowedToTeleport(e, level, address)));
 			if(!entities.isEmpty()){
 				Location loc = GatewaySavedData.lookupAddress((ServerLevel) level, new GatewayAddress(chevrons));
 				IGateway otherTE;
