@@ -91,8 +91,8 @@ public class GatewayControllerTileEntity extends GatewayControllerAbstractTileEn
 			}
 			chat.add(Component.translatable("tt.crossroads.gateway.chevron.dialed", names[0], names[1], names[2], names[3]));
 			resetHandlers();
-			RotaryUtil.addRotaryInfo(chat, axleHandler, true);
-			FluxUtil.addFluxInfo(chat, this, chevrons[3] != null && origin ? FLUX_PER_CYCLE : 0);
+			RotaryUtil.addRotaryInfo(chat, axleHandler, true, player);
+			FluxUtil.addFluxInfo(chat, this, chevrons[3] != null && origin ? FLUX_PER_CYCLE : 0, player);
 		}
 	}
 

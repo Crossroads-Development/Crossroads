@@ -55,7 +55,7 @@ public class LargeGearSlaveTileEntity extends BlockEntity implements IInfoTE, IC
 			return;
 		}
 
-		RotaryUtil.addRotaryInfo(chat, axle, false);
+		RotaryUtil.addRotaryInfo(chat, axle, false, player);
 	}
 
 	public void setInitial(BlockPos masPos){

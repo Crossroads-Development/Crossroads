@@ -109,7 +109,7 @@ public abstract class ReagentHolderTE extends BlockEntity implements ITickableTi
 	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
 		double temp = correctTemp();
 		if(contents.getTotalQty() != 0 || temp != HeatUtil.ABSOLUTE_ZERO || useCableHeat()){
-			HeatUtil.addHeatInfo(chat, temp, Short.MIN_VALUE);
+			HeatUtil.addHeatInfo(chat, temp, Short.MIN_VALUE, player);
 		}else{
 			chat.add(Component.translatable("tt.crossroads.boilerplate.alchemy_empty"));
 		}

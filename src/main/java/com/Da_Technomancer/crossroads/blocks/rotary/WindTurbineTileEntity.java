@@ -115,7 +115,7 @@ public class WindTurbineTileEntity extends ModuleTE implements IAxleCapable{
 
 	@Override
 	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
-		chat.add(Component.translatable("tt.crossroads.wind_turbine.weather", CRConfig.formatVal(getPowerOutput())));
+		chat.add(Component.translatable("tt.crossroads.wind_turbine.weather", CRConfig.formatVal(getPowerOutput(), player)));
 		super.addInfo(chat, player, hit);
 	}
 

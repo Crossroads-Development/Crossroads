@@ -46,7 +46,7 @@ public class ChronoHarnessTileEntity extends IFluxLink.SimpleFluxLink implements
 	@Override
 	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
 		chat.add(Component.translatable("tt.crossroads.chrono_harness.fe", fe, FE_CAPACITY, curPower));
-		FluxUtil.addFluxInfo(chat, this, shouldRun() ? curPower / CRConfig.fePerEntropy.get() : 0);
+		FluxUtil.addFluxInfo(chat, this, shouldRun() ? curPower / CRConfig.fePerEntropy.get() : 0, player);
 		super.addInfo(chat, player, hit);
 	}
 

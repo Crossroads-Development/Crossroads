@@ -23,6 +23,7 @@ import com.Da_Technomancer.crossroads.items.witchcraft.GeneticSpawnEgg;
 import com.Da_Technomancer.crossroads.render.BeamToolOverlay;
 import com.Da_Technomancer.crossroads.render.MultiLineMessageOverlay;
 import com.Da_Technomancer.crossroads.render.tesr.CRRendererRegistry;
+import com.Da_Technomancer.essentials.ESConfig;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -469,5 +470,13 @@ public class EventHandlerClient{
 				e.setNewFovModifier((float) Mth.lerp(Minecraft.getInstance().options.fovEffectScale().get(), 1.0F, scopingFOV));
 			}
 		}
+	}
+
+
+	@SubscribeEvent
+	@SuppressWarnings({"unused"})
+	public void playerJoin(ClientPlayerNetworkEvent.LoggingIn e){
+		//Server-side needs to know our preferred number format (only relevant in multiplayer - singleplayer can just reach across)
+		CRPackets.sendPacketToServer(new SendConfigPreferenceToServer(ESConfig.numberDisplay.get()));
 	}
 }

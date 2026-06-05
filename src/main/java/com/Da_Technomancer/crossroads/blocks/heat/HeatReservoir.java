@@ -64,7 +64,7 @@ public class HeatReservoir extends BaseEntityBlock implements IReadable{
 		tooltip.add(Component.translatable("tt.crossroads.heat_battery.info"));
 		tooltip.add(Component.translatable("tt.crossroads.heat_battery.reds"));
 		if(stack.has(CRItems.TEMPERATURE_DATA)){
-			tooltip.add(Component.translatable("tt.crossroads.boilerplate.degrees_c", CRConfig.formatVal(stack.get(CRItems.TEMPERATURE_DATA))));
+			tooltip.add(Component.translatable("tt.crossroads.boilerplate.degrees_c", CRConfig.formatVal(stack.get(CRItems.TEMPERATURE_DATA), null)));
 		}
 	}
 

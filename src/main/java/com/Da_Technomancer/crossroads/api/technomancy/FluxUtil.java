@@ -16,6 +16,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.apache.commons.lang3.tuple.Pair;
 
+import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.List;
 import java.util.Objects;
@@ -106,14 +107,14 @@ public class FluxUtil{
 	 * @param te The TE to provide info about
 	 * @param fluxPerCycle Flux production. -1 to not display info about flux production
 	 */
-	public static void addFluxInfo(List<Component> tooltip, IFluxLink te, int fluxPerCycle){
+	public static void addFluxInfo(List<Component> tooltip, IFluxLink te, int fluxPerCycle, @Nullable Player player){
 		if(te.isShutDown()){
 			tooltip.add(Component.translatable("tt.crossroads.boilerplate.flux.shutdown"));
 		}
 		if(fluxPerCycle < 0){
-			tooltip.add(Component.translatable("tt.crossroads.boilerplate.flux_simple", te.getReadingFlux(), te.getMaxFlux(), CRConfig.formatVal(100F * te.getReadingFlux() / te.getMaxFlux())));
+			tooltip.add(Component.translatable("tt.crossroads.boilerplate.flux_simple", te.getReadingFlux(), te.getMaxFlux(), CRConfig.formatVal(100F * te.getReadingFlux() / te.getMaxFlux(), player)));
 		}else{
-			tooltip.add(Component.translatable("tt.crossroads.boilerplate.flux", te.getReadingFlux(), te.getMaxFlux(), CRConfig.formatVal(100F * te.getReadingFlux() / te.getMaxFlux()), CRConfig.formatVal(fluxPerCycle)));
+			tooltip.add(Component.translatable("tt.crossroads.boilerplate.flux", te.getReadingFlux(), te.getMaxFlux(), CRConfig.formatVal(100F * te.getReadingFlux() / te.getMaxFlux(), player), CRConfig.formatVal(fluxPerCycle, player)));
 		}
 	}
 

@@ -120,7 +120,7 @@ public class FluxNodeTileEntity extends IFluxLink.SimpleFluxLink{
 
 	@Override
 	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
-		FluxUtil.addFluxInfo(chat, this, -1);
+		FluxUtil.addFluxInfo(chat, this, -1, player);
 		super.addInfo(chat, player, hit);
 	}
 }

@@ -14,6 +14,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -44,20 +45,21 @@ public class RotaryUtil{
 	 * @param chat The text list. One entry per line, will be modified
 	 * @param axle The axle being added to the info chat. This method does nothing if null
 	 * @param compact Whether to compact the output into one line of chat
+	 * @param player The player this info is being displayed to
 	 */
-	public static void addRotaryInfo(List<Component> chat, @Nullable IAxleHandler axle, boolean compact){
+	public static void addRotaryInfo(List<Component> chat, @Nullable IAxleHandler axle, boolean compact, @Nullable Player player){
 		if(axle == null){
 			return;
 		}
 		if(compact){
 			//Print speed, energy, power, inertia, and rot ratio
-			chat.add(Component.translatable("tt.crossroads.boilerplate.rotary.compact", CRConfig.formatVal(axle.getSpeed()), CRConfig.formatVal(axle.getEnergy()), CRConfig.formatVal(axle.getMoInertia()), CRConfig.formatVal(axle.getRotationRatio())));
+			chat.add(Component.translatable("tt.crossroads.boilerplate.rotary.compact", CRConfig.formatVal(axle.getSpeed(), player), CRConfig.formatVal(axle.getEnergy(), player), CRConfig.formatVal(axle.getMoInertia(), player), CRConfig.formatVal(axle.getRotationRatio(), player)));
 		}else{
 			//Prints full data
 			double axleSpeed = axle.getSpeed();
-			chat.add(Component.translatable("tt.crossroads.boilerplate.rotary.speed", CRConfig.formatVal(axleSpeed), CRConfig.formatVal(axleSpeed * 60D / (Math.PI * 2D))));
-			chat.add(Component.translatable("tt.crossroads.boilerplate.rotary.energy", CRConfig.formatVal(axle.getEnergy())));
-			chat.add(Component.translatable("tt.crossroads.boilerplate.rotary.setup", CRConfig.formatVal(axle.getMoInertia()), CRConfig.formatVal(axle.getRotationRatio())));
+			chat.add(Component.translatable("tt.crossroads.boilerplate.rotary.speed", CRConfig.formatVal(axleSpeed, player), CRConfig.formatVal(axleSpeed * 60D / (Math.PI * 2D), player)));
+			chat.add(Component.translatable("tt.crossroads.boilerplate.rotary.energy", CRConfig.formatVal(axle.getEnergy(), player)));
+			chat.add(Component.translatable("tt.crossroads.boilerplate.rotary.setup", CRConfig.formatVal(axle.getMoInertia(), player), CRConfig.formatVal(axle.getRotationRatio(), player)));
 		}
 	}
 

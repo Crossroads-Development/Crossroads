@@ -132,7 +132,7 @@ public abstract class AbstractGlassware extends Item{
 		if(stored.getTotalQty() == 0){
 			tooltip.add(Component.translatable("tt.crossroads.boilerplate.alchemy_empty"));
 		}else{
-			HeatUtil.addHeatInfo(tooltip, temp, Short.MIN_VALUE);
+			HeatUtil.addHeatInfo(tooltip, temp, Short.MIN_VALUE, null);
 			int total = 0;
 			for(IReagent type : stored.keySetReag()){
 				int qty = stored.getQty(type);

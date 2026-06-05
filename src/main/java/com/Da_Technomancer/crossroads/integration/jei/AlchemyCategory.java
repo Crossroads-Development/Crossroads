@@ -77,9 +77,9 @@ public class AlchemyCategory implements IRecipeCategory<AlchemyRec>{
 		double maxTemp = recipe.maxTemp();
 		String line;
 		if(maxTemp <= Short.MAX_VALUE - 100){
-			line = MiscUtil.localize("crossroads.jei.alchemy.temp.dual", CRConfig.formatVal(Math.max(recipe.minTemp(), HeatUtil.ABSOLUTE_ZERO)), CRConfig.formatVal(maxTemp));
+			line = MiscUtil.localize("crossroads.jei.alchemy.temp.dual", CRConfig.formatValClient(Math.max(recipe.minTemp(), HeatUtil.ABSOLUTE_ZERO)), CRConfig.formatValClient(maxTemp));
 		}else{
-			line = MiscUtil.localize("crossroads.jei.alchemy.temp", CRConfig.formatVal(Math.max(recipe.minTemp(), HeatUtil.ABSOLUTE_ZERO)));
+			line = MiscUtil.localize("crossroads.jei.alchemy.temp", CRConfig.formatValClient(Math.max(recipe.minTemp(), HeatUtil.ABSOLUTE_ZERO)));
 		}
 		matrix.drawString(fontRenderer, line, (int) (90 - fontRenderer.width(line) / 2F), 42, 0x404040, false);
 		line = recipe.deltaHeatPer() > 0 ? MiscUtil.localize("crossroads.jei.alchemy.cooling") : recipe.deltaHeatPer() < 0 ? MiscUtil.localize("crossroads.jei.alchemy.heating") : MiscUtil.localize("crossroads.jei.alchemy.no_temp_change");

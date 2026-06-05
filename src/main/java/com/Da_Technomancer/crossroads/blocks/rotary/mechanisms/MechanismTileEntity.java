@@ -67,7 +67,7 @@ public class MechanismTileEntity extends BlockEntity implements ITickableTileEnt
 			return;
 		}
 
-		RotaryUtil.addRotaryInfo(chat, axleHandlers[part], false);
+		RotaryUtil.addRotaryInfo(chat, axleHandlers[part], false, player);
 	}
 
 	// D-U-N-S-W-E-A

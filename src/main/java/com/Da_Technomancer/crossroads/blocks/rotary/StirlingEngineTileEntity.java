@@ -65,12 +65,12 @@ public class StirlingEngineTileEntity extends ModuleTE implements IAxleCapable, 
 
 	@Override
 	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
-		chat.add(Component.translatable("tt.crossroads.stirling_engine.temp", CRConfig.formatVal(tempBottom), CRConfig.formatVal(HeatUtil.toKelvin(tempBottom)), CRConfig.formatVal(tempSide), CRConfig.formatVal(HeatUtil.toKelvin(tempSide))));
-		chat.add(Component.translatable("tt.crossroads.stirling_engine.status", CRConfig.formatVal(lastHeatIn), CRConfig.formatVal(lastHeatOut), CRConfig.formatVal(lastPower)));
+		chat.add(Component.translatable("tt.crossroads.stirling_engine.temp", CRConfig.formatVal(tempBottom, player), CRConfig.formatVal(HeatUtil.toKelvin(tempBottom), player), CRConfig.formatVal(tempSide, player), CRConfig.formatVal(HeatUtil.toKelvin(tempSide), player)));
+		chat.add(Component.translatable("tt.crossroads.stirling_engine.status", CRConfig.formatVal(lastHeatIn, player), CRConfig.formatVal(lastHeatOut, player), CRConfig.formatVal(lastPower, player)));
 		if(lastHeatIn > 0 && lastHeatOut > 0){
-			chat.add(Component.translatable("tt.crossroads.stirling_engine.efficiency", CRConfig.formatVal(lastPower / lastHeatIn), CRConfig.formatVal(lastPower / lastHeatOut)));
+			chat.add(Component.translatable("tt.crossroads.stirling_engine.efficiency", CRConfig.formatVal(lastPower / lastHeatIn, player), CRConfig.formatVal(lastPower / lastHeatOut, player)));
 		}else{
-			chat.add(Component.translatable("tt.crossroads.stirling_engine.efficiency", CRConfig.formatVal(0), CRConfig.formatVal(0)));
+			chat.add(Component.translatable("tt.crossroads.stirling_engine.efficiency", CRConfig.formatVal(0F, player), CRConfig.formatVal(0F, player)));
 		}
 		super.addInfo(chat, player, hit);
 	}

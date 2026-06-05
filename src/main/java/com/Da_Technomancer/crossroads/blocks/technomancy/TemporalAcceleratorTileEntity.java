@@ -62,7 +62,7 @@ public class TemporalAcceleratorTileEntity extends IFluxLink.SimpleFluxLink impl
 	@Override
 	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
 		chat.add(Component.translatable("tt.crossroads.time_accel.boost", 100 * extraTicks(infoIntensity)));
-		FluxUtil.addFluxInfo(chat, this, producedFlux(infoIntensity));
+		FluxUtil.addFluxInfo(chat, this, producedFlux(infoIntensity), player);
 		super.addInfo(chat, player, hit);
 	}
 

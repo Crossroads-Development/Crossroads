@@ -125,10 +125,10 @@ public abstract class ModuleTE extends BlockEntity implements ITickableTileEntit
 	@Override
 	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
 		if(useHeat()){
-			HeatUtil.addHeatInfo(chat, temp, HeatUtil.convertBiomeTemp(level, worldPosition));
+			HeatUtil.addHeatInfo(chat, temp, HeatUtil.convertBiomeTemp(level, worldPosition), player);
 		}
 		if(useRotary()){
-			RotaryUtil.addRotaryInfo(chat, axleHandler, true);
+			RotaryUtil.addRotaryInfo(chat, axleHandler, true, player);
 		}
 	}
 

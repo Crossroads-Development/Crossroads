@@ -56,7 +56,7 @@ public class IncubatorTileEntity extends InventoryTE implements IHeatCapable, II
 
 	@Override
 	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
-		chat.add(Component.translatable("tt.crossroads.boilerplate.progress", CRConfig.formatVal(progress), REQUIRED));
+		chat.add(Component.translatable("tt.crossroads.boilerplate.progress", CRConfig.formatVal(progress, player), REQUIRED));
 		super.addInfo(chat, player, hit);
 	}
 

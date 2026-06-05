@@ -53,10 +53,10 @@ public class MaxwellDemonTileEntity extends BlockEntity implements ITickableTile
 
 	@Override
 	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
-		chat.add(Component.translatable("tt.crossroads.maxwell_demon.read_top", CRConfig.formatVal(tempUp)));
-		chat.add(Component.translatable("tt.crossroads.maxwell_demon.read_bottom", CRConfig.formatVal(tempDown)));
-		chat.add(Component.translatable("tt.crossroads.maxwell_demon.read_biome", CRConfig.formatVal(HeatUtil.convertBiomeTemp(level, worldPosition))));
-		chat.add(Component.translatable("tt.crossroads.maxwell_demon.fat", fat, FAT_CONSUMPTION, fat / FAT_CONSUMPTION / 20));
+		chat.add(Component.translatable("tt.crossroads.maxwell_demon.read_top", CRConfig.formatVal(tempUp, player)));
+		chat.add(Component.translatable("tt.crossroads.maxwell_demon.read_bottom", CRConfig.formatVal(tempDown, player)));
+		chat.add(Component.translatable("tt.crossroads.maxwell_demon.read_biome", CRConfig.formatVal(HeatUtil.convertBiomeTemp(level, worldPosition), player)));
+		chat.add(Component.translatable("tt.crossroads.maxwell_demon.fat", fat, FAT_CONSUMPTION, fat / FAT_CONSUMPTION / 20, player));
 	}
 
 	private void init(){

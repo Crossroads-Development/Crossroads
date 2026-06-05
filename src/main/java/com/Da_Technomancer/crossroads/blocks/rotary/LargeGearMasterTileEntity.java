@@ -71,7 +71,7 @@ public class LargeGearMasterTileEntity extends BlockEntity implements ILongRecei
 
 	@Override
 	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
-		RotaryUtil.addRotaryInfo(chat, axleHandler, false);
+		RotaryUtil.addRotaryInfo(chat, axleHandler, false, player);
 	}
 
 	public void initSetup(CRMaterialLibrary.GearMaterial typ){

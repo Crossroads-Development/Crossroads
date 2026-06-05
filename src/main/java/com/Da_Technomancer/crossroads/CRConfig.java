@@ -2,22 +2,25 @@ package com.Da_Technomancer.crossroads;
 
 import com.Da_Technomancer.crossroads.api.EnumPath;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
+import com.Da_Technomancer.essentials.ESConfig;
 import com.Da_Technomancer.essentials.api.ConfigUtil;
 import com.google.common.collect.Lists;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import javax.annotation.Nullable;
+import java.text.DecimalFormat;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
@@ -287,11 +290,146 @@ public class CRConfig{
 		return CraftingUtil.tagContains(destroyBlacklist, state.getBlock()) || state.getBlock().defaultDestroyTime() < 0;
 	}
 
+	/**
+	 * Virtual server-side only
+	 * Not thread-safe, so don't touch on the virtual client
+	 * Tracks the preferred number format of each player
+	 */
+	private static final HashMap<UUID, ConfigUtil.NumberTypes> playerNumberFormatPreferences = new HashMap<>();
+
+	public static void updateNumberFormatPreference(Player player, ConfigUtil.NumberTypes numberFormat){
+		//Only call on the virtual server side
+		if(player != null){
+			if(player.level() != null && player.level().isClientSide){
+				Crossroads.logger.error("Config data to server submitted on client side - report as a bug");
+				return;
+			}
+			playerNumberFormatPreferences.put(player.getUUID(), numberFormat);
+		}else{
+			Crossroads.logger.warn("Received client-side config data from null player");
+		}
+	}
+
+	private static ConfigUtil.NumberTypes getNumberFormatClient(){
+		return ESConfig.numberDisplay.get();
+	}
+
+	private static ConfigUtil.NumberTypes getNumberFormat(@Nullable Player player){
+		if(player == null){
+			if(FMLEnvironment.dist.isClient()){
+				//Note: this is an escape hatch for certain cases where we can't get a player instance,
+				//but we're reasonable confident we're on the virtual client side (mostly for item tooltips)
+				//If you call this on LAN from virtual server-side, it won't crash, but it will use the host's config setting instead of whoever it should be
+				return getNumberFormatClient();
+			}
+			return ConfigUtil.NumberTypes.SCIENTIFIC;
+		}
+		if(player.level().isClientSide){
+			//On the virtual client
+			return getNumberFormatClient();
+		}
+		ConfigUtil.NumberTypes format = playerNumberFormatPreferences.get(player.getUUID());
+		if(format == null){
+			Crossroads.logger.warn("Missing player config information for " + player.getGameProfile());
+			format = ConfigUtil.NumberTypes.SCIENTIFIC;
+		}
+		return format;
+	}
+
+	/**
+	 * Virtual client-side only - may crash otherwise
+	 * @param d Value to be formatted for display
+	 * @return String representing the number
+	 */
+	public static String formatValClient(double d){
+		return formatValClient((float) d);
+	}
+
+	/**
+	 * Virtual client-side only - may crash otherwise
+	 * @param f Value to be formatted for display
+	 * @return String representing the number
+	 */
+	public static String formatValClient(float f){
+		return ConfigUtil.formatFloat(f, null);
+	}
+
+	/**
+	 * Virtual client-side only - may crash otherwise
+	 * @param i Value to be formatted for display
+	 * @return String representing the number
+	 */
+	public static String formatValClient(int i){
+		return formatInteger(i, getNumberFormatClient());
+	}
+
+	/**
+	 * @param d Value to be formatted for display
+	 * @param player The player whose number-format preferences should be used. If null, falls back to scientific notation
+	 * @return String representing the number
+	 */
+	public static String formatVal(double d, @Nullable Player player){
+		return formatVal((float) d, player);
+	}
+
+	/**
+	 * @param f Value to be formatted for display
+	 * @param player The player whose number-format preferences should be used. If null, falls back to scientific notation
+	 * @return String representing the number
+	 */
+	public static String formatVal(float f, @Nullable Player player){
+		return ConfigUtil.formatFloat(f, getNumberFormat(player));
+	}
+
+	/**
+	 * @param i Value to be formatted for display
+	 * @param player The player whose number-format preferences should be used. If null, falls back to scientific notation
+	 * @return String representing the number
+	 */
+	public static String formatVal(int i, @Nullable Player player){
+		return formatInteger(i, getNumberFormat(player));
+	}
+
+	private static final DecimalFormat INTEGER_PLAIN = new DecimalFormat("0");
+	private static final DecimalFormat INTEGER_SCIENTIFIC = new DecimalFormat("0.000E0");
+	private static final DecimalFormat INTEGER_ENGINEERING = new DecimalFormat("##0.000E0");
+
+	private static String formatInteger(int i, ConfigUtil.NumberTypes format){
+		if(format == ConfigUtil.NumberTypes.HEX){
+			return Integer.toHexString(i);
+		}
+		final int absValue = Math.abs(i);
+		switch(format){
+			case SCIENTIFIC:
+				if(absValue >= 10000){
+					return INTEGER_SCIENTIFIC.format(i);
+				}
+				break;
+			case ENGINEERING:
+				if(absValue >= 10000){
+					return INTEGER_ENGINEERING.format(i);
+				}
+				break;
+		}
+
+		return INTEGER_PLAIN.format(i);
+	}
+
+	@Deprecated(forRemoval = true)
 	public static String formatVal(double d){
 		return formatVal((float) d);
 	}
 
+	@Deprecated(forRemoval = true)
 	public static String formatVal(float f){
-		return ConfigUtil.formatFloat(f, null);
+		// Works perfectly in singleplayer,
+		// But in multiplayer (or LAN), it doesn't always respect the config option (in the Essentials client config) for preferred number format
+		// This is because we're often formatting numbers on the server side, but the player's preferred number format setting only exists on the client
+		try{
+			return ConfigUtil.formatFloat(f, null);
+		}catch(IllegalStateException ignored){
+			//This occurs on dedicated server, because the Essentials client config (which defines preferred number format) isn't loaded
+		}
+		return ConfigUtil.formatFloat(f, ConfigUtil.NumberTypes.SCIENTIFIC);
 	}
 }

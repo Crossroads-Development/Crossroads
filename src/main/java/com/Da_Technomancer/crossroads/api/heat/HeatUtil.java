@@ -5,9 +5,11 @@ import com.Da_Technomancer.essentials.api.MathUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class HeatUtil{
@@ -37,11 +39,12 @@ public class HeatUtil{
 	 * @param chat The chat list. One line per entry, will be modified
 	 * @param temp The temperature, in degrees C
 	 * @param biomeTemp The biome temperature, in degrees C. Specify a value below absolute zero to not print this
+	 * @param player The player who this info is being provided to
 	 */
-	public static void addHeatInfo(List<Component> chat, double temp, double biomeTemp){
-		chat.add(Component.translatable("tt.crossroads.boilerplate.temp_k", CRConfig.formatVal(temp), CRConfig.formatVal(toKelvin(temp))));
+	public static void addHeatInfo(List<Component> chat, double temp, double biomeTemp, @Nullable Player player){
+		chat.add(Component.translatable("tt.crossroads.boilerplate.temp_k", CRConfig.formatVal(temp, player), CRConfig.formatVal(toKelvin(temp), player)));
 		if(biomeTemp >= ABSOLUTE_ZERO){
-			chat.add(Component.translatable("tt.crossroads.boilerplate.temp.biome", CRConfig.formatVal(biomeTemp)));
+			chat.add(Component.translatable("tt.crossroads.boilerplate.temp.biome", CRConfig.formatVal(biomeTemp, player)));
 		}
 	}
 

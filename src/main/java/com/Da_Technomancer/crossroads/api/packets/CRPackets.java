@@ -33,6 +33,7 @@ public class CRPackets{
 		registrar.playToClient(SendCompassTargetToClient.TYPE, SendCompassTargetToClient.STREAM_CODEC, SendCompassTargetToClient::handlePacketClient);
 		registrar.playToServer(SendPathUnlockToServer.TYPE, SendPathUnlockToServer.STREAM_CODEC, SendPathUnlockToServer::handlePacketServer);
 		registrar.playToClient(SendOptionalSoundToClient.TYPE, SendOptionalSoundToClient.STREAM_CODEC, SendOptionalSoundToClient::handlePacketClient);
+		registrar.playToServer(SendConfigPreferenceToServer.TYPE, SendConfigPreferenceToServer.STREAM_CODEC, SendConfigPreferenceToServer::handlePacketServer);
 	}
 
 	public static void sendPacketAround(Level world, BlockPos pos, CustomPacketPayload payload){

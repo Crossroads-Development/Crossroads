@@ -90,9 +90,9 @@ public class WindingTable extends BaseEntityBlock implements IReadable{
 
 	@Override
 	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
-		tooltip.add(Component.translatable("tt.crossroads.winding_table.desc", CRConfig.formatVal(WindingTableTileEntity.INERTIA)));
-		tooltip.add(Component.translatable("tt.crossroads.winding_table.reds", CRConfig.formatVal(WindingTableTileEntity.INCREMENT)));
-		tooltip.add(Component.translatable("tt.crossroads.winding_table.counter", CRConfig.formatVal(CRConfig.windingResist.get())));
+		tooltip.add(Component.translatable("tt.crossroads.winding_table.desc", CRConfig.formatVal(WindingTableTileEntity.INERTIA, null)));
+		tooltip.add(Component.translatable("tt.crossroads.winding_table.reds", CRConfig.formatVal(WindingTableTileEntity.INCREMENT, null)));
+		tooltip.add(Component.translatable("tt.crossroads.winding_table.counter", CRConfig.formatVal(CRConfig.windingResist.get(), null)));
 		if(CRConfig.windingDestroy.get()){
 			tooltip.add(Component.translatable("tt.crossroads.winding_table.destroy"));
 		}else{

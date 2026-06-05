@@ -63,7 +63,7 @@ public class StirlingEngine extends BaseEntityBlock{
 	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
 		tooltip.add(Component.translatable("tt.crossroads.stirling_engine.desc", CRConfig.jouleWorth.get() * StirlingEngineTileEntity.MAX_TEMPERATURE_DIFFERANCE / CRConfig.stirlingConversion.get() / StirlingEngineTileEntity.EFFICIENCY_MULTIPLIER));
 		tooltip.add(Component.translatable("tt.crossroads.stirling_engine.rate", StirlingEngineTileEntity.HEAT_INTERVAL));
-		tooltip.add(Component.translatable("tt.crossroads.stirling_engine.power", CRConfig.formatVal(CRConfig.stirlingConversion.get())));
+		tooltip.add(Component.translatable("tt.crossroads.stirling_engine.power", CRConfig.formatVal(CRConfig.stirlingConversion.get(), null)));
 		tooltip.add(Component.translatable("tt.crossroads.stirling_engine.limit", CRConfig.stirlingSpeedLimit.get()));
 		tooltip.add(Component.translatable("tt.crossroads.boilerplate.inertia", StirlingEngineTileEntity.INERTIA));
 	}

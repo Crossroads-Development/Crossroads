@@ -55,8 +55,8 @@ public class HeatLimiterBasicTileEntity extends BlockEntity implements ITickable
 	@Override
 	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
 		init();
-		HeatUtil.addHeatInfo(chat, heatIn, Short.MIN_VALUE);//Add the first temp without biome temp to prevent double printing
-		HeatUtil.addHeatInfo(chat, heatOut, HeatUtil.convertBiomeTemp(level, worldPosition));
+		HeatUtil.addHeatInfo(chat, heatIn, Short.MIN_VALUE, player);//Add the first temp without biome temp to prevent double printing
+		HeatUtil.addHeatInfo(chat, heatOut, HeatUtil.convertBiomeTemp(level, worldPosition), player);
 	}
 
 	protected double getSetting(){

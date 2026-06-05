@@ -56,8 +56,8 @@ public class WindingTableTileEntity extends InventoryTE implements IAxleCapable,
 		if(inventory[0].getItem() instanceof IWindableItem item){
 			double speed = item.getWindLevel(inventory[0]);
 			double maxSpeed = item.getMaxWind();
-			chat.add(Component.translatable("tt.crossroads.winding_table.winding", CRConfig.formatVal(speed), CRConfig.formatVal(maxSpeed)));
-			chat.add(Component.translatable("tt.crossroads.winding_table.power", CRConfig.formatVal(speed * CRConfig.windingResist.get())));
+			chat.add(Component.translatable("tt.crossroads.winding_table.winding", CRConfig.formatVal(speed, player), CRConfig.formatVal(maxSpeed, player)));
+			chat.add(Component.translatable("tt.crossroads.winding_table.power", CRConfig.formatVal(speed * CRConfig.windingResist.get(), player)));
 		}else{
 			chat.add(Component.translatable("tt.crossroads.winding_table.empty"));
 			chat.add(Component.translatable("tt.crossroads.winding_table.power", 0));
@@ -215,7 +215,7 @@ public class WindingTableTileEntity extends InventoryTE implements IAxleCapable,
 			}else{
 				double wind = getWindLevel(stack);
 				double maxWind = getMaxWind();
-				tooltip.add(Component.translatable("tt.crossroads.boilerplate.spring_speed", CRConfig.formatVal(wind), CRConfig.formatVal(maxWind)));
+				tooltip.add(Component.translatable("tt.crossroads.boilerplate.spring_speed", CRConfig.formatVal(wind, null), CRConfig.formatVal(maxWind, null)));
 			}
 		}
 

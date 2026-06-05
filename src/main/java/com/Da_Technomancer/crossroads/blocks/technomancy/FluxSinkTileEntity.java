@@ -45,7 +45,7 @@ public class FluxSinkTileEntity extends IFluxLink.SimpleFluxLink{
 	@Override
 	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
 		chat.add(Component.translatable("tt.crossroads.flux_sink.desc"));
-		FluxUtil.addFluxInfo(chat, this, -1);
+		FluxUtil.addFluxInfo(chat, this, -1, player);
 	}
 
 	@Override

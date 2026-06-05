@@ -68,8 +68,8 @@ public class OmniMeter extends Item{
 
 			IAxisHandler axisHandler;
 			if((axisHandler = world.getCapability(CRCapabilities.AXIS_CAPABILITY, te.getBlockPos(), null)) != null){
-				chat.add(Component.translatable("tt.crossroads.meter.axis.current", CRConfig.formatVal(axisHandler.getTotalEnergy()), CRConfig.formatVal(axisHandler.getBaseSpeed())));
-				chat.add(Component.translatable("tt.crossroads.meter.axis.change", CRConfig.formatVal(axisHandler.getEnergyChange()), CRConfig.formatVal(axisHandler.getEnergyLost())));
+				chat.add(Component.translatable("tt.crossroads.meter.axis.current", CRConfig.formatVal(axisHandler.getTotalEnergy(), player), CRConfig.formatVal(axisHandler.getBaseSpeed(), player)));
+				chat.add(Component.translatable("tt.crossroads.meter.axis.change", CRConfig.formatVal(axisHandler.getEnergyChange(), player), CRConfig.formatVal(axisHandler.getEnergyLost(), player)));
 			}
 
 			IEnergyStorage battEnergyHandler;
@@ -80,7 +80,7 @@ public class OmniMeter extends Item{
 			//Read circuit output
 			IRedstoneHandler redstoneHandler;
 			if((redstoneHandler = world.getCapability(RedstoneUtil.REDSTONE_CAPABILITY, te.getBlockPos(), null)) != null){
-				chat.add(Component.translatable("tt.crossroads.meter.circuit", CRConfig.formatVal(redstoneHandler.getOutput())));
+				chat.add(Component.translatable("tt.crossroads.meter.circuit", CRConfig.formatVal(redstoneHandler.getOutput(), player)));
 			}
 
 			if(te instanceof IInfoTE infoTE){

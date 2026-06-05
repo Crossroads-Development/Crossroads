@@ -64,8 +64,8 @@ public abstract class AbstractCannonTileEntity extends BlockEntity implements IT
 			chat.add(Component.translatable("tt.crossroads.beam_cannon.base.angle", MathUtil.preciseRound(angle[0], 3), MathUtil.preciseRound(MathUtil.clockModulus((float) baseAxleHandler.getSpeed(), (float) Math.PI * 2F), 3)));
 			chat.add(Component.translatable("tt.crossroads.beam_cannon.side.angle", MathUtil.preciseRound(angle[1], 3), MathUtil.preciseRound(Mth.clamp(sideAxleHandler.getSpeed(), -Math.PI / 2F, Math.PI / 2F), 3)));
 		}
-		RotaryUtil.addRotaryInfo(chat, baseAxleHandler, true);
-		RotaryUtil.addRotaryInfo(chat, sideAxleHandler, true);
+		RotaryUtil.addRotaryInfo(chat, baseAxleHandler, true, player);
+		RotaryUtil.addRotaryInfo(chat, sideAxleHandler, true, player);
 	}
 
 	/**

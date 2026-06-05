@@ -59,7 +59,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, 
 	@Override
 	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
 		super.addInfo(chat, player, hit);
-		FluxUtil.addFluxInfo(chat, this, running ? FLUX_GEN : 0);
+		FluxUtil.addFluxInfo(chat, this, running ? FLUX_GEN : 0, player);
 		fluxHelper.addInfo(chat, player, hit);
 	}
 
