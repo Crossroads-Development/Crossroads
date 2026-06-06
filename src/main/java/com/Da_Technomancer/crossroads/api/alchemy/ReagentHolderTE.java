@@ -627,13 +627,17 @@ public abstract class ReagentHolderTE extends BlockEntity implements ITickableTi
 		}
 
 		private void updateFakeInv(){
+			//We make a fake inventory of items to show to anything interacting with the ItemHandler
+			//Need to manually repopulate it whenever it is requested and contents might have changed
 			Arrays.fill(fakeInventory, ItemStack.EMPTY);
-			int index = 0;
+			int index = fakeInventory.length - 1;
+			//Populate the last slot first, working backwords.
+			//This leaves slot 0 empty for new items (because insertItem only allows slot 0 interactions)
 			double endTemp = chemHandler.getTemp();
 			for(IReagent reag : contents.keySetReag()){
 				ReagentStack rStack = contents.getStack(reag);
 				fakeInventory[index] = !rStack.isEmpty() && reag.getPhase(endTemp) == EnumMatterPhase.SOLID ? reag.getStackFromReagent(rStack) : ItemStack.EMPTY;
-				index++;
+				index--;
 			}
 		}
 
