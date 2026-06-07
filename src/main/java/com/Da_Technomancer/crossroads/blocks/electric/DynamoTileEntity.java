@@ -9,13 +9,18 @@ import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.IEnergyStorage;
+
+import java.util.ArrayList;
 
 public class DynamoTileEntity extends ModuleTE{
 
@@ -24,6 +29,20 @@ public class DynamoTileEntity extends ModuleTE{
 	private static final int CHARGE_CAPACITY = 8_000;
 	public static final int INERTIA = 200;
 	public static final double POWER_MULT = 20;
+
+	private int lastAddedFE;
+	private int lastAddedFECapacity;//For display purposes
+
+	@Override
+	public void addInfo(ArrayList<Component> chat, Player player, BlockHitResult hit){
+		chat.clear();//Replace any existing FE line
+		chat.add(Component.translatable("tt.crossroads.dynamo.fe_info", fe, CHARGE_CAPACITY, lastAddedFE, lastAddedFECapacity));
+		super.addInfo(chat, player, hit);
+	}
+
+	public int getLastAddedFE(){
+		return lastAddedFE;
+	}
 
 	private int fe = 0;
 
@@ -48,8 +67,11 @@ public class DynamoTileEntity extends ModuleTE{
 		int operations = (int) Math.min(Math.abs(energy), POWER_MULT * Math.abs(axleHandler.getSpeed()));
 		if(operations > 0){
 			axleHandler.addEnergy(-operations, false);
-			fe += operations * CRConfig.electPerJoule.get();
+			int lastFE = fe;
+			lastAddedFECapacity = operations * CRConfig.electPerJoule.get();
+			fe += lastAddedFECapacity;
 			fe = Math.min(fe, CHARGE_CAPACITY);
+			lastAddedFE = fe - lastFE;
 			setChanged();
 		}
 
@@ -79,13 +101,14 @@ public class DynamoTileEntity extends ModuleTE{
 	public void load(CompoundTag nbt){
 		super.load(nbt);
 		fe = nbt.getInt("charge");
+		lastAddedFE = nbt.getInt("added_fe");
 	}
 
 	@Override
 	public void saveAdditional(CompoundTag nbt){
 		super.saveAdditional(nbt);
 		nbt.putInt("charge", fe);
-
+		nbt.putInt("added_fe", lastAddedFE);
 	}
 
 	@Override

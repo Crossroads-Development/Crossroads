@@ -480,7 +480,8 @@
 	"tt.crossroads.wind_turbine.power": "Produces: ±(%1$d-%2$d) J/t, (avg ±%3$d J/t)",
 	"tt.crossroads.wind_turbine.limits": "Useless above %1$frad/s; Comparators read power output",
 	"tt.crossroads.dynamo.power": "Produces: %1$fFE/J",
-	"tt.crossroads.dynamo.usage": "Consumes: -%1$dω J/t)",
+	"tt.crossroads.dynamo.usage": "Consumes: -%1$dω J/t",
+	"tt.crossroads.dynamo.fe_info": "Generating +%3$d/%4$dFE/t - Charge: %1$d/%2$dFE",
 	"tt.crossroads.fat_collector.tier": "%1$d%% efficiency when above %2$d°C",
 	"tt.crossroads.edible_blob.food": "Hunger: %1$d",
 	"tt.crossroads.edible_blob.sat": "Saturation: %1$d",
@@ -1043,6 +1044,7 @@
 	"effect.terraform_jungle": "Create Jungle",
 	"effect.terraform_end": "Create End",
 	"effect.terraform_flower_forest": "Create Flower Forest",
+	"effect.hydrate": "Hydrate (liquid only)",
 
 
 	"path.technomancy": "Technomancy",

@@ -109,11 +109,7 @@ public class TeslaCoil extends TEBlock implements IReadable{
 		}
 
 		if(!worldIn.isClientSide && worldIn.getBlockEntity(pos) instanceof TeslaCoilTileEntity te){
-			if(heldItem.isEmpty()){
-				playerIn.setItemInHand(hand, te.removeBattery());
-			}else{
-				playerIn.setItemInHand(hand, te.addBattery(heldItem));
-			}
+			te.swapBattery(heldItem, playerIn, hand);
 		}
 		return InteractionResult.SUCCESS;
 	}

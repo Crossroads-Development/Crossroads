@@ -104,18 +104,19 @@ public class AlchemicalTubeTileEntity extends ReagentHolderTE implements Conduit
 		for(int i = 0; i < 6; i++){
 			if(modes[i].isConnection()){
 				Direction side = Direction.from3DDataValue(i);
+				Direction opposite = side.getOpposite();
 				BlockEntity te = level.getBlockEntity(worldPosition.relative(side));
 				LazyOptional<IChemicalHandler> otherOpt;
-				if(te == null || !(otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, side.getOpposite())).isPresent()){
+				if(te == null || !(otherOpt = te.getCapability(Capabilities.CHEMICAL_CAPABILITY, opposite)).isPresent()){
 					setData(i, false, modes[i]);
 					continue;
 				}
 
 				IChemicalHandler otherHandler = otherOpt.orElseThrow(NullPointerException::new);
 
-				EnumContainerType otherChannel = otherHandler.getChannel(side.getOpposite());
-				EnumTransferMode otherMode = otherHandler.getMode(side.getOpposite());
-				if(!channel.connectsWith(otherChannel) || !modes[i].connectsWith(otherMode)){
+				EnumContainerType otherChannel = otherHandler.getChannel(opposite);
+				EnumTransferMode _otherMode = otherHandler.getMode(opposite);
+				if(!channel.connectsWith(otherChannel)/* || !modes[i].connectsWith(otherMode)*/){
 					setData(i, false, modes[i]);
 					continue;
 				}
@@ -123,7 +124,7 @@ public class AlchemicalTubeTileEntity extends ReagentHolderTE implements Conduit
 				if(contents.getTotalQty() == 0 || !modes[i].isOutput()){
 					continue;
 				}
-				if(otherHandler.insertReagents(contents, side.getOpposite(), handler, ignorePhase)){
+				if(otherHandler.insertReagents(contents, opposite, handler, ignorePhase)){
 					lastActTick = worldTick;
 					correctReag();
 					setChanged();

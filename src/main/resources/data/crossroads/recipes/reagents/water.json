@@ -12,5 +12,6 @@
 		"base": "C80060FF",
 		"gas": "80FFFFFF",
 		"solid": "A0AAE1FF"
-	}
+	},
+	"effect": "hydrate"
 }
