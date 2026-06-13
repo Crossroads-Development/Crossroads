@@ -51,7 +51,7 @@ public class ItemCannonTileEntity extends AbstractCannonTileEntity implements II
 		if(inventory.isEmpty()){
 			chat.add(Component.translatable("tt.crossroads.item_cannon.inventory.empty", launchSpeed()));
 		}else{
-			chat.add(Component.translatable("tt.crossroads.item_cannon.inventory", inventory, launchSpeed()));
+			chat.add(Component.translatable("tt.crossroads.item_cannon.inventory", inventory.toString(), launchSpeed()));
 		}
 	}
 
