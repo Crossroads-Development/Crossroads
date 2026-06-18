@@ -1,8 +1,8 @@
 package com.Da_Technomancer.crossroads.items.item_sets;
 
 import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
-import com.Da_Technomancer.essentials.api.MathUtil;
 import com.Da_Technomancer.crossroads.items.CRItems;
+import com.Da_Technomancer.essentials.api.MathUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -15,7 +15,11 @@ import java.util.List;
 public abstract class GearMatItem extends OreProfileItem{
 
 	protected GearMatItem(String name){
-		super(CRItems.baseItemProperties());
+		this(name, CRItems.baseItemProperties());
+	}
+
+	protected GearMatItem(String name, Item.Properties prop){
+		super(prop);
 		CRItems.queueForRegister(name, this, CRItems.GEAR_CREATIVE_TAB_ID);
 	}
 

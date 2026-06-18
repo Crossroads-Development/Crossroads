@@ -5,10 +5,13 @@ import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.crossroads.api.packets.SafeCallable;
 import com.Da_Technomancer.crossroads.api.packets.SendOptionalSoundToClient;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.JukeboxSong;
 import net.minecraft.world.level.Level;
 
 import java.util.HashMap;
@@ -26,6 +29,9 @@ public class CRSounds{
 	public static final SoundEvent ITEM_CANNON = createEvent("item_cannon");
 	public static final SoundEvent FIRE_SWELL = createEvent("fire_swell");
 	public static final SoundEvent WATER_BUBBLING = createEvent("bubbling_water");
+	public static final SoundEvent HAPPY_BIRTHDAY = createEvent("happy_birthday");
+
+	public static final ResourceKey<JukeboxSong> HAPPY_BIRTHDAY_SONG_KEY = ResourceKey.create(Registries.JUKEBOX_SONG, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "happy_birthday"));
 
 	private static SoundEvent createEvent(String name){
 		ResourceLocation id = ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, name);

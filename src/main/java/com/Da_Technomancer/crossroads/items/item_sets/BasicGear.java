@@ -1,6 +1,7 @@
 package com.Da_Technomancer.crossroads.items.item_sets;
 
 import com.Da_Technomancer.crossroads.Crossroads;
+import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
 import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.rotary.IMechanism;
@@ -8,9 +9,13 @@ import com.Da_Technomancer.crossroads.api.rotary.IMechanismProperty;
 import com.Da_Technomancer.crossroads.api.rotary.RotaryUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.rotary.mechanisms.MechanismTileEntity;
+import com.Da_Technomancer.crossroads.items.CRItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.EitherHolder;
+import net.minecraft.world.item.JukeboxPlayable;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -23,12 +28,13 @@ import java.util.Optional;
 public class BasicGear extends GearMatItem{
 
 	public BasicGear(){
-		this("gear_base");
+		super("gear_base", CRItems.baseItemProperties()
+				.component(DataComponents.JUKEBOX_PLAYABLE, new JukeboxPlayable(new EitherHolder<>(CRSounds.HAPPY_BIRTHDAY_SONG_KEY), false))//Hidden jukebox song
+		);
 	}
 
 	protected BasicGear(String name){
 		super(name);
-
 	}
 
 	@Override

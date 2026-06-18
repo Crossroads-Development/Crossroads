@@ -958,6 +958,7 @@
 	"subtitle.crossroads.item_cannon": "Item launched",
 	"subtitle.crossroads.fire_swell": "Bursting cloud of flame",
 	"subtitle.crossroads.bubbling_water": "Bubbling water",
+	"subtitle.crossroads.happy_birthday": "Happy Birthday plays",
 
 	"material.iron": "Iron",
 	"material.gold": "Gold",
@@ -1364,7 +1365,10 @@
 	"crossroads.advancement.ignis_infernum.desc": "Unleash Hellfire",
 	"crossroads.advancement.hopper_hawk": "Not A Flower",
 	"crossroads.advancement.hopper_hawk.desc": "Create your animal sidekick",
+	"crossroads.advancement.happy_birthday": "And Many Many More",
+	"crossroads.advancement.happy_birthday.desc": "Celebrate Crossroads' 10-year Anniversary",
 
+	"jukebox_song.crossroads.happy_birthday": "Crossroads Anniversary",
 
 	"key.control_energy": "Item Energy Control",
 	"key.control_potential": "Item Potential Control",
