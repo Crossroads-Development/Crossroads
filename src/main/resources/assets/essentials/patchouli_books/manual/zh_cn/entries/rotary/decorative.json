@@ -1,7 +1,7 @@
 {
 	"category": "essentials:rotary",
 	"name": "美观结构",
-	"icon": "crossroads:gear_facade_stone_brick",
+	"icon": "crossroads:gear_facade",
 	"sortnum": 0,
 	"priority": false,
 	"read_by_default": "true",
@@ -9,7 +9,7 @@
 		{
 			"type": "patchouli:spotlight",
 			"title": "美观结构",
-			"item": "crossroads:gear_facade_stone_brick",
+			"item": "crossroads:gear_facade",
 			"text": "有几种能和<item>$(l:essentials:rotary/gear_base)齿轮、轴等/$放在同一方块空间内的装饰<thing>$(l:essentials:rotary/gear_base)结构/$。$(br2)"
 		},
 		{
@@ -40,9 +40,6 @@
 		}
 	],
 	"extra_recipe_mappings": {
-		"crossroads:gear_facade_stone_brick": 0,
-		"crossroads:gear_facade_iron": 0,
-		"crossroads:gear_facade_cobble": 0,
-		"crossroads:gear_facade_glass": 0
+		"crossroads:gear_facade": 0
 	}
 }
