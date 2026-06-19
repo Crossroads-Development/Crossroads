@@ -3,7 +3,7 @@
 	"format": 2,
 	"name": "Intro to Heat",
 	"icon": "crossroads:firebox",
-	"sortnum": 1,
+	"sortnum": 2,
 	"priority": true,
 	"read_by_default": "true",
 	"pages": [

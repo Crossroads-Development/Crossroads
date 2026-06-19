@@ -139,7 +139,7 @@ public class FluidTubeTileEntity extends BlockEntity implements ITickableTileEnt
 							tankHandler = (IFluidTank) otherHandler;
 						}else{
 							//We are not allowed to do bi-direction with this neighbor. Disconnect on this side
-							mode = EnumTransferMode.NONE;
+							mode = EnumTransferMode.OUTPUT;
 							break;
 						}
 

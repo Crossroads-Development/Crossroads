@@ -3,7 +3,7 @@
 	"format": 2,
 	"name": "Intro to Beams",
 	"icon": "crossroads:lens_array",
-	"sortnum": 4,
+	"sortnum": 5,
 	"priority": true,
 	"read_by_default": "true",
 	"pages": [

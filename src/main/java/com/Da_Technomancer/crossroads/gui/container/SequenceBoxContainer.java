@@ -1,5 +1,6 @@
 package com.Da_Technomancer.crossroads.gui.container;
 
+import com.Da_Technomancer.essentials.api.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -36,7 +37,7 @@ public class SequenceBoxContainer extends AbstractContainerMenu{
 
 	@Override
 	public boolean stillValid(Player playerIn){
-		return pos != null && pos.distSqr(playerIn.blockPosition()) <= 64;
+		return pos != null && BlockUtil.playerInRangeOfUI(playerIn, pos);
 	}
 
 	@Override

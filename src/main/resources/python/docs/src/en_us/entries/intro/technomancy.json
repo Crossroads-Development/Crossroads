@@ -3,7 +3,7 @@
 	"format": 2,
 	"name": "Intro to Technomancy",
 	"icon": "crossroads:module_goggles",
-	"sortnum": 6,
+	"sortnum": 7,
 	"priority": true,
 	"advancement": "crossroads:progress/path/technomancy",
 	"read_by_default": "true",

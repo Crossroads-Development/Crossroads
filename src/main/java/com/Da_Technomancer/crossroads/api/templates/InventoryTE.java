@@ -114,7 +114,7 @@ public abstract class InventoryTE extends ModuleTE implements RecipeInput, IItem
 
 	@Override
 	public boolean stillValid(Player player){
-		return level.getBlockEntity(worldPosition) == this && player.distanceToSqr(worldPosition.getX() + 0.5D, worldPosition.getY() + 0.5D, worldPosition.getZ() + 0.5D) <= 64;
+		return BlockUtil.playerInRangeOfUI(player, this);
 	}
 
 	@Override

@@ -3,7 +3,7 @@
 	"format": 2,
 	"name": "Intro to Rotary",
 	"icon": "crossroads:gear_base",
-	"sortnum": 2,
+	"sortnum": 3,
 	"priority": true,
 	"read_by_default": "true",
 	"pages": [
@@ -19,7 +19,7 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "Usually, a machine will consume a certain amount of <thing>energy/$ per operation, but have a minimum <thing>speed/$ to work. Most machines will work faster at higher <thing>speeds/$.$(br2)<item>$(l:essentials:rotary/gear_base)Gears and axles/$ can be connected together to transfer energy. Placing a <item>$(l:essentials:rotary/gear_base)small gear/$ next to a <item>$(l:essentials:rotary/gear_large)large gear/$ will cause the larger gear to spin slower than the small one- as you'ld expect.$(br2)"
+			"text": "Usually, a machine will consume a certain amount of <thing>energy/$ per operation, but have a minimum <thing>speed/$ to work. Most machines will work faster at higher <thing>speeds/$.$(br2)<item>$(l:essentials:rotary/gear_base)Gears and axles/$ can be connected together to transfer energy. Placing a <item>$(l:essentials:rotary/gear_base)small gear/$ next to a <item>$(l:essentials:rotary/gear_large)large gear/$ will cause the larger gear to spin slower than the small one as you'd expect.$(br2)"
 		},
 		{
 			"type": "patchouli:text",

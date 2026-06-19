@@ -3,7 +3,7 @@
 	"format": 2,
 	"name": "Intro to Fluids",
 	"icon": "crossroads:fluid_tube",
-	"sortnum": 3,
+	"sortnum": 4,
 	"priority": true,
 	"read_by_default": "true",
 	"pages": [

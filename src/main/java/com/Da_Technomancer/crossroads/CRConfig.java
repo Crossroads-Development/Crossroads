@@ -19,7 +19,6 @@ import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 import javax.annotation.Nullable;
-import java.text.DecimalFormat;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -337,39 +336,12 @@ public class CRConfig{
 	}
 
 	/**
-	 * Virtual client-side only - may crash otherwise
-	 * @param d Value to be formatted for display
-	 * @return String representing the number
-	 */
-	public static String formatValClient(double d){
-		return formatValClient((float) d);
-	}
-
-	/**
-	 * Virtual client-side only - may crash otherwise
-	 * @param f Value to be formatted for display
-	 * @return String representing the number
-	 */
-	public static String formatValClient(float f){
-		return ConfigUtil.formatFloat(f, null);
-	}
-
-	/**
-	 * Virtual client-side only - may crash otherwise
-	 * @param i Value to be formatted for display
-	 * @return String representing the number
-	 */
-	public static String formatValClient(int i){
-		return formatInteger(i, getNumberFormatClient());
-	}
-
-	/**
 	 * @param d Value to be formatted for display
 	 * @param player The player whose number-format preferences should be used. If null, falls back to scientific notation
 	 * @return String representing the number
 	 */
 	public static String formatVal(double d, @Nullable Player player){
-		return formatVal((float) d, player);
+		return ConfigUtil.formatDouble(d, getNumberFormat(player));
 	}
 
 	/**
@@ -387,49 +359,6 @@ public class CRConfig{
 	 * @return String representing the number
 	 */
 	public static String formatVal(int i, @Nullable Player player){
-		return formatInteger(i, getNumberFormat(player));
-	}
-
-	private static final DecimalFormat INTEGER_PLAIN = new DecimalFormat("0");
-	private static final DecimalFormat INTEGER_SCIENTIFIC = new DecimalFormat("0.000E0");
-	private static final DecimalFormat INTEGER_ENGINEERING = new DecimalFormat("##0.000E0");
-
-	private static String formatInteger(int i, ConfigUtil.NumberTypes format){
-		if(format == ConfigUtil.NumberTypes.HEX){
-			return Integer.toHexString(i);
-		}
-		final int absValue = Math.abs(i);
-		switch(format){
-			case SCIENTIFIC:
-				if(absValue >= 10000){
-					return INTEGER_SCIENTIFIC.format(i);
-				}
-				break;
-			case ENGINEERING:
-				if(absValue >= 10000){
-					return INTEGER_ENGINEERING.format(i);
-				}
-				break;
-		}
-
-		return INTEGER_PLAIN.format(i);
-	}
-
-	@Deprecated(forRemoval = true)
-	public static String formatVal(double d){
-		return formatVal((float) d);
-	}
-
-	@Deprecated(forRemoval = true)
-	public static String formatVal(float f){
-		// Works perfectly in singleplayer,
-		// But in multiplayer (or LAN), it doesn't always respect the config option (in the Essentials client config) for preferred number format
-		// This is because we're often formatting numbers on the server side, but the player's preferred number format setting only exists on the client
-		try{
-			return ConfigUtil.formatFloat(f, null);
-		}catch(IllegalStateException ignored){
-			//This occurs on dedicated server, because the Essentials client config (which defines preferred number format) isn't loaded
-		}
-		return ConfigUtil.formatFloat(f, ConfigUtil.NumberTypes.SCIENTIFIC);
+		return ConfigUtil.formatInteger(i, getNumberFormat(player));
 	}
 }

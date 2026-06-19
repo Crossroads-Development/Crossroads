@@ -3,7 +3,7 @@
 	"format": 2,
 	"name": "Intro to Bioengineering",
 	"icon": "crossroads:syringe[crossroads:extension_treated=true]",
-	"sortnum": 6,
+	"sortnum": 7,
 	"priority": true,
 	"advancement": "crossroads:progress/path/witchcraft",
 	"read_by_default": "true",

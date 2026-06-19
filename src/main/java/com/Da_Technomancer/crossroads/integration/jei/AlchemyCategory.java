@@ -1,11 +1,11 @@
 package com.Da_Technomancer.crossroads.integration.jei;
 
-import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.heat.HeatUtil;
 import com.Da_Technomancer.crossroads.crafting.AlchemyRec;
 import com.Da_Technomancer.crossroads.items.CRItems;
+import com.Da_Technomancer.essentials.api.ConfigUtil;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -77,9 +77,9 @@ public class AlchemyCategory implements IRecipeCategory<AlchemyRec>{
 		double maxTemp = recipe.maxTemp();
 		String line;
 		if(maxTemp <= Short.MAX_VALUE - 100){
-			line = MiscUtil.localize("crossroads.jei.alchemy.temp.dual", CRConfig.formatValClient(Math.max(recipe.minTemp(), HeatUtil.ABSOLUTE_ZERO)), CRConfig.formatValClient(maxTemp));
+			line = MiscUtil.localize("crossroads.jei.alchemy.temp.dual", ConfigUtil.formatNumberClient(Math.max(recipe.minTemp(), HeatUtil.ABSOLUTE_ZERO)), ConfigUtil.formatNumberClient(maxTemp));
 		}else{
-			line = MiscUtil.localize("crossroads.jei.alchemy.temp", CRConfig.formatValClient(Math.max(recipe.minTemp(), HeatUtil.ABSOLUTE_ZERO)));
+			line = MiscUtil.localize("crossroads.jei.alchemy.temp", ConfigUtil.formatNumberClient(Math.max(recipe.minTemp(), HeatUtil.ABSOLUTE_ZERO)));
 		}
 		matrix.drawString(fontRenderer, line, (int) (90 - fontRenderer.width(line) / 2F), 42, 0x404040, false);
 		line = recipe.deltaHeatPer() > 0 ? MiscUtil.localize("crossroads.jei.alchemy.cooling") : recipe.deltaHeatPer() < 0 ? MiscUtil.localize("crossroads.jei.alchemy.heating") : MiscUtil.localize("crossroads.jei.alchemy.no_temp_change");

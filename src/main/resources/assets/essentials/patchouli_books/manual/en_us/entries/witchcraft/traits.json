@@ -31,11 +31,11 @@
 		{
 			"type": "patchouli:text",
 			"anchor": "reincarnating",
-			"text": "<thing>Reincarnating/$ clones will come back from the dead when killed, respawning 30 seconds after being killed with full health. However, if killed again within 30 seconds of coming back, they stay dead forever. If killed with <thing>$(l:essentials:witchcraft/souls#transient)soul transience/$, they stay dead forever. Sometimes they just decide death is better (5% chance) and stay dead forever. They drop loot every time they are killed."
+			"text": "<thing>Reincarnating/$ clones will come back from the dead when killed, respawning 30 seconds after being killed with full health. However, if killed again within 30 seconds of coming back, they stay dead forever. If killed with <thing>$(l:essentials:witchcraft/souls#transient)soul transience/$, they stay dead forever. Sometimes they just decide death is better (5% chance) and stay dead forever. They drop loot "
 		},
 		{
 			"type": "patchouli:text",
-			"text": ""
+			"text": "every time they are killed."
 		},
 		{
 			"type": "patchouli:text",

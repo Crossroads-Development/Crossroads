@@ -57,7 +57,9 @@ public record SendOptionalSoundToClient(BlockPos pos, SoundEvent sound, SoundSou
 
 		ALWAYS(Predicates.alwaysTrue()),
 		NEVER(Predicates.alwaysFalse()),
-		BEAM_SOUND_CONFIG(pos -> CRConfig.beamSounds.getAsBoolean());
+		BEAM_SOUND_CONFIG(pos -> CRConfig.beamSounds.getAsBoolean()),
+		ELECTRIC_SOUND_CONFIG(pos -> CRConfig.electricSounds.getAsBoolean()),
+		FLUX_SOUND_CONFIG(pos -> CRConfig.fluxSounds.getAsBoolean());
 
 		public static final StreamCodec<RegistryFriendlyByteBuf, SoundCondition> STREAM_CODEC = ByteBufCodecs.fromCodecWithRegistries(StringRepresentable.fromEnum(SoundCondition::values));
 

@@ -2,7 +2,7 @@
 	"category": "essentials:intro",
 	"name": "Intro to Paths",
 	"icon": "crossroads:detailed_crafter",
-	"sortnum": 5,
+	"sortnum": 6,
 	"priority": true,
 	"read_by_default": "true",
 	"pages": [
@@ -10,33 +10,37 @@
 			"type": "patchouli:spotlight",
 			"title": "Intro to Paths",
 			"item": "crossroads:detailed_crafter",
-			"text": "Wait! This is a late-mid-game feature. By this point you should have used <thing>$(l:essentials:intro/beam)beams/$.$(br2)<thing>Alchemy/$, <thing>Technomancy/$, and <thing>Bioengineering/$ are the three <thing>paths/$ you can spec into. Unlock a path in the <item>Detailed Crafter/$. By default (config controlled- may have been changed in your modpack), you can unlock <em>one/$ <thing>path/$, "
+			"text": "Wait! This is a late-mid-game feature. By this point you should have used <thing>$(l:essentials:intro/beam)beams/$.$(br2)<thing>Alchemy/$, <thing>Technomancy/$, and <thing>Bioengineering/$ are the three <thing>paths/$ you can spec into. Unlock a path in the <item>Detailed Crafter/$. By default (config controlled- may have been changed "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "and can't unlock an additional <thing>path/$ until you complete a difficult advancement related to the <thing>path/$ you've already unlocked. When you unlock a <thing>path/$, you gain access to a huge number of new recipes, machines, and items. These recipes have to be made in a <item>Detailed Crafter/$, which is a special crafting table that can also craft <thing>path/$ specific recipes. In order to unlock your first <thing>path"
+			"text": "in your modpack), you can unlock <em>one/$ <thing>path/$, and can't unlock an additional <thing>path/$ until you complete a difficult advancement related to the <thing>path/$ you've already unlocked. When you unlock a <thing>path/$, you gain access to a huge number of new recipes, machines, and items. These recipes have to be made in a <item>Detailed Crafter/$, which is a special crafting table that "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<thing>/$, you <em>must/$ have discovered every <thing>$(l:essentials:intro/beam)alignment/$ (other than <thing>$(l:essentials:beam/void)void/$).$(br2)Every <thing>path/$ has specialities- things only it can do. Not all <thing>paths/$ are equally powerful overall, or equally difficult.$(br2)"
+			"text": "can also craft <thing>path/$ specific recipes. In order to unlock your first <thing>path/$, you <em>must/$ have discovered every <thing>$(l:essentials:intro/beam)alignment/$ (other than <thing>$(l:essentials:beam/void)void/$).$(br2)Every <thing>path/$ has specialities- things only it can do. Not all <thing>paths/$ are equally powerful overall, or equally difficult.$(br2)"
 		},
 		{
 			"type": "patchouli:text",
 			"anchor": "alchemy",
-			"text": "<thing>Alchemy/$ is a <thing>path/$ all about chemistry, materials, and transmutation. It adds a new crafting system based on chemical reactions. <thing>Alchemy/$ allows mass producing gems and metals, making special new super-dense materials that allow controlling gravity, doing terraforming and biome changing, and generally manipulating the forces of nature on a massive scale.$(br2)While <thing>Alchemy/$ is powerful, "
+			"text": "<thing>Alchemy/$ is a <thing>path/$ all about chemistry, materials, and transmutation. It adds a new crafting system based on chemical reactions. <thing>Alchemy/$ allows mass producing gems and metals, making special new super-dense materials that allow controlling gravity, doing terraforming and biome changing, and generally manipulating the forces of nature on a massive scale.$(br2)While "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "and probably the most straightforward <thing>path/$, it is also dangerous. Mix the wrong endgame chemicals, or spill something unusually dangerous, and you could wipe out your base and the surrounding landscape. It also takes longer to get the most powerful things in <thing>alchemy/$- parts of <thing>alchemy/$ are locked behind obtaining first the <item>Philosopher's Stone/$, and later the <item>Practitioner's Stone/$."
+			"text": "<thing>Alchemy/$ is powerful, and probably the most straightforward <thing>path/$, it is also dangerous. Mix the wrong endgame chemicals, or spill something unusually dangerous, and you could wipe out your base and the surrounding landscape. It also takes longer to get the most powerful things in <thing>alchemy/$- parts of <thing>alchemy/$ are locked behind obtaining first the <item>Philosopher's "
+		},
+		{
+			"type": "patchouli:text",
+			"text": "<item>Stone/$, and later the <item>Practitioner's Stone/$."
 		},
 		{
 			"type": "patchouli:text",
 			"anchor": "technomancy",
-			"text": "<thing>Technomancy/$ is a <thing>path/$ about time manipulation and high-power, high-risk systems. It is also the path with the most cool gadgets. It allows manipulating time in an area, and is fairly simple to start with, but making even a small mistake <em>has drastic consequences/$ (unlike <thing>Alchemy/$, where small mistakes have small consequences).$(br2)<thing>Technomancy/$ also allows much more precise control "
+			"text": "<thing>Technomancy/$ is a <thing>path/$ about time manipulation and high-power, high-risk systems. It is also the path with the most cool gadgets. It allows manipulating time in an area, and is fairly simple to start with, but making even a small mistake <em>has drastic consequences/$ (unlike <thing>Alchemy/$, where small mistakes have small consequences).$(br2)<thing>Technomancy/$ also allows "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "over <thing>$(l:essentials:intro/rotary)rotary/$ systems, making it possible to dramatically simplify and improve existing <thing>$(l:essentials:intro/rotary)rotary/$ setups. Most machines in <thing>Technomancy/$ require having at least one nether star (but won't consume it)."
+			"text": "much more precise control over <thing>$(l:essentials:intro/rotary)rotary/$ systems, making it possible to dramatically simplify and improve existing <thing>$(l:essentials:intro/rotary)rotary/$ setups. Most machines in <thing>Technomancy/$ require having at least one nether star (but won't consume it)."
 		},
 		{
 			"type": "patchouli:text",

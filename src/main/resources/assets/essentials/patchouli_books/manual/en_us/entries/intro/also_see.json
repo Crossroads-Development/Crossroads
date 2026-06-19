@@ -1,0 +1,41 @@
+{
+	"category": "essentials:intro",
+	"name": "Also See...",
+	"icon": "minecraft:writable_book",
+	"sortnum": 1,
+	"priority": true,
+	"read_by_default": "true",
+	"pages": [
+		{
+			"type": "patchouli:link",
+			"anchor": "discord",
+			"text": "Show off your builds, ask for help, or make suggestions on the mod's Discord.",
+			"url": "https://discord.gg/6g47knp",
+			"link_text": "Mod Discord"
+		},
+		{
+			"type": "patchouli:link",
+			"anchor": "crossroads_github",
+			"link_text": "Crossroads Github",
+			"url": "https://github.com/Crossroads-Development/Crossroads",
+			"text": "Report bugs or make suggestions on the Crossroads Github page. $(br2)$(l:essentials:essentials/welcome#essentials_github)Click Here for Essentials issues/$"
+		},
+		{
+			"type": "patchouli:link",
+			"anchor": "novel",
+			"text": "<thing>Death & Taxes/$ is a bureaucratic comedic-fantasy novel written by the dev. If you like reading or want to inflict it on someone else, check it out now!$(br2)Available in paperback and eBook from all the best sellers of books (and also Amazon).",
+			"url": "https://www.amazon.com/Death-Taxes-Stop-Max-Daniel-ebook/dp/B0GHV63P7H/",
+			"link_text": "Read More"
+		},
+		{
+			"type": "patchouli:image",
+			"images": [
+				"essentials:textures/book/death_and_taxes.png"
+			],
+			"border": "true",
+			"title": "Death & Taxes!",
+			"text": "Free sample chapters are on the store page"
+		}
+	],
+	"extra_recipe_mappings": {}
+}

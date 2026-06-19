@@ -305,7 +305,7 @@ def parseBody(text: [str, ...], icon: str, title: str, indents: int) -> tuple[st
 
 	lineSt = '\t' * indents  # Placed at the beginning of every line- for indentation
 	output = ''  # Final output string
-	pageCharLimit = {'text': 380, 'spotlight': 300, 'image': 80, 'entity': 80}
+	pageCharLimit = {'text': 350, 'spotlight': 250, 'image': 80, 'entity': 80}
 	charPerNewline = 45  # Number of characters to consider a newline
 	jsonWriters = {'text': writeTextPage, 'spotlight': writeSpotlightPage, 'image': writeImagePage, 'entity': writeEntityPage}
 

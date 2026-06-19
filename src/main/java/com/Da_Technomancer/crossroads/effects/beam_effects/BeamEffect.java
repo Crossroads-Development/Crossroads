@@ -1,12 +1,11 @@
 package com.Da_Technomancer.crossroads.effects.beam_effects;
 
-import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
-import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.beams.BeamHit;
 import com.Da_Technomancer.crossroads.api.beams.BeamUnit;
 import com.Da_Technomancer.crossroads.api.beams.EnumBeamAlignments;
 import com.Da_Technomancer.crossroads.api.beams.IBeamHandler;
+import com.Da_Technomancer.crossroads.api.packets.SendOptionalSoundToClient;
 import com.Da_Technomancer.crossroads.crafting.BeamTransmuteRec;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.integration.curios.CurioHelper;
@@ -16,7 +15,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
@@ -67,10 +65,8 @@ public class BeamEffect{
 		Optional<RecipeHolder<BeamTransmuteRec>> recipe = recipes.parallelStream().filter(rec -> rec.value().canApply(align, voi, power, state)).findAny();
 		if(recipe.isPresent()){
 			beamHit.getWorld().setBlockAndUpdate(beamHit.getPos(), recipe.get().value().getOutput().defaultBlockState());
-			if(CRConfig.beamSounds.get()){
-				//Play a sound
-				CRSounds.playSoundServer(beamHit.getWorld(), beamHit.getPos(), CRSounds.BEAM_TRANSMUTE, SoundSource.BLOCKS, 0.5F, 1F);
-			}
+			//Play a sound
+			CRSounds.playSoundServer(beamHit.getWorld(), beamHit.getPos(), CRSounds.BEAM_TRANSMUTE, SoundSource.BLOCKS, 0.5F, 1F, SendOptionalSoundToClient.SoundCondition.BEAM_SOUND_CONFIG);
 			return true;
 		}
 

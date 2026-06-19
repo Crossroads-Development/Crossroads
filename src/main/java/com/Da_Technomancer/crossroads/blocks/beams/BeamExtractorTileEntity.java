@@ -164,7 +164,7 @@ public class BeamExtractorTileEntity extends BeamRenderTE implements RecipeInput
 
 	@Override
 	public boolean stillValid(Player player){
-		return level.getBlockEntity(worldPosition) == this && player.distanceToSqr(worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5) <= 64;
+		return BlockUtil.playerInRangeOfUI(player, this);
 	}
 
 	@Override

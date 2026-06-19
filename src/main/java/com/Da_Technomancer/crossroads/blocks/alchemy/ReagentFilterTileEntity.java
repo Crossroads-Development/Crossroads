@@ -202,7 +202,7 @@ public class ReagentFilterTileEntity extends ReagentHolderTE implements MenuProv
 
 	@Override
 	public boolean stillValid(Player player){
-		return level.getBlockEntity(worldPosition) == this && player.distanceToSqr(worldPosition.getX() + 0.5D, worldPosition.getY() + 0.5D, worldPosition.getZ() + 0.5F) <= 64;
+		return BlockUtil.playerInRangeOfUI(player, this);
 	}
 
 	@Override

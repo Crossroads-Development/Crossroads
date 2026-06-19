@@ -14,15 +14,15 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "The fourth resource in <thing>$(l:essentials:intro/beam)beams/$ is <thing>Void/$. <thing>Void/$ is black- unlike the three other resources of <thing>energy/$, <thing>potential/$, and <thing>stability/$ which are primary colors. Adding <thing>void/$ to a beam will not affect the <thing>alignment/$ of the beam normally, but instead even a single point of <thing>void/$ will make it act as a special <thing>void alignment/$, which acts in the opposite way as normal.$(br2)For example, while the <thing>energy"
+			"text": "The fourth resource in <thing>$(l:essentials:intro/beam)beams/$ is <thing>Void/$. <thing>Void/$ is black- unlike the three other resources of <thing>energy/$, <thing>potential/$, and <thing>stability/$ which are primary colors. Adding <thing>void/$ to a beam will not affect the <thing>alignment/$ of the beam normally, but instead even a single point of <thing>void/$ will make it act as a special <thing>void alignment/$, which acts in the opposite way as normal.$(br2)For "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<thing>/$ alignment produces heat, the void-energy (called <thing>cold/$) <thing>alignment/$ removes heat.$(br2)<thing>Void/$ is produced by sending any beam through a <item>$(l:essentials:beam/frame)lens frame/$ with a <item>$(l:essentials:intro/ores)void crystal/$. The entire <thing>power/$ of the original beam will be converted to <thing>void/$.$(br2)Note: If using the 'transparent beams' config option, <thing>Void/$ makes the beam visually more transparent instead of darker, and a pure <thing>void/$ beam is <em>totally "
+			"text": "example, while the <thing>energy/$ alignment produces heat, the void-energy (called <thing>cold/$) <thing>alignment/$ removes heat.$(br2)<thing>Void/$ is produced by sending any beam through a <item>$(l:essentials:beam/frame)lens frame/$ with a <item>$(l:essentials:intro/ores)void crystal/$. The entire <thing>power/$ of the original beam will be converted to <thing>void/$.$(br2)Note: If using the 'transparent beams' config option, <thing>Void/$ makes the beam visually more transparent "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<em>invisible/$.$(br2)"
+			"text": "instead of darker, and a pure <thing>void/$ beam is <em>totally invisible/$.$(br2)"
 		},
 		{
 			"type": "patchouli:text",

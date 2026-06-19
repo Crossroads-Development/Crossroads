@@ -86,6 +86,8 @@ def processFile(fileText: str):
 						if 'advancement' in page:
 							newPage['advancement'] = page['advancement']
 						newPages.append(newPage)
+				else:
+					newPages.append(page)
 			resultJson['pages'] = newPages
 
 			if 'extra_recipe_mappings' in srcJson:
@@ -190,7 +192,7 @@ def parsePageText(srcPageText: str, sourcePageType: str) -> list[str]:
 	"""
 
 	pages = []
-	pageCharLimit = {'patchouli:text': 380, 'patchouli:spotlight': 300, 'patchouli:image': 80, 'patchouli:entity': 80}
+	pageCharLimit = {'patchouli:text': 350, 'patchouli:spotlight': 250, 'patchouli:image': 80, 'patchouli:entity': 80}
 	fallbackCharLimit = 300
 
 	pageType = sourcePageType

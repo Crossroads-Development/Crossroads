@@ -11,11 +11,11 @@
 			"type": "patchouli:spotlight",
 			"title": "Fluid Injector",
 			"item": "crossroads:fluid_injector",
-			"text": "The <item>Fluid Injector/$ is an automated way to convert between fluids and liquid-phase <thing>$(l:essentials:intro/alchemy)alchemy reagents/$. It connects to a fluid pipe on the top and a <item>$(l:essentials:alchemy/conduit)alchemy conduit/$ on the bottom. It can convert in either direction, and 1 unit of <thing>$(l:essentials:intro/alchemy)alchemy reagent/$ is worth more than 1mB of fluid. Added <thing>$(l:essentials:intro/alchemy)reagents/$ will be added "
+			"text": "The <item>Fluid Injector/$ is an automated way to convert between fluids and liquid-phase <thing>$(l:essentials:intro/alchemy)alchemy reagents/$. It connects to a fluid pipe on the top and a <item>$(l:essentials:alchemy/conduit)alchemy conduit/$ on the bottom. It can convert in either direction, and 1 unit of <thing>$(l:essentials:intro/alchemy)alchemy reagent/$ is worth "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "at a temperature it would be liquid at.$(br2)"
+			"text": "more than 1mB of fluid. Added <thing>$(l:essentials:intro/alchemy)reagents/$ will be added at a temperature it would be liquid at.$(br2)"
 		},
 		{
 			"type": "patchouli:text",

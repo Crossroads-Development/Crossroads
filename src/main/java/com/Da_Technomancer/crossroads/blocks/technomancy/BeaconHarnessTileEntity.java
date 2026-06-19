@@ -10,6 +10,7 @@ import com.Da_Technomancer.crossroads.api.templates.BeamRenderTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.crossroads.gui.container.BeaconHarnessContainer;
+import com.Da_Technomancer.essentials.api.BlockUtil;
 import com.Da_Technomancer.essentials.api.ILinkTE;
 import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
@@ -304,7 +305,7 @@ public class BeaconHarnessTileEntity extends BeamRenderTE implements IFluxLink, 
 
 	@Override
 	public boolean stillValid(Player player){
-		return level.getBlockEntity(worldPosition) == this && player.distanceToSqr(worldPosition.getX() + 0.5D, worldPosition.getY() + 0.5D, worldPosition.getZ() + 0.5D) <= 64;
+		return BlockUtil.playerInRangeOfUI(player, this);
 	}
 
 	@Override

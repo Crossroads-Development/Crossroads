@@ -2,9 +2,9 @@ package com.Da_Technomancer.crossroads.gui.container;
 
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
-import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.crafting.CRRecipes;
 import com.Da_Technomancer.crossroads.crafting.DetailedCrafterRec;
+import com.Da_Technomancer.essentials.api.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.Registries;
@@ -33,15 +33,15 @@ import java.util.List;
 public class DetailedCrafterContainer extends RecipeBookMenu<CraftingInput, CraftingRecipe>{
 
 
-	@SuppressWarnings("unchecked")
-	private static final TagKey<Item>[] unlockKeys = new TagKey[3];
-	private static final TagKey<Item> fillerMats = CraftingUtil.getTagKey(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "path_unlock_filler"));
-
-	static{
-		unlockKeys[0] = CraftingUtil.getTagKey(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "technomancy_unlock_key"));
-		unlockKeys[1] = CraftingUtil.getTagKey(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "alchemy_unlock_key"));
-		unlockKeys[2] = CraftingUtil.getTagKey(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "witchcraft_unlock_key"));
-	}
+//	@SuppressWarnings("unchecked")
+//	private static final TagKey<Item>[] unlockKeys = new TagKey[3];
+//	private static final TagKey<Item> fillerMats = CraftingUtil.getTagKey(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "path_unlock_filler"));
+//
+//	static{
+//		unlockKeys[0] = CraftingUtil.getTagKey(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "technomancy_unlock_key"));
+//		unlockKeys[1] = CraftingUtil.getTagKey(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "alchemy_unlock_key"));
+//		unlockKeys[2] = CraftingUtil.getTagKey(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "witchcraft_unlock_key"));
+//	}
 
 	private final CraftingContainer inInv = new TransientCraftingContainer(this, 3, 3);
 	private final ResultContainer outInv = new ResultContainer();
@@ -119,7 +119,7 @@ public class DetailedCrafterContainer extends RecipeBookMenu<CraftingInput, Craf
 
 	@Override
 	public boolean stillValid(Player playerIn){
-		return fake || pos == null || playerIn.level().getBlockState(pos).getBlock() == CRBlocks.detailedCrafter && playerIn.distanceToSqr((pos.getX()) + .5D, (pos.getY()) + .5D, (pos.getZ()) + .5D) <= 64;
+		return fake || pos == null || BlockUtil.playerInRangeOfUI(player, pos);
 	}
 
 	/**

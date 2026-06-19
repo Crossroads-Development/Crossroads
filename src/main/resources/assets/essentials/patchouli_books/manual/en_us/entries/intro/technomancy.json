@@ -2,7 +2,7 @@
 	"category": "essentials:intro",
 	"name": "Intro to Technomancy",
 	"icon": "crossroads:module_goggles",
-	"sortnum": 6,
+	"sortnum": 7,
 	"priority": true,
 	"advancement": "crossroads:progress/path/technomancy",
 	"read_by_default": "true",
@@ -11,15 +11,15 @@
 			"type": "patchouli:spotlight",
 			"title": "Intro to Technomancy",
 			"item": "crossroads:module_goggles",
-			"text": "Most <thing>Technomancy/$ machines produce <thing>Temporal Entropy/$ instead of using power. <thing>Temporal Entropy/$ is a <em>reverse power system/$- instead of generators making power and machines using it, machines make <thing>Temporal Entropy/$ and 'generators' destroy it. If anything fills with <thing>Temporal Entropy/$, the machine will overload "
+			"text": "Most <thing>Technomancy/$ machines produce <thing>Temporal Entropy/$ instead of using power. <thing>Temporal Entropy/$ is a <em>reverse power system/$- instead of generators making power and machines using it, machines make <thing>Temporal Entropy/$ and 'generators' destroy it. If anything fills "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "and shut down until it's cleared out all entropy. $(br2)<thing>Temporal Entropy/$ can be easily destroyed in an <item>$(l:essentials:technomancy/sink)Entropy Sink/$, which must be placed over a beacon to work. <thing>Temporal Entropy/$ can be transmitted using <item>$(l:essentials:technomancy/node)Entropy Nodes/$. <thing>Temporal Entropy/$ is produced, transferred, and destroyed on a per-cycle basis (one cycle=4 game ticks=2 redstone ticks=0.2 seconds). These are the same cycles that "
+			"text": "with <thing>Temporal Entropy/$, the machine will overload and shut down until it's cleared out all entropy. $(br2)<thing>Temporal Entropy/$ can be easily destroyed in an <item>$(l:essentials:technomancy/sink)Entropy Sink/$, which must be placed over a beacon to work. <thing>Temporal Entropy/$ can be transmitted using <item>$(l:essentials:technomancy/node)Entropy Nodes/$. <thing>Temporal Entropy/$ is produced, transferred, and destroyed on a per-cycle basis (one cycle=4 "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<thing>$(l:essentials:intro/beam)beams/$ use.$(br2)Most <thing>Technomancy/$ machines and items require a material called <item>$(l:essentials:technomancy/copshowium)Copshowium/$ to craft. It's worth getting a decent supply before starting.$(br2)A good first <thing>Technomancy/$ machine is the <item>$(l:essentials:technomancy/beacon_harness)Beacon Harness/$, which produces massive amounts of <thing>$(l:essentials:intro/beam)beams/$ cheaply.$(br2)"
+			"text": "game ticks=2 redstone ticks=0.2 seconds). These are the same cycles that <thing>$(l:essentials:intro/beam)beams/$ use.$(br2)Most <thing>Technomancy/$ machines and items require a material called <item>$(l:essentials:technomancy/copshowium)Copshowium/$ to craft. It's worth getting a decent supply before starting.$(br2)A good first <thing>Technomancy/$ machine is the <item>$(l:essentials:technomancy/beacon_harness)Beacon Harness/$, which produces massive amounts of <thing>$(l:essentials:intro/beam)beams/$ cheaply.$(br2)"
 		}
 	],
 	"extra_recipe_mappings": {}

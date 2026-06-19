@@ -11,19 +11,19 @@
 			"type": "patchouli:spotlight",
 			"title": "Acids & Aqua Regia",
 			"item": "crossroads:solid_regia",
-			"text": "<thing>Alchemy/$ adds four different reagents that are acids: <item>Vitriol Salt (Sulfuric Acid)/$, <item>Muriatic Salt (Hydrochloric Acid)/$, <item>Aziotic Salt (Nitric Acid)/$, and <item>Regia Salt (Aqua Regia)/$. Three of these (Sulfuric, Muriatic, and Aziotic) act identically. <item>Aqua Regia/$ is more powerful than the other three, and allows "
+			"text": "<thing>Alchemy/$ adds four different reagents that are acids: <item>Vitriol Salt (Sulfuric Acid)/$, <item>Muriatic Salt (Hydrochloric Acid)/$, <item>Aziotic Salt (Nitric Acid)/$, and <item>Regia Salt (Aqua Regia)/$. Three of these (Sulfuric, Muriatic, and Aziotic) act identically. <item>Aqua Regia"
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<em>breaking bedrock/$ and getting <item>Bedrock Dust/$.$(br2)The three normal acids have the same <thing>$(l:essentials:alchemy/effect)effect/$: They deal 8 damage to any entity they hit, and will break metal blocks other than gold.$(br2)"
+			"text": "<item>/$ is more powerful than the other three, and allows <em>breaking bedrock/$ and getting <item>Bedrock Dust/$.$(br2)The three normal acids have the same <thing>$(l:essentials:alchemy/effect)effect/$: They deal 8 damage to any entity they hit, and will break metal blocks other than gold.$(br2)"
 		},
 		{
 			"type": "patchouli:text",
-			"text": "<item>Aqua Regia/$ will do 12 damage to hit entities, and will break metal blocks (including gold). Much more importantly, any bedrock that <item>aqua regia/$ hits will be broken, dropping 1 <item>Bedrock Dust/$, an important reagent.$(br2)As <thing>aqua regia/$ can be expensive and you will need a lot of <item>bedrock dust/$, it suggested to mix it with a cheap liquid (like water) to splash the <thing>$(l:essentials:alchemy/effect)effect/$ over a large area. "
+			"text": "<item>Aqua Regia/$ will do 12 damage to hit entities, and will break metal blocks (including gold). Much more importantly, any bedrock that <item>aqua regia/$ hits will be broken, dropping 1 <item>Bedrock Dust/$, an important reagent.$(br2)As <thing>aqua regia/$ can be expensive and you will need a lot of <item>bedrock dust/$, it suggested to mix it with a cheap liquid (like water) to splash "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "See the <thing>$(l:essentials:alchemy/effect)effects/$ page for full details.$(br2)"
+			"text": "the <thing>$(l:essentials:alchemy/effect)effect/$ over a large area. See the <thing>$(l:essentials:alchemy/effect)effects/$ page for full details.$(br2)"
 		},
 		{
 			"type": "patchouli:text",

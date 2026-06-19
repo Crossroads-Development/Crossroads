@@ -11,11 +11,11 @@
 			"type": "patchouli:spotlight",
 			"title": "Detailed Auto-Crafter",
 			"item": "crossroads:detailed_auto_crafter",
-			"text": "The <item>Detailed Auto-Crafter/$ is an upgraded Crafter that can craft <item>$(l:essentials:intro/path)Detailed Crafter/$ specific recipes from any <thing>$(l:essentials:intro/path)path/$.$(br2)It <em>can not/$ craft normal crafting table recipes- only <thing>$(l:essentials:intro/path)path/$ specific recipes. There is a <em>sigil slot/$ in the UI (below the arrow) that takes a <thing>path sigil/$. The <thing>path sigil/$ isn't consumed, but "
+			"text": "The <item>Detailed Auto-Crafter/$ is an upgraded Crafter that can craft <item>$(l:essentials:intro/path)Detailed Crafter/$ specific recipes from any <thing>$(l:essentials:intro/path)path/$.$(br2)It <em>can not/$ craft normal crafting table recipes- only <thing>$(l:essentials:intro/path)path/$ specific recipes. There is a <em>sigil slot/$ in the UI (below the arrow) that takes "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "is required to craft recipes from that <thing>$(l:essentials:intro/path)path/$. Once a <thing>path sigil/$ has been used once, it can only be used again for that specific recipe."
+			"text": "a <thing>path sigil/$. The <thing>path sigil/$ isn't consumed, but is required to craft recipes from that <thing>$(l:essentials:intro/path)path/$. Once a <thing>path sigil/$ has been used once, it can only be used again for that specific recipe."
 		}
 	],
 	"extra_recipe_mappings": {

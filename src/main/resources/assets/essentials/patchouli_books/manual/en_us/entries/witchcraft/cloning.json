@@ -11,25 +11,29 @@
 			"type": "patchouli:spotlight",
 			"title": "Cloning",
 			"item": "crossroads:embryo",
-			"text": "So, you've decided to play God.$(br)<thing>Cloning/$ allows cheaply mass-producing almost any mob (other than bosses), and creating custom variants with special traits.$(br2)Potential applications for cloning include: Mass-production of mob drops, creating hordes of super-strong pets, creating the ultimate mount, "
+			"text": "So, you've decided to play God.$(br)<thing>Cloning/$ allows cheaply mass-producing almost any mob (other than bosses), and creating custom variants with special traits.$(br2)Potential applications for cloning include: Mass-production of mob drops, creating hordes "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "and more.$(br2)"
+			"text": "of super-strong pets, creating the ultimate mount, and more.$(br2)"
 		},
 		{
 			"type": "patchouli:text",
 			"anchor": "attributes",
-			"text": "Clones have two stats: Quality and Complexity. Complexity is how complex a mob you're trying to create, Quality is how good a job you've done creating it. As long as Quality is higher than Complexity, no problems. For simple clones, you can skip some processing steps completely. If Complexity gets higher than Quality, clones start having health issues and may even be completely "
+			"text": "Clones have two stats: Quality and Complexity. Complexity is how complex a mob you're trying to create, Quality is how good a job you've done creating it. As long as Quality is higher than Complexity, no problems. For simple clones, you can skip some processing steps completely. If Complexity gets higher than Quality, clones start having health issues "
 		},
 		{
 			"type": "patchouli:text",
-			"text": "non-viable. Clones can have special <thing>$(l:essentials:witchcraft/traits)Traits/$ added to them to make them more useful."
+			"text": "and may even be completely non-viable. Clones can have special <thing>$(l:essentials:witchcraft/traits)Traits/$ added to them to make them more useful."
 		},
 		{
 			"type": "patchouli:text",
 			"anchor": "process",
-			"text": "Step 1: Take a <item>$(l:essentials:witchcraft/syringe#blood)blood sample/$ from the mob being <thing>cloned/$.$(br2)Step 2 (optional): Use a <item>$(l:essentials:witchcraft/blood_centrifuge)blood centrifuge/$ to increase the Quality.$(br2)Step 3: Use an <item>$(l:essentials:witchcraft/embryo_lab)Life-Spark Capsule/$ to add <thing>$(l:essentials:witchcraft/traits)Traits/$ and create an <item>embryo/$.$(br2)Step 4 (optional): Use a <item>$(l:essentials:witchcraft/cultivator_vat)nutrition vat/$ to preserve and duplicate your <item>embryo/$.$(br2)Step 5: Use an <item>$(l:essentials:witchcraft/incubator)incubator/$ to make <item>spawn eggs/$ and increase the <thing>Quality/$ further."
+			"text": "Step 1: Take a <item>$(l:essentials:witchcraft/syringe#blood)blood sample/$ from the mob being <thing>cloned/$.$(br2)Step 2 (optional): Use a <item>$(l:essentials:witchcraft/blood_centrifuge)blood centrifuge/$ to increase the Quality.$(br2)Step 3: Use an <item>$(l:essentials:witchcraft/embryo_lab)Life-Spark Capsule/$ to add <thing>$(l:essentials:witchcraft/traits)Traits/$ and create an <item>embryo/$.$(br2)Step 4 (optional): Use a <item>$(l:essentials:witchcraft/cultivator_vat)nutrition vat/$ to preserve and duplicate your <item>embryo/$.$(br2)Step 5: Use an <item>$(l:essentials:witchcraft/incubator)incubator/$ to make <item>spawn eggs/$ and increase the "
+		},
+		{
+			"type": "patchouli:text",
+			"text": "<thing>Quality/$ further."
 		}
 	],
 	"extra_recipe_mappings": {}

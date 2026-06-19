@@ -3,7 +3,7 @@
 	"format": 2,
 	"name": "Intro to Paths",
 	"icon": "crossroads:detailed_crafter",
-	"sortnum": 5,
+	"sortnum": 6,
 	"priority": true,
 	"read_by_default": "true",
 	"pages": [
