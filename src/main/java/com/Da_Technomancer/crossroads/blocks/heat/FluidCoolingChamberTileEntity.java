@@ -166,7 +166,7 @@ public class FluidCoolingChamberTileEntity extends InventoryTE implements IHeatC
 	@Override
 	@Nullable
 	public IHeatHandler getHeatHandler(Direction direction){
-		if (direction.equals(Direction.UP)) {
+		if(direction == null || direction == Direction.UP) {
 			return heatHandler;
 		}
 		return null;
