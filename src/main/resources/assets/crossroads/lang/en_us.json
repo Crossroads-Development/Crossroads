@@ -379,6 +379,7 @@
 	"entity.crossroads.hopper_hawk": "Hopper Hawk",
 
 
+	"tt.crossroads.omnimeter.desc": "Hold in either hand to get information when looking at a machine",
 	"tt.crossroads.salt_block": "Kills plants and slimes around it",
 	"tt.crossroads.salt_block.quip": "Because who needs plants?",
 	"tt.crossroads.meter.fluid_tank.single": "1 internal tank",
@@ -1364,6 +1365,12 @@
 	"crossroads.advancement.ignis_infernum.desc": "Unleash Hellfire",
 	"crossroads.advancement.hopper_hawk": "Not A Flower",
 	"crossroads.advancement.hopper_hawk.desc": "Create your animal sidekick",
+	"crossroads.advancement.guide_book": "All in the Manual",
+	"crossroads.advancement.guide_book.desc": "Read the Crossroads & Essentials Guidebook",
+	"crossroads.advancement.circuits": "Redstone Made Easy",
+	"crossroads.advancement.circuits.desc": "Use a Circuit Wrench for compact redstone logic",
+	"crossroads.advancement.omnimeter": "Facts and Figures",
+	"crossroads.advancement.omnimeter.desc": "Hold an Omnimeter to take measurements from machines",
 
 
 	"key.control_energy": "Item Energy Control",

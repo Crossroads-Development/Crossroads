@@ -1,0 +1,33 @@
+{
+	"parent": "crossroads:progress/root",
+	"display": {
+		"icon": {
+			"id": "essentials:guide_book"
+		},
+		"title": {
+			"translate": "crossroads.advancement.guide_book"
+		},
+		"description": {
+			"translate": "crossroads.advancement.guide_book.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"has_item": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "essentials:guide_book"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_item"
+		]
+	]
+}

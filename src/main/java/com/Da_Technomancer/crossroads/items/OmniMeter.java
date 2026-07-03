@@ -17,6 +17,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
@@ -25,6 +26,7 @@ import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class OmniMeter extends Item{
 
@@ -32,6 +34,11 @@ public class OmniMeter extends Item{
 		super(new Item.Properties().stacksTo(1));
 		String name = "omnimeter";
 		CRItems.queueForRegister(name, this);
+	}
+
+	@Override
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
+		tooltip.add(Component.translatable("tt.crossroads.omnimeter.desc"));
 	}
 
 	public static final int CHAT_ID = 279478;//Value chosen at random

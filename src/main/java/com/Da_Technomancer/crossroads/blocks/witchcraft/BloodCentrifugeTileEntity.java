@@ -37,7 +37,7 @@ public class BloodCentrifugeTileEntity extends InventoryTE implements IAxleCapab
 	public static final double HIGH_SPEED = 10;
 	public static final int REQUIRED = 100;
 	public static final int INERTIA = 100;
-	public static final double MAX_ADDED_QUALITY = 50;
+	public static final double MAX_ADDED_QUALITY = 55;
 
 	private int progress = 0;
 	private double deviation = 0;

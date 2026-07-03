@@ -1,0 +1,46 @@
+{
+	"parent": "crossroads:progress/root",
+	"display": {
+		"icon": {
+			"id": "essentials:circuit_wrench"
+		},
+		"title": {
+			"translate": "crossroads.advancement.circuits"
+		},
+		"description": {
+			"translate": "crossroads.advancement.circuits.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"has_item_wrench": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "essentials:circuit_wrench"
+					}
+				]
+			}
+		},
+		"has_item_plate": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "essentials:wire_circuit"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_item_wrench"
+		],
+		[
+			"has_item_plate"
+		]
+	]
+}

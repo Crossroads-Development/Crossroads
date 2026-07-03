@@ -1,0 +1,33 @@
+{
+	"parent": "crossroads:progress/misc/heat_cables",
+	"display": {
+		"icon": {
+			"id": "crossroads:omnimeter"
+		},
+		"title": {
+			"translate": "crossroads.advancement.omnimeter"
+		},
+		"description": {
+			"translate": "crossroads.advancement.omnimeter.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true
+	},
+	"criteria": {
+		"has_item": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "crossroads:omnimeter"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_item"
+		]
+	]
+}
