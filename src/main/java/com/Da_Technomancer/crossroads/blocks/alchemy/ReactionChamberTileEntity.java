@@ -71,6 +71,10 @@ public class ReactionChamberTileEntity extends ReagentHolderTE implements IHeatC
 
 	public void setMap(ReagentMap map){
 		contents = map;
+		if(contents.getTotalQty() > 0){
+			//Force cable temperature to bottle temperature, prevents averaging with previous temperature
+			heatHandler.setTemp(contents.getTempC());
+		}
 		dirtyReag = true;
 	}
 
