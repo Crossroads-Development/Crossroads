@@ -2,11 +2,11 @@ package com.Da_Technomancer.crossroads.blocks.rotary.mechanisms;
 
 import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
-import com.Da_Technomancer.essentials.api.MathUtil;
 import com.Da_Technomancer.crossroads.api.render.CRRenderUtil;
 import com.Da_Technomancer.crossroads.api.rotary.*;
 import com.Da_Technomancer.crossroads.items.CRItems;
 import com.Da_Technomancer.crossroads.render.tesr.CRModels;
+import com.Da_Technomancer.essentials.api.MathUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -98,10 +98,13 @@ public class MechanismSmallGear implements IMechanism<CRMaterialLibrary.GearMate
 	}
 
 	protected void propagateCogs(IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis, MechanismTileEntity te, IMechanismAxleHandler handler, IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius){
+		ICogHandler cogHandler;
+
 		//Other internal gears
-		for(int i = 0; i < 6; i++){
-			if(i != side.get3DDataValue() && i != side.getOpposite().get3DDataValue() && te.members[i] != null && te.members[i].hasCap(CRCapabilities.COG_CAPABILITY, Direction.from3DDataValue(i), te.mats[i], Direction.from3DDataValue(i), te.getAxleAxis(), te)){
-				te.axleHandlers[i].propagate(masterIn, key, RotaryUtil.getDirSign(side, Direction.from3DDataValue(i)) * handler.getRotationRatio(), .5D, !handler.renderOffset());
+		for(Direction dir : Direction.values()){
+			if(dir != side && dir != side.getOpposite() && (cogHandler = te.getCogHandler(dir)) != null){
+				cogHandler.connect(masterIn, key, RotaryUtil.getDirSign(side, dir) * handler.getRotationRatio(), .5D, side, !handler.renderOffset());
+//				te.axleHandlers[i].propagate(masterIn, key, RotaryUtil.getDirSign(side, Direction.from3DDataValue(i)) * handler.getRotationRatio(), .5D, !handler.renderOffset());
 			}
 		}
 
@@ -117,7 +120,7 @@ public class MechanismSmallGear implements IMechanism<CRMaterialLibrary.GearMate
 				BlockPos adjPos = te.getBlockPos().relative(facing);
 				BlockEntity adjTE = world.getBlockEntity(adjPos);
 				BlockState adjState = world.getBlockState(adjPos);
-				ICogHandler cogHandler = world.getCapability(CRCapabilities.COG_CAPABILITY, adjPos, adjState, adjTE, side);
+				cogHandler = world.getCapability(CRCapabilities.COG_CAPABILITY, adjPos, adjState, adjTE, side);
 				if(cogHandler != null){
 					cogHandler.connect(masterIn, key, -handler.getRotationRatio(), .5D, facing.getOpposite(), handler.renderOffset());
 				}else if((cogHandler = world.getCapability(CRCapabilities.COG_CAPABILITY, adjPos, adjState, adjTE, facing.getOpposite())) != null){

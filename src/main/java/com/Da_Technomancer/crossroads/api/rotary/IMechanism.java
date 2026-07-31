@@ -5,6 +5,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.api.distmarker.Dist;
@@ -13,6 +15,7 @@ import net.neoforged.neoforge.capabilities.BlockCapability;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 
 public interface IMechanism<T extends IMechanismProperty>{
 
@@ -80,12 +83,44 @@ public interface IMechanism<T extends IMechanismProperty>{
 	void propagate(IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis, MechanismTileEntity te, IMechanismAxleHandler handler, IAxisHandler masterIn, byte key, double rotRatioIn, double lastRadius);
 
 	/**
+	 * Called when performing ICogHandler connection
+	 * @param mat The material of this mechanism
+	 * @param side The side this mechanism is on. If null, this is in the axle slot (center)
+	 * @param axis If side is null (axle slot), this is the orientation of this mechanism. If side is not null, this should be ignored, and may be null
+	 * @param te The containing TileEntity
+	 * @param handler The associated SidedAxleHandler for this location
+	 * @param masterIn
+	 * @param key
+	 * @param rotationRatioIn
+	 * @param lastRadius
+	 * @param cogOrient The orientation of the cogs in the plane (as opposed to the alignment of the plane, which is the capability side)
+	 * @param renderOffset Whether to render this block at an offset angle. This value should ONLY be used for rendering. Invert when connecting to other blocks before passing to the IAxleHandler (don't invert when connecting axially)
+	 */
+	default void connect(IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis, MechanismTileEntity te, IMechanismAxleHandler handler, @Nonnull IAxisHandler masterIn, byte key, double rotationRatioIn, double lastRadius, Direction cogOrient, boolean renderOffset){
+		handler.propagate(masterIn, key, rotationRatioIn, lastRadius, !renderOffset);//Go through the handler - don't skip directly to IMechanism::propagate
+	}
+
+	/**
+	 * @deprecated Override the version with more parameters instead
+	 */
+	@Nonnull
+	@Deprecated(forRemoval = true)
+	default ItemStack getDrop(IMechanismProperty mat){
+		return ItemStack.EMPTY;
+	}
+
+	/**
 	 * Used to get the item that should be dropped when broken
 	 * @param mat The material of this mechanism
+	 * @param side The side this mechanism is on. If null, this is in the axle slot (center)
+	 * @param axis If side is null (axle slot), this is the orientation of this mechanism. If side is not null, this is the orientation of the axle, if there is one
+	 * @param te The tile entity this is part of
 	 * @return The dropped itemstack
 	 */
 	@Nonnull
-	ItemStack getDrop(IMechanismProperty mat);
+	default ItemStack getDrop(IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis, @Nullable MechanismTileEntity te){
+		return getDrop(mat);
+	}
 
 	/**
 	 * Used to get the bounding box for breaking and collision
@@ -110,24 +145,11 @@ public interface IMechanism<T extends IMechanismProperty>{
 	@OnlyIn(Dist.CLIENT)
 	void doRender(MechanismTileEntity te, PoseStack matrix, MultiBufferSource buffer, int combinedLight, float partialTicks, IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis);
 
-	@Deprecated(forRemoval = true)
-	default T deserializeProperty(int serial){
-		return null;
-	}
-
-	@Deprecated(forRemoval = true)
-	default T loadProperty(String name){
-		return null;
-	}
-
 	/**
-	 * The default implementation for backwards compatibility; will be removed in a later version. Override this method.
 	 * @param nbt NBT with this saved.
 	 * @return A new property, read from NBT
 	 */
-	default T readProperty(CompoundTag nbt){
-		return loadProperty(nbt.getString("prop_data"));
-	}
+	T readProperty(CompoundTag nbt);
 
 	/**
 	 * @return Whether this mechanism should break if on a side without a supporting block or connected axle
@@ -142,5 +164,22 @@ public interface IMechanism<T extends IMechanismProperty>{
 	 */
 	default boolean shouldUpdateCircuitReaders(IMechanismProperty mat, Direction.Axis axis, double energy, double speed, MechanismTileEntity te){
 		return false;
+	}
+
+	/**
+	 * @param chat Chat list to append to
+	 * @param player Player taking information
+	 * @param mat Property for this mechanism
+	 * @param side The side this mechanism is on. If null, this is in the axle slot (center)
+	 * @param axis If side is null (axle slot), this is the orientation of this mechanism. If side is not null, this should be ignored, and may be null
+	 * @param te The containing TileEntity
+	 * @param handler The associated SidedAxleHandler.
+	 */
+	default void addInfo(ArrayList<Component> chat, Player player, IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis, MechanismTileEntity te, IMechanismAxleHandler handler){
+		RotaryUtil.addRotaryInfo(chat, handler, false, player);
+	}
+
+	default void onRemoved(IMechanismProperty mat, @Nullable Direction side, @Nullable Direction.Axis axis, MechanismTileEntity te){
+
 	}
 }

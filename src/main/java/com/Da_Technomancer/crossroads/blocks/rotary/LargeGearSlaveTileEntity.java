@@ -22,6 +22,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
+@Deprecated
 public class LargeGearSlaveTileEntity extends BlockEntity implements IInfoTE, ICogCapable{
 
 	public static final BlockEntityType<LargeGearSlaveTileEntity> TYPE = CRTileEntity.createType(LargeGearSlaveTileEntity::new, CRBlocks.largeGearSlave);

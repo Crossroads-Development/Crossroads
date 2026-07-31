@@ -28,7 +28,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
@@ -76,7 +75,7 @@ public class Mechanism extends BaseEntityBlock implements IReadable{
 
 		for(int i = 0; i < 7; i++){
 			if(mte.boundingBoxes[i] != null && voxelContains(mte.boundingBoxes[i], relVec)){
-				return mte.members[i].getDrop(mte.mats[i]);
+				return mte.members[i].getDrop(mte.mats[i], i == 6 ? null : Direction.from3DDataValue(i), mte.getAxleAxis(), mte);
 			}
 		}
 
@@ -121,10 +120,23 @@ public class Mechanism extends BaseEntityBlock implements IReadable{
 		return Shapes.empty();//Shouldn't happen unless network weirdness.
 	}
 
+//	@Override
+//	public boolean onDestroyedByPlayer(BlockState state, Level worldIn, BlockPos pos, Player player, boolean willHarvest, FluidState fluid){
+//		RotaryUtil.increaseMasterKey(false, worldIn);
+//		return super.onDestroyedByPlayer(state, worldIn, pos, player, willHarvest, fluid);
+//	}
+
 	@Override
-	public boolean onDestroyedByPlayer(BlockState state, Level worldIn, BlockPos pos, Player player, boolean willHarvest, FluidState fluid){
-		RotaryUtil.increaseMasterKey(false, worldIn);
-		return super.onDestroyedByPlayer(state, worldIn, pos, player, willHarvest, fluid);
+	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving){
+		RotaryUtil.increaseMasterKey(false, world);
+		if(world.getBlockEntity(pos) instanceof MechanismTileEntity te && newState.getBlock() != state.getBlock()){
+			for(int i = 0; i < 7; i++){
+				if(te.members[i] != null){
+					te.members[i].onRemoved(te.mats[i], i == 6 ? null : Direction.from3DDataValue(i), te.getAxleAxis(), te);
+				}
+			}
+		}
+		super.onRemove(state, world, pos, newState, isMoving);
 	}
 
 	@Override
@@ -135,7 +147,7 @@ public class Mechanism extends BaseEntityBlock implements IReadable{
 			MechanismTileEntity mte = (MechanismTileEntity) te;
 			for(int i = 0; i < 7; i++){
 				if(mte.members[i] != null){
-					drops.add(mte.members[i].getDrop(mte.mats[i]));
+					drops.add(mte.members[i].getDrop(mte.mats[i], i == 6 ? null : Direction.from3DDataValue(i), mte.getAxleAxis(), mte));
 				}
 			}
 		}
@@ -193,19 +205,19 @@ public class Mechanism extends BaseEntityBlock implements IReadable{
 
 		Direction.Axis axleAxis = te.getAxleAxis();
 		if(axleAxis != null && !RotaryUtil.couldMechanismExistAtLocation(worldIn, pos, null, axleAxis, te.members[6])){
-			popResource(worldIn, pos, te.members[6].getDrop(te.mats[6]));
+			popResource(worldIn, pos, te.members[6].getDrop(te.mats[6], null, axleAxis, te));
 			te.setMechanism(6, null, null, null, false);
 		}
 		for(Direction side : Direction.values()){
 			IMechanism<?> mechanism = te.members[side.get3DDataValue()];
 			if(mechanism != null && !RotaryUtil.couldMechanismExistAtLocation(worldIn, pos, side, null, mechanism)){
-				popResource(worldIn, pos, mechanism.getDrop(te.mats[side.get3DDataValue()]));
+				popResource(worldIn, pos, mechanism.getDrop(te.mats[side.get3DDataValue()], side, te.getAxleAxis(), te));
 				te.setMechanism(side.get3DDataValue(), null, null, null, false);
 			}
 		}
-		if(te.members[0] == null && te.members[1] == null && te.members[2] == null && te.members[3] == null && te.members[4] == null && te.members[5] == null && te.members[6] == null){
-			worldIn.destroyBlock(pos, false);
-		}
+//		if(te.members[0] == null && te.members[1] == null && te.members[2] == null && te.members[3] == null && te.members[4] == null && te.members[5] == null && te.members[6] == null){
+//			worldIn.destroyBlock(pos, false);
+//		}
 
 		te.updateRedstone();
 	}
@@ -241,16 +253,17 @@ public class Mechanism extends BaseEntityBlock implements IReadable{
 
 					//Spawn an item as applicable
 					if(!player.isCreative()){
-						popResource(worldIn, pos, gear.members[out].getDrop(gear.mats[out]));
+						popResource(worldIn, pos, gear.members[out].getDrop(gear.mats[out], out == 6 ? null : Direction.from3DDataValue(out), gear.getAxleAxis(), gear));
 					}
 
 					gear.setMechanism(out, null, null, null, false);//Delete the destroyed mechanism
 					//Block update on self, to check if any members are missing block support
-					neighborChanged(state, worldIn, pos, this, pos, false);
-					if(gear.members[0] == null && gear.members[1] == null && gear.members[2] == null && gear.members[3] == null && gear.members[4] == null && gear.members[5] == null && gear.members[6] == null){
-						//If the mechanism is now empty, set it to air
-						worldIn.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
-					}
+					worldIn.updateNeighborsAt(pos, this);
+//					neighborChanged(state, worldIn, pos, this, pos, false);
+//					if(gear.members[0] == null && gear.members[1] == null && gear.members[2] == null && gear.members[3] == null && gear.members[4] == null && gear.members[5] == null && gear.members[6] == null){
+//						//If the mechanism is now empty, set it to air
+//						worldIn.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+//					}
 				}
 				RotaryUtil.increaseMasterKey(!worldIn.isClientSide, worldIn);
 				return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);

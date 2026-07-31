@@ -28,6 +28,8 @@ import javax.annotation.Nullable;
 
 public class MechanismFacade implements IMechanism<GearFacade.FacadeBlock>{
 
+	public static final MechanismFacade INSTANCE = new MechanismFacade();
+
 	private static final VoxelShape[] SHAPES = new VoxelShape[6];
 
 	static{

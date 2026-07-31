@@ -20,5 +20,8 @@ public interface ICogHandler{
 	 */
 	public void connect(@Nonnull IAxisHandler masterIn, byte key, double rotationRatioIn, double lastRadius, Direction cogOrient, boolean renderOffset);
 
-	public IAxleHandler getAxle();
+	@Deprecated//Not decided if we should keep this. Not currently used, not implemented properly for large gears
+	public default IAxleHandler getAxle(){
+		return null;
+	}
 }

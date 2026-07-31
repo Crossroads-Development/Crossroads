@@ -17,7 +17,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -35,7 +34,7 @@ public class MechanismTileEntity extends BlockEntity implements ITickableTileEnt
 
 	public static final BlockEntityType<MechanismTileEntity> TYPE = CRTileEntity.createType(MechanismTileEntity::new, CRBlocks.mechanism);
 
-	public static final ArrayList<IMechanism<?>> MECHANISMS = new ArrayList<>(8);//This is a list instead of an array to allow expansion by addons
+	public static final ArrayList<IMechanism<?>> MECHANISMS = new ArrayList<>(10);//This is a list instead of an array to allow expansion by addons
 
 	static{
 		MECHANISMS.add(new MechanismSmallGear());//Index 0, small gear
@@ -45,7 +44,9 @@ public class MechanismTileEntity extends BlockEntity implements ITickableTileEnt
 		MECHANISMS.add(new MechanismToggleGear(false));//Index 4, normal toggle gear
 		MECHANISMS.add(new MechanismToggleGear(true));//Index 5, inverted toggle gear
 		MECHANISMS.add(new MechanismAxleMount());//Index 6, axle mount
-		MECHANISMS.add(new MechanismFacade());//Index 7, facades
+		MECHANISMS.add(MechanismFacade.INSTANCE);//Index 7, facades
+		MECHANISMS.add(MechanismLargeGearCore.INSTANCE);//Index 8, large gear core
+		MECHANISMS.add(MechanismLargeGearEdge.INSTANCE);//Index 9, large gear edge
 	}
 
 	public MechanismTileEntity(BlockPos pos, BlockState state){
@@ -67,7 +68,8 @@ public class MechanismTileEntity extends BlockEntity implements ITickableTileEnt
 			return;
 		}
 
-		RotaryUtil.addRotaryInfo(chat, axleHandlers[part], false, player);
+		members[part].addInfo(chat, player, mats[part], part == 6 ? null : Direction.from3DDataValue(part), getAxleAxis(), this, axleHandlers[part]);
+//		RotaryUtil.addRotaryInfo(chat, axleHandlers[part], false, player);
 	}
 
 	// D-U-N-S-W-E-A
@@ -90,6 +92,7 @@ public class MechanismTileEntity extends BlockEntity implements ITickableTileEnt
 
 	/**
 	 * Sets the mechanism in a slot
+	 * If there is an existing mechanism in that slot, it will be overridden and the new mechanism will inherit some of its properties - for a clean replacement, call this with a null mechanism first
 	 * @param index The index, with 6 being the axle slot. Must be from 0 to 6, inclusive.
 	 * @param mechanism The new mechanism. May be null.
 	 * @param mat The new material. If mechanism is null, must be null. If mechanism is nonnull, must be nonnull.
@@ -97,9 +100,13 @@ public class MechanismTileEntity extends BlockEntity implements ITickableTileEnt
 	 * @param newTE Whether this TE is newly created this tick
 	 */
 	public void setMechanism(int index, @Nullable IMechanism<?> mechanism, @Nullable IMechanismProperty mat, @Nullable Direction.Axis axis, boolean newTE){
+		final IMechanism<?> prevMechanism = members[index];
+		final IMechanismProperty prevMat = mats[index];
+		final Direction.Axis prevAxis = getAxleAxis();
+
 		members[index] = mechanism;
 		mats[index] = mat;
-		if(index == 6 && getAxleAxis() != axis){
+		if(index == 6 && prevAxis != axis){
 			axleAxis = axis;
 			if(!newTE && !level.isClientSide){
 				CRPackets.sendPacketAround(level, worldPosition, new SendLongToTE(14, axis == null ? -1 : axis.ordinal(), worldPosition));
@@ -112,7 +119,15 @@ public class MechanismTileEntity extends BlockEntity implements ITickableTileEnt
 			axleHandlers[index].updateStates(true);
 		}
 		level.invalidateCapabilities(worldPosition);
+		if(prevMechanism != null && mechanism == null){
+			//Update pre-existing mechanism as 'removed' only if replaced by null
+			prevMechanism.onRemoved(prevMat, index == 6 ? null : Direction.from3DDataValue(index), prevAxis, this);
+		}
 		setChanged();
+
+		if(!newTE && mechanism == null && members[0] == null && members[1] == null && members[2] == null && members[3] == null && members[4] == null && members[5] == null && members[6] == null){
+			level.destroyBlock(worldPosition, false);
+		}
 	}
 
 	@Override
@@ -192,14 +207,7 @@ public class MechanismTileEntity extends BlockEntity implements ITickableTileEnt
 					continue;//Sanity check in case a mechanism type gets removed in the future
 				}
 
-				//Backwards compat, to be removed in a later version
-				if(nbt.getTagType("[" + i + "]mat") == Tag.TAG_STRING){
-					CompoundTag matNBT = new CompoundTag();
-					matNBT.putString("prop_data", nbt.getString("[" + i + "]mat"));
-					mats[i] = members[i].readProperty(matNBT);
-				}else{
-					mats[i] = members[i].readProperty(nbt.getCompound("[" + i + "]mat"));
-				}
+				mats[i] = members[i].readProperty(nbt.getCompound("[" + i + "]mat"));
 				energy[i] = nbt.getDouble("[" + i + ",1]mot");
 
 //				clientW[i] = nbt.getFloat("[" + i + "]cl_w");
@@ -336,7 +344,9 @@ public class MechanismTileEntity extends BlockEntity implements ITickableTileEnt
 
 		@Override
 		public void connect(IAxisHandler masterIn, byte key, double rotationRatioIn, double lastRadius, Direction cogOrient, boolean renderOffset){
-			axleHandlers[side].propagate(masterIn, key, rotationRatioIn, lastRadius, !renderOffset);
+			if(members[side] != null){
+				members[side].connect(mats[side], side == 6 ? null : Direction.from3DDataValue(side), getAxleAxis(), MechanismTileEntity.this, axleHandlers[side], masterIn, key, rotationRatioIn, lastRadius, cogOrient, renderOffset);
+			}
 		}
 
 		@Override

@@ -64,7 +64,7 @@ public class AxleMount extends GearMatItem{
 		BlockEntity teAtPlacement = world.getBlockEntity(placePos);
 
 		//Must be able to place against a solid surface
-		if(RotaryUtil.solidToGears(world, pos, side)){
+		if(RotaryUtil.couldMechanismExistAtLocation(world, placePos, side.getOpposite(), null, mechanismToPlace())){
 			int mechInd = side.getOpposite().get3DDataValue();//Index this gear would be placed within the mechanism
 			if(teAtPlacement instanceof MechanismTileEntity){
 				//Existing mechanism TE to expand

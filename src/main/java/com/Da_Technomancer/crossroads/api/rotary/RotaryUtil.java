@@ -8,8 +8,7 @@ import com.Da_Technomancer.crossroads.api.packets.SendMasterKeyToClient;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.rotary.LargeGearMaster;
 import com.Da_Technomancer.crossroads.blocks.rotary.LargeGearSlave;
-import com.Da_Technomancer.crossroads.blocks.rotary.mechanisms.MechanismSmallGear;
-import com.Da_Technomancer.crossroads.blocks.rotary.mechanisms.MechanismTileEntity;
+import com.Da_Technomancer.crossroads.blocks.rotary.mechanisms.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -165,7 +164,8 @@ public class RotaryUtil{
 			return false;
 		}
 		if(state.getBlock() == CRBlocks.mechanism && world.getBlockEntity(pos) instanceof MechanismTileEntity mte){
-			if(mte.getAxleAxis() != side.getAxis() && mte.members[side.get3DDataValue()] instanceof MechanismSmallGear){
+			IMechanism<?> backingMechanism = mte.members[side.get3DDataValue()];
+			if(mte.getAxleAxis() != side.getAxis() && (backingMechanism instanceof MechanismSmallGear || backingMechanism instanceof MechanismLargeGearCore || backingMechanism instanceof MechanismLargeGearEdge)){
 				//Intended to prevent the case of two back-to-back floating small gears supporting eachother
 				return false;
 			}
@@ -182,8 +182,9 @@ public class RotaryUtil{
 	}
 
 	/**
-	 * For an IMechanism, checks whether it would be structurally stable (ie, wouldn't pop off for lack of support) at a given location
-	 * Returns the same result regardless of whether the mechanism currently exists at that location
+	 * For an IMechanism, checks whether it would be structurally stable (ie, wouldn't pop off for lack of support) at a given location.
+	 * Returns the same result regardless of whether the mechanism currently exists at that location.
+	 *
 	 * @param world The World
 	 * @param pos The block's position
 	 * @param side The side of the mechanism. Null for axial slot
@@ -192,24 +193,148 @@ public class RotaryUtil{
 	 */
 	public static boolean couldMechanismExistAtLocation(Level world, BlockPos pos, @Nullable Direction side, @Nullable Direction.Axis selfAxleAxis, IMechanism<?> proposedMechanism){
 		assert (side == null) != (selfAxleAxis == null);
-		if(selfAxleAxis != null){
-			//Currently, axles have no support requirements
+
+		BlockEntity te = world.getBlockEntity(pos);
+		MechanismTileEntity mte = te instanceof MechanismTileEntity mech ? mech : null;
+
+		if(mte != null){
+			if(selfAxleAxis != null){
+				// Axle-specific conflicts
+				if(mte.members[Direction.get(Direction.AxisDirection.POSITIVE, selfAxleAxis).get3DDataValue()] == MechanismLargeGearEdge.INSTANCE || mte.members[Direction.get(Direction.AxisDirection.NEGATIVE, selfAxleAxis).get3DDataValue()] == MechanismLargeGearEdge.INSTANCE){
+					//Don't allow axles jamming into large gear edges
+					return false;
+				}
+			}else{
+				// Side-mounted conflicts
+				Direction.Axis sideAxis = side.getAxis();
+
+				if(isMechanismWide(proposedMechanism, side)){
+					for(Direction dir : Direction.values()){
+						if(dir.getAxis() == sideAxis){
+							continue;
+						}
+						//Check all the adjoining sides for anything that would clash with this location
+
+						int i = dir.get3DDataValue();
+						IMechanism<?> existing = mte.members[i];
+
+						// Don't allow anything 'large' except other facades beside a facade
+						if(proposedMechanism == MechanismFacade.INSTANCE && existing != MechanismFacade.INSTANCE && isMechanismWide(existing, dir)){
+							return false;
+						}
+
+						// Don't allow anything jamming into the side of a large gear core
+						if(existing == MechanismLargeGearCore.INSTANCE){
+							return false;
+						}
+
+						// Don't allow anything on the inside of a large gear edge
+						if(existing == MechanismLargeGearEdge.INSTANCE && mte.mats[i] instanceof MechanismLargeGearEdge.CorePosOffset coreOffset){
+							BlockPos offsetPos = coreOffset.offsetPos();
+							if(offsetPos.getX() * side.getStepX() + offsetPos.getY() * side.getStepY() + offsetPos.getZ() * side.getStepZ() >= 0){
+								return false;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		// Axles currently have no support requirements
+		if(selfAxleAxis != null || !proposedMechanism.requiresSupport()){
 			return true;
-		}else{
-			if(!proposedMechanism.requiresSupport()){
-				return true;
-			}
-			BlockPos supportingPos = pos.relative(side);
-			if(solidToGears(world, supportingPos, side.getOpposite())){
-				//Supported by being placed on solid block
-				return true;
-			}
-			if(world.getBlockEntity(pos) instanceof MechanismTileEntity mte && mte.getAxleAxis() == side.getAxis()){
-				//Supported by being on the end of an axle inside the same blockspace
-				return true;
-			}
+		}
+
+		BlockPos supportingPos = pos.relative(side);
+
+		// Supported by a solid neighboring block
+		if(solidToGears(world, supportingPos, side.getOpposite())){
+			return true;
+		}
+
+		//Supported by being on the end of an axle inside the same blockspace
+		return mte != null && mte.getAxleAxis() == side.getAxis();
+	}
+
+//	/**
+//	 * For an IMechanism, checks whether it would be structurally stable (ie, wouldn't pop off for lack of support) at a given location
+//	 * Returns the same result regardless of whether the mechanism currently exists at that location
+//	 * @param world The World
+//	 * @param pos The block's position
+//	 * @param side The side of the mechanism. Null for axial slot
+//	 * @param selfAxleAxis The axis if this is an axle-slot mechanism. Null for non-null side, non-null otherwise.
+//	 * @return Whether it would be allowed to stay at that location
+//	 */
+//	public static boolean couldMechanismExistAtLocation(Level world, BlockPos pos, @Nullable Direction side, @Nullable Direction.Axis selfAxleAxis, IMechanism<?> proposedMechanism){
+//		assert (side == null) != (selfAxleAxis == null);
+//		BlockEntity te = world.getBlockEntity(pos);
+//
+//		//Prevent certain mechanisms in adjacent slots that would clash with each-other
+//		//Quite a bad implementation - too hardcoded
+//		if(proposedMechanism == MechanismFacade.INSTANCE && side != null && te instanceof MechanismTileEntity mte){
+//			//Don't allow anything 'large' except other facades on an adjacent side in the same block
+//			for(Direction dir : Direction.values()){
+//				int i = dir.get3DDataValue();
+//				if(dir.getAxis() != side.getAxis() && mte.members[i] != MechanismFacade.INSTANCE && isMechanismWide(mte.members[i], dir)){
+//					return false;
+//				}
+//			}
+//		}
+//		if(selfAxleAxis != null && te instanceof MechanismTileEntity mte){
+//			//Don't allow axles jamming into large gear edges
+//			if(mte.members[Direction.get(Direction.AxisDirection.POSITIVE, selfAxleAxis).get3DDataValue()] == MechanismLargeGearEdge.INSTANCE || mte.members[Direction.get(Direction.AxisDirection.NEGATIVE, selfAxleAxis).get3DDataValue()] == MechanismLargeGearEdge.INSTANCE){
+//				return false;
+//			}
+//		}
+//		if(side != null && isMechanismWide(proposedMechanism, side) && te instanceof MechanismTileEntity mte){
+//			//Don't allow anything jamming into the side of a large gear core or an inner side of a large gear edge
+//			for(Direction dir : Direction.values()){
+//				if(dir.getAxis() != side.getAxis()){
+//					int i = dir.get3DDataValue();
+//					if(mte.members[i] == MechanismLargeGearCore.INSTANCE){
+//						return false;
+//					}
+//					if(mte.members[i] == MechanismLargeGearEdge.INSTANCE && mte.mats[i] instanceof MechanismLargeGearEdge.CorePosOffset coreOffset){
+//						BlockPos offsetPos = coreOffset.offsetPos();
+//						if(offsetPos.getX() * side.getStepX() + offsetPos.getY() * side.getStepY() + offsetPos.getZ() * side.getStepZ() >= 0){
+//							//Since offsetPos represents a vector pointing from the edge to the core for the adjoining large gear, and side.step() represents a vector pointing towards the face this mechanism is mounted on
+//							//If the dot-product of these two vectors is positive, our new mechanism is on the inner surface of the large gear edge (adjoining the core), if it's 0, it's at some awkward angle that would intersect the edge,
+//							// and if it's negative, it's a legal position (either connecting to the large gear or along the outskirts of one of the corner pieces)
+//							return false;
+//						}
+//					}
+//				}
+//			}
+//		}
+//
+//		if(selfAxleAxis != null){
+//			//Currently, axles have no support requirements
+//			return true;
+//		}else{
+//			if(!proposedMechanism.requiresSupport()){
+//				return true;
+//			}
+//			BlockPos supportingPos = pos.relative(side);
+//			if(solidToGears(world, supportingPos, side.getOpposite())){
+//				//Supported by being placed on solid block
+//				return true;
+//			}
+//			if(te instanceof MechanismTileEntity mte && mte.getAxleAxis() == side.getAxis()){
+//				//Supported by being on the end of an axle inside the same blockspace
+//				return true;
+//			}
+//			return false;
+//		}
+//	}
+
+	private static boolean isMechanismWide(@Nullable IMechanism<?> mechanism, Direction side){
+		if(mechanism == null){
 			return false;
 		}
+		//Terrible, sloppy implementation
+		//Only works because all the current mechanisms are rotationally symmetrical
+		VoxelShape shape = mechanism.getBoundingBox(side, null);
+		return shape.max(side.getAxis() == Direction.Axis.Y ? Direction.Axis.X : Direction.Axis.Y) > 0.8D;
 	}
 
 	private static final BiFunction<String, Integer, Integer> INCREMENT_FUNCTION = (key, oldValue) -> oldValue == null ? 1 : oldValue + 1;

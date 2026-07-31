@@ -87,6 +87,10 @@ public class BasicGear extends GearMatItem{
 
 	public static boolean tryPlacement(Level world, BlockPos pos, Direction side, UseOnContext context, IMechanism<?> mechanism, IMechanismProperty type){
 		int mechInd = side.get3DDataValue();//Index this gear would be placed within the mechanism
+		if(!RotaryUtil.couldMechanismExistAtLocation(world, pos, side, null, mechanism)){
+			return false;
+		}
+
 		if(world.getBlockEntity(pos) instanceof MechanismTileEntity mte){
 			//Existing mechanism TE to expand
 			if(mte.members[mechInd] != null){

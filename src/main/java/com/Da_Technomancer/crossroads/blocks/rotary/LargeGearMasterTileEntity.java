@@ -1,28 +1,29 @@
 package com.Da_Technomancer.crossroads.blocks.rotary;
 
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.CRMaterialLibrary;
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.essentials.api.MathUtil;
-import com.Da_Technomancer.crossroads.api.packets.CRPackets;
+import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.rotary.*;
 import com.Da_Technomancer.crossroads.api.templates.IInfoTE;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
-import com.Da_Technomancer.crossroads.items.CRItems;
+import com.Da_Technomancer.crossroads.blocks.rotary.mechanisms.MechanismLargeGearCore;
+import com.Da_Technomancer.crossroads.blocks.rotary.mechanisms.MechanismLargeGearEdge;
+import com.Da_Technomancer.crossroads.blocks.rotary.mechanisms.MechanismTileEntity;
+import com.Da_Technomancer.crossroads.items.item_sets.LargeGear;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
+import com.Da_Technomancer.essentials.api.MathUtil;
 import com.Da_Technomancer.essentials.api.packets.ILongReceiver;
-import com.Da_Technomancer.essentials.api.packets.SendLongToTE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -31,6 +32,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
+@Deprecated
 public class LargeGearMasterTileEntity extends BlockEntity implements ILongReceiver, ITickableTileEntity, IInfoTE, IAxleCapable{
 
 	public static final BlockEntityType<LargeGearMasterTileEntity> TYPE = CRTileEntity.createType(LargeGearMasterTileEntity::new, CRBlocks.largeGearMaster);
@@ -89,18 +91,19 @@ public class LargeGearMasterTileEntity extends BlockEntity implements ILongRecei
 	}
 
 	public void breakGroup(Direction side, boolean drop){
-		if(borken){
-			return;
-		}
-		borken = true;
-		for(int i = -1; i < 2; ++i){
-			for(int j = -1; j < 2; ++j){
-				level.setBlockAndUpdate(worldPosition.relative(side.getAxis() == Axis.X ? Direction.UP : Direction.EAST, i).relative(side.getAxis() == Axis.Z ? Direction.UP : Direction.NORTH, j), Blocks.AIR.defaultBlockState());
-			}
-		}
-		if(drop){
-			level.addFreshEntity(new ItemEntity(level, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), CRItems.largeGear.withMaterial(type, 1)));
-		}
+//		Disabled for auto-conversion to new version
+//		if(borken){
+//			return;
+//		}
+//		borken = true;
+//		for(int i = -1; i < 2; ++i){
+//			for(int j = -1; j < 2; ++j){
+//				level.setBlockAndUpdate(worldPosition.relative(side.getAxis() == Axis.X ? Direction.UP : Direction.EAST, i).relative(side.getAxis() == Axis.Z ? Direction.UP : Direction.NORTH, j), Blocks.AIR.defaultBlockState());
+//			}
+//		}
+//		if(drop){
+//			level.addFreshEntity(new ItemEntity(level, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), CRItems.largeGear.withMaterial(type, 1)));
+//		}
 	}
 
 	@Override
@@ -122,13 +125,34 @@ public class LargeGearMasterTileEntity extends BlockEntity implements ILongRecei
 
 	@Override
 	public void serverTick(){
-		ITickableTileEntity.super.serverTick();
-		if(newTE){
-			newTE = false;
-			//This is newly placed. Lazy-load send (lazy send? lazy network?) the type data to any clients.
-			//This is unnecessary for the client that placed this, but needed in MP for other clients
-			CRPackets.sendPacketAround(level, worldPosition, new SendLongToTE((byte) 1, type == null ? -1 : type.serialize(), worldPosition));
+		//Auto-convert to new version
+		final Direction side = getFacing();
+		final BlockPos pos = worldPosition;
+		final Level world = level;
+		Crossroads.logger.info("Large gear at [" + pos + "] converting to new version");
+		final CRMaterialLibrary.GearMaterial mat = type;
+		world.setBlock(pos, CRBlocks.mechanism.defaultBlockState(), MiscUtil.BLOCK_FLAGS_NORMAL);
+		if(world.getBlockEntity(pos) instanceof MechanismTileEntity mte){
+			mte.setMechanism(side.get3DDataValue(), MechanismLargeGearCore.INSTANCE, mat, null, true);//Core
+			mte.setMechanism(6, MechanismTileEntity.MECHANISMS.get(1), mat, side.getAxis(), true);//Axle
 		}
+		//Edge pieces
+		for(MechanismLargeGearEdge.CorePosOffset corePosOffset : LargeGear.EDGE_OFFSET_POSITIONS[side.getAxis().ordinal()]){
+			BlockPos edgePos = corePosOffset.edgePos(pos);
+			world.setBlock(edgePos, CRBlocks.mechanism.defaultBlockState(), MiscUtil.BLOCK_FLAGS_NORMAL);
+			if(world.getBlockEntity(edgePos) instanceof MechanismTileEntity mte){
+				mte.setMechanism(side.get3DDataValue(), MechanismLargeGearEdge.INSTANCE, corePosOffset, null, true);//Edge
+			}
+		}
+
+//		Disabled for auto-conversion
+//		ITickableTileEntity.super.serverTick();
+//		if(newTE){
+//			newTE = false;
+//			//This is newly placed. Lazy-load send (lazy send? lazy network?) the type data to any clients.
+//			//This is unnecessary for the client that placed this, but needed in MP for other clients
+//			CRPackets.sendPacketAround(level, worldPosition, new SendLongToTE((byte) 1, type == null ? -1 : type.serialize(), worldPosition));
+//		}
 	}
 
 	@Override

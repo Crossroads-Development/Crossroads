@@ -52,7 +52,7 @@ public class Axle extends GearMatItem{
 
 		if(te instanceof MechanismTileEntity){
 			MechanismTileEntity mte = (MechanismTileEntity) te;
-			if(mte.members[6] == null){
+			if(mte.members[6] == null && RotaryUtil.couldMechanismExistAtLocation(world, pos, null, side.getAxis(), mechanismToPlace())){
 				RotaryUtil.increaseMasterKey(true, world);
 				mte.setMechanism(6, mechanismToPlace(), type, side.getAxis(), false);
 				if(playerIn == null || !playerIn.isCreative()){
@@ -66,7 +66,7 @@ public class Axle extends GearMatItem{
 		te = world.getBlockEntity(pos.relative(side));
 		if(te instanceof MechanismTileEntity){
 			MechanismTileEntity mte = (MechanismTileEntity) te;
-			if(mte.members[6] == null){
+			if(mte.members[6] == null && RotaryUtil.couldMechanismExistAtLocation(world, pos.relative(side), null, side.getAxis(), mechanismToPlace())){
 				RotaryUtil.increaseMasterKey(true, world);
 				mte.setMechanism(6, mechanismToPlace(), type, side.getAxis(), false);
 				if(playerIn == null || !playerIn.isCreative()){
@@ -77,7 +77,7 @@ public class Axle extends GearMatItem{
 		}
 
 		//Make a new mechanism block
-		if(world.getBlockState(pos.relative(side)).canBeReplaced(new BlockPlaceContext(context))){
+		if(world.getBlockState(pos.relative(side)).canBeReplaced(new BlockPlaceContext(context)) && RotaryUtil.couldMechanismExistAtLocation(world, pos.relative(side), null, side.getAxis(), mechanismToPlace())){
 			if(playerIn == null || !playerIn.isCreative()){
 				context.getItemInHand().shrink(1);
 			}
