@@ -21,13 +21,13 @@
 		{
 			"type": "patchouli:spotlight",
 			"anchor": "sedation",
-			"item": "minecraft:potion{Potion:\"crossroads:sedation\"}",
+			"item": "minecraft:potion[minecraft:potion_contents=\"crossroads:sedation\"]",
 			"text": "<thing>镇静/$药水能停用任何生物的AI。被镇静的生物无法自主移动、反击、攻击，或者对环境作出反应。这种药水能用于运输生物或将其定住用于展示。$(br2)不过玩家或boss级怪物无法被镇静，只会产生统一的一般负面效果。$(br2)"
 		},
 		{
 			"type": "patchouli:spotlight",
 			"anchor": "neutralization",
-			"item": "minecraft:potion{Potion:\"crossroads:curative\"}",
+			"item": "minecraft:potion[minecraft:potion_contents=\"crossroads:curative\"]",
 			"text": "<thing>中和/$药水是药水形式的牛奶。它们能移除所有药水效果。$(br2)"
 		}
 	],

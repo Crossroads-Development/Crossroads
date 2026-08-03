@@ -77,7 +77,7 @@ public class BoboRod extends Item{
 				}
 				if(!hasOffering && CraftingUtil.tagContains(offering, ent.getItem().getItem())){
 					hasOffering = true;
-				}else{
+				}else if(i < 3){
 					recipeItems[i] = ent.getItem();
 					i++;
 				}
