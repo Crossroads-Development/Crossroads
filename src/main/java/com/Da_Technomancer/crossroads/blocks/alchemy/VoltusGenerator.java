@@ -55,8 +55,8 @@ public class VoltusGenerator extends BaseEntityBlock implements IReadable{
 	@Override
 	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag){
 		tooltip.add(Component.translatable("tt.crossroads.voltus_generator.desc"));
-		tooltip.add(Component.translatable("tt.crossroads.voltus_generator.eff", CRConfig.voltusValue.get()));
-		tooltip.add(Component.translatable("tt.crossroads.voltus_generator.rate"));
+		tooltip.add(Component.translatable("tt.crossroads.voltus_generator.eff", CRConfig.voltusValue.get(), CRConfig.voltusValue.get() * VoltusGeneratorTileEntity.VOLTUS_FUEL_TIME));
+		tooltip.add(Component.translatable("tt.crossroads.voltus_generator.rate", VoltusGeneratorTileEntity.VOLTUS_FUEL_TIME));
 	}
 
 	@Override

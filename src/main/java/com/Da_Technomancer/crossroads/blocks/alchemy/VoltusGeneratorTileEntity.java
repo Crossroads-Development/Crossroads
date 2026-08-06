@@ -32,6 +32,8 @@ public class VoltusGeneratorTileEntity extends BlockEntity implements ITickableT
 	private static final int VOLTUS_CAPACITY = 100;
 	private static final int FE_CAPACITY = 1_000_000;
 	private int voltusAmount = 0;
+	private int fuelTime = 0;
+	public static final int VOLTUS_FUEL_TIME = AlchemyUtil.ALCHEMY_TIME;
 	private int fe = 0;
 
 	private IChemicalHandler chemicalHandler = new AlchHandler();
@@ -52,8 +54,12 @@ public class VoltusGeneratorTileEntity extends BlockEntity implements ITickableT
 
 	@Override
 	public void serverTick(){
-		if(voltusAmount != 0 && FE_CAPACITY - fe >= CRConfig.voltusValue.get()){
-			voltusAmount -= 1;
+		if(voltusAmount + fuelTime != 0 && FE_CAPACITY - fe >= CRConfig.voltusValue.get()){
+			if(fuelTime == 0){
+				fuelTime = VOLTUS_FUEL_TIME;
+				voltusAmount -= 1;
+			}
+			fuelTime -= 1;
 			fe += CRConfig.voltusValue.get();
 			setChanged();
 		}
@@ -75,6 +81,7 @@ public class VoltusGeneratorTileEntity extends BlockEntity implements ITickableT
 	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries){
 		super.loadAdditional(nbt, registries);
 		voltusAmount = nbt.getInt("voltus");
+		fuelTime = nbt.getInt("fuel_time");
 		fe = nbt.getInt("fe");
 	}
 
@@ -83,6 +90,7 @@ public class VoltusGeneratorTileEntity extends BlockEntity implements ITickableT
 		super.saveAdditional(nbt, pRegistries);
 		nbt.putInt("voltus", voltusAmount);
 		nbt.putInt("fe", fe);
+		nbt.putInt("fuel_time", fuelTime);
 	}
 
 	@Override

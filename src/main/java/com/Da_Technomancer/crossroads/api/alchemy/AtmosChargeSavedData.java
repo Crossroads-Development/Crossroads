@@ -33,8 +33,9 @@ public class AtmosChargeSavedData extends SavedData{
 			data.atmosCharge = newCharge;
 			data.setDirty();
 			//Advancement check
+			int chargePct = (int) ((100L * newCharge) / getCapacity());//Convert to long due to integer overflow
 			for(ServerPlayer player : w.players()){
-				AtmosChargeTrigger.INSTANCE.trigger(player, 100 * newCharge / getCapacity());
+				AtmosChargeTrigger.INSTANCE.trigger(player, chargePct);
 			}
 		}
 	}

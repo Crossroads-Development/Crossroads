@@ -49,9 +49,9 @@ public class TemporalAcceleratorTileEntity extends IFluxLink.SimpleFluxLink impl
 	private int intensity = 0;//Power of the incoming beam
 	private int infoIntensity = 0;
 	private long lastRunTick;//Used to prevent accelerators affecting each other
-	//BlockState cache
-	private Direction facing;
-	private TemporalAccelerator.Mode mode;
+//	//BlockState cache
+//	private Direction facing;
+//	private TemporalAccelerator.Mode mode;
 
 	private IBeamHandler beamHandler = new BeamHandler();
 
@@ -89,34 +89,38 @@ public class TemporalAcceleratorTileEntity extends IFluxLink.SimpleFluxLink impl
 	}
 
 	private Direction getFacing(){
-		if(facing == null){
-			BlockState state = getBlockState();
-			if(!(state.getBlock() instanceof TemporalAccelerator)){
-				setRemoved();
-				return Direction.DOWN;
-			}
-			facing = state.getValue(CRProperties.FACING);
-			mode = state.getValue(CRProperties.ACCELERATOR_TARGET);
-		}
-
-		return facing;
+		BlockState state = getBlockState();
+		return state.hasProperty(CRProperties.FACING) ? state.getValue(CRProperties.FACING) : Direction.DOWN;
+//		if(facing == null){
+//			if(!(state.getBlock() instanceof TemporalAccelerator)){
+//				setRemoved();
+//				return Direction.DOWN;
+//			}
+//			facing = state.getValue(CRProperties.FACING);
+//			mode = state.getValue(CRProperties.ACCELERATOR_TARGET);
+//		}
+//
+//		return facing;
 	}
 
 	private TemporalAccelerator.Mode getMode(){
-		if(facing == null){
-			BlockState state = getBlockState();
-			if(!(state.getBlock() instanceof TemporalAccelerator)){
-				setRemoved();
-				return TemporalAccelerator.Mode.ENTITIES;
-			}
-			facing = state.getValue(CRProperties.FACING);
-			mode = state.getValue(CRProperties.ACCELERATOR_TARGET);
-		}
-
-		return mode;
+		BlockState state = getBlockState();
+		return state.hasProperty(CRProperties.ACCELERATOR_TARGET) ? state.getValue(CRProperties.ACCELERATOR_TARGET) : TemporalAccelerator.Mode.ENTITIES;
+//		if(facing == null){
+//			BlockState state = getBlockState();
+//			if(!(state.getBlock() instanceof TemporalAccelerator)){
+//				setRemoved();
+//				return TemporalAccelerator.Mode.ENTITIES;
+//			}
+//			facing = state.getValue(CRProperties.FACING);
+//			mode = state.getValue(CRProperties.ACCELERATOR_TARGET);
+//		}
+//
+//		return mode;
 	}
 
 	private AABB getAffectedRegion(){
+		Direction facing = getFacing();
 		return ZONE.move(worldPosition.getX() + 0.5D + facing.getStepX() * SIZE / 2D, worldPosition.getY() + 0.5D + facing.getStepY() * SIZE / 2D, worldPosition.getZ() + 0.5D + facing.getStepZ() * SIZE / 2D);
 	}
 
