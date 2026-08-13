@@ -66,9 +66,9 @@ public class ReagInfoCategory implements IRecipeCategory<IReagent>{
 		Font fontRenderer = Minecraft.getInstance().font;
 		double melt = recipe.getMeltingPoint();
 		double boil = recipe.getBoilingPoint();
-		String line = melt >= Short.MAX_VALUE - 10 ? MiscUtil.localize("crossroads.jei.reagent.melting.no") : melt <= HeatUtil.ABSOLUTE_ZERO ? MiscUtil.localize("crossroads.jei.reagent.melting.yes") : MiscUtil.localize("crossroads.jei.reagent.melting", Math.round(melt));
+		String line = melt >= Float.MAX_VALUE ? MiscUtil.localize("crossroads.jei.reagent.melting.no") : melt <= HeatUtil.ABSOLUTE_ZERO ? MiscUtil.localize("crossroads.jei.reagent.melting.yes") : MiscUtil.localize("crossroads.jei.reagent.melting", Math.round(melt));
 		graphics.drawString(fontRenderer, line, 2, 22, 0x404040, false);
-		line = boil >= Short.MAX_VALUE - 10 ? MiscUtil.localize("crossroads.jei.reagent.boiling.no") : boil <= HeatUtil.ABSOLUTE_ZERO ? MiscUtil.localize("crossroads.jei.reagent.boiling.yes") : MiscUtil.localize("crossroads.jei.reagent.boiling", Math.round(boil));
+		line = boil >= Float.MAX_VALUE ? MiscUtil.localize("crossroads.jei.reagent.boiling.no") : boil <= HeatUtil.ABSOLUTE_ZERO ? MiscUtil.localize("crossroads.jei.reagent.boiling.yes") : MiscUtil.localize("crossroads.jei.reagent.boiling", Math.round(boil));
 		graphics.drawString(fontRenderer, line, 2, 42, 0x404040, false);
 		line = MiscUtil.localize("crossroads.jei.reagent.effect", recipe.getEffect().getName().getString());
 		graphics.drawString(fontRenderer, line, 2, 62, 0x404040, false);

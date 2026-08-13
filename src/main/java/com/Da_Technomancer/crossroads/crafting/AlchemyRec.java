@@ -339,7 +339,7 @@ public class AlchemyRec implements IOptionalRecipe<RecipeInput>{
 					CraftingUtil.singleOrListCodec(ReagentStack.CODEC, 0, Integer.MAX_VALUE).xmap(list -> list.toArray(new ReagentStack[0]), List::of).fieldOf("products").forGetter(AlchemyRec::getProducts),
 					Codec.STRING.optionalFieldOf("catalyst", VOID_STR).forGetter(AlchemyRec::getNonnullCatalyst),
 					Codec.DOUBLE.optionalFieldOf("min_temp", -300D).forGetter(AlchemyRec::minTemp),
-					Codec.DOUBLE.optionalFieldOf("max_temp", (double) Short.MAX_VALUE).forGetter(AlchemyRec::maxTemp),
+					Codec.DOUBLE.optionalFieldOf("max_temp", Double.POSITIVE_INFINITY).forGetter(AlchemyRec::maxTemp),
 					Codec.DOUBLE.optionalFieldOf("heat", 0D).forGetter(AlchemyRec::deltaHeatPer),
 					Codec.BOOL.optionalFieldOf("charged", false).forGetter(AlchemyRec::charged),
 					//There are two different fields using "data"- mutually exclusive on decode, but not sure if that works on encode

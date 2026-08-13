@@ -264,8 +264,8 @@ public class ReagentRec implements Recipe<RecipeInput>, IReagent{
 			MapCodec<ReagentRec> codec = RecordCodecBuilder.mapCodec(instance -> instance.group(
 					CraftingUtil.recipeGroupFieldCodec().forGetter(ReagentRec::getGroup),
 					Codec.STRING.fieldOf("id").forGetter(ReagentRec::getID),
-					Codec.withAlternative(Codec.DOUBLE, Codec.STRING.flatXmap(str -> "never".equals(str) ? DataResult.success(Short.MAX_VALUE - 1D) : DataResult.error(() -> "Must be a number or \"never\"", 0D), val -> DataResult.success(val.toString()))).optionalFieldOf("melting", -275D).forGetter(ReagentRec::getMeltingPoint),
-					Codec.withAlternative(Codec.DOUBLE, Codec.STRING.flatXmap(str -> "never".equals(str) ? DataResult.success((double) Short.MAX_VALUE) : DataResult.error(() -> "Must be a number or \"never\""), val -> DataResult.success(val.toString()))).optionalFieldOf("boiling", -274D).forGetter(ReagentRec::getBoilingPoint),
+					Codec.withAlternative(Codec.DOUBLE, Codec.STRING.flatXmap(str -> "never".equals(str) ? DataResult.success(Double.POSITIVE_INFINITY) : DataResult.error(() -> "Must be a number or \"never\"", 0D), val -> DataResult.success(val.toString()))).optionalFieldOf("melting", -275D).forGetter(ReagentRec::getMeltingPoint),
+					Codec.withAlternative(Codec.DOUBLE, Codec.STRING.flatXmap(str -> "never".equals(str) ? DataResult.success(Double.POSITIVE_INFINITY) : DataResult.error(() -> "Must be a number or \"never\""), val -> DataResult.success(val.toString()))).optionalFieldOf("boiling", -274D).forGetter(ReagentRec::getBoilingPoint),
 					TagKey.codec(Registries.ITEM).optionalFieldOf("item", CRItemTags.EMPTY).forGetter(ReagentRec::getSolid),
 					CraftingUtil.fluidIngredientMapCodec("fluid", false).orElse(FluidIngredient.EMPTY).forGetter(ReagentRec::getFluid),
 					ExtraCodecs.NON_NEGATIVE_INT.optionalFieldOf("fluid_amount", 0).forGetter(ReagentRec::getFluidQty),

@@ -9,7 +9,7 @@
 	"pages": [
 		{
 			"type": "patchouli:spotlight",
-			"title": "Alignment: Equilibrium",
+			"title": "Alignment: Force",
 			"item": "crossroads:pure_quartz",
 			"text": "<thing>Force/$ (pink) pushes blocks like a piston and acts as a tractor beam for entities. When it pushes 'sticky' blocks (like slime or honey), it treats them as normal blocks instead of them sticking to things. The maximum number of blocks pushed at a time is "
 		},
