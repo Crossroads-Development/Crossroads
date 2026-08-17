@@ -27,6 +27,7 @@ import net.neoforged.neoforge.common.util.FakePlayerFactory;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.UUID;
 
 public class RotaryDrillTileEntity extends ModuleTE implements IAxleCapable{
 
@@ -60,6 +61,10 @@ public class RotaryDrillTileEntity extends ModuleTE implements IAxleCapable{
 		return Direction.UP;
 	}
 
+	private static FakePlayer getFakePlayer(ServerLevel level){
+		return FakePlayerFactory.get(level, new GameProfile(UUID.randomUUID(), "drill_player_" + MiscUtil.getDimensionName(level)));
+	}
+
 	@Override
 	public void serverTick(){
 		super.serverTick();
@@ -88,7 +93,7 @@ public class RotaryDrillTileEntity extends ModuleTE implements IAxleCapable{
 
 				List<LivingEntity> ents = level.getEntitiesOfClass(LivingEntity.class, new AABB(worldPosition.relative(facing)), EntitySelector.ENTITY_STILL_ALIVE);
 				for(LivingEntity ent : ents){
-					ent.hurt(isGolden() ? CRMobDamage.damageSource(CRMobDamage.DRILL, level, FakePlayerFactory.get((ServerLevel) level, new GameProfile(null, "drill_player_" + MiscUtil.getDimensionName(level)))) : CRMobDamage.damageSource(CRMobDamage.DRILL, level), (float) Math.abs(axleHandler.getSpeed()) * DAMAGE_PER_SPEED);
+					ent.hurt(isGolden() ? CRMobDamage.damageSource(CRMobDamage.DRILL, level, getFakePlayer((ServerLevel) level)) : CRMobDamage.damageSource(CRMobDamage.DRILL, level), (float) Math.abs(axleHandler.getSpeed()) * DAMAGE_PER_SPEED);
 				}
 			}
 		}
