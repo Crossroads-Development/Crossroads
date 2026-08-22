@@ -1,0 +1,8 @@
+{
+	"comparator_output": 10,
+	"description": {
+		"translate": "jukebox_song.crossroads.happy_birthday"
+	},
+	"length_in_seconds": 52,
+	"sound_event": "crossroads:happy_birthday"
+}

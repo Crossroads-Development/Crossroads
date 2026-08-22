@@ -1,0 +1,49 @@
+{
+	"parent": "crossroads:progress/misc/bobo_rod",
+	"display": {
+		"icon": {
+			"id": "minecraft:jukebox"
+		},
+		"title": {
+			"translate": "crossroads.advancement.happy_birthday"
+		},
+		"description": {
+			"translate": "crossroads.advancement.happy_birthday.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": true,
+		"hidden": true
+	},
+	"criteria": {
+		"played_gear": {
+			"trigger": "minecraft:item_used_on_block",
+			"conditions": {
+				"location": [
+					{
+						"condition": "minecraft:location_check",
+						"predicate": {
+							"block": {
+								"blocks": "minecraft:jukebox"
+							}
+						}
+					},
+					{
+						"condition": "minecraft:match_tool",
+						"predicate": {
+							"predicates": {
+								"minecraft:jukebox_playable": {
+									"song": "crossroads:happy_birthday"
+								}
+							}
+						}
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"played_gear"
+		]
+	]
+}

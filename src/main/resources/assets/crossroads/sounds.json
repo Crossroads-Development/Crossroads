@@ -81,5 +81,14 @@
 				"name": "crossroads:bubbling_water"
 			}
 		]
+	},
+	"happy_birthday": {
+		"category": "record",
+		"subtitle": "subtitle.crossroads.happy_birthday",
+		"sounds": [
+			{
+				"name": "crossroads:happy_birthday"
+			}
+		]
 	}
 }
