@@ -15,12 +15,13 @@ public class BrewingVatScreen extends MachineScreen<BrewingVatContainer, Brewing
 
 	public BrewingVatScreen(BrewingVatContainer cont, Inventory playerInv, Component name){
 		super(cont, playerInv, name);
+		imageHeight = 170;
 	}
 
 	@Override
 	protected void renderBg(GuiGraphics matrix, float partialTicks, int mouseX, int mouseY){
 		matrix.blit(TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
-		matrix.blit(TEXTURE, leftPos + 25, topPos + 35, 176, 0, menu.craftProgress.get() * 54 / BrewingVatTileEntity.REQUIRED, 19);
+		matrix.blit(TEXTURE, leftPos + 25, topPos + 39, 176, 0, menu.craftProgress.get() * 54 / BrewingVatTileEntity.REQUIRED, 19);
 
 		super.renderBg(matrix, partialTicks, mouseX, mouseY);
 	}

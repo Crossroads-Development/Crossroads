@@ -19,12 +19,12 @@ public class BrewingVatContainer extends MachineContainer<BrewingVatTileEntity>{
 
 	@Override
 	protected void addSlots(){
-		addSlot(new StrictSlot(te, 0, 44, 50));//Ingredient input
-		addSlot(new StrictSlot(te, 1, 8, 14));//Potion input
-		addSlot(new StrictSlot(te, 2, 8, 32));//Potion input
-		addSlot(new StrictSlot(te, 3, 8, 50));//Potion input
-		addSlot(new OutputSlot(te, 4, 80, 14));//Potion output
-		addSlot(new OutputSlot(te, 5, 80, 32));//Potion output
-		addSlot(new OutputSlot(te, 6, 80, 50));//Potion output
+		addSlot(new StrictSlot(te, 0, 44, 54));//Ingredient input
+		addSlot(new StrictSlot(te, 1, 8, 18));//Potion input
+		addSlot(new StrictSlot(te, 2, 8, 36));//Potion input
+		addSlot(new StrictSlot(te, 3, 8, 54));//Potion input
+		addSlot(new OutputSlot(te, 4, 80, 18));//Potion output
+		addSlot(new OutputSlot(te, 5, 80, 36));//Potion output
+		addSlot(new OutputSlot(te, 6, 80, 54));//Potion output
 	}
 }

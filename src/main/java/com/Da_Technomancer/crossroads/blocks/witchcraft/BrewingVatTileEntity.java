@@ -67,8 +67,9 @@ public class BrewingVatTileEntity extends InventoryTE implements IHeatCapable, I
 		ItemStack created = ItemStack.EMPTY;
 
 		//Only allow crafting if all inputs are present, all input potions are the same item, and all outputs are empty
-		if(!inventory[0].isEmpty() && !inventory[1].isEmpty() && BlockUtil.sameItem(inventory[1], inventory[2]) && BlockUtil.sameItem(inventory[1], inventory[3]) && inventory[4].isEmpty() && inventory[5].isEmpty() && inventory[6].isEmpty()){
-			created = level.potionBrewing().mix(inventory[1], inventory[0]);
+		//Parameters on potionBrewing().hasMix() and potionBrewing().mix() are labelled backwards on which is reagent and which is the potion bottle
+		if(!inventory[0].isEmpty() && !inventory[1].isEmpty() && BlockUtil.sameItem(inventory[1], inventory[2]) && BlockUtil.sameItem(inventory[1], inventory[3]) && inventory[4].isEmpty() && inventory[5].isEmpty() && inventory[6].isEmpty() && level.potionBrewing().hasMix(inventory[1], inventory[0])){
+			created = level.potionBrewing().mix(inventory[0], inventory[1]);
 		}
 
 		if(created.isEmpty()){
