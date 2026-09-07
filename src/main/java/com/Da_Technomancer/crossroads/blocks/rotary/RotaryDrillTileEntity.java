@@ -2,7 +2,6 @@ package com.Da_Technomancer.crossroads.blocks.rotary;
 
 import com.Da_Technomancer.crossroads.ambient.particles.CRParticles;
 import com.Da_Technomancer.crossroads.api.CRProperties;
-import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.rotary.IAxleCapable;
 import com.Da_Technomancer.crossroads.api.rotary.IAxleHandler;
 import com.Da_Technomancer.crossroads.api.templates.ModuleTE;
@@ -26,6 +25,7 @@ import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
 
 import javax.annotation.Nullable;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.UUID;
 
@@ -42,6 +42,7 @@ public class RotaryDrillTileEntity extends ModuleTE implements IAxleCapable{
 	private static final double SPEED_PER_HARDNESS = .2D;
 	private static final float DAMAGE_PER_SPEED = 0.5F;
 	public static final double[] INERTIA = {50, 100};
+	private static final GameProfile DRILL_PROFILE = new GameProfile(UUID.nameUUIDFromBytes("crossroads:rotary_drill".getBytes(StandardCharsets.UTF_8)), "crossroads:rotary_drill");
 
 	public boolean isGolden(){
 		return getBlockState().getBlock() == CRBlocks.rotaryDrillGold;
@@ -62,7 +63,7 @@ public class RotaryDrillTileEntity extends ModuleTE implements IAxleCapable{
 	}
 
 	private static FakePlayer getFakePlayer(ServerLevel level){
-		return FakePlayerFactory.get(level, new GameProfile(UUID.randomUUID(), "drill_player_" + MiscUtil.getDimensionName(level)));
+		return FakePlayerFactory.get(level, DRILL_PROFILE);
 	}
 
 	@Override
