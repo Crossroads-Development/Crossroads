@@ -209,6 +209,12 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE, IIntArrayRec
 			Level world = owner.getLevel();
 			long worldTime = world.getGameTime();
 			if(worldTime != lastTick){
+				if(worldTime - lastTick > 1){
+					//Implies the chunk was unloaded since the last time this ticked
+					//Band-aid fix for Github issue #363. Not sure if this actually works or not.
+					flux = queuedFlux = 0;
+				}
+
 				lastTick = worldTime;
 				if(lastTick % FluxUtil.FLUX_TIME == 0){
 					int toTransfer = flux;
