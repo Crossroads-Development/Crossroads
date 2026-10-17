@@ -3,7 +3,6 @@ package com.Da_Technomancer.crossroads.effects.beam_effects;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.advancements.GolemBuiltTrigger;
-import com.Da_Technomancer.crossroads.api.MiscUtil;
 import com.Da_Technomancer.crossroads.api.beams.BeamHit;
 import com.Da_Technomancer.crossroads.api.beams.EnumBeamAlignments;
 import com.mojang.authlib.GameProfile;
@@ -30,14 +29,16 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.UUID;
 
 public class PlaceEffect extends BeamEffect{
 
+	private static final GameProfile BLOCK_PLACER_PROFILE = new GameProfile(UUID.nameUUIDFromBytes("crossroads:block_placer".getBytes(StandardCharsets.UTF_8)), "crossroads:block_placer");
+
 	public static FakePlayer getBlockFakePlayer(ServerLevel world){
-		GameProfile fakePlayerProfile = new GameProfile(UUID.randomUUID(), Crossroads.MODID + "-block-fake-player-" + MiscUtil.getDimensionName(world));
-		return FakePlayerFactory.get(world, fakePlayerProfile);
+		return FakePlayerFactory.get(world, BLOCK_PLACER_PROFILE);
 	}
 
 	@Override
