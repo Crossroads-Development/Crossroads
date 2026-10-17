@@ -174,6 +174,7 @@ public interface IFluxLink extends ILongReceiver, ILinkTE, IInfoTE, IIntArrayRec
 		@Override
 		public CompoundTag getUpdateTag(HolderLookup.Provider pRegistries){
 			CompoundTag nbt = super.getUpdateTag(pRegistries);
+			linkHelper.writeNBT(nbt);
 			nbt.putIntArray("rendered_arcs", rendered);
 			nbt.putBoolean("shutdown", shutDown);
 			return nbt;
