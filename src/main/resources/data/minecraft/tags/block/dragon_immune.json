@@ -1,6 +1,7 @@
 {
 	"replace": false,
 	"values": [
-		"crossroads:ore_void"
+		"crossroads:ore_void",
+		"#crossroads:master_axes"
 	]
 }

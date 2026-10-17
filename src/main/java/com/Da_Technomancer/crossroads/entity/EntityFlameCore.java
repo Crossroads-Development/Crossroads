@@ -1,25 +1,33 @@
 package com.Da_Technomancer.crossroads.entity;
 
 import com.Da_Technomancer.crossroads.CRConfig;
+import com.Da_Technomancer.crossroads.Crossroads;
 import com.Da_Technomancer.crossroads.ambient.sounds.CRSounds;
 import com.Da_Technomancer.crossroads.api.alchemy.*;
+import com.Da_Technomancer.crossroads.api.crafting.CraftingUtil;
+import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.common.Tags;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -32,6 +40,8 @@ public class EntityFlameCore extends Entity{
 	protected static final EntityDataAccessor<Integer> TIME_EXISTED = SynchedEntityData.defineId(EntityFlameCore.class, EntityDataSerializers.INT);
 	protected static final EntityDataAccessor<Integer> COLOR = SynchedEntityData.defineId(EntityFlameCore.class, EntityDataSerializers.INT);
 	protected static final EntityDataAccessor<Integer> MAX_RADIUS = SynchedEntityData.defineId(EntityFlameCore.class, EntityDataSerializers.INT);
+
+	private static final TagKey<Block> masterAxes = CraftingUtil.getTagKey(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(Crossroads.MODID, "master_axes"));
 
 	/**
 	 * In order to avoid iterating over a large ReagentStack[] that is mostly empty several times a tick, this list is created to store all non-null reagent stacks
@@ -221,7 +231,7 @@ public class EntityFlameCore extends Entity{
 		if(reags.getQty(EnumReagents.ALCHEMICAL_SALT.id()) == 0){
 			BlockState state = world.getBlockState(pos);
 
-			if(!CRConfig.isProtected(world, pos, state) && state.getDestroySpeed(world, pos) >= 0){
+			if(!CRConfig.isProtected(world, pos, state) && state.getDestroySpeed(world, pos) >= 0 && !CraftingUtil.tagContains(masterAxes, state.getBlock())){
 				world.setBlock(pos, lastAction && Math.random() > 0.75D && Blocks.FIRE.defaultBlockState().canSurvive(world, pos) ? Blocks.FIRE.defaultBlockState() : Blocks.AIR.defaultBlockState(), lastAction ? 3 : 18);
 			}
 

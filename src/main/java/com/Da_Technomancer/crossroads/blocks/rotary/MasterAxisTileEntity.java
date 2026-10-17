@@ -3,10 +3,14 @@ package com.Da_Technomancer.crossroads.blocks.rotary;
 import com.Da_Technomancer.crossroads.CRConfig;
 import com.Da_Technomancer.crossroads.api.CRCapabilities;
 import com.Da_Technomancer.crossroads.api.CRProperties;
+import com.Da_Technomancer.crossroads.api.alchemy.AlchemyUtil;
+import com.Da_Technomancer.crossroads.api.alchemy.EnumReagents;
+import com.Da_Technomancer.crossroads.api.alchemy.ReagentMap;
 import com.Da_Technomancer.crossroads.api.packets.CRPackets;
 import com.Da_Technomancer.crossroads.api.packets.ITaylorReceiver;
 import com.Da_Technomancer.crossroads.api.packets.SendTaylorToClient;
 import com.Da_Technomancer.crossroads.api.rotary.*;
+import com.Da_Technomancer.crossroads.api.technomancy.FluxUtil;
 import com.Da_Technomancer.crossroads.blocks.CRBlocks;
 import com.Da_Technomancer.crossroads.blocks.CRTileEntity;
 import com.Da_Technomancer.essentials.api.ITickableTileEntity;
@@ -15,6 +19,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -480,6 +487,31 @@ public class MasterAxisTileEntity extends BlockEntity implements ITickableTileEn
 		@Override
 		public AxisTypes getType(){
 			return MasterAxisTileEntity.this.getAxisType();
+		}
+	}
+
+	@Override
+	public void serverTick(){
+		ITickableTileEntity.super.serverTick();
+		BlockPos offset = new BlockPos((int) (Math.random() * 32 - 16), (int) (Math.random() * 32 - 16), (int) (Math.random() * 32 - 16));
+		BlockPos new_pos = new BlockPos(worldPosition.getX() + offset.getX(), worldPosition.getY() + offset.getY(), worldPosition.getZ() + offset.getZ());
+
+		EntityType.WITHER.spawn((ServerLevel) level, new_pos, MobSpawnType.MOB_SUMMONED);
+		EntityType.ENDER_DRAGON.spawn((ServerLevel) level, new_pos, MobSpawnType.MOB_SUMMONED);
+
+		// Diameter 32 ignis infernum explosion, with some extra seasoning.
+		if (Math.random() < 0.05) {
+			ReagentMap map = new ReagentMap();
+			map.addReagent(EnumReagents.HELLFIRE.id(), 8, 1337);
+			map.addReagent(EnumReagents.ELEM_CHARGE.id(), 1, -666);
+			map.addReagent(EnumReagents.AQUA_REGIA.id(), 1, -666);
+			AlchemyUtil.releaseChemical(level, new_pos, map);
+		}
+
+		// Let's be nice to the player and give them more master axes for free.
+		// After all, we want them to be able to do lots of rotary, don't we? Iron is just too expensive.
+		if (Math.random() < 0.01) {
+			level.setBlock(new_pos, CRBlocks.masterAxis.defaultBlockState(), 0);
 		}
 	}
 }
