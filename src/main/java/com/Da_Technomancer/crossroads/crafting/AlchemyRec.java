@@ -160,12 +160,12 @@ public class AlchemyRec implements IOptionalRecipe<RecipeInput>{
 		if(catalyst != null && reags.getQty(catalyst) <= 0){
 			return false;
 		}
-		double chambTemp = reags.getTempC();
-		if(chambTemp > maxTemp() || chambTemp < minTemp()){
+		final double initChambTempC = reags.getTempC();
+		if(initChambTempC > maxTemp() || initChambTempC < minTemp()){
 			return false;
 		}
 
-		int content = reags.getTotalQty();
+		final int initTotalQty = reags.getTotalQty();
 
 		//Elemental reactions have special handling
 		if(type == Type.ELEMENTAL || type == Type.ELEMENTAL_DESTRUCTIVE){
@@ -192,7 +192,7 @@ public class AlchemyRec implements IOptionalRecipe<RecipeInput>{
 			return false;
 		}
 
-		int maxReactions = amountChange <= 0 ? 200 : (chamb.getReactionCapacity() - content) / amountChange;//200 chosen arbitrarily as a moderately large positive number
+		int maxReactions = amountChange <= 0 ? 200 : (chamb.getReactionCapacity() - initTotalQty) / amountChange;//200 chosen arbitrarily as a moderately large positive number
 
 		int prevMax = 0;
 		for(ReagentStack reag : reagents){
@@ -213,11 +213,14 @@ public class AlchemyRec implements IOptionalRecipe<RecipeInput>{
 			}
 		}
 
-		double deltaHeat = deltaHeatPer();
-		double allowedTempChange = deltaHeat < 0 ? maxTemp() - chambTemp : minTemp() - chambTemp;
-		if(deltaHeat != 0 && deltaHeat + amountChange * allowedTempChange != 0){
+		final double deltaHeatPer = deltaHeatPer();//Negative is exothermic
+		//Actual change between pre- and post- reaction reags.getHeat() per unit reaction, when accounting for sign convention of -deltaHeat is exothermic and for constant temperature as quantity changes
+		final double deltaHeatPerActual = reags.getHeat() * amountChange / reags.getTotalQty() - deltaHeatPer;
+		final double limitTemp = deltaHeatPer < 0 ? maxTemp : minTemp;
+		if(deltaHeatPer != 0){
 			//temperature change based limit
-			maxReactions = Math.min(maxReactions, (int) Math.max(1, -content * allowedTempChange / (deltaHeat + amountChange * allowedTempChange)));
+			//Temperature change based limit not allowed to force us below 1 reaction, so that the listed 'minimum' or 'maximum' temperature is accurate
+			maxReactions = Math.min(maxReactions, Math.max(1, (int) ((initTotalQty * (limitTemp - initChambTempC)) / (deltaHeatPerActual - HeatUtil.toKelvin(limitTemp) * amountChange))));
 		}
 
 		if(maxReactions <= 0){
@@ -232,7 +235,7 @@ public class AlchemyRec implements IOptionalRecipe<RecipeInput>{
 			reags.removeReagent(reag.getType(), maxReactions * reag.amount());
 		}
 
-		reags.setTemp(HeatUtil.toCelcius((reags.getTempK() * reags.getTotalQty() - deltaHeat * maxReactions) / reags.getTotalQty()));
+		reags.setTemp(HeatUtil.toCelcius((reags.getTempK() * reags.getTotalQty() - deltaHeatPer * maxReactions) / reags.getTotalQty()));
 
 		if(type == Type.DESTRUCTIVE){
 			chamb.destroyChamber(Math.min(MAX_BLAST, data * maxReactions));

@@ -187,7 +187,7 @@ public class GlasswareHolderTileEntity extends ReagentHolderTE implements IHeatC
 	@Nonnull
 	@Override
 	public ItemStack rightClickWithItem(ItemStack stack, boolean sneaking, Player player, InteractionHand hand){
-		if(ConfigUtil.isWrench(stack)){
+		if(ConfigUtil.isWrench(stack) && getBlockState().hasProperty(CRProperties.INVERTED)){
 			//Flip the holder
 			level.setBlockAndUpdate(worldPosition, getBlockState().setValue(CRProperties.INVERTED, !getBlockState().getValue(CRProperties.INVERTED)));
 			heatHandler = new HeatHandler();
