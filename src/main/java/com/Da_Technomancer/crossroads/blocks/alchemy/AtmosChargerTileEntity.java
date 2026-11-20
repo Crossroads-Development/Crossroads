@@ -97,6 +97,8 @@ public class AtmosChargerTileEntity extends BlockEntity implements ITickableTile
 		return true;
 	}
 
+	private int lastChargeForReds = 0;
+
 	@Override
 	public void serverTick(){
 		ITickableTileEntity.super.serverTick();
@@ -107,6 +109,11 @@ public class AtmosChargerTileEntity extends BlockEntity implements ITickableTile
 		renderTimer--;
 
 		int atmosCharge = AtmosChargeSavedData.getCharge((ServerLevel) level);
+
+		if(lastChargeForReds != atmosCharge){
+			lastChargeForReds = atmosCharge;
+			level.updateNeighbourForOutputSignal(worldPosition, CRBlocks.atmosCharger);
+		}
 
 		if(isExtractMode()){
 			int op = Math.min((FE_CAPACITY - fe) / 1000, atmosCharge / 1000);
